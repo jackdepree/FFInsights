@@ -470,17 +470,21 @@ cor.df <- mutate(cor.df, percent.change=100*(cor.future-cor.current)/cor.current
 good.cor.df <- filter(cor.df, cor.current>=.1 | cor.current<=-.1)
 best.cor.df <- filter(cor.df, cor.current>=.5 | cor.current<=-.5)
 bad.cor.df <- filter(cor.df, cor.current<.1 & cor.current>-.1)
-cor.df
+#cor.df
 #good.cor.df
-#best.cor.df
+best.cor.df
 #bad.cor.df
 ```
 
 ```{r}
 ggplot(qb_12_22) +
-  geom_point(aes(y=fantasy_points.y, x=rushes_by_sacks.x), colour='purple') +
-  geom_point(aes(y=fantasy_points.y, x=all_touchdowns_by_int_by_sacks.x), colour='darkgreen') +
-  geom_point(aes(y=fantasy_points.y, x=accurate_passes.x), colour='brown')
+  geom_point(aes(y=fantasy_points.y, x=attempts_rush.x, colour=first_downs_pass.x))
+```
+
+```{r}
+ggplot(qb_12_22)+
+  geom_point(aes(y=fantasy_points.y, x=attempts_rush.x, color=`Age.x`))+
+  scale_color_gradient(low = "black", high = "green")
 ```
 
 
