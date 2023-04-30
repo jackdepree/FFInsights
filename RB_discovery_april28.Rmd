@@ -255,17 +255,61 @@ dvoa_22 <- dvoa_22 %>%
   separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
   separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
   separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
-sal_12 <- salary %>% filter(`X2012`=="TRUE")
-sal_13 <- salary %>% filter(`X2013`=="TRUE")
-sal_14 <- salary %>% filter(`X2014`=="TRUE")
-sal_15 <- salary %>% filter(`X2015`=="TRUE")
-sal_16 <- salary %>% filter(`X2016`=="TRUE")
-sal_17 <- salary %>% filter(`X2017`=="TRUE")
-sal_18 <- salary %>% filter(`X2018`=="TRUE")
-sal_19 <- salary %>% filter(`X2019`=="TRUE")
-sal_20 <- salary %>% filter(`X2020`=="TRUE")
-sal_21 <- salary %>% filter(`X2021`=="TRUE")
-sal_22 <- salary %>% filter(`X2022`=="TRUE")
+sal_12 <- salary %>%
+  filter(X2012=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_13 <- salary %>% 
+  filter(X2013=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_14 <- salary %>% 
+  filter(X2014=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_15 <- salary %>% 
+  filter(X2015=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_16 <- salary %>% 
+  filter(X2016=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_17 <- salary %>% 
+  filter(X2017=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_18 <- salary %>% 
+  filter(X2018=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_19 <- salary %>% 
+  filter(X2019=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_20 <- salary %>% 
+  filter(X2020=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_21 <- salary %>% 
+  filter(X2021=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_22 <- salary %>% 
+  filter(X2022=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
 ```
 
 ```{r}
@@ -357,7 +401,6 @@ rb_19 <- filter(rb_19, position=="HB")
 rb_20 <- filter(rb_20, position=="HB")
 rb_21 <- filter(rb_21, position=="HB")
 rb_22 <- filter(rb_22, position=="HB")
-view(rb_22)
 ```
 
 ```{r}
@@ -401,12 +444,12 @@ glimpse(rb_21_22)
 rb_12_22 <- rbind(rb_12_13, rb_13_14, rb_14_15, rb_15_16, rb_16_17, rb_17_18, rb_18_19, rb_19_20, rb_20_21, rb_21_22)
 rb_12_22 <- rb_12_22 %>% select(c(player, player_game_count.x:fantasy_points.x, yards_rush.y, yards_rec.y, 
                                   receptions.y, touchdowns_rec.y, touchdowns_rush.y, fumbles.y, fantasy_points.y),
-                                -c(rec_yards.x, franchise_id.x, Year.Signed.x:Year.End.x, Position.x, Team.x))
+                                -c(rec_yards.x, franchise_id.x))
 glimpse(rb_12_22)
 ```
 
 ```{r}
-n=104
+n=101
 current_correl <- c()
 future_correl <- c()
 for (i in 2:n) {
@@ -442,8 +485,8 @@ efficiency <- rb_12_22 %>% select(c(fantasy_points.y, explosive.x, grades_offens
                                     route_rate.x, slot_rate.x, yards_per_reception.x, yprr.x))
 situation <- rb_12_22 %>% select(c(fantasy_points.y, Weighted_DVOA.x, Total_DVOA.x, Pass_DVOA.x, Rush_DVOA.x, Variance.x, PowerSuccess.x, 
                                    Stuffed.x, `Adj. LineYards.x`, RBYards.x, `2nd LevelYards.x`, `Open FieldYards.x`))
-expectation <- rb_12_22 %>% select(c(fantasy_points.y, ADP.x, Pick.x, Appearances.x, AllAmerican.x, APY.x, Guaranteed.x, APY..Of.Cap.x,
-                                     Inflated.Value.x, Inflated.APY.x, Inflated.Guaranteed.x, Contract.Years.x))
+expectation <- rb_12_22 %>% select(c(fantasy_points.y, ADP.x, Pick.x, Appearances.x, AllAmerican.x, Inlfated_Value.x,
+                                     Inflated_APY.x, Inflated_GTD.x, Contract_Years.x, APY_percent.x))
 ```
 
 ```{r}
