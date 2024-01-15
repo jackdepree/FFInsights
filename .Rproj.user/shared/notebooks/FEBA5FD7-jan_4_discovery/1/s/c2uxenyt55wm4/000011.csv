@@ -1,0 +1,4 @@
+"0","table <- read.csv(""2023_drives.csv"")"
+"0","table <- table %>%"
+"0","  mutate(Net.Yards=O.Yards-D.Yards)"
+"0","table"
