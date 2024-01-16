@@ -1,0 +1,650 @@
+---
+title: "HB_discovery_april28"
+output: html_document
+date: "2023-04-28"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+pff_rush_12 <- read.csv("pff_rushing_summary_2012.csv")
+pff_rush_13 <- read.csv("pff_rushing_summary_2013.csv")
+pff_rush_14 <- read.csv("pff_rushing_summary_2014.csv")
+pff_rush_15 <- read.csv("pff_rushing_summary_2015.csv")
+pff_rush_16 <- read.csv("pff_rushing_summary_2016.csv")
+pff_rush_17 <- read.csv("pff_rushing_summary_2017.csv")
+pff_rush_18 <- read.csv("pff_rushing_summary_2018.csv")
+pff_rush_19 <- read.csv("pff_rushing_summary_2019.csv")
+pff_rush_20 <- read.csv("pff_rushing_summary_2020.csv")
+pff_rush_21 <- read.csv("pff_rushing_summary_2021.csv")
+pff_rush_22 <- read.csv("pff_rushing_summary_2022.csv")
+pff_rec_12 <- read.csv("pff_receiving_summary_2012.csv")
+pff_rec_13 <- read.csv("pff_receiving_summary_2013.csv")
+pff_rec_14 <- read.csv("pff_receiving_summary_2014.csv")
+pff_rec_15 <- read.csv("pff_receiving_summary_2015.csv")
+pff_rec_16 <- read.csv("pff_receiving_summary_2016.csv")
+pff_rec_17 <- read.csv("pff_receiving_summary_2017.csv")
+pff_rec_18 <- read.csv("pff_receiving_summary_2018.csv")
+pff_rec_19 <- read.csv("pff_receiving_summary_2019.csv")
+pff_rec_20 <- read.csv("pff_receiving_summary_2020.csv")
+pff_rec_21 <- read.csv("pff_receiving_summary_2021.csv")
+pff_rec_22 <- read.csv("pff_receiving_summary_2022.csv")
+combine <- read.csv("combine.csv")
+salary <- read.csv("salary_data.csv")
+pfr_rush_12 <- read.csv("2012_pfr_rushing.csv")
+pfr_rush_13 <- read.csv("2013_pfr_rushing.csv")
+pfr_rush_14 <- read.csv("2014_pfr_rushing.csv")
+pfr_rush_15 <- read.csv("2015_pfr_rushing.csv")
+pfr_rush_16 <- read.csv("2016_pfr_rushing.csv")
+pfr_rush_17 <- read.csv("2017_pfr_rushing.csv")
+pfr_rush_18 <- read.csv("2018_pfr_rushing.csv")
+pfr_rush_19 <- read.csv("2019_pfr_rushing.csv")
+pfr_rush_20 <- read.csv("2020_pfr_rushing.csv")
+pfr_rush_21 <- read.csv("2021_pfr_rushing.csv")
+pfr_rush_22 <- read.csv("2022_pfr_rushing.csv")
+adp_12 <- read.csv("2012_fantasypros_rb_adp.csv")
+adp_13 <- read.csv("2013_fantasypros_rb_adp.csv")
+adp_14 <- read.csv("2014_fantasypros_rb_adp.csv")
+adp_15 <- read.csv("2015_fantasypros_rb_adp.csv")
+adp_16 <- read.csv("2016_fantasypros_rb_adp.csv")
+adp_17 <- read.csv("2017_fantasypros_rb_adp.csv")
+adp_18 <- read.csv("2018_fantasypros_rb_adp.csv")
+adp_19 <- read.csv("2019_fantasypros_rb_adp.csv")
+adp_20 <- read.csv("2020_fantasypros_rb_adp.csv")
+adp_21 <- read.csv("2021_fantasypros_rb_adp.csv")
+adp_22 <- read.csv("2022_fantasypros_rb_adp.csv")
+adp_23 <- read.csv("2023_fantasypros_rb_adp.csv")
+oline_12 <- read_csv("2012 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_13 <- read_csv("2013 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_14 <- read_csv("2014 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_15 <- read_csv("2015 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_16 <- read_csv("2016 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_17 <- read_csv("2017 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_18 <- read_csv("2018 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_19 <- read_csv("2019 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_20 <- read_csv("2020 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_21 <- read_csv("2021 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+oline_22 <- read_csv("2022 Basic Offensive Line Stats.csv", show_col_types=FALSE)
+dvoa_12 <- read_csv("2012 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_13 <- read_csv("2013 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_14 <- read_csv("2014 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_15 <- read_csv("2015 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_16 <- read_csv("2016 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_17 <- read_csv("2017 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_18 <- read_csv("2018 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_19 <- read_csv("2019 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_20 <- read_csv("2020 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_21 <- read_csv("2021 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+dvoa_22 <- read_csv("2022 Team DVOA Ratings Offense.csv", show_col_types=FALSE)
+combine <- select(combine, -c(Pos))
+pfr_rush_12 <- pfr_rush_12 %>% select(c(Player, Age, GS))
+pfr_rush_13 <- pfr_rush_13 %>% select(c(Player, Age, GS))
+pfr_rush_14 <- pfr_rush_14 %>% select(c(Player, Age, GS))
+pfr_rush_15 <- pfr_rush_15 %>% select(c(Player, Age, GS))
+pfr_rush_16 <- pfr_rush_16 %>% select(c(Player, Age, GS))
+pfr_rush_17 <- pfr_rush_17 %>% select(c(Player, Age, GS))
+pfr_rush_18 <- pfr_rush_18 %>% select(c(Player, Age, GS))
+pfr_rush_19 <- pfr_rush_19 %>% select(c(Player, Age, GS))
+pfr_rush_20 <- pfr_rush_20 %>% select(c(Player, Age, GS))
+pfr_rush_21 <- pfr_rush_21 %>% select(c(Player, Age, GS))
+pfr_rush_22 <- pfr_rush_22 %>% select(c(Player, Age, GS))
+pff_rec_12 <- pff_rec_12 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_13 <- pff_rec_13 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_14 <- pff_rec_14 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_15 <- pff_rec_15 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_16 <- pff_rec_16 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_17 <- pff_rec_17 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_18 <- pff_rec_18 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_19 <- pff_rec_19 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_20 <- pff_rec_20 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_21 <- pff_rec_21 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+pff_rec_22 <- pff_rec_22 %>% select(-c(player_id, position, team_name, player_game_count, drops, 
+                                       franchise_id, fumbles, grades_hands_drop, grades_hands_fumble,
+                                       grades_offense, grades_pass_block, grades_pass_route, 
+                                       receptions, routes, targets, yprr))
+oline_12 <- oline_12 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_13 <- oline_13 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_14 <- oline_14 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_15 <- oline_15 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_16 <- oline_16 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_17 <- oline_17 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_18 <- oline_18 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_19 <- oline_19 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_20 <- oline_20 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_21 <- oline_21 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+oline_22 <- oline_22 %>%
+  select(c(`Team`, `PowerSuccess`, `Stuffed`, `Adj. LineYards`, `RBYards`, `2nd LevelYards`, `Open FieldYards`)) %>%
+  separate(col=PowerSuccess, into=c('PowerSuccess', NA), sep="%", convert=TRUE) %>%
+  separate(col=Stuffed, into=c('Stuffed', NA), sep="%", convert=TRUE)
+dvoa_12 <- dvoa_12 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_13 <- dvoa_13 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_14 <- dvoa_14 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_15 <- dvoa_15 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_16 <- dvoa_16 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_17 <- dvoa_17 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_18 <- dvoa_18 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_19 <- dvoa_19 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_20 <- dvoa_20 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_21 <- dvoa_21 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+dvoa_22 <- dvoa_22 %>%
+  select(c(`Team`, `Total DVOA`, `Weighted DVOA`, `Pass DVOA`, `Rush DVOA`, `Variance`)) %>%
+  separate(col=`Total DVOA`, into=c('Total_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Weighted DVOA`, into=c('Weighted_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Pass DVOA`, into=c('Pass_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Rush DVOA`, into=c('Rush_DVOA', NA), sep="%", convert=TRUE) %>%
+  separate(col=`Variance`, into=c('Variance', NA), sep="%", convert=TRUE)
+sal_12 <- salary %>%
+  filter(X2012=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_13 <- salary %>% 
+  filter(X2013=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_14 <- salary %>% 
+  filter(X2014=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_15 <- salary %>% 
+  filter(X2015=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_16 <- salary %>% 
+  filter(X2016=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_17 <- salary %>% 
+  filter(X2017=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_18 <- salary %>% 
+  filter(X2018=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_19 <- salary %>% 
+  filter(X2019=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_20 <- salary %>% 
+  filter(X2020=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_21 <- salary %>% 
+  filter(X2021=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+sal_22 <- salary %>% 
+  filter(X2022=="TRUE") %>%
+  group_by(Player) %>%
+  summarise(Inlfated_Value=mean(Inflated.Value), Inflated_GTD=mean(Inflated.Guaranteed), Inflated_APY=mean(Inflated.APY), 
+            Contract_Years=mean(Contract.Years), APY_percent=mean(APY..Of.Cap))
+```
+
+```{r}
+rb_12 <- merge(pff_rush_12, pff_rec_12, by='player', all=T, suffixes=c("_rush", "_rec"))
+rb_13 <- merge(pff_rush_13, pff_rec_13, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_14 <- merge(pff_rush_14, pff_rec_14, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_15 <- merge(pff_rush_15, pff_rec_15, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_16 <- merge(pff_rush_16, pff_rec_16, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_17 <- merge(pff_rush_17, pff_rec_17, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_18 <- merge(pff_rush_18, pff_rec_18, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_19 <- merge(pff_rush_19, pff_rec_19, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_20 <- merge(pff_rush_20, pff_rec_20, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_21 <- merge(pff_rush_21, pff_rec_21, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_22 <- merge(pff_rush_22, pff_rec_22, by="player", all=T, suffixes=c("_rush", "_rec"))
+rb_12 <- merge(rb_12, pfr_rush_12, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_13 <- merge(rb_13, pfr_rush_13, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_14 <- merge(rb_14, pfr_rush_14, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_15 <- merge(rb_15, pfr_rush_15, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_16 <- merge(rb_16, pfr_rush_16, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_17 <- merge(rb_17, pfr_rush_17, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_18 <- merge(rb_18, pfr_rush_18, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_19 <- merge(rb_19, pfr_rush_19, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_20 <- merge(rb_20, pfr_rush_20, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_21 <- merge(rb_21, pfr_rush_21, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_22 <- merge(rb_22, pfr_rush_22, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_12 <- merge(rb_12, adp_13, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_13 <- merge(rb_13, adp_14, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_14 <- merge(rb_14, adp_15, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_15 <- merge(rb_15, adp_16, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_16 <- merge(rb_16, adp_17, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_17 <- merge(rb_17, adp_18, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_18 <- merge(rb_18, adp_19, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_19 <- merge(rb_19, adp_20, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_20 <- merge(rb_20, adp_21, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_21 <- merge(rb_21, adp_22, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_22 <- merge(rb_22, adp_23, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_12 <- merge(rb_12, oline_12, by.x="team_name", by.y="Team", all=TRUE)
+rb_13 <- merge(rb_13, oline_13, by.x="team_name", by.y="Team", all=TRUE)
+rb_14 <- merge(rb_14, oline_14, by.x="team_name", by.y="Team", all=TRUE)
+rb_15 <- merge(rb_15, oline_15, by.x="team_name", by.y="Team", all=TRUE)
+rb_16 <- merge(rb_16, oline_16, by.x="team_name", by.y="Team", all=TRUE)
+rb_17 <- merge(rb_17, oline_17, by.x="team_name", by.y="Team", all=TRUE)
+rb_18 <- merge(rb_18, oline_18, by.x="team_name", by.y="Team", all=TRUE)
+rb_19 <- merge(rb_19, oline_19, by.x="team_name", by.y="Team", all=TRUE)
+rb_20 <- merge(rb_20, oline_20, by.x="team_name", by.y="Team", all=TRUE)
+rb_21 <- merge(rb_21, oline_21, by.x="team_name", by.y="Team", all=TRUE)
+rb_22 <- merge(rb_22, oline_22, by.x="team_name", by.y="Team", all=TRUE)
+rb_12 <- merge(rb_12, dvoa_12, by.x="team_name", by.y="Team", all=TRUE)
+rb_13 <- merge(rb_13, dvoa_13, by.x="team_name", by.y="Team", all=TRUE)
+rb_14 <- merge(rb_14, dvoa_14, by.x="team_name", by.y="Team", all=TRUE)
+rb_15 <- merge(rb_15, dvoa_15, by.x="team_name", by.y="Team", all=TRUE)
+rb_16 <- merge(rb_16, dvoa_16, by.x="team_name", by.y="Team", all=TRUE)
+rb_17 <- merge(rb_17, dvoa_17, by.x="team_name", by.y="Team", all=TRUE)
+rb_18 <- merge(rb_18, dvoa_18, by.x="team_name", by.y="Team", all=TRUE)
+rb_19 <- merge(rb_19, dvoa_19, by.x="team_name", by.y="Team", all=TRUE)
+rb_20 <- merge(rb_20, dvoa_20, by.x="team_name", by.y="Team", all=TRUE)
+rb_21 <- merge(rb_21, dvoa_21, by.x="team_name", by.y="Team", all=TRUE)
+rb_22 <- merge(rb_22, dvoa_22, by.x="team_name", by.y="Team", all=TRUE)
+rb_12 <- merge(rb_12, sal_12, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_13 <- merge(rb_13, sal_13, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_14 <- merge(rb_14, sal_14, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_15 <- merge(rb_15, sal_15, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_16 <- merge(rb_16, sal_16, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_17 <- merge(rb_17, sal_17, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_18 <- merge(rb_18, sal_18, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_19 <- merge(rb_19, sal_19, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_20 <- merge(rb_20, sal_20, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_21 <- merge(rb_21, sal_21, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_22 <- merge(rb_22, sal_22, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_12 <- merge(rb_12, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_13 <- merge(rb_13, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_14 <- merge(rb_14, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_15 <- merge(rb_15, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_16 <- merge(rb_16, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_17 <- merge(rb_17, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_18 <- merge(rb_18, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_19 <- merge(rb_19, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_20 <- merge(rb_20, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_21 <- merge(rb_21, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_22 <- merge(rb_22, combine, by.x="player", by.y="Player", all=T, match_type="fuzzy")
+rb_12 <- filter(rb_12, position=="HB")
+rb_13 <- filter(rb_13, position=="HB")
+rb_14 <- filter(rb_14, position=="HB")
+rb_15 <- filter(rb_15, position=="HB")
+rb_16 <- filter(rb_16, position=="HB")
+rb_17 <- filter(rb_17, position=="HB")
+rb_18 <- filter(rb_18, position=="HB")
+rb_19 <- filter(rb_19, position=="HB")
+rb_20 <- filter(rb_20, position=="HB")
+rb_21 <- filter(rb_21, position=="HB")
+rb_22 <- filter(rb_22, position=="HB")
+```
+
+```{r}
+fantasy_points <- function(data){
+  newdf <- data %>% 
+    mutate(fantasy_points = yards_rush*.1 + yards_rec*.1 + receptions*.5 + touchdowns_rec*6 + touchdowns_rush*6 - fumbles*2) %>%
+    mutate(fp_game = fantasy_points/player_game_count) %>%
+    select(c(player, player_game_count:fp_game), -c(rec_yards, franchise_id, grades_pass))
+  return(newdf)
+}
+
+rb_12 <- fantasy_points(rb_12)
+rb_13 <- fantasy_points(rb_13)
+rb_14 <- fantasy_points(rb_14)
+rb_15 <- fantasy_points(rb_15)
+rb_16 <- fantasy_points(rb_16)
+rb_17 <- fantasy_points(rb_17)
+rb_18 <- fantasy_points(rb_18)
+rb_19 <- fantasy_points(rb_19)
+rb_20 <- fantasy_points(rb_20)
+rb_21 <- fantasy_points(rb_21)
+rb_22 <- fantasy_points(rb_22)
+
+rb_12_13 <- merge(rb_12, rb_13, by="player", all=T, suffixes=c(".x", ".y"))
+rb_13_14 <- merge(rb_13, rb_14, by="player", all=T, suffixes=c(".x", ".y"))
+rb_14_15 <- merge(rb_14, rb_15, by="player", all=T, suffixes=c(".x", ".y"))
+rb_15_16 <- merge(rb_15, rb_16, by="player", all=T, suffixes=c(".x", ".y"))
+rb_16_17 <- merge(rb_16, rb_17, by="player", all=T, suffixes=c(".x", ".y"))
+rb_17_18 <- merge(rb_17, rb_18, by="player", all=T, suffixes=c(".x", ".y"))
+rb_18_19 <- merge(rb_18, rb_19, by="player", all=T, suffixes=c(".x", ".y"))
+rb_19_20 <- merge(rb_19, rb_20, by="player", all=T, suffixes=c(".x", ".y"))
+rb_20_21 <- merge(rb_20, rb_21, by="player", all=T, suffixes=c(".x", ".y"))
+rb_21_22 <- merge(rb_21, rb_22, by="player", all=T, suffixes=c(".x", ".y"))
+# glimpse(rb_21_22)
+```
+
+```{r}
+rb_12_22 <- rbind(rb_12_13, rb_13_14, rb_14_15, rb_15_16, rb_16_17, rb_17_18, rb_18_19, rb_19_20, rb_20_21, rb_21_22)
+rb_12_22 <- rb_12_22 %>% select(c(player, player_game_count.x:fp_game.x, yards_rush.y, yards_rec.y, 
+                                  receptions.y, touchdowns_rec.y, touchdowns_rush.y, fumbles.y, fantasy_points.y, 
+                                  fp_game.y))
+# glimpse(rb_12_22)
+rb_12_22 %>% summarize_all(funs(sum(is.na(.))))
+```
+
+```{r}
+n=101
+current_correl <- c()
+future_correl <- c()
+for (i in 2:n) {
+  x <- cor(rb_12_22$fantasy_points.x, rb_12_22[,i], use="p")
+  current_correl <- c(current_correl, x)
+}
+for (i in 2:n) {
+  x <- cor(rb_12_22$fantasy_points.y, rb_12_22[,i], use="p")
+  future_correl <- c(future_correl, x)
+}
+correl_df <- data.frame(factor=colnames(rb_12_22[,2:n]), current=current_correl, future=future_correl)
+correl_df <- correl_df %>% mutate(perc_change=100*(future-current)/current)
+best_correl <- correl_df %>% filter(future > 0.4 | future < -0.3)
+good_correl <- correl_df %>% filter(future > 0.1 | future < -0.1)
+bad_correl <- correl_df %>% filter(future < 0.1 & future > -0.1)
+correl_df
+best_correl
+good_correl
+bad_correl
+```
+
+```{r}
+physical <- rb_12_22 %>% select(c(fantasy_points.y, Height.x, Weight.x, Dash40.x, Vertical.x, Bench.x, Broad.Jump.x, Cone3.x, 
+                                  Shuttle.x, Age.x))
+production <- rb_12_22 %>% select(c(fantasy_points.y, attempts.x, designed_yards.x, first_downs_rush.x, receptions.x, routes.x, 
+                                    run_plays.x,targets.x, total_touches.x, touchdowns_rush.x, yards_rush.x, pass_plays.x, GS.x, 
+                                    avoided_tackles_rush.x, breakaway_attempts.x, breakaway_yards.x, drops.x, elu_recv_mtf.x,
+                                    elu_rush_mtf.x, touchdowns_rec.x, first_downs_rec.x, yards_after_catch.x, fumbles.x,
+                                    fantasy_points.x, explosive.x))
+efficiency <- rb_12_22 %>% select(c(fantasy_points.y, grades_offense.x, grades_run.x, longest_rush.x, 
+                                    longest_rec.x,yco_attempt.x, ypa.x, targeted_qb_rating.x, yards_after_catch_per_reception.x, 
+                                    elusive_rating.x, avg_depth_of_target.x, caught_percent.x, contested_catch_rate.x, drop_rate.x, 
+                                    route_rate.x, slot_rate.x, yards_per_reception.x, yprr.x))
+situation <- rb_12_22 %>% select(c(fantasy_points.y, Weighted_DVOA.x, Total_DVOA.x, Pass_DVOA.x, Rush_DVOA.x, Variance.x, PowerSuccess.x, 
+                                   Stuffed.x, `Adj. LineYards.x`, RBYards.x, `2nd LevelYards.x`, `Open FieldYards.x`))
+expectation <- rb_12_22 %>% select(c(fantasy_points.y, ADP.x, Pick.x, Appearances.x, AllAmerican.x, Inlfated_Value.x,
+                                     Inflated_APY.x, Inflated_GTD.x, Contract_Years.x, APY_percent.x))
+best_df <- rb_12_22 %>% select(c(fantasy_points.y, best_correl$factor))
+good_df <- rb_12_22 %>% select(c(fantasy_points.y, good_correl$factor))
+refined <- rb_12_22 %>% select(c(fantasy_points.y, yards_rush.x, yards_rec.x, touchdowns_rec.x, touchdowns_rush.x, fumbles.x, receptions.x))
+```
+
+physical = 3.2*Broad.Jump.x + 5.8*Height.x + 151*Shuttle.x - 104*Cone3.x - 3.8*Age.x + 1.4*Bench.x - 559
+production = 0.43*fantasy_points.x - 0.43*pass_plays.x + 0.48*routes.x + 1.3*explosive.x + 1.3*elu_recv_mtf.x + 3.5*fumbles.x + 36
+efficiency = 1.3*longest_rush.x + 1.6*grades_offense.x + .68*longest_rec.x - 8.8*avg_depth_of_target.x + 2.1*slot_rate.x - 9.2*ypa.x + 16.2*yprr.x - 59
+situation = 18*RBYards.x + 2.6*Stuffed.x + 18*`Adj. LineYards.x` - 111
+expectation = -0.6*ADP.x - 0.15*Pick.x + 9.6*Contract_Years.x + 125
+fp_refined = 0.004*yards_rec.x + 0.05*yards_rush.x + 3.3*touchdowns_rush.x + 1.8*touchdowns_rec.x + 2.3*fumbles.x + 0.7*receptions.x + 35
+
+**Most powerful individual stats**
+  best_hypo = fp_game.x + explosive.x + elu_recv_mtf.x + pass_plays.x + routes.x + ADP.x
+  good_hypo = fp_game.x + inline_rate.x + elu_recv_mtf.x + 
+              grades_run.x + Weight.x + Broad.Jump.x + fumbles.x + 
+              attempts.x + run_plays.x + explosive.x + ypa.x + 
+              `2nd LevelYards.x` + `Open FieldYards.x`
+  
+```{r}
+modeller <- function(columns) {
+  data <- rb_12_22 %>% select(c(all_of(columns), fantasy_points.y)) %>% na.omit()
+  intercept_only <- lm(fantasy_points.y ~ 1, data=data)
+  all <- lm(fantasy_points.y ~ ., data=data)
+  model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+  summary(model)
+}
+modeller(colnames(refined))
+```
+
+```{r}
+schema <- function(data){
+  newdf <- data %>% 
+    mutate(physical = 3.2*Broad.Jump.x + 5.8*Height.x + 151*Shuttle.x - 104*Cone3.x - 3.8*Age.x + 1.4*Bench.x - 559) %>%
+    mutate(production = 0.43*fantasy_points.x - 0.43*pass_plays.x + 0.48*routes.x + 1.3*explosive.x + 1.3*elu_recv_mtf.x + 3.5*fumbles.x + 36) %>%
+    mutate(efficiency = 1.3*longest_rush.x + 1.6*grades_offense.x + .68*longest_rec.x - 8.8*avg_depth_of_target.x + 2.1*slot_rate.x - 9.2*ypa.x + 16.2*yprr.x - 59) %>%
+    mutate(situation = 18*RBYards.x + 2.6*Stuffed.x + 18*`Adj. LineYards.x` - 111) %>%
+    mutate(expectation = -0.3*ADP.x - 0.15*Pick.x + 9.6*Contract_Years.x + 125)
+  return(newdf)
+}
+
+test_12_22 <- rb_12_22
+
+for (i in 2:99){
+  test_12_22[,i][is.na(test_12_22[,i])] <- ifelse(cor(test_12_22[,i], test_12_22$fantasy_points.x, use="p")>0, quantile(test_12_22[,i], .15, na.rm=T), quantile(test_12_22[,i], .85, na.rm=T))
+}
+
+test_12_22 <- schema(test_12_22)
+test_12_22 <- test_12_22 %>% select(c(player:expectation, fantasy_points.y, fp_game.y))
+
+# glimpse(test_12_22)
+```
+
+```{r}
+test_data <- test_12_22 %>% na.omit()
+test_model <- lm(fantasy_points.y ~ physical + production + efficiency + situation + expectation, data=test_data)
+# summary(test_model)
+```
+
+```{r}
+prediction <- function(data, model){
+  adp <- range(1:230)
+  predator <- as.data.frame((predict(model, data, interval="confidence")))
+  predictions <- predator %>% mutate(player=data$player, actual=data$fantasy_points.y, implied_ADP=(quantile(adp, 1-ecdf(fit)(fit))))
+  predictions <- arrange(predictions, desc(fit))
+  return(predictions)
+}
+```
+
+```{r}
+overall_test <- na.omit(prediction(test_12_22, test_model))
+# overall_test
+ggplot(overall_test, aes(x=implied_ADP, y=actual, size=fit, color=fit, alpha=.1)) + geom_point() + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F, color=F) + 
+  labs(y="Future Fantasy Points", x="Implied Average Draft Position", title="RB Outcomes Based on Implied ADP (test)") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+best_model <- lm(fantasy_points.y ~ fp_game.x + explosive.x + pass_plays.x + ADP.x, data=rb_12_22)
+best_pred <- na.omit(prediction(rb_12_22, best_model))
+# best_pred
+ggplot(best_pred, aes(x=implied_ADP, y=actual, size=fit, color=fit, alpha=.1)) + geom_point() + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F, color=F) + 
+  labs(y="Future Fantasy Points", x="Implied Average Draft Position", title="RB Outcomes Based on Implied ADP (best)") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+good_model <- lm(fantasy_points.y ~ fp_game.x + inline_rate.x + elu_recv_mtf.x + 
+              grades_run.x + Weight.x + Broad.Jump.x + fumbles.x + 
+              attempts.x + run_plays.x + explosive.x + ypa.x + 
+              `2nd LevelYards.x` + `Open FieldYards.x`, data=rb_12_22)
+good_pred <- na.omit(prediction(rb_12_22, good_model))
+# good_pred
+ggplot(good_pred, aes(x=implied_ADP, y=actual, size=fit, color=fit, alpha=.1)) + geom_point() + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F, color=F) + 
+  labs(y="Future Fantasy Points", x="Implied Average Draft Position", title="RB Outcomes Based on Implied ADP (good)") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+refined_fp_model <- lm(fantasy_points.y ~ yards_rec.x + yards_rush.x + 
+                         touchdowns_rush.x + touchdowns_rec.x, fumbles.x + 
+                         receptions.x, data=rb_12_22)
+refined_fp_pred <- na.omit(prediction(rb_12_22, refined_fp_model))
+# refined_fp_pred
+ggplot(refined_fp_pred, aes(x=implied_ADP, y=actual, size=fit, color=fit, alpha=.1)) + geom_point() + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F, color=F) + 
+  labs(y="Future Fantasy Points", x="Implied Average Draft Position", title="RB Outcomes Based on Implied ADP (refined)") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+ggplot(rb_12_22, aes(x=ADP.x, y=fantasy_points.y, color=ADP.x, size=1, alpha=.1)) + geom_point() + xlim(0,270) + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F, color=F) + 
+  labs(y="Fantasy Points (0.5PPR)", x="Average Draft Position", title="RB Outcomes Based on ADP") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+ggplot(rb_12_22, aes(x=Pick.x, y=fantasy_points.x, color=Broad.Jump.x, size=Broad.Jump.x, alpha=.1)) + geom_point() + 
+  scale_color_gradient(high="darkorange", low="darkgreen") + guides(size=F, alpha=F) + 
+  labs(y="Fantasy Points", x="Draft Pick", title="RB Outcomes Based on Draft Pick & Broad Jump", color="Broad Jump") + 
+  geom_smooth(level=.99, linewidth=2, color="darkred")
+```
+
+```{r}
+summary(lm(actual ~ implied_ADP, data=overall_test))
+
+summary(lm(fantasy_points.y ~ ADP.x, data=rb_12_22))
+
+summary(lm(actual ~ implied_ADP, data=best_pred))
+
+summary(lm(actual ~ implied_ADP, data=good_pred))
+
+summary(lm(actual ~ implied_ADP, data=refined_fp_pred))
+```
+
+```{r}
+players <- rb_12_22 %>% select(c(player, Contract_Years.x, Inflated_APY.x, yards_rush.x, Inlfated_Value.x, Inflated_GTD.x, APY_percent.x))
+view(players)
+```
+
+```{r}
+unik <- c()
+for (i in 1:109){
+  x <- unique(rb_12_22[,c(1,i)])
+  x <- length(x$player)
+  unik <- c(unik, x)
+  
+}
+
+unik.df <- data.frame(factor=colnames(rb_12_22), unique=unik)
+unik.df %>% arrange(desc(unique))
+```
+
+```{r}
+removal <- unique(rb_12_22[,c("player", "fp_game.x", "explosive.x", "elu_recv_mtf.x", "pass_plays.x", "routes.x", "ADP.x")])
+head(removal) %>% arrange(-desc(player))
+```
+
