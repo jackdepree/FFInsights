@@ -1,0 +1,292 @@
+---
+title: "Passing Summary Try Out"
+author: "Jack DePree"
+date: "2023-02-20"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<http://rmarkdown.rstudio.com>.
+
+```{r}
+library(readr)
+library(tidyverse)
+pff_passing_summary_2012 <- read_csv("pff_passing_summary_2012.csv", show_col_types = FALSE)
+pff_passing_summary_2013 <- read_csv("pff_passing_summary_2013.csv", show_col_types = FALSE)
+pff_passing_summary_2014 <- read_csv("pff_passing_summary_2014.csv", show_col_types = FALSE)
+pff_passing_summary_2015 <- read_csv("pff_passing_summary_2015.csv", show_col_types = FALSE)
+pff_passing_summary_2016 <- read_csv("pff_passing_summary_2016.csv", show_col_types = FALSE)
+pff_passing_summary_2017 <- read_csv("pff_passing_summary_2017.csv", show_col_types = FALSE)
+pff_passing_summary_2018 <- read_csv("pff_passing_summary_2018.csv", show_col_types = FALSE)
+pff_passing_summary_2019 <- read_csv("pff_passing_summary_2019.csv", show_col_types = FALSE)
+pff_passing_summary_2020 <- read_csv("pff_passing_summary_2020.csv", show_col_types = FALSE)
+pff_passing_summary_2021 <- read_csv("pff_passing_summary_2021.csv", show_col_types = FALSE)
+pff_passing_summary_2022 <- read_csv("pff_passing_summary_2022.csv", show_col_types = FALSE)
+```
+
+```{r}
+  # Assigning the tables to smaller names
+pass_12 <- pff_passing_summary_2012
+pass_13 <- pff_passing_summary_2013
+pass_14 <- pff_passing_summary_2014
+pass_15 <- pff_passing_summary_2015
+pass_16 <- pff_passing_summary_2016
+pass_17 <- pff_passing_summary_2017
+pass_18 <- pff_passing_summary_2018
+pass_19 <- pff_passing_summary_2019
+pass_20 <- pff_passing_summary_2020
+pass_21 <- pff_passing_summary_2021
+pass_22 <- pff_passing_summary_2022
+  # Merging the 'prior' season to the 'current' season
+pass_12_13 <- merge(pass_12, pass_13, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_13_14 <- merge(pass_13, pass_14, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_14_15 <- merge(pass_14, pass_15, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_15_16 <- merge(pass_15, pass_16, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_16_17 <- merge(pass_16, pass_17, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_17_18 <- merge(pass_17, pass_18, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_18_19 <- merge(pass_18, pass_19, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_19_20 <- merge(pass_19, pass_20, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_20_21 <- merge(pass_20, pass_21, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_21_22 <- merge(pass_21, pass_22, by='player', all=TRUE, suffixes=c('.x','.y'))
+  # Joining all of the merged tables into on table for ease of analysis
+passing_12_22 <- rbind(pass_12_13, pass_13_14, pass_14_15, pass_15_16, pass_16_17, pass_17_18, pass_19_20, pass_20_21, pass_21_22)
+passing_12_22
+  # Showing the index for each column
+column.passing <- names(passing_12_22)
+numbers <- 1:83
+index.passing <- data.frame(numbers, column.passing)
+index.passing
+```
+
+```{r}
+passing_12_22f <- filter(passing_12_22, attempts.x > 100)
+#quantile(passing_12_22$attempts.x, .15, na.rm=TRUE)
+
+print("yards change")
+sum(passing_12_22$yards.x, na.rm=TRUE) - sum(passing_12_22f$yards.x)
+print('accuracy')
+summary(passing_12_22$accuracy_percent.x)
+print('accuracy filtered')
+summary(passing_12_22f$accuracy_percent.x)
+print("players per year")
+length(passing_12_22$player)/11
+print("players per year filtered")
+length(passing_12_22f$player)/11
+```
+
+\*\*Analysis
+
+Plotting
+
+```{r}
+yards.cor <- c()
+tds.cor <- c()
+yards.y <- passing_12_22f$yards.y
+tds.y <- passing_12_22f$touchdowns.y
+
+for (i in seq(5,42,1)) {
+  jj <- cor(yards.y, passing_12_22f[i], use="complete.obs")
+  yards.cor <- c(yards.cor, jj)
+}
+for (i in seq(5,42,1)) {
+  jj <- cor(tds.y, passing_12_22f[i], use="complete.obs")
+  tds.cor <- c(tds.cor, jj)
+}
+
+plot(yards.cor, xlab="Index", ylab="Yards Correlation", col="blue", cex=2, lwd=2)
+points(tds.cor, col="red", cex=2, lwd=2)
+
+yards.cor.60 <- colnames(passing_12_22f[which(yards.cor>=.6)+4])
+yards.cor.60
+```
+
+Conditional Probabilities Test
+
+Hypothetical Methodology 1: Make lists of probabilities for each condition (a list of probabilities for "game_count" and for the future year's variable at a percentile of 90, and then another list for the same variable at a percentile of 80). Then, make a list of lists for each variable and their various conditions and outcomes. Then, make a list of lists for all of the variables of the columns.
+
+Hypothetical Methodology 2: Make lists of probabilities for each "repetitional" condition (each "repetitional" outcome is the odds that a player will repeat the next year at the same level, meaning if a player passes 90th yards.x then what are the odds they get 90th yards.y?).
+
+Implementation
+
+i need a loop that makes a list of all of the implied yards per each variable for each player, then to take the average of that list, then make a new list of the players + their mean(implied.yards) + their actual yards
+
+Make a list of the filtered columns of passing_12_22. The make a loop that goes through the list of columns, then makes a new list of the associated average.if.predictions
+
+
+Polynomial Regression Testing
+
+```{r}
+
+game.count <- passing_12_22f$player_game_count.x
+yards.y <- passing_12_22f$yards.y
+
+model.game.count <- lm(yards.y ~ poly(game.count, 3, raw=TRUE))
+
+#summary(model.game.count)
+coef(model.game.count)
+
+#confint(model.game.count, level=.96)
+
+#plot(fitted(model.game.count), residuals(model.game.count))
+
+yards.cov <- c()
+for (i in seq(5,42,1)) {
+  jj <- cov(yards.y, passing_12_22f[i])
+  yards.cov <- c(yards.cov, jj)
+}
+yards.cov
+yards.cov.50th <- colnames(passing_12_22f[which(yards.cor>=5600)+4])
+yards.cov.50th
+
+ggplot(passing_12_22f, aes(player_game_count.x, yards.y)) +
+  geom_point() + stat_smooth(method=lm, formula=y~poly(x,3,raw=TRUE))
+
+```
+
+Average.If Data Frame for reference and implementation
+
+```{r}
+zscores <- c(3, 2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5, -3)
+zpercentiles <- c(1, .9938, .9772, .9332, .8413, .6915, .5, .3085, .1587, .0668, .0228, .0062, 0)
+
+z.score <- data.frame(zscores, zpercentiles)
+z.score
+```
+
+```{r}
+pass.variables <- colnames(passing_12_22f[5:42])  # Column names of passing_12_22 to be integrated in the average.if 'df'
+average.if.yards <- data.frame(Tier=(1:12))  # Initiation of the average.if 'df' with the first column "Tier"
+yards.y <- passing_12_22f$yards.y  # Assigning the dependent variable to "yards.y"
+
+means.yards <- function(i) {  #Initiating a function to make each separate column for each variable in passing_12_22
+  means <- data.frame(variable=numeric())  # Assigning "means" to be an empty 'df'
+  for (xx in 1:12) {  # A loop to amount to the same amount of Tiers (10)
+    variable <- passing_12_22f[i+4]  # Assigning the column data from passing_12_22
+    bottom <- quantile(variable, zpercentiles[xx+1], na.rm=TRUE)  # Assigning the bottom percentile benchmark 
+    top <- quantile(variable, zpercentiles[xx], na.rm=TRUE)  # Assigning the top percentile benchmark
+    m <- mean(yards.y[variable >= bottom & variable <= top], na.rm=TRUE)  # Calculating the average dependent yards.y for the given benchmarks
+    means[nrow(means) + 1,] <- m  # Appending the new row to the "means" 'df'
+  }
+  return(means)  # Returning and therefore storing the new 'df' that will be used as a column in the "average.if" 'df'
+}
+for (i in 1:38) {  # For loop for all of the variables/columns/metrics in the passing_12_22
+  average.if.yards[, ncol(average.if.yards) + 1] <- means.yards(i)  # Using the "means()" function to create columns to be appended to the "average.if" 'df'
+  colnames(average.if.yards)[ncol(average.if.yards)] <- paste0(pass.variables[i])  # Renaming each new column 
+}
+average.if.yards
+```
+
+```{r}
+pass_21f <- filter(pass_21, attempts > 100)
+
+
+prediction <- function(i) {
+  player.val <- data.frame(variable=numeric())
+  for (xx in 1:length(pass_21f$player)) {
+    variable <- passing_12_22f[i+4]
+    element <- pass_21f[xx,i+4]
+    if (element > quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[1,i+1] } # Dissimilar due to benchmark sampled by a filtered passing_12_22
+    if (element > quantile(variable, zpercentiles[3], na.rm=TRUE) & element <= quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[2,i+1] }
+    if (element > quantile(variable, zpercentiles[4], na.rm=TRUE) & element <= quantile(variable, zpercentiles[3], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[3,i+1] }
+    if (element > quantile(variable, zpercentiles[5], na.rm=TRUE) & element <= quantile(variable, zpercentiles[4], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[4,i+1] }
+    if (element > quantile(variable, zpercentiles[6], na.rm=TRUE) & element <= quantile(variable, zpercentiles[5], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[5,i+1] }
+    if (element > quantile(variable, zpercentiles[7], na.rm=TRUE) & element <= quantile(variable, zpercentiles[6], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[6,i+1] }
+    if (element > quantile(variable, zpercentiles[8], na.rm=TRUE) & element <= quantile(variable, zpercentiles[7], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[7,i+1] }
+    if (element > quantile(variable, zpercentiles[9], na.rm=TRUE) & element <= quantile(variable, zpercentiles[8], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[8,i+1] }
+    if (element > quantile(variable, zpercentiles[10], na.rm=TRUE) & element <= quantile(variable, zpercentiles[9], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[9,i+1] }
+    if (element > quantile(variable, zpercentiles[11], na.rm=TRUE) & element <= quantile(variable, zpercentiles[10], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[10,i+1] }
+    if (element > quantile(variable, zpercentiles[12], na.rm=TRUE) & element <= quantile(variable, zpercentiles[11], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[11,i+1] }
+    if (element <= quantile(variable, zpercentiles[12], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if.yards[12,i+1] }
+  }
+  return(player.val)
+}
+
+average.player.21 <- data.frame(Player=pass_21f$player)
+for (i in 1:38) {
+  average.player.21[, ncol(average.player.21)+1] <- prediction(i)
+  colnames(average.player.21)[ncol(average.player.21)] <- paste0(pass.variables[i])
+}
+average.player.21
+
+average.player.sum.21 <- mutate(average.player.21, Results=rowMeans(average.player.21[,-1]))
+average.player.sum.21 <- select(average.player.sum.21, 1,40)
+average.player.sum.21
+```
+
+```{r}
+pass_20f <- filter(pass_20, attempts > 100)
+prediction <- function(i) {
+  player.val <- data.frame(variable=numeric())
+  for (xx in 1:length(pass_20f$player)) {
+    variable <- passing_12_22f[i+4]
+    element <- pass_20f[xx,i+4]
+    average.if <- average.if.yards
+    if (element > quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[1,i+1] } # Dissimilar due to benchmark sampled by a filtered passing_12_22
+    if (element > quantile(variable, zpercentiles[3], na.rm=TRUE) & element <= quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[2,i+1] }
+    if (element > quantile(variable, zpercentiles[4], na.rm=TRUE) & element <= quantile(variable, zpercentiles[3], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[3,i+1] }
+    if (element > quantile(variable, zpercentiles[5], na.rm=TRUE) & element <= quantile(variable, zpercentiles[4], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[4,i+1] }
+    if (element > quantile(variable, zpercentiles[6], na.rm=TRUE) & element <= quantile(variable, zpercentiles[5], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[5,i+1] }
+    if (element > quantile(variable, zpercentiles[7], na.rm=TRUE) & element <= quantile(variable, zpercentiles[6], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[6,i+1] }
+    if (element > quantile(variable, zpercentiles[8], na.rm=TRUE) & element <= quantile(variable, zpercentiles[7], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[7,i+1] }
+    if (element > quantile(variable, zpercentiles[9], na.rm=TRUE) & element <= quantile(variable, zpercentiles[8], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[8,i+1] }
+    if (element > quantile(variable, zpercentiles[10], na.rm=TRUE) & element <= quantile(variable, zpercentiles[9], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[9,i+1] }
+    if (element > quantile(variable, zpercentiles[11], na.rm=TRUE) & element <= quantile(variable, zpercentiles[10], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[10,i+1] }
+    if (element > quantile(variable, zpercentiles[12], na.rm=TRUE) & element <= quantile(variable, zpercentiles[11], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[11,i+1] }
+    if (element <= quantile(variable, zpercentiles[12], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[12,i+1] }
+  }
+  return(player.val)
+}
+average.player.20 <- data.frame(Player=pass_20f$player)
+for (i in 1:38) {
+  average.player.20[, ncol(average.player.20)+1] <- prediction(i)
+  colnames(average.player.20)[ncol(average.player.20)] <- paste0(pass.variables[i])
+}
+average.player.20
+
+average.player.sum.20 <- mutate(average.player.20, Results=rowMeans(average.player.20[,-1]))
+average.player.sum.20 <- select(average.player.sum.20, 1,40)
+average.player.sum.20
+```
+
+```{r}
+pass_19f <- filter(pass_19, attempts > 100)
+prediction <- function(i) {
+  player.val <- data.frame(variable=numeric())
+  for (xx in 1:length(pass_19f$player)) {
+    variable <- passing_12_22f[i+4]
+    element <- pass_19f[xx,i+4]
+    average.if <- average.if.yards
+    if (element > quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[1,i+1] } # Dissimilar due to benchmark sampled by a filtered passing_12_22
+    if (element > quantile(variable, zpercentiles[3], na.rm=TRUE) & element <= quantile(variable, zpercentiles[2], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[2,i+1] }
+    if (element > quantile(variable, zpercentiles[4], na.rm=TRUE) & element <= quantile(variable, zpercentiles[3], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[3,i+1] }
+    if (element > quantile(variable, zpercentiles[5], na.rm=TRUE) & element <= quantile(variable, zpercentiles[4], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[4,i+1] }
+    if (element > quantile(variable, zpercentiles[6], na.rm=TRUE) & element <= quantile(variable, zpercentiles[5], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[5,i+1] }
+    if (element > quantile(variable, zpercentiles[7], na.rm=TRUE) & element <= quantile(variable, zpercentiles[6], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[6,i+1] }
+    if (element > quantile(variable, zpercentiles[8], na.rm=TRUE) & element <= quantile(variable, zpercentiles[7], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[7,i+1] }
+    if (element > quantile(variable, zpercentiles[9], na.rm=TRUE) & element <= quantile(variable, zpercentiles[8], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[8,i+1] }
+    if (element > quantile(variable, zpercentiles[10], na.rm=TRUE) & element <= quantile(variable, zpercentiles[9], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[9,i+1] }
+    if (element > quantile(variable, zpercentiles[11], na.rm=TRUE) & element <= quantile(variable, zpercentiles[10], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[10,i+1] }
+    if (element > quantile(variable, zpercentiles[12], na.rm=TRUE) & element <= quantile(variable, zpercentiles[11], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[11,i+1] }
+    if (element <= quantile(variable, zpercentiles[12], na.rm=TRUE)) { player.val[nrow(player.val)+1,] <- average.if[12,i+1] }
+  }
+  return(player.val)
+}
+average.player.19 <- data.frame(Player=pass_19f$player)
+for (i in 1:38) {
+  average.player.19[, ncol(average.player.19)+1] <- prediction(i)
+  colnames(average.player.19)[ncol(average.player.19)] <- paste0(pass.variables[i])
+}
+average.player.19
+
+average.player.sum.19 <- mutate(average.player.19, Results=rowMeans(average.player.19[,-1]))
+average.player.sum.19 <- select(average.player.sum.19, 1,40)
+average.player.sum.19
+```
+
+
+
+
+
