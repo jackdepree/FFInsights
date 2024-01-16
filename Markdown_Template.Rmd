@@ -1,0 +1,82 @@
+---
+title: "Markdown_Template"
+author: "Jack DePree"
+date: "2024-01-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Title of Project
+
+##Scientiic Questions
+---
+
+##Contextualization
+---
+
+##Reasoning
+---
+
+Data Collection
+```{r}
+library(dplyr)
+library(tidyverse)
+
+?read_csv()
+
+```
+
+#Data Cleaning
+```{r}
+?separate()
+?mutate()
+?transmute()
+?select()
+?relocate()
+?na.omit()
+
+```
+
+```{r}
+
+```
+
+#Data Organization
+```{r}
+?merge()
+?rbind()
+
+```
+
+```{r}
+
+```
+
+#Data Analysis
+```{r}
+?summary()
+?cor()
+?quantile()
+?group_by()
+?sapply()
+?lm()
+
+```
+
+```{r}
+
+```
+
+#Data Visualization
+```{r}
+?ggplot()
+?geom_smooth()
+
+```
+
+```{r}
+
+```
