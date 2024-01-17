@@ -28,18 +28,18 @@ Data Collection
 library(dplyr)
 library(tidyverse)
 
-?read_csv()
+#read.csv()
 
 ```
 
 #Data Cleaning
 ```{r}
-?separate()
-?mutate()
-?transmute()
-?select()
-?relocate()
-?na.omit()
+#separate()
+#mutate()
+#transmute()
+#select()
+#relocate()
+#na.omit()
 
 ```
 
@@ -49,8 +49,8 @@ library(tidyverse)
 
 #Data Organization
 ```{r}
-?merge()
-?rbind()
+#merge()
+#rbind()
 
 ```
 
@@ -60,12 +60,12 @@ library(tidyverse)
 
 #Data Analysis
 ```{r}
-?summary()
-?cor()
-?quantile()
-?group_by()
-?sapply()
-?lm()
+#summary()
+#cor()
+#quantile()
+#group_by()
+#sapply()
+#lm()
 
 ```
 
@@ -75,8 +75,8 @@ library(tidyverse)
 
 #Data Visualization
 ```{r}
-?ggplot()
-?geom_smooth()
+#ggplot()
+#geom_smooth()
 
 ```
 

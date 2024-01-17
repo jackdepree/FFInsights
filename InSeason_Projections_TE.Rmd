@@ -12,22 +12,22 @@ knitr::opts_chunk$set(echo = TRUE)
 #Within Season Projections
 
 ##Contextualization
-Each week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions will be. The data will be centered around discovering three aspects: "individual ability" (stable metrics of performance and efficiency), "situation" (a combination of both opportunity and opposition), "noise reduction" (unstable metrics of luck and unfortune).  Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future? If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors?
+Each week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions will be. The data will be centered around discovering three aspects: "individual ability" (stable metrics of performance and efficiency), "situation" (a combination of both opportunity and opposition), "noise reduction" (unstable metrics of luck and unfortune).  Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future# If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors#
 
 ##Reasoning
 Using unstable variables as confounding variables, we can adjust the stable variables for more predictive validity. There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using the most recent weeks can be more useful than using the entire season to-date, meaning we can add weights to the most recent weeks' data to better predict the future. 
 
 ##Scientiic Questions
-1. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
-2. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
-3. From the stable and unstable variables, which of them are highly associated with fantasy points? (Association)
-4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction?" (PCA)
-5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction? (Prediction)
+1. Which variables are highly associated with fantasy points# (Association)
+2. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
+3. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
+4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction#" (PCA)
+5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction# (Prediction)
 
 ##Methodology
-1. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by lowest variability. Create correlations between each variable of their past and future samples, sort by highest correlation. 
-2. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by highest variability. Create correlations between each variable of their past and future samples, sort by lowest correlation.
-3. Create a df where each week is stacked upon one another for an association test. Select the variables that were highlighted in the past two summary statistics.
+1. Create a df where each week is stacked upon one another for an association test. Compare each variable with both the player's given week's points and the player's total seasonal points.
+2. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by lowest variability. Create correlations between each variable of their past and future samples, sort by highest correlation. 
+3. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by highest variability. Create correlations between each variable of their past and future samples, sort by lowest correlation.
 4. Use cluster analysis and model making to form composites of the previously selected variables.
 5. Create multiple dfs where the past and future weeks have been averaged in varied ways using weights and recency bias to assess the most predictable weeks and their arrangements.
 
@@ -36,19 +36,74 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 library(dplyr)
 library(tidyverse)
 
-?read_csv()
+wk1 <- read.csv("2023_wk1_flex_stats.csv")
+wk2 <- read.csv("2023_wk2_flex_stats.csv")
+wk3 <- read.csv("2023_wk3_flex_stats.csv")
+wk4 <- read.csv("2023_wk4_flex_stats.csv")
+wk5 <- read.csv("2023_wk5_flex_stats.csv")
+wk6 <- read.csv("2023_wk6_flex_stats.csv")
+wk7 <- read.csv("2023_wk7_flex_stats.csv")
+wk8 <- read.csv("2023_wk8_flex_stats.csv")
+wk9 <- read.csv("2023_wk9_flex_stats.csv")
+wk10 <- read.csv("2023_wk10_flex_stats.csv")
+wk11 <- read.csv("2023_wk11_flex_stats.csv")
+wk12 <- read.csv("2023_wk12_flex_stats.csv")
+wk13 <- read.csv("2023_wk13_flex_stats.csv")
+wk14 <- read.csv("2023_wk14_flex_stats.csv")
+wk15 <- read.csv("2023_wk15_flex_stats.csv")
+wk16 <- read.csv("2023_wk16_flex_stats.csv")
+wk17 <- read.csv("2023_wk17_flex_stats.csv")
+total <- read.csv("2023_total_flex_stats.csv")
 
+glimpse(total)
 ```
 
 #Data Cleaning
 ```{r}
-?separate()
-?mutate()
-?transmute()
-?select()
-?relocate()
-?na.omit()
+#separate()
+#mutate()
+#transmute()
+#select()
+#relocate()
+#na.omit()
 
+total <- total %>%
+  filter(position=="TE") %>%
+  select(c(player, fantasyPts))
+wk1 <- wk1 %>%
+  filter(position=="TE")
+wk2 <- wk2 %>%
+  filter(position=="TE")
+wk3 <- wk3 %>%
+  filter(position=="TE")
+wk4 <- wk4 %>%
+  filter(position=="TE")
+wk5 <- wk5 %>%
+  filter(position=="TE")
+wk6 <- wk6 %>%
+  filter(position=="TE")
+wk7 <- wk7 %>%
+  filter(position=="TE")
+wk8 <- wk8 %>%
+  filter(position=="TE")
+wk9 <- wk9 %>%
+  filter(position=="TE")
+wk10 <- wk10 %>%
+  filter(position=="TE")
+wk11 <- wk11 %>%
+  filter(position=="TE")
+wk12 <- wk12 %>%
+  filter(position=="TE")
+wk13 <- wk13 %>%
+  filter(position=="TE")
+wk14 <- wk14 %>%
+  filter(position=="TE")
+wk15 <- wk15 %>%
+  filter(position=="TE")
+wk16 <- wk16 %>%
+  filter(position=="TE")
+wk17 <- wk17 %>%
+  filter(position=="TE")
 ```
 
 ```{r}
@@ -57,9 +112,10 @@ library(tidyverse)
 
 #Data Organization
 ```{r}
-?merge()
-?rbind()
-
+big_association <- rbind(wk1,wk2,wk3,wk4,wk5,wk6,wk7,wk8,wk9,wk10,wk11,wk12,wk13,wk14,wk15,wk16,wk17)
+big_association <- merge(big_association, total, by="player", all=T, suffixes=c(".x", ".y"))
+big_association <- select(big_association, -c(player, team, games, position))
+glimpse(big_association)
 ```
 
 ```{r}
@@ -68,23 +124,20 @@ library(tidyverse)
 
 #Data Analysis
 ```{r}
-?summary()
-?cor()
-?quantile()
-?group_by()
-?sapply()
-?lm()
-
+cor.x <- cor(big_association, big_association$fantasyPts.x, use="complete.obs")
+cor.y <- cor(big_association, big_association$fantasyPts.y, use="complete.obs")
+significant.x <- which(cor.x>.1)
+significant.y <- which(cor.y>.1)
 ```
 
 ```{r}
-
+apply(big_association[,significant.x], 2, mean)
 ```
 
 #Data Visualization
 ```{r}
-?ggplot()
-?geom_smooth()
+#ggplot()
+#geom_smooth()
 
 ```
 
