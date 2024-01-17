@@ -1,0 +1,93 @@
+---
+title: "InSeason_Projections_TE"
+author: "Jack DePree"
+date: "2024-01-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Within Season Projections
+
+##Contextualization
+Each week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions will be. The data will be centered around discovering three aspects: "individual ability" (stable metrics of performance and efficiency), "situation" (a combination of both opportunity and opposition), "noise reduction" (unstable metrics of luck and unfortune).  Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future? If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors?
+
+##Reasoning
+Using unstable variables as confounding variables, we can adjust the stable variables for more predictive validity. There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using the most recent weeks can be more useful than using the entire season to-date, meaning we can add weights to the most recent weeks' data to better predict the future. 
+
+##Scientiic Questions
+1. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
+2. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
+3. From the stable and unstable variables, which of them are highly associated with fantasy points? (Association)
+4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction?" (PCA)
+5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction? (Prediction)
+
+##Methodology
+1. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by lowest variability. Create correlations between each variable of their past and future samples, sort by highest correlation. 
+2. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by highest variability. Create correlations between each variable of their past and future samples, sort by lowest correlation.
+3. Create a df where each week is stacked upon one another for an association test. Select the variables that were highlighted in the past two summary statistics.
+4. Use cluster analysis and model making to form composites of the previously selected variables.
+5. Create multiple dfs where the past and future weeks have been averaged in varied ways using weights and recency bias to assess the most predictable weeks and their arrangements.
+
+#Data Collection
+```{r}
+library(dplyr)
+library(tidyverse)
+
+?read_csv()
+
+```
+
+#Data Cleaning
+```{r}
+?separate()
+?mutate()
+?transmute()
+?select()
+?relocate()
+?na.omit()
+
+```
+
+```{r}
+
+```
+
+#Data Organization
+```{r}
+?merge()
+?rbind()
+
+```
+
+```{r}
+
+```
+
+#Data Analysis
+```{r}
+?summary()
+?cor()
+?quantile()
+?group_by()
+?sapply()
+?lm()
+
+```
+
+```{r}
+
+```
+
+#Data Visualization
+```{r}
+?ggplot()
+?geom_smooth()
+
+```
+
+```{r}
+
+```

@@ -11,13 +11,16 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #Title of Project
 
-##Scientiic Questions
----
-
 ##Contextualization
 ---
 
 ##Reasoning
+---
+
+##Scientiic Questions
+---
+
+##Methodology
 ---
 
 Data Collection
