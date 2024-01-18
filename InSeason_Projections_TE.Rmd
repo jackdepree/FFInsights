@@ -21,7 +21,7 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 1. Which variables are highly associated with fantasy points# (Association)
 2. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
 3. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
-4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction#" (PCA)
+4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction." (PCA)
 5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction# (Prediction)
 
 ##Methodology
@@ -115,6 +115,7 @@ wk17 <- wk17 %>%
 big_association <- rbind(wk1,wk2,wk3,wk4,wk5,wk6,wk7,wk8,wk9,wk10,wk11,wk12,wk13,wk14,wk15,wk16,wk17)
 big_association <- merge(big_association, total, by="player", all=T, suffixes=c(".x", ".y"))
 big_association <- select(big_association, -c(player, team, games, position))
+big_association <- subset(big_association, recTarg>0)
 glimpse(big_association)
 ```
 
@@ -123,24 +124,43 @@ glimpse(big_association)
 ```
 
 #Data Analysis
+
+Calcualating the correlation of each variable to both the current week's fatnasy points and the year's total fantasy points.
 ```{r}
-cor.x <- cor(big_association, big_association$fantasyPts.x, use="complete.obs")
-cor.y <- cor(big_association, big_association$fantasyPts.y, use="complete.obs")
-significant.x <- which(cor.x>.1)
-significant.y <- which(cor.y>.1)
+cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
+cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
+cor.x.index <- which(cor.x>.1)
+cor.y.index <- which(cor.y>.1)
+head(cor.x)
 ```
 
+Calculating the coefficient of variation for each variable over all weeks.
 ```{r}
-apply(big_association[,significant.x], 2, mean)
+var.x <- as.matrix(round(apply(big_association[,cor.x.index], 2, var), 3))
+var.y <- as.matrix(round(apply(big_association[,cor.y.index], 2, var), 3))
+var.x.stable.index <- which(var.x<50)
+var.x.unstable.index <- which(var.x>50)
+var.y.stable.index <- which(var.y<50)
+var.y.unstable.index <- which(var.y>50)
+head(var.x)
 ```
 
 #Data Visualization
 ```{r}
 #ggplot()
 #geom_smooth()
+ggplot(big_association, aes(x=recYds)) +
+  geom_histogram(binwidth=sd(big_association$recYds))
+      
+ggplot(big_association, aes(x=recTarg)) +
+  geom_histogram(binwidth=sd(big_association$recTarg))
+```
+
+```{r}
 
 ```
 
+#Data Prediction
 ```{r}
 
 ```
