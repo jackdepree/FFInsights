@@ -18,11 +18,11 @@ Each week adds more data that can be used to predict the future; it is assumed t
 Using unstable variables as confounding variables, we can adjust the stable variables for more predictive validity. There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using the most recent weeks can be more useful than using the entire season to-date, meaning we can add weights to the most recent weeks' data to better predict the future. 
 
 ##Scientiic Questions
-1. Which variables are highly associated with fantasy points# (Association)
-2. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
-3. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends# (Association)
-4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction." (PCA)
-5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction# (Prediction)
+1. Which variables are highly associated with fantasy points? (Association)
+2. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
+3. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
+4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction?" (PCA)
+5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction? (Prediction)
 
 ##Methodology
 1. Create a df where each week is stacked upon one another for an association test. Compare each variable with both the player's given week's points and the player's total seasonal points.
@@ -35,6 +35,7 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 ```{r}
 library(dplyr)
 library(tidyverse)
+library(corrplot)
 
 wk1 <- read.csv("2023_wk1_flex_stats.csv")
 wk2 <- read.csv("2023_wk2_flex_stats.csv")
@@ -125,39 +126,74 @@ glimpse(big_association)
 
 #Data Analysis
 
-Calcualating the correlation of each variable to both the current week's fatnasy points and the year's total fantasy points.
+Calculating the correlation of each variable to both the current week's fatnasy points and the year's total fantasy points.
 ```{r}
 cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
 cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
 cor.x.index <- which(cor.x>.1)
 cor.y.index <- which(cor.y>.1)
-head(cor.x)
+head(cor.x, 10)
 ```
 
 Calculating the coefficient of variation for each variable over all weeks.
 ```{r}
-var.x <- as.matrix(round(apply(big_association[,cor.x.index], 2, var), 3))
-var.y <- as.matrix(round(apply(big_association[,cor.y.index], 2, var), 3))
-var.x.stable.index <- which(var.x<50)
-var.x.unstable.index <- which(var.x>50)
-var.y.stable.index <- which(var.y<50)
-var.y.unstable.index <- which(var.y>50)
-head(var.x)
+cv <- function(x) {
+  m <- mean(x)
+  var <- var(x)
+  cv <- var/m
+  return(cv)
+}
+```
+
+```{r}
+var.x <- as.matrix(round(apply(big_association[,cor.x.index], 2, cv), 3))
+var.y <- as.matrix(round(apply(big_association[,cor.y.index], 2, cv), 3))
+var.x.stable.index <- which(var.x<2)
+var.x.unstable.index <- which(var.x>2)
+var.y.stable.index <- which(var.y<2)
+var.y.unstable.index <- which(var.y>2)
+head(var.x, 10)
 ```
 
 #Data Visualization
 ```{r}
 #ggplot()
 #geom_smooth()
-ggplot(big_association, aes(x=recYds)) +
-  geom_histogram(binwidth=sd(big_association$recYds))
+ggplot(big_association, aes(x=recTd40s)) +
+  geom_histogram(binwidth=sd(big_association$recTd40s)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Touchdowns >= 40 Yards (Stable)", x="Receiving TDs >= 40yds per Game", y="")
+
+ggplot(big_association, aes(x=recRec40s)) +
+  geom_histogram(binwidth=sd(big_association$recRec40s)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Receptions >= 40 Yards (Stable)", x="Receiving Recs >= 40yds per Game", y="")
       
 ggplot(big_association, aes(x=recTarg)) +
-  geom_histogram(binwidth=sd(big_association$recTarg))
+  geom_histogram(binwidth=sd(big_association$recTarg)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Targets (Unstable)", x="Receiving Targets per Game", y="")
+
+ggplot(big_association, aes(x=rzRecTdPct)) +
+  geom_histogram(binwidth=sd(big_association$rzRecTdPct)/2, fill="darkorchid4") +
+  labs(title="Distribution of rzRecTdPct (Unstable)", x="Receiving rzRecTdPct per Game", y="")
 ```
 
 ```{r}
+plot <- cor(big_association[,cor.x.index])
+corrplot(plot, method="color")
+```
 
+```{r}
+modeller <- function(dat, indep, dep) {
+  indep <- colnames(dat[, indep])
+  dep <- grep(dep, colnames(dat))
+  data <- dat %>% select(c(indep, dep)) %>% na.omit()
+  intercept_only <- lm(dep ~ 1, data=data)
+  all <- lm(dep ~ ., data=data)
+  model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+  summary(model)
+}
+modeller(dat=big_association,
+         indep=cor.y.index,
+         dep='fantasyPts.y')
 ```
 
 #Data Prediction
