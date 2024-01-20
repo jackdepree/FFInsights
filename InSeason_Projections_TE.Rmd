@@ -132,6 +132,8 @@ cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use=
 cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
 cor.x.index <- which(cor.x>.1)
 cor.y.index <- which(cor.y>.1)
+cor.x.index <- cor.x.index[! cor.x.index %in% c(47,48,49)]
+cor.y.index <- cor.y.index[! cor.y.index %in%c(47,48,49)]
 head(cor.x, 10)
 ```
 
@@ -185,15 +187,23 @@ corrplot(plot, method="color")
 modeller <- function(dat, indep, dep) {
   indep <- colnames(dat[, indep])
   dep <- grep(dep, colnames(dat))
-  data <- dat %>% select(c(indep, dep)) %>% na.omit()
-  intercept_only <- lm(dep ~ 1, data=data)
-  all <- lm(dep ~ ., data=data)
+  data <- dat %>% select(c(all_of(indep), dep)) %>% na.omit()
+  intercept_only <- lm(dat[,dep] ~ 1, data=data)
+  all <- lm(dat[,dep] ~ ., data=data)
   model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
   summary(model)
 }
 modeller(dat=big_association,
          indep=cor.y.index,
-         dep='fantasyPts.y')
+         dep="fantasyPts.y")
+```
+
+```{r}
+data <- big_association %>% select(c(all_of(cor.y.index), fantasyPts.y)) %>% na.omit()
+intercept_only <- lm(fantasyPts.y ~ 1, data=data)
+all <- lm(fantasyPts.y ~ ., data=data)
+model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+summary(model)
 ```
 
 #Data Prediction
