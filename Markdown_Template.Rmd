@@ -47,7 +47,7 @@ library(tidyverse)
 
 ```
 
-#Data Organization
+#Data Transformation
 ```{r}
 #merge()
 #rbind()
@@ -80,6 +80,11 @@ library(tidyverse)
 
 ```
 
+```{r}
+
+```
+
+#Data Prediction
 ```{r}
 
 ```

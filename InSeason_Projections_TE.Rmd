@@ -111,7 +111,7 @@ wk17 <- wk17 %>%
 
 ```
 
-#Data Organization
+#Data Transformation
 ```{r}
 big_association <- rbind(wk1,wk2,wk3,wk4,wk5,wk6,wk7,wk8,wk9,wk10,wk11,wk12,wk13,wk14,wk15,wk16,wk17)
 big_association <- merge(big_association, total, by="player", all=T, suffixes=c(".x", ".y"))
@@ -157,32 +157,6 @@ var.y.unstable.index <- which(var.y>2)
 head(var.x, 10)
 ```
 
-#Data Visualization
-```{r}
-#ggplot()
-#geom_smooth()
-ggplot(big_association, aes(x=recTd40s)) +
-  geom_histogram(binwidth=sd(big_association$recTd40s)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Touchdowns >= 40 Yards (Stable)", x="Receiving TDs >= 40yds per Game", y="")
-
-ggplot(big_association, aes(x=recRec40s)) +
-  geom_histogram(binwidth=sd(big_association$recRec40s)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Receptions >= 40 Yards (Stable)", x="Receiving Recs >= 40yds per Game", y="")
-      
-ggplot(big_association, aes(x=recTarg)) +
-  geom_histogram(binwidth=sd(big_association$recTarg)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Targets (Unstable)", x="Receiving Targets per Game", y="")
-
-ggplot(big_association, aes(x=rzRecTdPct)) +
-  geom_histogram(binwidth=sd(big_association$rzRecTdPct)/2, fill="darkorchid4") +
-  labs(title="Distribution of rzRecTdPct (Unstable)", x="Receiving rzRecTdPct per Game", y="")
-```
-
-```{r}
-plot <- cor(big_association[,cor.x.index])
-corrplot(plot, method="color")
-```
-
 ```{r}
 modeller <- function(dat, indep, dep) {
   indep <- colnames(dat[, indep])
@@ -204,6 +178,40 @@ intercept_only <- lm(fantasyPts.y ~ 1, data=data)
 all <- lm(fantasyPts.y ~ ., data=data)
 model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
 summary(model)
+```
+
+#Data Visualization
+
+Visualizing Stability
+```{r}
+#ggplot()
+#geom_smooth()
+ggplot(big_association, aes(x=recTd40s)) +
+  geom_histogram(binwidth=sd(big_association$recTd40s)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Touchdowns >= 40 Yards (Stable)", x="Receiving TDs >= 40yds per Game", y="")
+
+ggplot(big_association, aes(x=recRec40s)) +
+  geom_histogram(binwidth=sd(big_association$recRec40s)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Receptions >= 40 Yards (Stable)", x="Receiving Recs >= 40yds per Game", y="")
+      
+ggplot(big_association, aes(x=recTarg)) +
+  geom_histogram(binwidth=sd(big_association$recTarg)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Targets (Unstable)", x="Receiving Targets per Game", y="")
+
+ggplot(big_association, aes(x=rzRecTdPct)) +
+  geom_histogram(binwidth=sd(big_association$rzRecTdPct)/2, fill="darkorchid4") +
+  labs(title="Distribution of rzRecTdPct (Unstable)", x="Receiving rzRecTdPct per Game", y="")
+
+```
+
+```{r}
+plot <- cor(big_association[,cor.x.index])
+corrplot(plot, method="color")
+```
+
+```{r}
+ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
+  geom_violin()
 ```
 
 #Data Prediction
