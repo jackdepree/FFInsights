@@ -37,29 +37,48 @@ library(dplyr)
 library(tidyverse)
 library(corrplot)
 
-wk1 <- read.csv("2023_wk1_flex_stats.csv")
-wk2 <- read.csv("2023_wk2_flex_stats.csv")
-wk3 <- read.csv("2023_wk3_flex_stats.csv")
-wk4 <- read.csv("2023_wk4_flex_stats.csv")
-wk5 <- read.csv("2023_wk5_flex_stats.csv")
-wk6 <- read.csv("2023_wk6_flex_stats.csv")
-wk7 <- read.csv("2023_wk7_flex_stats.csv")
-wk8 <- read.csv("2023_wk8_flex_stats.csv")
-wk9 <- read.csv("2023_wk9_flex_stats.csv")
-wk10 <- read.csv("2023_wk10_flex_stats.csv")
-wk11 <- read.csv("2023_wk11_flex_stats.csv")
-wk12 <- read.csv("2023_wk12_flex_stats.csv")
-wk13 <- read.csv("2023_wk13_flex_stats.csv")
-wk14 <- read.csv("2023_wk14_flex_stats.csv")
-wk15 <- read.csv("2023_wk15_flex_stats.csv")
-wk16 <- read.csv("2023_wk16_flex_stats.csv")
-wk17 <- read.csv("2023_wk17_flex_stats.csv")
-total <- read.csv("2023_total_flex_stats.csv")
+wk1_23 <- read.csv("2023_wk1_flex_stats.csv")
+wk2_23 <- read.csv("2023_wk2_flex_stats.csv")
+wk3_23 <- read.csv("2023_wk3_flex_stats.csv")
+wk4_23 <- read.csv("2023_wk4_flex_stats.csv")
+wk5_23 <- read.csv("2023_wk5_flex_stats.csv")
+wk6_23 <- read.csv("2023_wk6_flex_stats.csv")
+wk7_23 <- read.csv("2023_wk7_flex_stats.csv")
+wk8_23 <- read.csv("2023_wk8_flex_stats.csv")
+wk9_23 <- read.csv("2023_wk9_flex_stats.csv")
+wk10_23 <- read.csv("2023_wk10_flex_stats.csv")
+wk11_23 <- read.csv("2023_wk11_flex_stats.csv")
+wk12_23 <- read.csv("2023_wk12_flex_stats.csv")
+wk13_23 <- read.csv("2023_wk13_flex_stats.csv")
+wk14_23 <- read.csv("2023_wk14_flex_stats.csv")
+wk15_23 <- read.csv("2023_wk15_flex_stats.csv")
+wk16_23 <- read.csv("2023_wk16_flex_stats.csv")
+wk17_23 <- read.csv("2023_wk17_flex_stats.csv")
+total_23 <- read.csv("2023_total_flex_stats.csv")
 
-glimpse(total)
+wk1_22 <- read.csv("2022_wk1_flex_stats.csv")
+wk2_22 <- read.csv("2023_wk2_flex_stats.csv")
+wk3_22 <- read.csv("2022_wk3_flex_stats.csv")
+wk4_22 <- read.csv("2022_wk4_flex_stats.csv")
+wk5_22 <- read.csv("2022_wk5_flex_stats.csv")
+wk6_22 <- read.csv("2022_wk6_flex_stats.csv")
+wk7_22 <- read.csv("2022_wk7_flex_stats.csv")
+wk8_22 <- read.csv("2022_wk8_flex_stats.csv")
+wk9_22 <- read.csv("2022_wk9_flex_stats.csv")
+wk10_22 <- read.csv("2022_wk10_flex_stats.csv")
+wk11_22 <- read.csv("2022_wk11_flex_stats.csv")
+wk12_22 <- read.csv("2022_wk12_flex_stats.csv")
+wk13_22 <- read.csv("2022_wk13_flex_stats.csv")
+wk14_22 <- read.csv("2022_wk14_flex_stats.csv")
+wk15_22 <- read.csv("2022_wk15_flex_stats.csv")
+wk16_22 <- read.csv("2022_wk16_flex_stats.csv")
+wk17_22 <- read.csv("2022_wk17_flex_stats.csv")
+total_22 <- read.csv("2022_total_flex_stats.csv")
+
+glimpse(total_22)
 ```
 
-#Data Cleaning
+#Data Transformation
 ```{r}
 #separate()
 #mutate()
@@ -67,55 +86,24 @@ glimpse(total)
 #select()
 #relocate()
 #na.omit()
+total_23 <- select(total_23, c(player, fantasyPts))
+total_22 <- select(total_22, c(player, fantasyPts))
+```
 
-total <- total %>%
+```{r}
+big_23 <- rbind(wk1_23,wk2_23,wk3_23,wk4_23,wk5_23,wk6_23,wk7_23,wk8_23,wk9_23,wk10_23,wk11_23,wk12_23,wk13_23,wk14_23,wk15_23,wk16_23,wk17_23)
+big_23 <- merge(big_23, total_23, by="player", all=T, suffixes=c(".x", ".y"))
+
+big_22 <- rbind(wk1_22,wk2_22,wk3_22,wk4_22,wk5_22,wk6_22,wk7_22,wk8_22,wk9_22,wk10_22,wk11_22,wk12_22,wk13_22,wk14_22,wk15_22,wk16_22,wk17_22)
+big_22 <- merge(big_22, total_22, by="player", all=T, suffixes=c(".x", ".y"))
+```
+
+```{r}
+big_association <- rbind(big_23, big_22)
+big_association <- big_association %>% 
   filter(position=="TE") %>%
-  select(c(player, fantasyPts))
-wk1 <- wk1 %>%
-  filter(position=="TE")
-wk2 <- wk2 %>%
-  filter(position=="TE")
-wk3 <- wk3 %>%
-  filter(position=="TE")
-wk4 <- wk4 %>%
-  filter(position=="TE")
-wk5 <- wk5 %>%
-  filter(position=="TE")
-wk6 <- wk6 %>%
-  filter(position=="TE")
-wk7 <- wk7 %>%
-  filter(position=="TE")
-wk8 <- wk8 %>%
-  filter(position=="TE")
-wk9 <- wk9 %>%
-  filter(position=="TE")
-wk10 <- wk10 %>%
-  filter(position=="TE")
-wk11 <- wk11 %>%
-  filter(position=="TE")
-wk12 <- wk12 %>%
-  filter(position=="TE")
-wk13 <- wk13 %>%
-  filter(position=="TE")
-wk14 <- wk14 %>%
-  filter(position=="TE")
-wk15 <- wk15 %>%
-  filter(position=="TE")
-wk16 <- wk16 %>%
-  filter(position=="TE")
-wk17 <- wk17 %>%
-  filter(position=="TE")
-```
-
-```{r}
-
-```
-
-#Data Transformation
-```{r}
-big_association <- rbind(wk1,wk2,wk3,wk4,wk5,wk6,wk7,wk8,wk9,wk10,wk11,wk12,wk13,wk14,wk15,wk16,wk17)
-big_association <- merge(big_association, total, by="player", all=T, suffixes=c(".x", ".y"))
-big_association <- select(big_association, -c(player, team, games, position))
+  select(-c(player, team, games, position)) %>%
+  na.omit()
 big_association <- subset(big_association, recTarg>0)
 glimpse(big_association)
 ```
@@ -130,11 +118,11 @@ Calculating the correlation of each variable to both the current week's fatnasy 
 ```{r}
 cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
 cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
-cor.x.index <- which(cor.x>.1)
-cor.y.index <- which(cor.y>.1)
+cor.x.index <- which(cor.x>.1 | cor.x< (-.1))
+cor.y.index <- which(cor.y>.1 | cor.y< (-.1))
 cor.x.index <- cor.x.index[! cor.x.index %in% c(47,48,49)]
-cor.y.index <- cor.y.index[! cor.y.index %in%c(47,48,49)]
-head(cor.x, 10)
+cor.y.index <- cor.y.index[! cor.y.index %in% c(47,48,49)]
+head(cor.y, 20)
 ```
 
 Calculating the coefficient of variation for each variable over all weeks.
@@ -150,11 +138,11 @@ cv <- function(x) {
 ```{r}
 var.x <- as.matrix(round(apply(big_association[,cor.x.index], 2, cv), 3))
 var.y <- as.matrix(round(apply(big_association[,cor.y.index], 2, cv), 3))
-var.x.stable.index <- which(var.x<2)
-var.x.unstable.index <- which(var.x>2)
-var.y.stable.index <- which(var.y<2)
-var.y.unstable.index <- which(var.y>2)
-head(var.x, 10)
+var.x.stable.index <- which(var.x<20)
+var.x.unstable.index <- which(var.x>20)
+var.y.stable.index <- which(var.y<20)
+var.y.unstable.index <- which(var.y>20)
+head(var.x, 20)
 ```
 
 ```{r}
@@ -186,21 +174,22 @@ Visualizing Stability
 ```{r}
 #ggplot()
 #geom_smooth()
+theme_TE <- theme(text=element_text(family="Times New Roman"))
 ggplot(big_association, aes(x=recTd40s)) +
   geom_histogram(binwidth=sd(big_association$recTd40s)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Touchdowns >= 40 Yards (Stable)", x="Receiving TDs >= 40yds per Game", y="")
+  labs(title="Distribution of Receiving Touchdowns over 40 Yards (Stable) (TE)", x="Receiving TDs over 40yds per Game", y="")
 
-ggplot(big_association, aes(x=recRec40s)) +
-  geom_histogram(binwidth=sd(big_association$recRec40s)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Receptions >= 40 Yards (Stable)", x="Receiving Recs >= 40yds per Game", y="")
+ggplot(big_association, aes(x=recRec)) +
+  geom_histogram(binwidth=sd(big_association$recRec)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Receptions (Stable) (TE)", x="Receiving Recs per Game", y="")
       
-ggplot(big_association, aes(x=recTarg)) +
-  geom_histogram(binwidth=sd(big_association$recTarg)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Targets (Unstable)", x="Receiving Targets per Game", y="")
+ggplot(big_association, aes(x=recYds)) +
+  geom_histogram(binwidth=sd(big_association$recYds)/2, fill="darkorchid4") +
+  labs(title="Distribution of Receiving Yards (Unstable) (TE)", x="Receiving Yards per Game", y="")
 
-ggplot(big_association, aes(x=rzRecTdPct)) +
-  geom_histogram(binwidth=sd(big_association$rzRecTdPct)/2, fill="darkorchid4") +
-  labs(title="Distribution of rzRecTdPct (Unstable)", x="Receiving rzRecTdPct per Game", y="")
+ggplot(big_association, aes(x=rzRecTargPct)) +
+  geom_histogram(binwidth=sd(big_association$rzRecTargPct)/2, fill="darkorchid4") +
+  labs(title="Distribution of Redzone Target% (Unstable) (TE)", x="Receiving Redzone Target% per Game", y="")
 
 ```
 
@@ -211,7 +200,14 @@ corrplot(plot, method="color")
 
 ```{r}
 ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
-  geom_violin()
+  geom_violin(fill="darkorchid4") +
+  labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns per game", y="Fantasy Points per game")
+```
+
+```{r}
+ggplot(big_association, aes(x=factor(recTarg), y=fantasyPts.y, color=recRec)) +
+  geom_violin(fill="darkorchid4", width=4, scale="count") +
+  labs(title="Year-End Points by Receiving Targets within a single game (TE)", x="Targets per game", y="Year-End Fantasy Points")
 ```
 
 #Data Prediction
