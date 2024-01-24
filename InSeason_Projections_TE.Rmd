@@ -205,10 +205,26 @@ ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x))
 ```
 
 ```{r}
-ggplot(big_association, aes(x=factor(recTarg), y=fantasyPts.y, color=recRec)) +
-  geom_violin(fill="darkorchid4", width=4, scale="count") +
+ggplot(big_association, aes(x=factor(recTarg), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
   labs(title="Year-End Points by Receiving Targets within a single game (TE)", x="Targets per game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(rzRecTarg), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Redzone Receiving Targets within a single game (TE)", x="Redzone Targets per game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(rzRecRec), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Redzone Receiving Receptions within a single game (TE)", x="Redzone Recpetions per game", y="Year-End Fantasy Points")
 ```
+
+```{r}
+ggplot(big_association, aes(x=recYds, y=fantasyPts.y, color=recTds, alpha=.4)) +
+  geom_point() +
+  scale_color_gradient2(low="gray", mid="darkorchid", high="darkorchid4")
+  labs(title="Year-End Points by Receiving Yards within a single game (TE)", x="Receiving Yards per game", y="Year-End Fantasy Points")
+```
+
 
 #Data Prediction
 ```{r}
