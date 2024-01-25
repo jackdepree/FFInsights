@@ -35,6 +35,7 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 ```{r}
 library(dplyr)
 library(tidyverse)
+library(lsr)
 library(corrplot)
 
 wk1_23 <- read.csv("2023_wk1_flex_stats.csv")
@@ -114,7 +115,7 @@ glimpse(big_association)
 
 #Data Analysis
 
-Calculating the correlation of each variable to both the current week's fatnasy points and the year's total fantasy points.
+Calculating the correlation of each variable to both the current week's fantasy points and the year's total fantasy points.
 ```{r}
 cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
 cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
@@ -123,6 +124,22 @@ cor.y.index <- which(cor.y>.1 | cor.y< (-.1))
 cor.x.index <- cor.x.index[! cor.x.index %in% c(47,48,49)]
 cor.y.index <- cor.y.index[! cor.y.index %in% c(47,48,49)]
 head(cor.y, 20)
+```
+
+```{r}
+colnames <- c(colnames(big_association))
+cor.x <- c(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
+cor.y <- c(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
+coh.x <- c(round(apply(big_association, 2, cohensD, y=big_association$fantasyPts.x), 3))
+coh.y <- c(round(apply(big_association, 2, cohensD, y=big_association$fantasyPts.y), 3))
+comatrix <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, coh.x=coh.x, coh.y=coh.y)
+comatrix <- comatrix %>% 
+  mutate(effect.x=round(cor.x*coh.x,3)) %>%
+  mutate(effect.y=round(cor.y*coh.y,3)) %>%
+  mutate(cor.diff=round(cor.x-cor.y,3)) %>%
+  mutate(coh.diff=round(coh.x-coh.y,3)) %>%
+  mutate(diff=round(effect.x-effect.y,3))
+comatrix
 ```
 
 Calculating the coefficient of variation for each variable over all weeks.
