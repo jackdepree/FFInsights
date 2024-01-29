@@ -214,6 +214,10 @@ corrplot(plot, method = 'color', order = 'AOE', diag = FALSE)
 ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
   geom_violin(fill="darkorchid4") +
   labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns within game", y="Fantasy Points within game")
+
+ggplot(big_association, aes(x=catch, y=fantasyPts.x)) +
+  geom_point() +
+  geom_count()
 ```
 
 ```{r}
