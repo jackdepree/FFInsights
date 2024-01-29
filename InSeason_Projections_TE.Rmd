@@ -9,29 +9,29 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Within Season Projections
+# Within Season Projections Tight Ends
 
-##Contextualization
+## Contextualization
 Each week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions will be. The data will be centered around discovering three aspects: "individual ability" (stable metrics of performance and efficiency), "situation" (a combination of both opportunity and opposition), "noise reduction" (unstable metrics of luck and unfortune).  Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future# If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors#
 
-##Reasoning
+## Reasoning
 Using unstable variables as confounding variables, we can adjust the stable variables for more predictive validity. There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using the most recent weeks can be more useful than using the entire season to-date, meaning we can add weights to the most recent weeks' data to better predict the future. 
 
-##Scientiic Questions
+## Scientiic Questions
 1. Which variables are highly associated with fantasy points? (Association)
 2. Are there variables that are stable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
 3. Are there variables that are unstable (from week to week, or for the next series of weeks) for Tight Ends? (Association)
 4. Can we make composites of variables to better synthesize the data for prediction, like "individual ability," "situation," "noise reduction?" (PCA)
 5. Can we select specific past data (from the past 2, 3, 4 weeks) to better synthesize the data for prediction? (Prediction)
 
-##Methodology
+## Methodology
 1. Create a df where each week is stacked upon one another for an association test. Compare each variable with both the player's given week's points and the player's total seasonal points.
 2. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by lowest variability. Create correlations between each variable of their past and future samples, sort by highest correlation. 
 3. Create a df with each week alongside each other week, for a week-to-week association test. Create summary statistics of each variable, sort by highest variability. Create correlations between each variable of their past and future samples, sort by lowest correlation.
 4. Use cluster analysis and model making to form composites of the previously selected variables.
 5. Create multiple dfs where the past and future weeks have been averaged in varied ways using weights and recency bias to assess the most predictable weeks and their arrangements.
 
-#Data Collection
+# Data Collection
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -79,7 +79,7 @@ total_22 <- read.csv("2022_total_flex_stats.csv")
 glimpse(total_22)
 ```
 
-#Data Transformation
+# Data Transformation
 ```{r}
 #separate()
 #mutate()
@@ -113,18 +113,7 @@ glimpse(big_association)
 
 ```
 
-#Data Analysis
-
-Calculating the correlation of each variable to both the current week's fantasy points and the year's total fantasy points.
-```{r}
-cor.x <- as.matrix(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))
-cor.y <- as.matrix(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
-cor.x.index <- which(cor.x>.1 | cor.x< (-.1))
-cor.y.index <- which(cor.y>.1 | cor.y< (-.1))
-cor.x.index <- cor.x.index[! cor.x.index %in% c(47,48,49)]
-cor.y.index <- cor.y.index[! cor.y.index %in% c(47,48,49)]
-head(cor.y, 20)
-```
+# Data Analysis
 
 ```{r}
 colnames <- c(colnames(big_association))
@@ -136,10 +125,10 @@ comatrix <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, coh.x=coh.x,
 comatrix <- comatrix %>% 
   mutate(effect.x=round(cor.x*coh.x,3)) %>%
   mutate(effect.y=round(cor.y*coh.y,3)) %>%
-  mutate(cor.diff=round(cor.x-cor.y,3)) %>%
-  mutate(coh.diff=round(coh.x-coh.y,3)) %>%
-  mutate(diff=round(effect.x-effect.y,3))
-comatrix
+  mutate(cor.diff=round(cor.y-cor.x,3)) %>%
+  mutate(coh.diff=round(coh.y-coh.x,3)) %>%
+  mutate(effect.diff=round(effect.y-effect.x,3))
+arrange(comatrix, desc(cor.x))
 ```
 
 Calculating the coefficient of variation for each variable over all weeks.
@@ -163,29 +152,33 @@ head(var.x, 20)
 ```
 
 ```{r}
-modeller <- function(dat, indep, dep) {
-  indep <- colnames(dat[, indep])
-  dep <- grep(dep, colnames(dat))
-  data <- dat %>% select(c(all_of(indep), dep)) %>% na.omit()
-  intercept_only <- lm(dat[,dep] ~ 1, data=data)
-  all <- lm(dat[,dep] ~ ., data=data)
-  model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
-  summary(model)
-}
-modeller(dat=big_association,
-         indep=cor.y.index,
-         dep="fantasyPts.y")
-```
-
-```{r}
-data <- big_association %>% select(c(all_of(cor.y.index), fantasyPts.y)) %>% na.omit()
-intercept_only <- lm(fantasyPts.y ~ 1, data=data)
-all <- lm(fantasyPts.y ~ ., data=data)
-model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+data <- big_association %>% 
+  select(c(recRec, recYds, recTds, fantasyPts.x)) %>% 
+  na.omit()
+all <- lm(fantasyPts.x ~ ., data=data)
+model <- step(all, direction = "backward", trace=0)
 summary(model)
 ```
 
-#Data Visualization
+```{r}
+data <- big_association %>% 
+  select(-c(recRec, recYds, recTds)) %>% 
+  na.omit()
+all <- lm(fantasyPts.x ~ ., data=data)
+model <- step(all, direction = "backward", trace=0)
+summary(model)
+```
+
+```{r}
+data <- big_association %>% 
+  select(c(recTarg, recYds100Games, catch, rzRecTds, rushTds, fantasyPts.x)) %>% 
+  na.omit()
+all <- lm(fantasyPts.x ~ ., data=data)
+model <- step(all, direction = "backward", trace=0)
+summary(model)
+```
+
+# Data Visualization
 
 Visualizing Stability
 ```{r}
@@ -194,56 +187,77 @@ Visualizing Stability
 theme_TE <- theme(text=element_text(family="Times New Roman"))
 ggplot(big_association, aes(x=recTd40s)) +
   geom_histogram(binwidth=sd(big_association$recTd40s)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Touchdowns over 40 Yards (Stable) (TE)", x="Receiving TDs over 40yds per Game", y="")
+  labs(title="Distribution of Receiving Touchdowns over 40 Yards (Stable) (TE)", x="Receiving TDs over 40yds within Game", y="")
 
 ggplot(big_association, aes(x=recRec)) +
   geom_histogram(binwidth=sd(big_association$recRec)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Receptions (Stable) (TE)", x="Receiving Recs per Game", y="")
+  labs(title="Distribution of Receiving Receptions (Stable) (TE)", x="Receiving Recs within Game", y="")
       
 ggplot(big_association, aes(x=recYds)) +
   geom_histogram(binwidth=sd(big_association$recYds)/2, fill="darkorchid4") +
-  labs(title="Distribution of Receiving Yards (Unstable) (TE)", x="Receiving Yards per Game", y="")
+  labs(title="Distribution of Receiving Yards (Unstable) (TE)", x="Receiving Yards within Game", y="")
 
 ggplot(big_association, aes(x=rzRecTargPct)) +
   geom_histogram(binwidth=sd(big_association$rzRecTargPct)/2, fill="darkorchid4") +
-  labs(title="Distribution of Redzone Target% (Unstable) (TE)", x="Receiving Redzone Target% per Game", y="")
+  labs(title="Distribution of Redzone Target% (Unstable) (TE)", x="Receiving Redzone Target% within Game", y="")
 
 ```
 
 ```{r}
-plot <- cor(big_association[,cor.x.index])
-corrplot(plot, method="color")
+data <- big_association %>%
+  select(c(recTarg, recYds100Games, catch, rzRecTds, rushTds, fantasyPts.x))
+plot <- cor(data)
+corrplot(plot, method = 'color', order = 'AOE', diag = FALSE)
 ```
 
 ```{r}
 ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
   geom_violin(fill="darkorchid4") +
-  labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns per game", y="Fantasy Points per game")
+  labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns within game", y="Fantasy Points within game")
 ```
 
 ```{r}
 ggplot(big_association, aes(x=factor(recTarg), y=fantasyPts.y)) +
   geom_boxplot(fill="darkorchid4") +
-  labs(title="Year-End Points by Receiving Targets within a single game (TE)", x="Targets per game", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Receiving Targets within a single game (TE)", x="Targets within game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(recRec), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Receptions within a single game (TE)", x="Receptions within game", y="Year-End Fantasy Points")
 
 ggplot(big_association, aes(x=factor(rzRecTarg), y=fantasyPts.y)) +
   geom_boxplot(fill="darkorchid4") +
-  labs(title="Year-End Points by Redzone Receiving Targets within a single game (TE)", x="Redzone Targets per game", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Redzone Receiving Targets within a single game (TE)", x="Redzone Targets within game", y="Year-End Fantasy Points")
 
 ggplot(big_association, aes(x=factor(rzRecRec), y=fantasyPts.y)) +
   geom_boxplot(fill="darkorchid4") +
-  labs(title="Year-End Points by Redzone Receiving Receptions within a single game (TE)", x="Redzone Recpetions per game", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Redzone Receptions within a single game (TE)", x="Redzone Recpetions within game", y="Year-End Fantasy Points")
 ```
 
 ```{r}
-ggplot(big_association, aes(x=recYds, y=fantasyPts.y, color=recTds, alpha=.4)) +
+ggplot(big_association, aes(x=recYds, y=fantasyPts.y, size=recTds, alpha=.4)) +
   geom_point() +
-  scale_color_gradient2(low="gray", mid="darkorchid", high="darkorchid4")
+  scale_size(range=c(1,3)) +
   labs(title="Year-End Points by Receiving Yards within a single game (TE)", x="Receiving Yards per game", y="Year-End Fantasy Points")
 ```
 
 
 #Data Prediction
-```{r}
 
+```{r}
+data <- big_association %>% 
+  select(-c(fantasyPts.x)) %>% 
+  na.omit()
+all <- lm(fantasyPts.y ~ ., data=data)
+model <- step(all, direction = "backward", trace=0)
+summary(model)
+```
+
+```{r}
+data <- big_association %>% 
+  select(c(recRec, recYds, recTds, fantasyPts.y)) %>% 
+  na.omit()
+all <- lm(fantasyPts.y ~ ., data=data)
+model <- step(all, direction = "backward", trace=0)
+summary(model)
 ```

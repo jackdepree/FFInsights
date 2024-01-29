@@ -9,21 +9,21 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-#Title of Project
+# Title of Project
 
-##Contextualization
+## Contextualization
 ---
 
-##Reasoning
+## Reasoning
 ---
 
-##Scientiic Questions
+## Scientiic Questions
 ---
 
-##Methodology
+## Methodology
 ---
 
-Data Collection
+# Data Collection
 ```{r}
 library(dplyr)
 library(tidyverse)
@@ -32,7 +32,7 @@ library(tidyverse)
 
 ```
 
-#Data Cleaning
+# Data Cleaning
 ```{r}
 #separate()
 #mutate()
@@ -47,7 +47,7 @@ library(tidyverse)
 
 ```
 
-#Data Transformation
+# Data Transformation
 ```{r}
 #merge()
 #rbind()
@@ -58,7 +58,7 @@ library(tidyverse)
 
 ```
 
-#Data Analysis
+# Data Analysis
 ```{r}
 #summary()
 #cor()
@@ -70,10 +70,18 @@ library(tidyverse)
 ```
 
 ```{r}
-
+modeller <- function(dat, indep, dep) {
+  indep <- colnames(dat[, indep])
+  dep <- grep(dep, colnames(dat))
+  data <- dat %>% select(c(all_of(indep), dep)) %>% na.omit()
+  intercept_only <- lm(dat[,dep] ~ 1, data=data)
+  all <- lm(dat[,dep] ~ ., data=data)
+  model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+  summary(model)
+}
 ```
 
-#Data Visualization
+# Data Visualization
 ```{r}
 #ggplot()
 #geom_smooth()
@@ -84,7 +92,7 @@ library(tidyverse)
 
 ```
 
-#Data Prediction
+# Data Prediction
 ```{r}
 
 ```
