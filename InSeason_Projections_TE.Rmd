@@ -79,6 +79,11 @@ total_22 <- read.csv("2022_total_flex_stats.csv")
 glimpse(total_22)
 ```
 
+# Data Cleaning
+```{r}
+
+```
+
 # Data Transformation
 ```{r}
 #separate()
@@ -109,8 +114,63 @@ big_association <- subset(big_association, recTarg>0)
 glimpse(big_association)
 ```
 
+Pairing adjacent weeks and respective players' stats are averaged
 ```{r}
+weeks_pair1_23 <- rbind(wk1_23, wk2_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair2_23 <- rbind(wk2_23, wk3_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair3_23 <- rbind(wk3_23, wk4_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair4_23 <- rbind(wk4_23, wk5_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair5_23 <- rbind(wk5_23, wk6_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair6_23 <- rbind(wk6_23, wk7_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair7_23 <- rbind(wk7_23, wk8_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair8_23 <- rbind(wk8_23, wk9_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair9_23 <- rbind(wk9_23, wk10_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair10_23 <- rbind(wk10_23, wk11_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair11_23 <- rbind(wk11_23, wk12_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair12_23 <- rbind(wk12_23, wk13_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair13_23 <- rbind(wk13_23, wk14_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair14_23 <- rbind(wk14_23, wk15_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair15_23 <- rbind(wk15_23, wk16_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+weeks_pair16_23 <- rbind(wk16_23, wk17_23) %>%
+  group_by(player) %>%
+  summarise(across(.cols=-c(team, position), .fns=mean))
+```
 
+```{r}
+pairs_23 <- rbind(weeks_pair1_23, weeks_pair2_23, weeks_pair3_23, weeks_pair4_23, weeks_pair5_23, weeks_pair6_23, weeks_pair7_23, weeks_pair8_23,
+                  weeks_pair9_23, weeks_pair10_23, weeks_pair11_23, weeks_pair12_23, weeks_pair13_23, weeks_pair14_23, weeks_pair15_23,
+                  weeks_pair16_23)
+glimpse(pairs_23)
 ```
 
 # Data Analysis
