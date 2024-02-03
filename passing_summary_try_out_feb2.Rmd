@@ -116,67 +116,34 @@ median(passing_12_22$yards.x[passing_12_22$position.x == "QB"], na.rm=TRUE)
 median(passing_12_22$yards.x[passing_12_22$position.x != "QB"], na.rm=TRUE)
 ```
 
-Average If data.frame Test
+Average If data.frame
+
+Make a list of the filtered columns of passing_12_22. The make a loop that goes through the list of columns, then makes a new list of the associated average.if.predictions
 
 ``` {r}
-zscores <- c(2.5, 2, 1.5, 1, .5, 0, -.5, -1, -1.5, -2, -2.5)
-zpercentiles <- c(.9938, .9772, .9332, .8413, .6915, .5, .3085, .1587, .0668, .0228, .0062)
 
-z.score <- data.frame(zscores, zpercentiles)
-z.score
-```
-
-```{r}
-percentile.1st <- function() {
-  yards.y <- passing_12_22$yards.y
+yards.y <- passing_12_22$yards.y
   variables.pass <- passing_12_22[5:42]
-  average.if.1st <- data.frame(tier.1st=numeric())
-  
+  average.if <- data.frame(average_yards=numeric(), stringsAsFactors = FALSE)
   for (i in variables.pass) {
-    averages.1st <- mean(yards.y[i >= quantile(i, zpercentiles[10], na.rm=TRUE) & i <= quantile(i, zpercentiles[9], na.rm=TRUE)], na.rm=TRUE)
-    average.if.1st[nrow(average.if.1st)+1,] <- averages.1st
+    averages.05 <- mean(yards.y[i >= quantile(i, .05, na.rm=TRUE)], na.rm=TRUE)
+    average.if[nrow(average.if)+1,] <- averages.05
   }
-return(data.frame(average.if.1st))
+return(average.if)
 }
-percentile.1st()
-print(average.if.1st)
+percentile.05
 
-```
-
-```{r}
-percentile.2nd <- function() {
-  yards.y <- passing_12_22$yards.y
-  variables.pass <- passing_12_22[5:42]
-  average.if.2nd <- data.frame(tier.2nd=numeric())
-  
-  for (i in variables.pass) {
-    averages.2nd <- mean(yards.y[i >= quantile(i, zpercentiles[9], na.rm=TRUE) & i <= quantile(i, zpercentiles[8], na.rm=TRUE)], na.rm=TRUE)
-    average.if.2nd[nrow(average.if.2nd)+1,] <- averages.2nd
-  }
-print(average.if.2nd)
-}
-percentile.2nd()
 
 
 ```
-
-
-```{r}
-percentile.1st.tier <- c(percentile.1st())
-percentile.2nd.tier <- c(percentile.2nd())
-newlist <- cbind(percentile.1st.tier, percentile.2nd.tier)
-newlist
-```
-
-
 
 Test
 
 ```{r}
 yards.y <- passing_12_22$yards.y
 print("this is loop")
-zpercentiles <- c(.9938, .9772, .9332, .8413, .6915, .5, .3085, .1587, .0668, .0228, .0062)
-for (index in zpercentiles) {
+percentiles <- c(.05, .1, .2, .3, .4, .5, .6, .7, .8, .9, .95)
+for (index in percentiles) {
     averages <- mean(yards.y[passing_12_22$attempts.x >= quantile(passing_12_22$attempts.x, index, na.rm=TRUE)], na.rm=TRUE)
 print(averages)
 }

@@ -12,7 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
-dimnames(pff_passing_summary_2012)
+library(readr)
+numbers <- 1:83
+column.names <- names(passing_12_22)
+column.index <- data.frame(numbers, column.names)
+column.index
+
 ```
 
 
@@ -48,7 +53,8 @@ passing_12_22
 
 **Analysis
 ```{r}
-
+install.packages(corrplot)
+library(corrplot)
 passing_12_22 <- as.data.frame(passing_12_22)
 m <- cor(passing_12_22[,c(5:12,46:53)], use='complete.obs')
 corrplot(m, method='color', order='hclust', type='lower')
@@ -57,10 +63,25 @@ corrplot(m, method='color', order='hclust', type='lower')
 # how to make it so that only '.x' correlates to only '.y' and so that '.x' does not correlate with itself?
 
 ```
+Average If data.frame
+``` {r}
+percentiles <- c(.05, .1, .2, .3, .4, .5, .6, .7, .8, .9, .95)
+variables1 <- names(pass_12)
+#average.if <- data.frame
 
+attempts.x <- passing_12_22$attempts.x
+yards.y <- passing_12_22$yards.y
 
+for (index in percentiles) {
+  averages <- mean(yards.y[attempts.x >= quantile(attempts.x, index, na.rm=TRUE)], na.rm=TRUE)
+  print(averages)
+}
+  
 
+#attempts.to.yards <- function(list1,list2) {
+  #for i in list1:}
 
+```
 
 
 
