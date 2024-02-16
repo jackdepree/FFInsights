@@ -534,13 +534,25 @@ ggplot(big_association, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
   geom_point() +
   scale_size(range=c(1,3)) +
   geom_smooth(method="loess") +
-  labs(title="Year-End Points by Fatnasy Points within a game (TE)", x="Fantasy Points within a game", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Fantasy Points within a game (TE)", x="Fantasy Points within a game", y="Year-End Fantasy Points")
 
 ggplot(big_association, aes(fantasyPts.x, fill="darkorchid4")) +
   geom_histogram() +
   geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1) +
   labs(title="Fantasy Points within a Game Distribution (TE)", x="Fantasy Points within a game", y="", fill="")
+```
 
+```{r}
+ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point() +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess") +
+  labs(title="Year-End Points by Fantasy Points within Consecutive Games (TE)", x="Fantasy Points within consecutive games", y="Year-End Fantasy Points")
+
+ggplot(big_pairs, aes(fantasyPts.x, fill="darkorchid4")) +
+  geom_histogram() +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1) +
+  labs(title="Fantasy Points within Consecutive Games Distribution (TE)", x="Fantasy Points within consecutive games", y="", fill="")
 ```
 
 ```{r}
@@ -584,20 +596,20 @@ plot(model)
 ggplot(big_pairs, aes(x=recTarg, y=fantasyPts.y)) +
   geom_smooth(data=subset(big_pairs, recTds<.5), method="loess", se=F, color="darkorchid2", linewidth=1.25) +
   geom_smooth(data=subset(big_pairs, recTds>.5), method="loess", se=F, color="darkorchid4", linewidth=1.25) +
-  labs(title="Year-End Points by Receiving Targets consecutive games (TE)", x="Avg Targets in consecutive games", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Receiving Targets consecutive games (TE)", x="Avg Targets in consecutive games (0.5<)TDs(>0.5)", y="Year-End Fantasy Points")
 
 ggplot(big_pairs, aes(x=recRec, y=fantasyPts.y)) +
   geom_smooth(data=subset(big_pairs, recTds<.5), method="loess", se=F, color="darkorchid2", linewidth=1.25) +
   geom_smooth(data=subset(big_pairs, recTds>.5), method="loess", se=F, color="darkorchid4", linewidth=1.25) +
-  labs(title="Year-End Points by Receptions consecutive games (TE)", x="Avg Receptions in consecutive games", y="Year-End Fantasy Points")
+  labs(title="Year-End Points by Receptions consecutive games (TE)", x="Avg Receptions in consecutive games (0.5<)TDs(>0.5)", y="Year-End Fantasy Points")
 ```
 
 ```{r}
-ggplot(big_pairs, aes(x=factor(recTds), y=fantasyPts.y)) +
+ggplot(subset(big_pairs, recTds<2), aes(x=factor(recTds), y=fantasyPts.y)) +
   geom_violin(fill="darkorchid4", width=1) +
   labs(title="Receiving Tds and Fantasy Points in consecutive games (TE)", x="Avg Receiving Touchdowns in consecutive games", y="Year-End Fantsy Points")
 
-ggplot(big_pairs, aes(x=factor(recTds), y=fantasyPts.y)) +
+ggplot(subset(big_pairs, recTds<2), aes(x=factor(recTds), y=fantasyPts.y)) +
   geom_violin(fill="darkorchid4", scale="count", width=2) +
   labs(title="Receiving Tds and Fantasy Points in consecutive games (TE)", x="Avg Receiving Touchdowns in consecutive games", y="Year-End Fantsy Points")
 ```
