@@ -28,9 +28,10 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 4. Are there models that are more predictive than others, given different subsets of weekly data?
 
 ## Methodology
-1. Collect, assign, and transform data. Compose dataframes to where each record is a player's output in a given subset of weeks. The dataframe will have redundent players but no redundent records.
+1. Collect, assign, and transform data. Compose dataframes to where each record is a player's output in a given subset of weeks. The dataframe will have redundant players but no redundent records.
 2. Perform a PCA analysis. Calculate the contribution of each variable in the principal components that account for more than 80% of the covariance in the data. 
 3. Use visualization tools and summary statistics to show how the variables change over different subsets of weeks.
+4. Use regression modeling, stepwise reduction and anova tools to compare variables and models to best predict the future based on different subsets of weeks.
 ***
 
 # Data Collection
@@ -679,12 +680,52 @@ cv <- function(x) {           # Coefficient of Variation, a relative measure of 
 ```
 
 ```{r echo=FALSE}
+mode <- function(x) { #mode function
+   x <- na.omit(x)
+   u <- unique(x)
+   mode <- u[which.max(tabulate(match(x, u)))] #find the most common record in the variable
+   return(mode)
+}
+```
+
+```{r echo=FALSE}
+skew <- function(x) { #Pearson's mode skewness 
+  mean <- mean(x)
+  mode <- mode(x)
+  sd <- sd(x)
+  skew <- (mean-mode)/sd
+  return(skew)
+}
+```
+
+```{r echo=FALSE}
 colnames <- c(colnames(big_association))
 cor.x <- c(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given week's points
 cor.y <- c(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given year's points
 varco <- c(round(apply(big_association, 2, cv), 3)) #coef of variation for each variable
-comatrix <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, varco=varco)
-arrange(comatrix, desc(cor.y))
+skew <- c(round(apply(big_association, 2, skew), 3)) #skew measure for each variable
+comatrix1 <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, varco=varco, skew=skew) %>% arrange(desc(cor.y))
+comatrix1
+```
+
+```{r echo=FALSE}
+colnames <- c(colnames(big_pairs))
+cor.x <- c(round(cor(big_pairs, big_pairs$fantasyPts.x, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given week's points
+cor.y <- c(round(cor(big_pairs, big_pairs$fantasyPts.y, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given year's points
+varco <- c(round(apply(big_pairs, 2, cv), 3)) #coef of variation for each variable
+skew <- c(round(apply(big_pairs, 2, skew), 3)) #skew measure for each variable
+comatrix2 <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, varco=varco, skew=skew) %>% arrange(desc(cor.y))
+comatrix2
+```
+
+```{r echo=FALSE}
+colnames <- c(colnames(big_trios))
+cor.x <- c(round(cor(big_trios, big_trios$fantasyPts.x, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given week's points
+cor.y <- c(round(cor(big_trios, big_trios$fantasyPts.y, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given year's points
+varco <- c(round(apply(big_trios, 2, cv), 3)) #coef of variation for each variable
+skew <- c(round(apply(big_trios, 2, skew), 3)) #skew measure for each variable
+comatrix3 <- data.frame(colnames=colnames, cor.x=cor.x, cor.y=cor.y, varco=varco, skew=skew) %>% arrange(desc(cor.y))
+comatrix3
 ```
 
 ```{r echo=FALSE}
@@ -694,7 +735,7 @@ loadings <- arrange(round(data.frame(pca$rotation)[1:4], 3), desc(PC1)) #show th
 eigenvalues <- pca$sdev^2 #extract the eigenvalues
 contribution <- arrange(round((loadings^2)*eigenvalues, 3), desc(PC1)) #show the contributions of each variable towards the given Principal Component
 contribution <- round(mutate(contribution, sum=PC1*0.3801 + PC2*0.3031 + PC3*0.1089 + PC4*0.0626), 3) #add a summation column to show the weight of each variable in the first four PCs
-contribution
+#contribution
 ```
 
 ```{r echo=FALSE}
@@ -702,6 +743,7 @@ df <- select(big_association, -c(rushYds100Games, rushTd40s)) #create a data fra
 cor_matrix <- data.frame(cor(df)) #convert df into correlation matrix
 summed_cor <- data.frame(sum=rowSums(cor_matrix)) #sum all rows
 arrange(round(summed_cor, 3), desc(sum))
+#summed_cor
 ```
 
 ```{r echo=FALSE}
