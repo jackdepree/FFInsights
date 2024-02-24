@@ -100,7 +100,7 @@ modeller <- function(dat, indep, dep) {
 
 ```
 
-# Data Prediction
+# Regression Analysis
 ```{r}
 
 ```
