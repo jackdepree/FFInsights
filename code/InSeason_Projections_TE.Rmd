@@ -19,7 +19,7 @@ knitr::opts_chunk$set(echo = TRUE)
 Each NFL week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions. Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future just as well as a subset of more data would? If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors?
 
 ## Reasoning
-Using unstable variables as confounding variables, we can adjust the stable variables for more predictive validity. We can also ignore variables that are unstable even though the community would still factor them into their predictions (incorrectly). There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using the most recent weeks can be more useful than using the entire season to-date.
+We can ignore variables that are unstable even though the community would still factor them into their predictions (incorrectly). There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using different sample sizes (set of weeks) will influence the predictive power of each variable.
 
 ## Scientiic Questions
 1. Which variables are highly associated with fantasy points? (Feature Association)
@@ -28,7 +28,7 @@ Using unstable variables as confounding variables, we can adjust the stable vari
 4. Are there models that are more predictive than others, given different subsets of weekly data?
 
 ## Methodology
-1. Collect, assign, and transform data. Compose dataframes to where each record is a player's output in a given subset of weeks. The dataframe will have redundant players but no redundent records. This methodology has an advantage in creating more samples, but limited in the fact that each sample is not explicitly far away from the year end fantasy points in terms of time.
+1. Collect, assign, and transform data. Compose dataframes to where each record is a player's output in a given subset of weeks. The dataframe will have redundant players but no redundant records. This methodology has an advantage in creating more samples, but limited in the fact that each sample is not explicitly far away from the year end fantasy points in terms of time.
 2. Perform a PCA analysis. Calculate the contribution of each variable in the principal components that account for more than 80% of the covariance in the data. The advantage is that the PCA will uncover which variables can be reduced or removed, but it is limited because the PCA does not know that we basically only care about covariance with fantasy points.
 3. Use visualization tools and summary statistics to show how the variables change over different subsets of weeks. Of course, there is the dimensional curse and it is impossible to make enough plots to visualize all the variables in every condition.
 4. Use regression modeling, stepwise reduction and anova tools to compare variables and models to best predict the future based on different subsets of weeks.
@@ -672,7 +672,31 @@ big_half <- rbind(half_23, half_22, half_21) %>%
 ***
 
 ```{r echo=FALSE}
-cv <- function(x) {           # Coefficient of Variation, a relative measure of variation dependent upon a variable's average
+pca <- prcomp(big_association) #perform PCA on weekly data
+summary <- summary(pca) #shows the cumulative proportion of each Principal Component (PC4 > 0.85)
+loadings <- arrange(round(data.frame(pca$rotation)[1:4], 3), desc(PC1)) #show the loadings of the first four Principal Components (PCs)
+eigenvalues <- pca$sdev^2 #extract the eigenvalues
+contribution <- arrange(round((loadings^2)*eigenvalues, 3), desc(PC1)) #show the contributions of each variable towards the given Principal Component
+contribution <- round(mutate(contribution, sum=PC1*0.3801 + PC2*0.3031 + PC3*0.1089 + PC4*0.0626), 3) #add a summation column to show the weight of each variable in the first four PCs
+#contribution
+```
+
+These first four principal components account for more than 85% of the covariance in the data (single-week sample). The numbers for each variable describe the contribution towards each principal component, meaning that those variables explain a substantial amount of the rest of the data's variation.
+
+The PCA reports that year-end fantasy points are the most responsible for explaining covariance in the data. Redzone receiving touchdowns percentage is the second most responsible, followed by other percentage based variables and receiving yards. These percentage based variables attempt to explain where a TE get targeted on the field: with a high percentage, then their receptions or targets were mostly in the redzone or endzone.
+
+```{r echo=FALSE}
+df <- select(big_association, -c(rushYds100Games, rushTd40s)) #create a data frame that excludes two variables containing NA values
+cor_matrix <- data.frame(cor(df)) #convert df into correlation matrix
+summed_cor <- data.frame(sum=rowSums(cor_matrix)) #sum all rows
+summed_cor <- arrange(round(summed_cor, 3), desc(sum))
+summed_cor
+```
+
+This is extremely similar to the PCA. This table shows the sum of all correlations within the correlation matrix. Each number for each variable represents the gross correlation it has with all other variables. The difference between this and the PCA is that the PCA uses covariance instead of correlation, covariance is dependent upon units whereas correlation is a unitless and scaled metric.
+
+```{r echo=FALSE}
+cv <- function(x) {           #Coefficient of Variation, a relative measure of variation dependent upon a variable's average
   m <- mean(x)
   sd <- sd(x)
   cv <- sd/m
@@ -699,7 +723,7 @@ skews <- function(x) { #Pearson's mode skewness
 }
 ```
 
-```{r echo=FALSE}
+```{r echo=FALSE, warning=FALSE}
 colnames <- c(colnames(big_association))
 cor.x <- c(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given week's points
 varco <- c(round(apply(big_association, 2, cv), 3)) #coef of variation for each variable
@@ -742,7 +766,7 @@ comatrix4 <- data.frame(colnames=colnames, cor.x=cor.x, varco=varco, skew=skew) 
 #comatrix4
 ```
 
-Here are the variables most associated with the given condition's fantasy points
+Here are the variables most positively associated with the average fantasy points per set of weeks:
 
 One-Week | Two-Weeks | Three-Weeks | First-Half
 ---------|-----------|-------------|-----------
@@ -754,26 +778,19 @@ rzRecTds | Targets   | Tds         | rzRec
 As the samples use more and more weeks, the highest associated variables with fantasy points become more and more stable and predictive.
 
 ```{r echo=FALSE}
-pca <- prcomp(big_association) #perform PCA on weekly data
-summary <- summary(pca) #shows the cumulative proportion of each Principal Component (PC4 > 0.85)
-loadings <- arrange(round(data.frame(pca$rotation)[1:4], 3), desc(PC1)) #show the loadings of the first four Principal Components (PCs)
-eigenvalues <- pca$sdev^2 #extract the eigenvalues
-contribution <- arrange(round((loadings^2)*eigenvalues, 3), desc(PC1)) #show the contributions of each variable towards the given Principal Component
-contribution <- round(mutate(contribution, sum=PC1*0.3801 + PC2*0.3031 + PC3*0.1089 + PC4*0.0626), 3) #add a summation column to show the weight of each variable in the first four PCs
-contribution
+colnames <- c(colnames(big_association))
+one <- c(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
+two <- c(round(cor(big_pairs, big_pairs$fantasyPts.y, use="complete.obs"), 3))
+three <- c(round(cor(big_trios, big_trios$fantasyPts.y, use="complete.obs"), 3))
+half <- c(round(cor(big_half, big_half$fantasyPts.y, use="complete.obs"), 3))
+comatrix5 <- data.frame(colnames=colnames, One=one, Two=two, Three=three, First_Half=half) %>% 
+  mutate(average=(One+Two+Three+First_Half)/4) %>% 
+  arrange(desc(average)) %>%
+  filter(colnames!='fantasyPts.y')
+#comatrix5
 ```
 
-These first four principal components account for more than 85% of the covariance in the data (single-week sample). The numbers for each variable describe the contribution towards each principal component, meaning that those variables explain a substantial amount of the rest of the data's variation.
-
-The PCA reports that year-end fantasy points are the most responsible for explaining covariance in the data. Redzone receiving touchdowns percentage is the second most responsible, followed by other percentage based variables and receiving yards. These percentage based variables attempt to explain where a TE get targeted on the field: with a high percentage, then their receptions or targets were mostly in the redzone or endzone.
-
-```{r echo=FALSE}
-df <- select(big_association, -c(rushYds100Games, rushTd40s)) #create a data frame that excludes two variables containing NA values
-cor_matrix <- data.frame(cor(df)) #convert df into correlation matrix
-summed_cor <- data.frame(sum=rowSums(cor_matrix)) #sum all rows
-summed_cor <- arrange(round(summed_cor, 3), desc(sum))
-summed_cor
-```
+This is a table that shows the association between each variable and the year-end fantasy points. The most intuitive pattern is the increase in correlation as the sample size increases. Some variables actually decrease (targets, receptions, ADOT, drops); even though the variable is stable, the sample size becomes so large (first half of season) that the variables that contribute more to actual fantasy points become more predictive (yards, touchdowns).
 
 ***
 
@@ -792,83 +809,6 @@ corrplot(plot, method = 'color', order = 'AOE', diag = FALSE) #creating a correl
 ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
   geom_violin(fill="darkorchid4") +
   labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns within game", y="Fantasy Points within game")
-
-ggplot(big_association, aes(x=catch, y=fantasyPts.x)) +
-  geom_smooth(data=subset(big_association, recTarg>1), method="loess", se=F, color="violet", linewidth=1.25) +
-  geom_smooth(data=subset(big_association, recTarg>3), method="loess", se=F, color="darkorchid2", linewidth=1.25) +
-  geom_smooth(data=subset(big_association, recTarg>5), method="loess", se=F, color="darkorchid3", linewidth=1.25) +
-  geom_smooth(data=subset(big_association, recTarg>7), method="loess", se=F, color="darkorchid4", linewidth=1.25) +
-  labs(title="Catch Percentage and Fantasy Points (TE)", x="Catch Percentage within a game for varying Targets>(1,3,5,7)", y="Fantasy Points within a game")
-```
-
-```{r echo=FALSE}
-ggplot(big_association, aes(fantasyPts.x, fill="darkorchid4")) +
-  geom_histogram() +
-  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
-  labs(title="Fantasy Points within a Game Distribution (TE)", x="Fantasy Points within a game", y="", fill="")
-
-ggplot(big_pairs, aes(fantasyPts.x, fill="darkorchid4")) +
-  geom_histogram() +
-  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
-  labs(title="Fantasy Points within Consecutive Games Distribution (TE)", x="Average Fantasy Points within consecutive games", y="", fill="")
-
-ggplot(big_trios, aes(fantasyPts.x, fill="darkorchid4")) +
-  geom_histogram() +
-  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
-  labs(title="Fantasy Points within Triplet of Games Distribution (TE)", x="Average Fantasy Points within a Triplet of games", y="", fill="")
-
-ggplot(big_half, aes(fantasyPts.x, fill="darkorchid4")) +
-  geom_histogram() +
-  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
-  labs(title="Fantasy Points in First Half of Season Distribution (TE)", x="Average Fantasy Points in First Half of season", y="", fill="")
-```
-
-```{r echo=FALSE}
-ggplot(big_association, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.33)) +
-  geom_point() +
-  scale_size(range=c(1,3)) +
-  geom_smooth(method="loess") +
-  labs(title="Year-End Points by Fantasy Points within a game (TE)", x="Fantasy Points within a game", y="Year-End Fantasy Points")
-
-ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.33)) +
-  geom_point() +
-  scale_size(range=c(1,3)) +
-  geom_smooth(method="loess") +
-  labs(title="Year-End Points by Fantasy Points within Consecutive Games (TE)", x="Average Fantasy Points within consecutive games", y="Year-End Fantasy Points")
-
-ggplot(big_trios, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.33)) +
-  geom_point() +
-  scale_size(range=c(1,3)) +
-  geom_smooth(method="loess") +
-  labs(title="Year-End Points by Fantasy Points within a Triplet of Games (TE)", x="Average Fantasy Points within a Triplet of games", y="Year-End Fantasy Points")
-
-ggplot(big_half, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.33)) +
-  geom_point() +
-  scale_size(range=c(1,3)) +
-  geom_smooth(method="loess") +
-  labs(title="Year-End Points by Fantasy Points in First Half of Season (TE)", x="Average Fantasy Points in First Half of season", y="Year-End Fantasy Points")
-```
-
-```{r echo=FALSE}
-ggplot(big_pairs, aes(x=recTarg, y=fantasyPts.y)) +
-  geom_smooth(data=subset(big_pairs, recTds<.5), method="loess", se=F, color="darkorchid2", linewidth=1.25) +
-  geom_smooth(data=subset(big_pairs, recTds>.5), method="loess", se=F, color="darkorchid4", linewidth=1.25) +
-  labs(title="Year-End Points by Receiving Targets consecutive games (TE)", x="Avg Targets in consecutive games (0.5<)TDs(>0.5)", y="Year-End Fantasy Points")
-
-ggplot(big_pairs, aes(x=recRec, y=fantasyPts.y)) +
-  geom_smooth(data=subset(big_pairs, recTds<.5), method="loess", se=F, color="darkorchid2", linewidth=1.25) +
-  geom_smooth(data=subset(big_pairs, recTds>.5), method="loess", se=F, color="darkorchid4", linewidth=1.25) +
-  labs(title="Year-End Points by Receptions consecutive games (TE)", x="Avg Receptions in consecutive games (0.5<)TDs(>0.5)", y="Year-End Fantasy Points")
-```
-
-```{r echo=FALSE}
-ggplot(subset(big_pairs, recTds<2), aes(x=factor(recTds), y=fantasyPts.y)) +
-  geom_violin(fill="darkorchid4", width=1) +
-  labs(title="Receiving Tds and Fantasy Points in consecutive games (TE)", x="Avg Receiving Touchdowns in consecutive games", y="Year-End Fantsy Points")
-
-ggplot(subset(big_pairs, recTds<2), aes(x=factor(recTds), y=fantasyPts.y)) +
-  geom_violin(fill="darkorchid4", scale="count", width=2) +
-  labs(title="Receiving Tds and Fantasy Points in consecutive games (TE)", x="Avg Receiving Touchdowns in consecutive games", y="Year-End Fantsy Points")
 ```
 
 ```{r echo=FALSE}
@@ -887,6 +827,85 @@ ggplot(big_association, aes(x=factor(rzRecTarg), y=fantasyPts.y)) +
 ggplot(big_association, aes(x=factor(rzRecRec), y=fantasyPts.y)) +
   geom_boxplot(fill="darkorchid4") +
   labs(title="Year-End Points by Redzone Receptions within a single game (TE)", x="Redzone Recpetions within game", y="Year-End Fantasy Points")
+```
+
+```{r echo=FALSE}
+ggplot(big_association, aes(fantasyPts.x)) +
+  geom_histogram(fill="violet") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within a Game Distribution (TE)", x="Fantasy Points within a game", y="", fill="")
+
+ggplot(big_pairs, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid2") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within Consecutive Games Distribution (TE)", x="Average Fantasy Points within consecutive games", y="", fill="")
+
+ggplot(big_trios, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid3") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within Triplet of Games Distribution (TE)", x="Average Fantasy Points within a Triplet of games", y="", fill="")
+
+ggplot(big_half, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid4") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points in First Half of Season Distribution (TE)", x="Average Fantasy Points in First Half of season", y="", fill="")
+```
+
+These are distribution plots of fantasy points over the different sample sizes. The dotted line is set at 7.5 fantasy points, it acts as a reference point and represents the points at which the last starting TE (12 team) would average over a given year.
+
+```{r echo=FALSE}
+ggplot(big_association, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="violet") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess") +
+  labs(title="Year-End Points by Fantasy Points within a game (TE)", x="Fantasy Points within a game", y="Year-End Fantasy Points")
+
+ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="darkorchid2") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess") +
+  labs(title="Year-End Points by Fantasy Points within Consecutive Games (TE)", x="Average Fantasy Points within consecutive games", y="Year-End Fantasy Points")
+
+ggplot(big_trios, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="darkorchid3") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess") +
+  labs(title="Year-End Points by Fantasy Points within a Triplet of Games (TE)", x="Average Fantasy Points within a Triplet of games", y="Year-End Fantasy Points")
+
+ggplot(big_half, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=1)) +
+  geom_point(color="darkorchid4") +
+  guides(alpha="none") + 
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess") +
+  labs(title="Year-End Points by Fantasy Points in First Half of Season (TE)", x="Average Fantasy Points in First Half of season", y="Year-End Fantasy Points")
+```
+
+These plots are similar to the last, but also show the year-end fantasy points. As the sample size increases, the rolling average function line becomes more linear. There also seems to be no threshold (fantasy points) that characterizes a gross increase in predictive power.
+
+```{r echo=FALSE}
+ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y)) +
+  geom_smooth(data=big_association, method="loess", se=F, color="violet", linewidth=1.25) +
+  geom_smooth(data=big_pairs, method="loess", se=F, color="darkorchid2", linewidth=1.25) +
+  geom_smooth(data=big_trios, method="loess", se=F, color="darkorchid3", linewidth=1.25) +
+  geom_smooth(data=big_half, method="loess", se=F, color="darkorchid4", linewidth=1.25) +
+  labs(title="Year-End Points by Subsets of Combined games (TE)", x="Avg Fantasy Points in set of games (1,2,3,half)", y="Year-End Fantasy Points")
+```
+
+This plots the last four function lines together. It is clear that with increasing sample size there is also an increase in predictive power, however the increase seems to get progressively smaller.
+
+```{r echo=FALSE}
+
+```
+
+```{r echo=FALSE}
+
 ```
 
 ```{r echo=FALSE}
@@ -915,8 +934,12 @@ data <- pivot_longer(data, cols=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHal
 data$subset <- factor(data$subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf")) #assigning levels to the subsets to plot them in order
 #data
 ggplot(data) +
-  geom_col(aes(x=subset, y=correlation, fill=variable))
+  geom_col(aes(x=subset, y=correlation, fill=variable)) +
+  labs(title="Correlation of Fantasy Points with Year-End Points (TE)", x="", y="Collective Correlation with Year-End Points")
 ```
+
+Of course, the cumulative correlation and individual correlations increase with sample size. However, the largest change in predictive power is with receiving touchdowns. This because touchdowns are infrequent and unpredictable in any single week, but are more frequent and more predictable over the course of multiple weeks.
+
 ***
 
 # Regression Analysis
@@ -924,35 +947,17 @@ ggplot(data) +
 ***
 
 ```{r echo=FALSE}
-model <- lm(fantasyPts.x ~ recRec + recYds + recTds, data=big_association)
-#summary(model)
+pca_variables <- c('fantasyPts.y', 'rzRecTdPct', 'ezRecTdPct', 'rzRecRecPct', 'rzRecTargPct', "recYds", 'ezRecRecPct', 'ezRecTargPct', 'fantasyPts.x', 'depth')
+sum_cor_variables <- c('fantasyPts.x', 'recTds', 'rzRecTds', 'rzRecTdPct', 'ptsPerTouch', 'rzRecRec', 'ezRecTds', 'rzRecTarg', 'ezRecTdPct', 'ptsPerSnap')
+one_cor_variables <- c(comatrix1$colnames[1:10]) #intra-week points correlation: correlations with the given week's points
+two_cor_variables <- c(comatrix2$colnames[1:10]) #intra-week points correlation
+three_cor_variables <- c(comatrix3$colnames[1:10]) #intra-week points correlation
+half_cor_variables <- c(comatrix4$colnames[1:10]) #intra-week points correlation
+year_end_cor_variables <- c(comatrix5$colnames[1:10]) #inter-week points correlation: correlation with the year-end points
 ```
 
 ```{r echo=FALSE}
-data <- big_association %>% 
-  select(-c(recRec, recYds, recTds, fantasyPts.y)) %>% 
-  na.omit() #creating a dataset to make a model
-all <- lm(fantasyPts.x ~ ., data=data) #making a model with every variable in the given dataset
-model <- step(all, direction = "backward", trace=0) #using a backwards stepwise process to simplify the given model
-#summary(model)
-```
 
-```{r echo=FALSE}
-data <- big_association %>% 
-  select(c(recTarg, catch, rzRecTarg, rzRecTdPct, ptsPerTouch, fantasyPts.x)) %>% 
-  na.omit()
-all <- lm(fantasyPts.x ~ ., data=data)
-model <- step(all, direction = "backward", trace=0)
-#summary(model)
-```
-
-```{r echo=FALSE}
-data <- big_association %>% 
-  select(-c(fantasyPts.x)) %>% 
-  na.omit()
-all <- lm(fantasyPts.y ~ ., data=data)
-model <- step(all, direction = "backward", trace=0)
-#summary(model)
 ```
 
 ```{r echo=FALSE}
@@ -960,6 +965,46 @@ model1 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_association)
 model2 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_pairs)
 model3 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_trios)
 model4 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_half)
+```
+
+```{r echo=FALSE}
+data <- big_association %>% 
+  select(-c()) #creating a dataset to make a model
+all <- lm(fantasyPts.y ~ ., data=data) #making a model with every variable in the given dataset
+OneWeek_model <- step(all, direction = "backward", trace=0) #using a backwards stepwise process to simplify the given model
+OneWeek_sum <- summary(OneWeek_model)
+
+data <- big_pairs %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+TwoWeeks_model <- step(all, direction = "backward", trace=0)
+TwoWeeks_sum <- summary(TwoWeeks_model)
+
+data <- big_trios %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+ThreeWeeks_model <- step(all, direction = "backward", trace=0)
+ThreeWeeks_sum <- summary(ThreeWeeks_model)
+
+data <- big_half %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+FirstHalf_model <- step(all, direction = "backward", trace=0)
+FirstHalf_sum <- summary(FirstHalf_model)
+```
+
+```{r echo=FALSE}
+FirstHalf_v <- c(OneWeek_sum$adj.r.squared, 
+               data.frame(Names=c(names(coef(OneWeek_model))),
+                          t.value=c(OneWeek_sum$coefficients[,"t value"])) %>%
+                 arrange(desc(t.value))
+               )
+```
+
+```{r echo=FALSE}
+oneweek <- c(OneWeek$adj.r.squared, OneWeek)
+model_comparison <- data.frame(Terms=c('Adj_R2', 'Variable1', 'Variable2', 'Variable3', 'Variable4', 'Variable5', 'Variable6'),
+                               )
 ```
 
 ***
