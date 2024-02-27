@@ -961,50 +961,79 @@ year_end_cor_variables <- c(comatrix5$colnames[1:10]) #inter-week points correla
 ```
 
 ```{r echo=FALSE}
-model1 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_association)
-model2 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_pairs)
-model3 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_trios)
-model4 <- lm(fantasyPts.y ~ recRec + recYds + recTds, data=big_half)
+model1 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_association)
+model1_sum <- summary(model1)
+model2 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_pairs)
+model2_sum <- summary(model2)
+model3 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_trios)
+model3_sum <- summary(model3)
+model4 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_half)
+model4_sum <- summary(model4)
 ```
+
+```{r echo=FALSE}
+data <- data.frame(Subset=c('OneWeek', 'TwoWeeks', 'ThreeWeeks', 'FirstHalf'),
+                               Adj.R.Squared=c(model1_sum$adj.r.squared, 
+                                               model2_sum$adj.r.squared, 
+                                               model3_sum$adj.r.squared, 
+                                               model4_sum$adj.r.squared))
+data$Subset <- factor(data$Subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf"))
+ggplot(data) +
+  geom_col(aes(x=Subset, y=Adj.R.Squared), fill="darkorchid4") +
+  labs(title="Points Model Comparison of Adjusted R Squared", x="Sample Size of Weeks", y="")
+```
+
+These are the adjusted r squared of each model, which represents the percent of data that the model can predict adjusted for the complexity of the model. These models only use average fantasy points to predict year-end points. Obviously, the predictive power of each model gets better with larger sample sizes, however it also appears that the same pattern of decreasing rate of return exists. One Week does not surpass 50% variance explained, which is an intuitive threshold.
 
 ```{r echo=FALSE}
 data <- big_association %>% 
   select(-c()) #creating a dataset to make a model
 all <- lm(fantasyPts.y ~ ., data=data) #making a model with every variable in the given dataset
-OneWeek_model <- step(all, direction = "backward", trace=0) #using a backwards stepwise process to simplify the given model
-OneWeek_sum <- summary(OneWeek_model)
+step_model1 <- step(all, direction = "backward", trace=0) #using a backwards stepwise process to simplify the given model
+step_model1_sum <- summary(step_model1)
 
 data <- big_pairs %>% 
   select(-c())
 all <- lm(fantasyPts.y ~ ., data=data)
-TwoWeeks_model <- step(all, direction = "backward", trace=0)
-TwoWeeks_sum <- summary(TwoWeeks_model)
+step_model2 <- step(all, direction = "backward", trace=0)
+step_model2_sum <- summary(step_model2)
 
 data <- big_trios %>% 
   select(-c())
 all <- lm(fantasyPts.y ~ ., data=data)
-ThreeWeeks_model <- step(all, direction = "backward", trace=0)
-ThreeWeeks_sum <- summary(ThreeWeeks_model)
+step_model3 <- step(all, direction = "backward", trace=0)
+step_model3_sum <- summary(step_model3)
 
 data <- big_half %>% 
   select(-c())
 all <- lm(fantasyPts.y ~ ., data=data)
-FirstHalf_model <- step(all, direction = "backward", trace=0)
-FirstHalf_sum <- summary(FirstHalf_model)
+step_model4 <- step(all, direction = "backward", trace=0)
+step_model4_sum <- summary(step_model4)
 ```
 
 ```{r echo=FALSE}
-FirstHalf_v <- c(OneWeek_sum$adj.r.squared, 
-               data.frame(Names=c(names(coef(OneWeek_model))),
-                          t.value=c(OneWeek_sum$coefficients[,"t value"])) %>%
-                 arrange(desc(t.value))
-               )
+data <- data.frame(Subset=c('OneWeek', 'TwoWeeks', 'ThreeWeeks', 'FirstHalf'),
+                               Adj.R.Squared=c(step_model1_sum$adj.r.squared, 
+                                               step_model2_sum$adj.r.squared, 
+                                               step_model3_sum$adj.r.squared, 
+                                               step_model4_sum$adj.r.squared))
+data$Subset <- factor(data$Subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf"))
+ggplot(data) +
+  geom_col(aes(x=Subset, y=Adj.R.Squared), fill="darkorchid4") +
+  labs(title="Stepwise Regression Comparison of Adjusted R Squared", x="Sample Size of Weeks", y="")
 ```
 
 ```{r echo=FALSE}
-oneweek <- c(OneWeek$adj.r.squared, OneWeek)
-model_comparison <- data.frame(Terms=c('Adj_R2', 'Variable1', 'Variable2', 'Variable3', 'Variable4', 'Variable5', 'Variable6'),
-                               )
+comp1 <- anova(model1, step_model1)
+comp2 <- anova(model2, step_model2)
+comp3 <- anova(model3, step_model3)
+comp4 <- anova(model4, step_model4)
+```
+
+Thankfully, the more complex models (backwards stepwise regression) that use more variables are also significantly different in predictive power (all under 0.0001 alpha values) compared to the models that only use average fantasy points.
+
+```{r echo=FALSE}
+
 ```
 
 ***
