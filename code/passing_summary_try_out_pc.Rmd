@@ -1,0 +1,105 @@
+---
+title: "Try Out Testing"
+author: "Jack DePree"
+date: "2023-01-24"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+<http://rmarkdown.rstudio.com>.
+
+```{r}
+column.passing <- names(passing_12_22)
+numbers <- 1:83
+index.passing <- data.frame(numbers, column.passing)
+index.passing
+```
+
+```{r}
+pass_12 <- pff_passing_summary_2012
+pass_13 <- pff_passing_summary_2013
+pass_14 <- pff_passing_summary_2014
+pass_15 <- pff_passing_summary_2015
+pass_16 <- pff_passing_summary_2016
+pass_17 <- pff_passing_summary_2017
+pass_18 <- pff_passing_summary_2018
+pass_19 <- pff_passing_summary_2019
+pass_20 <- pff_passing_summary_2020
+pass_21 <- pff_passing_summary_2021
+pass_22 <- pff_passing_summary_2022
+
+pass_12_13 <- merge(pass_12, pass_13, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_13_14 <- merge(pass_13, pass_14, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_14_15 <- merge(pass_14, pass_15, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_15_16 <- merge(pass_15, pass_16, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_16_17 <- merge(pass_16, pass_17, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_17_18 <- merge(pass_17, pass_18, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_18_19 <- merge(pass_18, pass_19, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_19_20 <- merge(pass_19, pass_20, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_20_21 <- merge(pass_20, pass_21, by='player', all=TRUE, suffixes=c('.x','.y'))
+pass_21_22 <- merge(pass_21, pass_22, by='player', all=TRUE, suffixes=c('.x','.y'))
+
+passing_12_22 <- rbind(pass_12_13, pass_13_14, pass_14_15, pass_15_16, pass_16_17, pass_17_18, pass_19_20, pass_20_21, pass_21_22)
+
+passing_12_22
+
+
+```
+
+\*\*Analysis
+
+Plotting
+
+```{r}
+library(corrplot)
+
+passing_12_22 <- as.data.frame(passing_12_22)
+m <- cor(passing_12_22[,c(5:15,79,82)], use='complete.obs')
+corrplot(m, method='square', order='original', type='lower')
+
+m <- cor(passing_12_22[,c(16:25,79,82)], use='complete.obs')
+corrplot(m, method='square', order='original', type='lower')
+
+m <- cor(passing_12_22[,c(26:35,79,82)], use='complete.obs')
+corrplot(m, method='square', order='original', type='lower')
+
+# how to make it so that only '.x' correlates to only '.y' and so that '.x' does not correlate with itself?
+
+```
+
+Conditional Probabilities
+
+```{r}
+
+attempts <- passing_12_22$attempts.x
+attempts.90th <- quantile(attempts, c(0.9), na.rm=TRUE)
+attempts.90th
+
+yards <- passing_12_22$yards.y
+yards.90th <- quantile(yards, 0.9, na.rm=TRUE)
+yards.90th
+
+PAB <- sum((attempts >= attempts.90th), na.rm=TRUE & yards >= yards.90th, na.rm=TRUE) / 1225
+print('PAB')
+PAB
+PB <- 0.9
+conditional.attempts.yards <- PAB / PB
+conditional.attempts.yards
+
+```
+
+Average If
+
+```{r}
+mean(passing_12_22$yards.y[attempts >= 200], na.rm=TRUE)
+mean(passing_12_22$yards.y[attempts >= 300], na.rm=TRUE)
+mean(passing_12_22$yards.y[attempts >= 400], na.rm=TRUE)
+mean(passing_12_22$yards.y[attempts >= 500], na.rm=TRUE)
+mean(passing_12_22$yards.y[attempts >= 600], na.rm=TRUE) 
+
+median(passing_12_22$yards.x[passing_12_22$position.x == "QB"], na.rm=TRUE)
+median(passing_12_22$yards.x[passing_12_22$position.x != "QB"], na.rm=TRUE)
+```

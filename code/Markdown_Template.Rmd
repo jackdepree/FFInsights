@@ -1,0 +1,106 @@
+---
+title: "Markdown_Template"
+author: "Jack DePree"
+date: "2024-01-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Title of Project
+
+## Contextualization
+---
+
+## Reasoning
+---
+
+## Scientiic Questions
+---
+
+## Methodology
+---
+
+# Data Collection
+```{r}
+
+directory <- getwd() #get the current working directory
+code_loc <- "/code" #make string to remove from current working directory
+directory <- gsub(code_loc, "", directory) #remove string from current working directory
+data_loc <- "/data" #make string to add to the current working directory
+new_directory <- paste0(directory, data_loc) #add the data string to the working directory
+setwd(new_directory) #set the working directory
+
+library(dplyr)
+library(tidyverse)
+
+#read.csv()
+
+```
+
+# Data Cleaning
+```{r}
+#separate()
+#mutate()
+#transmute()
+#select()
+#relocate()
+#na.omit()
+
+```
+
+```{r}
+
+```
+
+# Data Transformation
+```{r}
+#merge()
+#rbind()
+
+```
+
+```{r}
+
+```
+
+# Data Analysis
+```{r}
+#summary()
+#cor()
+#quantile()
+#group_by()
+#sapply()
+#lm()
+
+```
+
+```{r}
+modeller <- function(dat, indep, dep) {
+  indep <- colnames(dat[, indep])
+  dep <- grep(dep, colnames(dat))
+  data <- dat %>% select(c(all_of(indep), dep)) %>% na.omit()
+  intercept_only <- lm(dat[,dep] ~ 1, data=data)
+  all <- lm(dat[,dep] ~ ., data=data)
+  model <- step(intercept_only, direction="forward", scope=formula(all), trace=0)
+  summary(model)
+}
+```
+
+# Data Visualization
+```{r}
+#ggplot()
+#geom_smooth()
+
+```
+
+```{r}
+
+```
+
+# Regression Analysis
+```{r}
+
+```

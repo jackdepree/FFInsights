@@ -1,0 +1,59 @@
+---
+title: "Salary Data"
+author: "Jack DePree"
+date: "2023-09-11"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+library(tidyverse)
+library(dplyr)
+```
+
+```{r}
+salary_wk1 <- read_csv("2023_wk1_salaries.csv")
+salary_wk2 <- read_csv("2023_wk2_salaries.csv")
+salary_wk3 <- read_csv("2023_wk3_salaries.csv")
+```
+
+```{r}
+projections_wk1 <- read_csv("2023_wk1_pff_projections.csv")
+projections_wk2 <- read_csv("2023_wk2_pff_projections.csv")
+projections_wk3 <- read_csv("2023_wk3_pff_projections.csv")
+```
+
+```{r}
+expected_flex_wk1 <- read_csv("2023_wk1_flex_expected.csv")
+expected_flex_wk2 <- read_csv("2023_wk2_flex_expected.csv")
+expected_flex_wk3 <- read_csv("2023_wk3_flex_expected.csv")
+expected_flex_wk1
+```
+
+```{r}
+expected_qb_wk1 <- read_csv("2023_wk1_qb_expected.csv")
+expected_qb_wk2 <- read_csv("2023_wk2_qb_expected.csv")
+expected_qb_wk3 <- read_csv("2023_wk3_qb_expected.csv")
+```
+
+```{r}
+salary_wk1 <- salary_wk1 %>% select(c(player, position, salary, ownership))
+salary_wk2 <- salary_wk2 %>% select(c(player, position, salary, ownership))
+salary_wk3 <- salary_wk3 %>% select(c(player, position, salary, ownership))
+```
+
+```{r}
+flex_wk1 <- merge(salary_wk1, expected_flex_wk1, by.x='player', by.y='Player', all=T)
+View(flex_wk1)
+```
+
+
+```{r}
+names_flex <- expected_flex_wk1["Player"]
+names_sal <- salary_wk1["player"]
+names_flex %in% names_sal
+```

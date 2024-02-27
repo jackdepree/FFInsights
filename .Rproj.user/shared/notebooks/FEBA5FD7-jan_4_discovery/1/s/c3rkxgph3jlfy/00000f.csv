@@ -1,5 +1,0 @@
-"0","yards <- ggplot(table) +"
-"0","  geom_point(aes(x=`D.Yards`, y=`O.Yards`, color=`Wins`, size=`Net.Yards`)) +"
-"0","  scale_color_gradient(low=""black"", high=""green"")"
-"0",""
-"0","yards"
