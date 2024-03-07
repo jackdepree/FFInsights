@@ -35,12 +35,6 @@ We can ignore variables that are unstable even though the community would still 
 3. Use visualization tools and summary statistics to show how the variables change over different subsets of weeks. Of course, there is the dimensional curse and it is impossible to make enough plots to visualize all the variables in every condition.
 4. Use regression modeling, stepwise reduction and anova tools to compare variables and models to best predict the future based on different subsets of weeks.
 
-***
-
-# Data Collection
-
-***
-
 ```{r echo=FALSE, warning=FALSE, warning=FALSE, message=FALSE}
 library(dplyr)
 library(tidyverse)
