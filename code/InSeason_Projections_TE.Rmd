@@ -23,7 +23,7 @@ This is a within season analysis of TE performance and predicted year-end total 
 ## Reasoning
 We can ignore variables that are unstable even though the community would still factor them into their predictions (incorrectly). There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using different sample sizes (set of weeks) will influence the predictive power of each variable.
 
-## Scientiic Questions
+## Scientific Questions
 1. Which variables are highly associated with fantasy points? (Feature Association)
 2. Are there variables that account for more variance in the dataset than others? (PCA)
 3. How do variables change - in terms of predictability - with different subsets of weekly data? (Backwards Stepwise Regression Modeling)
