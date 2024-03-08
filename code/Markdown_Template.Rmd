@@ -12,18 +12,17 @@ knitr::opts_chunk$set(echo = TRUE)
 # Title of Project
 
 ## Contextualization
----
+
 
 ## Reasoning
----
+
 
 ## Scientiic Questions
----
+
 
 ## Methodology
----
 
-# Data Collection
+
 ```{r}
 
 directory <- getwd() #get the current working directory
@@ -40,7 +39,12 @@ library(tidyverse)
 
 ```
 
+***
+
 # Data Cleaning
+
+***
+
 ```{r}
 #separate()
 #mutate()
@@ -55,7 +59,12 @@ library(tidyverse)
 
 ```
 
+***
+
 # Data Transformation
+
+***
+
 ```{r}
 #merge()
 #rbind()
@@ -66,7 +75,12 @@ library(tidyverse)
 
 ```
 
+***
+
 # Data Analysis
+
+***
+
 ```{r}
 #summary()
 #cor()
@@ -89,7 +103,12 @@ modeller <- function(dat, indep, dep) {
 }
 ```
 
+***
+
 # Data Visualization
+
+***
+
 ```{r}
 #ggplot()
 #geom_smooth()
@@ -100,7 +119,16 @@ modeller <- function(dat, indep, dep) {
 
 ```
 
+***
+
 # Regression Analysis
+
+***
+
+```{r}
+
+```
+
 ```{r}
 
 ```
