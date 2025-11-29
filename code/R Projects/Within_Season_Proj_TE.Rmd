@@ -1,0 +1,849 @@
+---
+title: "InSeason_Projections_TE"
+author: "Jack DePree"
+date: "2024-03-6"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE, message=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+***
+
+# Within Season Fantasy Projections for Tight Ends
+
+***
+
+## Contextualization
+This is a within season analysis of TE performance and predicted year-end total fantasy points. Each NFL week adds more data that can be used to predict the future; it is assumed that the more data we have, then the more accurate our predictions. Some variables will be unstable and others will be stable. Is there a point where a small sample of data is able to predict the future just as well as a subset of more data would? If not, then does that mean there is a way we can leverage the unpredictability to outsmart other bettors?
+
+## Reasoning
+We can ignore variables that are unstable even though the community would still factor them into their predictions (incorrectly). There should also be a point within a season where the amount of usable data passes the threshold of profitability, meaning that we finally have enough data to accurately predict the future: maybe two or three weeks. Furthermore, using different sample sizes (set of weeks) will influence the predictive power of each variable.
+
+## Scientific Questions
+1. Which variables are highly associated with fantasy points? (Feature Association)
+2. Are there variables that account for more variance in the dataset than others? (PCA)
+3. How do variables change - in terms of predictability - with different subsets of weekly data? (Backwards Stepwise Regression Modeling)
+4. Are there models that are more predictive than others, given different subsets of weekly data? (Predictive Analysis)
+
+## Methodology
+1. Collect, assign, and transform data. Compose dataframes to where each record is a player's output in a given subset of weeks. The dataframe will have redundant players but no redundant records. This methodology has an advantage in creating more samples, but limited in the fact that each sample is not explicitly far away from the year end fantasy points in terms of time.
+2. Perform a PCA analysis. Calculate the contribution of each variable in the principal components that account for more than 80% of the covariance in the data. The advantage is that the PCA will uncover which variables can be reduced or removed, but it is limited because the PCA does not know that we basically only care about covariance with fantasy points.
+3. Use visualization tools and summary statistics to show how the variables change over different subsets of weeks. Of course, there is the dimensional curse and it is impossible to make enough plots to visualize all the variables in every condition.
+4. Use regression modeling, stepwise reduction and anova tools to compare variables and models to best predict the future based on different subsets of weeks.
+
+```{r echo=FALSE, warning=FALSE, warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyverse)
+library(lsr)
+library(corrplot)
+library(MASSExtra)
+
+
+directory <- getwd() #get the current working directory
+code_loc <- "/code" #make string to remove from current working directory
+directory <- gsub(code_loc, "", directory) #remove string from current working directory
+data_loc <- "/data" #make string to add to the current working directory
+new_directory <- paste0(directory, data_loc) #add the data string to the working directory
+setwd(new_directory) #set the working directory
+
+wk1_23 <- read.csv("2023_wk1_flex_stats.csv")
+wk2_23 <- read.csv("2023_wk2_flex_stats.csv")
+wk3_23 <- read.csv("2023_wk3_flex_stats.csv")
+wk4_23 <- read.csv("2023_wk4_flex_stats.csv")
+wk5_23 <- read.csv("2023_wk5_flex_stats.csv")
+wk6_23 <- read.csv("2023_wk6_flex_stats.csv")
+wk7_23 <- read.csv("2023_wk7_flex_stats.csv")
+wk8_23 <- read.csv("2023_wk8_flex_stats.csv")
+wk9_23 <- read.csv("2023_wk9_flex_stats.csv")
+wk10_23 <- read.csv("2023_wk10_flex_stats.csv")
+wk11_23 <- read.csv("2023_wk11_flex_stats.csv")
+wk12_23 <- read.csv("2023_wk12_flex_stats.csv")
+wk13_23 <- read.csv("2023_wk13_flex_stats.csv")
+wk14_23 <- read.csv("2023_wk14_flex_stats.csv")
+wk15_23 <- read.csv("2023_wk15_flex_stats.csv")
+wk16_23 <- read.csv("2023_wk16_flex_stats.csv")
+wk17_23 <- read.csv("2023_wk17_flex_stats.csv")
+total_23 <- read.csv("2023_total_flex_stats.csv")
+
+wk1_22 <- read.csv("2022_wk1_flex_stats.csv")
+wk2_22 <- read.csv("2022_wk2_flex_stats.csv")
+wk3_22 <- read.csv("2022_wk3_flex_stats.csv")
+wk4_22 <- read.csv("2022_wk4_flex_stats.csv")
+wk5_22 <- read.csv("2022_wk5_flex_stats.csv")
+wk6_22 <- read.csv("2022_wk6_flex_stats.csv")
+wk7_22 <- read.csv("2022_wk7_flex_stats.csv")
+wk8_22 <- read.csv("2022_wk8_flex_stats.csv")
+wk9_22 <- read.csv("2022_wk9_flex_stats.csv")
+wk10_22 <- read.csv("2022_wk10_flex_stats.csv")
+wk11_22 <- read.csv("2022_wk11_flex_stats.csv")
+wk12_22 <- read.csv("2022_wk12_flex_stats.csv")
+wk13_22 <- read.csv("2022_wk13_flex_stats.csv")
+wk14_22 <- read.csv("2022_wk14_flex_stats.csv")
+wk15_22 <- read.csv("2022_wk15_flex_stats.csv")
+wk16_22 <- read.csv("2022_wk16_flex_stats.csv")
+wk17_22 <- read.csv("2022_wk17_flex_stats.csv")
+total_22 <- read.csv("2022_total_flex_stats.csv")
+
+wk1_21 <- read.csv("2021_wk1_flex_stats.csv")
+wk2_21 <- read.csv("2021_wk2_flex_stats.csv")
+wk3_21 <- read.csv("2021_wk3_flex_stats.csv")
+wk4_21 <- read.csv("2021_wk4_flex_stats.csv")
+wk5_21 <- read.csv("2021_wk5_flex_stats.csv")
+wk6_21 <- read.csv("2021_wk6_flex_stats.csv")
+wk7_21 <- read.csv("2021_wk7_flex_stats.csv")
+wk8_21 <- read.csv("2021_wk8_flex_stats.csv")
+wk9_21 <- read.csv("2021_wk9_flex_stats.csv")
+wk10_21 <- read.csv("2021_wk10_flex_stats.csv")
+wk11_21 <- read.csv("2021_wk11_flex_stats.csv")
+wk12_21 <- read.csv("2021_wk12_flex_stats.csv")
+wk13_21 <- read.csv("2021_wk13_flex_stats.csv")
+wk14_21 <- read.csv("2021_wk14_flex_stats.csv")
+wk15_21 <- read.csv("2021_wk15_flex_stats.csv")
+wk16_21 <- read.csv("2021_wk16_flex_stats.csv")
+wk17_21 <- read.csv("2021_wk17_flex_stats.csv")
+total_21 <- read.csv("2021_total_flex_stats.csv")
+
+#glimpse(total_22)
+```
+
+***
+
+# Data Cleaning
+
+***
+
+```{r echo=FALSE, warning=FALSE, warning=FALSE, message=FALSE}
+wk1_23 <- wk1_23 %>% filter(position=="TE") %>% select(-c(team, games, position)) #filter out non-TEs and remove variables "team", "games", "position"
+wk2_23 <- wk2_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk3_23 <- wk3_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk4_23 <- wk4_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk5_23 <- wk5_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk6_23 <- wk6_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk7_23 <- wk7_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk8_23 <- wk8_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk9_23 <- wk9_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk10_23 <- wk10_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk11_23 <- wk11_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk12_23 <- wk12_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk13_23 <- wk13_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk14_23 <- wk14_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk15_23 <- wk15_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk16_23 <- wk16_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk17_23 <- wk17_23 %>% filter(position=="TE") %>% select(-c(team, games, position))
+
+wk1_22 <- wk1_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk2_22 <- wk2_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk3_22 <- wk3_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk4_22 <- wk4_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk5_22 <- wk5_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk6_22 <- wk6_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk7_22 <- wk7_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk8_22 <- wk8_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk9_22 <- wk9_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk10_22 <- wk10_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk11_22 <- wk11_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk12_22 <- wk12_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk13_22 <- wk13_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk14_22 <- wk14_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk15_22 <- wk15_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk16_22 <- wk16_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk17_22 <- wk17_22 %>% filter(position=="TE") %>% select(-c(team, games, position))
+
+wk1_21 <- wk1_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk2_21 <- wk2_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk3_21 <- wk3_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk4_21 <- wk4_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk5_21 <- wk5_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk6_21 <- wk6_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk7_21 <- wk7_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk8_21 <- wk8_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk9_21 <- wk9_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk10_21 <- wk10_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk11_21 <- wk11_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk12_21 <- wk12_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk13_21 <- wk13_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk14_21 <- wk14_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk15_21 <- wk15_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk16_21 <- wk16_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+wk17_21 <- wk17_21 %>% filter(position=="TE") %>% select(-c(team, games, position))
+```
+
+It is important to note that I removed all records of TEs when they rush for more than 2 times. This essentially removes Taysom Hill from the data. The data was extremely clean and required nearly no changes.
+
+***
+
+# Data Transformation
+
+***
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+total_23 <- select(total_23, c(player, fantasyPts)) #selecting the total fantasy points for each player in a given year
+total_22 <- select(total_22, c(player, fantasyPts))
+total_21 <- select(total_21, c(player, fantasyPts))
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_23 <- rbind(wk1_23,wk2_23,wk3_23,wk4_23,wk5_23,wk6_23,wk7_23,wk8_23,wk9_23,wk10_23,wk11_23,wk12_23,wk13_23,wk14_23,wk15_23,wk16_23,wk17_23) #combining all weeks on a vertical basis
+big_23 <- merge(big_23, total_23, by="player", all=T, suffixes=c(".x", ".y")) #merging the combined weeks and each player's respective total fantasy points for the year
+
+big_22 <- rbind(wk1_22,wk2_22,wk3_22,wk4_22,wk5_22,wk6_22,wk7_22,wk8_22,wk9_22,wk10_22,wk11_22,wk12_22,wk13_22,wk14_22,wk15_22,wk16_22,wk17_22)
+big_22 <- merge(big_22, total_22, by="player", all=T, suffixes=c(".x", ".y"))
+
+big_21 <- rbind(wk1_21,wk2_21,wk3_21,wk4_21,wk5_21,wk6_21,wk7_21,wk8_21,wk9_21,wk10_21,wk11_21,wk12_21,wk13_21,wk14_21,wk15_21,wk16_21,wk17_21)
+big_21 <- merge(big_21, total_21, by="player", all=T, suffixes=c(".x", ".y"))
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_association <- rbind(big_23, big_22, big_21) %>% 
+  select(-c(player)) %>%
+  na.omit()
+big_association <- subset(big_association, recTarg>0)
+#glimpse(big_association)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+pairing <- function(j, k) {
+  new <- rbind(j, k) %>% #binds the two dfs vertically into one df
+    group_by(player) %>% #groups by player so that we can later average each player's performance
+    filter(n() == 2) %>% #filters out players who only appear once, meaning that they only played one game
+    summarise(across(.fns=mean)) #summarises the data across each row to find the averages for each player
+  return(new)
+}
+weeks_pair1_23 <- pairing(wk1_23, wk2_23)
+weeks_pair2_23 <- pairing(wk2_23, wk3_23)
+weeks_pair3_23 <- pairing(wk3_23, wk4_23)
+weeks_pair4_23 <- pairing(wk4_23, wk5_23)
+weeks_pair5_23 <- pairing(wk5_23, wk6_23)
+weeks_pair6_23 <- pairing(wk6_23, wk7_23)
+weeks_pair7_23 <- pairing(wk7_23, wk8_23)
+weeks_pair8_23 <- pairing(wk8_23, wk9_23)
+weeks_pair9_23 <- pairing(wk9_23, wk10_23)
+weeks_pair10_23 <- pairing(wk10_23, wk11_23)
+weeks_pair11_23 <- pairing(wk11_23, wk12_23)
+weeks_pair12_23 <- pairing(wk12_23, wk13_23)
+weeks_pair13_23 <- pairing(wk13_23, wk14_23)
+weeks_pair14_23 <- pairing(wk14_23, wk15_23)
+weeks_pair15_23 <- pairing(wk15_23, wk16_23)
+weeks_pair16_23 <- pairing(wk16_23, wk17_23)
+
+weeks_pair1_22 <- pairing(wk1_22, wk2_22)
+weeks_pair2_22 <- pairing(wk2_22, wk3_22)
+weeks_pair3_22 <- pairing(wk3_22, wk4_22)
+weeks_pair4_22 <- pairing(wk4_22, wk5_22)
+weeks_pair5_22 <- pairing(wk5_22, wk6_22)
+weeks_pair6_22 <- pairing(wk6_22, wk7_22)
+weeks_pair7_22 <- pairing(wk7_22, wk8_22)
+weeks_pair8_22 <- pairing(wk8_22, wk9_22)
+weeks_pair9_22 <- pairing(wk9_22, wk10_22)
+weeks_pair10_22 <- pairing(wk10_22, wk11_22)
+weeks_pair11_22 <- pairing(wk11_22, wk12_22)
+weeks_pair12_22 <- pairing(wk12_22, wk13_22)
+weeks_pair13_22 <- pairing(wk13_22, wk14_22)
+weeks_pair14_22 <- pairing(wk14_22, wk15_22)
+weeks_pair15_22 <- pairing(wk15_22, wk16_22)
+weeks_pair16_22 <- pairing(wk16_22, wk17_22)
+
+weeks_pair1_21 <- pairing(wk1_21, wk2_21)
+weeks_pair2_21 <- pairing(wk2_21, wk3_21)
+weeks_pair3_21 <- pairing(wk3_21, wk4_21)
+weeks_pair4_21 <- pairing(wk4_21, wk5_21)
+weeks_pair5_21 <- pairing(wk5_21, wk6_21)
+weeks_pair6_21 <- pairing(wk6_21, wk7_21)
+weeks_pair7_21 <- pairing(wk7_21, wk8_21)
+weeks_pair8_21 <- pairing(wk8_21, wk9_21)
+weeks_pair9_21 <- pairing(wk9_21, wk10_21)
+weeks_pair10_21 <- pairing(wk10_21, wk11_21)
+weeks_pair11_21 <- pairing(wk11_21, wk12_21)
+weeks_pair12_21 <- pairing(wk12_21, wk13_21)
+weeks_pair13_21 <- pairing(wk13_21, wk14_21)
+weeks_pair14_21 <- pairing(wk14_21, wk15_21)
+weeks_pair15_21 <- pairing(wk15_21, wk16_21)
+weeks_pair16_21 <- pairing(wk16_21, wk17_21)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+pairs_23 <- rbind(weeks_pair1_23, weeks_pair2_23, weeks_pair3_23, weeks_pair4_23, weeks_pair5_23, weeks_pair6_23, weeks_pair7_23, weeks_pair8_23,
+                  weeks_pair9_23, weeks_pair10_23, weeks_pair11_23, weeks_pair12_23, weeks_pair13_23, weeks_pair14_23, weeks_pair15_23,
+                  weeks_pair16_23)
+pairs_23 <- merge(pairs_23, total_23, by="player", all=T, suffixes=c(".x", ".y"))
+
+pairs_22 <- rbind(weeks_pair1_22, weeks_pair2_22, weeks_pair3_22, weeks_pair4_22, weeks_pair5_22, weeks_pair6_22, weeks_pair7_22, weeks_pair8_22,
+                  weeks_pair9_22, weeks_pair10_22, weeks_pair11_22, weeks_pair12_22, weeks_pair13_22, weeks_pair14_22, weeks_pair15_22,
+                  weeks_pair16_22)
+pairs_22 <- merge(pairs_22, total_22, by="player", all=T, suffixes=c(".x", ".y"))
+
+pairs_21 <- rbind(weeks_pair1_21, weeks_pair2_21, weeks_pair3_21, weeks_pair4_21, weeks_pair5_21, weeks_pair6_21, weeks_pair7_21, weeks_pair8_21,
+                  weeks_pair9_21, weeks_pair10_21, weeks_pair11_21, weeks_pair12_21, weeks_pair13_21, weeks_pair14_21, weeks_pair15_21,
+                  weeks_pair16_21)
+pairs_21 <- merge(pairs_21, total_21, by="player", all=T, suffixes=c(".x", ".y"))
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_pairs <- rbind(pairs_23, pairs_22, pairs_21) %>% 
+  select(-c(player)) %>%
+  na.omit() %>%
+  round(2)
+glimpse(big_pairs)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+tripling <- function(j, k, i) {
+  new <- rbind(j, k, i) %>%
+    group_by(player) %>%
+    filter(n() == 3) %>%
+    summarise(across(.fns=mean))
+  return(new)
+}
+
+weeks_trio1_23 <- tripling(wk1_23, wk2_23, wk3_23)
+weeks_trio2_23 <- tripling(wk2_23, wk3_23, wk4_23)
+weeks_trio3_23 <- tripling(wk3_23, wk4_23, wk5_23)
+weeks_trio4_23 <- tripling(wk4_23, wk5_23, wk6_23)
+weeks_trio5_23 <- tripling(wk5_23, wk6_23, wk7_23)
+weeks_trio6_23 <- tripling(wk6_23, wk7_23, wk8_23)
+weeks_trio7_23 <- tripling(wk7_23, wk8_23, wk9_23)
+weeks_trio8_23 <- tripling(wk8_23, wk9_23, wk10_23)
+weeks_trio9_23 <- tripling(wk9_23, wk10_23, wk11_23)
+weeks_trio10_23 <- tripling(wk10_23, wk11_23, wk12_23)
+weeks_trio11_23 <- tripling(wk11_23, wk12_23, wk13_23)
+weeks_trio12_23 <- tripling(wk12_23, wk13_23, wk14_23)
+weeks_trio13_23 <- tripling(wk13_23, wk14_23, wk15_23)
+weeks_trio14_23 <- tripling(wk14_23, wk15_23, wk16_23)
+weeks_trio15_23 <- tripling(wk15_23, wk16_23, wk17_23)
+
+weeks_trio1_22 <- tripling(wk1_22, wk2_22, wk3_22)
+weeks_trio2_22 <- tripling(wk2_22, wk3_22, wk4_22)
+weeks_trio3_22 <- tripling(wk3_22, wk4_22, wk5_22)
+weeks_trio4_22 <- tripling(wk4_22, wk5_22, wk6_22)
+weeks_trio5_22 <- tripling(wk5_22, wk6_22, wk7_22)
+weeks_trio6_22 <- tripling(wk6_22, wk7_22, wk8_22)
+weeks_trio7_22 <- tripling(wk7_22, wk8_22, wk9_22)
+weeks_trio8_22 <- tripling(wk8_22, wk9_22, wk10_22)
+weeks_trio9_22 <- tripling(wk9_22, wk10_22, wk11_22)
+weeks_trio10_22 <- tripling(wk10_22, wk11_22, wk12_22)
+weeks_trio11_22 <- tripling(wk11_22, wk12_22, wk13_22)
+weeks_trio12_22 <- tripling(wk12_22, wk13_22, wk14_22)
+weeks_trio13_22 <- tripling(wk13_22, wk14_22, wk15_22)
+weeks_trio14_22 <- tripling(wk14_22, wk15_22, wk16_22)
+weeks_trio15_22 <- tripling(wk15_22, wk16_22, wk17_22)
+
+weeks_trio1_21 <- tripling(wk1_21, wk2_21, wk3_21)
+weeks_trio2_21 <- tripling(wk2_21, wk3_21, wk4_21)
+weeks_trio3_21 <- tripling(wk3_21, wk4_21, wk5_21)
+weeks_trio4_21 <- tripling(wk4_21, wk5_21, wk6_21)
+weeks_trio5_21 <- tripling(wk5_21, wk6_21, wk7_21)
+weeks_trio6_21 <- tripling(wk6_21, wk7_21, wk8_21)
+weeks_trio7_21 <- tripling(wk7_21, wk8_21, wk9_21)
+weeks_trio8_21 <- tripling(wk8_21, wk9_21, wk10_21)
+weeks_trio9_21 <- tripling(wk9_21, wk10_21, wk11_21)
+weeks_trio10_21 <- tripling(wk10_21, wk11_21, wk12_21)
+weeks_trio11_21 <- tripling(wk11_21, wk12_21, wk13_21)
+weeks_trio12_21 <- tripling(wk12_21, wk13_21, wk14_21)
+weeks_trio13_21 <- tripling(wk13_21, wk14_21, wk15_21)
+weeks_trio14_21 <- tripling(wk14_21, wk15_21, wk16_21)
+weeks_trio15_21 <- tripling(wk15_21, wk16_21, wk17_21)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+trios_23 <- rbind(weeks_trio1_23,weeks_trio2_23,weeks_trio3_23,weeks_trio4_23,weeks_trio5_23,weeks_trio6_23,weeks_trio7_23,weeks_trio8_23,weeks_trio9_23,weeks_trio10_23,
+                  weeks_trio11_23,weeks_trio12_23,weeks_trio13_23,weeks_trio14_23,weeks_trio15_23)
+trios_23 <- merge(trios_23, total_23, by="player", all=T, suffixes=c(".x", ".y"))
+
+trios_22 <- rbind(weeks_trio1_22,weeks_trio2_22,weeks_trio3_22,weeks_trio4_22,weeks_trio5_22,weeks_trio6_22,weeks_trio7_22,weeks_trio8_22,weeks_trio9_22,weeks_trio10_22,
+                  weeks_trio11_22,weeks_trio12_22,weeks_trio13_22,weeks_trio14_22,weeks_trio15_22)
+trios_22 <- merge(trios_22, total_22, by="player", all=T, suffixes=c(".x", ".y"))
+
+trios_21 <- rbind(weeks_trio1_21,weeks_trio2_21,weeks_trio3_21,weeks_trio4_21,weeks_trio5_21,weeks_trio6_21,weeks_trio7_21,weeks_trio8_21,weeks_trio9_21,weeks_trio10_21,
+                  weeks_trio11_21,weeks_trio12_21,weeks_trio13_21,weeks_trio14_21,weeks_trio15_21)
+trios_21 <- merge(trios_21, total_21, by="player", all=T, suffixes=c(".x", ".y"))
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_trios <- rbind(trios_23, trios_22, trios_21) %>% 
+  select(-c(player)) %>%
+  na.omit() %>%
+  round(2)
+glimpse(big_trios)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+half_23 <- rbind(wk1_23,wk2_23,wk3_23,wk4_23,wk5_23,wk6_23,wk7_23,wk8_23,wk9_23) %>%
+  group_by(player) %>%
+  filter(n() >= 5) %>%
+  summarise(across(.fns=mean))
+half_23 <- merge(half_23, total_23, by="player", all=T, suffixes=c(".x", ".y")) 
+
+half_22 <- rbind(wk1_22,wk2_22,wk3_22,wk4_22,wk5_22,wk6_22,wk7_22,wk8_22,wk9_22) %>%
+  group_by(player) %>%
+  filter(n() >= 5) %>%
+  summarise(across(.fns=mean))
+half_22 <- merge(half_22, total_22, by="player", all=T, suffixes=c(".x", ".y"))
+
+half_21 <- rbind(wk1_21,wk2_21,wk3_21,wk4_21,wk5_21,wk6_21,wk7_21,wk8_21,wk9_21) %>%
+  group_by(player) %>%
+  filter(n() >= 5) %>%
+  summarise(across(.fns=mean))
+half_21 <- merge(half_21, total_21, by="player", all=T, suffixes=c(".x", ".y"))
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_half <- rbind(half_23, half_22, half_21) %>% 
+  select(-c(player)) %>%
+  na.omit() %>%
+  round(2)
+glimpse(big_half)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+big_association <- filter(big_association, rushCarries < 2) #essentially removing Tasyom Hill from the data
+big_pairs <- filter(big_pairs, rushCarries < 2)
+big_trios <- filter(big_trios, rushCarries < 2)
+big_half <- filter(big_half, rushCarries < 2)
+```
+
+I vertically joined the weekly data sets so that I can compile all data into one dataframe. This process adds more records to the dataframe, but does not accurately represent the idea of predicting future outcomes. In the real world, we can compile all of the past weeks and use them to predict he future. However, the way I set up the dataframes makes it so that week 16 (in the one-week sample size) is trying to predict the year end points, even though in the real world we already have weeks 1-15 to predict the year end points.
+
+***
+
+# Data Analysis
+
+***
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+pca <- prcomp(big_association) #perform PCA on weekly data
+summary <- summary(pca) #shows the cumulative proportion of each Principal Component (PC4 > 0.85)
+loadings <- arrange(round(data.frame(pca$rotation)[1:4], 3), desc(PC1)) #show the loadings of the first four Principal Components (PCs)
+eigenvalues <- pca$sdev^2 #extract the eigenvalues
+contribution <- arrange(round((loadings^2)*eigenvalues, 3), desc(PC1)) #show the contributions of each variable towards the given Principal Component
+contribution <- round(mutate(contribution, sum=PC1*0.3801 + PC2*0.3031 + PC3*0.1089 + PC4*0.0626), 3) #add a summation column to show the weight of each variable in the first four PCs
+head(contribution, 20)
+```
+
+These first four principal components account for more than 85% of the covariance in the data (single-week sample). The numbers for each variable describe the contribution towards each principal component, meaning that those variables explain a substantial amount of the rest of the data's variation.
+
+The PCA reports that year-end fantasy points are the most responsible for explaining covariance in the data. Redzone receiving touchdowns percentage is the second most responsible, followed by other percentage based variables and receiving yards. These percentage based variables attempt to explain where a TE get targeted on the field: with a high percentage, then their receptions or targets were mostly in the redzone or endzone.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+df <- select(big_association, -c(rushYds100Games, rushTd40s, rush40s)) #create a data frame that excludes two variables containing NA values
+cor_matrix <- data.frame(cor(df)) #convert df into correlation matrix
+summed_cor <- data.frame(sum=rowSums(cor_matrix)) #sum all rows
+summed_cor <- arrange(round(summed_cor, 3), desc(sum))
+head(summed_cor, 20)
+```
+
+This is extremely similar to the PCA. This table shows the sum of all correlations within the correlation matrix. Each number for each variable represents the gross correlation it has with all other variables. The difference between this and the PCA is that the PCA uses covariance instead of correlation, covariance is dependent upon units whereas correlation is a unitless and scaled metric.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+cv <- function(x) {           #Coefficient of Variation, a relative measure of variation dependent upon a variable's average
+  m <- mean(x)
+  sd <- sd(x)
+  cv <- sd/m
+  return(cv)
+}
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+mode <- function(x) { #mode function
+   x <- na.omit(x)
+   u <- unique(x)
+   mode <- u[which.max(tabulate(match(x, u)))] #find the most common record in the variable
+   return(mode)
+}
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+skews <- function(x) { #Pearson's mode skewness 
+  mean <- mean(x)
+  mode <- mode(x)
+  sd <- sd(x)
+  skew <- (mean-mode)/sd
+  return(skew)
+}
+```
+
+```{r echo=FALSE, warning=FALSE, warning=FALSE, message=FALSE}
+colnames <- c(colnames(big_association))
+cor.x <- c(round(cor(big_association, big_association$fantasyPts.x, use="complete.obs"), 3))  #making a vector of correlations between a given variable and the given week's points
+varco <- c(round(apply(big_association, 2, cv), 3)) #coef of variation for each variable
+skew <- c(round(apply(big_association, 2, skews), 3)) #skew measure for each variable
+comatrix1 <- data.frame(colnames=colnames, cor.x=cor.x, varco=varco, skew=skew) %>% arrange(desc(cor.x))
+head(comatrix1, 20)
+```
+
+colnames: variables in the data
+cor.x: correlation between the variable and the given week's fantasy points
+varco: the relative variance of each variable
+skew: skewness of each variable (positive number = positive skew)
+
+In the single-week subset, the variables most associated with the current week's fantasy points are: yards, receptions, touchdowns and redzone receiving touchdowns. The variables with the highest variance are of course the rushing variables, stats that simply do not apply to most TEs. There is a negative correlation (-0.3167) between the correlation of the year-end points and the variance of each variable; this makes sense because if something is less stable it would be assumed that it would also provide less predictability. Almost all variables are skewed positively, with the exception of catchrate.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+colnames <- c(colnames(big_pairs))
+cor.x <- c(round(cor(big_pairs, big_pairs$fantasyPts.x, use="complete.obs"), 3))
+varco <- c(round(apply(big_pairs, 2, cv), 3))
+skew <- c(round(apply(big_pairs, 2, skews), 3))
+comatrix2 <- data.frame(colnames=colnames, cor.x=cor.x, varco=varco, skew=skew) %>% arrange(desc(cor.x))
+head(comatrix2, 20)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+colnames <- c(colnames(big_trios))
+cor.x <- c(round(cor(big_trios, big_trios$fantasyPts.x, use="complete.obs"), 3))
+varco <- c(round(apply(big_trios, 2, cv), 3))
+skew <- c(round(apply(big_trios, 2, skews), 3))
+comatrix3 <- data.frame(colnames=colnames, cor.x=cor.x, varco=varco, skew=skew) %>% arrange(desc(cor.x))
+head(comatrix3, 20)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+colnames <- c(colnames(big_half))
+cor.x <- c(round(cor(big_half, big_half$fantasyPts.x, use="complete.obs"), 3))
+varco <- c(round(apply(big_half, 2, cv), 3))
+skew <- c(round(apply(big_half, 2, skews), 3))
+comatrix4 <- data.frame(colnames=colnames, cor.x=cor.x, varco=varco, skew=skew) %>% arrange(desc(cor.x))
+head(comatrix4, 20)
+```
+
+Here are the variables most positively associated with the average fantasy points per set of weeks:
+
+One-Week | Two-Weeks | Three-Weeks | First-Half
+---------|-----------|-------------|-----------
+Yards    | Yards     | Yards       | Yards
+Rec      | Rec       | Rec         | Rec
+Tds      | Targets   | Targets     | Targets
+rzRecTds | Tds       | Tds         | rzRec
+
+As the samples use more and more weeks, the highest associated variables with fantasy points become more and more stable and predictive.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+colnames <- c(colnames(big_association))
+one <- c(round(cor(big_association, big_association$fantasyPts.y, use="complete.obs"), 3))
+two <- c(round(cor(big_pairs, big_pairs$fantasyPts.y, use="complete.obs"), 3))
+three <- c(round(cor(big_trios, big_trios$fantasyPts.y, use="complete.obs"), 3))
+half <- c(round(cor(big_half, big_half$fantasyPts.y, use="complete.obs"), 3))
+comatrix5 <- data.frame(colnames=colnames, One=one, Two=two, Three=three, First_Half=half) %>% 
+  mutate(average=(One+Two+Three+First_Half)/4) %>% 
+  arrange(desc(average)) %>%
+  filter(colnames!='fantasyPts.y')
+head(comatrix5, 20)
+```
+
+This is a table that shows the association between each variable and the year-end fantasy points. The most intuitive pattern is the increase in correlation as the sample size increases. Some variables actually decrease (targets, ADOT, drops); even though the variable is stable, the sample size becomes so large (first half of season) that the variables that contribute more to actual fantasy points become relatively more predictive (yards, touchdowns).
+
+***
+
+# Data Visualization
+
+***
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+data <- big_association %>%
+  select(c(recRec, recYds, recTds, fantasyPts.x))
+plot <- cor(data)
+corrplot(plot, method = 'color', order = 'AOE', diag = FALSE) #creating a correlogram 
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(subset(big_association, recTds<3), aes(x=factor(recTds), y=fantasyPts.x)) +
+  geom_violin(fill="darkorchid4") +
+  labs(title="Receiving Tds and Fantasy Points (TE)", x="Receiving Touchdowns within a single game", y="Fantasy Points within a single game")
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(big_association, aes(x=factor(recTarg), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Receiving Targets within a single game (TE)", x="Targets within game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(recRec), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Receptions within a single game (TE)", x="Receptions within game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(rzRecTarg), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Redzone Receiving Targets within a single game (TE)", x="Redzone Targets within game", y="Year-End Fantasy Points")
+
+ggplot(big_association, aes(x=factor(rzRecRec), y=fantasyPts.y)) +
+  geom_boxplot(fill="darkorchid4") +
+  labs(title="Year-End Points by Redzone Receptions within a single game (TE)", x="Redzone Recpetions within game", y="Year-End Fantasy Points")
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(big_association, aes(fantasyPts.x)) +
+  geom_histogram(fill="violet") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within a Game Distribution (TE)", x="Fantasy Points within a game", y="")
+
+ggplot(big_pairs, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid2") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within Consecutive Games Distribution (TE)", x="Average Fantasy Points within consecutive games", y="")
+
+ggplot(big_trios, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid3") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points within Triplet of Games Distribution (TE)", x="Average Fantasy Points within a Triplet of games", y="")
+
+ggplot(big_half, aes(fantasyPts.x)) +
+  geom_histogram(fill="darkorchid4") +
+  guides(fill="none") +
+  geom_vline(xintercept=7.5, linetype="dashed", color="black", linewidth=1.25) +
+  labs(title="Fantasy Points in First Half of Season Distribution (TE)", x="Average Fantasy Points in First Half of season", y="")
+```
+
+These are distribution plots of fantasy points over the different sample sizes. The dotted line is set at 7.5 fantasy points, it acts as a reference point and represents the points at which the last starting TE (12 team) would average over a given year.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(big_association, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="violet") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess", color="black") +
+  labs(title="Year-End Points by Fantasy Points within a game (TE)", x="Fantasy Points within a game", y="Year-End Fantasy Points")
+
+ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="darkorchid2") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess", color="black") +
+  labs(title="Year-End Points by Fantasy Points within Consecutive Games (TE)", x="Average Fantasy Points within consecutive games", y="Year-End Fantasy Points")
+
+ggplot(big_trios, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=.4)) +
+  geom_point(color="darkorchid3") +
+  guides(alpha="none") +
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess", color="black") +
+  labs(title="Year-End Points by Fantasy Points within a Triplet of Games (TE)", x="Average Fantasy Points within a Triplet of games", y="Year-End Fantasy Points")
+
+ggplot(big_half, aes(x=fantasyPts.x, y=fantasyPts.y, alpha=1)) +
+  geom_point(color="darkorchid4") +
+  guides(alpha="none") + 
+  scale_size(range=c(1,3)) +
+  geom_smooth(method="loess", color="black") +
+  labs(title="Year-End Points by Fantasy Points in First Half of Season (TE)", x="Average Fantasy Points in First Half of season", y="Year-End Fantasy Points")
+```
+
+These plots are similar to the last, but also show the year-end fantasy points. As the sample size increases, the rolling average function line becomes more linear. There also seems to be no threshold (fantasy points) that characterizes a gross increase in predictive power.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+ggplot(big_pairs, aes(x=fantasyPts.x, y=fantasyPts.y)) +
+  geom_smooth(data=big_association, method="loess", se=F, color="violet", linewidth=1.25) +
+  geom_smooth(data=big_pairs, method="loess", se=F, color="darkorchid2", linewidth=1.25) +
+  geom_smooth(data=big_trios, method="loess", se=F, color="darkorchid3", linewidth=1.25) +
+  geom_smooth(data=big_half, method="loess", se=F, color="darkorchid4", linewidth=1.25) +
+  labs(title="Year-End Points by Subsets of Combined games (TE)", x="Avg Fantasy Points in set of games (1,2,3,half)", y="Year-End Fantasy Points")
+```
+
+This plots the last four function lines together. It is clear that with increasing sample size there is also an increase in predictive power, however the increase seems to get progressively smaller.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+cor1 <- data.frame(variable=c("recRec", "recYds", "recTds"),
+                   correlation=c(cor(big_association$recRec, big_association$fantasyPts.y),
+                                 cor(big_association$recYds, big_association$fantasyPts.y),
+                                 cor(big_association$recTds, big_association$fantasyPts.y)))
+cor2 <- data.frame(variable=c("recRec", "recYds", "recTds"),
+                   correlation=c(cor(big_pairs$recRec, big_pairs$fantasyPts.y),
+                                 cor(big_pairs$recYds, big_pairs$fantasyPts.y),
+                                 cor(big_pairs$recTds, big_pairs$fantasyPts.y)))
+cor3 <- data.frame(variable=c("recRec", "recYds", "recTds"),
+                   correlation=c(cor(big_trios$recRec, big_trios$fantasyPts.y),
+                                 cor(big_trios$recYds, big_trios$fantasyPts.y),
+                                 cor(big_trios$recTds, big_trios$fantasyPts.y)))
+cor4 <- data.frame(variable=c("recRec", "recYds", "recTds"),
+                   correlation=c(cor(big_half$recRec, big_half$fantasyPts.y),
+                                 cor(big_half$recYds, big_half$fantasyPts.y),
+                                 cor(big_half$recTds, big_half$fantasyPts.y)))
+data <- data.frame(variable=c("recRec", "recYds", "recTds"),
+                   OneWeek=cor1$correlation,
+                   TwoWeeks=cor2$correlation,
+                   ThreeWeeks=cor3$correlation,
+                   FirstHalf=cor4$correlation)
+data <- pivot_longer(data, cols=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf"), names_to="subset", values_to="correlation") #pivoting the data to a longer format to better plot the relationships
+data$subset <- factor(data$subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf")) #assigning levels to the subsets to plot them in order
+#data
+ggplot(data) +
+  geom_col(aes(x=subset, y=correlation, fill=variable)) +
+  labs(title="Correlation of Fantasy Points with Year-End Points (TE)", x="", y="Collective Correlation with Year-End Points")
+```
+
+Of course, the cumulative correlation and individual correlations increase with sample size. However, the largest change in predictive power is with receiving touchdowns. This because touchdowns are infrequent and unpredictable in any single week, but are more frequent and more predictable over the course of multiple weeks.
+
+***
+
+# Regression Analysis
+
+***
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+model1 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_association)
+model1_sum <- summary(model1)
+model2 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_pairs)
+model2_sum <- summary(model2)
+model3 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_trios)
+model3_sum <- summary(model3)
+model4 <- lm(fantasyPts.y ~ fantasyPts.x, data=big_half)
+model4_sum <- summary(model4)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+data <- data.frame(Subset=c('OneWeek', 'TwoWeeks', 'ThreeWeeks', 'FirstHalf'),
+                               Adj.R.Squared=c(model1_sum$adj.r.squared, 
+                                               model2_sum$adj.r.squared, 
+                                               model3_sum$adj.r.squared, 
+                                               model4_sum$adj.r.squared))
+data$Subset <- factor(data$Subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf"))
+ggplot(data) +
+  geom_col(aes(x=Subset, y=Adj.R.Squared), fill="darkorchid4") +
+  labs(title="Points Model Comparison of Adjusted R Squared", x="Sample Size of Weeks", y="")
+```
+
+These are the adjusted r squared of each model, which represents the percent of data that the model can predict adjusted for the complexity of the model. These models only use average fantasy points to predict year-end points. Obviously, the predictive power of each model gets better with larger sample sizes, however it also appears that the same pattern of decreasing rate of return exists. One Week does not surpass 50% variance explained, which is an intuitive threshold.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+data <- big_association %>% 
+  select(-c()) #creating a dataset to make a model
+all <- lm(fantasyPts.y ~ ., data=data) #making a model with every variable in the given dataset
+step_model1 <- step(all, direction = "backward", trace=0) #using a backwards stepwise process to simplify the given model
+step_model1_sum <- summary(step_model1)
+
+data <- big_pairs %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+step_model2 <- step(all, direction = "backward", trace=0)
+step_model2_sum <- summary(step_model2)
+
+data <- big_trios %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+step_model3 <- step(all, direction = "backward", trace=0)
+step_model3_sum <- summary(step_model3)
+
+data <- big_half %>% 
+  select(-c())
+all <- lm(fantasyPts.y ~ ., data=data)
+step_model4 <- step(all, direction = "backward", trace=0)
+step_model4_sum <- summary(step_model4)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+data <- data.frame(Subset=c('OneWeek', 'TwoWeeks', 'ThreeWeeks', 'FirstHalf'),
+                               Adj.R.Squared=c(step_model1_sum$adj.r.squared, 
+                                               step_model2_sum$adj.r.squared, 
+                                               step_model3_sum$adj.r.squared, 
+                                               step_model4_sum$adj.r.squared))
+data$Subset <- factor(data$Subset, levels=c("OneWeek", "TwoWeeks", "ThreeWeeks", "FirstHalf"))
+ggplot(data) +
+  geom_col(aes(x=Subset, y=Adj.R.Squared), fill="darkorchid4") +
+  labs(title="Stepwise Regression Comparison of Adjusted R Squared", x="Sample Size of Weeks", y="")
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+comp1 <- anova(model1, step_model1)
+comp2 <- anova(model2, step_model2)
+comp3 <- anova(model3, step_model3)
+comp4 <- anova(model4, step_model4)
+```
+
+Thankfully, the more complex models (backwards stepwise regression) that use more variables are also significantly different in predictive power (all under 0.0001 p values) compared to the models that only use average fantasy points. This means that digging deeper into the data has revealed that there is an advantage in more complex models; not just looking at fantasy points.
+
+* Number of Variables Used in Each Stepwise Model:
+  + One Week: 16
+  + Two Weeks: 22
+  + Three Weeks: 21
+  + First Half: 19
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+pca_variables <- c('fantasyPts.y', 'rzRecTdPct', 'ezRecTdPct') #top contributors to the first PCs
+sum_cor_variables <- c('fantasyPts.x', 'recTds', 'rzRecTds') #top contributors to the cumulative correlation
+one_cor_variables <- c(comatrix1$colnames[1:3]) #intra-week points correlation: correlations with the given week's points
+two_cor_variables <- c(comatrix2$colnames[1:3]) #intra-week points correlation
+three_cor_variables <- c(comatrix3$colnames[1:3]) #intra-week points correlation
+half_cor_variables <- c(comatrix4$colnames[1:3]) #intra-week points correlation
+year_end_cor_variables <- c(comatrix5$colnames[1:8]) #inter-week points correlation: correlation with the year-end points
+
+reduced_v <- colnames(big_association) %in% c(pca_variables, sum_cor_variables, one_cor_variables, two_cor_variables, three_cor_variables, half_cor_variables, year_end_cor_variables) #creating a mask based off multiple standards to reduce the data's dimensions
+reduced <- colnames(big_association)[reduced_v]
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+red_model1 <- lm(fantasyPts.y ~ ., data=big_association[,reduced])
+red_model1_sum <- summary(red_model1)
+red_model2 <- lm(fantasyPts.y ~ ., data=big_pairs[,reduced])
+red_model2_sum <- summary(red_model2)
+red_model3 <- lm(fantasyPts.y ~ ., data=big_trios[,reduced])
+red_model3_sum <- summary(red_model3)
+red_model4 <- lm(fantasyPts.y ~ ., data=big_half[,reduced])
+red_model4_sum <- summary(red_model4)
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+comp5 <- anova(red_model1, step_model1)
+comp6 <- anova(red_model2, step_model2)
+comp7 <- anova(red_model3, step_model3)
+comp8 <- anova(red_model4, step_model4)
+```
+
+Next, I used the most highly associated variables from each of the data analysis techniques to compile a 'reduced' set of 12 variables. Using the anova test, there is a significant difference between all of the reduced models and their stepwise counterparts, meaning that the stepwise models are better. Here, I was hoping that the simplified models would be just as good as the stepwise models. The stepwise models have an average of 23 variables whereas the reduced models have only 12 variables.
+
+It is also important to note that the margin of gain between reduced models (all except for the first half sample size) and the fantasy points models is larger than the margin of gain between the stepwise models and the reduced models.
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+step_model1_sum
+```
+
+Here is the summary for the one week sample size stepwise reduced model. I believe that this is the model that should be used to predict future fantasy points, because it can be applied to the other sample sizes better than they can be applied to the one week sample size. Plus, this model uses the least amount of variables.
+
+The "estimate" is the coefficient for each variable, meaning that for every one unit increase in the given variable there is a corresponding change in the predicted value of total fantasy points, regardless of the other variables. The "t value" and p value" both show the chance that these variables provide unique information on the predicted value of fantasy points more than that of the other variable (while assuming there should not be any uniqueness). There is high multicollinearity between the variables in the model, so the coefficients and significance measures are less accurate. These coefficients are also based on the one-week sample, so they may be different when applied to other sample sizes. However, these variables are the most important variables for predicting the year-end total fantasy points of a TE.
+
+***
+
+# Predictive Analysis
+
+***
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+newdata <- big_association[, -49]
+single_end <- big_association[, 49]
+predicted_single <- predict(step_model1, newdata, level="confidence")
+newdata <- big_pairs[, -49]
+pairs_end <- big_pairs[, 49]
+predicted_pairs <- predict(step_model1, newdata, level="confidence")
+newdata <- big_trios[, -49]
+trios_end <- big_trios[, 49]
+predicted_trios <- predict(step_model1, newdata, level="confidence")
+newdata <- big_half[, -49]
+half_end <- big_half[, 49]
+predicted_half <- predict(step_model1, newdata, level="confidence")
+
+data1 <- data.frame(predicted=predicted_single, real=single_end)
+data2 <- data.frame(predicted=predicted_pairs, real=pairs_end)
+data3 <- data.frame(predicted=predicted_trios, real=trios_end)
+data4 <- data.frame(predicted=predicted_half, real=half_end)
+
+ggplot(data1, aes(x=predicted, y=real)) +
+  geom_smooth(data=data1, se=F, method="lm", color="violet", linewidth=1.25, fullrange=T) +
+  geom_smooth(data=data2, se=F, method="lm", color="darkorchid2", linewidth=1.25, fullrange=T) +
+  geom_smooth(data=data3, se=F, method="lm", color="darkorchid3", linewidth=1.25, fullrange=T) +
+  geom_smooth(data=data4, se=F, method="lm", color="darkorchid4", linewidth=1.25, fullrange=T) +
+  lims(x=c(0, NA), y=c(0, NA)) +
+  labs(title="Fantasy Points Based on Predicted Fantasy Points (TE)", x="Predicted Points", y="Real Total Points")
+ggplot(data1, aes(x=predicted, y=real)) +
+  geom_smooth(data=data1, se=T, method="lm", color="violet", fill="violet", linewidth=0, level=.99) +
+  geom_smooth(data=data2, se=T, method="lm", color="darkorchid2", fill="darkorchid2", linewidth=0, level=.99) +
+  geom_smooth(data=data3, se=T, method="lm", color="darkorchid3", fill="darkorchid3", linewidth=0, level=.99) +
+  geom_smooth(data=data4, se=T, method="lm", color="darkorchid4", fill="darkorchid4", linewidth=0, level=.99) +
+  lims(x=c(0, NA), y=c(0, NA)) +
+  labs(title="Fantasy Points Based on Predicted Fantasy Points (TE)", x="Predicted Points with SE of 99%", y="Real Total Points")
+```
+
+The first plot shows the change in slope of real fantasy points scored and predicted fantasy points scored, based on the specified model. The slope slowly increases towards 1 with every increase in sample size. There still seems to be a diminishing rate of return for every increase in sample size.
+
+The second plot shows the confidence intervals for the average real fantasy points based on predicted fantasy points at the 99% level. Based on the standard errors of the linear trend lines, the one-week sample is clearly different and worse than the others. However, the other samples all touch each other, so it is reasonable to assume that there is limited difference between the projections.
+
+*Data from of PFF*
