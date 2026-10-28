@@ -18,7 +18,7 @@ projects:
   - id: odds-collection
     name: Betting-line collection
     phase: 0
-    status: idea
+    status: exploring
     horizon: now
     depends_on: []
     summary: Collect game and player-prop lines weekly from free odds-API tiers and public JSON endpoints (no scraping). Time-sensitive, since every missed week is lost.

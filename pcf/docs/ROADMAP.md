@@ -44,7 +44,10 @@ These are targets, not deadlines.
 
 ## Decisions needed from the CEO
 
-Nothing open right now.
+From the [`odds-collection` exploration](../projects/odds-collection/EXPLORATION.md):
+- [ ] Sign up for a free The Odds API key (prices and TD odds), or skip it for now?
+- [ ] Run the ESPN prop backfill (2022–2026) now, before the brief?
+- [ ] Where the multi-times-a-week collector runs: GitHub Actions, or this PC?
 
 Decided:
 - **2026-10-28 · Expert catalog:** confirmed as recommended. Every ⭐ is on the roadmap, every ○ is in the parking lot.
