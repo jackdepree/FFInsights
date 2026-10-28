@@ -236,6 +236,15 @@ projects:
     depends_on: [participation]
     summary: Slot receiver, deep threat, receiving back, blocking tight end, ... from usage patterns.
 
+  - id: schemes-v2
+    name: Schemes v2
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [roles-archetypes, context-v2]
+    origin: Schemes_Model.ipynb
+    summary: A full expert (CEO call, 2026-10-28). Retry team schemes from the roles-and-archetypes angle; the exploration must first check why schemes-v1 found little signal.
+
   - id: qb-talent
     name: QB true talent
     phase: 1
@@ -457,14 +466,6 @@ projects:
     depends_on: [timeline]
     summary: Contract years, incentives and extension likelihood.
 
-  - id: schemes-v2
-    name: Schemes v2
-    phase: 1
-    status: parked
-    horizon: parking
-    depends_on: [roles-archetypes]
-    summary: Retry schemes from the roles-and-archetypes angle. See schemes-v1 for what didn't work.
-
   - id: hot-hand
     name: Hot hand (exploration only)
     phase: 1
@@ -488,4 +489,4 @@ projects:
     status: dead_end
     depends_on: []
     origin: Schemes_Model.ipynb
-    summary: Over-expectation features, then PCA, then clustering into team schemes. Little usable signal found.
+    summary: Over-expectation features, then PCA, then clustering into team schemes. Little usable signal found. Retried as schemes-v2.

@@ -28,7 +28,7 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 ## Later
 
-- **The remaining experts:** line play, game script, VOE v2, opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, QB talent, prospects, kicker & DST, market, crowd, news
+- **The remaining experts:** line play, game script, VOE v2, opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, schemes v2, QB talent, prospects, kicker & DST, market, crowd, news
 - **Then** composites, products, automation and public, in dependency order
 
 ## Milestones
@@ -44,8 +44,11 @@ These are targets, not deadlines.
 
 ## Decisions needed from the CEO
 
-- [ ] **Expert catalog:** I put every ⭐ from the brainstorm on the roadmap and every ○ in the parking lot. Confirm, or move items.
-- [ ] **Schemes:** parked as `schemes-v2` (a retry from the roles angle), or retired for good?
+Nothing open right now.
+
+Decided:
+- **2026-10-28 · Expert catalog:** confirmed as recommended. Every ⭐ is on the roadmap, every ○ is in the parking lot.
+- **2026-10-28 · Schemes:** `schemes-v2` is a full expert, not parked. We didn't find signal before, but we still need to look.
 
 ## Parking lot
 
@@ -54,7 +57,6 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 - referee crews
 - coverage matchups
 - contract & motivation
-- schemes v2
 - hot hand (exploration only)
 - VOE as a conditional diffusion model
 
@@ -62,7 +64,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 | Project | What we tried | Why it failed | What would make us retry |
 |---|---|---|---|
-| `schemes-v1` (`old/code/Schemes_Model.ipynb`) | Over-expectation features → PCA → clustering into team schemes | Little usable signal | A new angle, most likely roles & archetypes first (`schemes-v2`) |
+| `schemes-v1` (`old/code/Schemes_Model.ipynb`) | Over-expectation features → PCA → clustering into team schemes | Little usable signal | Being retried as the `schemes-v2` expert, from the roles & archetypes angle |
 
 ## Changelog
 
