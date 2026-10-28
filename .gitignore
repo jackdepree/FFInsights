@@ -2,3 +2,11 @@
 .Rhistory
 .RData
 .Ruserdata
+
+# PCF data stays out of git (rule g)
+pcf/data/
+
+# Secrets: API keys live in .env files that are never committed
+.env
+*.env
+!.env.example
