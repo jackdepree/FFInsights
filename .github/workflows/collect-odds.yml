@@ -1,0 +1,74 @@
+# Collects betting lines several times a week and saves them to the private pcf-data repo.
+# Collected market data can't be re-downloaded later, so it is the one exception to rule g.
+# This repo is public, so these logs are public: the scripts print only counts, never lines or keys.
+#
+# Secrets (repo Settings → Secrets and variables → Actions):
+#   PCF_DATA_TOKEN  fine-grained token with Contents: read and write on jackdepree/pcf-data only
+#   ODDS_API_KEY    The Odds API free key (if missing, that step skips quietly)
+#
+# Schedules run only from the default branch (main). GitHub disables schedules in public repos
+# after 60 days without commits; re-enable them on the Actions tab if that happens.
+name: collect-odds
+
+on:
+  schedule:
+    - cron: "0 15 * * 2"   # Tue: opening lines for the week
+    - cron: "0 20 * * 4"   # Thu: before Thursday Night Football
+    - cron: "0 15 * * 6"   # Sat: before Saturday games, mid-week movement
+    - cron: "0 12 * * 0"   # Sun: before early and international kickoffs
+    - cron: "0 20 * * 1"   # Mon: before Monday Night Football
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: collect-odds
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check out pcf-data
+        uses: actions/checkout@v4
+        with:
+          repository: jackdepree/pcf-data
+          token: ${{ secrets.PCF_DATA_TOKEN }}
+          path: pcf-data
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install requests
+
+      - name: ESPN lines and props (free, no key)
+        env:
+          PCF_DATA_DIR: ${{ github.workspace }}/pcf-data
+        run: python pcf/projects/odds-collection/explore/backfill_espn.py --current-season
+
+      - name: The Odds API lines and props (free tier)
+        env:
+          PCF_DATA_DIR: ${{ github.workspace }}/pcf-data
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python pcf/projects/odds-collection/explore/collect_odds_api.py
+
+      - name: Save to pcf-data
+        working-directory: pcf-data
+        run: |
+          git config user.name "pcf-collector"
+          git config user.email "pcf-collector@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "nothing new"
+          else
+            git commit -q -m "odds snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+            git push -q
+          fi

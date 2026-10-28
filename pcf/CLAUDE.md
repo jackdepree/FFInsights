@@ -34,7 +34,7 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 - **d. Every model ships with** a backtest, a calibration check and an uncertainty estimate.
 - **e. Versioned handoffs.** Higher layers read lower-layer outputs only from saved, versioned results, never by refitting on the fly. In training, lower-layer outputs used as features must be out-of-fold.
 - **f. No hardcoded paths.** Everything is configured in one place.
-- **g. Data stays out of git**, except small final outputs (e.g. start/sit advice).
+- **g. Data stays out of git**, except small final outputs (e.g. start/sit advice). **The one exception is data we collect that can't be re-downloaded** (betting lines). It lives in the private `jackdepree/pcf-data` repo, never in this public one. API keys live in `pcf/.env` (gitignored) and in GitHub Actions secrets, never in code.
 - **h. Football sanity check.** Results that defy football logic get flagged, not shipped.
 - **i. Notebooks are for exploring only.** Reusable code lives in the package.
 - **j. Modularity.** Before writing new code, check the shared package for something that already does it. When writing something reusable, put it in the shared package so new and parallel projects reuse it. Flag duplication when you see it.

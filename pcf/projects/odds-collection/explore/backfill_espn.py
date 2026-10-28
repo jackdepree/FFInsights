@@ -9,6 +9,7 @@ Raw responses are saved append-only as gzipped JSON, one file per game per fetch
 Re-running skips games whose final file already exists, so it is safe to resume.
 
 Usage: python backfill_espn.py [--seasons 2022 2023 2024 2025 2026] [--delay 0.4]
+       python backfill_espn.py --current-season   (what the scheduled collector runs)
 Needs: requests
 """
 import argparse
@@ -105,11 +106,14 @@ def fetch_event(ev, delay):
 def main():
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--seasons", type=int, nargs="+", default=[2022, 2023, 2024, 2025, 2026])
+    parser.add_argument("--current-season", action="store_true",
+                        help="only the NFL season in progress (Jan-Feb belong to the previous year's season)")
     parser.add_argument("--delay", type=float, default=0.4, help="seconds between requests")
     args = parser.parse_args()
     now = datetime.now(timezone.utc)
+    seasons = [now.year if now.month >= 3 else now.year - 1] if args.current_season else args.seasons
 
-    for season in args.seasons:
+    for season in seasons:
         out_dir = RAW_DIR / f"season={season}"
         out_dir.mkdir(parents=True, exist_ok=True)
         events = list(list_events(season, args.delay))
