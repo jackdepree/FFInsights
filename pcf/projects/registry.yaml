@@ -1,0 +1,491 @@
+# PCF project registry: the single source of truth for every project's status and dependencies.
+# docs/ROADMAP.md is the human-readable view. If they ever disagree, this file wins.
+#
+# Fields
+#   id          unique kebab-case id; also the project's folder name: projects/<id>/
+#   name        short human name
+#   phase       0 foundation · 1 experts · 2 composites · 3 products · 4 automation · 5 public
+#               (phases 0-3 are the layers in CLAUDE.md)
+#   status      idea | exploring | brief | building | validating | done | parked | dead_end
+#   horizon     now | next | later | parking   (omitted for dead_end)
+#   depends_on  ids this project needs first. "What does it feed?" is derived from these; never stored.
+#   origin      optional: the old/ notebook it builds on
+#   summary     one line
+
+projects:
+
+  # ---------------------------------------------------------------- Phase 0: foundation
+  - id: odds-collection
+    name: Betting-line collection
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: []
+    summary: Collect game and player-prop lines weekly from free odds-API tiers and public JSON endpoints (no scraping). Time-sensitive, since every missed week is lost.
+
+  - id: package-scaffold
+    name: Package scaffold and config
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: []
+    summary: The pcf Python package, one central config (rule f), environment and test setup.
+
+  - id: data-layer
+    name: Data layer
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [package-scaffold]
+    summary: nflreadpy ingestion into a local cache kept out of git, with a re-runnable weekly refresh.
+
+  - id: timeline
+    name: NFL timeline and known-at timestamps
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [data-layer]
+    summary: One calendar for season weeks and offseason phases (combine, free agency, trades, pre-/post-draft, camp). Every row gets a known_at timestamp. Fallback is "week 0" only if this proves unworkable.
+
+  - id: cleaning-port
+    name: Port the cleaning functions
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [data-layer]
+    origin: VOE_Model_Training.ipynb, Fatigue_Model_Training.ipynb (pivot_wide_both_sides, clean_depth_charts, pivot_long_both_sides, get_position_groups)
+    summary: Rewrite and improve the old play-by-play, depth-chart, injury and snap cleaning functions as tested package code.
+
+  - id: grain-tables
+    name: Tables at every level of detail
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [cleaning-port, timeline]
+    summary: Play, player-game, team-game, player-week, player-season, team-season, player-career and event tables, joined by shared ids and known_at.
+
+  - id: tag-tables
+    name: Tag tables
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [grain-tables]
+    summary: Reusable categorical labels per play and per player-game (successful_play, added_win_probability, risky_play, ...) that any project can add to.
+
+  - id: validation-harness
+    name: Validation harness
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [package-scaffold, timeline]
+    summary: Walk-forward backtests, calibration, uncertainty checks, shuffled-null signal tests, automated leakage checks, feature selection inside CV folds.
+
+  - id: baselines
+    name: Dumb baselines
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [grain-tables, validation-harness]
+    summary: Rolling averages, Vegas lines, ECR and a simple lasso. The yardstick every product must beat.
+
+  - id: prediction-ledger
+    name: Prediction ledger
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [package-scaffold]
+    summary: An append-only record of every prediction made before kickoff, with the market line at that time. It feeds the track record and the scorecards.
+
+  - id: registry-tooling
+    name: Registry tooling
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [package-scaffold]
+    summary: A script that validates this file (no missing ids, no cycles) and draws the impact map.
+
+  # ---------------------------------------------------------------- Phase 1: experts
+  - id: elo
+    name: Team Elo (weekly)
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Weekly team strength rating, with optional offense/defense split and QB adjustment. Doubles as a win-probability baseline.
+
+  - id: team-efficiency
+    name: Opponent-adjusted efficiency
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA).
+
+  - id: pace
+    name: Pace and play-calling
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume.
+
+  - id: environment
+    name: Environment
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Weather, roof, surface, rest days, travel and time zones.
+
+  - id: stabilization
+    name: Stabilization and regression
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty.
+
+  - id: context-v2
+    name: Context v2
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, tag-tables, validation-harness]
+    origin: Context_Model_Training.ipynb
+    summary: The situation and pressure each play happened in (pressure, time to throw, YAC, completion, ...), refactored from the old context models.
+
+  - id: participation
+    name: Participation and snaps
+    phase: 1
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Snaps, routes run and share of plays, projected forward.
+
+  - id: line-play
+    name: Line play
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [grain-tables, tag-tables, validation-harness]
+    summary: Pass protection and run blocking as a unit (pressure over expected, yards before contact).
+
+  - id: game-script
+    name: Game script
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [elo, team-efficiency, pace]
+    summary: How likely each team is to be leading or trailing during the game, which shifts the pass/run mix.
+
+  - id: voe-v2
+    name: VOE v2
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [context-v2]
+    origin: VOE_Model_Training.ipynb
+    summary: Value over expected for each player at the play level. PCF's signature stat. Rebuilt, possibly split several ways.
+
+  - id: opportunity-quality
+    name: Opportunity quality
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [participation]
+    summary: Expected fantasy points from where targets and carries happen.
+
+  - id: vacated-opportunity
+    name: Vacated opportunity
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [participation, opportunity-quality]
+    summary: When a player is out, who absorbs his targets and carries.
+
+  - id: td-expert
+    name: Touchdown expert
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [opportunity-quality, team-efficiency]
+    summary: Red-zone and goal-line usage, giving touchdown probability. Feeds TD-scorer props.
+
+  - id: aging
+    name: Aging curves
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [grain-tables, validation-harness]
+    summary: Decline by position and age.
+
+  - id: injury-fatigue
+    name: Injury and fatigue
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [participation, timeline]
+    origin: Fatigue_Model_Training.ipynb
+    summary: Workload, injury-risk tiers (not "he'll get hurt") and recovery.
+
+  - id: roles-archetypes
+    name: Roles and archetypes
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [participation]
+    summary: Slot receiver, deep threat, receiving back, blocking tight end, ... from usage patterns.
+
+  - id: qb-talent
+    name: QB true talent
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [context-v2, stabilization]
+    summary: Completion over expected, sack avoidance and play under pressure, shrunk for sample size.
+
+  - id: prospects
+    name: Prospects and rookies
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [timeline, validation-harness]
+    summary: College stats, combine and draft capital, giving rookie projections. Key for dynasty and the offseason.
+
+  - id: kicker-dst
+    name: Kicker and DST
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [team-efficiency, environment]
+    summary: Needed for fantasy completeness.
+
+  - id: market
+    name: Market expert
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [odds-collection, timeline]
+    summary: Implied team totals and line movement, as features.
+
+  - id: crowd
+    name: Crowd expert
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [grain-tables, timeline]
+    summary: ECR and ADP as features and benchmarks. Where we disagree with the crowd is where an edge might be.
+
+  - id: news
+    name: News and off-field
+    phase: 1
+    status: idea
+    horizon: later
+    depends_on: [timeline, validation-harness]
+    summary: Arrests, coach quotes and media framing from free sources (RSS, Reddit, team sites). Weakest free data, so it comes last.
+
+  # ---------------------------------------------------------------- Phase 2: composites
+  - id: team-strength
+    name: Team strength composite
+    phase: 2
+    status: idea
+    horizon: later
+    depends_on: [elo, team-efficiency, qb-talent, line-play]
+    summary: One team-strength view combining the team experts.
+
+  - id: player-opportunity
+    name: Player opportunity composite
+    phase: 2
+    status: idea
+    horizon: later
+    depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, injury-fatigue]
+    summary: Projected volume and role for each player for the coming game.
+
+  - id: game-simulator
+    name: Game simulator
+    phase: 2
+    status: idea
+    horizon: later
+    depends_on: [team-strength, player-opportunity, game-script, pace, environment, voe-v2, td-expert, stabilization, market]
+    summary: Drive- or play-level simulation run thousands of times. Joint distributions for every prop, fantasy score and correlation from one engine.
+
+  - id: outcome-distributions
+    name: Outcome distributions
+    phase: 2
+    status: idea
+    horizon: later
+    depends_on: [game-simulator]
+    summary: Floor, median and ceiling for every player and stat.
+
+  # ---------------------------------------------------------------- Phase 3: products
+  - id: fantasy-projections
+    name: Fantasy projections (all formats)
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [outcome-distributions, aging, prospects, crowd, kicker-dst]
+    summary: Projections with uncertainty for any scoring (PPR, half, custom) and format.
+
+  - id: start-sit
+    name: Start/sit
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [fantasy-projections]
+    summary: Weekly start/sit advice with confidence grades.
+
+  - id: props-board
+    name: Props board
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [outcome-distributions, odds-collection, prediction-ledger]
+    summary: Our probability against the line for every collected prop, ranked by edge and confidence.
+
+  - id: dfs-bestball
+    name: DFS and best ball
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [outcome-distributions]
+    summary: Ceiling-focused rankings and stacks.
+
+  - id: dynasty-values
+    name: Dynasty values
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [fantasy-projections, aging, prospects]
+    summary: Multi-year player values.
+
+  - id: futures
+    name: Futures
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [game-simulator]
+    summary: Season-long simulations for win totals, playoffs and Super Bowl odds.
+
+  - id: scorecards
+    name: Scorecards and track record
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [prediction-ledger, validation-harness]
+    summary: Which models make or lose money, which are erratic, with uncertainty on our own performance.
+
+  - id: weekly-report
+    name: Weekly HTML report
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [start-sit, props-board, scorecards]
+    summary: The user view from VISION.md, in layers of depth.
+
+  - id: builder-view
+    name: Builder view
+    phase: 3
+    status: idea
+    horizon: later
+    depends_on: [registry-tooling]
+    summary: Project status, the impact map and exploration results, the builder view from VISION.md.
+
+  # ---------------------------------------------------------------- Phase 4: automation & distribution
+  - id: weekly-run
+    name: Automated weekly run
+    phase: 4
+    status: idea
+    horizon: later
+    depends_on: [weekly-report]
+    summary: The whole pipeline runs on a schedule, end to end.
+
+  - id: email-reports
+    name: Emailed reports
+    phase: 4
+    status: idea
+    horizon: later
+    depends_on: [weekly-report, weekly-run]
+    summary: The weekly report emailed to the CEO and friends.
+
+  - id: dashboard
+    name: Dashboard
+    phase: 4
+    status: idea
+    horizon: later
+    depends_on: [weekly-report]
+    summary: Interactive version of the report.
+
+  # ---------------------------------------------------------------- Phase 5: public
+  - id: website
+    name: Public website
+    phase: 5
+    status: idea
+    horizon: later
+    depends_on: [dashboard, scorecards]
+    summary: Subscriptions, only once the track record earns it.
+
+  # ---------------------------------------------------------------- Parking lot
+  - id: play-caller
+    name: Play-caller tendencies
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [pace]
+    summary: 4th-down aggressiveness and pass rate tied to the coach, following him across teams.
+
+  - id: referee-crews
+    name: Referee crews
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [grain-tables]
+    summary: Penalty and flag tendencies by crew.
+
+  - id: coverage-matchups
+    name: Coverage matchups
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [roles-archetypes]
+    summary: Receiver performance against man vs. zone coverage (limited free charting data).
+
+  - id: contract-motivation
+    name: Contract and motivation
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [timeline]
+    summary: Contract years, incentives and extension likelihood.
+
+  - id: schemes-v2
+    name: Schemes v2
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [roles-archetypes]
+    summary: Retry schemes from the roles-and-archetypes angle. See schemes-v1 for what didn't work.
+
+  - id: hot-hand
+    name: Hot hand (exploration only)
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [validation-harness]
+    summary: Does momentum exist beyond noise? Mainly a test that the shuffled-null check works.
+
+  - id: voe-diffusion
+    name: VOE as a conditional diffusion model
+    phase: 1
+    status: parked
+    horizon: parking
+    depends_on: [voe-v2]
+    summary: CEO idea. Revisit once VOE v2 gives a baseline to beat.
+
+  # ---------------------------------------------------------------- Dead ends
+  - id: schemes-v1
+    name: Schemes v1
+    phase: 1
+    status: dead_end
+    depends_on: []
+    origin: Schemes_Model.ipynb
+    summary: Over-expectation features, then PCA, then clustering into team schemes. Little usable signal found.

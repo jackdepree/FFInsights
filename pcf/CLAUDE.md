@@ -30,7 +30,7 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 - **a. `old/` is read-only.** Reuse ideas and functions by rewriting them in `pcf/`.
 - **b. Free data only.** nflreadpy is the backbone. No paid sources and no manually downloaded CSVs. Where free history doesn't exist (e.g. player-prop lines), we collect it ourselves from now on.
-- **c. Point-in-time.** No feature may use information that was unavailable before kickoff. Stacked models leak easily, and leaked backtests look great and then fail live.
+- **c. Point-in-time.** No feature may use information that was unavailable before kickoff. Stacked models leak easily, and leaked backtests look great and then fail live. Leakage checks are automated and run on every model. We can almost never have too many: when in doubt, add another check.
 - **d. Every model ships with** a backtest, a calibration check and an uncertainty estimate.
 - **e. Versioned handoffs.** Higher layers read lower-layer outputs only from saved, versioned results, never by refitting on the fly. In training, lower-layer outputs used as features must be out-of-fold.
 - **f. No hardcoded paths.** Everything is configured in one place.
@@ -38,7 +38,10 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 - **h. Football sanity check.** Results that defy football logic get flagged, not shipped.
 - **i. Notebooks are for exploring only.** Reusable code lives in the package.
 - **j. Modularity.** Before writing new code, check the shared package for something that already does it. When writing something reusable, put it in the shared package so new and parallel projects reuse it. Flag duplication when you see it.
-- **k. Simple first.** Every complex technique is tested against a cheap, simple baseline (e.g. a rolling average, a linear model, the Vegas line, ECR). If it doesn't clearly beat the baseline, the simple version ships.
+- **k. Simple first, no noise.** Every complex technique is tested against a cheap, simple version.
+  - **Experts** must show real signal on held-out data: they beat a shuffled, signal-free version of themselves, and they don't add noise. They don't have to beat other models. Downstream feature selection decides whether they get used.
+  - **Feature selection always happens inside the cross-validation folds**, never on the full dataset.
+  - **Products** must beat simple baselines (e.g. a rolling average, a lasso, the Vegas line, ECR). If they don't, the simple version ships.
 - **l. Questions come with context, simple to detailed.** When Claude asks the CEO a question, it gives enough context to answer it, in this order: the question in one line → why it matters in plain language → the options and tradeoffs → technical detail, only if needed.
 
 ## How we work together
@@ -65,13 +68,16 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 ## Mini-project lifecycle
 
-Every new mini-project, sub-problem, feature, model or domain follows these steps:
+Every new mini-project, sub-problem, feature, model or domain gets an entry in [`projects/registry.yaml`](projects/registry.yaml) and moves through these statuses: **idea → exploring → brief → building → validating → done** (or **parked** / **dead_end**).
 
-1. **Brainstorm** the idea together.
-2. **Executive brief:** a one-pager the CEO helps write. It covers the idea or question, goals, assumptions, inputs, outputs, football context, technical possibilities and validation criteria.
-3. **Build** the code and **validate** the results against the brief's criteria (rules c, d, k).
-4. **Technical results:** a one-pager by Claude. It covers what the outputs mean technically, their limitations, and future possibilities. It lists open questions for the CEO to answer.
-5. **Update the roadmap.**
+1. **Idea:** brainstorm it together and add it to the registry.
+2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
+3. **Brief:** a one-pager the CEO helps write. It covers the idea or question, goals, assumptions, inputs, outputs, football context, technical possibilities and validation criteria.
+4. **Building:** production-level code in the package.
+5. **Validating:** check the results against the brief's criteria (rules c, d, k).
+6. **Done:** Claude writes the technical results one-pager: what the outputs mean technically, their limitations, and future possibilities. It lists open questions for the CEO to answer. Then the roadmap and registry are updated.
+
+Each project's notes live in `projects/<id>/`: `EXPLORATION.md`, `BRIEF.md`, `RESULTS.md`.
 
 ## Definition of done
 
@@ -79,12 +85,12 @@ A mini-project is done when:
 - [ ] The executive brief was agreed before building.
 - [ ] Reusable code is in the package, with tests. Notebooks only explore.
 - [ ] The point-in-time check passes: no feature uses post-kickoff information.
-- [ ] The model beats its simple baseline, or the simple baseline ships instead.
+- [ ] Experts show held-out signal over a shuffled null and don't add noise. Products beat their simple baselines, or the baseline ships instead.
 - [ ] A backtest, a calibration check and an uncertainty estimate are reported.
 - [ ] Outputs are saved, versioned, and readable by higher layers.
 - [ ] Results pass the football sanity check.
 - [ ] The technical results one-pager is written and the CEO's open questions are answered.
-- [ ] The roadmap is updated and the CEO approved the merge.
+- [ ] The registry and roadmap are updated, and the CEO approved the merge.
 
 ## Where things live
 
@@ -93,9 +99,11 @@ Items marked *(planned)* don't exist yet. `ARCHITECTURE.md` will define the code
 ```
 pcf/
   CLAUDE.md           ← this charter
-  docs/               (planned) project-wide docs, linked below
+  docs/               project-wide docs, linked below
     decisions/        (planned) one short note per technical decision, with the reason
-  projects/<name>/    (planned) each mini-project's executive brief and technical results
+  projects/
+    registry.yaml     ← single source of truth for every project's status and dependencies
+    <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md
   <layer folders>/    (planned) each with its own short CLAUDE.md
 ```
 
@@ -103,9 +111,10 @@ pcf/
 
 - [`docs/VISION.md`](docs/VISION.md): the north star, in the CEO's words. Read it when a tradeoff isn't settled by the rules above.
 
+- [`docs/ROADMAP.md`](docs/ROADMAP.md): now / next / later, milestones, CEO decisions, dead ends
+
 To be written:
 
-- `docs/ROADMAP.md`: what we're building now, next and later; current status
 - `docs/DATA_SOURCES.md`: every source, how it updates, known gaps
 - `docs/ARCHITECTURE.md`: code layout, storage, dependency graph, automation
 - `docs/VALIDATION.md`: backtest, calibration, uncertainty and leakage standards
