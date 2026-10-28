@@ -110,7 +110,6 @@ pcf/
 ## Further reading
 
 - [`docs/VISION.md`](docs/VISION.md): the north star, in the CEO's words. Read it when a tradeoff isn't settled by the rules above.
-
 - [`docs/ROADMAP.md`](docs/ROADMAP.md): now / next / later, milestones, CEO decisions, dead ends
 
 To be written:
