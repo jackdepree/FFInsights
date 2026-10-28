@@ -99,9 +99,12 @@ pcf/
   <layer folders>/    (planned) each with its own short CLAUDE.md
 ```
 
-## Further reading (to be written)
+## Further reading
 
-- `docs/VISION.md`: the full vision, in the CEO's words
+- [`docs/VISION.md`](docs/VISION.md): the north star, in the CEO's words. Read it when a tradeoff isn't settled by the rules above.
+
+To be written:
+
 - `docs/ROADMAP.md`: what we're building now, next and later; current status
 - `docs/DATA_SOURCES.md`: every source, how it updates, known gaps
 - `docs/ARCHITECTURE.md`: code layout, storage, dependency graph, automation
