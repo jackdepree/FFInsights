@@ -10,3 +10,7 @@ pcf/data/
 .env
 *.env
 !.env.example
+
+# Python build files
+__pycache__/
+*.pyc
