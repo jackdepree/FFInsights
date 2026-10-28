@@ -62,11 +62,44 @@ This is a data-collection project, so "signal" means: does usable data exist? Ye
 3. **One normalized lines table:** `known_at, source, book, game_id (nflverse), player_id (gsis), market (normalized), line, over_price, under_price, is_open`.
 4. **Market-name mapping** between ESPN, The Odds API and our own stat names. For example, "Total Receiving Yards (incl. overtime)" maps to `player_reception_yds`, which maps to `receiving_yards`.
 
-## Open questions for the CEO
+## Decisions made (2026-10-28)
 
-1. **The Odds API key.** You'd need to sign up for the free tier yourself (I can't create accounts). Then you'd put the key in a local config file that stays out of git. Or should we skip it for now and accept no prices and no TD odds?
-2. **Backfill before the brief?** The ESPN API is unofficial and could vanish. I recommend running the backfill right away as exploration code, saving to a local data folder that's out of git, and writing the brief alongside it.
-3. **Where the collector runs.** Snapshots several times a week need a machine that's on. That favors GitHub Actions for this one piece, even if everything else runs on your PC. It's an `ARCHITECTURE.md` question, but this project forces it early.
+1. **The Odds API key:** the CEO signed up. The key is in `pcf/.env` and goes in a GitHub Actions secret.
+2. **Backfill:** run now, before the brief. Results are below.
+3. **Collector:** runs on GitHub Actions 5 times a week (`.github/workflows/collect-odds.yml`) and commits to the **private `jackdepree/pcf-data` repo**. Collected lines are the one exception to rule g, because they can't be re-downloaded.
+
+## Backfill results (2026-10-28)
+
+**Raw data:** 1,264 game files, 13 MB compressed, in `pcf/data/raw/espn_odds/` (local, out of git). **Parsed tables:** 500,009 prop rows and 9,740 game-line rows in `pcf/data/interim/espn_odds/`.
+
+| Season | Games with props | Props per game | Books | Markets | Players matched to nflverse |
+|---|---|---|---|---|---|
+| 2022 | 277 | ~108 | Caesars, MGM, DraftKings, SugarHouse | 6 | 98.5% |
+| 2023 | 285 | ~98 | Caesars, MGM, DraftKings, PointsBet, SugarHouse | 7 | 97.3% |
+| 2024 | 284 | ~561 | ESPN BET | 41 | 99.7% |
+| 2025 | 198 | ~1,026 | ESPN BET, DraftKings | 79 | 99.9% |
+| 2026 (wk 1–7) | 107 | ~676 | DraftKings | 77 | 99.9% |
+
+Every row matched an nflverse `game_id`.
+
+**What we learned:**
+- **The "current" line on a completed game is a pre-game closing line, not an in-game line.** Tested on receiving, rushing and passing yards and receptions, for rows where the line moved.
+  - "Current" was only **1–12% closer** to the actual result than "open". For example, 2025 receiving yards: open MAE 20.65, current MAE 20.24.
+  - That's the size of improvement a closing line normally has over an opening line.
+  - If in-game updates had leaked in, "current" would be dramatically more accurate.
+  - We treat "current" as the closing line.
+- **`lastUpdated` is *not* when the line was set.** On completed games it's mostly hours *after* kickoff (2025 median: about 6 hours after), which is when ESPN closed the market. For history, `open` and `current` have no exact timestamp. Features may use them only as "the opening line" and "the closing line", never as "the line at time t".
+- **Gap: 2025 weeks 14–22 have no props** (about 90 games), almost certainly lost when ESPN switched from ESPN BET to DraftKings in December 2025. It can't be recovered for free.
+- **ESPN game lines have open *and* close, with prices.**
+  - nflverse's `spread_line` matches ESPN's *closing* spread in 45–84% of games, and the opening spread in only 11–30%.
+  - So nflverse is near-closing but not exactly closing.
+  - For closing line value, use ESPN close (2023 onward) and fall back to nflverse.
+- **The 2022 game-line fields parse differently.** Open values are missing and close values never match nflverse. This needs a parser fix before 2022 game lines are used.
+- **The Odds API free tier (tested live):** props **with prices** from FanDuel, DraftKings, BetMGM, BetRivers, Bovada and BetOnline, for all five markets requested, at 5 credits per game as estimated.
+
+## Next step
+
+The executive **brief**, written together. It covers: the normalized lines table, market-name mapping, how `known_at` is defined for history vs. live snapshots, the 2022 parser fix, and promoting these scripts into the package.
 
 ## Sources
 
