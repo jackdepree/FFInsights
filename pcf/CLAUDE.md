@@ -29,7 +29,7 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 ## Non-negotiable rules
 
 - **a. `old/` is read-only.** Reuse ideas and functions by rewriting them in `pcf/`.
-- **b. Free data only.** nflreadpy is the backbone. No paid sources and no manually downloaded CSVs. Where free history doesn't exist (e.g. player-prop lines), we collect it ourselves from now on.
+- **b. Free data only.** nflreadpy is the backbone. No paid sources and **no recurring manual downloads**. A one-time download for a research case study is fine (e.g. Big Data Bowl). Where free history doesn't exist (e.g. player-prop lines), we collect it ourselves from now on.
 - **c. Point-in-time.** No feature may use information that was unavailable before kickoff. Stacked models leak easily, and leaked backtests look great and then fail live. Leakage checks are automated and run on every model. We can almost never have too many: when in doubt, add another check.
 - **d. Every model ships with** a backtest, a calibration check and an uncertainty estimate.
 - **e. Versioned handoffs.** Higher layers read lower-layer outputs only from saved, versioned results, never by refitting on the fly. In training, lower-layer outputs used as features must be out-of-fold.
@@ -112,9 +112,10 @@ pcf/
 - [`docs/VISION.md`](docs/VISION.md): the north star, in the CEO's words. Read it when a tradeoff isn't settled by the rules above.
 - [`docs/ROADMAP.md`](docs/ROADMAP.md): now / next / later, milestones, CEO decisions, dead ends
 
+- [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md): every source, its tier, years, update timing, **known-at rule**, how ids join, and known gaps. Read it before using any data.
+
 To be written:
 
-- `docs/DATA_SOURCES.md`: every source, how it updates, known gaps
 - `docs/ARCHITECTURE.md`: code layout, storage, dependency graph, automation
 - `docs/VALIDATION.md`: backtest, calibration, uncertainty and leakage standards
 - `docs/OLD_INVENTORY.md`: what in `old/` is worth reusing, and where it went

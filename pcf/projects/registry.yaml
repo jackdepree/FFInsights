@@ -152,7 +152,7 @@ projects:
     horizon: next
     depends_on: [grain-tables, tag-tables, validation-harness]
     origin: Context_Model_Training.ipynb
-    summary: The situation and pressure each play happened in (pressure, time to throw, YAC, completion, ...), refactored from the old context models.
+    summary: The situation and pressure each play happened in (pressure, time to throw, YAC, completion, ...), refactored from the old context models. The brief must choose live-only fields or a retrospective expert, because participation data is post-season only (DATA_SOURCES.md).
 
   - id: participation
     name: Participation and snaps
@@ -160,7 +160,7 @@ projects:
     status: idea
     horizon: next
     depends_on: [grain-tables, validation-harness]
-    summary: Snaps, routes run and share of plays, projected forward.
+    summary: Snaps, routes run and share of plays, projected forward. Live from snap counts and daily depth charts. Play-level participation (routes) is available for training only.
 
   - id: line-play
     name: Line play
@@ -185,7 +185,7 @@ projects:
     horizon: later
     depends_on: [context-v2]
     origin: VOE_Model_Training.ipynb
-    summary: Value over expected for each player at the play level. PCF's signature stat. Rebuilt, possibly split several ways.
+    summary: Value over expected for each player at the play level. PCF's signature stat. Rebuilt, possibly split several ways. Same participation caveat as context-v2.
 
   - id: opportunity-quality
     name: Opportunity quality
