@@ -1,0 +1,6 @@
+# Strip notebook outputs on commit (docs/CONVENTIONS.md, "Notebooks"). Set up with:
+#   pcf/.venv/Scripts/python.exe -m nbstripout --install --attributes pcf/.venv/nbstripout-attributes
+#   (see pcf/README.md: without --attributes it adds a repo-wide pattern that reaches old/)
+# Scoped to pcf/ so the read-only notebooks in old/ are never touched or shown as changed.
+pcf/**/*.ipynb filter=nbstripout
+pcf/**/*.ipynb diff=ipynb

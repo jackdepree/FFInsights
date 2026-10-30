@@ -14,3 +14,9 @@ pcf/data/
 # Python build files
 __pycache__/
 *.pyc
+
+# Python environment and tool caches
+.venv/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/

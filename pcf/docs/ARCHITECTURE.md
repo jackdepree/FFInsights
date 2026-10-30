@@ -42,6 +42,7 @@ pcf/
     config.py               the only place paths are resolved
     cli.py                  the `pcf` command
     core/
+      log.py                logging that masks API keys
       contract.py           the Expert interface and the standard output schema
       registry.py           reads registry.yaml: dependency order, cadence rules
       tracking.py           MLflow wrapper: log runs, register models, load them

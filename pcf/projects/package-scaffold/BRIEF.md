@@ -2,7 +2,7 @@
 
 > An infrastructure project: a short brief, no football calls. Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft (2026-10-30) · **Layer:** foundation (Phase 0) · **Cadence:** —
+**Status:** agreed (2026-10-30), built and done · **Layer:** foundation (Phase 0) · **Cadence:** —
 
 ## The question
 Can a new PCF project start writing tested, configured, reproducible code on day one, without setting anything up itself?

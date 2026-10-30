@@ -38,10 +38,20 @@ projects:
   - id: package-scaffold
     name: Package scaffold and config
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: []
     summary: The pcf Python package, one central config (rule f), environment and test setup.
+    interface:
+      inputs: none
+      outputs: pcf.config (get_config, zone, seasons, seed, get_secret), pcf.core.log (get_logger, setup_logging; masks keys), the pcf command (pcf info)
+      grain: n/a
+      interval: n/a
+      cadence: n/a
+      known_at: n/a
+      model: none
+      how_to_use: Import every path and setting from pcf.config, never hardcode one. Log through get_logger. Put code in the matching layer folder and follow its CLAUDE.md.
+      feeds: every project
 
   - id: experiment-tracking
     name: Experiment tracking (MLflow)

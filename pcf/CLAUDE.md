@@ -117,9 +117,9 @@ pcf/
     KNOWLEDGE.md      ← every finding from every finished project. Read before any brief.
     _templates/       BRIEF.md and RESULTS.md templates
     <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md, explore/
-  src/pcf/            (planned) the package: core, data, experts, composites, products, validation
-  tests/              (planned)
-  data/               (planned, gitignored) raw, interim, tables, features, outputs, mlflow, ledger, logs
+  src/pcf/            the package: core, data, experts, composites, products, validation (setup: README.md)
+  tests/              pytest, mirroring src/pcf/
+  data/               (gitignored) raw, interim, tables, features, outputs, mlflow, ledger, logs
 ```
 
 ## Further reading

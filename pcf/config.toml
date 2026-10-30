@@ -1,0 +1,20 @@
+# PCF configuration: every path and setting lives here (rule f, docs/CONVENTIONS.md).
+# API keys never go here. They live in pcf/.env (gitignored); see .env.example.
+
+[paths]
+# Relative paths resolve from the pcf/ folder.
+# The PCF_DATA_DIR environment variable overrides data_dir (the odds collector on Actions uses it).
+data_dir = "data"
+
+[seasons]
+# docs/VALIDATION.md section 1. The vault rolls forward every February.
+first_train = 2006
+first_report = 2016
+vault = 2025
+live = 2026
+
+[random]
+seed = 2026
+
+[logging]
+level = "INFO"
