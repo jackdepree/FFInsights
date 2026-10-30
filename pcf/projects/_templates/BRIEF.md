@@ -25,8 +25,12 @@ What has to be true for this to work: football assumptions and data assumptions.
 What we're looking for.
 
 ## Tests
-- **Success looks like:** the specific results that would mean it worked (e.g. "beats the shuffled null on 2023–2025 held-out weeks; calibrated within ±3%").
+The defaults are in `docs/VALIDATION.md`. List only what's specific to this project, and any default it changes (with the reason).
+- **Success looks like:** the specific results that would mean it worked (e.g. "beats the shuffled null on 2016–2024 held-out weeks; q10–q90 coverage 75–85%").
 - **Failure looks like:** the results that would mean it didn't, or that it should be a dead end.
+- **No-noise target** (experts): the downstream target and simple baseline this expert is tested against. **CEO approves.**
+- **Baselines** (composites and products): which ones from VALIDATION.md section 6.
+- **Seasons:** training start, and the vault (2025 by default; props use 2026 live).
 
 ## Inputs and outputs
 - **Inputs:** tables and expert outputs, each with its known-at rule.

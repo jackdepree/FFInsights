@@ -8,6 +8,15 @@
 ## In short
 Two or three sentences: what we learned and whether it worked against the brief's tests.
 
+**Scorecard:** link (MLflow) · **Vault:** result, opened on date (or "spent") · **Versions tried:** N
+
+| Check (docs/VALIDATION.md) | Result |
+|---|---|
+| Signal / no noise, or beats baselines | |
+| Calibration and range coverage | |
+| Leakage | |
+| Football sanity (CEO review date) | |
+
 ## Findings
 Numbered so other projects can cite them as `<id>#F1`. One claim each.
 

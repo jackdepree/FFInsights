@@ -217,7 +217,7 @@ Every modeling project climbs a ladder of methods (rule k). **A rung doesn't hav
 - Not every project needs every rung. The brief says which rungs are planned.
 - At the end, the takeaways worth keeping become findings in RESULTS.md.
 
-Full standards for each check (metrics, calibration, thresholds) go in `VALIDATION.md` (to be written).
+The bar for each check (scores, calibration, thresholds, the vault) is in [`VALIDATION.md`](VALIDATION.md).
 
 ## Running it
 
@@ -280,3 +280,4 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0003: The as_of gateway and stacked leakage checks](decisions/0003-as-of-gateway.md)
 - [0004: MLflow for tracking and model reuse](decisions/0004-mlflow.md)
 - [0005: Collectors on Actions, modeling on the PC](decisions/0005-where-it-runs.md)
+- [0006: A rolling vault season and proper scores](decisions/0006-validation-vault.md)

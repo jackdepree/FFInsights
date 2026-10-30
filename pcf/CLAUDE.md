@@ -96,7 +96,7 @@ A mini-project is done when:
 - [ ] Reusable code is in the package, with tests. Notebooks only explore.
 - [ ] The point-in-time check passes: no feature uses post-kickoff information.
 - [ ] Experts show held-out signal over a shuffled null and don't add noise. Products beat their simple baselines, or the baseline ships instead.
-- [ ] A backtest, a calibration check and an uncertainty estimate are reported.
+- [ ] A backtest, a calibration check and an uncertainty estimate are reported, with the vault result and the validation scorecard (`docs/VALIDATION.md`).
 - [ ] Outputs (live and walk-forward history) are saved in the standard schema, versioned, and readable by higher layers. The champion model is registered in MLflow.
 - [ ] Results pass the football sanity check.
 - [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its interface card is in the registry, and the CEO's open questions are answered.
@@ -125,13 +125,12 @@ pcf/
 
 - [`docs/VISION.md`](docs/VISION.md): the north star, in the CEO's words. Read it when a tradeoff isn't settled by the rules above.
 - [`docs/ROADMAP.md`](docs/ROADMAP.md): now / next / later, milestones, CEO decisions, dead ends
-
 - [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md): every source, its tier, years, update timing, **known-at rule**, how ids join, and known gaps. Read it before using any data.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): code layout, storage, the `as_of` gateway and leakage checks, the expert contract, MLflow, the knowledge tree, the ladder, and how it runs. Read it before writing package code.
+- [`docs/VALIDATION.md`](docs/VALIDATION.md): the bar every model must clear: the vault, walk-forward backtests, scores, what "beats" means, signal and no-noise tests, baselines, calibration, betting evaluation, leakage thresholds, sanity review, the scorecard. Read it before validating anything.
 
 To be written:
 
-- `docs/VALIDATION.md`: backtest, calibration, uncertainty and leakage standards
 - `docs/OLD_INVENTORY.md`: what in `old/` is worth reusing, and where it went
 - `docs/CONVENTIONS.md`: code style and naming
 - `docs/GLOSSARY.md`: shared terms (EPA, VOE, CLV, ECR…)
