@@ -305,6 +305,8 @@ class GitHubUpstream:
                 )
                 continue
             updated = datetime.fromisoformat(item["updated_at"].replace("Z", "+00:00"))
+            # GitHub only started publishing digests in mid-2025; older uploads (most of the
+            # catalog) are versioned by upload time and size instead.
             digest = item.get("digest") or ""
             sha = digest.removeprefix("sha256:") if digest.startswith("sha256:") else None
             version = digest or f"{item['updated_at']}|{item['size']}"
@@ -501,6 +503,10 @@ def _fetch_one(
     tmp = dest.with_name(dest.name + ".part")
     try:
         upstream.download(f, tmp)
+        # Files uploaded before mid-2025 have no SHA-256 upstream; their size still catches a
+        # download cut short.
+        if f.size and tmp.stat().st_size != f.size:
+            raise RuntimeError(f"{rel}: downloaded {tmp.stat().st_size} bytes, expected {f.size}")
         sha = sha256_file(tmp)
         if f.sha256 and sha != f.sha256:
             raise RuntimeError(f"{rel}: downloaded content doesn't match nflverse's fingerprint")

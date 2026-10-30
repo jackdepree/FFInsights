@@ -31,3 +31,4 @@
 | `data-layer#F10` | All of nflverse is 786 MB (408 files); play-by-play is 496 MB of it. | strong | [RESULTS.md](data-layer/RESULTS.md) |
 | `data-layer#F11` | State files change within minutes (a schedule moneyline moved between runs 14 minutes apart). A change-log entry was 15 KB against a 355 KB full copy. | strong | [RESULTS.md](data-layer/RESULTS.md) |
 | `data-layer#F12` | A refresh stopped mid-way heals on the next run, fetching nothing twice. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F13` | 278 of 408 nflverse files (all uploaded before July 2025) have no SHA-256 on GitHub. They're versioned by upload time and size, and downloads are checked by size. | strong | [RESULTS.md](data-layer/RESULTS.md) |

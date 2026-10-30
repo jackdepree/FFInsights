@@ -226,6 +226,21 @@ def test_a_fingerprint_mismatch_is_refused(up, tmp_path, monkeypatch):
         _run(up, tmp_path)
 
 
+def test_a_short_download_without_a_fingerprint_is_refused(up, tmp_path, monkeypatch):
+    real = up.list_files
+    monkeypatch.setattr(
+        up,
+        "list_files",
+        lambda ds: [
+            UpstreamFile(f.dataset, f.name, f.season, f.url, "2025-04-30|1", f.size + 1, T0)
+            for f in real(ds)
+        ],
+    )
+    with pytest.raises(RuntimeError, match="expected"):
+        _run(up, tmp_path)
+    assert not list((tmp_path / "raw/nflverse").rglob("*.parquet.part"))
+
+
 def test_dry_run_downloads_nothing(up, tmp_path):
     s = _run(up, tmp_path, dry_run=True)
     assert len(s.would_download) == 3 and up.downloads == 0

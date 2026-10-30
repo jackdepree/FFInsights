@@ -6,6 +6,7 @@ GitHub API calls (60 an hour without GITHUB_TOKEN). Starting from a copy of
 the local refresh's cache saves re-sending unchanged listings, and makes them free with a token.
 """
 
+import re
 import shutil
 
 import nflreadpy as nfl
@@ -48,7 +49,8 @@ def raw(upstream, tmp_path_factory):
 def test_every_dataset_is_published(upstream, name):
     files = upstream.list_files(DATASETS[name])
     assert files, f"nothing upstream matches {DATASETS[name].pattern}"
-    assert all(f.version.startswith(("sha256:", "blob:")) for f in files)
+    # A SHA-256 digest, a git blob sha, or (uploads before mid-2025) "<uploaded at>|<size>"
+    assert all(re.fullmatch(r"sha256:\w{64}|blob:\w{40}|\S+Z\|\d+", f.version) for f in files)
     if DATASETS[name].per_season:
         assert SEASON in {f.season for f in files}
 

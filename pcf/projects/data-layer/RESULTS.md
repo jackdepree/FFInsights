@@ -19,19 +19,19 @@ PCF now keeps its own copy of all of nflverse: 36 datasets, 408 files, 786 MB. O
 | Nothing written outside `pcf/data/`, nothing in it tracked by git | **Pass.** An offline test checks writes, and `git check-ignore` confirms `pcf/data/` is ignored. |
 | Football sanity | Not applicable (no football output). |
 
-**Tests:** 82 offline (all pass), 82 network. The 46 network tests that compare data pass. The 36 that list every release depend on GitHub's hourly limit; see the note at the end.
+**Tests:** 83 offline and 82 network, all passing. The network tests that list every release first failed on a wrong assumption of mine (F13); the code was right, the test was fixed, and a size check was added to every download.
 
 ## Terms
 As in the brief, with one change. **Change log** is new: how state files are stored, as a full copy, then the rows added or removed at each change. The brief said "dated snapshot". `snapshot(dataset, at)` still returns the file as it was at a moment, so the term keeps its meaning for every reader. All terms are in `docs/GLOSSARY.md`.
 
 ## Findings
-F1–F5 came from the light exploration. F6–F12 came from the build.
+F1–F5 came from the light exploration. F6–F13 came from the build.
 
 | # | Finding | Evidence | Confidence | Applies to |
 |---|---|---|---|---|
 | F1 | nflverse re-uploads past seasons months later. Check every file, not just the current season. | [EXPLORATION.md](EXPLORATION.md) | strong | every refresh |
 | F2 | One measured play-by-play re-upload (2023) changed no modelling column. | [EXPLORATION.md](EXPLORATION.md) | suggestive | revision policy |
-| F3 | Change detection is cheap: one listing per release gives every file's size, upload time and SHA-256. | [EXPLORATION.md](EXPLORATION.md), F7 | strong | refresh |
+| F3 | Change detection is cheap: one listing per release gives every file's size and upload time, and a SHA-256 for recent uploads (F13). | [EXPLORATION.md](EXPLORATION.md), F7 | strong | refresh |
 | F4 | Next Gen Stats, players, contracts, schedules and ECR are single all-season files. | [EXPLORATION.md](EXPLORATION.md) | strong | catalog |
 | F5 | nflreadpy has its own cache and reads `NFLREADPY_*` from `.env`. | [EXPLORATION.md](EXPLORATION.md) | strong | anyone calling nflreadpy |
 | F6 | **Without a token, a "not modified" (304) reply still counts against GitHub's limit.** One conditional request moved the allowance from 60 to 59. GitHub's docs say 304s are free with a token (not measured here). The listing cache saves bandwidth, not calls. | a measured request | strong | GitHub API use |
@@ -41,9 +41,10 @@ F1–F5 came from the light exploration. F6–F12 came from the build.
 | F10 | **All of nflverse is 786 MB; play-by-play is 496 MB of it (63%).** Expected fantasy points (pass, rush, total) are 110 MB, the ECR archive 40 MB. | the manifest | strong | storage |
 | F11 | **State files change within minutes.** Schedules was re-uploaded 14 minutes after the first pull: one moneyline moved (DAL at IND, 190 → 185). Its change-log entry is 15 KB, against a 355 KB full copy. The ten state files' first full copies total 15 MB. | `_changes/schedules/` | strong | `snapshot()`, line history |
 | F12 | **A refresh stopped mid-way heals on the next run.** The rate limit stopped the first pull after 120 files. The next full run counted 119 files as unchanged, fetched the other 289, and fetched nothing twice. (A crash in the middle of a download is covered by an offline test: no partial file is left.) | the manifest, offline test | strong | refresh |
+| F13 | **Most files have no SHA-256 from GitHub.** 278 of 408 files (473 MB), everything uploaded before July 2025, predate GitHub's digests. They're versioned by upload time and size, and every download is checked against the published size (all 408 matched). The other 126 are also checked by SHA-256. The 4 dynastyprocess files use git's own fingerprint. | the manifest, a network test | strong | refresh |
 
 ## Pitfalls
-- **Assumed free calls weren't free** (F6). Measure an API's limits before designing around them.
+- **Assumed free calls weren't free** (F6), and assumed every file had a SHA-256 (F13). Measure an API's limits before designing around them.
 - **"Matches nflreadpy" isn't always byte for byte.** Check each loader's code for cleaning steps (F9).
 - **Upstream changes during a run.** Schedules changed between two runs 14 minutes apart (F11). Tests comparing our copy with a fresh download can fail for that reason alone. Rerun before suspecting the code.
 
