@@ -8,6 +8,14 @@
 #               (phases 0-3 are the layers in CLAUDE.md)
 #   status      idea | exploring | brief | building | validating | done | parked | dead_end
 #   horizon     now | next | later | parking   (omitted for dead_end)
+#   cadence     phases 1-3 only. When the project updates, which also limits what inputs it may use:
+#                 in_season        between games during the season; only data available live (DATA_SOURCES.md)
+#                 retrospective    between seasons; may use post-season-only data (e.g. participation)
+#                 offseason_events when offseason events land (combine, free agency, trades, draft)
+#               A retrospective output may feed an in-season project only for seasons already finished
+#               (e.g. last season's VOE as a prior), never for the season in progress. Each such edge
+#               needs a stated reason in the consumer's brief. Reviewed so far: aging -> fantasy-projections,
+#               aging -> dynasty-values (curves fit on completed seasons).
 #   depends_on  ids this project needs first. "What does it feed?" is derived from these; never stored.
 #   origin      optional: the old/ notebook it builds on
 #   summary     one line
@@ -110,6 +118,7 @@ projects:
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Weekly team strength rating, with optional offense/defense split and QB adjustment. Doubles as a win-probability baseline.
 
@@ -118,6 +127,7 @@ projects:
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA).
 
@@ -126,6 +136,7 @@ projects:
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume.
 
@@ -134,6 +145,7 @@ projects:
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Weather, roof, surface, rest days, travel and time zones.
 
@@ -142,23 +154,36 @@ projects:
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty.
 
-  - id: context-v2
-    name: Context v2
+  - id: context-live
+    name: Context (in-season)
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, tag-tables, validation-harness]
     origin: Context_Model_Training.ipynb
-    summary: The situation and pressure each play happened in (pressure, time to throw, YAC, completion, ...), refactored from the old context models. The brief must choose live-only fields or a retrospective expert, because participation data is post-season only (DATA_SOURCES.md).
+    summary: The situation and pressure each play happened in, using only fields available during the season (play-by-play, lagged FTN charting, weekly NGS and PFR). Updates between games.
+
+  - id: context-retro
+    name: Context (retrospective)
+    phase: 1
+    status: idea
+    horizon: later
+    cadence: [retrospective]
+    depends_on: [grain-tables, tag-tables, validation-harness]
+    origin: Context_Model_Training.ipynb
+    summary: The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons.
 
   - id: participation
     name: Participation and snaps
     phase: 1
     status: idea
     horizon: next
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Snaps, routes run and share of plays, projected forward. Live from snap counts and daily depth charts. Play-level participation (routes) is available for training only.
 
@@ -167,6 +192,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [grain-tables, tag-tables, validation-harness]
     summary: Pass protection and run blocking as a unit (pressure over expected, yards before contact).
 
@@ -175,23 +201,35 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [elo, team-efficiency, pace]
     summary: How likely each team is to be leading or trailing during the game, which shifts the pass/run mix.
 
-  - id: voe-v2
-    name: VOE v2
+  - id: voe-retro
+    name: VOE (retrospective)
     phase: 1
     status: idea
     horizon: later
-    depends_on: [context-v2]
+    cadence: [retrospective]
+    depends_on: [context-retro]
     origin: VOE_Model_Training.ipynb
-    summary: Value over expected for each player at the play level. PCF's signature stat. Rebuilt, possibly split several ways. Same participation caveat as context-v2.
+    summary: Value over expected for each player at the play level, rebuilt from the old VOE model on post-season participation. PCF's signature stat. Updates between seasons, and also serves as a prior for the next season.
+
+  - id: voe-live
+    name: VOE (in-season)
+    phase: 1
+    status: idea
+    horizon: later
+    cadence: [in_season]
+    depends_on: [context-live]
+    summary: Value over expected updated between games during the season, using only live-available fields. Feeds weekly composites.
 
   - id: opportunity-quality
     name: Opportunity quality
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [participation]
     summary: Expected fantasy points from where targets and carries happen.
 
@@ -200,6 +238,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [participation, opportunity-quality]
     summary: When a player is out, who absorbs his targets and carries.
 
@@ -208,6 +247,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [opportunity-quality, team-efficiency]
     summary: Red-zone and goal-line usage, giving touchdown probability. Feeds TD-scorer props.
 
@@ -216,14 +256,16 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [retrospective]
     depends_on: [grain-tables, validation-harness]
-    summary: Decline by position and age.
+    summary: Decline by position and age. Curves are fit between seasons; in-season projects use curves fit on completed seasons only.
 
   - id: injury-fatigue
     name: Injury and fatigue
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [participation, timeline]
     origin: Fatigue_Model_Training.ipynb
     summary: Workload, injury-risk tiers (not "he'll get hurt") and recovery.
@@ -233,15 +275,17 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season, retrospective]
     depends_on: [participation]
-    summary: Slot receiver, deep threat, receiving back, blocking tight end, ... from usage patterns.
+    summary: Slot receiver, deep threat, receiving back, blocking tight end, ... from usage patterns. Weekly from snap counts and depth charts; refined between seasons with route data.
 
   - id: schemes-v2
     name: Schemes v2
     phase: 1
     status: idea
     horizon: later
-    depends_on: [roles-archetypes, context-v2]
+    cadence: [retrospective]
+    depends_on: [roles-archetypes, context-retro]
     origin: Schemes_Model.ipynb
     summary: A full expert (CEO call, 2026-10-28). Retry team schemes from the roles-and-archetypes angle; the exploration must first check why schemes-v1 found little signal.
 
@@ -250,7 +294,8 @@ projects:
     phase: 1
     status: idea
     horizon: later
-    depends_on: [context-v2, stabilization]
+    cadence: [in_season]
+    depends_on: [context-live, stabilization]
     summary: Completion over expected, sack avoidance and play under pressure, shrunk for sample size.
 
   - id: prospects
@@ -258,6 +303,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [offseason_events]
     depends_on: [timeline, validation-harness]
     summary: College stats, combine and draft capital, giving rookie projections. Key for dynasty and the offseason.
 
@@ -266,6 +312,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [team-efficiency, environment]
     summary: Needed for fantasy completeness.
 
@@ -274,6 +321,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [odds-collection, timeline]
     summary: Implied team totals and line movement, as features.
 
@@ -282,6 +330,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season, offseason_events]
     depends_on: [grain-tables, timeline]
     summary: ECR and ADP as features and benchmarks. Where we disagree with the crowd is where an edge might be.
 
@@ -290,6 +339,7 @@ projects:
     phase: 1
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [timeline, validation-harness]
     summary: Arrests, coach quotes and media framing from free sources (RSS, Reddit, team sites). Weakest free data, so it comes last.
 
@@ -299,6 +349,7 @@ projects:
     phase: 2
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [elo, team-efficiency, qb-talent, line-play]
     summary: One team-strength view combining the team experts.
 
@@ -307,6 +358,7 @@ projects:
     phase: 2
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, injury-fatigue]
     summary: Projected volume and role for each player for the coming game.
 
@@ -315,7 +367,8 @@ projects:
     phase: 2
     status: idea
     horizon: later
-    depends_on: [team-strength, player-opportunity, game-script, pace, environment, voe-v2, td-expert, stabilization, market]
+    cadence: [in_season]
+    depends_on: [team-strength, player-opportunity, game-script, pace, environment, voe-live, td-expert, stabilization, market]
     summary: Drive- or play-level simulation run thousands of times. Joint distributions for every prop, fantasy score and correlation from one engine.
 
   - id: outcome-distributions
@@ -323,6 +376,7 @@ projects:
     phase: 2
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [game-simulator]
     summary: Floor, median and ceiling for every player and stat.
 
@@ -332,6 +386,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [outcome-distributions, aging, prospects, crowd, kicker-dst]
     summary: Projections with uncertainty for any scoring (PPR, half, custom) and format.
 
@@ -340,6 +395,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [fantasy-projections]
     summary: Weekly start/sit advice with confidence grades.
 
@@ -348,6 +404,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [outcome-distributions, odds-collection, prediction-ledger]
     summary: Our probability against the line for every collected prop, ranked by edge and confidence.
 
@@ -356,6 +413,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [outcome-distributions]
     summary: Ceiling-focused rankings and stacks.
 
@@ -364,6 +422,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season, offseason_events]
     depends_on: [fantasy-projections, aging, prospects]
     summary: Multi-year player values.
 
@@ -372,6 +431,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season, offseason_events]
     depends_on: [game-simulator]
     summary: Season-long simulations for win totals, playoffs and Super Bowl odds.
 
@@ -380,6 +440,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [prediction-ledger, validation-harness]
     summary: Which models make or lose money, which are erratic, with uncertainty on our own performance.
 
@@ -388,6 +449,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [start-sit, props-board, scorecards]
     summary: The user view from VISION.md, in layers of depth.
 
@@ -396,6 +458,7 @@ projects:
     phase: 3
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [registry-tooling]
     summary: Project status, the impact map and exploration results, the builder view from VISION.md.
 
@@ -405,6 +468,7 @@ projects:
     phase: 4
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [weekly-report]
     summary: The whole pipeline runs on a schedule, end to end.
 
@@ -413,6 +477,7 @@ projects:
     phase: 4
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [weekly-report, weekly-run]
     summary: The weekly report emailed to the CEO and friends.
 
@@ -421,6 +486,7 @@ projects:
     phase: 4
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [weekly-report]
     summary: Interactive version of the report.
 
@@ -430,6 +496,7 @@ projects:
     phase: 5
     status: idea
     horizon: later
+    cadence: [in_season]
     depends_on: [dashboard, scorecards]
     summary: Subscriptions, only once the track record earns it.
 
@@ -439,6 +506,7 @@ projects:
     phase: 1
     status: parked
     horizon: parking
+    cadence: [in_season]
     depends_on: [pace]
     summary: 4th-down aggressiveness and pass rate tied to the coach, following him across teams.
 
@@ -447,6 +515,7 @@ projects:
     phase: 1
     status: parked
     horizon: parking
+    cadence: [in_season]
     depends_on: [grain-tables]
     summary: Penalty and flag tendencies by crew.
 
@@ -455,6 +524,7 @@ projects:
     phase: 1
     status: parked
     horizon: parking
+    cadence: [retrospective]
     depends_on: [roles-archetypes]
     summary: Receiver performance against man vs. zone coverage (limited free charting data).
 
@@ -463,6 +533,7 @@ projects:
     phase: 1
     status: parked
     horizon: parking
+    cadence: [offseason_events]
     depends_on: [timeline]
     summary: Contract years, incentives and extension likelihood.
 
@@ -471,6 +542,7 @@ projects:
     phase: 1
     status: parked
     horizon: parking
+    cadence: [in_season]
     depends_on: [validation-harness]
     summary: Does momentum exist beyond noise? Mainly a test that the shuffled-null check works.
 
@@ -479,8 +551,9 @@ projects:
     phase: 1
     status: parked
     horizon: parking
-    depends_on: [voe-v2]
-    summary: CEO idea. Revisit once VOE v2 gives a baseline to beat.
+    cadence: [retrospective]
+    depends_on: [voe-retro]
+    summary: CEO idea. Revisit once VOE (retrospective) gives a baseline to beat.
 
   # ---------------------------------------------------------------- Dead ends
   - id: schemes-v1

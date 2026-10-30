@@ -76,13 +76,13 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | Trades (`load_trades`) | transaction | 2002→ | When trades happen | `trade_date` | Timeline, vacated opportunity |
 | FantasyPros ECR (`load_ff_rankings`) | player-ranking | `type="all"`: archived history, Dec 2019→. `"draft"` and `"week"`: the current snapshot only. | Weekly in season | `scrape_date` | Crowd expert, ECR benchmark |
 
-> ⚠️ **Participation is post-season only. This shapes Context v2 and VOE v2.**
+> ⚠️ **Participation is post-season only. This is why Context and VOE each come as two experts** (`context-live` / `context-retro`, `voe-live` / `voe-retro`; rule m).
 > Play-level fields like routes run, coverage type, pressure and time to throw arrive only after the season ends. The old Context and VOE models were built on them. A model *trained* on these fields can't be *fed* them for live, mid-season predictions. That mismatch (train/serve skew) silently breaks a model in production.
-> Each expert that uses participation must choose one of two paths:
-> - **(a) Use only fields available live:** play-by-play, FTN charting (with its lag), weekly Next Gen Stats, PFR advanced stats.
-> - **(b) Be a retrospective expert:** updated after each season, useful for player value, archetypes and next-season projections, but not for week-to-week predictions.
+> So every expert declares a `cadence` in the registry:
+> - **in_season:** uses only fields available live: play-by-play, FTN charting (with its lag), daily depth charts, weekly snap counts, Next Gen Stats and PFR advanced stats.
+> - **retrospective:** updated between seasons, and may use participation. Useful for player value, archetypes and next-season priors.
 >
-> This decision goes in each project's brief.
+> Where an idea needs both, it becomes two experts.
 
 ## Tier 2 to 4: other free sources
 

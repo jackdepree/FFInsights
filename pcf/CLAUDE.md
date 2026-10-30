@@ -43,6 +43,15 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
   - **Feature selection always happens inside the cross-validation folds**, never on the full dataset.
   - **Products** must beat simple baselines (e.g. a rolling average, a lasso, the Vegas line, ECR). If they don't, the simple version ships.
 - **l. Questions come with context, simple to detailed.** When Claude asks the CEO a question, it gives enough context to answer it, in this order: the question in one line → why it matters in plain language → the options and tradeoffs → technical detail, only if needed.
+- **m. Everything declares its timing.**
+  - Every data source states when its data is known (`docs/DATA_SOURCES.md`).
+  - Every expert, composite and product declares its `cadence` in the registry:
+    - **in_season:** updates between games, and may use only data available live;
+    - **retrospective:** updates between seasons, and may use post-season-only data such as participation;
+    - **offseason_events:** updates when combine, free agency, trades or the draft happen.
+  - When the same idea needs both cadences, it becomes two experts (e.g. `voe-live` and `voe-retro`).
+  - A retrospective output feeds an in-season model only from *completed* seasons, as a prior.
+  - "Play-level" or "within a game" describes the level of detail an expert works at, computed after the game. Live in-game prediction is still a non-goal (`docs/VISION.md`).
 
 ## How we work together
 

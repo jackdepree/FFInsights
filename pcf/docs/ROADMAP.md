@@ -24,11 +24,11 @@ Phase 0, starting with the one item that can't wait:
 
 ## Next
 
-The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-calling · environment · stabilization · Context v2 · participation & snaps**
+The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-calling · environment · stabilization · Context (in-season) · participation & snaps**
 
 ## Later
 
-- **The remaining experts:** line play, game script, VOE v2, opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, schemes v2, QB talent, prospects, kicker & DST, market, crowd, news
+- **The remaining experts:** line play, game script, Context (retrospective), VOE (in-season), VOE (retrospective), opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, schemes v2, QB talent, prospects, kicker & DST, market, crowd, news
 - **Then** composites, products, automation and public, in dependency order
 
 ## Milestones
@@ -74,3 +74,4 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 One dated line each time something reaches Done, or the roadmap changes shape.
 
 - **2026-10-28:** Charter (`CLAUDE.md`), `VISION.md`, this roadmap and the project registry created.
+- **2026-10-30:** `DATA_SOURCES.md` written. Experts now declare a `cadence` (rule m). Context and VOE are each split into in-season and retrospective experts, because play-level participation is published only after the season.
