@@ -128,9 +128,9 @@ pcf/
 - [`docs/DATA_SOURCES.md`](docs/DATA_SOURCES.md): every source, its tier, years, update timing, **known-at rule**, how ids join, and known gaps. Read it before using any data.
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): code layout, storage, the `as_of` gateway and leakage checks, the expert contract, MLflow, the knowledge tree, the ladder, and how it runs. Read it before writing package code.
 - [`docs/VALIDATION.md`](docs/VALIDATION.md): the bar every model must clear: the vault, walk-forward backtests, scores, what "beats" means, signal and no-noise tests, baselines, calibration, betting evaluation, leakage thresholds, sanity review, the scorecard. Read it before validating anything.
+- [`docs/OLD_INVENTORY.md`](docs/OLD_INVENTORY.md): the salvage map of `old/`: the core models' goals, the functions to port (copy, test, then improve), old data for research only, and lessons learned. Read it before touching anything `old/` did.
 
 To be written:
 
-- `docs/OLD_INVENTORY.md`: what in `old/` is worth reusing, and where it went
 - `docs/CONVENTIONS.md`: code style and naming
 - `docs/GLOSSARY.md`: shared terms (EPA, VOE, CLV, ECR…)

@@ -80,3 +80,4 @@ One dated line each time something reaches Done, or the roadmap changes shape.
 - **2026-10-30:** `DATA_SOURCES.md` written. Experts now declare a `cadence` (rule m). Context and VOE are each split into in-season and retrospective experts, because play-level participation is published only after the season.
 - **2026-10-30:** `ARCHITECTURE.md` written, with five decision notes, brief and results templates, and `projects/KNOWLEDGE.md`. Added the `experiment-tracking` project.
 - **2026-10-30:** `VALIDATION.md` written. The 2025 season is the first vault.
+- **2026-10-30:** `OLD_INVENTORY.md` written: the salvage map of `old/`. Old saved models are never loaded, and old data is for research and benchmarking only.
