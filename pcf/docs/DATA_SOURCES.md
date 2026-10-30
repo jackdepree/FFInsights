@@ -2,7 +2,7 @@
 
 > Every source PCF uses, how far back it goes, when it updates, and **when its data counts as "known"** (rule c).
 > **nflverse (`nflreadpy`) is the backbone, the Bible.** Everything else adds to it.
-> Facts here were verified on **2026-10-30** against the nflverse release listing and live loads. Re-verify a source before relying on a detail that may have changed.
+> Facts here were verified on **2026-10-30** against the nflverse release listing and live loads, and corrected the same day by the [package-scaffold profile](../projects/package-scaffold/EXPLORATION.md). Re-verify a source before relying on a detail that may have changed.
 
 ## Rules for using sources
 
@@ -16,7 +16,7 @@
 
 ### Known-at rules
 `known_at` is **the earliest moment PCF could have had this data, in this form, for a live prediction.** Every row in the data layer carries one.
-- When a source publishes a timestamp (`dt`, `date_pulled`, `trade_date`, `scrape_date`), use it.
+- When a source publishes a timestamp (`dt`, `trade_date`, `scrape_date`), use it, **after checking it records first availability and not a later re-pull** (FTN's `date_pulled` doesn't; see its row).
 - When it doesn't, use the conservative rule in that source's table below.
 - If unsure, pick the later time. Being a little late costs a little accuracy. Being early is leakage.
 
@@ -48,7 +48,7 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 |---|---|---|---|---|---|
 | Play-by-play (`load_pbp`) | play | 1999→ | Morning after each game | Kickoff + 1 day | Context, VOE, team efficiency, tags, nearly everything |
 | Schedules (`load_schedules`) | game | 1999→ | Several times a week | Game facts (date, roof, surface, rest): at schedule release. **Lines:** spreads and totals 1999→, moneylines 2006→. They sit *near* the closing line (they match ESPN's close in 45–84% of games), so treat them as known at kickoff. | Environment, Elo, baselines, closing-line fallback |
-| FTN charting (`load_ftn_charting`) | play | 2022→ | About 1–2 weeks behind (week 7 on Oct 30) | `date_pulled` | Context, roles, schemes, line play |
+| FTN charting (`load_ftn_charting`) | play | 2022→ | About 1–2 weeks behind (week 7 on Oct 30) | **History:** kickoff + 14 days. **Live:** our own fetch time. Not `date_pulled`: whole seasons were re-pulled later (2022–23 all show 2024-09-06), so it isn't first availability ([exploration](../projects/package-scaffold/EXPLORATION.md)). | Context, roles, schemes, line play |
 | Officials (`load_officials`) | game | 2015→ | Preseason assignments, then weekly | Kickoff − 2 days | Referee crews (parked) |
 
 ### Players and usage
@@ -56,12 +56,12 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 |---|---|---|---|---|---|
 | Player stats (`load_player_stats`) | player-week | 1999→ | Morning after | Kickoff + 1 day | Baselines, every player expert |
 | Team stats (`load_team_stats`) | team-week | 1999→ | Morning after | Kickoff + 1 day | Team experts |
-| Snap counts (`load_snap_counts`) | player-game | 2012→ | Morning after | Kickoff + 1 day | Participation, fatigue, vacated opportunity |
+| Snap counts (`load_snap_counts`) | player-game | 2013→ | Morning after | Kickoff + 1 day | Participation, fatigue, vacated opportunity |
 | ⚠️ **Participation** (`load_participation`) | play (who was on the field, routes, coverage, pressure, time to throw) | 2016–**2025** | **After the season only** (last update Feb 2026; no 2026 data) | End of season | **Training only.** See the callout below. |
 | Next Gen Stats (`load_nextgen_stats`) | player-week | 2016→ | Morning after | Kickoff + 1 day | Context, QB talent, separation, time to throw (weekly) |
 | PFR advanced stats (`load_pfr_advstats`) | player-week | 2018→ | About a week behind (week 7 on Oct 30) | The Tuesday after the following week (conservative) | Pressure, drops, broken tackles |
 | Expected fantasy points (`load_ff_opportunity`) | player-week | 2006→ | Morning after | Kickoff + 1 day | Opportunity quality (benchmark) |
-| Depth charts (`load_depth_charts`) | player-snapshot | 2001→ | **Daily** (2026 has a `dt` timestamp per snapshot) | `dt`. Older weekly-format years: the start of that week. | Participation, roles, vacated opportunity |
+| Depth charts (`load_depth_charts`) | player-snapshot | 2001→ | **Daily** from 2025: snapshot rows with `dt` and **no `season` or `week`**. Weekly rows through 2024. | `dt`. Older weekly-format years: the start of that week. | Participation, roles, vacated opportunity |
 | Weekly rosters (`load_rosters_weekly`) | player-week | 2002→ | Daily during the season | The start of that week | Joining, team membership |
 | Rosters, players (`load_rosters`, `load_players`) | player | 1920→ | Daily | Snapshot date | Bio, age, position |
 | Id map (`load_ff_playerids`) | player | — | Regularly | — | Joining all non-nflverse sources |

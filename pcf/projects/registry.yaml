@@ -38,7 +38,7 @@ projects:
   - id: package-scaffold
     name: Package scaffold and config
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: []
     summary: The pcf Python package, one central config (rule f), environment and test setup.

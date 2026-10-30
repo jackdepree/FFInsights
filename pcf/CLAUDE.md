@@ -82,6 +82,7 @@ Every new mini-project, sub-problem, feature, model or domain gets an entry in [
 
 1. **Idea:** brainstorm it together and add it to the registry.
 2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
+   - **Infrastructure projects** (scaffold, tracking, tooling) have no signal to find, so they get a **light exploration** instead: a quick descriptive profile of the data they touch (rows, columns, date ranges, level of detail, size). Small, but not skipped.
 3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)). It covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
