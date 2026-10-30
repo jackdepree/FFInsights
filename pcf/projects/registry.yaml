@@ -64,7 +64,7 @@ projects:
   - id: data-layer
     name: Data layer
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [package-scaffold]
     summary: nflreadpy ingestion into a local cache kept out of git, with a re-runnable weekly refresh.
