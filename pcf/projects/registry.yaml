@@ -19,6 +19,10 @@
 #   depends_on  ids this project needs first. "What does it feed?" is derived from these; never stored.
 #   origin      optional: the old/ notebook it builds on
 #   summary     one line
+#   interface   added when status reaches done: the interface card from the project's RESULTS.md
+#               (template: projects/_templates/RESULTS.md), so code and Claude can read it:
+#                 inputs, outputs (path and quantities), grain, interval, cadence, known_at,
+#                 model (pcf.<id> and champion version), how_to_use, feeds
 
 projects:
 
@@ -38,6 +42,14 @@ projects:
     horizon: now
     depends_on: []
     summary: The pcf Python package, one central config (rule f), environment and test setup.
+
+  - id: experiment-tracking
+    name: Experiment tracking (MLflow)
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [package-scaffold]
+    summary: Local MLflow for every run and model, the pcf.<id> model registry with champion aliases, nested runs for the ladder, and registration allowed only after the blocking leakage checks pass.
 
   - id: data-layer
     name: Data layer
@@ -85,8 +97,8 @@ projects:
     phase: 0
     status: idea
     horizon: now
-    depends_on: [package-scaffold, timeline]
-    summary: Walk-forward backtests, calibration, uncertainty checks, shuffled-null signal tests, automated leakage checks, feature selection inside CV folds.
+    depends_on: [package-scaffold, timeline, experiment-tracking]
+    summary: The as_of gateway's leakage suite (docs/ARCHITECTURE.md), walk-forward backtests, calibration, uncertainty checks, shuffled-null signal tests, feature selection inside CV folds.
 
   - id: baselines
     name: Dumb baselines
@@ -110,7 +122,7 @@ projects:
     status: idea
     horizon: now
     depends_on: [package-scaffold]
-    summary: A script that validates this file (no missing ids, no cycles) and draws the impact map.
+    summary: Validates this file (no missing ids, no cycles, inputs match depends_on), draws the impact map, and generates projects/KNOWLEDGE.md from every RESULTS.md.
 
   # ---------------------------------------------------------------- Phase 1: experts
   - id: elo
@@ -470,7 +482,7 @@ projects:
     horizon: later
     cadence: [in_season]
     depends_on: [weekly-report]
-    summary: The whole pipeline runs on a schedule, end to end.
+    summary: The whole pipeline runs on a schedule, end to end, on the CEO's PC via Windows Task Scheduler (Tue, Wed, Sat; docs/ARCHITECTURE.md).
 
   - id: email-reports
     name: Emailed reports
