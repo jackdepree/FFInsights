@@ -86,6 +86,17 @@ Data is **Parquet** files, read and written with **Polars**. **DuckDB** queries 
 - **A `known_at` column**, in UTC and timezone-aware: the earliest moment PCF could have had this row (DATA_SOURCES.md). No row without one.
 - Partitioned by season, so a refresh rewrites only what changed.
 
+**`raw/nflverse/`** (built by `data-layer`, written only by `pcf refresh`):
+
+| Path | What |
+|---|---|
+| `<dataset>/season=YYYY/<file>` or `<dataset>/<file>` | The latest version of each published file, byte for byte |
+| `_manifest/<UTC stamp>_<dataset>.parquet` | Append-only: one row per file per run (where from, upstream fingerprint, size, SHA-256, action). `data_version()` hashes it. |
+| `_changes/<dataset>/<file>/<UTC stamp>_base\|delta.parquet` | Change logs for state files: a full copy, then rows added or removed. `snapshot(dataset, at)` replays them. |
+| `_api_cache.json` | GitHub API responses with their ETags, so an unchanged check costs nothing |
+
+Revision reports go to `logs/nflverse_revisions/`. Readers: `scan(dataset, seasons)` (lazy), `snapshot(dataset, at)`, `data_version()`.
+
 Polars is the default dataframe library. Data converts to pandas or NumPy only at the edge of a model library that needs it.
 
 ## Point-in-time: the as_of gateway
@@ -282,3 +293,4 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0004: MLflow for tracking and model reuse](decisions/0004-mlflow.md)
 - [0005: Collectors on Actions, modeling on the PC](decisions/0005-where-it-runs.md)
 - [0006: A rolling vault season and proper scores](decisions/0006-validation-vault.md)
+- [0007: State snapshots are change logs](decisions/0007-state-change-logs.md)

@@ -24,3 +24,10 @@
 | `package-scaffold#F7` | ruff 0.17+ also formats Python code blocks inside Markdown, and rewrote a doc when unscoped. Keep ruff limited to `src/` and `tests/`. | strong | [RESULTS.md](package-scaffold/RESULTS.md) |
 | `package-scaffold#F8` | `nbstripout --install` writes a repo-wide `*.ipynb` pattern into `.git/info/attributes` that overrides `.gitattributes` and reaches `old/`. Install with `--attributes pcf/.venv/nbstripout-attributes`. | strong | [RESULTS.md](package-scaffold/RESULTS.md) |
 | `package-scaffold#F9` | Claude's deny rule `Edit(/old/**)` blocks Edit, Write and NotebookEdit in `old/`, but not shell commands. For those, rule a and `git status` are still the guard. | strong | [RESULTS.md](package-scaffold/RESULTS.md) |
+| `data-layer#F6` | Without a token, GitHub counts a "not modified" (304) reply against the 60-an-hour limit (measured). ETag caching saves bandwidth, not calls. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F7` | A release's inline asset list is complete (554 inline = 554 paged). A full nflverse check is 22 API calls. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F8` | The unauthenticated allowance ran out sooner than our own calls explain (it seems shared). Plan for fewer than 60 an hour; a token fixes it. | suggestive | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F9` | nflreadpy loaders return published files unchanged, except schedules: it nulls `roof` values outside dome/outdoors/closed/open (26 games have `""`). `cleaning-port` must do the same. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F10` | All of nflverse is 786 MB (408 files); play-by-play is 496 MB of it. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F11` | State files change within minutes (a schedule moneyline moved between runs 14 minutes apart). A change-log entry was 15 KB against a 355 KB full copy. | strong | [RESULTS.md](data-layer/RESULTS.md) |
+| `data-layer#F12` | A refresh stopped mid-way heals on the next run, fetching nothing twice. | strong | [RESULTS.md](data-layer/RESULTS.md) |

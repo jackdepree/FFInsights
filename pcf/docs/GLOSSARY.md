@@ -87,6 +87,11 @@
 | **Gateway** | The `as_of` function: the only way models read data | ARCHITECTURE.md |
 | **Leakage** | A model using information it wouldn't have had at prediction time | CLAUDE.md rule c |
 | **Snapshot** | A dated copy of a source that gets revised | DATA_SOURCES.md |
+| **History source**, **state source** | A file whose rows describe past events and only grow or get corrected (we keep the latest), vs one that describes how things are now and is overwritten (we keep every change) | data-layer |
+| **Manifest** | The append-only log of every raw file fetched: where from, upstream fingerprint, size, SHA-256, when | data-layer |
+| **Change log** | How state snapshots are stored: a full copy, then only the rows added or removed at each change | data-layer |
+| **Revision report** | What changed when a history file was replaced upstream; flags changes to **watched columns** (ones models use, like `epa` or ids) | data-layer |
+| **Data version** | A fingerprint of the raw files at a moment, logged with every run | data-layer |
 | **Tier** | How much we trust a source (1–4) | DATA_SOURCES.md |
 | **Level of detail (grain)** | What one row is: a play, player-game, team-week, … | ARCHITECTURE.md |
 | **Walk-forward history** | Each past prediction made by a model trained only on earlier data. Higher layers train on it. | ARCHITECTURE.md |

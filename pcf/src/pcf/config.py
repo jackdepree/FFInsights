@@ -22,7 +22,7 @@ ENV_FILE = PCF_DIR / ".env"
 DATA_ZONES = ("raw", "interim", "tables", "features", "outputs", "mlflow", "ledger", "logs")
 
 # Secrets that may arrive as environment variables (GitHub Actions secrets, pcf/.env.example).
-KNOWN_SECRET_NAMES = ("ODDS_API_KEY", "CFBD_API_KEY", "PCF_DATA_TOKEN")
+KNOWN_SECRET_NAMES = ("ODDS_API_KEY", "CFBD_API_KEY", "PCF_DATA_TOKEN", "GITHUB_TOKEN")
 
 
 @dataclass(frozen=True)

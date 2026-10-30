@@ -22,6 +22,8 @@ This sets up the filter in your local git config. The repo's `.gitattributes` al
 
 API keys go in `pcf/.env` (gitignored), one `NAME=value` per line. Never commit them, and never paste them into code.
 
+`pcf refresh` needs no key. GitHub allows 60 API calls an hour without one, and a full check uses 22, so it fits about twice an hour. If you hit the limit, add `GITHUB_TOKEN=` with a [fine-grained token](https://github.com/settings/personal-access-tokens) that has no permissions at all: public repos only, read only.
+
 ## Everyday commands
 
 Run these from `pcf/`:
@@ -33,6 +35,7 @@ Run these from `pcf/`:
 | Lint | `uv run ruff check` |
 | Format | `uv run ruff format` |
 | Show paths, seasons and which keys are set | `uv run pcf info` |
+| Download new or changed nflverse files (`--dry-run` to preview) | `uv run pcf refresh` |
 | Open JupyterLab | `uv run jupyter lab` |
 
 ## Where data lives

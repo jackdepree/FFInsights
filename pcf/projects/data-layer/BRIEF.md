@@ -2,7 +2,7 @@
 
 > An infrastructure project: no model and no football calls, but two storage questions for the CEO (end of page). Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft (2026-10-30) · **Layer:** 0, data (Phase 0) · **Cadence:** — (the refresh itself is scheduled by `weekly-run`)
+**Status:** agreed (2026-10-30): CEO chose 1B and 2A · **Layer:** 0, data (Phase 0) · **Cadence:** — (the refresh itself is scheduled by `weekly-run`)
 
 ## The question
 Can PCF hold its own copy of every nflverse file, keep it current with one re-runnable command, and always know what changed upstream and when?
@@ -34,14 +34,14 @@ Every table and model reads from this copy. If it silently changes underneath a 
 - **Everything nflverse publishes, 1999→ (about 830 MB).** Training starts in 2006, but aging and career models need earlier seasons, and the cost is small.
 - **Download the release files directly, not through nflreadpy's loaders.** `raw/` should hold the file exactly as published, with our own manifest and snapshots. nflreadpy stays the reference: a network test checks every file we fetch matches what its loader returns. Its cache is turned off for our refresh (F5).
 - **History sources keep only their latest version, safe because of F2,** with every replacement logged in the manifest and checked by the revision report.
-- **State sources keep a snapshot only when their content changes** (deduplicated by fingerprint), current season only. At a weekly refresh that's roughly 25 MB a week, under 1 GB a season.
+- **State sources keep a dated record only when their content changes**, current season only. *Changed while building:* a full copy per change, at the daily cadence the CEO chose (1B), would add about 5 GB a year to `pcf-data`'s git history. So each record is a **change log**: a full copy once, then only the rows added or removed. Same information, about 0.1–0.2 GB a year ([decision 0007](../../docs/decisions/0007-state-change-logs.md)).
 - No keys needed. A GitHub token is optional (raises the rate limit), read through `get_secret`.
 
 ## Goals: what gets built
 1. **A source catalog** (`data/sources/nflverse.py`): every nflverse dataset in `DATA_SOURCES.md`, plus expected fantasy points, the id map and ECR. For each: where it's published, one file per season or one file total, first season, and whether it's a history or state source.
 2. **`pcf refresh`:** compares upstream metadata to the manifest and downloads only new or changed files into `raw/nflverse/<dataset>/season=YYYY/`. Options: `--dataset`, `--seasons`, `--dry-run` (show what would change), `--force`. The first run pulls everything. It ends with a short summary: files checked, downloaded, unchanged, revised.
 3. **The manifest** (`raw/nflverse/_manifest.parquet`, append-only) and a `data_version()` function.
-4. **Snapshots for state sources:** `raw/nflverse/<dataset>/snapshots/<file>@<fetched UTC>.parquet`, written only when the fingerprint changes.
+4. **Change logs for state sources:** `raw/nflverse/_changes/<dataset>/<file>/<fetched UTC>_base|delta.parquet`, written only when the content changes, with a fresh full copy after 90 deltas or when the columns change. Plus a daily GitHub Actions job (`snapshot-nflverse.yml`) that writes them to `pcf-data` (decision 1B).
 5. **The revision report:** when a history file is replaced, compare old and new on their key columns before the old one is deleted. Record rows added and removed, plus every changed column with its row count. **Flag** (in the summary and the log) when a watched column changes, or when a past season loses rows.
 6. **Readers for the layers above:** `scan(dataset, seasons=None)` returns a lazy Polars frame over the latest files (a season at a time, F6). `snapshot(dataset, at)` returns the latest snapshot taken at or before a moment. Only `timeline`, `cleaning-port` and the tables use them. Experts never do (leakage check 1).
 7. **Safe downloads:** timeouts, retries with backoff, and writes to a temporary file, renamed into place only once complete, so a crash never leaves half a file.
@@ -65,7 +65,11 @@ Every table and model reads from this copy. If it silently changes underneath a 
 ## How it will be used
 For now, run `pcf refresh` by hand. `weekly-run` schedules it later. `timeline` and `cleaning-port` read through `scan` and `snapshot`. `experiment-tracking` logs `data_version()` with every run.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-10-30)
+- **1B:** a separate daily Actions job records state files into `pcf-data`.
+- **2A:** take nflverse's latest corrections, log them, and flag watched columns.
+
+## Questions for the CEO (answered above)
 1. **Where should state snapshots live?** Snapshots of overwritten files can't be re-downloaded later, the same as odds. Rule g says that kind of data belongs in the private `pcf-data` repo.
    - **A. Local only for now** (in `pcf/data/raw/`), backed up to `pcf-data` once `weekly-run` exists. Simplest. But anything collected before then is lost if this PC dies, and nothing is collected while the PC is off.
    - **B. A small GitHub Actions job, separate from the odds collector, that snapshots the state files daily into `pcf-data`.** *(Recommended.)* It runs with the PC off, like the odds collection, and leaves `collect-odds.yml` untouched. It costs one more workflow file, and it reuses the existing `PCF_DATA_TOKEN`.

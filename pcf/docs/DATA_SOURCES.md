@@ -22,8 +22,8 @@
 
 ### Revisions and snapshots
 Some sources get corrected after the fact: stat corrections, roster moves, updated depth charts. Loading them today can show information that wasn't true at the time.
-- **Sources that change** (rosters, depth charts, injuries, rankings, ADP, lines): keep **dated snapshots** of what we pulled and when.
-- **Stable history** (past seasons' play-by-play, combine, draft): keep the latest version only.
+- **Sources that change** (rosters, depth charts, injuries, rankings, ADP, lines): keep **dated snapshots** of what we pulled and when. For nflverse these are stored as **change logs** (a full copy, then only the rows added or removed), recorded daily into `pcf-data` by the `snapshot-nflverse` Actions job (`data-layer`).
+- **Stable history** (past seasons' play-by-play, combine, draft): keep the latest version only. nflverse re-uploads past seasons; each replacement gets a **revision report** that flags changes to watched columns (`data-layer#F2`).
 
 ### Manual downloads
 **Never recurring.** A one-time download for a research case study is fine (e.g. Big Data Bowl). Anything needed weekly or monthly must be automated.

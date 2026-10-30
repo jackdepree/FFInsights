@@ -1,0 +1,70 @@
+# Records nflverse's state files (players, rosters, depth charts, injuries, contracts, schedules,
+# current rankings, the id map) every day into the private pcf-data repo. They're overwritten
+# upstream, so a day we don't record is lost for good: the same reason odds are collected.
+# Only change logs are saved (a full copy, then the rows added or removed each day), so a typical
+# day adds tens of kilobytes and an unchanged day nothing (pcf/docs/decisions/0007).
+#
+# This repo is public, so these logs are public: `pcf refresh` prints file names and counts only.
+#
+# Secrets: PCF_DATA_TOKEN (the same token collect-odds uses). GITHUB_TOKEN is provided by
+# Actions and only raises the API rate limit for reading nflverse's public releases.
+#
+# Schedules run only from the default branch (main). GitHub disables schedules in public repos
+# after 60 days without commits; re-enable them on the Actions tab if that happens.
+name: snapshot-nflverse
+
+on:
+  schedule:
+    - cron: "0 13 * * *"   # daily, after nflverse's overnight updates
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: snapshot-nflverse
+  cancel-in-progress: false
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Check out pcf-data
+        uses: actions/checkout@v4
+        with:
+          repository: jackdepree/pcf-data
+          token: ${{ secrets.PCF_DATA_TOKEN }}
+          path: pcf-data
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install pcf (locked versions)
+        working-directory: pcf
+        run: uv sync --frozen --no-dev
+
+      - name: Record nflverse state files
+        working-directory: pcf
+        env:
+          PCF_DATA_DIR: ${{ github.workspace }}/pcf-data
+          GITHUB_TOKEN: ${{ github.token }}
+        run: uv run --frozen --no-dev pcf refresh --snapshots-only
+
+      - name: Save to pcf-data
+        working-directory: pcf-data
+        run: |
+          git config user.name "pcf-collector"
+          git config user.email "pcf-collector@users.noreply.github.com"
+          git add raw/nflverse
+          if git diff --cached --quiet; then
+            echo "nothing new"
+          else
+            git commit -q -m "nflverse snapshot $(date -u +%Y-%m-%dT%H:%MZ)"
+            # collect-odds also pushes here; take its commits first if it ran meanwhile.
+            git pull -q --rebase
+            git push -q
+          fi

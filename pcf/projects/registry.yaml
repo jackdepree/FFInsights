@@ -64,10 +64,20 @@ projects:
   - id: data-layer
     name: Data layer
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [package-scaffold]
     summary: nflreadpy ingestion into a local cache kept out of git, with a re-runnable weekly refresh.
+    interface:
+      inputs: nflverse-data and ffopportunity GitHub releases, dynastyprocess ECR and id-map files (36 datasets)
+      outputs: raw/nflverse (latest files, manifest, change logs for state files), pcf.data.sources.nflverse (refresh, scan, snapshot, data_version, DATASETS), the pcf refresh command, the snapshot-nflverse Actions job (state change logs into pcf-data daily)
+      grain: as published (one file per dataset per season, or one file total)
+      interval: on demand; state files daily via Actions
+      cadence: n/a
+      known_at: n/a (raw files carry no known_at; timeline adds it). Manifest rows record when each file was fetched.
+      model: none
+      how_to_use: Read through scan(dataset, seasons) a season at a time, and snapshot(dataset, at) for state files as of a moment. Only timeline, cleaning-port and the tables read sources; experts never do. Log data_version() with every run.
+      feeds: timeline, cleaning-port, experiment-tracking
 
   - id: timeline
     name: NFL timeline and known-at timestamps
