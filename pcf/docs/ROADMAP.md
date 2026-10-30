@@ -81,3 +81,4 @@ One dated line each time something reaches Done, or the roadmap changes shape.
 - **2026-10-30:** `ARCHITECTURE.md` written, with five decision notes, brief and results templates, and `projects/KNOWLEDGE.md`. Added the `experiment-tracking` project.
 - **2026-10-30:** `VALIDATION.md` written. The 2025 season is the first vault.
 - **2026-10-30:** `OLD_INVENTORY.md` written: the salvage map of `old/`. Old saved models are never loaded, and old data is for research and benchmarking only.
+- **2026-10-30:** `CONVENTIONS.md` and `GLOSSARY.md` written. Every brief and results page now has a Terms section. The project-wide docs are complete.

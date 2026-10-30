@@ -34,7 +34,7 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 - **d. Every model ships with** a backtest, a calibration check and an uncertainty estimate.
 - **e. Versioned handoffs.** Higher layers read lower-layer outputs only from saved, versioned results, never by refitting on the fly. In training, lower-layer outputs used as features must come from the lower model's **walk-forward history**: made by a model trained only on data before that row. Never run today's best model over past rows to make training features.
 - **f. No hardcoded paths.** Everything is configured in one place.
-- **g. Data stays out of git**, except small final outputs (e.g. start/sit advice). **The one exception is data we collect that can't be re-downloaded** (betting lines, the prediction ledger). It lives in the private `jackdepree/pcf-data` repo, never in this public one. API keys live in `pcf/.env` (gitignored) and in GitHub Actions secrets, never in code.
+- **g. Data stays out of git**, except small final outputs (e.g. start/sit advice). **The one exception is data we collect that can't be re-downloaded** (betting lines, the prediction ledger). It lives in the private `jackdepree/pcf-data` repo, never in this public one. Tiny test fixtures (under 1 MB, public or synthetic rows) may live in `tests/fixtures/` (`docs/CONVENTIONS.md`). API keys live in `pcf/.env` (gitignored) and in GitHub Actions secrets, never in code.
 - **h. Football sanity check.** Results that defy football logic get flagged, not shipped.
 - **i. Notebooks are for exploring only.** Reusable code lives in the package.
 - **j. Modularity.** Before writing new code, check the shared package for something that already does it. When writing something reusable, put it in the shared package so new and parallel projects reuse it. Flag duplication when you see it.
@@ -82,7 +82,7 @@ Every new mini-project, sub-problem, feature, model or domain gets an entry in [
 
 1. **Idea:** brainstorm it together and add it to the registry.
 2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
-3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)). It covers the question, why it matters, assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
+3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)). It covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
 6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, and the roadmap and registry are updated.
@@ -99,7 +99,7 @@ A mini-project is done when:
 - [ ] A backtest, a calibration check and an uncertainty estimate are reported, with the vault result and the validation scorecard (`docs/VALIDATION.md`).
 - [ ] Outputs (live and walk-forward history) are saved in the standard schema, versioned, and readable by higher layers. The champion model is registered in MLflow.
 - [ ] Results pass the football sanity check.
-- [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its interface card is in the registry, and the CEO's open questions are answered.
+- [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its new terms are in `GLOSSARY.md`, its interface card is in the registry, and the CEO's open questions are answered.
 - [ ] The registry and roadmap are updated, and the CEO approved the merge.
 
 ## Where things live
@@ -129,8 +129,5 @@ pcf/
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): code layout, storage, the `as_of` gateway and leakage checks, the expert contract, MLflow, the knowledge tree, the ladder, and how it runs. Read it before writing package code.
 - [`docs/VALIDATION.md`](docs/VALIDATION.md): the bar every model must clear: the vault, walk-forward backtests, scores, what "beats" means, signal and no-noise tests, baselines, calibration, betting evaluation, leakage thresholds, sanity review, the scorecard. Read it before validating anything.
 - [`docs/OLD_INVENTORY.md`](docs/OLD_INVENTORY.md): the salvage map of `old/`: the core models' goals, the functions to port (copy, test, then improve), old data for research only, and lessons learned. Read it before touching anything `old/` did.
-
-To be written:
-
-- `docs/CONVENTIONS.md`: code style and naming
-- `docs/GLOSSARY.md`: shared terms (EPA, VOE, CLV, ECR…)
+- [`docs/CONVENTIONS.md`](docs/CONVENTIONS.md): code style, naming (ids, columns, units), how functions behave, tests, notebooks, git. Read it before writing code.
+- [`docs/GLOSSARY.md`](docs/GLOSSARY.md): every term, with its nflverse column and how PCF uses it. Read it when a term is unclear.

@@ -17,6 +17,9 @@ Two or three sentences: what we learned and whether it worked against the brief'
 | Leakage | |
 | Football sanity (CEO review date) | |
 
+## Terms
+The project's terms as they ended up: anything new, or anything whose definition changed since the brief. These are copied into `docs/GLOSSARY.md`.
+
 ## Findings
 Numbered so other projects can cite them as `<id>#F1`. One claim each.
 

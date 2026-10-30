@@ -11,6 +11,10 @@ One or two sentences, in plain football language.
 ## Why it matters
 What it unlocks: which products or experts get better, and how a user would notice.
 
+## Terms
+- **Standard terms used:** list them, linking to `docs/GLOSSARY.md` (e.g. EPA, target share, CLV).
+- **New terms this project introduces:** define each one here, in plain language: what it means, how it's computed, and why we need it. They move into the glossary when the project is done.
+
 ## Builds on
 | Project | What we use | Why |
 |---|---|---|
