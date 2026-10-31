@@ -7,11 +7,11 @@ from pcf.data.clean import legacy, standard
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
-    game_day_cutoffs,
     weekly_depth_rows,
 )
 from pcf.data.clean.players import players_on_play, plays_with_players
 from pcf.data.sources.nflverse import scan
+from pcf.data.timeline import games, team_kickoffs
 
 PBP = ["game_id", "play_id", "play_type", "season", "week", "season_type", "posteam", "defteam"]
 OLD = ["offense_players", "defense_players", "game_id", "play_id", "play_type", "season", "week"]
@@ -24,7 +24,8 @@ pytestmark = pytest.mark.local_data
 def labels() -> pl.DataFrame:
     weekly = weekly_depth_rows(scan("depth_charts", range(2015, 2025)).collect())
     schedules = standard.schedules(scan("schedules").filter(pl.col("season") >= 2025).collect())
-    daily = daily_depth_rows(scan("depth_charts", [2025]).collect(), game_day_cutoffs(schedules))
+    kickoffs = team_kickoffs(games(schedules))
+    daily = daily_depth_rows(scan("depth_charts", [2025]).collect(), kickoffs)
     return depth_labels(pl.concat([weekly, daily]))
 
 

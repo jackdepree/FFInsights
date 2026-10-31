@@ -5,11 +5,11 @@ from pcf.data.clean import standard
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
-    game_day_cutoffs,
     weekly_depth_rows,
 )
 from pcf.data.clean.players import players_on_play, plays_with_players
 from pcf.data.clean.slots import position_groups, slot_labels
+from pcf.data.timeline import games, team_kickoffs
 
 from .conftest import fixture
 
@@ -133,8 +133,8 @@ def test_two_2024_games_meet_the_expectations():
 def test_a_2025_game_from_daily_charts_meets_the_expectations():
     plays = plays_with_players(fixture("pbp_2025"), fixture("participation_2025"))
     players = players_on_play(plays)
-    cutoffs = game_day_cutoffs(fixture("schedules_2025"))
-    labels = depth_labels(daily_depth_rows(fixture("depth_charts_2025"), cutoffs))
+    kickoffs = team_kickoffs(games(fixture("schedules_2025")))
+    labels = depth_labels(daily_depth_rows(fixture("depth_charts_2025"), kickoffs))
     rosters = standard.weekly_rosters(
         fixture("weekly_rosters_2025").with_columns(status=pl.lit("ACT"))
     )

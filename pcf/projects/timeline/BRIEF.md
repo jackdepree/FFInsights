@@ -2,7 +2,7 @@
 
 > An infrastructure project: no model, but one scope call for the CEO (end of page). Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, data (Phase 0) · **Cadence:** — (pure functions over schedules and each source's own timestamps)
+**Status:** agreed (2026-10-31): CEO chose 1A · **Layer:** 0, data (Phase 0) · **Cadence:** — (pure functions over schedules and each source's own timestamps)
 
 ## The question
 When did each thing in football happen, and when could PCF have known about it? One calendar covers games, weeks and offseason phases, and every row of every source gets a `known_at` timestamp.
@@ -65,7 +65,10 @@ Rule c (no information from after kickoff) is only as good as `known_at`. The ta
 ## How it will be used
 `grain-tables` adds `known_at` to every table with these rules. The gateway (`validation-harness`) uses `phase_at` and `known_at` to show a model only what was known at a moment. The `offseason_events` experts (prospects, free agency, the draft) use the offseason phases.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-10-31)
+- **1A:** offseason dates come from a small dates file kept in the repo, filled once and checked against our data, then one row added each spring (a test fails from February if it's missing).
+
+## Questions for the CEO (answered above)
 1. **Where should the offseason dates come from?**
    - **Why it matters:** `offseason_events` experts update at the combine, free agency, trades and the draft. To keep their backtests honest, PCF needs to know, for example, that free agency comes before the draft in every year. nflverse has no such dates (F6).
    - **A. A small dates file kept in the repo.** *(Recommended.)*

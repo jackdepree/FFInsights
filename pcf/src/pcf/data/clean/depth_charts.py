@@ -5,8 +5,6 @@ latest daily snapshot before each game. Labels rank players within a position by
 depth so far, as the old `clean_depth_charts` did, but in time order and to date only.
 """
 
-from datetime import UTC
-
 import polars as pl
 
 from pcf.core.log import get_logger
@@ -80,11 +78,13 @@ def weekly_depth_rows(depth_charts: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def daily_depth_rows(depth_charts: pl.DataFrame, cutoffs: pl.DataFrame) -> pl.DataFrame:
+def daily_depth_rows(depth_charts: pl.DataFrame, kickoffs: pl.DataFrame) -> pl.DataFrame:
     """Daily snapshots (2025→) → one row per team, week and player, from the latest snapshot at
-    or before each game's cutoff.
+    or before each game's kickoff.
 
-    `cutoffs` has season, week, team and cutoff (UTC) for each team's game (`game_day_cutoffs`).
+    `kickoffs` has season, week, team and kickoff (UTC) for each team's game
+    (`pcf.data.timeline.team_kickoffs`). Snapshots are taken in the early morning Eastern, so a
+    game gets its game-day chart (timeline#F5).
     Depth is the player's rank within their spot (WR has three spots, so the second WR in each
     spot is depth 2), matching the weekly format's `depth_team`.
     """
@@ -100,11 +100,11 @@ def daily_depth_rows(depth_charts: pl.DataFrame, cutoffs: pl.DataFrame) -> pl.Da
 
     taken = charts.select("team", "taken").unique().sort("taken")
     chosen = (
-        cutoffs.select("season", "week", "team", "cutoff")
-        .sort("cutoff")
+        kickoffs.select("season", "week", "team", "kickoff")
+        .sort("kickoff")
         .join_asof(
             taken,
-            left_on="cutoff",
+            left_on="kickoff",
             right_on="taken",
             by="team",
             strategy="backward",
@@ -115,13 +115,13 @@ def daily_depth_rows(depth_charts: pl.DataFrame, cutoffs: pl.DataFrame) -> pl.Da
     # chart (that's what a live prediction uses); later ones get nothing, since their chart
     # will still change.
     newest = taken["taken"].max()
-    future = pl.col("cutoff") > newest
+    future = pl.col("kickoff") > newest
     chosen = chosen.filter(
-        ~future | (pl.col("cutoff") == pl.col("cutoff").filter(future).min().over("team"))
+        ~future | (pl.col("kickoff") == pl.col("kickoff").filter(future).min().over("team"))
     )
     missing = chosen.filter(pl.col("taken").is_null())
     if missing.height:
-        log.warning("no depth chart before the cutoff for %d team-games", missing.height)
+        log.warning("no depth chart before kickoff for %d team-games", missing.height)
     return (
         chosen.drop_nulls("taken")
         .join(charts.drop_nulls("gsis_id"), on=["team", "taken"])
@@ -181,26 +181,3 @@ def depth_labels(rows: pl.DataFrame) -> pl.DataFrame:
         .select(*ROW_COLUMNS, "depth_mean", "weeks_listed", "position_label")
         .sort("season", "week", "team", "position", "position_label")
     )
-
-
-def game_day_cutoffs(schedules: pl.DataFrame) -> pl.DataFrame:
-    """Each team's game → the start of game day in New York, as UTC: season, week, team, cutoff.
-
-    A stand-in until `timeline` provides kickoff times. Snapshots are taken about once a day, so
-    the start of game day loses at most the morning-of snapshot, and never looks past kickoff.
-    """
-    games = schedules.select(
-        pl.col("season").cast(pl.Int32),
-        pl.col("week").cast(pl.Int32),
-        "home_team",
-        "away_team",
-        cutoff=pl.col("gameday")
-        .str.to_datetime("%Y-%m-%d", time_zone="America/New_York")
-        .dt.convert_time_zone(str(UTC)),
-    )
-    return pl.concat(
-        [
-            games.select("season", "week", team=pl.col(side), cutoff="cutoff")
-            for side in ("home_team", "away_team")
-        ]
-    ).sort("season", "week", "team")

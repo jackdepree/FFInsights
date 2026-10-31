@@ -17,13 +17,13 @@ from pcf.data.clean import legacy
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
-    game_day_cutoffs,
     weekly_depth_rows,
 )
 from pcf.data.clean.players import plays_with_players, players_on_play
 from pcf.data.clean import standard
 from pcf.data.clean.slots import slot_labels
 from pcf.data.sources.nflverse import scan
+from pcf.data.timeline import games, team_kickoffs
 
 PBP = ["game_id", "play_id", "play_type", "season", "week", "season_type", "posteam", "defteam"]
 OLD_PLAYS = ["offense_players", "defense_players", "game_id", "play_id", "play_type", "season", "week"]
@@ -32,10 +32,9 @@ ROSTER = ["season", "week", "team", "gsis_id", "position", "depth_chart_position
 
 def all_depth_rows() -> pl.DataFrame:
     weekly = weekly_depth_rows(scan("depth_charts", range(2001, 2025)).collect())
-    cutoffs = game_day_cutoffs(
-        scan("schedules").filter(pl.col("season") >= 2025).collect()
-    )
-    daily = daily_depth_rows(scan("depth_charts", [2025, 2026]).collect(), cutoffs)
+    schedules = standard.schedules(scan("schedules").filter(pl.col("season") >= 2025).collect())
+    kickoffs = team_kickoffs(games(schedules))
+    daily = daily_depth_rows(scan("depth_charts", [2025, 2026]).collect(), kickoffs)
     return pl.concat([weekly, daily])
 
 

@@ -1,0 +1,39 @@
+# League-wide offseason dates, one row per league year (CEO decision 1A, timeline brief).
+# Add next year's row each spring: a test fails from February 1 if it's missing.
+# Blank = not found in a public source. Rules that need a blank date fall back to a later one
+# (combine results: the first day of the draft). Dates are calendar days in US Eastern time.
+#
+# league_year_start: the new league year, free agency and trading open (4 PM ET in recent years).
+# combine_start, combine_end: the NFL Scouting Combine in Indianapolis.
+# draft_start, draft_end: the first and last day of the draft.
+# preseason_start: the first preseason game (the Hall of Fame Game, unless it was canceled).
+#
+# Sources (read 2026-10-31): Wikipedia's "<year> NFL season" pages (league year, combine 2013-15),
+# "List of NFL drafts", and "Pro Football Hall of Fame Game"; jt-sw.com's 2002 timeline (2002
+# league year and combine); Packers.com (2003 combine); NFL.com and team sites (2026 combine).
+season,league_year_start,combine_start,combine_end,draft_start,draft_end,preseason_start,notes
+2002,2002-03-01,2002-02-28,2002-03-04,2002-04-20,2002-04-21,2002-08-05,
+2003,,2003-02-18,2003-02-24,2003-04-26,2003-04-27,2003-08-04,
+2004,,,,2004-04-24,2004-04-25,2004-08-09,
+2005,,,,2005-04-23,2005-04-24,2005-08-08,
+2006,,,,2006-04-29,2006-04-30,2006-08-06,
+2007,,,,2007-04-28,2007-04-29,2007-08-05,
+2008,,,,2008-04-26,2008-04-27,2008-08-03,
+2009,,,,2009-04-25,2009-04-26,2009-08-09,
+2010,2010-03-05,,,2010-04-22,2010-04-24,2010-08-08,
+2011,2011-07-25,,,2011-04-28,2011-04-30,2011-08-11,Lockout: free agency opened after the draft. Hall of Fame Game canceled; first preseason games Aug 11.
+2012,2012-03-13,,,2012-04-26,2012-04-28,2012-08-05,
+2013,2013-03-12,2013-02-20,2013-02-26,2013-04-25,2013-04-27,2013-08-04,
+2014,2014-03-11,2014-02-19,2014-02-25,2014-05-08,2014-05-10,2014-08-03,
+2015,2015-03-10,2015-02-17,2015-02-23,2015-04-30,2015-05-02,2015-08-09,
+2016,2016-03-09,,,2016-04-28,2016-04-30,2016-08-11,Hall of Fame Game canceled; first preseason games Aug 11.
+2017,2017-03-09,,,2017-04-27,2017-04-29,2017-08-03,
+2018,2018-03-14,,,2018-04-26,2018-04-28,2018-08-02,
+2019,2019-03-13,,,2019-04-25,2019-04-27,2019-08-01,
+2020,2020-03-18,,,2020-04-23,2020-04-25,,No preseason (COVID-19). Virtual draft.
+2021,2021-03-17,,,2021-04-29,2021-05-01,2021-08-05,No combine (COVID-19): pro days and medical checks instead.
+2022,2022-03-16,,,2022-04-28,2022-04-30,2022-08-04,
+2023,2023-03-15,,,2023-04-27,2023-04-29,2023-08-03,
+2024,2024-03-13,,,2024-04-25,2024-04-27,2024-08-01,
+2025,2025-03-12,,,2025-04-24,2025-04-26,2025-07-31,
+2026,2026-03-11,2026-02-23,2026-03-02,2026-04-23,2026-04-25,2026-08-06,

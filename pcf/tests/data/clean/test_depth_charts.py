@@ -6,7 +6,6 @@ import pytest
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
-    game_day_cutoffs,
     weekly_depth_rows,
 )
 
@@ -97,11 +96,11 @@ def _daily(rows):
     return pl.DataFrame(rows, schema=cols, orient="row")
 
 
-def _cutoffs(rows):
-    return pl.DataFrame(rows, schema=["season", "week", "team", "cutoff"], orient="row")
+def _kickoffs(rows):
+    return pl.DataFrame(rows, schema=["season", "week", "team", "kickoff"], orient="row")
 
 
-def test_daily_charts_use_the_latest_snapshot_before_each_cutoff():
+def test_daily_charts_use_the_latest_snapshot_before_each_kickoff():
     daily = _daily(
         [
             ("2025-09-01T07:00:00Z", "KC", "old_qb", "3WR 1TE", "QB", 9, 1),
@@ -109,7 +108,7 @@ def test_daily_charts_use_the_latest_snapshot_before_each_cutoff():
             ("2025-09-08T07:00:00Z", "KC", "after", "3WR 1TE", "QB", 9, 1),
         ]
     )
-    cut = _cutoffs([(2025, 1, "KC", datetime(2025, 9, 7, 4, tzinfo=UTC))])
+    cut = _kickoffs([(2025, 1, "KC", datetime(2025, 9, 7, 4, tzinfo=UTC))])
     assert daily_depth_rows(daily, cut)["gsis_id"].to_list() == ["new_qb"]
 
 
@@ -121,7 +120,7 @@ def test_daily_depth_is_the_rank_within_each_wr_spot():
         ]
         + [("2025-09-06T07:00:00Z", "KC", "lde", "Base 4-3 D", "LDE", 1, 1)]
     )
-    cut = _cutoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
+    cut = _kickoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
     rows = daily_depth_rows(daily, cut)
     depth = dict(zip(rows["gsis_id"], rows["depth"], strict=True))
     assert depth == {"wr1": 1, "wr2": 1, "wr3": 1, "wr4": 2, "wr5": 2, "lde": 1}
@@ -130,7 +129,7 @@ def test_daily_depth_is_the_rank_within_each_wr_spot():
 
 def test_only_the_next_future_game_gets_todays_chart():
     daily = _daily([("2025-09-06T07:00:00Z", "KC", "qb", "3WR 1TE", "QB", 9, 1)])
-    cut = _cutoffs(
+    cut = _kickoffs(
         [
             (2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC)),
             (2025, 2, "KC", datetime(2025, 9, 14, tzinfo=UTC)),
@@ -141,21 +140,6 @@ def test_only_the_next_future_game_gets_todays_chart():
 
 def test_daily_charts_refuse_a_position_pcf_does_not_map():
     daily = _daily([("2025-09-06T07:00:00Z", "KC", "x", "3WR 1TE", "SLOT", 1, 1)])
-    cut = _cutoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
+    cut = _kickoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
     with pytest.raises(ValueError, match="SLOT"):
         daily_depth_rows(daily, cut)
-
-
-def test_game_day_cutoff_is_midnight_in_new_york():
-    sched = pl.DataFrame(
-        {
-            "season": [2025],
-            "week": [1],
-            "home_team": ["KC"],
-            "away_team": ["OAK"],
-            "gameday": ["2025-09-07"],
-        }
-    )
-    cut = game_day_cutoffs(sched)
-    assert cut["cutoff"].to_list() == [datetime(2025, 9, 7, 4, tzinfo=UTC)] * 2
-    assert sorted(cut["team"]) == ["KC", "OAK"]  # recoding happens in standard.schedules
