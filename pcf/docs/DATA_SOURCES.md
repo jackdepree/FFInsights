@@ -48,7 +48,7 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | Source (loader) | Level of detail | Years | Updates | Known-at rule | Feeds |
 |---|---|---|---|---|---|
 | Play-by-play (`load_pbp`) | play | 1999→ | Morning after each game | Kickoff + 1 day | Context, VOE, team efficiency, tags, nearly everything |
-| Schedules (`load_schedules`) | game | 1999→ | Several times a week | Game facts (date, roof, surface, rest): at schedule release. **Lines:** spreads and totals 1999→, moneylines 2006→. They sit *near* the closing line (they match ESPN's close in 45–84% of games), so treat them as known at kickoff. | Environment, Elo, baselines, closing-line fallback |
+| Schedules (`load_schedules`) | game | 1999→ | Several times a week | Three columns (`timeline`). Game facts (date, roof, surface, rest): at schedule release; PCF uses the start of week 1, since release dates aren't recorded. **Lines:** spreads and totals 1999→, moneylines 2006→. They sit *near* the closing line (they match ESPN's close in 45–84% of games), so treat them as known at kickoff. Scores: kickoff + 1 day. | Environment, Elo, baselines, closing-line fallback |
 | FTN charting (`load_ftn_charting`) | play | 2022→ | About 1–2 weeks behind (week 7 on Oct 30) | **History:** kickoff + 14 days. **Live:** our own fetch time. Not `date_pulled`: whole seasons were re-pulled later (2022–23 all show 2024-09-06), so it isn't first availability ([exploration](../projects/package-scaffold/EXPLORATION.md)). | Context, roles, schemes, line play |
 | Officials (`load_officials`) | game | 2015→ | Preseason assignments, then weekly | Kickoff − 2 days | Referee crews (parked) |
 
@@ -58,8 +58,8 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | Player stats (`load_player_stats`) | player-week | 1999→ | Morning after | Kickoff + 1 day | Baselines, every player expert |
 | Team stats (`load_team_stats`) | team-week | 1999→ | Morning after | Kickoff + 1 day | Team experts |
 | Snap counts (`load_snap_counts`) | player-game | 2013→ | Morning after | Kickoff + 1 day | Participation, fatigue, vacated opportunity |
-| ⚠️ **Participation** (`load_participation`) | play (who was on the field, routes, coverage, pressure, time to throw) | 2016–**2025** | **After the season only** (last update Feb 2026; no 2026 data) | End of season | **Training only.** See the callout below. |
-| Next Gen Stats (`load_nextgen_stats`) | player-week | 2016→ | Morning after | Kickoff + 1 day | Context, QB talent, separation, time to throw (weekly) |
+| ⚠️ **Participation** (`load_participation`) | play (who was on the field, routes, coverage, pressure, time to throw) | 2016–**2025** | **After the season only** (last update Feb 2026; no 2026 data) | The day after the Super Bowl | **Training only.** See the callout below. |
+| Next Gen Stats (`load_nextgen_stats`) | player-week | 2016→ | Morning after | The day after the week ends. Week 0 (season totals): the day after the regular season. NGS numbers the Super Bowl one past the schedule (timeline#F11). | Context, QB talent, separation, time to throw (weekly) |
 | PFR advanced stats (`load_pfr_advstats`) | player-week | 2018→ | About a week behind (week 7 on Oct 30) | The Tuesday after the following week (conservative) | Pressure, drops, broken tackles |
 | Expected fantasy points (`load_ff_opportunity`) | player-week | 2006→ | Morning after | Kickoff + 1 day | Opportunity quality (benchmark) |
 | Depth charts (`load_depth_charts`) | player-snapshot | 2001→ | **Daily** from 2025: snapshot rows with `dt` and **no `season` or `week`**. Weekly rows through 2024. | `dt`. Older weekly-format years: the start of that week. | Participation, roles, vacated opportunity |
@@ -70,12 +70,12 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 ### Health, people and the offseason
 | Source (loader) | Level of detail | Years | Updates | Known-at rule | Feeds |
 |---|---|---|---|---|---|
-| Injuries (`load_injuries`) | player-week (game status plus Wed–Fri practice status) | 2009→ | During each game week | **Noon ET the day before kickoff.** The final report comes 1–2 days before the game. No timestamp column. | Injury & fatigue, vacated opportunity |
-| Combine (`load_combine`) | player | 2000→ | After the combine (March) | The day after that year's combine ends | Prospects |
-| Draft picks (`load_draft_picks`) | player | 1980→ | After the draft (late April) | The day of the pick | Prospects, aging, dynasty |
+| Injuries (`load_injuries`) | player-week (game status plus Wed–Fri practice status) | 2009→ | During each game week | **`date_modified`** (when the report was last changed). Without it (2009, 2025→): **kickoff − 12 hours**. The old rule, noon ET the day before, was too early for 6–7% of 2021–2024 reports (timeline#F4). | Injury & fatigue, vacated opportunity |
+| Combine (`load_combine`) | player | 2000→ | After the combine (March) | The day after that year's combine ends; without its dates, the first day of the draft (offseason dates file) | Prospects |
+| Draft picks (`load_draft_picks`) | player | 1980→ | After the draft (late April) | The day after the draft ends (leans late) | Prospects, aging, dynasty |
 | Contracts (`load_contracts`, OverTheCap) | player-contract | Signing years through 2026. Only the year signed, no exact date. | Regularly | Use our snapshot date, because the year signed alone is too coarse for point-in-time | Contract & motivation (parked) |
-| Trades (`load_trades`) | transaction | 2002→ | When trades happen | `trade_date` | Timeline, vacated opportunity |
-| FantasyPros ECR (`load_ff_rankings`) | player-ranking | `type="all"`: archived history, Dec 2019→. `"draft"` and `"week"`: the current snapshot only. | Weekly in season | `scrape_date` | Crowd expert, ECR benchmark |
+| Trades (`load_trades`) | transaction | 2002→ | When trades happen (the file stopped in April 2026: timeline#F7) | The end of `trade_date` | Timeline, vacated opportunity |
+| FantasyPros ECR (`load_ff_rankings`) | player-ranking | `type="all"`: archived history, Dec 2019→. `"draft"` and `"week"`: the current snapshot only. | Weekly in season | The end of `scrape_date` | Crowd expert, ECR benchmark |
 
 > ⚠️ **Participation is post-season only. This is why Context and VOE each come as two experts** (`context-live` / `context-retro`, `voe-live` / `voe-retro`; rule m).
 > Play-level fields like routes run, coverage type, pressure and time to throw arrive only after the season ends. The old Context and VOE models were built on them. A model *trained* on these fields can't be *fed* them for live, mid-season predictions. That mismatch (train/serve skew) silently breaks a model in production.

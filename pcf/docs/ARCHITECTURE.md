@@ -50,7 +50,7 @@ pcf/
     data/
       sources/              one module per source (nflverse, espn_odds, odds_api, ...)
       clean/                the cleaning functions, ported from old/ and tested
-      timeline.py           the NFL calendar and every source's known-at rule
+      timeline/             the NFL calendar, the offseason dates file and every source's known-at rule
       tables/               tables at each level of detail (play, player-game, team-week, ...)
       tags/                 tag tables
       gateway.py            as_of(): the only way models read data

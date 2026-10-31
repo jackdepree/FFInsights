@@ -106,7 +106,7 @@ Also in `registry.yaml` under `interface`.
 | | |
 |---|---|
 | **Inputs** | Raw nflverse play-by-play, participation, depth charts (weekly and daily), weekly rosters, schedules, and the other sources `standard` covers (player stats, expected fantasy points, snap counts, players, injuries) |
-| **Outputs** | Pure functions in `pcf.data.clean`. `players`: `plays_with_players`, `players_on_play`. `depth_charts`: `weekly_depth_rows`, `daily_depth_rows`, `game_day_cutoffs`, `depth_labels`. `slots`: `slot_labels` (adds `position`, `position_label`, `label_source`), `position_groups`, `position_of`. `standard`: one function per source plus `team`/`standard_teams`. `legacy`: the faithful copy, for comparison only. |
+| **Outputs** | Pure functions in `pcf.data.clean`. `players`: `plays_with_players`, `players_on_play`. `depth_charts`: `weekly_depth_rows`, `daily_depth_rows` (takes `timeline.team_kickoffs` since `timeline`; `game_day_cutoffs` was removed), `depth_labels`. `slots`: `slot_labels` (adds `position`, `position_label`, `label_source`), `position_groups`, `position_of`. `standard`: one function per source plus `team`/`standard_teams`. `legacy`: the faithful copy, for comparison only. |
 | **Level of detail** | Slot labels: player-play. Depth labels: player-team-week. Standard functions: as published. |
 | **Interval** | Depth labels: weekly, from week 1 (2001→). Slot labels: 2016→ (participation). |
 | **Cadence** | Slot labels from participation: retrospective only (rule m). Depth labels: in-season use is fine, as each week uses only that week's chart and earlier. |

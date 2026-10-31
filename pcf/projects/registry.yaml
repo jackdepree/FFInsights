@@ -82,10 +82,20 @@ projects:
   - id: timeline
     name: NFL timeline and known-at timestamps
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [data-layer]
     summary: One calendar for season weeks and offseason phases (combine, free agency, trades, pre-/post-draft, camp). Every row gets a known_at timestamp. Fallback is "week 0" only if this proves unworkable.
+    interface:
+      inputs: standardized schedules, the offseason dates file (src/pcf/data/timeline/offseason_dates.csv), each dataset's own timestamps (date_modified, dt, trade_date, scrape_date)
+      outputs: pcf.data.timeline. calendar(schedules) -> Calendar (games with kickoff, weeks, phases, offseason); phase_at(cal, moment); team_kickoffs(games); known_at(dataset, df, cal, fetched_at) and RULES for all 36 nflverse datasets; check_known_at(df, not_before)
+      grain: games, season-weeks, phases; rules keep each dataset's rows
+      interval: 1999 to the current schedule
+      cadence: n/a (pure functions; rebuild the calendar after each schedules refresh)
+      known_at: defined here. Schedules get facts_known_at, lines_known_at and known_at.
+      model: none
+      how_to_use: Build the calendar once from standard.schedules. Add known_at to every table with known_at(dataset, df, cal); pass fetched_at for state files and unfinished season totals. Add next league year's row to the dates file each spring (a test fails from February 1).
+      feeds: grain-tables, validation-harness, cleaning-port, offseason experts
 
   - id: cleaning-port
     name: Port the cleaning functions
@@ -97,7 +107,7 @@ projects:
     summary: Copy the old play-by-play, depth-chart, injury and snap cleaning functions into the package, prove they match the old output with golden tests, then improve them one tested change at a time (docs/OLD_INVENTORY.md).
     interface:
       inputs: raw nflverse play-by-play, participation, depth charts (weekly and daily), weekly rosters, schedules, player stats, ff_opportunity, snap counts, players, injuries
-      outputs: pure functions in pcf.data.clean. players (plays_with_players, players_on_play), depth_charts (weekly_depth_rows, daily_depth_rows, game_day_cutoffs, depth_labels), slots (slot_labels adds position, position_label, label_source; position_groups, position_of), standard (one function per source; team, standard_teams), legacy (faithful copy, for comparison only)
+      outputs: pure functions in pcf.data.clean. players (plays_with_players, players_on_play), depth_charts (weekly_depth_rows, daily_depth_rows with timeline.team_kickoffs, depth_labels), slots (slot_labels adds position, position_label, label_source; position_groups, position_of), standard (one function per source; team, standard_teams), legacy (faithful copy, for comparison only)
       grain: slot labels player-play; depth labels player-team-week; standard functions as published
       interval: depth labels weekly from 2001; slot labels from 2016 (participation)
       cadence: slot labels from participation are retrospective only; depth labels are usable in season (each week uses only that week's chart and earlier)

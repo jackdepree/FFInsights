@@ -83,5 +83,6 @@ One dated line each time something reaches Done, or the roadmap changes shape.
 - **2026-10-30:** `OLD_INVENTORY.md` written: the salvage map of `old/`. Old saved models are never loaded, and old data is for research and benchmarking only.
 - **2026-10-30:** `CONVENTIONS.md` and `GLOSSARY.md` written. Every brief and results page now has a Terms section. The project-wide docs are complete.
 - **2026-10-30:** `package-scaffold` done: the `pcf` package, config, a logger that masks keys, `pcf info`, pytest, ruff, nbstripout, JupyterLab, VS Code settings, and a deny rule that stops Claude's edit tools in `old/`.
+- **2026-10-31:** `timeline` done: kickoff times, week windows, offseason phases (a small dates file, CEO decision 1A) and a known-at rule for every nflverse dataset. The injury rule was too early for 6–7% of recent reports and is fixed.
 - **2026-10-31:** `cleaning-port` done: the old slot functions copied and golden-tested, then improved (time-ordered depth, 2025+ daily charts, a real slot for players missing from a chart, `special` from ~5% to under 0.03%), plus standardizing functions for every nflverse source.
 - **2026-10-30:** `data-layer` done: PCF keeps its own copy of nflverse (36 datasets, 786 MB) with `pcf refresh`, a manifest, revision reports, and daily state change logs into `pcf-data` (decision 0007).

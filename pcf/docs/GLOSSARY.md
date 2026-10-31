@@ -93,9 +93,14 @@
 | **Revision report** | What changed when a history file was replaced upstream; flags changes to **watched columns** (ones models use, like `epa` or ids) | data-layer |
 | **Slot label** | A player's position and depth on a play (`WR2`, `CB1`): their rank at that position on their team that week, by average depth over the season so far. `special` for K/P/LS, `unknown` with no chart or roster row | cleaning-port |
 | **Label source** (`label_source`) | Where a slot label came from: `week` (that week's chart), `earlier_week` (an earlier chart that season), `roster` (roster position, ranked past the deepest in use) or `none` | cleaning-port |
-| **Depth chart for a game** | Through 2024, that season-week's chart. From 2025, the latest daily snapshot at or before the cutoff (kickoff, from `timeline`; until then the start of game day, New York time) | cleaning-port |
+| **Depth chart for a game** | Through 2024, that season-week's chart. From 2025, the latest daily snapshot at or before kickoff | cleaning-port, timeline |
 | **Reference version** | An old function compiled straight from its `old/` notebook when a golden test runs. The faithful copy in the package must equal it | cleaning-port |
 | **PCF team codes** | The 32 codes play-by-play uses, each franchise's current code for every season (2017 Raiders = `LV`). Other codes (OAK, SD, STL, LAR, …) are recoded at ingest | cleaning-port |
+| **Kickoff** | A game's scheduled start in UTC: schedules' `gameday` + `gametime` (US Eastern for every game). Not the actual start | timeline |
+| **Week window** | A season-week's span: from midnight Eastern after the previous week's last game day to midnight after its own. Week 1 starts two days before its first game | timeline |
+| **Phase** | `offseason`, `free_agency`, `draft`, `after_draft`, `preseason`, `regular_season`, `postseason`. Offseason phases belong to the coming season. `phase_at` gives the phase of any moment | timeline |
+| **Known-at rule** | The function that gives a dataset's rows their `known_at` (`pcf.data.timeline.RULES`) | timeline |
+| **Offseason dates file** | `offseason_dates.csv`: league year, combine, draft and first preseason game per year, from public sources. A row is added each spring | timeline |
 | **Data version** | A fingerprint of the raw files at a moment, logged with every run | data-layer |
 | **Tier** | How much we trust a source (1–4) | DATA_SOURCES.md |
 | **Level of detail (grain)** | What one row is: a play, player-game, team-week, … | ARCHITECTURE.md |

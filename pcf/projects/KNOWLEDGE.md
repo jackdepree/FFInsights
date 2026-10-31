@@ -50,3 +50,18 @@
 | `cleaning-port#F16` | Participation sometimes lists one player twice on one side (373 in 2019); keep the first. | strong | [RESULTS.md](cleaning-port/RESULTS.md) |
 | `cleaning-port#F17` | Map snap counts' PFR id to `gsis_id` through nflverse's `players` file (99.93%), not dynastyprocess's id map (82%). | strong | [RESULTS.md](cleaning-port/RESULTS.md) |
 | `cleaning-port#F18` | `player_stats` has an empty row per season-week (id `"0"` or null); `ff_opportunity` one repeated player-game (2013). Both dropped in `standard`. | strong | [RESULTS.md](cleaning-port/RESULTS.md) |
+| `timeline#F1` | Schedules' `gametime` is US Eastern for every game, international ones included; the first play comes a median 2 minutes after kickoff. 1999 has no times. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F2` | Actual starts can be hours late, and play-by-play's clock is sometimes wrong by 3–12 hours. Use the scheduled kickoff. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F3` | NFL weeks never overlap (at least 2 days apart), so contiguous week windows cover every moment of a season. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F4` | "Noon ET the day before kickoff" was too early for 6–7% of 2021–2024 injury reports (mostly Thursday games). Use `date_modified`; without it, kickoff − 12 h. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F5` | 2025+ depth-chart snapshots are taken in the early morning Eastern, so each game has a game-day chart before kickoff. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F6` | nflverse has almost no offseason dates (draft and combine: year only). Trades are dated. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F7` | The nflverse trades file stops at 2026-04-17: no 2026 draft-day or in-season trades. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F8` | Weekly rosters cover weeks 1–22 only, with no offseason weeks. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F9` | The ECR archive has 371 dated scrapes from 2019-12. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F10` | Using kickoff instead of the start of game day changes 6.1% of 2025+ depth labels (+1,159 game-day listings). | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F11` | Next Gen Stats numbers the Super Bowl one past the schedule (22 through 2020, 23 from 2021). | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F12` | Officials keep the ids of 4 moved or canceled games (2021 COVID postponements, 2022 BUF at CIN). | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F13` | Every draft 2002–2025 holds that year's busiest day for trading its picks: a check of the dates file against our data. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F14` | Public sources date the offseason unevenly: draft and Hall of Fame Game every year, league-year start 2002 and 2010→, combine 6 years. 2011 had free agency after the draft. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F15` | The 2025+ depth-chart files have no `season` or `week` column, only `dt`. | strong | [RESULTS.md](timeline/RESULTS.md) |
