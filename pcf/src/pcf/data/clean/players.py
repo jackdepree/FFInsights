@@ -4,6 +4,10 @@ from collections.abc import Sequence
 
 import polars as pl
 
+from pcf.core.log import get_logger
+
+log = get_logger(__name__)
+
 PLAY_KEYS = ["game_id", "play_id"]
 SIDES = {"offense": "posteam", "defense": "defteam"}
 
@@ -15,9 +19,9 @@ def plays_with_players(pbp: pl.DataFrame, participation: pl.DataFrame) -> pl.Dat
     float in older play-by-play files and an integer in participation, so both become Int64.
     Raises if participation lists a play twice.
     """
-    part = participation.rename({"nflverse_game_id": "game_id"}).with_columns(
-        pl.col("play_id").cast(pl.Int64)
-    )
+    if "nflverse_game_id" in participation.columns:
+        participation = participation.rename({"nflverse_game_id": "game_id"})
+    part = participation.with_columns(pl.col("play_id").cast(pl.Int64))
     dupes = part.filter(part.select(PLAY_KEYS).is_duplicated())
     if dupes.height:
         raise ValueError(f"participation lists {dupes.height} plays twice, e.g. {dupes.row(0)}")
@@ -35,7 +39,8 @@ def players_on_play(
     team, slot, gsis_id.
 
     Unlike the old `pivot_wide_both_sides`, every listed player is kept (the old code cut lists
-    at 11), and empty slots make no row. `slot` is the player's place in the list, 1 upward.
+    at 11), empty slots make no row, and a player listed twice on one side keeps the first
+    listing. `slot` is the player's place in the list, 1 upward.
     """
     plays = plays.filter(pl.col("play_type").is_in(list(play_types)))
     sides = []
@@ -55,4 +60,9 @@ def players_on_play(
             .with_columns(slot=pl.int_range(1, pl.len() + 1).over(*PLAY_KEYS, "side"))
             .filter(pl.col("gsis_id").is_not_null() & (pl.col("gsis_id") != ""))
         )
-    return pl.concat(sides).sort(*PLAY_KEYS, "side", "slot")
+    players = pl.concat(sides)
+    # A handful of plays list the same player twice on one side; keep the first listing.
+    once = players.unique([*PLAY_KEYS, "side", "gsis_id"], keep="first", maintain_order=True)
+    if once.height < players.height:
+        log.info("players_on_play: %d repeat listings dropped", players.height - once.height)
+    return once.sort(*PLAY_KEYS, "side", "slot")
