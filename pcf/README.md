@@ -32,6 +32,7 @@ Run these from `pcf/`:
 |---|---|
 | Run the tests (offline, network tests skipped) | `uv run pytest` |
 | Also run the tests that need the internet | `uv run pytest -m network` |
+| Run the tests on full seasons from the local raw copy | `uv run pytest -m local_data` |
 | Lint | `uv run ruff check` |
 | Format | `uv run ruff format` |
 | Show paths, seasons and which keys are set | `uv run pcf info` |

@@ -8,6 +8,7 @@ old one. Also checks 2026 depth labels build from the daily snapshots.
 Run from pcf/:  uv run python projects/cleaning-port/explore/measure_slots.py
 """
 
+import sys
 import time
 
 import polars as pl
@@ -39,6 +40,7 @@ def all_depth_rows() -> pl.DataFrame:
 
 
 def main() -> None:
+    sys.stdout.reconfigure(encoding="utf-8")  # polars tables don't fit cp1252
     t = time.time()
     labels = depth_labels(all_depth_rows())
     print(f"depth labels 2001-2026: {labels.height:,} rows in {time.time() - t:.0f}s")

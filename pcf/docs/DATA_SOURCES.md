@@ -36,6 +36,7 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | `game_id` | **The game id**, e.g. `2026_08_CAR_GB` | nflverse (`schedules`, play-by-play) |
 | `game_id` + `play_id` | **The play id** | nflverse play-by-play. FTN maps to it via `nflverse_game_id` and `nflverse_play_id`. |
 | ESPN, PFR, Sleeper, Yahoo ids, … | Other player ids | Mapped to `gsis_id` by `load_ff_playerids` (ESPN prop athletes matched 99.7–99.9% for 2024+) |
+| PFR id (`pfr_player_id`, snap counts) | Pro Football Reference's player id | Mapped to `gsis_id` through nflverse's `players` file (99.93% of snap-count rows), not `load_ff_playerids` (82%, fantasy players only): cleaning-port#F17 |
 | ESPN event id | ESPN's game id | Mapped to `game_id` through the `espn` column of `load_schedules` (100% matched) |
 | The Odds API event id | The Odds API's game id | Matched to `game_id` by home team, away team and kickoff date |
 

@@ -87,4 +87,8 @@ One line each time something from `old/` lands in `pcf/`.
 
 | Date | From `old/` | To `pcf/` | Notes |
 |---|---|---|---|
-| | | | |
+| 2026-10-31 | `pivot_wide_both_sides`, `clean_depth_charts`, `pivot_long_both_sides`, `get_position_groups` (`Fatigue_Model_Prod.ipynb`, cells 1–4) | `pcf.data.clean.legacy` | Faithful copy, golden-tested against the notebook on 2016–2024. For comparison only. |
+| 2026-10-31 | `pivot_wide_both_sides`, `pivot_long_both_sides` | `pcf.data.clean.players` (`plays_with_players`, `players_on_play`) | Keeps every listed player (the old code cut at 11) and joins participation itself. |
+| 2026-10-31 | `clean_depth_charts` | `pcf.data.clean.depth_charts` | Season-to-date depth in time order; 2025+ daily snapshots; the mislabeled comment fixed. |
+| 2026-10-31 | `pivot_long_both_sides` (the label join), `get_position_groups` | `pcf.data.clean.slots` (`slot_labels`, `position_groups`) | Players missing from a chart get a real slot (CEO 2A); groups read from the labels present. |
+| 2026-10-31 | — (new) | `pcf.data.clean.standard` | Per-source ids, team codes, spread sign, `roof` rule, duplicates (CEO 1B). |

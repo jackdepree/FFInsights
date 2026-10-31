@@ -34,7 +34,7 @@
 | `play_id` | nflverse play id, unique within a game |
 | `season` | The year the season started (the 2026 season's Super Bowl is in 2027) |
 | `week` | nflverse numbering: regular season 1–18, playoffs 19–22 (since 2021). Use `season_type` to separate them. |
-| `team`, `opponent` | nflverse abbreviations: `LA` (Rams), `LAC`, `LV`, `WAS`, … Other sources' codes (ESPN's `LAR`, `WSH`) are mapped at ingest. |
+| `team`, `opponent` | Play-by-play's 32 codes, each franchise's **current** code for every season: `LA` (Rams), `LAC`, `LV`, `WAS`, … Older and other codes (OAK, SD, STL, ESPN's `LAR`, `WSH`, …) are mapped at ingest (`pcf.data.clean.standard`, cleaning-port#F11). |
 | `known_at`, `as_of`, `train_end` | Timestamps, always **UTC and timezone-aware** |
 
 **Derived columns end in their kind or unit:**
@@ -79,6 +79,7 @@
   - **contract and leakage:** run on every expert by the validation harness (ARCHITECTURE.md).
 - **Test fixtures may live in git** (an exception to rule g): `tests/fixtures/`, **under 1 MB in total**. They hold a few rows of public nflverse data, or synthetic rows. **Never collected odds or anything from `pcf-data`** (it's private, and this repo is public), and never keys.
 - Tests don't touch the internet. Anything that needs a download is marked `@pytest.mark.network` and skipped by default.
+- Tests that read full seasons from the local raw copy are marked `@pytest.mark.local_data` and skipped by default. Run them with `uv run pytest -m local_data` after `pcf refresh`.
 
 ## Notebooks
 

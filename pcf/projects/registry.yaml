@@ -90,11 +90,21 @@ projects:
   - id: cleaning-port
     name: Port the cleaning functions
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [data-layer]
     origin: VOE_Model_Training.ipynb, Fatigue_Model_Training.ipynb (pivot_wide_both_sides, clean_depth_charts, pivot_long_both_sides, get_position_groups)
     summary: Copy the old play-by-play, depth-chart, injury and snap cleaning functions into the package, prove they match the old output with golden tests, then improve them one tested change at a time (docs/OLD_INVENTORY.md).
+    interface:
+      inputs: raw nflverse play-by-play, participation, depth charts (weekly and daily), weekly rosters, schedules, player stats, ff_opportunity, snap counts, players, injuries
+      outputs: pure functions in pcf.data.clean. players (plays_with_players, players_on_play), depth_charts (weekly_depth_rows, daily_depth_rows, game_day_cutoffs, depth_labels), slots (slot_labels adds position, position_label, label_source; position_groups, position_of), standard (one function per source; team, standard_teams), legacy (faithful copy, for comparison only)
+      grain: slot labels player-play; depth labels player-team-week; standard functions as published
+      interval: depth labels weekly from 2001; slot labels from 2016 (participation)
+      cadence: slot labels from participation are retrospective only; depth labels are usable in season (each week uses only that week's chart and earlier)
+      known_at: none yet (timeline). Depth labels are known at that week's chart, or the daily snapshot's dt.
+      model: none
+      how_to_use: Called by grain-tables, never by experts. Standardize each source first (standard), build depth labels for all seasons at once, then slot_labels a season at a time. Filter on label_source for chart-listed players only.
+      feeds: grain-tables
 
   - id: grain-tables
     name: Tables at every level of detail
