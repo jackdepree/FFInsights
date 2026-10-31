@@ -2,7 +2,7 @@
 
 > An infrastructure project: no model, but one football call and one scope call for the CEO (end of page). Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, data (Phase 0) · **Cadence:** — (pure functions. Slot labels built from participation are retrospective only, rule m.)
+**Status:** agreed (2026-10-31): CEO chose 1B and 2A · **Layer:** 0, data (Phase 0) · **Cadence:** — (pure functions. Slot labels built from participation are retrospective only, rule m.)
 
 ## The question
 Can PCF reproduce your old cleaning exactly, prove it, and then fix it? That means: who was on the field for each play, in which slot (QB1, WR2, CB1, …), for every season 2016–2026, from our own copy of nflverse.
@@ -63,7 +63,11 @@ VOE, Context, fatigue, roles and participation all start from "these 22 players 
 ## How it will be used
 `grain-tables` calls these functions to build the play and player-play tables. VOE, Context, fatigue, roles and participation read those tables, never these functions directly.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-10-31)
+- **1B:** player slots plus source normalizations (goals 1–6).
+- **2A:** players missing from a week's chart fall back step by step, with a column recording the step.
+
+## Questions for the CEO (answered above)
 1. **How wide should this project be?** The old code holds only player-slot cleaning. The rest of PCF still needs basic source cleaning: the `data-layer` brief assigned id renames and duplicates here, and F9 adds the `roof` rule.
    - **A. Player slots only** (goals 1–5). The fastest route, but `grain-tables` then starts by writing the source cleaning itself.
    - **B. Player slots plus source normalizations** (goals 1–6). *(Recommended.)* The rules are already written in `DATA_SOURCES.md` and `CONVENTIONS.md`; this puts them in code with tests, in one place, so `grain-tables` starts on clean inputs. It adds about half a session.
