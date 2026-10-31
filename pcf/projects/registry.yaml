@@ -82,7 +82,7 @@ projects:
   - id: timeline
     name: NFL timeline and known-at timestamps
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [data-layer]
     summary: One calendar for season weeks and offseason phases (combine, free agency, trades, pre-/post-draft, camp). Every row gets a known_at timestamp. Fallback is "week 0" only if this proves unworkable.
