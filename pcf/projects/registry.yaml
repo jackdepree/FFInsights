@@ -90,7 +90,7 @@ projects:
   - id: cleaning-port
     name: Port the cleaning functions
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [data-layer]
     origin: VOE_Model_Training.ipynb, Fatigue_Model_Training.ipynb (pivot_wide_both_sides, clean_depth_charts, pivot_long_both_sides, get_position_groups)
