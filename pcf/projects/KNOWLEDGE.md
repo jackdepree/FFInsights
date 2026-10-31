@@ -65,3 +65,21 @@
 | `timeline#F13` | Every draft 2002–2025 holds that year's busiest day for trading its picks: a check of the dates file against our data. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F14` | Public sources date the offseason unevenly: draft and Hall of Fame Game every year, league-year start 2002 and 2010→, combine 6 years. 2011 had free agency after the draft. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F15` | The 2025+ depth-chart files have no `season` or `week` column, only `dt`. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `grain-tables#F1` | Player-week is player-game: no team or player has two games in one week. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F2` | Player stats list only 71–73% of the players who played (no offensive linemen or long snappers). Snap counts list everyone, from 2013. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F3` | Weekly rosters mark the dressed (`ACT`) and, from 2019, the game-day inactives (`INA`, 6–7 per team-game, none of whom played). | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F4` | Roster `status` is known 90 minutes before kickoff, not at the start of the week: now `status_known_at` = kickoff − 1 hour. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F5` | Sparse sources cover part of the player-games (ff_opportunity 21%, PFR 51%, injury reports 15%, NGS 9%). A missing row means "not in that source", not zero. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F6` | Player-game and play keys are unique once standardized; a few snap-count pfr ids are missing from the players file. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F7` | Participation and FTN match 100% of run and pass plays; team stats have 2 rows per game. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F8` | One player-game's sources become known over four weeks, from the roster (before the week) to participation (after the Super Bowl). Hence one `known_at` per source, not per row. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F9` | `scan` doesn't filter NGS by season (one file); `ff_opportunity`'s season is text; participation has no season. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F10` | The built tables are 390 MB, 311 MB of it play-by-play. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F11` | Before 2016 a weekly roster's `status` is the player's last of the season (a December IR move shows from week 1). Don't use it as a weekly fact. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F12` | 19 played games from 1999–2002 have no team stats, 16 of them Jacksonville home games in 2001–2002. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F13` | The roster spine holds 99.97–100% of the players who played before the game, every season except 2016 (99.82%). | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F14` | Schedules dated playoff matchups to week 1. Their facts are now known at the start of their own week. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F15` | 2025+ daily depth charts list players on injured reserve (16% of labelled rows, 1% in 2024), which can push healthy players' slot labels down. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F16` | The 2025+ injury files have no `date_modified` column at all. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F17` | Players' passing, rushing and receiving totals sum to the team's in every team-game with team stats but one. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F18` | A player traded between two opponents can be on both teams' lists that week; team-listed parts must match on team too. | strong | [RESULTS.md](grain-tables/RESULTS.md) |

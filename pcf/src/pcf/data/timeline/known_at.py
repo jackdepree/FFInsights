@@ -12,7 +12,7 @@ import polars as pl
 
 from pcf.core.log import get_logger
 from pcf.data.clean.standard import team
-from pcf.data.timeline.calendar import Calendar, day_start
+from pcf.data.timeline.calendar import Calendar, day_start, team_kickoffs
 
 log = get_logger(__name__)
 
@@ -20,6 +20,8 @@ ONE_DAY = pl.duration(days=1)
 # Injury reports without `date_modified` (2009, 2025→). Only 0.06% of 2010-2024 reports were
 # modified later than this (timeline#F4).
 INJURY_LEAD = pl.duration(hours=12)
+# Game-day inactives: teams name them 90 minutes before kickoff; this leans 30 minutes late.
+STATUS_LEAD = pl.duration(hours=1)
 # Draft years with no row in the offseason dates file: every draft has ended by June 1.
 LATE_DRAFT_FALLBACK = (6, 1)
 
@@ -105,13 +107,19 @@ def participation(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
 
 
 def _season_rows(
-    df: pl.DataFrame, ends: pl.DataFrame, fetched_at: datetime | None, name: str
+    df: pl.DataFrame,
+    ends: pl.DataFrame,
+    fetched_at: datetime | None,
+    name: str,
+    totals: pl.Series | None = None,
 ) -> pl.Series:
-    """Season totals: the season's end where it has one, otherwise the copy's fetch time."""
+    """Season totals: the season's end where it has one, otherwise the copy's fetch time.
+    `totals` marks which rows are season totals (default: all); only those need `fetched_at`."""
     keyed = df.select(pl.col("season").cast(pl.Int32)).join(
         ends, on="season", how="left", maintain_order="left"
     )["season_end"]
-    if keyed.is_null().any():
+    unfinished = keyed.is_null() if totals is None else keyed.is_null() & totals
+    if unfinished.any():
         keyed = keyed.fill_null(_fetched(fetched_at, f"{name} (an unfinished season)"))
     return keyed
 
@@ -135,7 +143,7 @@ def ngs(df: pl.DataFrame, cal: Calendar, fetched_at: datetime | None = None, **_
     finished = reg_end.join(
         cal.weeks.filter(pl.col("phase") == "postseason").select("season").unique(), on="season"
     )  # the regular season is over once postseason games are on the schedule
-    totals = _season_rows(df, finished, fetched_at, "ngs week 0")
+    totals = _season_rows(df, finished, fetched_at, "ngs week 0", totals=df["week"] == 0)
     out = df.with_columns(known_at=pl.when(pl.col("week") == 0).then(totals).otherwise(weekly))
     _require(out, "known_at", "a season-week not in the schedule")
     return out
@@ -176,11 +184,21 @@ def depth_charts(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
     return out
 
 
-def week_start(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
-    """Weekly rosters: the start of that week."""
+def weekly_rosters(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
+    """Weekly rosters, in two columns:
+    - `known_at`: who is on the team, the start of that week.
+    - `status_known_at`: `status`, which from 2019 marks the game-day inactives (`INA`). Teams
+      name them 90 minutes before kickoff, so the team's kickoff − 1 hour; empty in a bye week
+      (grain-tables#F4). Read `status` from this column's time, never from `known_at`.
+    """
     out = df.with_columns(known_at=_week_edge(df, cal, "start", pl.duration()))
     _require(out, "known_at", "a season-week not in the schedule")
-    return out
+    keyed = df.select(
+        pl.col("season").cast(pl.Int32), pl.col("week").cast(pl.Int32), team("team")
+    ).join(
+        team_kickoffs(cal.games), on=["season", "week", "team"], how="left", maintain_order="left"
+    )
+    return out.with_columns(status_known_at=keyed["kickoff"] - STATUS_LEAD)
 
 
 def injuries(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
@@ -209,17 +227,24 @@ def injuries(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
 def schedules(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
     """Schedules carry three kinds of field, so three columns:
     - `facts_known_at`: date, teams, stadium, roof. Released in spring; here, conservatively, the
-      start of the season's week 1. A flexed game's time is only right after the flex.
+      start of the season's week 1. A flexed game's time is only right after the flex. Playoff
+      games: the start of their own week, when the previous round has set the matchup.
     - `lines_known_at`: spreads, totals and moneylines, which sit near the close: kickoff
       (odds-collection#F3).
     - `known_at`: the whole row, scores included: kickoff + 1 day.
     """
     week1 = cal.weeks.filter(pl.col("week") == 1).select("season", facts_known_at="start")
     kick = cal.games.select("game_id", lines_known_at="kickoff")
+    own_week = _week_edge(df, cal, "start", pl.duration())
     out = df.join(kick, on="game_id", how="left").join(
         week1, on=pl.col("season").cast(pl.Int32), how="left"
     )
-    return out.with_columns(known_at=pl.col("lines_known_at") + ONE_DAY)
+    return out.with_columns(
+        facts_known_at=pl.when(pl.col("game_type") == "REG")
+        .then("facts_known_at")
+        .otherwise(own_week),
+        known_at=pl.col("lines_known_at") + ONE_DAY,
+    )
 
 
 def _offseason_day(df: pl.DataFrame, cal: Calendar, day: pl.Expr) -> pl.Series:
@@ -303,7 +328,7 @@ RULES: dict[str, Rule] = {
         for d in ["pfr_season_pass", "pfr_season_rush", "pfr_season_rec", "pfr_season_def"]
     },
     "depth_charts": depth_charts,
-    "weekly_rosters": week_start,
+    "weekly_rosters": weekly_rosters,
     "injuries": injuries,
     "schedules": schedules,
     "combine": combine,

@@ -48,7 +48,7 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | Source (loader) | Level of detail | Years | Updates | Known-at rule | Feeds |
 |---|---|---|---|---|---|
 | Play-by-play (`load_pbp`) | play | 1999→ | Morning after each game | Kickoff + 1 day | Context, VOE, team efficiency, tags, nearly everything |
-| Schedules (`load_schedules`) | game | 1999→ | Several times a week | Three columns (`timeline`). Game facts (date, roof, surface, rest): at schedule release; PCF uses the start of week 1, since release dates aren't recorded. **Lines:** spreads and totals 1999→, moneylines 2006→. They sit *near* the closing line (they match ESPN's close in 45–84% of games), so treat them as known at kickoff. Scores: kickoff + 1 day. | Environment, Elo, baselines, closing-line fallback |
+| Schedules (`load_schedules`) | game | 1999→ | Several times a week | Three columns (`timeline`). Game facts (date, roof, surface, rest): at schedule release; PCF uses the start of week 1, since release dates aren't recorded. Playoff games: the start of their own week, when the matchup is set (grain-tables#F14). **Lines:** spreads and totals 1999→, moneylines 2006→. They sit *near* the closing line (they match ESPN's close in 45–84% of games), so treat them as known at kickoff. Scores: kickoff + 1 day. | Environment, Elo, baselines, closing-line fallback |
 | FTN charting (`load_ftn_charting`) | play | 2022→ | About 1–2 weeks behind (week 7 on Oct 30) | **History:** kickoff + 14 days. **Live:** our own fetch time. Not `date_pulled`: whole seasons were re-pulled later (2022–23 all show 2024-09-06), so it isn't first availability ([exploration](../projects/package-scaffold/EXPLORATION.md)). | Context, roles, schemes, line play |
 | Officials (`load_officials`) | game | 2015→ | Preseason assignments, then weekly | Kickoff − 2 days | Referee crews (parked) |
 
@@ -63,14 +63,14 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | PFR advanced stats (`load_pfr_advstats`) | player-week | 2018→ | About a week behind (week 7 on Oct 30) | The Tuesday after the following week (conservative) | Pressure, drops, broken tackles |
 | Expected fantasy points (`load_ff_opportunity`) | player-week | 2006→ | Morning after | Kickoff + 1 day | Opportunity quality (benchmark) |
 | Depth charts (`load_depth_charts`) | player-snapshot | 2001→ | **Daily** from 2025: snapshot rows with `dt` and **no `season` or `week`**. Weekly rows through 2024. | `dt`. Older weekly-format years: the start of that week. | Participation, roles, vacated opportunity |
-| Weekly rosters (`load_rosters_weekly`) | player-week | 2002→ | Daily during the season | The start of that week | Joining, team membership |
+| Weekly rosters (`load_rosters_weekly`) | player-week | 2002→ | Daily during the season | Membership: the start of that week. **`status`** (from 2019 it marks the game-day inactives, `INA`): **1 hour before the team's kickoff** (`status_known_at`, grain-tables#F4). Before 2016 `status` is the player's last of the season, not that week's: don't use it as weekly (grain-tables#F11). | Joining, team membership, the `player_game` spine |
 | Rosters, players (`load_rosters`, `load_players`) | player | 1920→ | Daily | Snapshot date | Bio, age, position |
 | Id map (`load_ff_playerids`) | player | — | Regularly | — | Joining all non-nflverse sources |
 
 ### Health, people and the offseason
 | Source (loader) | Level of detail | Years | Updates | Known-at rule | Feeds |
 |---|---|---|---|---|---|
-| Injuries (`load_injuries`) | player-week (game status plus Wed–Fri practice status) | 2009→ | During each game week | **`date_modified`** (when the report was last changed). Without it (2009, 2025→): **kickoff − 12 hours**. The old rule, noon ET the day before, was too early for 6–7% of 2021–2024 reports (timeline#F4). | Injury & fatigue, vacated opportunity |
+| Injuries (`load_injuries`) | player-week (game status plus Wed–Fri practice status) | 2009→ | During each game week | **`date_modified`** (when the report was last changed). Without it (2009, 2025→, whose files have no such column): **kickoff − 12 hours**. The old rule, noon ET the day before, was too early for 6–7% of 2021–2024 reports (timeline#F4). | Injury & fatigue, vacated opportunity |
 | Combine (`load_combine`) | player | 2000→ | After the combine (March) | The day after that year's combine ends; without its dates, the first day of the draft (offseason dates file) | Prospects |
 | Draft picks (`load_draft_picks`) | player | 1980→ | After the draft (late April) | The day after the draft ends (leans late) | Prospects, aging, dynasty |
 | Contracts (`load_contracts`, OverTheCap) | player-contract | Signing years through 2026. Only the year signed, no exact date. | Regularly | Use our snapshot date, because the year signed alone is too coarse for point-in-time | Contract & motivation (parked) |

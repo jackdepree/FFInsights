@@ -85,8 +85,22 @@ def test_depth_charts_use_dt_or_the_start_of_their_week():
 
 
 def test_weekly_rosters_are_known_at_the_start_of_the_week():
-    out = known_at("weekly_rosters", pl.DataFrame({"season": [2025], "week": [1]}), CAL)
+    out = known_at(
+        "weekly_rosters", pl.DataFrame({"season": [2025], "week": [1], "team": ["KC"]}), CAL
+    )
     assert out["known_at"].item() == utc(2025, 9, 2, 4)
+
+
+def test_roster_status_is_known_an_hour_before_the_teams_kickoff():
+    df = pl.DataFrame(
+        {"season": [2025, 2025, 2025], "week": [1, 1, 2], "team": ["KC", "NYG", "DAL"]}
+    )
+    out = known_at("weekly_rosters", df, CAL)
+    assert out["status_known_at"].to_list() == [
+        WEEK1_KICK - timedelta(hours=1),
+        utc(2025, 9, 9, 0, 15) - timedelta(hours=1),  # Monday night, 8:15 PM Eastern
+        None,  # DAL has no game in week 2
+    ]
 
 
 def test_pfr_weekly_stats_use_the_start_of_the_week_after_next():
@@ -117,6 +131,9 @@ def test_ngs_weeks_and_season_totals():
     fetched = utc(2025, 10, 1)
     out = known_at("ngs_passing", df.filter(pl.col("week") == 0), unfinished, fetched_at=fetched)
     assert out["known_at"].item() == fetched
+    # Weekly rows of an unfinished season don't need a fetch time.
+    weekly = known_at("ngs_passing", df.filter(pl.col("week") == 1), unfinished)
+    assert weekly["known_at"].item() == utc(2025, 9, 10, 4)
 
 
 def test_pfr_weekly_stats_wait_for_the_week_after_next():
@@ -148,6 +165,12 @@ def test_schedules_have_three_known_at_columns():
     assert row["known_at"] == WEEK1_KICK + timedelta(days=1)
 
 
+def test_playoff_matchups_are_known_at_the_start_of_their_week():
+    out = known_at("schedules", SEASON.filter(pl.col("game_type") != "REG"), CAL)
+    # Wild card week starts the midnight after week 2's last game day (the toy has no week 3+).
+    assert out["facts_known_at"].to_list() == [utc(2025, 9, 15, 4), utc(2026, 1, 11, 5)]
+
+
 def test_state_files_need_their_fetch_time():
     with pytest.raises(ValueError, match="fetched_at"):
         known_at("players", pl.DataFrame({"gsis_id": ["x"]}), CAL)
@@ -156,7 +179,7 @@ def test_state_files_need_their_fetch_time():
 
 
 def test_deleting_later_games_changes_no_earlier_known_at():
-    df = pl.DataFrame({"season": [2025, 2025], "week": [1, 2]})
+    df = pl.DataFrame({"season": [2025, 2025], "week": [1, 2], "team": ["KC", "KC"]})
     full = known_at("weekly_rosters", df, CAL)
     early = calendar(SEASON.filter(pl.col("week") <= 2), OFFSEASON)
     assert known_at("weekly_rosters", df, early)["known_at"].equals(full["known_at"])

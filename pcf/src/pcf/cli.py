@@ -63,6 +63,13 @@ def refresh(args: argparse.Namespace) -> None:
     print(summary.text())
 
 
+def tables(args: argparse.Namespace) -> None:
+    """Build tables from the raw copy."""
+    from pcf.data.tables import build
+
+    build(args.tables or None, args.seasons)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pcf", description="PCF: Principal Component Football")
     parser.add_argument("--version", action="version", version=f"pcf {__version__}")
@@ -87,12 +94,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="only update the change logs of state files (the pcf-data job)",
     )
 
+    t = commands.add_parser("tables", help="build the tables at each level of detail")
+    t_commands = t.add_subparsers(dest="tables_command", required=True)
+    b = t_commands.add_parser("build", help="build tables from the raw copy")
+    b.add_argument("tables", nargs="*", metavar="TABLE", help="tables to build; default: all")
+    b.add_argument("--seasons", nargs="+", type=int, help="only these seasons")
+
     args = parser.parse_args(argv)
     if args.command == "info":
         info()
         return 0
     if args.command == "refresh":
         refresh(args)
+        return 0
+    if args.command == "tables":
+        tables(args)
         return 0
     parser.print_help()
     return 0

@@ -101,6 +101,9 @@
 | **Phase** | `offseason`, `free_agency`, `draft`, `after_draft`, `preseason`, `regular_season`, `postseason`. Offseason phases belong to the coming season. `phase_at` gives the phase of any moment | timeline |
 | **Known-at rule** | The function that gives a dataset's rows their `known_at` (`pcf.data.timeline.RULES`) | timeline |
 | **Offseason dates file** | `offseason_dates.csv`: league year, combine, draft and first preseason game per year, from public sources. A row is added each spring | timeline |
+| **Table part** | One source's columns for a table, saved with that source's `known_at` and the table's keys. `load` joins the parts known at a moment | grain-tables |
+| **Spine** | The part that decides which rows a table has. `player_game`'s is the roster: everyone on the 53-man roster for the game | grain-tables |
+| **Inactive** | A player on the 53-man roster who isn't dressed for the game. Named 90 minutes before kickoff; `status` = `INA` in weekly rosters from 2019 | grain-tables |
 | **Data version** | A fingerprint of the raw files at a moment, logged with every run | data-layer |
 | **Tier** | How much we trust a source (1–4) | DATA_SOURCES.md |
 | **Level of detail (grain)** | What one row is: a play, player-game, team-week, … | ARCHITECTURE.md |

@@ -119,10 +119,36 @@ projects:
   - id: grain-tables
     name: Tables at every level of detail
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [cleaning-port, timeline]
-    summary: Play, player-game, team-game, player-week, player-season, team-season, player-career and event tables, joined by shared ids and known_at.
+    summary: Game, team-game, play, player-play and player-game tables, joined by shared ids, each saved as parts with their own known_at (decision 0008). Player-week is player-game (F1). Season, career and event tables moved to their own ideas.
+    interface:
+      inputs: raw nflverse copy (scan), cleaning-port standard functions, players_on_play, slot_labels and depth labels, timeline calendar and known-at rules
+      outputs: "pcf.data.tables: load(name, at, seasons, parts); build(names, seasons) and `pcf tables build`; write_parts. pcf.data.schemas: TABLES, check_part, check_parts. Tables and parts: game (schedule, pregame, result); team_game (schedule, pregame, result, stats); play (pbp, participation, ftn); player_play (on_field); player_game (roster, game_status, injury, depth, stats, snaps, ff_opportunity, ngs, pfr). Files data/tables/<table>/<part>/season=YYYY/data.parquet."
+      grain: game; team-game; play; player-play; player-game
+      interval: game, team_game, play 1999 on; player_game 2002 on; player_play 2016-2025; each part its source's years
+      cadence: n/a (rebuilt after each data refresh, about 20 seconds)
+      known_at: each part has its own; load returns the spine's as known_at and the others' as <part>_known_at
+      model: none
+      how_to_use: Experts read through the gateway (validation-harness), which wraps load. An empty part column means not known yet or not in that source, never zero. player_game holds the 53-man roster (CEO decision 1A); on_roster and status (2019 on) say who was available, snaps who played.
+      feeds: validation-harness, tag-tables, every layer-1 expert
+
+  - id: season-tables
+    name: Season and career totals
+    phase: 0
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, validation-harness]
+    summary: Player-season, team-season and player-career totals, computed in the reader and cut at the moment asked, so a season total is never known before its games (grain-tables brief). Build when the first expert needs them.
+
+  - id: event-tables
+    name: Offseason event table
+    phase: 0
+    status: idea
+    horizon: next
+    depends_on: [grain-tables, timeline]
+    summary: Draft picks, combine results, trades and contracts as dated events with known_at, for the offseason_events experts. Build when the first one needs it.
 
   - id: tag-tables
     name: Tag tables

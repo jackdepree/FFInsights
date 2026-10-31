@@ -51,10 +51,10 @@ pcf/
       sources/              one module per source (nflverse, espn_odds, odds_api, ...)
       clean/                the cleaning functions, ported from old/ and tested
       timeline/             the NFL calendar, the offseason dates file and every source's known-at rule
-      tables/               tables at each level of detail (play, player-game, team-week, ...)
+      tables/               tables at each level of detail, saved as parts (game, team_game, play, player_play, player_game)
       tags/                 tag tables
       gateway.py            as_of(): the only way models read data
-      schemas.py            column contracts for every table
+      schemas.py            the table contract: each table's keys and parts, checked on every write
     experts/<id>/           one folder per expert, same layout (see "The expert contract")
     composites/<id>/
     products/<id>/
@@ -85,6 +85,7 @@ Data is **Parquet** files, read and written with **Polars**. **DuckDB** queries 
 - Its key columns (e.g. `gsis_id, game_id`) and their types.
 - **A `known_at` column**, in UTC and timezone-aware: the earliest moment PCF could have had this row (DATA_SOURCES.md). No row without one.
 - Partitioned by season, so a refresh rewrites only what changed.
+- **Saved as parts** (decision 0008): one per source, each with its own `known_at`, sharing the table's keys. The first part, the spine, decides which rows the table has. `pcf.data.tables.load(name, at)` joins the parts known at a moment onto the spine. Files: `tables/<table>/<part>/season=YYYY/data.parquet`. Build them with `pcf tables build`.
 
 **`raw/nflverse/`** (built by `data-layer`, written only by `pcf refresh`):
 
@@ -238,6 +239,7 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 | Command | Does |
 |---|---|
 | `pcf refresh` | Pull the sources and rebuild the tables that changed |
+| `pcf tables build` | Build the tables from the raw copy (all, or named tables and `--seasons`); about 20 seconds |
 | `pcf run weekly` | Run every due project in dependency order, using `champion` models. Write outputs and the ledger. |
 | `pcf run <id>` | Run one project (with `--upstream` to run what it needs first) |
 | `pcf backtest <id>` | Build the walk-forward history and the validation report |

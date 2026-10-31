@@ -172,9 +172,12 @@ def injuries(df: pl.DataFrame) -> pl.DataFrame:
     A player traded during a week keeps one row per team. When a team files two reports for a
     player in one week (package-scaffold#F4), the later `date_modified` is kept: it's the status
     going into the game. `date_modified` stays on the row so `timeline` can apply its own known-at
-    rule. From 2025 `date_modified` is empty, and the last listed row is kept.
+    rule. From 2025 the files have no `date_modified` (an empty one is added), and the last
+    listed row is kept.
     """
     key = ["season", "week", "game_type", "team", "gsis_id"]
+    if "date_modified" not in df.columns:
+        df = df.with_columns(date_modified=pl.lit(None, pl.Datetime("us", "UTC")))
     out = standard_teams(
         df.with_columns(pl.col("season").cast(pl.Int32), pl.col("week").cast(pl.Int32)), "team"
     ).with_row_index("listed")

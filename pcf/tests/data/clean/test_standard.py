@@ -107,6 +107,10 @@ def test_injuries_keep_the_latest_report_per_team_and_week():
     assert out.filter(pl.col("gsis_id") == "a")["report_status"].to_list() == ["Out"]
     assert out.filter(pl.col("gsis_id") == "b").height == 2  # traded: one row per team
     assert out["season"].dtype == pl.Int32
+    # The 2025+ files have no date_modified: the last listed report is kept.
+    newer = standard.injuries(df.drop("date_modified"))
+    assert newer.filter(pl.col("gsis_id") == "a")["report_status"].to_list() == ["Questionable"]
+    assert newer["date_modified"].dtype == pl.Datetime("us", "UTC")
 
 
 def test_weekly_rosters_keep_the_active_row():

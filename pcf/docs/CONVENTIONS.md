@@ -29,7 +29,7 @@
 
 | Column | Meaning |
 |---|---|
-| `gsis_id` | Player id (nflverse calls it `player_id` in some tables; rename it). **Snap counts use `pfr_player_id`**, which is mapped through `load_ff_playerids`. |
+| `gsis_id` | Player id (nflverse calls it `player_id` in some tables; rename it). **Snap counts and PFR use `pfr_player_id`**, mapped through nflverse's `players` file (`cleaning-port#F17`). |
 | `game_id` | nflverse game id, e.g. `2026_08_CAR_GB` (participation calls it `nflverse_game_id`) |
 | `play_id` | nflverse play id, unique within a game |
 | `season` | The year the season started (the 2026 season's Super Bowl is in 2027) |
@@ -49,7 +49,7 @@
 | `_exp` | expected value (matches nflverse) | `receptions_exp` |
 | `_q10`, `_q50`, `_q90` | quantiles of a prediction | `rec_yards_q90` |
 
-**nflverse columns keep their names and scales** in `raw/` and `interim/`, because nflverse is the Bible. Two of them are on a 0–100 scale: `cpoe` and `pass_oe`. They're converted to 0–1 only in columns we derive from them.
+**nflverse columns keep their names and scales** in `raw/` and `interim/`, because nflverse is the Bible. In `tables/` too, except that NGS, PFR and ff_opportunity columns get their source as a prefix (`ngs_rec_`, `pfr_rush_`, `ffo_`), since their names would clash with player stats. Two of them are on a 0–100 scale: `cpoe` and `pass_oe`. They're converted to 0–1 only in columns we derive from them.
 
 ## Functions and modules
 

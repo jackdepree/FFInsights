@@ -1,8 +1,8 @@
 # Brief: Tables at every level of detail (`grain-tables`)
 
-> An infrastructure project: no model, but one call for the CEO (end of page), because it decides who counts as "playing" in a game. Light exploration: [EXPLORATION.md](EXPLORATION.md).
+> An infrastructure project: no model, but one call for the CEO (end of page), because it decides who counts as "playing" in a game. Answered: 1A. Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, data (Phase 0) · **Cadence:** — (rebuilt after each data refresh)
+**Status:** agreed (2026-10-31): CEO chose 1A · **Layer:** 0, data (Phase 0) · **Cadence:** — (rebuilt after each data refresh)
 
 ## The question
 Turn the cleaned sources into a few saved tables, one per level of detail: play, player-game, team-game and game. Every row is keyed by shared ids, and every piece of it says when it became known.
@@ -67,7 +67,10 @@ Every expert in layer 1 reads its data from these tables, through the `as_of` ga
 ## How it will be used
 Every layer-1 expert declares the tables it reads (`inputs = ["play", "player_game"]`) and gets them through the gateway at a moment. Retrospective experts (`voe-retro`) read the participation and FTN parts; in-season experts get those columns empty until they're known.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-10-31)
+- **1A:** `player_game` has a row for everyone on the 53-man roster that week: everyone dressed, the inactives (from 2019), and anyone who played without a roster row. A player who sits gets a row with zero snaps.
+
+## Questions for the CEO (answered above)
 1. **Who gets a row in `player_game`?**
    - **Why it matters:** this is the list of players PCF makes a game prediction for, and learns from. A player missing from it can never be predicted to sit out, or to play.
    - **A. Everyone on the 53-man roster that week** *(Recommended).* From the weekly roster: everyone dressed, plus the inactives (from 2019), plus anyone who played without a roster row (7 player-games in 2024). About 27,400 player-games a season (F3).
