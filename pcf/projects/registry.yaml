@@ -119,7 +119,7 @@ projects:
   - id: grain-tables
     name: Tables at every level of detail
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [cleaning-port, timeline]
     summary: Play, player-game, team-game, player-week, player-season, team-season, player-career and event tables, joined by shared ids and known_at.
