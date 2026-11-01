@@ -14,6 +14,9 @@ def test_schedules():
     assert set(out["roof"].drop_nulls()) <= set(standard.ROOFS)
     assert set(out["home_team"]) <= standard.TEAMS
     assert out.filter(pl.col("home_spread") != -pl.col("spread_line")).height == 0
+    # Before the London games (2007 on), nothing kicks off before noon Eastern.
+    early = out.filter((pl.col("season") < 2007) & (pl.col("gametime") < "12:00"))
+    assert early.height == 0
 
 
 def test_player_stats_and_expected_points():

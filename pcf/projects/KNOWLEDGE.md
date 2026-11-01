@@ -97,3 +97,17 @@
 | `experiment-tracking#F12` | MLflow 3.17.2 requires pyarrow below 26; the project's floor is now 25. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
 | `experiment-tracking#F13` | MLflow 3.17 saves scikit-learn models with skops, a safe format that doesn't run code on loading. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
 | `experiment-tracking#F14` | Importing MLflow takes about 5 seconds; it's kept out of `import pcf`, but the offline tests now take about 14 seconds. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `tag-tables#F1` | Every seed tag can be built from the years its inputs cover: CPOE and air yards 2006→, rosters 2002→, injury reports 2009→, game statuses 2019→, FTN 2022→. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F3` | Garbage time by win probability (21% of plays) and by score (7%) disagree by a factor of three. PCF uses score and clock (CEO decision 1A). | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F4` | nflverse's win probability, EPA, completion probability and expected pass rate are in-sample before 2020 (fit on seasons through 2019). | medium | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F5` | Coverage sacks can't be built from participation (no time-to-throw on 97% of sacks); FTN's QB-fault sack (2022→) is the nearest. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F6` | Play-by-play numbers are decimals: compare `down` with `3.0`; Polars 2 refuses `is_in([3, 4])` on them. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F8` | A "usual" anything (usual starter) must be "so far this season"; the whole season's usual leaks the future. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F9` | Weather is known only after the game: the schedule has game-time readings, no forecasts. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F10` | Tags need football timing (before the snap or game, or after) as well as data timing (`known_at`); only "before" tags may describe the row being predicted. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F12` | On a single throw, positive CPOE just means "completed"; CPOE only means something summed over a game or more. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F13` | 2000–2005 schedules write 9 PM night kickoffs as "09:00" (12 hours early). `standard.schedules` now moves pre-noon kickoffs in those years to the evening. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F14` | A share that ignores empties hides rule bugs: a tag on a sparse part (injury reports) must say "no" for "not listed", and check its rate against the rows it applies to. | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F15` | Weather readings exist for only 54% of 2022 and 79% of 2023 outdoor games (95–99% otherwise). | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F16` | Football moves some rates a lot: divisional games were half the schedule before 2002; 2001 had 11% of team-games off a bye (9/11); 4th-down attempts doubled 2011→2025; scoring drives rose from 29% (1999) to 40% (2020). | strong | [RESULTS.md](tag-tables/RESULTS.md) |
+| `tag-tables#F17` | By the "so far" rule, the starting QB isn't the team's usual starter in 11–25% of team-games. | strong | [RESULTS.md](tag-tables/RESULTS.md) |

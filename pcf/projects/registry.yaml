@@ -165,10 +165,20 @@ projects:
   - id: tag-tables
     name: Tag tables
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [grain-tables]
-    summary: "Football's shared vocabulary as labels on plays, drives, games and players: half statistical (successful, explosive), half commentator lore (hero ball, answer drive, trap game), one versioned rule each, for consistency and for stratifying models. Any project can add to it."
+    summary: "Football's shared vocabulary as labels on plays, drives, games and players: half statistical (successful, explosive), half commentator lore (hero ball, answer drive, trap game), one versioned rule each, for consistency and for stratifying models. 52 tags and 11 references (docs/TAGS.md), each with its football timing and a rate band. Any project can add to it."
+    interface:
+      inputs: grain-tables play (pbp), game (result), team_game (pregame), player_game (game_status, injury, stats; the spine's history)
+      outputs: "pcf.data.tags: TAGS, REFERENCES, Tag, tags_for(level, part), BEFORE, build_tags(name, seasons), run by `pcf tables build`. pcf.data.tags.check: rates, out_of_band. Parts: play.tags; the drive table (summary, tags); team_game.tags and tags_result; player_game.tags and tags_result. Columns tag_<name> (tag_<name>_v2 for a new version). docs/TAGS.md is generated from the catalog."
+      grain: play; drive; team-game; player-game
+      interval: each tag's own years (docs/TAGS.md); 1999 on for most play and drive tags
+      cadence: n/a (rebuilt with the tables)
+      known_at: the part's known_at, the latest of the parts each tag reads (play-by-play; pregame; game status and injuries; results and stats for the tags_result parts)
+      model: none
+      how_to_use: Only tags whose football timing is before the snap or before the game may describe the row being predicted; the others are outcomes, usable as targets or as features from earlier rows. Empty means does not apply or not covered that year, never no. A new tag needs a rule, a rate band and a test; a changed rule is a new version (CEO decision 2A).
+      feeds: every layer-1 expert, validation-harness (the timing check)
 
   - id: validation-harness
     name: Validation harness

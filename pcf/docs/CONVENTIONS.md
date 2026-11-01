@@ -49,6 +49,8 @@
 | `_exp` | expected value (matches nflverse) | `receptions_exp` |
 | `_q10`, `_q50`, `_q90` | quantiles of a prediction | `rec_yards_q90` |
 
+**Tags are `tag_<name>`**, and a changed rule is a new column, `tag_<name>_v2`, never an edit of the old one (tag-tables, CEO decision 2A). The catalog is `pcf.data.tags.catalog`; `docs/TAGS.md` is generated from it.
+
 **nflverse columns keep their names and scales** in `raw/` and `interim/`, because nflverse is the Bible. In `tables/` too, except that NGS, PFR and ff_opportunity columns get their source as a prefix (`ngs_rec_`, `pfr_rush_`, `ffo_`), since their names would clash with player stats. Two of them are on a 0–100 scale: `cpoe` and `pass_oe`. They're converted to 0–1 only in columns we derive from them.
 
 ## Functions and modules

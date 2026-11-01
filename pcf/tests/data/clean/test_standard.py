@@ -45,6 +45,20 @@ def test_schedules_roof_rule_and_betting_style_spread():
     assert out["home_team"].to_list() == ["KC", "LV"]
 
 
+def test_early_night_kickoffs_move_to_the_evening():
+    df = pl.DataFrame(
+        {
+            "season": [2002, 2002, 2014],
+            "home_team": ["KC", "KC", "KC"],
+            "away_team": ["DEN", "DEN", "DEN"],
+            "roof": ["outdoors"] * 3,
+            "spread_line": [1.0] * 3,
+            "gametime": ["09:00", "16:05", "09:30"],  # 2014's 9:30 is a real London morning
+        }
+    )
+    assert standard.schedules(df)["gametime"].to_list() == ["21:00", "16:05", "09:30"]
+
+
 def test_ids_are_renamed():
     stats = standard.player_stats(
         pl.DataFrame(

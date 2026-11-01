@@ -52,7 +52,7 @@ pcf/
       clean/                the cleaning functions, ported from old/ and tested
       timeline/             the NFL calendar, the offseason dates file and every source's known-at rule
       tables/               tables at each level of detail, saved as parts (game, team_game, play, player_play, player_game)
-      tags/                 tag tables
+      tags/                 the tag catalog and builders: tags saved as table parts, and the drive table
       gateway.py            as_of(): the only way models read data
       schemas.py            the table contract: each table's keys and parts, checked on every write
     experts/<id>/           one folder per expert, same layout (see "The expert contract")
@@ -74,7 +74,7 @@ Data is **Parquet** files, read and written with **Polars**. **DuckDB** queries 
 |---|---|---|---|
 | `raw/` | Source responses exactly as fetched. Dated snapshots for sources that get revised (DATA_SOURCES.md). | Parquet, or gzip JSON for APIs | Re-download. **Collected odds can't be:** they live in the private `pcf-data` repo. |
 | `interim/` | Cleaned source tables, each row with `known_at` | Parquet | Rebuild |
-| `tables/` | Tables at each level of detail, plus tag tables | Parquet | Rebuild |
+| `tables/` | Tables at each level of detail, with their tag parts and the `drive` table | Parquet | Rebuild |
 | `features/` | Cached feature matrices | Parquet | Rebuild |
 | `outputs/<id>/<version>/` | Each model version's predictions, including its walk-forward history | Parquet | Rebuild, slowly |
 | `mlflow/` | The tracking database and saved models | SQLite + files | Rebuild, slowly |

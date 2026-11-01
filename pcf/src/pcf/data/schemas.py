@@ -36,13 +36,19 @@ _GAME = ("game_id", pl.String)
 _TEAM = ("team", pl.String)
 _PLAY = ("play_id", pl.Int64)
 _PLAYER = ("gsis_id", pl.String)
+_DRIVE = ("fixed_drive", pl.Int32)
 
 TABLES: dict[str, Table] = {
     t.name: t
     for t in [
         Table("game", (_GAME,), ("schedule", "pregame", "result")),
-        Table("team_game", (_GAME, _TEAM), ("schedule", "pregame", "result", "stats")),
-        Table("play", (_GAME, _PLAY), ("pbp", "participation", "ftn")),
+        Table(
+            "team_game",
+            (_GAME, _TEAM),
+            ("schedule", "pregame", "result", "stats", "tags", "tags_result"),
+        ),
+        Table("play", (_GAME, _PLAY), ("pbp", "participation", "ftn", "tags")),
+        Table("drive", (_GAME, _DRIVE), ("summary", "tags")),
         Table("player_play", (_GAME, _PLAY, _PLAYER), ("on_field",)),
         Table(
             "player_game",
@@ -57,6 +63,8 @@ TABLES: dict[str, Table] = {
                 "ff_opportunity",
                 "ngs",
                 "pfr",
+                "tags",
+                "tags_result",
             ),
         ),
     ]

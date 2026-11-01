@@ -104,6 +104,12 @@
 | **Table part** | One source's columns for a table, saved with that source's `known_at` and the table's keys. `load` joins the parts known at a moment | grain-tables |
 | **Spine** | The part that decides which rows a table has. `player_game`'s is the roster: everyone on the 53-man roster for the game | grain-tables |
 | **Inactive** | A player on the 53-man roster who isn't dressed for the game. Named 90 minutes before kickoff; `status` = `INA` in weekly rosters from 2019 | grain-tables |
+| **Tag** | A named label on a play, drive, team-game or player-game, computed by one written, versioned rule (`tag_<name>`, `tag_<name>_v2`). Usually yes/no; some are categories (game script). Empty means "doesn't apply", never "no". The catalog is `docs/TAGS.md` | tag-tables |
+| **Tag family**: measured, situation, lore | A statistical definition (successful = positive EPA); the game state (red zone); a commentator's idea pinned to a rule (answer drive) | tag-tables |
+| **Football timing** | Whether a tag describes the moment *before* the event or its *result*: before the snap, before the game, after the play, after the drive, after the game, after the season. Only "before" tags may describe the row being predicted. Separate from `known_at`, which is when PCF has the data | tag-tables |
+| **Reference tag** | A catalog entry pointing at a column nflverse already has (FTN's `is_play_action`), listed so it's found, not copied | tag-tables |
+| **Rate band** | The share of applicable rows a tag should fire on in a complete season. A season outside it fails the build's checks (rule h) | tag-tables |
+| **Drive** | One possession, nflverse's `fixed_drive` within a game. The `drive` table has one row per drive with its result, plays and first downs | tag-tables |
 | **Data version** | A fingerprint of the raw files at a moment, logged with every run | data-layer |
 | **Tier** | How much we trust a source (1–4) | DATA_SOURCES.md |
 | **Level of detail (grain)** | What one row is: a play, player-game, team-week, … | ARCHITECTURE.md |

@@ -179,14 +179,15 @@ def test_each_part_has_its_own_known_at_and_prefix():
 
 
 def test_inactives_stay_hidden_until_an_hour_before_kickoff(tmp_path):
-    write_parts(_parts(), "player_game", [2025], tmp_path)
-    friday = load("player_game", at=KICK - timedelta(days=2), root=tmp_path)
+    parts = _parts()
+    write_parts(parts, "player_game", [2025], tmp_path)
+    friday = load("player_game", at=KICK - timedelta(days=2), parts=list(parts), root=tmp_path)
     assert friday.height == 4  # the 53, not yet the player who'll come off the street
     assert friday["status"].null_count() == 4
     assert friday["passing_yards"].null_count() == 4
-    pregame = load("player_game", at=KICK - timedelta(minutes=30), root=tmp_path)
+    pregame = load("player_game", at=KICK - timedelta(minutes=30), parts=list(parts), root=tmp_path)
     assert dict(pregame.select("gsis_id", "status").iter_rows())["wr2"] == "INA"
-    after = load("player_game", at=KICK + timedelta(days=1), root=tmp_path)
+    after = load("player_game", at=KICK + timedelta(days=1), parts=list(parts), root=tmp_path)
     assert after.height == 5
     assert after.filter(pl.col("gsis_id") == "qb1")["passing_yards"].item() == 280
 

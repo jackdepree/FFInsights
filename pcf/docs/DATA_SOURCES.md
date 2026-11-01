@@ -124,4 +124,6 @@ The NFL's free full-tracking samples: every player's position 10 times a second,
 | Prop lines, 2025 weeks 14–22 | Prop backtests for those weeks | None free. Exclude those weeks. |
 | Prop **prices** before 2026-10-28 | Prop edge sizes in backtests | Assume −110 for over/under. Real prices from The Odds API going forward. |
 | Touchdown-scorer odds before 2026-10-28 | TD-prop backtests | The Odds API from now on |
+| Weather forecasts | A before-the-game weather tag | Game-time readings only (`temp`, `wind`, known after the game); 2022 has them for 54% of outdoor games, 2023 for 79% (tag-tables#F15) |
+| Kickoff times in 1999 | Primetime and other time-of-day splits for 1999 | None: 1999 games get a 1 PM stand-in. 2000–2005 night games, written "09:00", are moved to 9 PM by `standard.schedules` (tag-tables#F13) |
 | Exact line timing in ESPN history | "Line at time t" features | Use opening and closing lines only |

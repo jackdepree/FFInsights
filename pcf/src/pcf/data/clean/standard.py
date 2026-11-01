@@ -11,6 +11,8 @@ from pcf.core.log import get_logger
 
 log = get_logger(__name__)
 
+# The last season whose schedule writes night kickoffs on a 12-hour clock (tag-tables#F13).
+LAST_TWELVE_HOUR_SEASON = 2005
 # The 32 codes play-by-play uses for every season. Play-by-play gives a franchise its current
 # code throughout (the 2017 Raiders are LV), so that's the standard: one franchise, one code.
 TEAMS = frozenset(
@@ -117,15 +119,29 @@ def _drop(df: pl.DataFrame, keep: pl.Expr, what: str) -> pl.DataFrame:
 
 
 def schedules(df: pl.DataFrame) -> pl.DataFrame:
-    """Team codes, nflreadpy's roof rule, and `home_spread` in betting style.
+    """Team codes, nflreadpy's roof rule, `home_spread` in betting style, and night kickoffs.
 
     nflverse's `spread_line` is positive when the home team is favored. Betting style is the
     reverse (home -3.5 = favored by 3.5), so `home_spread = -spread_line`. `spread_line` itself
     keeps its nflverse meaning (CONVENTIONS.md: nflverse columns keep their names and scales).
+
+    2000-2005 write the 9 PM night games as "09:00" (Monday night, a few Thursdays and
+    Saturdays: tag-tables#F13). No game kicked off before noon Eastern then, so those become 21:00.
     """
-    return standard_teams(df, "home_team", "away_team").with_columns(
+    out = standard_teams(df, "home_team", "away_team").with_columns(
         roof=pl.when(pl.col("roof").is_in(ROOFS)).then(pl.col("roof")),
         home_spread=-pl.col("spread_line"),
+    )
+    if "gametime" not in out.columns:
+        return out
+    night = (pl.col("season") <= LAST_TWELVE_HOUR_SEASON) & (pl.col("gametime") < "12:00")
+    return out.with_columns(
+        gametime=pl.when(night)
+        .then(
+            (pl.col("gametime").str.slice(0, 2).cast(pl.Int32) + 12).cast(pl.String)
+            + pl.col("gametime").str.slice(2)
+        )
+        .otherwise(pl.col("gametime"))
     )
 
 

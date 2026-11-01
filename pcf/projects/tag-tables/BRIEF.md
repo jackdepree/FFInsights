@@ -1,8 +1,8 @@
 # Brief: Tag tables (`tag-tables`)
 
-> An infrastructure project, but half of it is football knowledge, so the CEO owns the catalog's content. Two calls for the CEO (end of page). Light exploration: [EXPLORATION.md](EXPLORATION.md).
+> An infrastructure project, but half of it is football knowledge, so the CEO owns the catalog's content. Two calls for the CEO (end of page). Answered: 1A, catalog as is. Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, data (Phase 0) · **Cadence:** — (rebuilt with the tables)
+**Status:** agreed (2026-11-01): CEO chose 1A and the catalog as written · **Layer:** 0, data (Phase 0) · **Cadence:** — (rebuilt with the tables)
 
 **Agreed in the brainstorm (CEO, 2026-11-01):**
 - **Purpose.** Tags are half statistical labels and half the football knowledge fans, commentators and analysts point out. They exist for consistency, and to give many categorical and conditional ways to build features and stratify models.
@@ -166,7 +166,11 @@ That's 52 tags plus 11 references, about half measured or situation and half lor
 ## How it will be used
 Experts read tags through the gateway like any column, and stratify or interact by them on the ladder. Before-snap and before-game tags can describe the row being predicted. After-the-play tags are outcomes: targets, or features built from earlier rows only. The gateway (`validation-harness`) will enforce that from the catalog's timing.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-11-01)
+- **1A:** situation tags use score and clock, not win probability. Garbage time = 4th quarter with a 17+ point margin or 3rd quarter with 28+; neutral script = within one score, outside the last 2 minutes of a half.
+- **Catalog:** ships as written as v1. The CEO will edit it later; each change becomes a new version (2A).
+
+## Questions for the CEO (answered above)
 1. **Should situation tags be measured by score and clock, or by win probability?**
    - **Why it matters:** garbage time and neutral script are the most used filters in football analytics, and the two ways disagree a lot. By win probability, garbage time is 21% of plays; by score, 7% (F3).
    - **A. Score and clock (recommended).** Garbage time = 4th quarter with a 17+ point margin, or 3rd quarter with 28+. Neutral script = within one score (8 points), outside the last 2 minutes of a half. It's how commentators talk ("a three-score game"), needs no model, and has no in-sample issue (F4). Its weakness: it ignores a team's strength, so a 17-point lead with 8 minutes left counts the same for every team.

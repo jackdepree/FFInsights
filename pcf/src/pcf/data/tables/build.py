@@ -150,7 +150,12 @@ def build(
     seasons: Sequence[int] | None = None,
     root: Path | None = None,
 ) -> None:
-    """Build tables (default: all) for `seasons` (default: every season their source has)."""
+    """Build tables (default: all) for `seasons` (default: every season their source has).
+
+    Each table's tags (`pcf.data.tags`) are rebuilt right after it; `play` also builds `drive`.
+    """
+    from pcf.data.tags import build_tags
+
     names = list(names or TABLE_ORDER)
     unknown = set(names) - set(TABLE_ORDER)
     if unknown:
@@ -173,4 +178,5 @@ def build(
                 t = time.time()
                 PER_SEASON[name][1](season, cal, root)
                 log.info("%s %d built in %.0fs", name, season, time.time() - t)
+        build_tags(name, chosen, root)
         log.info("%s: %d seasons built in %.0fs", name, len(chosen), time.time() - started)
