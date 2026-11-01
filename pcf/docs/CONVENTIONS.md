@@ -21,7 +21,7 @@
 | Branches | `pcf/<id>` or `pcf/<topic>` | `pcf/voe-live` |
 | Notebooks | numbered, in `projects/<id>/explore/` | `01_first_look.ipynb` |
 | Tables (files) | snake_case, named for their level of detail | `player_game`, `team_week` |
-| MLflow | experiment = project id. Registered model = `pcf.<id>`. | `pcf.voe-live` |
+| MLflow | experiment = project id. Registered model = `pcf.<id>`. Rungs are named `<n>-<method>`. PCF's own tags start with `pcf.`. Always through `pcf.core.tracking`. | `pcf.voe-live`, `1-lasso`, `pcf.train_end` |
 
 ### Columns
 

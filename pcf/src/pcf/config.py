@@ -17,6 +17,8 @@ from pathlib import Path
 PCF_DIR = Path(__file__).resolve().parents[2]
 CONFIG_FILE = PCF_DIR / "config.toml"
 ENV_FILE = PCF_DIR / ".env"
+REGISTRY_FILE = PCF_DIR / "projects" / "registry.yaml"
+UV_LOCK = PCF_DIR / "uv.lock"
 
 # The storage zones under the data folder (docs/ARCHITECTURE.md, "Storage").
 DATA_ZONES = ("raw", "interim", "tables", "features", "outputs", "mlflow", "ledger", "logs")

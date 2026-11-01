@@ -37,6 +37,7 @@ Run these from `pcf/`:
 | Format | `uv run ruff format` |
 | Show paths, seasons and which keys are set | `uv run pcf info` |
 | Download new or changed nflverse files (`--dry-run` to preview) | `uv run pcf refresh` |
+| Open MLflow's view of every run and model | `uv run pcf ui` |
 | Open JupyterLab | `uv run jupyter lab` |
 
 ## Where data lives

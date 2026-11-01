@@ -109,7 +109,9 @@
 | **Level of detail (grain)** | What one row is: a play, player-game, team-week, … | ARCHITECTURE.md |
 | **Walk-forward history** | Each past prediction made by a model trained only on earlier data. Higher layers train on it. | ARCHITECTURE.md |
 | **train_end**, **vintage rule** | The last `known_at` in a model's training data; a model's output may be used only for rows after it | ARCHITECTURE.md |
-| **Champion**, **challenger** | The current best version of a model, and a candidate compared against it | ARCHITECTURE.md |
+| **Champion**, **challenger** | The current best version of a model, and a candidate compared against it. The champion is written in `registry.yaml` and changes only by an approved merge (decision 0009) | ARCHITECTURE.md, experiment-tracking |
+| **Attempt** | One try at a project's model: a parent run in MLflow with one child run per rung. Every attempt counts in the scorecard's "versions tried", failed ones too | experiment-tracking |
+| **Registered model** | A model saved under a name, `pcf.<id>`, with numbered versions. Only runs that passed the leakage checks can be registered | experiment-tracking |
 | **Ladder**, **rung**, **takeaway** | Methods from simple to complex; one step on it; the lesson a rung passes to the next | ARCHITECTURE.md |
 | **Brief**, **results**, **exploration** | A project's notes before building, after building, and from its first look | CLAUDE.md |
 | **Finding** | A numbered claim in a results page, cited as `<project>#F1` | ARCHITECTURE.md |

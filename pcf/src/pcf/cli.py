@@ -70,6 +70,43 @@ def tables(args: argparse.Namespace) -> None:
     build(args.tables or None, args.seasons)
 
 
+def ui(args: argparse.Namespace) -> None:
+    """Open MLflow's browser view on PCF's store. Runs until stopped (Ctrl+C)."""
+    import os
+    import subprocess
+    import webbrowser
+
+    from pcf.core.tracking import use_store
+
+    uri = use_store()
+    url = f"http://127.0.0.1:{args.port}"
+    print(f"MLflow store: {uri}")
+    print(f"Opening {url} (Ctrl+C to stop)")
+    env = {**os.environ, "MLFLOW_DISABLE_TELEMETRY": "true", "MLFLOW_DISABLE_AGENT_HINT": "1"}
+    server = subprocess.Popen(
+        [sys.executable, "-m", "mlflow", "ui", "--backend-store-uri", uri]
+        + ["--host", "127.0.0.1", "--port", str(args.port)],
+        env=env,
+    )
+    if not args.no_browser:
+        webbrowser.open(url)
+    try:
+        server.wait()
+    except KeyboardInterrupt:
+        server.terminate()
+
+
+def champions(args: argparse.Namespace) -> None:
+    """Copy the champion versions in registry.yaml to MLflow's `champion` aliases (main only)."""
+    from pcf.core.tracking import model_name, sync_champions
+
+    synced = sync_champions()
+    if not synced:
+        print("no champions in registry.yaml yet")
+    for project_id, version in synced.items():
+        print(f"{model_name(project_id)}: champion = version {version}")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pcf", description="PCF: Principal Component Football")
     parser.add_argument("--version", action="version", version=f"pcf {__version__}")
@@ -100,6 +137,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     b.add_argument("tables", nargs="*", metavar="TABLE", help="tables to build; default: all")
     b.add_argument("--seasons", nargs="+", type=int, help="only these seasons")
 
+    u = commands.add_parser("ui", help="open MLflow's browser view of every run and model")
+    u.add_argument("--port", type=int, default=5000, help="local port (default 5000)")
+    u.add_argument("--no-browser", action="store_true", help="don't open a browser tab")
+    commands.add_parser(
+        "champions", help="set MLflow's champion aliases from registry.yaml (on main only)"
+    )
+
     args = parser.parse_args(argv)
     if args.command == "info":
         info()
@@ -109,6 +153,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.command == "tables":
         tables(args)
+        return 0
+    if args.command == "ui":
+        ui(args)
+        return 0
+    if args.command == "champions":
+        champions(args)
         return 0
     parser.print_help()
     return 0

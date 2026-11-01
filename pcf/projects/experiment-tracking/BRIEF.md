@@ -1,8 +1,8 @@
 # Brief: Experiment tracking (`experiment-tracking`)
 
-> An infrastructure project: no model, but one call for the CEO (end of page), because it decides who can change which model the weekly run uses. Light exploration: [EXPLORATION.md](EXPLORATION.md).
+> An infrastructure project: no model, but one call for the CEO (end of page), because it decides who can change which model the weekly run uses. Answered: 1A. Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, foundation (Phase 0) · **Cadence:** — (used by every model's training run)
+**Status:** agreed (2026-11-01): CEO chose 1A · **Layer:** 0, foundation (Phase 0) · **Cadence:** — (used by every model's training run)
 
 ## The question
 Give PCF one small, tested way to record every training run, keep every model, and say which version of each expert is the best one, using local MLflow as decided in 0004.
@@ -79,7 +79,10 @@ Give PCF one small, tested way to record every training run, keep every model, a
 ## How it will be used
 Every modelling project trains inside `with tracking.attempt("elo"):` and one `with tracking.rung("1-lasso"):` per rung. The harness writes its checks and scorecard into the run, then registers it. Higher layers read outputs through the gateway. They load a model only to score new rows or to explain it, and always by a pinned version.
 
-## Questions for the CEO
+## Decisions (CEO, 2026-11-01)
+- **1A:** `champion` changes only through a merge the CEO approves. Claude sets the alias on the branch; the RESULTS page shows the old and new versions' scorecards side by side.
+
+## Questions for the CEO (answered above)
 1. **Who can make a model the `champion`?**
    - **Why it matters:** `champion` is the version the weekly run uses for real predictions and bets. Changing it changes what you see on Sunday.
    - **A. Only by a merge you approve** *(Recommended).* A project or an update ends with Claude setting `champion` on a branch, and the change takes effect when you approve that merge, like any code change. The RESULTS page shows the old and new versions' scorecards side by side. One approval, never a silent change.

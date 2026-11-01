@@ -83,3 +83,17 @@
 | `grain-tables#F16` | The 2025+ injury files have no `date_modified` column at all. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F17` | Players' passing, rushing and receiving totals sum to the team's in every team-game with team stats but one. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F18` | A player traded between two opponents can be on both teams' lists that week; team-listed parts must match on team too. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `experiment-tracking#F1` | Local MLflow does what ARCHITECTURE.md planned: SQLite plus files, nested runs, `pcf.<id>`, `champion` loaded back by alias. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F2` | It's fast and small: about 25 ms a run with metrics; 1.1 MB for 54 runs and two models. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F3` | Child runs follow the active experiment, not their parent's; unset, they land in "Default" and write a stray `mlruns/`. Use `pcf.core.tracking`. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F4` | MLflow 3 sends usage telemetry by default; `MLFLOW_DISABLE_TELEMETRY` turns it off (the wrapper does). | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F5` | MLflow adds 86 packages and about 320 MB, including scikit-learn, scipy and matplotlib. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F6` | Windows Smart App Control on the CEO's PC sometimes blocks a newly installed library file once; it loads on the next try. Scheduled jobs should retry once. | medium | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F7` | Windows' 260-character path limit applies (long paths off); fine inside the project's `.venv`, not from deep temp folders. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F8` | MLflow 3 stores models apart from runs (`models:/m-<id>`); its guessed package versions aren't exact, so runs record the `uv.lock` hash. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F9` | MLflow lets anyone register anything; "checked runs only" is the wrapper's rule. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F10` | MLflow's package guess takes about 7 seconds a model (it loads the model in a new process). State the list instead. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F11` | MLflow's store isn't in git, so an alias set there takes effect at once; the champion lives in `registry.yaml` (decision 0009). | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F12` | MLflow 3.17.2 requires pyarrow below 26; the project's floor is now 25. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F13` | MLflow 3.17 saves scikit-learn models with skops, a safe format that doesn't run code on loading. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |
+| `experiment-tracking#F14` | Importing MLflow takes about 5 seconds; it's kept out of `import pcf`, but the offline tests now take about 14 seconds. | strong | [RESULTS.md](experiment-tracking/RESULTS.md) |

@@ -23,6 +23,8 @@
 #               (template: projects/_templates/RESULTS.md), so code and Claude can read it:
 #                 inputs, outputs (path and quantities), grain, interval, cadence, known_at,
 #                 model (pcf.<id> and champion version), how_to_use, feeds
+#   champion    models only: the version of pcf.<id> the weekly run uses. Changed only on a branch
+#               and merged with the CEO's approval; `pcf champions` copies it to MLflow (decision 0009)
 
 projects:
 
@@ -56,10 +58,20 @@ projects:
   - id: experiment-tracking
     name: Experiment tracking (MLflow)
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [package-scaffold]
     summary: Local MLflow for every run and model, the pcf.<id> model registry with champion aliases, nested runs for the ladder, and registration allowed only after the blocking leakage checks pass.
+    interface:
+      inputs: pcf.config (mlflow zone, REGISTRY_FILE, UV_LOCK), registry.yaml (ids, cadence, champion), git
+      outputs: "pcf.core.tracking: attempt, rung (.takeaways), log_model, log_checks, register, set_challenger, sync_champions, alias_version, load_model, versions_tried, mark_vault_opened, use_store, experiment. pcf.core.registry: projects, project. Commands pcf ui and pcf champions. Store data/mlflow/mlflow.db and data/mlflow/artifacts/<id>/."
+      grain: one run per attempt and per rung; one registered model per project
+      interval: from 2026-11-01
+      cadence: n/a (used whenever a model trains)
+      known_at: n/a; runs record train_end, the last known_at in their training data
+      model: none
+      how_to_use: Train inside tracking.attempt(id, train_end=...) with one tracking.rung("<n>-<method>") per rung; log_model and takeaways in each rung. The harness calls log_checks and register. To change a champion, write champion N under the project in registry.yaml on the branch; after the CEO merges, run pcf champions on main.
+      feeds: validation-harness, every modelling project, weekly-run, scorecards
 
   - id: data-layer
     name: Data layer

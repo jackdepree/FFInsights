@@ -44,8 +44,8 @@ pcf/
     core/
       log.py                logging that masks API keys
       contract.py           the Expert interface and the standard output schema
-      registry.py           reads registry.yaml: dependency order, cadence rules
-      tracking.py           MLflow wrapper: log runs, register models, load them
+      registry.py           reads registry.yaml (ids, cadence, champion); dependency order planned (registry-tooling)
+      tracking.py           MLflow wrapper: attempts and rungs, checked registration, champions, loading
       ledger.py             the prediction ledger
     data/
       sources/              one module per source (nflverse, espn_odds, odds_api, ...)
@@ -176,7 +176,7 @@ A test checks that `inputs` matches the project's `depends_on` in the registry, 
 
 ## Tracking and reuse: MLflow
 
-**MLflow** records every training run, keeps every model, and marks the best one (built by `experiment-tracking`). It runs locally with no server: the database and models live in `pcf/data/mlflow/`, and `uv run mlflow ui` opens a browser view of every run.
+**MLflow** records every training run, keeps every model, and marks the best one (built by `experiment-tracking`). It runs locally with no server: the database and models live in `pcf/data/mlflow/`, and `uv run pcf ui` opens a browser view of every run. **Projects never call MLflow directly:** they train through `pcf.core.tracking` (`attempt`, `rung`, `log_model`), which handles its pitfalls once (experiment-tracking#F3, #F4, #F10).
 
 **How runs are organized:**
 - **One MLflow experiment per project** (named by its registry id).
@@ -191,6 +191,7 @@ A test checks that `inputs` matches the project's `depends_on` in the registry, 
 **The model registry** (MLflow's, not our `registry.yaml`):
 - Each expert gets a registered model, `pcf.<id>`, with numbered versions.
 - The alias **`champion`** marks the current best. **`challenger`** marks a candidate being compared against it.
+- **The champion changes only by a merge the CEO approves** (decision 0009). Its version is written in `registry.yaml` (`champion: N`), and `pcf champions` copies it to MLflow on `main`.
 - **Only a run that passes every blocking leakage check can be registered.** The tracking wrapper refuses otherwise.
 - **Training pins an exact version** (e.g. `pcf.voe-live` version 4), and the run records it, so results reproduce. **The weekly run uses `champion`**.
 
@@ -240,6 +241,8 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 |---|---|
 | `pcf refresh` | Pull the sources and rebuild the tables that changed |
 | `pcf tables build` | Build the tables from the raw copy (all, or named tables and `--seasons`); about 20 seconds |
+| `pcf ui` | Open MLflow's browser view of every run and model (about 8 seconds to start) |
+| `pcf champions` | Set MLflow's `champion` aliases from `registry.yaml`, on `main` only |
 | `pcf run weekly` | Run every due project in dependency order, using `champion` models. Write outputs and the ledger. |
 | `pcf run <id>` | Run one project (with `--upstream` to run what it needs first) |
 | `pcf backtest <id>` | Build the walk-forward history and the validation report |
@@ -296,3 +299,5 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0005: Collectors on Actions, modeling on the PC](decisions/0005-where-it-runs.md)
 - [0006: A rolling vault season and proper scores](decisions/0006-validation-vault.md)
 - [0007: State snapshots are change logs](decisions/0007-state-change-logs.md)
+- [0008: Tables are saved as parts](decisions/0008-table-parts.md)
+- [0009: The champion changes only by merge](decisions/0009-champion-by-merge.md)
