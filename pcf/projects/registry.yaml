@@ -165,10 +165,10 @@ projects:
   - id: tag-tables
     name: Tag tables
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [grain-tables]
-    summary: Reusable categorical labels per play and per player-game (successful_play, added_win_probability, risky_play, ...) that any project can add to.
+    summary: "Football's shared vocabulary as labels on plays, drives, games and players: half statistical (successful, explosive), half commentator lore (hero ball, answer drive, trap game), one versioned rule each, for consistency and for stratifying models. Any project can add to it."
 
   - id: validation-harness
     name: Validation harness
