@@ -56,7 +56,7 @@ projects:
   - id: experiment-tracking
     name: Experiment tracking (MLflow)
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [package-scaffold]
     summary: Local MLflow for every run and model, the pcf.<id> model registry with champion aliases, nested runs for the ladder, and registration allowed only after the blocking leakage checks pass.
