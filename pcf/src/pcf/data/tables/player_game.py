@@ -25,6 +25,7 @@ from collections.abc import Mapping
 import polars as pl
 
 from pcf.core.log import get_logger
+from pcf.data.clean.standard import ON_53
 from pcf.data.tables.frames import merge, on_spine, prefixed, team_games
 from pcf.data.timeline import Calendar, known_at
 
@@ -32,7 +33,6 @@ log = get_logger(__name__)
 
 KEYS = ["gsis_id", "game_id"]
 PART_KEEP = [*KEYS, "season", "known_at"]
-ROSTER_STATUSES = ["ACT", "INA"]
 ROSTER_COLUMNS = [
     "position",
     "depth_chart_position",
@@ -105,7 +105,7 @@ def _int_season_week(df: pl.DataFrame) -> pl.DataFrame:
 def _spine(cal: Calendar, rosters: pl.DataFrame, played: pl.DataFrame) -> pl.DataFrame:
     """Roster rows for each team's game, plus anyone who played without one."""
     games = team_games(cal.games)
-    on_53 = pl.col("status").is_in(ROSTER_STATUSES) | (pl.col("season") < WEEKLY_STATUS_FROM)
+    on_53 = pl.col("status").is_in(ON_53) | (pl.col("season") < WEEKLY_STATUS_FROM)
     on_roster = (
         _int_season_week(rosters)
         .filter(on_53 & pl.col("gsis_id").is_not_null())
@@ -217,7 +217,7 @@ def player_game_parts(
         )
 
     if (roster_rows["status"] == "INA").any():  # marked from 2019
-        status = _by_team_week(roster_rows, cal).filter(pl.col("status").is_in(ROSTER_STATUSES))
+        status = _by_team_week(roster_rows, cal).filter(pl.col("status").is_in(ON_53))
         status = status.select(*KEYS, "team", "season", "status", known_at="status_known_at")
         attach("game_status", status, by_team=True)
     if injuries is not None:

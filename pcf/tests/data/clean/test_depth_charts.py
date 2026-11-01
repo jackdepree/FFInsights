@@ -6,6 +6,7 @@ import pytest
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
+    drop_off_roster,
     weekly_depth_rows,
 )
 
@@ -143,3 +144,29 @@ def test_daily_charts_refuse_a_position_pcf_does_not_map():
     cut = _kickoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
     with pytest.raises(ValueError, match="SLOT"):
         daily_depth_rows(daily, cut)
+
+
+def test_players_off_the_53_lose_their_label_and_no_one_else_does():
+    daily = _daily(
+        [
+            ("2025-09-06T07:00:00Z", "KC", wr, "3WR 1TE", "WR", 1, rank)
+            for wr, rank in [("on_ir", 1), ("starter", 2), ("inactive", 3), ("unlisted", 4)]
+        ]
+    )
+    cut = _kickoffs([(2025, 1, "KC", datetime(2025, 9, 7, tzinfo=UTC))])
+    rosters = pl.DataFrame(
+        {
+            "season": [2025] * 4,
+            "week": [1] * 4,
+            "team": ["KC", "KC", "KC", "BUF"],
+            "gsis_id": ["on_ir", "starter", "inactive", "unlisted"],
+            "status": ["RES", "ACT", "INA", "CUT"],  # cut by BUF, not by KC
+        },
+        schema_overrides={"season": pl.Int32, "week": pl.Int32},
+    )
+    labels = depth_labels(drop_off_roster(daily_depth_rows(daily, cut), rosters))
+    assert dict(zip(labels["gsis_id"], labels["position_label"], strict=True)) == {
+        "starter": "WR1",
+        "inactive": "WR2",
+        "unlisted": "WR3",
+    }

@@ -200,6 +200,8 @@ def injuries(df: pl.DataFrame) -> pl.DataFrame:
 
 # Statuses in the order a duplicated weekly-roster row is kept (package-scaffold#F4).
 ROSTER_STATUS_ORDER = ["ACT", "RES", "INA", "DEV", "PUP", "EXE", "SUS"]
+# Statuses of players on the 53-man roster: dressed, or a game-day inactive (grain-tables#F3).
+ON_53 = ["ACT", "INA"]
 
 
 def weekly_rosters(df: pl.DataFrame) -> pl.DataFrame:

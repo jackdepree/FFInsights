@@ -12,7 +12,12 @@ import polars as pl
 
 from pcf.core.log import get_logger
 from pcf.data.clean import standard
-from pcf.data.clean.depth_charts import daily_depth_rows, depth_labels, weekly_depth_rows
+from pcf.data.clean.depth_charts import (
+    daily_depth_rows,
+    depth_labels,
+    drop_off_roster,
+    weekly_depth_rows,
+)
 from pcf.data.sources.nflverse import DATASETS, files, scan
 from pcf.data.tables.games import game_parts, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
@@ -47,13 +52,16 @@ def _schedules() -> pl.DataFrame:
 
 
 def depth_labels_for(season: int, cal: Calendar) -> pl.DataFrame | None:
-    """A season's depth labels: weekly charts through 2024, daily snapshots from 2025."""
+    """A season's depth labels: weekly charts through 2024, daily snapshots from 2025 without the
+    players off the 53-man roster (grain-tables#F15)."""
     charts = _season("depth_charts", season)
     if charts is None:
         return None
     if season >= DAILY_CHARTS_FROM:
         kickoffs = team_kickoffs(cal.games.filter(pl.col("season") == season))
-        return depth_labels(daily_depth_rows(charts, kickoffs))
+        rows = daily_depth_rows(charts, kickoffs)
+        rosters = _rosters(season)
+        return depth_labels(rows if rosters is None else drop_off_roster(rows, rosters))
     return depth_labels(weekly_depth_rows(charts))
 
 

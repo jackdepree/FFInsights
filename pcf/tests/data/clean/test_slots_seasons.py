@@ -7,6 +7,7 @@ from pcf.data.clean import legacy, standard
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
     depth_labels,
+    drop_off_roster,
     weekly_depth_rows,
 )
 from pcf.data.clean.players import players_on_play, plays_with_players
@@ -26,6 +27,8 @@ def labels() -> pl.DataFrame:
     schedules = standard.schedules(scan("schedules").filter(pl.col("season") >= 2025).collect())
     kickoffs = team_kickoffs(games(schedules))
     daily = daily_depth_rows(scan("depth_charts", [2025]).collect(), kickoffs)
+    rosters = standard.weekly_rosters(scan("weekly_rosters", [2025]).collect())
+    daily = drop_off_roster(daily, rosters)
     return depth_labels(pl.concat([weekly, daily]))
 
 

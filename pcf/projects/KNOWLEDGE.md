@@ -79,7 +79,7 @@
 | `grain-tables#F12` | 19 played games from 1999–2002 have no team stats, 16 of them Jacksonville home games in 2001–2002. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F13` | The roster spine holds 99.97–100% of the players who played before the game, every season except 2016 (99.82%). | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F14` | Schedules dated playoff matchups to week 1. Their facts are now known at the start of their own week. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
-| `grain-tables#F15` | 2025+ daily depth charts list players on injured reserve (16% of labelled rows, 1% in 2024), which can push healthy players' slot labels down. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
+| `grain-tables#F15` | 2025+ daily depth charts list players on injured reserve (16% of labelled rows, 1% in 2024), which can push healthy players' slot labels down. Fixed: `drop_off_roster` keeps only `ACT` and `INA` players (and those with no roster row). | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F16` | The 2025+ injury files have no `date_modified` column at all. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F17` | Players' passing, rushing and receiving totals sum to the team's in every team-game with team stats but one. | strong | [RESULTS.md](grain-tables/RESULTS.md) |
 | `grain-tables#F18` | A player traded between two opponents can be on both teams' lists that week; team-listed parts must match on team too. | strong | [RESULTS.md](grain-tables/RESULTS.md) |

@@ -8,7 +8,7 @@ depth so far, as the old `clean_depth_charts` did, but in time order and to date
 import polars as pl
 
 from pcf.core.log import get_logger
-from pcf.data.clean.standard import team
+from pcf.data.clean.standard import ON_53, team
 
 log = get_logger(__name__)
 
@@ -140,6 +140,26 @@ def daily_depth_rows(depth_charts: pl.DataFrame, kickoffs: pl.DataFrame) -> pl.D
         )
         .pipe(_one_row_per_player_week)
     )
+
+
+def drop_off_roster(rows: pl.DataFrame, rosters: pl.DataFrame) -> pl.DataFrame:
+    """Daily rows → without players the week's roster has off the 53-man roster.
+
+    Daily snapshots (2025→) keep listing players on injured reserve, the practice squad or cut:
+    16% of rows in 2025, against 1% in the weekly charts (grain-tables#F15). Left in, they push
+    healthy players' labels down. `rosters` is `standard.weekly_rosters`. A player with no roster
+    row for that team-week stays.
+
+    Only for daily charts: their labels are known at kickoff, after `status` (kickoff − 1 hour,
+    grain-tables#F4). Weekly charts' labels are known at the start of the week, before it.
+    """
+    key = ["season", "week", "team", "gsis_id"]
+    off = rosters.filter(pl.col("status").is_not_null() & ~pl.col("status").is_in(ON_53))
+    out = rows.join(off.select(key).unique(), on=key, how="anti")
+    dropped = rows.height - out.height
+    if dropped:
+        log.info("daily depth charts: %d rows off the 53-man roster dropped", dropped)
+    return out
 
 
 def _one_row_per_player_week(rows: pl.DataFrame) -> pl.DataFrame:

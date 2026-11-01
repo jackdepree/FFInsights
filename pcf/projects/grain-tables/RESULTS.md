@@ -62,7 +62,7 @@ F1–F10 came from the light exploration ([EXPLORATION.md](EXPLORATION.md)). F11
 | F12 | **19 played games from 1999–2002 have no team stats**, 16 of them Jacksonville home games in 2001–2002. Their `team_game.stats` columns are empty. | `check_tables.py` | strong | team_game |
 | F13 | **The spine holds 99.97–100% of the players who played before the game, every season.** Exception: 2016, at 99.82% (44 players with no roster row). | `local_data` test | strong | player_game |
 | F14 | **Leak, fixed: schedules dated playoff matchups to week 1.** Facts are now known at the start of the game's own week for every non-regular-season game. | `timeline` unit test | strong | game, team_game |
-| F15 | **2025+ daily depth charts list players on injured reserve:** 16% of labelled rows in 2025, against 1% in 2024. 244 of them hold a "1" label (141 in 2024). They're off the `player_game` spine, but they can push healthy players' slot labels down a number in `player_play` and the `depth` part. | a comparison on 2024–2025 | strong | slot labels 2025→ |
+| F15 | **2025+ daily depth charts list players on injured reserve:** 16% of labelled rows in 2025, against 1% in 2024. 244 of them hold a "1" label (141 in 2024). They're off the `player_game` spine, but they can push healthy players' slot labels down a number in `player_play` and the `depth` part. **Fixed after the merge:** `drop_off_roster` drops daily-chart rows whose roster status that week isn't `ACT` or `INA` (5,638 rows in 2025, 2,150 in 2026). 12% of the remaining 2025 labels moved up (7% in 2026), and 360 became a "1". | a comparison on 2024–2025; `test_depth_charts` | strong | slot labels 2025→ |
 | F16 | **The 2025+ injury files have no `date_modified` column at all**, not just empty values. `standard.injuries` now adds an empty one. | the build | strong | injuries 2025→ |
 | F17 | **Box scores agree across sources.** Players' passing yards, rushing yards, receptions and receiving yards sum to the team's in every team-game with team stats, except one 2012 game (2 receptions short). No inactive took a snap. | `local_data` tests | strong | player_game, team_game |
 | F18 | **A player can be on both opponents' lists in one week** (traded, 2025 week 10 BUF–MIA). Parts listed by team must match the player's spine team. | the build | strong | joins |
@@ -80,7 +80,7 @@ F1–F10 came from the light exploration ([EXPLORATION.md](EXPLORATION.md)). F11
 - **Flexed game times.** `kickoff` in the schedule part is the final time, known from week 1 (timeline's "not looked at").
 
 ## Could be improved
-1. **Drop players on injured reserve from the 2025+ daily depth charts before labelling** (F15). It's a `cleaning-port` change; then rebuild `player_play` and `player_game` for 2025→.
+1. ~~Drop players on injured reserve from the 2025+ daily depth charts before labelling~~ (F15): done after the merge, and `player_play` and `player_game` rebuilt for 2025→. Weekly charts (through 2024) keep them: their labels are known at the start of the week, before `status`, and they're only 1% of rows.
 2. **Build the tables after each refresh** in the daily job, once experts read them.
 3. **Season-to-date totals in the reader**, cut at the moment, when the first expert needs them.
 
@@ -105,4 +105,4 @@ Also in `registry.yaml` under `interface`.
 
 ## Open questions for the CEO
 - **Approve the merge?** Nothing new to install. To rebuild the tables after a refresh: `uv run pcf tables build` (about 20 seconds).
-- No football calls are needed. One follow-up is ready: dropping injured-reserve players from the 2025+ depth charts before labelling (F15), a small `cleaning-port` fix.
+- No football calls are needed. The F15 follow-up is done.
