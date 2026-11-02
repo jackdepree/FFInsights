@@ -32,7 +32,7 @@ projects:
   - id: odds-collection
     name: Betting-line collection
     phase: 0
-    status: exploring
+    status: building
     horizon: now
     depends_on: []
     summary: Collect game and player-prop lines weekly from free odds-API tiers and public JSON endpoints (no scraping). Time-sensitive, since every missed week is lost.
@@ -183,7 +183,7 @@ projects:
   - id: validation-harness
     name: Validation harness
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [package-scaffold, timeline, experiment-tracking]
     summary: The as_of gateway's leakage suite (docs/ARCHITECTURE.md), walk-forward backtests, calibration, uncertainty checks, shuffled-null signal tests, feature selection inside CV folds.
