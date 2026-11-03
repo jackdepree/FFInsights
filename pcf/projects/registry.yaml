@@ -320,8 +320,8 @@ projects:
   - id: participation
     name: Participation and snaps
     phase: 1
-    status: idea
-    horizon: next
+    status: brief
+    horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Snaps, routes run and share of plays, projected forward. Live from snap counts and daily depth charts. Play-level participation (routes) is available for training only.
