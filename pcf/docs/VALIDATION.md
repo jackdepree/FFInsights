@@ -111,9 +111,11 @@ Experts don't have to beat other models (rule k), but they must pass both of the
 
 Composites and products must beat their simple baselines (rule k) by section 4. If they don't, the baseline ships.
 
+**ECR is the one exception: matching it is enough to ship** (CEO, 2026-11-03, baselines#F9). The weekly fantasy product passes when its 90% interval against ECR includes zero or is entirely better; it fails only when it's entirely worse. Beating ECR is the goal, not the bar. The other baselines still have to be beaten.
+
 | Product | Baselines it must beat |
 |---|---|
-| Weekly fantasy points | ECR (archived from Dec 2019), a 4-week rolling average, last season's per-game average, a lasso |
+| Weekly fantasy points | ECR (match it; weekly from 2021, baselines#F1), a 4-week rolling average, the season-so-far average, last season's per-game average, a lasso |
 | Rest-of-season and dynasty | ECR and ADP where available, last season's per-game average |
 | Player props | The closing line itself (it's the market's median), a lasso |
 | Anytime TD | The no-vig market price, a player's season TD rate |

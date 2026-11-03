@@ -82,7 +82,7 @@ Also in `registry.yaml`.
 | **Cadence** | in_season |
 | **Known at** | the averages and lasso at the Tuesday run (or the product's run); ECR at the Saturday run; the market at kickoff |
 | **How to use it** | A product lists the baselines it must beat in `baselines()`, e.g. `[Ecr, Lasso, RollingAverage]`; the harness reruns them at the product's run (benchmarks at their own) and the scorecard shows "beats" for each. Another scoring: `scored(Lasso, "half")`. Never use a benchmark as a feature before it's known. |
-| **Feeds** | every product's scorecard; the weekly fantasy product must beat `ecr` |
+| **Feeds** | every product's scorecard; the weekly fantasy product must match `ecr` (VALIDATION.md §6) |
 
 ## Open questions for the CEO
-1. **To ship, must the weekly fantasy product clearly beat ECR, or is matching it enough?** The charter says "at least as accurate as ECR". VALIDATION.md's "beats" means the whole 90% interval is better. Matching ECR (the interval includes zero) would pass the charter's wording but not "beats". Recommended: matching ECR is enough to ship, since it's the best free yardstick there is; beating it is the goal.
+1. ~~**To ship, must the weekly fantasy product clearly beat ECR, or is matching it enough?**~~ **Answered (CEO, 2026-11-03): matching ECR is enough to ship;** beating it is the goal. Recorded in VALIDATION.md §6.
