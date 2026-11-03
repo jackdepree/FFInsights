@@ -96,9 +96,20 @@ LENSES: list[Lens] = [
 FIXED = {lens.name for lens in LENSES}
 
 
-def _tag_lenses() -> list[Lens]:
-    """Every player-game and team-game tag not already a fixed lens: candidates to flag."""
-    out = []
+# Pre-game conditions that aren't tags, scanned with them (the CEO's spot-check, 2026-11-03)
+EXTRA: list[Lens] = [
+    Lens("home", "before", "playing at home", lambda d: c("home").cast(pl.String), ("home",)),
+    Lens(
+        "teammate_out", "before", "a same-position teammate is listed Out",
+        lambda d: c("teammate_out").cast(pl.String), ("teammate_out",),
+    ),
+]  # fmt: skip
+
+
+def _candidates() -> list[Lens]:
+    """Every player-game and team-game tag not already a fixed lens, and the EXTRA conditions:
+    the candidates to flag."""
+    out = list(EXTRA)
     for tag in TAGS:
         if tag.level not in ("player_game", "team_game") or tag.column in FIXED:
             continue
@@ -140,18 +151,41 @@ def lens_frame(source: Source, seasons: Sequence[int] | None = None) -> pl.DataF
         if p is not None:
             tags = [x for x in p.columns if x.startswith("tag_")]
             df = df.join(p.select("game_id", "team", *tags), on=["game_id", "team"], how="left")
-    result = _part(source, "game", "result")
-    if result is not None and {"home_score", "away_score"} <= set(result.columns):
-        sched = source.part("game", "schedule").select("game_id", "home_team")
-        g = result.select("game_id", "home_score", "away_score").join(sched, on="game_id")
-        df = df.join(g, on="game_id", how="left")
-        home = c("team") == c("home_team")
-        df = df.with_columns(
-            team_points=pl.when(home).then(c("home_score")).otherwise(c("away_score")),
-            margin=pl.when(home)
-            .then(c("home_score") - c("away_score"))
-            .otherwise(c("away_score") - c("home_score")),
-        ).drop("home_team", "home_score", "away_score")
+    injury = _part(source, "player_game", "injury")
+    if injury is not None and "report_status" in injury.columns:
+        out = (
+            injury.join(roster.select(*KEYS, "team", "position"), on=KEYS)
+            .filter(c("report_status") == "Out")
+            .select("game_id", "team", "position", teammate_out=pl.lit(True))
+            .unique()
+        )
+        reported = injury.select("game_id").unique().with_columns(reported=pl.lit(True))
+        df = (
+            df.join(out, on=["game_id", "team", "position"], how="left")
+            .join(reported, on="game_id", how="left")
+            .with_columns(
+                teammate_out=pl.when(c("reported")).then(c("teammate_out").fill_null(False))
+            )
+            .drop("reported")
+        )
+    sched = source.part("game", "schedule")
+    if "home_team" in sched.columns:
+        df = df.join(sched.select("game_id", "home_team"), on="game_id", how="left")
+        df = df.with_columns(home=c("team") == c("home_team"))
+        result = _part(source, "game", "result")
+        if result is not None and {"home_score", "away_score"} <= set(result.columns):
+            g = result.select("game_id", "home_score", "away_score")
+            df = (
+                df.join(g, on="game_id", how="left")
+                .with_columns(
+                    team_points=pl.when(c("home")).then(c("home_score")).otherwise(c("away_score")),
+                    margin=pl.when(c("home"))
+                    .then(c("home_score") - c("away_score"))
+                    .otherwise(c("away_score") - c("home_score")),
+                )
+                .drop("home_score", "away_score")
+            )
+        df = df.drop("home_team")
     return df
 
 
@@ -283,7 +317,7 @@ def report(
     # A tag is judged against the model's average miss at the same positions, on the rows it
     # fires on ("false" is everyone else, so it only repeats the model's overall bias).
     flagged = []
-    for lens in _tag_lenses():
+    for lens in _candidates():
         if lens.name not in base.columns:
             continue
         d = (

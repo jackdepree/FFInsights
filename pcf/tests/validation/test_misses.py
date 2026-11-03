@@ -88,8 +88,8 @@ def test_after_game_lenses_are_labelled_diagnostic():
     assert fixed == {"position": "before", "depth": "before", "week": "before",
                      "snap_share": "after", "team_points": "after", "margin": "after",
                      "qb_efficiency": "after"}  # fmt: skip
-    timing = {t.column: t.timing for t in TAGS}
-    for lens in misses._tag_lenses():
+    timing = {t.column: t.timing for t in TAGS} | {x.name: "before_game" for x in misses.EXTRA}
+    for lens in misses._candidates():
         assert lens.when == ("before" if timing[lens.name] in BEFORE else "after"), lens.name
 
 
@@ -109,10 +109,15 @@ def test_the_lens_frame_reads_what_the_source_has():
     })  # fmt: skip
     sched = pl.DataFrame({"game_id": ["G1"], "home_team": ["KC"]})
     result = pl.DataFrame({"game_id": ["G1"], "home_score": [31], "away_score": [10]})
+    injury = pl.DataFrame({"gsis_id": ["C"], "game_id": ["G1"], "report_status": ["Out"]})
+    roster = pl.concat([roster, roster.head(1).with_columns(gsis_id=pl.lit("C"))])
     frame = lens_frame(FrameSource({
         ("player_game", "roster"): roster, ("game", "schedule"): sched, ("game", "result"): result,
-    }))  # fmt: skip
-    got = dict(zip(frame["team"], zip(frame["team_points"], frame["margin"], strict=True),
-                   strict=True))  # fmt: skip
-    assert got == {"KC": (31, 21), "BUF": (10, -21)}
+        ("player_game", "injury"): injury,
+    })).sort("gsis_id")  # fmt: skip
+    assert frame["team_points"].to_list() == [31, 10, 31]
+    assert frame["margin"].to_list() == [21, -21, 21]
+    assert frame["home"].to_list() == [True, False, True]
+    # A's same-position teammate C is Out; the QB's isn't
+    assert frame["teammate_out"].to_list() == [True, False, True]
     assert "depth" not in frame.columns

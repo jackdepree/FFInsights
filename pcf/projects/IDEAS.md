@@ -25,6 +25,9 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 
 | I4 | Players active while questionable score less than box-score history says: playing hurt costs about a point | miss-lenses#F9 | A box-score model with an injury-report feature beats the same model without it, on held-out weeks; ECR, which already sees reports, shows no such miss | open |
 | I5 | Rookies improve during their first season, so season averages under-project them | miss-lenses#F9 | Rookies' average miss rises with week; a weight on recent games for rookies only beats the plain average | open |
+| I6 | ECR over-projects top players who play while questionable (−0.84 points; the pair stands out where neither alone does) | miss-lenses#F12, CEO spot-check | On new seasons, ECR's miss for top-third questionable players stays below zero; a product using the injury report beats ECR on those rows | open |
+| I7 | Game conditions multiply a player's projection rather than add to it (big favorite, backup QB, home) | miss-lenses#F12 | A model with projection × condition terms, or trees, beats the lasso on held-out weeks | open |
+| I8 | ECR under-projects players at home by about 0.3 points | miss-lenses#F13 | The miss holds in 2025+ live weeks, and a home term on top of ECR improves held-out pinball | open |
 
 ## Graduated
 
