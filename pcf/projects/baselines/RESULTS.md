@@ -82,7 +82,7 @@ Also in `registry.yaml`.
 | **Cadence** | in_season |
 | **Known at** | the averages and lasso at the Tuesday run (or the product's run); ECR at the Saturday run; the market at kickoff |
 | **How to use it** | A product lists the baselines it must beat in `baselines()`, e.g. `[Ecr, Lasso, RollingAverage]`; the harness reruns them at the product's run (benchmarks at their own) and the scorecard shows "beats" for each. Another scoring: `scored(Lasso, "half")`. Never use a benchmark as a feature before it's known. |
-| **Feeds** | every product's scorecard; the weekly fantasy product must match `ecr` (VALIDATION.md §6) |
+| **Feeds** | every product's scorecard; the weekly fantasy product must match `ecr`, or beat it if it uses ECR (VALIDATION.md §6) |
 
 ## Open questions for the CEO
-1. ~~**To ship, must the weekly fantasy product clearly beat ECR, or is matching it enough?**~~ **Answered (CEO, 2026-11-03): matching ECR is enough to ship;** beating it is the goal. Recorded in VALIDATION.md §6.
+1. ~~**To ship, must the weekly fantasy product clearly beat ECR, or is matching it enough?**~~ **Answered (CEO, 2026-11-03), in two cases:** a product that doesn't use ECR must match it; a product that uses ECR as an input must clearly beat it, since it could match ECR by copying it. Experts may name ECR as their no-noise baseline, to show they add information ECR lacks. Recorded in VALIDATION.md §5–6.

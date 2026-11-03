@@ -215,7 +215,7 @@ projects:
       known_at: averages and lasso at the Tuesday run (or the product's run); ECR at the Saturday run; the market at kickoff
       model: none registered (yardsticks; pcf backtest baselines --variant <name>)
       how_to_use: "List them in a product's baselines(), e.g. [Ecr, Lasso, RollingAverage]; the harness reruns them at the product's run (benchmarks at their own) and the scorecard shows beats for each. Another scoring: scored(Lasso, 'half'). Never use a benchmark as a feature before it is known."
-      feeds: every product's scorecard; the weekly fantasy product must match ecr (VALIDATION.md §6)
+      feeds: every product's scorecard; the weekly fantasy product must match ecr, or beat it if it uses ECR (VALIDATION.md §6)
 
   - id: prediction-ledger
     name: Prediction ledger

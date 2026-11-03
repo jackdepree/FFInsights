@@ -100,6 +100,7 @@ Experts don't have to beat other models (rule k), but they must pass both of the
 **No noise: does it hurt what it feeds?**
 - **Each brief names one downstream target and its simple baseline** (e.g. VOE into a rolling-average fantasy-points model). The CEO approves that choice in the brief.
 - Score the baseline with and without the expert's output, using section 4.
+- **ECR may be that baseline** for experts that feed weekly fantasy points: "adds value" then means the expert knows something ECR doesn't (CEO, 2026-11-03). It's judged on ECR's rows only (Saturday run, Sunday and Monday games, 2022 on: baselines#F1).
 
 | Result (90% interval of the change) | Verdict |
 |---|---|
@@ -111,11 +112,18 @@ Experts don't have to beat other models (rule k), but they must pass both of the
 
 Composites and products must beat their simple baselines (rule k) by section 4. If they don't, the baseline ships.
 
-**ECR is the one exception: matching it is enough to ship** (CEO, 2026-11-03, baselines#F9). The weekly fantasy product passes when its 90% interval against ECR includes zero or is entirely better; it fails only when it's entirely worse. Beating ECR is the goal, not the bar. The other baselines still have to be beaten.
+**ECR has its own rule, in two cases** (CEO, 2026-11-03, baselines#F9). The other baselines still have to be beaten.
+
+| The weekly fantasy product | Against ECR alone it must | Why |
+|---|---|---|
+| **Doesn't use ECR** | **Match it:** the 90% interval includes zero or is entirely better. Fails only when entirely worse. | ECR is the best free yardstick; matching it from our own data is already the charter's "at least as accurate". Beating it is the goal. |
+| **Uses ECR as an input** | **Beat it:** the whole 90% interval is better. A tie means ECR ships instead. | A model with ECR as an input can match ECR by copying it. Only beating ECR shows its other inputs add information ECR doesn't have. |
+
+Judge this on held-out weeks, never on in-sample p-values or a lasso's coefficients: with this many rows almost any feature looks significant.
 
 | Product | Baselines it must beat |
 |---|---|
-| Weekly fantasy points | ECR (match it; weekly from 2021, baselines#F1), a 4-week rolling average, the season-so-far average, last season's per-game average, a lasso |
+| Weekly fantasy points | ECR (match it, or beat it if it's an input; weekly from 2021, baselines#F1), a 4-week rolling average, the season-so-far average, last season's per-game average, a lasso |
 | Rest-of-season and dynasty | ECR and ADP where available, last season's per-game average |
 | Player props | The closing line itself (it's the market's median), a lasso |
 | Anytime TD | The no-vig market price, a player's season TD rate |
