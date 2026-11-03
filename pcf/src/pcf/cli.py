@@ -111,28 +111,32 @@ def backtest(args: argparse.Namespace) -> None:
     """Validate one model: walk-forward backtest, baselines, signal test, calibration, leakage
     checks and the scorecard, recorded as an MLflow attempt."""
     from pcf.core import tracking
-    from pcf.core.contract import check_expert, find
+    from pcf.core.contract import check_expert, find, find_all
     from pcf.validation.validate import record, validate
 
-    cls = find(args.project)
-    check_expert(cls)
-    expert = cls()
-    baselines = [b() for b in getattr(cls, "baselines", lambda: [])()]
-    v = validate(
-        expert,
-        seasons=args.seasons,
-        open_vault=args.open_vault,
-        baselines=baselines,
-        shuffles=args.shuffles,
-        refit=args.refit,
-    )
-    train_end = v.bt.history["train_end"].max()
-    with tracking.attempt(args.project, train_end=train_end, name="backtest"):
-        path = record(v)
-    for ch in v.checks:
-        mark = "pass" if ch.passed else ("FLAG" if not ch.blocking else "FAIL")
-        print(f"{ch.number:>2} {ch.name:<20} {mark:<5} {ch.detail}")
-    print(f"scorecard: {path}")
+    classes = [find(args.project, args.variant)] if args.variant else find_all(args.project)
+    for cls in classes:
+        check_expert(cls)
+        expert = cls()
+        baselines = [b() for b in getattr(cls, "baselines", lambda: [])()]
+        v = validate(
+            expert,
+            seasons=args.seasons,
+            open_vault=args.open_vault,
+            baselines=baselines,
+            shuffles=args.shuffles,
+            refit=args.refit,
+        )
+        train_end = v.bt.history["train_end"].max()
+        name = f"backtest {cls.variant}".strip()
+        variant = cls.variant or None
+        with tracking.attempt(args.project, train_end=train_end, name=name, variant=variant):
+            path = record(v)
+        print(cls.label())
+        for ch in v.checks:
+            mark = "pass" if ch.passed else ("FLAG" if not ch.blocking else "FAIL")
+            print(f"{ch.number:>2} {ch.name:<20} {mark:<5} {ch.detail}")
+        print(f"scorecard: {path}")
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -174,6 +178,7 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     bt = commands.add_parser("backtest", help="validate a model and write its scorecard")
     bt.add_argument("project", help="the model's registry id")
+    bt.add_argument("--variant", help="one variant of the project (default: all of them)")
     bt.add_argument(
         "--seasons", nargs="+", type=int, help="test seasons (default: 2016 to vault-1)"
     )

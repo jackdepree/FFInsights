@@ -196,16 +196,26 @@ projects:
       known_at: a view at moment t shows each part's rows with known_at <= t; post-season parts only for finished seasons in season; outputs with as_of <= t
       model: pcf.validation-harness (the toy expert's runs only)
       how_to_use: "Subclass Expert, declare inputs (table: parts; model: version), run and quantity, write features(view, games), target, fit and predict, then pcf backtest <id>. Never read tables directly. Add features_history only for speed; it must match the per-moment features. A new leakage check gets a planted leak and an honest twin in tests/validation/planted.py."
-      feeds: every expert, composite and product; baselines next
+      feeds: every expert, composite and product, through baselines
 
   - id: baselines
     name: Baselines
     phase: 0
-    status: brief
+    status: done
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Rolling averages, Vegas lines, ECR and a simple lasso. The yardstick every product must beat.
+    summary: "The yardsticks every product must beat, as variants of one project: the last-4-games, season-so-far and last-season averages and a lasso (any scoring), FantasyPros ECR as points, and the no-vig closing line for margins, totals and win probability. ECR beats every box-score baseline (F9)."
+    interface:
+      inputs: player_game stats and the new ecr part (2021 on); game pregame lines and results
+      outputs: "pcf.baselines: RollingAverage, SeasonAverage, LastSeason, Lasso, Ecr, MarketMargin, MarketTotal, MarketWin, VARIANTS, scored(cls, scoring). The player_game ecr part (ecr_rank, ecr_sd, ecr_best, ecr_worst, ecr_position, ecr_scraped). The kickoff moment (benchmarks only). Each validation writes outputs/baselines/<variant>/<run_id>/history.parquet and scorecard.html."
+      grain: player-game (fantasy points); game (the market)
+      interval: fantasy 2016-2024; ECR 2022-2024, weeks 2-17, Sunday and Monday games; market 2016-2024
+      cadence: in_season
+      known_at: averages and lasso at the Tuesday run (or the product's run); ECR at the Saturday run; the market at kickoff
+      model: none registered (yardsticks; pcf backtest baselines --variant <name>)
+      how_to_use: "List them in a product's baselines(), e.g. [Ecr, Lasso, RollingAverage]; the harness reruns them at the product's run (benchmarks at their own) and the scorecard shows beats for each. Another scoring: scored(Lasso, 'half'). Never use a benchmark as a feature before it is known."
+      feeds: every product's scorecard; the weekly fantasy product must beat ecr
 
   - id: prediction-ledger
     name: Prediction ledger

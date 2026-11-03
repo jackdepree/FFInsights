@@ -121,3 +121,13 @@
 | `validation-harness#F14` | Per-moment features cost about 0.18 s a view: 403 moments of a simple player-game expert take 77 s. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F15` | One residual spread for all positions under-covers QBs (69% inside q10–q90); amount models need ranges per group. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F16` | A simple model's full validation (2016–2024, 100 shuffles, 25 cutoffs, all checks) takes 7 minutes. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
+| `baselines#F1` *(exploration)* | FantasyPros' weekly ECR is in the archive from 2021, weeks 2–17, one Friday snapshot a week (2024 starts in week 4); 99.6% of rows match a gsis_id. | strong | [EXPLORATION.md](baselines/EXPLORATION.md) |
+| `baselines#F2` *(exploration)* | A Friday ECR snapshot comes after Thursday's kickoff and still lists Thursday's players; use it only for games after its known-at. | strong | [EXPLORATION.md](baselines/EXPLORATION.md) |
+| `baselines#F6` *(exploration)* | nflverse closing lines miss margins by 9.8 points and totals by 10.4 on average; favorites win 66.5%. | strong | [EXPLORATION.md](baselines/EXPLORATION.md) |
+| `baselines#F9` | ECR beats every box-score baseline on Sunday and Monday games (2022–2024, Saturday run): pinball 1.382 vs the lasso's 1.446 and the 4-game average's 1.561. The weekly fantasy product's bar is ECR. | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F10` | A lasso on several box-score averages beats a single points average (pinball 1.492 vs 1.608, 2016–2024). | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F11` | As a single number, the season-so-far average beats the last 4 games (1.586 vs 1.608 pinball); last season's average is the weakest. | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F12` | Ranges from residuals per position cover 79–81% inside q10–q90 at every position and season. | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F13` | The no-vig closing line is calibrated over 2016–2024 (1.66 points, slope 1.08, 2,466 games), but one season of games is too few to judge calibration (2024 alone: 6.1 points). | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F14` | The harness needed four fixes for real baselines: probability models in the test-label check, weeks with no predictions, baselines rerun at the model's run, and versions tried per variant. | strong | [RESULTS.md](baselines/RESULTS.md) |
+| `baselines#F15` | Full validations take 7–11.5 minutes for player-game baselines, 20 seconds for a game-level benchmark. | strong | [RESULTS.md](baselines/RESULTS.md) |

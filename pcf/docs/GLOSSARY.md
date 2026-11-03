@@ -128,6 +128,10 @@
 | **View** | What the gateway returns for one moment: a model's declared tables and outputs, as known then | validation-harness |
 | **Cutoff** | A moment at which a leakage check compares features with and without the data that came after it | validation-harness |
 | **Planted leak** | A deliberately leaky toy model kept in the tests: every blocking check must catch its own and pass the honest twin | validation-harness |
+| **Benchmark** | A baseline from outside PCF (ECR, the closing line): scored like a model, never used as a feature before it's known, and not signal-tested | baselines |
+| **Kickoff moment** | A prediction moment at each game's kickoff, allowed only for benchmarks (the closing line is known then) | baselines |
+| **Rank-to-points curve** | The points scored at each ECR rank in a position, fit on training weeks (isotonic: a better rank never projects fewer points). It turns a ranking into a projection | baselines |
+| **Variant** | One of several models under one project id, e.g. `baselines/ecr`; its outputs are in `outputs/<id>/<variant>/` | baselines |
 | **Expert contract** | The interface every model implements (`pcf.core.contract.Expert`): id, cadence, grain, inputs, run, `features(view, games)`, `target`, `fit`, `predict` | validation-harness |
 | **Shuffled null**, **signal test** | A model trained on shuffled outcomes; beating 95 of 100 of them shows real signal | VALIDATION.md |
 | **No-noise test** | An expert must not make its downstream baseline clearly worse | VALIDATION.md |

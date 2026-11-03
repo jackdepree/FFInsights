@@ -15,12 +15,15 @@ Parts, each with its own known-at rule (`timeline`):
 - depth: the depth-chart label going into the game (week start; daily charts, kickoff);
 - stats, snaps, ff_opportunity: the day after the game;
 - ngs: Next Gen Stats, the day after the week ends (2016→);
-- pfr: PFR advanced stats, about 9 days after (2018→).
+- pfr: PFR advanced stats, about 9 days after (2018→);
+- ecr: FantasyPros' weekly PPR rank in the player's position (2019→), known the start of the day
+  after the scrape, only for games that kick off after that and within 4 days (baselines#F2).
 NGS, PFR and ff_opportunity columns are prefixed with their source, since their names clash with
 player stats (`ngs_rec_targets`, `pfr_rush_carries`, `ffo_receptions`).
 """
 
 from collections.abc import Mapping
+from datetime import timedelta
 
 import polars as pl
 
@@ -95,6 +98,12 @@ PFR_DROP = ["pfr_game_id", "week", "game_type", "team", "opponent", "pfr_player_
 WEEKLY_STATUS_FROM = 2016
 # Depth charts are daily snapshots from 2025; the label is the chart at kickoff (timeline#F5).
 DAILY_CHARTS_FROM = 2025
+# Weekly positional ECR (`ecr_type` "wp": PPR pages, and QB), for the offensive positions.
+ECR_TYPE = "wp"
+ECR_POSITIONS = ("QB", "RB", "WR", "TE")
+# A snapshot ranks the games that kick off within this long after it's known: the Friday scrape
+# covers Sunday and Monday, never the Thursday game before it or next week's.
+ECR_WINDOW = timedelta(days=4)
 
 
 def _int_season_week(df: pl.DataFrame) -> pl.DataFrame:
@@ -185,6 +194,47 @@ def _pfr(pfr: Mapping[str, pl.DataFrame], players: pl.DataFrame, cal: Calendar) 
     return merge(frames, KEYS)
 
 
+def ecr_part(
+    ecr: pl.DataFrame, ids: pl.DataFrame, spine: pl.DataFrame, cal: Calendar
+) -> pl.DataFrame:
+    """The ECR archive and the id map → each player-game's latest weekly rank known before
+    kickoff. A Friday snapshot still lists Thursday's players (baselines#F2): those rows go."""
+    ids = (
+        ids.filter(pl.col("fantasypros_id").is_not_null() & pl.col("gsis_id").is_not_null())
+        .select(id="fantasypros_id", gsis_id="gsis_id")
+        .unique("id", keep="first", maintain_order=True)
+    )
+    ranks = (
+        known_at("ecr_archive", ecr.filter(pl.col("ecr_type") == ECR_TYPE), cal)
+        .filter(pl.col("pos").is_in(ECR_POSITIONS))
+        .join(ids, on="id")
+        .select(
+            "gsis_id",
+            "known_at",
+            ecr_rank="ecr",
+            ecr_sd="sd",
+            ecr_best="best",
+            ecr_worst="worst",
+            ecr_position="pos",
+            ecr_scraped=pl.col("scrape_date").str.to_date(),
+        )
+        .unique(["gsis_id", "known_at"], keep="first", maintain_order=True)
+    )
+    kickoffs = cal.games.select("game_id", "kickoff")
+    games = spine.select(*KEYS, "season").join(kickoffs, on="game_id")
+    fresh = (pl.col("known_at") < pl.col("kickoff")) & (
+        pl.col("kickoff") <= pl.col("known_at") + ECR_WINDOW
+    )
+    return (
+        games.join(ranks, on="gsis_id")
+        .filter(fresh)
+        .sort("known_at")
+        .unique(KEYS, keep="last", maintain_order=True)
+        .drop("kickoff")
+        .sort(KEYS)
+    )
+
+
 def player_game_parts(
     cal: Calendar,
     rosters: pl.DataFrame,
@@ -197,9 +247,12 @@ def player_game_parts(
     ngs: Mapping[str, pl.DataFrame] | None = None,
     pfr: Mapping[str, pl.DataFrame] | None = None,
     players: pl.DataFrame | None = None,
+    ecr: pl.DataFrame | None = None,
+    ids: pl.DataFrame | None = None,
 ) -> dict[str, pl.DataFrame]:
     """One season's standardized sources (`pcf.data.clean.standard`; NGS and PFR raw, keyed by
-    kind; `labels` from `depth_labels`; `players` for PFR's ids) → the `player_game` parts."""
+    kind; `labels` from `depth_labels`; `players` for PFR's ids; the ECR archive with `ids`, the
+    FantasyPros-to-gsis map) → the `player_game` parts."""
     roster_rows = known_at("weekly_rosters", rosters, cal)
     if snaps is not None:
         snaps = _int_season_week(known_at("snap_counts", snaps.drop_nulls("gsis_id"), cal))
@@ -255,4 +308,10 @@ def player_game_parts(
         if players is None:
             raise ValueError("PFR needs the players file to map its ids")
         attach("pfr", _pfr(pfr, players, cal))
+    if ecr is not None:
+        if ids is None:
+            raise ValueError("ECR needs the id map (player_ids) for its FantasyPros ids")
+        rows = ecr_part(ecr, ids, spine, cal)
+        if rows.height:
+            parts["ecr"] = rows
     return parts

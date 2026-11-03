@@ -177,7 +177,7 @@ def standard(
     """Predictions in the standard output schema (the expert's keys first)."""
     out = pred.with_columns(
         quantity=pl.lit(expert.quantity),
-        model=pl.lit(expert.id),
+        model=pl.lit(expert.label()),
         model_version=pl.lit(version),
         run_id=pl.lit(run_id),
         cadence=pl.lit(expert.cadence),
@@ -198,12 +198,13 @@ def run(
     bulk: bool = False,
     run_id: str = "",
 ) -> Backtest:
-    """The expert's walk-forward backtest over `seasons` (default: the reported seasons),
-    training from `first_train` on."""
-    seasons = list(seasons or test_seasons(open_vault))
+    """The expert's walk-forward backtest over `seasons` (default: the reported seasons after
+    its first training season), training from `first_train` on (config's, or the expert's own
+    if later)."""
+    first = max(get_config().seasons.first_train, expert.first_train or 0)
+    seasons = list(seasons or [s for s in test_seasons(open_vault) if s > first])
     check_seasons(seasons, open_vault)
     gateway = gateway or Gateway()
-    first = get_config().seasons.first_train
     every = steps(
         gateway.calendar,
         expert.cadence,
@@ -226,7 +227,7 @@ def run(
     history = scores.row_losses(history, expert.kind)
     log.info(
         "%s backtest: %d steps (%d tested), %d predictions; features %.1f s, walk %.1f s",
-        expert.id,
+        expert.label(),
         len(every),
         len(test),
         history.height,
@@ -238,9 +239,9 @@ def run(
 
 def write_history(bt: Backtest, run_id: str, root: Path | None = None) -> Path:
     """Save the walk-forward history in the standard schema: outputs/<id>/<run_id>/history.parquet
-    (the gateway reads registered versions from here)."""
+    (the gateway reads registered versions from here), or outputs/<id>/<variant>/<run_id>/."""
     root = root or get_config().zone("outputs")
-    path = root / bt.expert.id / run_id / HISTORY
+    path = root / bt.expert.id / bt.expert.variant / run_id / HISTORY
     path.parent.mkdir(parents=True, exist_ok=True)
     cols = [*bt.expert.keys(), *OUTPUT_SCHEMA]
     bt.history.select(cols).with_columns(run_id=pl.lit(run_id)).write_parquet(path)

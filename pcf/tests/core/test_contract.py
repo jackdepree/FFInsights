@@ -42,12 +42,17 @@ def test_a_model_matching_its_registry_entry_passes():
         ({"inputs": {"team_game": ("tags",)}}, "tag-tables"),
         ({"inputs": {"team_game": ("result",), "team-efficiency": 2}}, "team-efficiency"),
         ({"kind": "rank"}, "kind"),
+        ({"run": "kickoff"}, "only a benchmark"),
     ],
 )
 def test_contract_problems_are_named(change, message):
     bad = type("Bad", (Elo,), change)
     with pytest.raises(ValueError, match=message):
         check_expert(bad)
+
+
+def test_a_benchmark_may_run_at_kickoff():
+    check_expert(type("Close", (Elo,), {"run": "kickoff", "benchmark": True}))
 
 
 def test_a_model_that_skips_a_model_it_depends_on_is_refused():

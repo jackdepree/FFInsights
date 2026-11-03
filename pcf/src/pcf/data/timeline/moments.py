@@ -6,6 +6,10 @@ predicts Thursday games at the Wednesday run, never after kickoff.
 
 Retrospective models predict a season at 10:00 ET on the first day of its week-1 window;
 offseason-events models at the start of the event's phase.
+
+Benchmarks from outside PCF (the closing line) are predicted at each game's kickoff (`KICKOFF`),
+when they're known. Only benchmarks may declare it (baselines brief, D5). The gateway hides a
+kickoff-time output from every model running earlier, so it can never become a feature.
 """
 
 from datetime import datetime
@@ -22,6 +26,8 @@ RUNS: dict[str, tuple[int, int]] = {
     "wednesday": (3, 16),  # Thursday's injury reports and the week's practice news
     "saturday": (6, 12),  # Sunday's final injury reports; before any Saturday game
 }
+# The benchmarks' moment: each game's kickoff.
+KICKOFF = "kickoff"
 # Retrospective moments, and weeks with no allowed run before a game: 10:00 ET on the first day.
 FIRST_DAY_HOUR = 10
 EVENTS = ("free_agency", "draft")
@@ -76,8 +82,13 @@ def game_moments(cal: Calendar, run: str = "tuesday") -> pl.DataFrame:
     kickoff, moment, and `fallback`. A week that starts mid-week (a Tuesday or Wednesday game the
     week before, as in 2010 and 2020-21, or a Friday-start week 1 in 1999-2001) can have no allowed
     run before a game: its moment is then 10:00 ET on the window's first day (`fallback`), or
-    the window's start if that's already past kickoff."""
+    the window's start if that's already past kickoff. A `kickoff` benchmark's moment is the
+    kickoff itself."""
     games = cal.games.select("game_id", "season", "week", "kickoff")
+    if run == KICKOFF:
+        return games.with_columns(moment=c("kickoff"), fallback=pl.lit(False)).sort(
+            "moment", "game_id"
+        )
     chosen = (
         games.join(runs(cal).filter(c("run").is_in(allowed(run))), on=["season", "week"])
         .filter(c("at") < c("kickoff"))

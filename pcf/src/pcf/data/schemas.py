@@ -84,6 +84,7 @@ TABLES: dict[str, Table] = {
                 "pfr",
                 "tags",
                 "tags_result",
+                "ecr",
             ),
             after=("stats", "snaps", "ff_opportunity", "ngs", "pfr", "tags_result"),
         ),

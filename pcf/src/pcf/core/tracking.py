@@ -131,8 +131,10 @@ def attempt(
     train_end: datetime | None = None,
     name: str | None = None,
     params: Mapping[str, Any] | None = None,
+    variant: str | None = None,
 ) -> Iterator[Run]:
-    """One try at a project's model: a parent run with the tags every run must carry.
+    """One try at a project's model: a parent run with the tags every run must carry, and the
+    variant's name when the project has several models (the baselines).
 
     `train_end` is the last `known_at` in the training data (ARCHITECTURE.md, check 6). A run
     that raises is kept, marked FAILED, and still counts in `versions_tried`.
@@ -154,6 +156,8 @@ def attempt(
     }
     if train_end is not None:
         tags[f"{TAG}train_end"] = train_end.astimezone(UTC).isoformat()
+    if variant:
+        tags[f"{TAG}variant"] = variant
     with mlflow.start_run(experiment_id=experiment_id, run_name=name, tags=tags) as run:
         if params:
             mlflow.log_params(dict(params))
@@ -334,13 +338,16 @@ def log_text(text: str, name: str, run_id: str | None = None) -> None:
     _client().log_text(run_id, text, name)
 
 
-def versions_tried(project_id: str) -> int:
-    """How many attempts the project has made, failed ones included (VALIDATION.md section 4)."""
+def versions_tried(project_id: str, variant: str | None = None) -> int:
+    """How many attempts the project (or one of its variants) has made, failed ones included
+    (VALIDATION.md section 4)."""
     client = _client()
     found = client.get_experiment_by_name(project_id)
     if found is None:
         return 0
     attempts = f"tags.`{TAG}kind` = '{KIND_ATTEMPT}'"
+    if variant:
+        attempts += f" and tags.`{TAG}variant` = '{variant}'"
     return len(client.search_runs([found.experiment_id], attempts, max_results=50_000))
 
 

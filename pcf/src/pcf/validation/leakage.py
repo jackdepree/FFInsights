@@ -398,10 +398,11 @@ def test_label_check(
     change. Catches anything fit on the whole dataset."""
     expert = bt.expert
     keys = expert.keys()
-    picks = [bt.test[int(i)] for i in np.linspace(0, len(bt.test) - 1, min(n_steps, len(bt.test)))]
+    # Steps with predictions: a model can have none in some weeks (ECR has no week 18)
+    tested = [i for i in bt.test if i in set(bt.history["step"].to_list())]
+    picks = [tested[int(i)] for i in np.linspace(0, len(tested) - 1, min(n_steps, len(tested)))]
     by_index = {s.index: s for s in bt.steps}
     failed = []
-    cols = [k for k in ("mean", "q10", "q50", "q90")]
     for index in picks:
         later = pl.concat([s.games["game_id"] for s in bt.steps if s.index >= index])
 
@@ -416,6 +417,9 @@ def test_label_check(
         before = walk(expert, bt.features, bt.targets, bt.steps, [index], bt.refit, bt.half_life)
         after = walk(expert, feats, targets(expert, world), bt.steps, [index], bt.refit,
                      bt.half_life)  # fmt: skip
+        cols = [
+            k for k in ("mean", "q10", "q50", "q90") if k in before.columns
+        ]  # probability: mean
         diff = _differing(before.select(*keys, *cols), after.select(*keys, *cols), keys)
         if diff:
             failed.append(f"step {index} ({step.season} wk {step.week}): {diff} rows differ")
@@ -465,6 +469,8 @@ def run_checks(
     if signal is not None:
         detail = f"beat {signal.beaten} of {signal.n} shuffled refits (needs {signal.needed})"
         out.append(Check(9, "shuffled_null", signal.passed, detail))
+    elif bt.expert.benchmark:
+        out.append(Check(9, "shuffled_null", True, "not applicable: a benchmark from outside PCF"))
     out.append(too_good(bt))
     return out
 

@@ -50,9 +50,21 @@ class Validation:
         return all(ch.passed for ch in self.checks if ch.blocking)
 
 
+def at_run(baseline: Expert, run: str) -> Expert:
+    """The baseline predicted at another run. A baseline is judged at the model's own moment
+    (a Saturday model against Saturday averages), except a benchmark, which has its own (ECR is
+    known on Saturdays, the close at kickoff)."""
+    cls = type(baseline)
+    if cls.benchmark or cls.run == run:
+        return baseline
+    return type(cls.__name__, (cls,), {"run": run, "__module__": cls.__module__})()
+
+
 def baseline_history(bt: backtest.Backtest, baseline: Expert, gateway: Gateway) -> pl.DataFrame:
-    """A baseline's scored predictions on the same steps. One that only changes `fit` and
-    `predict` reuses the expert's features."""
+    """A baseline's scored predictions on the same steps, at the expert's run (`at_run`). One
+    that only changes `fit` and `predict` reuses the expert's features."""
+    if type(baseline).cadence == type(bt.expert).cadence == "in_season":
+        baseline = at_run(baseline, type(bt.expert).run)
     same = type(baseline).features is type(bt.expert).features
     if same:
         pred = backtest.walk(
@@ -89,7 +101,8 @@ def validate(
         name = type(b).__name__
         base_hist[name] = baseline_history(bt, b, gateway)
         comps[name] = compare(scored, base_hist[name], keys, "step", (expert.id, name), seed=seed)
-    signal = nulls.signal_test(bt, shuffles, seed) if shuffles else None
+    # A benchmark (ECR, the closing line) isn't PCF's model: there's no signal of ours to test.
+    signal = nulls.signal_test(bt, shuffles, seed) if shuffles and not expert.benchmark else None
     groups = scored.join(
         bt.features.select(*keys, *expert.groups, "step_season"), on=keys, how="left"
     ).rename({"step_season": "season"})
@@ -119,7 +132,7 @@ def record(v: Validation, out_dir: Path | None = None) -> Path:
     project_id = v.bt.expert.id
     if v.vault_opened:
         tracking.mark_vault_opened(project_id, run_id)
-    v.versions_tried = tracking.versions_tried(project_id)
+    v.versions_tried = tracking.versions_tried(project_id, v.bt.expert.variant or None)
     metrics = scores.summary(v.bt.scored, v.bt.expert.kind)
     metrics |= {f"vs_{name}_diff": comp.diff for name, comp in v.comparisons.items()}
     if v.signal is not None:
@@ -131,5 +144,5 @@ def record(v: Validation, out_dir: Path | None = None) -> Path:
     tracking.log_text(html, SCORECARD, run_id)
     path = history.parent / SCORECARD
     path.write_text(html, encoding="utf-8")
-    log.info("%s: scorecard at %s", project_id, path)
+    log.info("%s: scorecard at %s", v.bt.expert.label(), path)
     return path

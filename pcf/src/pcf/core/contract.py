@@ -56,7 +56,13 @@ PREDICTION = ("mean", *QUANTILES)
 # Model layers in the registry (phase 1-3) must be named in a consumer's inputs.
 MODEL_PHASES = (1, 2, 3)
 # Packages searched by `find`, in order. The harness's own toy expert lives in validation.
-MODEL_PACKAGES = ("pcf.experts", "pcf.composites", "pcf.products", "pcf.validation")
+MODEL_PACKAGES = (
+    "pcf.baselines",
+    "pcf.experts",
+    "pcf.composites",
+    "pcf.products",
+    "pcf.validation",
+)
 TAG_PARTS = ("tags", "tags_result")
 
 
@@ -65,7 +71,12 @@ class Expert(ABC):
 
     - `inputs`: a table name → the parts it reads, or a registry id → the pinned version of that
       model's outputs. The gateway refuses anything else.
-    - `run` (in-season): the prediction moment, one of `pcf.data.timeline.moments.RUNS`.
+    - `run` (in-season): the prediction moment, one of `pcf.data.timeline.moments.RUNS`, or
+      `KICKOFF` for a benchmark.
+    - `benchmark`: a yardstick from outside PCF (ECR, the closing line). Scored like a model, but
+      it needs no signal test, and only a benchmark may run at kickoff (baselines brief, D5).
+    - `variant`: one of several models under one project id (the baselines: `ecr`, `rolling4`).
+    - `first_train`: the first season it can be trained on, if later than config's (ECR: 2021).
     - `event` (offseason events): one of `moments.EVENTS`.
     - `groups`: feature columns the range coverage is also judged in (VALIDATION.md §7), besides
       the season; e.g. position, rookie, starter.
@@ -80,6 +91,9 @@ class Expert(ABC):
     run: ClassVar[str] = "tuesday"
     event: ClassVar[str | None] = None
     groups: ClassVar[tuple[str, ...]] = ()
+    benchmark: ClassVar[bool] = False
+    variant: ClassVar[str] = ""
+    first_train: ClassVar[int | None] = None
 
     @abstractmethod
     def features(self, view: View, games: pl.DataFrame) -> pl.DataFrame:
@@ -103,6 +117,11 @@ class Expert(ABC):
         return {}
 
     @classmethod
+    def label(cls) -> str:
+        """The model's name in outputs and scorecards: its id, and its variant if it has one."""
+        return f"{cls.id}/{cls.variant}" if cls.variant else cls.id
+
+    @classmethod
     def keys(cls) -> list[str]:
         from pcf.data.schemas import table
 
@@ -124,7 +143,7 @@ def check_expert(expert: type[Expert] | Expert, path=None) -> None:
     tables and parts, and `inputs` that match `depends_on` (the graph on paper is the graph in the
     code). Raises ValueError listing every problem."""
     from pcf.data.schemas import TABLES
-    from pcf.data.timeline.moments import EVENTS, RUNS
+    from pcf.data.timeline.moments import EVENTS, KICKOFF, RUNS
 
     cls = expert if isinstance(expert, type) else type(expert)
     problems = []
@@ -141,7 +160,9 @@ def check_expert(expert: type[Expert] | Expert, path=None) -> None:
         problems.append(f"kind {cls.kind!r} isn't one of {KINDS}")
     if cls.grain not in TABLES:
         problems.append(f"grain {cls.grain!r} isn't a table")
-    if cls.cadence == "in_season" and cls.run not in RUNS:
+    if cls.cadence == "in_season" and cls.run == KICKOFF and not cls.benchmark:
+        problems.append("only a benchmark may run at kickoff")
+    elif cls.cadence == "in_season" and cls.run not in (*RUNS, KICKOFF):
         problems.append(f"run {cls.run!r} isn't one of {list(RUNS)}")
     if cls.cadence == "offseason_events" and cls.event not in EVENTS:
         problems.append(f"event {cls.event!r} isn't one of {EVENTS}")
@@ -198,8 +219,17 @@ def check_output(df: pl.DataFrame, keys: list[str], kind: str = "amount") -> Non
             raise ValueError(f"output quantiles are missing or out of order on {bad} rows")
 
 
-def find(project_id: str) -> type[Expert]:
-    """The Expert subclass with this id, from the model packages."""
+def find(project_id: str, variant: str | None = None) -> type[Expert]:
+    """The Expert subclass with this id (and variant), from the model packages."""
+    for cls in find_all(project_id):
+        if variant is None or cls.variant == variant:
+            return cls
+    raise KeyError(f"no Expert with id {project_id!r} and variant {variant!r}")
+
+
+def find_all(project_id: str) -> list[type[Expert]]:
+    """Every Expert subclass with this id (one per variant), from the model packages."""
+    found = []
     for package_name in MODEL_PACKAGES:
         package = importlib.import_module(package_name)
         for info in pkgutil.walk_packages(package.__path__, f"{package_name}."):
@@ -213,6 +243,10 @@ def find(project_id: str) -> type[Expert]:
                     and value.__module__ == module.__name__
                     and not getattr(value, "__abstractmethods__", None)
                     and not getattr(value, "baseline", False)
+                    and hasattr(value, "quantity")  # not a shared base class
+                    and value not in found
                 ):
-                    return value
-    raise KeyError(f"no Expert with id {project_id!r} in {', '.join(MODEL_PACKAGES)}")
+                    found.append(value)
+    if not found:
+        raise KeyError(f"no Expert with id {project_id!r} in {', '.join(MODEL_PACKAGES)}")
+    return found

@@ -114,7 +114,7 @@ def render(v: Validation) -> str:
     passed = all(ch.passed for ch in blocking)
 
     head = [
-        f"<h1>Scorecard: {escape(expert.id)}</h1>",
+        f"<h1>Scorecard: {escape(expert.label())}</h1>",
         f'<p class="muted">{escape(expert.quantity)} · {escape(expert.cadence)}'
         f"{' at the ' + escape(expert.run) + ' run' if expert.cadence == 'in_season' else ''}"
         f" · seasons {v.seasons[0]}–{v.seasons[-1]} · made {v.made:%Y-%m-%d %H:%M} UTC</p>",
@@ -132,7 +132,8 @@ def render(v: Validation) -> str:
         "</div>",
     ]
 
-    rows = [(expert.id, summary[main], summary[readable], int(summary["rows"]), None, None, None,
+    label = expert.label()
+    rows = [(label, summary[main], summary[readable], int(summary["rows"]), None, None, None,
              "—")]  # fmt: skip
     for name, hist in v.baselines.items():
         s = scores.summary(hist.filter(pl.col("y").is_not_null()), kind)
@@ -210,7 +211,7 @@ def render(v: Validation) -> str:
     return (
         '<!doctype html><html lang="en"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width, initial-scale=1">'
-        f"<title>Scorecard {escape(expert.id)}</title><style>{STYLE}</style></head><body>"
+        f"<title>Scorecard {escape(expert.label())}</title><style>{STYLE}</style></head><body>"
         + "".join(head + body)
         + "</body></html>"
     )

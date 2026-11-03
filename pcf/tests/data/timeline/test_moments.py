@@ -72,6 +72,12 @@ def test_no_moment_is_at_or_after_kickoff(cal):
         assert m.filter(c("moment") >= c("kickoff")).is_empty()
 
 
+def test_a_benchmark_is_predicted_at_kickoff(cal):
+    m = game_moments(cal, "kickoff")
+    assert m.height == cal.games.height
+    assert (m["moment"] == m["kickoff"]).all() and not m["fallback"].any()
+
+
 def test_a_week_that_starts_after_its_runs_falls_back_to_10_am_on_its_first_day():
     # Week 1 ends on a Wednesday, so week 2 starts Thursday: its Tuesday run is after its game.
     rows = schedule(

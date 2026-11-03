@@ -2,7 +2,7 @@
 
 > The yardsticks every product must beat (rule k, VALIDATION.md §6). Exploration: [EXPLORATION.md](EXPLORATION.md). **Key decisions D1–D9 are at the end of this page, each to approve or deny.**
 
-**Status:** draft · **Layer:** 0, foundation (Phase 0) · **Cadence:** in_season (the weekly-points baselines); the market benchmark is at kickoff
+**Status:** agreed (2026-11-02): CEO approved D1–D9 as written · **Layer:** 0, foundation (Phase 0) · **Cadence:** in_season (the weekly-points baselines); the market benchmark is at kickoff
 
 ## The question
 What does "good enough to ship" mean for a PCF projection? Build the simple and market yardsticks each product must beat, so that "beats ECR" or "beats a 4-week average" means the same thing every time, on the same games.

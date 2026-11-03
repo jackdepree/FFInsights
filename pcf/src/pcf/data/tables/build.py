@@ -74,6 +74,13 @@ def _players() -> pl.DataFrame:
     return scan("players").select("pfr_id", "gsis_id").collect()
 
 
+def _ecr() -> tuple[pl.DataFrame | None, pl.DataFrame | None]:
+    """The ECR archive and the id map, or (None, None) if either isn't in the raw copy."""
+    if not files("ecr_archive") or not files("player_ids"):
+        return None, None
+    return scan("ecr_archive").collect(), scan("player_ids").collect()
+
+
 def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | None) -> None:
     schedules = _schedules().filter(pl.col("season").is_in(list(seasons)))
     if name == "game":
@@ -119,6 +126,7 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
     injuries = _season("injuries", season)
     ngs = {k: _season(f"ngs_{k}", season) for k in ("passing", "receiving", "rushing")}
     pfr = {k: _season(f"pfr_week_{k}", season) for k in ("pass", "rush", "rec", "def")}
+    ecr, ids = _ecr()
     parts = player_game_parts(
         cal,
         _rosters(season),
@@ -130,6 +138,8 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
         ngs={k: df for k, df in ngs.items() if df is not None},
         pfr={k: df for k, df in pfr.items() if df is not None},
         players=players,
+        ecr=ecr,
+        ids=ids,
     )
     write_parts(parts, "player_game", [season], root)
 

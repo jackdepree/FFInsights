@@ -12,7 +12,7 @@ The validation harness (`validation-harness` project): everything that decides w
 | `calibration.py` | Calibration error and slope; range coverage by group; sharpness |
 | `leakage.py` | Checks 1-8 and 10, each with a planted leak in `tests/validation/planted.py` |
 | `sanity.py` | Shared football-sanity rules and the CEO's review lists |
-| `scorecard.py`, `validate.py` | One validation run and its HTML scorecard, recorded in MLflow (`pcf backtest <id>`) |
+| `scorecard.py`, `validate.py` | One validation run and its HTML scorecard, recorded in MLflow (`pcf backtest <id> [--variant v]`). Baselines rerun at the model's run (`at_run`), benchmarks at their own |
 | `toy.py` | The harness's own toy expert (`validation-harness`): recent PPR points |
 
 - **Random splitters (`KFold`, `train_test_split`) are banned everywhere else**, and a test scans the package for them.

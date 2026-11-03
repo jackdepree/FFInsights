@@ -55,6 +55,7 @@ pcf/
       tags/                 the tag catalog and builders: tags saved as table parts, and the drive table
       gateway.py            as_of(): the only way models read data
       schemas.py            the table contract: each table's keys and parts, checked on every write
+    baselines/              the yardsticks every product must beat: averages, a lasso, ECR, the closing line
     experts/<id>/           one folder per expert, same layout (see "The expert contract")
     composites/<id>/
     products/<id>/
@@ -116,7 +117,7 @@ The gateway:
 - refuses any table, part or expert output the caller didn't declare in `inputs`;
 - shows an expert's outputs only where `as_of` <= the moment, and refuses rows whose `train_end` is after their `as_of` (check 6).
 
-**Prediction moments** (`data/timeline/moments.py`, CEO decision 1C in the validation-harness brief): the three weekly runs are named moments. A model declares its `run`, and each game is predicted at the latest allowed run before its kickoff (a Saturday model predicts Thursday games at the Wednesday run). Retrospective models predict a season at 10:00 ET on the first day of its week-1 window; offseason-events models at the start of the event.
+**Prediction moments** (`data/timeline/moments.py`, CEO decision 1C in the validation-harness brief): the three weekly runs are named moments. A model declares its `run`, and each game is predicted at the latest allowed run before its kickoff (a Saturday model predicts Thursday games at the Wednesday run). Retrospective models predict a season at 10:00 ET on the first day of its week-1 window; offseason-events models at the start of the event. **Benchmarks** from outside PCF (the closing line) are predicted at each game's kickoff, the `kickoff` moment, which only a benchmark may declare (decision 0012).
 
 The gateway (`pcf.data.gateway`) was built by `validation-harness` on `grain-tables`' `load`. **Features are defined per moment:** the backtest calls `features(view, games)` with a view at each prediction moment. A faster bulk `features_history` is allowed only if it matches the per-moment features at the leakage cutoffs (decision 0011).
 
@@ -161,6 +162,8 @@ class VoeLive(Expert):
 ```
 
 A test checks that `inputs` matches the project's `depends_on` in the registry, so the dependency graph on paper is the graph in the code.
+
+Optional attributes: `groups` (where range coverage is also judged), `benchmark` (a yardstick from outside PCF: no signal test, and it may run at kickoff), `variant` (one of several models under one project id, like the baselines) and `first_train` (a later first training season, e.g. ECR's 2021). A model names the baselines it must beat in a `baselines()` classmethod; the scorecard reruns them at the model's own run, except benchmarks, which keep theirs (decision 0012).
 
 **The standard output schema.** Every output table has the same columns, so any layer above can read any expert without custom glue:
 
@@ -309,3 +312,4 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0009: The champion changes only by merge](decisions/0009-champion-by-merge.md)
 - [0010: Prediction moments are the weekly runs](decisions/0010-prediction-moments.md)
 - [0011: Features are defined per moment](decisions/0011-features-per-moment.md)
+- [0012: Benchmarks run at kickoff; baselines at the model's run](decisions/0012-benchmarks-and-baseline-moments.md)

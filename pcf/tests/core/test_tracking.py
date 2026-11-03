@@ -158,6 +158,15 @@ def test_every_attempt_counts_failed_ones_too():
     assert tracking.versions_tried(PROJECT) == 2
 
 
+def test_variants_count_their_own_attempts():
+    with tracking.attempt(PROJECT, variant="a"):
+        pass
+    with tracking.attempt(PROJECT, variant="b"):
+        pass
+    assert tracking.versions_tried(PROJECT, "a") == 1
+    assert tracking.versions_tried(PROJECT) == 2
+
+
 def test_opening_the_vault_marks_the_run_and_the_experiment():
     with tracking.attempt(PROJECT) as run:
         tracking.mark_vault_opened(PROJECT)

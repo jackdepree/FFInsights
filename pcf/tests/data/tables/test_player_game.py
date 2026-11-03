@@ -221,3 +221,41 @@ def test_a_player_on_both_teams_lists_keeps_their_own_teams_label():
     )
     depth = player_game_parts(cal(), _rosters(), labels=labels)["depth"]
     assert depth.select("gsis_id", "position_label").rows() == [("qb1", "QB1")]
+
+
+def _ecr(*rows):
+    """ECR archive rows: (FantasyPros id, scrape date, rank)."""
+    return pl.DataFrame(
+        [(i, d, r, 1.0, r, r, "QB", "wp") for i, d, r in rows],
+        schema=["id", "scrape_date", "ecr", "sd", "best", "worst", "pos", "ecr_type"],
+        orient="row",
+    )
+
+
+IDS = pl.DataFrame({"fantasypros_id": ["fp1"], "gsis_id": ["qb1"]})
+
+
+def test_ecr_ranks_only_games_after_the_snapshot_is_known():
+    """Kickoff is Sunday 1 PM. Friday's snapshot is known Saturday 00:00 Eastern and ranks it;
+    one scraped on game day is known after kickoff (a Friday scrape for a Thursday game,
+    baselines#F2); one from the Monday before is too old."""
+    spine = _parts()["roster"]
+    for day, kept in [("2025-09-05", True), ("2025-09-07", False), ("2025-09-01", False)]:
+        rows = player_game.ecr_part(_ecr(("fp1", day, 4.0)), IDS, spine, cal())
+        assert (rows.height == 1) is kept, day
+    both = player_game.ecr_part(
+        _ecr(("fp1", "2025-09-04", 6.0), ("fp1", "2025-09-05", 4.0)), IDS, spine, cal()
+    )
+    assert both["ecr_rank"].to_list() == [4.0]  # the latest snapshot before kickoff
+    assert (both["known_at"] < KICK).all()
+    check_parts(
+        {"ecr": both.with_columns(pl.col("known_at").cast(pl.Datetime("us", "UTC")))}, "player_game"
+    )
+
+
+def test_ecr_ignores_other_pages_and_unmatched_players():
+    spine = _parts()["roster"]
+    other = _ecr(("fp1", "2025-09-05", 4.0)).with_columns(ecr_type=pl.lit("ro"))
+    stranger = _ecr(("fp9", "2025-09-05", 1.0))
+    assert player_game.ecr_part(other, IDS, spine, cal()).is_empty()
+    assert player_game.ecr_part(stranger, IDS, spine, cal()).is_empty()
