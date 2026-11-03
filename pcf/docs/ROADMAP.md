@@ -20,7 +20,7 @@ Phase 0, starting with the one item that can't wait:
 
 1. **Betting-line collection** (`odds-collection`). Every week of lines we don't collect is lost for good. Free odds-API tiers and public JSON endpoints only, no scraping.
 2. Package scaffold and config · experiment tracking (MLflow) · data layer · NFL timeline · cleaning-function port
-3. Tables at every level of detail · tag tables · validation harness (the `as_of` gateway's leakage checks) · baselines · prediction ledger · registry tooling
+3. Tables at every level of detail · tag tables · validation harness (the `as_of` gateway's leakage checks) · baselines · miss lenses · prediction ledger · registry tooling
 
 ## Next
 
@@ -47,6 +47,7 @@ These are targets, not deadlines.
 - [ ] **Backups for MLflow and model outputs** (not urgent until the first expert is built). They live on one PC, and losing them means slow retraining. Options to brainstorm then: a synced folder (OneDrive), an external drive, or champions only into a private repo.
 
 Decided:
+- **2026-11-03 · Ways of working:** two loops, discover then confirm; a hypothesis log (`projects/IDEAS.md`); a short fixed list of miss lenses in every RESULTS.md, chosen by discovery (`miss-lenses`) instead of every tag; the case against and a CEO spot-check before every merge.
 - **2026-11-03 · Baselines** ([results](../projects/baselines/RESULTS.md)): D1–D9 as written; to ship, the weekly fantasy product must match ECR if it doesn't use ECR, and clearly beat ECR if it uses ECR as an input; experts may name ECR as their no-noise baseline (VALIDATION.md §5–6).
 - **2026-11-02 · Validation harness** ([results](../projects/validation-harness/RESULTS.md)): prediction moments are the three weekly runs (1C); the harness covers everything a model needs to be done, with betting evaluation and the live gap later (2A); leakage comparisons allow a 1e-9 rounding tolerance.
 - **2026-10-30 · Validation** ([VALIDATION.md](VALIDATION.md)): a rolling vault season (2025 now; props use 2026 live), proper scores, "beats" means a 90% week-block interval above zero, signal and no-noise tests for experts, calibration and range-coverage bands, closing line value over ROI, and a CEO sanity review for every expert.
@@ -85,6 +86,7 @@ One dated line each time something reaches Done, or the roadmap changes shape.
 - **2026-10-30:** `OLD_INVENTORY.md` written: the salvage map of `old/`. Old saved models are never loaded, and old data is for research and benchmarking only.
 - **2026-10-30:** `CONVENTIONS.md` and `GLOSSARY.md` written. Every brief and results page now has a Terms section. The project-wide docs are complete.
 - **2026-10-30:** `package-scaffold` done: the `pcf` package, config, a logger that masks keys, `pcf info`, pytest, ruff, nbstripout, JupyterLab, VS Code settings, and a deny rule that stops Claude's edit tools in `old/`.
+- **2026-11-03:** Ways of working added to the charter: discovery and confirmation loops, `projects/IDEAS.md` for hypotheses, "Where it misses" and "The case against" in the results template, and a CEO spot-check before every merge. New idea: `miss-lenses`.
 - **2026-11-02:** `baselines` done: eight yardsticks as variants of one project (decision 0012): three points averages and a lasso for any scoring, FantasyPros ECR as points (a new `player_game` part that never ranks a game kicked off before its snapshot), and the no-vig closing line at a new kickoff moment for benchmarks. ECR beats every box-score baseline, so it is the weekly fantasy product's bar; the closing line is calibrated. CEO approved D1–D9.
 - **2026-11-02:** `validation-harness` done: one expert contract, the `as_of` gateway, prediction moments at the three weekly runs (CEO decision 1C, decision 0010), features defined per moment (decision 0011), walk-forward backtests, scores and "beats", signal and no-noise tests, calibration and coverage, leakage checks 1–10 each caught by a planted leak, sanity rules and an HTML scorecard (`pcf backtest <id>`). Betting evaluation and the live-vs-backtest gap wait for odds and the ledger (CEO decision 2A).
 - **2026-11-01:** `tag-tables` done: 52 tags and 11 references on plays, a new `drive` table, team-games and player-games, each with one versioned rule, a football timing and a rate band (`docs/TAGS.md`). Situation tags use score and clock (CEO decision 1A). On the way: 2000–2005 night kickoffs fixed (they were 12 hours early).

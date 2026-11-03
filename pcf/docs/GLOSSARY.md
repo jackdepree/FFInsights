@@ -132,6 +132,9 @@
 | **Kickoff moment** | A prediction moment at each game's kickoff, allowed only for benchmarks (the closing line is known then) | baselines |
 | **Rank-to-points curve** | The points scored at each ECR rank in a position, fit on training weeks (isotonic: a better rank never projects fewer points). It turns a ranking into a projection | baselines |
 | **Variant** | One of several models under one project id, e.g. `baselines/ecr`; its outputs are in `outputs/<id>/<variant>/` | baselines |
+| **Discovery loop**, **confirmation loop** | Cheap, open searches for problems and ideas (explorations, `IDEAS.md`, where models miss), versus the strict harness that proves a result. A discovery result never counts as proof | CLAUDE.md |
+| **Miss lens** | A tag or category every model's errors are split by, in each RESULTS.md's "Where it misses". The short list is chosen by `miss-lenses` | miss-lenses |
+| **Case against**, **spot-check** | Before a merge: Claude's strongest argument that the result is wrong, and one decision or finding the CEO picks to go through in depth | CLAUDE.md |
 | **Expert contract** | The interface every model implements (`pcf.core.contract.Expert`): id, cadence, grain, inputs, run, `features(view, games)`, `target`, `fit`, `predict` | validation-harness |
 | **Shuffled null**, **signal test** | A model trained on shuffled outcomes; beating 95 of 100 of them shows real signal | VALIDATION.md |
 | **No-noise test** | An expert must not make its downstream baseline clearly worse | VALIDATION.md |

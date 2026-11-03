@@ -16,6 +16,7 @@ Two or three sentences: what we learned and whether it worked against the brief'
 | Calibration and range coverage | |
 | Leakage | |
 | Football sanity (CEO review date) | |
+| CEO spot-check (date): what was checked | |
 
 ## Terms
 The project's terms as they ended up: anything new, or anything whose definition changed since the brief. These are copied into `docs/GLOSSARY.md`.
@@ -31,6 +32,19 @@ Numbered so other projects can cite them as `<id>#F1`. One claim each.
 | Rung | Method | Result vs the rung below | Takeaway carried forward |
 |---|---|---|---|
 | 0 | baseline | — | |
+
+## Where it misses
+*Models only.* Where the errors cluster, so they become new problems to solve. Kept short on purpose:
+- the fixed lenses (until `miss-lenses` picks the list: position and week);
+- plus at most 5 other tags whose average miss is clearly not zero (90% interval), largest first.
+
+Each pattern worth chasing becomes a line in `projects/IDEAS.md`.
+
+| Lens | Group | Rows | Average miss (actual − predicted) | 90% interval | Idea |
+|---|---|---|---|---|---|
+
+## The case against
+The strongest argument that this result is wrong or overstated: a leak no check covers, too few seasons, a lucky stretch, a score that flatters it. And what it would take to check. Written before asking to merge, so the CEO approves with it in view.
 
 ## Pitfalls
 What went wrong or nearly did, so the next project avoids it.

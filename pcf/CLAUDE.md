@@ -62,6 +62,15 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 **Brainstorm, then build.** For design decisions, Claude lays out options: the strong choices, plus a tempting but bad one that shows what separates good from bad. The CEO picks, then Claude writes or builds.
 
+**Two loops: discover, then confirm.**
+- **Discovery** is cheap and open: explorations, the hypothesis log ([`projects/IDEAS.md`](projects/IDEAS.md)), and where each model misses. Its only bar is "is there any signal?" This is where new problems come from.
+- **Confirmation** is strict: the harness, held-out weeks, the vault.
+- A discovery result never counts as proof. The more ideas we try, the more the vault and the versions-tried count matter.
+
+**Checks on Claude's work, before every merge:**
+- **The case against:** Claude writes the strongest argument that the result is wrong or overstated (in RESULTS.md), so the CEO approves with it in view.
+- **One spot-check:** the CEO picks one decision or finding, and Claude walks through it in depth: the rows, the alternative, what would change the answer.
+
 **Needs CEO sign-off first:**
 - a new layer or expert model
 - changing what a target means
@@ -80,13 +89,13 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 Every new mini-project, sub-problem, feature, model or domain gets an entry in [`projects/registry.yaml`](projects/registry.yaml) and moves through these statuses: **idea → exploring → brief → building → validating → done** (or **parked** / **dead_end**).
 
-1. **Idea:** brainstorm it together and add it to the registry.
+1. **Idea:** brainstorm it together and add it to the registry. A hypothesis smaller than a project goes in [`projects/IDEAS.md`](projects/IDEAS.md) instead, and graduates to the registry if a cheap check finds something.
 2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
    - **Infrastructure projects** (scaffold, tracking, tooling) have no signal to find, so they get a **light exploration** instead: a quick descriptive profile of the data they touch (rows, columns, date ranges, level of detail, size). Small, but not skipped.
 3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)). It covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
-6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, and the roadmap and registry are updated.
+6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, and the roadmap and registry are updated.
 
 Each project's notes live in `projects/<id>/`: `EXPLORATION.md`, `BRIEF.md`, `RESULTS.md`.
 
@@ -101,6 +110,7 @@ A mini-project is done when:
 - [ ] Outputs (live and walk-forward history) are saved in the standard schema, versioned, and readable by higher layers. The champion model is registered in MLflow.
 - [ ] Results pass the football sanity check.
 - [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its new terms are in `GLOSSARY.md`, its interface card is in the registry, and the CEO's open questions are answered.
+- [ ] The case against is written, and the CEO's spot-check is done.
 - [ ] The registry and roadmap are updated, and the CEO approved the merge.
 
 ## Where things live
@@ -115,6 +125,7 @@ pcf/
   projects/
     registry.yaml     ← single source of truth for every project's status, dependencies and interface
     KNOWLEDGE.md      ← every finding from every finished project. Read before any brief.
+    IDEAS.md          hypotheses to test: football hunches and patterns in model misses
     _templates/       BRIEF.md and RESULTS.md templates
     <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md, explore/
   src/pcf/            the package: core, data, experts, composites, products, validation (setup: README.md)

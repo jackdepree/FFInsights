@@ -217,6 +217,14 @@ projects:
       how_to_use: "List them in a product's baselines(), e.g. [Ecr, Lasso, RollingAverage]; the harness reruns them at the product's run (benchmarks at their own) and the scorecard shows beats for each. Another scoring: scored(Lasso, 'half'). Never use a benchmark as a feature before it is known."
       feeds: every product's scorecard; the weekly fantasy product must match ecr, or beat it if it uses ECR (VALIDATION.md §6)
 
+  - id: miss-lenses
+    name: Miss lenses
+    phase: 0
+    status: idea
+    horizon: now
+    depends_on: [baselines, tag-tables]
+    summary: "Discovery: which tags and categories explain the most of our models' misses (the lasso's and ECR's to start), so every RESULTS.md looks through a short fixed list of lenses instead of all 52 tags (CEO, 2026-11-03). Revisited once a season."
+
   - id: prediction-ledger
     name: Prediction ledger
     phase: 0
