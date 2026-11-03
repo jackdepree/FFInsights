@@ -47,6 +47,7 @@ These are targets, not deadlines.
 - [ ] **Backups for MLflow and model outputs** (not urgent until the first expert is built). They live on one PC, and losing them means slow retraining. Options to brainstorm then: a synced folder (OneDrive), an external drive, or champions only into a private repo.
 
 Decided:
+- **2026-11-02 · Validation harness** ([results](../projects/validation-harness/RESULTS.md)): prediction moments are the three weekly runs (1C); the harness covers everything a model needs to be done, with betting evaluation and the live gap later (2A); leakage comparisons allow a 1e-9 rounding tolerance.
 - **2026-10-30 · Validation** ([VALIDATION.md](VALIDATION.md)): a rolling vault season (2025 now; props use 2026 live), proper scores, "beats" means a 90% week-block interval above zero, signal and no-noise tests for experts, calibration and range-coverage bands, closing line value over ROI, and a CEO sanity review for every expert.
 - **2026-10-30 · Architecture** ([ARCHITECTURE.md](ARCHITECTURE.md)): Python only; Parquet, Polars and DuckDB; the `as_of` gateway with stacked leakage checks; one expert contract; MLflow for tracking and model reuse; the knowledge tree (briefs, results, numbered findings); the model ladder; collectors on Actions and modeling on the PC via Task Scheduler.
 - **2026-10-29 · Collector set up:** the private `pcf-data` repo, token and secrets were created, and the collector was merged to `main`.

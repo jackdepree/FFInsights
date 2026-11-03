@@ -117,7 +117,7 @@
 | `validation-harness#F7` *(exploration)* | 0.05% of injury rows and 0.03% of roster rows are known after kickoff; the gateway hides them at moments before. | strong | [EXPLORATION.md](validation-harness/EXPLORATION.md) |
 | `validation-harness#F11` | Every game since 1999 has a moment before kickoff at every run; weeks that start mid-week fall back to 10:00 ET on the window's first day (121 games for Tuesday, 59 for Wednesday). | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F12` | Polars joins don't keep row order, and a least-squares refit on reordered rows differs in the last digits. Sort training rows before any fit. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
-| `validation-harness#F13` | Honest features summed in a different order differ in the last float digit; leakage comparisons use a 1e-9 relative tolerance (CEO to agree). | strong | [RESULTS.md](validation-harness/RESULTS.md) |
+| `validation-harness#F13` | Honest features summed in a different order differ in the last float digit; leakage comparisons use a 1e-9 relative tolerance (CEO agreed 2026-11-02). | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F14` | Per-moment features cost about 0.18 s a view: 403 moments of a simple player-game expert take 77 s. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F15` | One residual spread for all positions under-covers QBs (69% inside q10–q90); amount models need ranges per group. | strong | [RESULTS.md](validation-harness/RESULTS.md) |
 | `validation-harness#F16` | A simple model's full validation (2016–2024, 100 shuffles, 25 cutoffs, all checks) takes 7 minutes. | strong | [RESULTS.md](validation-harness/RESULTS.md) |

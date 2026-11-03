@@ -165,8 +165,8 @@ The checks themselves are in [ARCHITECTURE.md](ARCHITECTURE.md#leakage-defense-i
 
 | Check | Bar |
 |---|---|
-| Future perturbation, future deletion | Features **exactly identical**, not "close", at **25 cutoffs**: random dates plus week 1, mid-season, the trade deadline, the playoffs, the combine, free agency and draft day |
-| Test-label perturbation | Test predictions exactly identical after scrambling the test fold's outcomes and refitting |
+| Future perturbation, future deletion | Features **identical**, not "close", at **25 cutoffs** (numbers may differ only by rounding, 1e-9 relative: CEO, 2026-11-02, validation-harness#F13): random dates plus week 1, mid-season, the trade deadline, the playoffs, the combine, free agency and draft day |
+| Test-label perturbation | Test predictions identical (to the same rounding tolerance) after scrambling the test fold's outcomes and refitting |
 | Shuffled-target null | Section 5's signal test |
 | Model vintage, cadence, gateway only, known_at sanity | Pass/fail, no tolerance |
 
