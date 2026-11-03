@@ -199,10 +199,11 @@ projects:
       feeds: every expert, composite and product; baselines next
 
   - id: baselines
-    name: Dumb baselines
+    name: Baselines
     phase: 0
-    status: idea
+    status: brief
     horizon: now
+    cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Rolling averages, Vegas lines, ECR and a simple lasso. The yardstick every product must beat.
 
