@@ -1,8 +1,8 @@
 # Brief: Participation and snaps (`participation`)
 
-> PCF's first expert: how much each skill player will be on the field next game, over the next few games and for the rest of the season. Exploration: [EXPLORATION.md](EXPLORATION.md). **Key decisions D1–D10 are at the end of this page, each to approve or deny.**
+> PCF's first expert: how much each skill player will be on the field next game, over the next few games and for the rest of the season. Exploration: [EXPLORATION.md](EXPLORATION.md). **Key decisions D1–D10 are at the end of this page; the CEO approved them on 2026-11-03.**
 
-**Status:** draft, for the CEO · **Layer:** 1, experts · **Cadence:** in_season
+**Status:** agreed 2026-11-03 · **Layer:** 1, experts · **Cadence:** in_season
 
 ## The question
 Before each game, what share of their team's offensive snaps will each rostered QB, RB, WR and TE play, and how likely are they to play at all? The same question over the next 3 games and the rest of the season (D9).
@@ -86,7 +86,7 @@ Time box: three sessions.
 
 **D4. The ladder (technical):** last-3 average → lasso per position → boosted trees. A rung that doesn't beat the one below stops the climb.
 
-**D5. Inputs (technical):** snaps, depth charts, the injury report and teammates' reports, tags. Past box-score stats (usage, yards, efficiency, special teams, age, experience, draft slot) are offered to the lasso rung, which keeps them only if they earn it inside the folds; trees found no use for them (F7). **Not** the game-day active list (known 90 minutes before kickoff) and **not** play-level participation (routes: post-season only, rule m).
+**D5. Inputs (technical):** snaps, depth charts, the injury report and teammates' reports, tags. Past shares average only the games a player was active, alongside the games missed in a row, so an absence doesn't read as a lost role (F9). Career share when active (from the CEO, 2026-11-03) is offered to each rung and kept only if it earns its place; results report it on players back from 4+ games out. Past box-score stats (usage, yards, efficiency, special teams, age, experience, draft slot) are offered to the lasso rung, which keeps them only if they earn it inside the folds; trees found no use for them (F7). **Not** the game-day active list (known 90 minutes before kickoff) and **not** play-level participation (routes: post-season only, rule m).
 
 **D6. The no-noise target (yours): the lasso's weekly fantasy points at Saturday.**
 - The exploration says it should help there (F5: 2.9% of the squared miss). Against ECR it would likely be "neutral" (0.6%), which passes but says little. The scorecard will report both.
