@@ -2,7 +2,7 @@
 
 > A short, fixed list of ways to split every model's misses, so each RESULTS.md shows where a model goes wrong without drowning in 52 tags (CEO, 2026-11-03). Exploration: [EXPLORATION.md](EXPLORATION.md). **Key decisions D1–D6 are at the end of this page, each to approve or deny.**
 
-**Status:** draft, for the CEO · **Layer:** 0, foundation (Phase 0) · **Cadence:** n/a (runs on any model's walk-forward history)
+**Status:** agreed (2026-11-03): CEO approved D1–D4 and D6, changed D5 (review on a big new model too), added D7 (everything dated) · **Layer:** 0, foundation (Phase 0) · **Cadence:** n/a (runs on any model's walk-forward history)
 
 ## The question
 Which few lenses explain the most of our models' misses, and how should every project report them, the same way each time?
@@ -81,7 +81,12 @@ Time box: one session.
 
 **D4. After-game lenses are labelled diagnostic everywhere (technical).** The report marks them, and the tags' football timing decides which list a tag goes in. The leakage checks already stop a model from reading them.
 
-**D5. Reviewed once a season (yours).** Each offseason, rerun the exploration on the champion models and change the list only if a lens moves into or out of the top ranks. The change is a dated line in this project's RESULTS.md.
+**D5. Reviewed once a season, and whenever a big new model arrives (yours; CEO's change, 2026-11-03).**
+- **Each offseason:** rerun the lens ranking on the champion models.
+- **And when an important new model lands** (one many others will build on or be judged against): rank every candidate lens on its misses. If its top lenses differ from the list, the list is redone.
+- Every change is a dated new list, kept beside the old ones, never an edit in place.
+
+**D7. Everything is dated (CEO, 2026-11-03).** Each lens list has a date (the first is `2026-11-03`), and so does the way lenses are scored. Every miss report records when it was measured, which lens list and scoring it used, and which model run it read. So a later change to the method never mixes silently with old reports.
 
 **D6. Rejected (✗):** pick each project's lenses after seeing its misses. It reads well, but then every report shows its most flattering or most dramatic splits, and the reports stop being comparable.
 

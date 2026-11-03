@@ -1,5 +1,6 @@
 """One validation run (docs/VALIDATION.md): the backtest, the baselines, the signal test, the
-calibration and coverage, the leakage suite and the sanity rules, gathered for the scorecard.
+calibration and coverage, the leakage suite, the sanity rules and where the model misses,
+gathered for the scorecard.
 
     v = validate(Expert(), baselines=[Baseline()])
     record(v)   # inside tracking.attempt(...): metrics, checks, history and the scorecard
@@ -22,6 +23,9 @@ from pcf.core.log import get_logger
 from pcf.data.gateway import Gateway
 from pcf.validation import backtest, calibration, leakage, nulls, sanity, scores
 from pcf.validation.compare import Comparison, compare
+from pcf.validation.misses import Misses, lens_frame
+from pcf.validation.misses import report as miss_report
+from pcf.validation.misses import save as save_misses
 
 log = get_logger(__name__)
 c = pl.col
@@ -42,6 +46,7 @@ class Validation:
     seasons: list[int]
     vault_opened: bool
     versions_tried: int | None = None
+    misses: Misses | None = None  # player-game amount models (miss-lenses)
     made: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     @property
@@ -116,9 +121,13 @@ def validate(
     review = sanity.review_lists(
         bt.history.join(bt.features.select(*keys, *expert.groups), on=keys, how="left"), show
     )
+    misses = None
+    if expert.grain == "player_game" and expert.kind == "amount":
+        misses = miss_report(scored, lens_frame(gateway.source, tested), seed=seed)
     return Validation(
-        bt, base_hist, comps, signal, None, calib, checks, rules_df, review, tested, open_vault
-    )
+        bt, base_hist, comps, signal, None, calib, checks, rules_df, review, tested, open_vault,
+        misses=misses,
+    )  # fmt: skip
 
 
 def record(v: Validation, out_dir: Path | None = None) -> Path:
@@ -140,6 +149,8 @@ def record(v: Validation, out_dir: Path | None = None) -> Path:
     tracking.log_metrics(metrics, run_id)
     tracking.log_checks(leakage.results(v.checks), run_id)
     history = backtest.write_history(v.bt, run_id, out_dir)
+    if v.misses is not None:
+        save_misses(v.misses, history.parent, run_id)
     html = render(v)
     tracking.log_text(html, SCORECARD, run_id)
     path = history.parent / SCORECARD

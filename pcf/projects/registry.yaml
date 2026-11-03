@@ -220,10 +220,20 @@ projects:
   - id: miss-lenses
     name: Miss lenses
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [baselines, tag-tables]
-    summary: "Discovery: which tags and categories explain the most of our models' misses (the lasso's and ECR's to start), so every RESULTS.md looks through a short fixed list of lenses instead of all 52 tags (CEO, 2026-11-03). Revisited once a season."
+    summary: "A short, dated list of lenses every player-game model's misses are split by (list of 2026-11-03: position, depth, week; after the game: snap share, team points, margin, QB efficiency), plus at most 5 tags that clear a 99% bar. On every scorecard. Reviewed each season and on each important new model (CEO, 2026-11-03)."
+    interface:
+      inputs: a player-game walk-forward history with outcomes; player_game roster, depth, snaps, tags, tags_result; team_game tags, tags_result; game schedule, result
+      outputs: "pcf.validation.misses (report, lens_frame, from_history, save, Misses, LENSES, LENS_LIST, METHOD). misses.parquet next to each run's history, stamped measured_at, lens_list, method, run_id; the scorecard's Where it misses section; pcf misses <id> [--variant] [--run] writes misses.html."
+      grain: player-game
+      interval: whatever the model's history covers
+      cadence: n/a (runs with every validation)
+      known_at: n/a (diagnosis after the fact; lenses never feed a model)
+      model: none
+      how_to_use: Copy the scorecard's section into RESULTS.md and turn patterns worth chasing into IDEAS.md lines. A new lens list is a new date beside the old one, never an edit.
+      feeds: every player-game RESULTS.md; IDEAS.md
 
   - id: prediction-ledger
     name: Prediction ledger

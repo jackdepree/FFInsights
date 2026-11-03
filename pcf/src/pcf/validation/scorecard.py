@@ -2,8 +2,8 @@
 
 Saved in MLflow and next to the run's history (`outputs/<id>/<run_id>/scorecard.html`). It holds
 the vault status and versions tried, the scores against every baseline with 90% intervals, the
-signal and no-noise results, calibration or range coverage, the leakage checklist, and the
-sanity results with the CEO's review lists.
+signal and no-noise results, calibration or range coverage, where the model misses (dated lens
+list), the leakage checklist, and the sanity results with the CEO's review lists.
 """
 
 from __future__ import annotations
@@ -15,6 +15,7 @@ import polars as pl
 
 from pcf.config import get_config
 from pcf.validation import calibration, scores
+from pcf.validation.misses import FLAG_LEVEL, LEVEL, MAX_FLAGGED, Misses
 
 if TYPE_CHECKING:
     from pcf.validation.validate import Validation
@@ -99,6 +100,59 @@ def _calibration_svg(table: pl.DataFrame) -> str:
         f"{dots}"
         f'<text x="{size / 2}" y="{size - 6}" fill="var(--muted)" font-size="11" '
         'text-anchor="middle">predicted</text></svg>'
+    )
+
+
+def misses_section(m: Misses | None) -> list[str]:
+    """ "Where it misses": the fixed lenses, then the tags that stand out, with its dates."""
+    if m is None:
+        return []
+
+    def show(df: pl.DataFrame) -> pl.DataFrame:
+        return df.select(
+            "lens", "when",
+            (pl.col("bias_share") * 100).alias("bias share %"),
+            (pl.col("spread_share") * 100).alias("spread share %"),
+            "top_group", "top_rows", "avg_miss", "lo", "hi",
+        )  # fmt: skip
+
+    seasons = f"{m.seasons[0]}–{m.seasons[-1]}" if m.seasons else "none"
+    out = [
+        "<h2>Where it misses</h2>",
+        f'<p class="muted">Lens list {escape(m.lens_list)} · scoring {escape(m.method)} · '
+        f"measured {m.measured_at:%Y-%m-%d} · {m.rows:,} player-games, seasons {seasons}.</p>",
+        '<p class="muted">A miss is actual minus projected (positive: the model was too low). '
+        "Bias and spread shares: how much of the squared miss, and of the miss size, a correction "
+        "per group removes when learned on the other half of the seasons. The top group is the "
+        f"one with the largest average miss (200+ rows), with a {LEVEL:.0%} interval resampled by "
+        'week. Lenses marked "after" are known only after the game: they explain misses and are '
+        "never features.</p>",
+        _table(show(m.lenses)),
+    ]
+    if m.flagged.is_empty():
+        out.append(f'<p class="muted">No other tag stands out ({FLAG_LEVEL:.0%} interval).</p>')
+    else:
+        out += [
+            f"<p>Tags that stand out (at most {MAX_FLAGGED}): the average miss where the tag "
+            "fires, "
+            "against the model's average at the same positions; the "
+            f"{FLAG_LEVEL:.0%} interval excludes zero.</p>",
+            _table(show(m.flagged)),
+        ]
+    if m.skipped:
+        out.append(
+            f'<p class="muted">Not measured (inputs missing): {escape(", ".join(m.skipped))}.</p>'
+        )
+    return out
+
+
+def render_misses(m: Misses, title: str) -> str:
+    """The miss report alone, as its own page (`pcf misses`)."""
+    return (
+        '<!doctype html><html lang="en"><head><meta charset="utf-8">'
+        '<meta name="viewport" content="width=device-width, initial-scale=1">'
+        f"<title>Misses {escape(title)}</title><style>{STYLE}</style></head><body>"
+        f"<h1>Where it misses: {escape(title)}</h1>" + "".join(misses_section(m)) + "</body></html>"
     )
 
 
@@ -198,6 +252,7 @@ def render(v: Validation) -> str:
         schema=["#", "check", "pass", "kind", "detail"],
         orient="row",
     )  # fmt: skip
+    body += misses_section(v.misses)
     body += ["<h2>Leakage checklist</h2>", _table(checks)]
 
     top, bottom = v.review

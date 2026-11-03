@@ -139,6 +139,37 @@ def backtest(args: argparse.Namespace) -> None:
         print(f"scorecard: {path}")
 
 
+def misses(args: argparse.Namespace) -> None:
+    """Where a saved run misses, by today's dated lens list: misses.parquet and misses.html next
+    to its history (the latest run unless --run)."""
+    import polars as pl
+
+    from pcf.config import get_config
+    from pcf.core.contract import find
+    from pcf.data.gateway import Gateway
+    from pcf.validation.misses import from_history, save
+    from pcf.validation.scorecard import render_misses
+
+    cls = find(args.project, args.variant)
+    folder = get_config().zone("outputs") / args.project / (cls.variant or "")
+    runs = sorted(
+        (p for p in folder.iterdir() if (p / "history.parquet").exists()),
+        key=lambda p: p.stat().st_mtime,
+    )
+    run = folder / args.run if args.run else runs[-1]
+    m = from_history(pl.read_parquet(run / "history.parquet"), cls(), Gateway())
+    save(m, run, run.name)
+    page = run / "misses.html"
+    page.write_text(render_misses(m, cls.label()), encoding="utf-8")
+    cols = ["lens", "when", "bias_share", "spread_share", "top_group", "avg_miss"]
+    with pl.Config(tbl_rows=20, float_precision=3, tbl_hide_dataframe_shape=True):
+        print(f"{cls.label()} (run {run.name}, lens list {m.lens_list})")
+        print(m.lenses.select(cols))
+        if not m.flagged.is_empty():
+            print(m.flagged.select(cols))
+    print(f"report: {page}")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pcf", description="PCF: Principal Component Football")
     parser.add_argument("--version", action="version", version=f"pcf {__version__}")
@@ -188,7 +219,15 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--open-vault", action="store_true", help="include the vault season (once, logged)"
     )
 
+    ms = commands.add_parser("misses", help="where a saved model run misses, by the lens list")
+    ms.add_argument("project", help="the model's registry id")
+    ms.add_argument("--variant", help="the variant (for projects with several)")
+    ms.add_argument("--run", help="the run id (default: the latest)")
+
     args = parser.parse_args(argv)
+    if args.command == "misses":
+        misses(args)
+        return 0
     if args.command == "backtest":
         backtest(args)
         return 0

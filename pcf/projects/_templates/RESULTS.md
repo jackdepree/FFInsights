@@ -34,9 +34,9 @@ Numbered so other projects can cite them as `<id>#F1`. One claim each.
 | 0 | baseline | — | |
 
 ## Where it misses
-*Models only.* Where the errors cluster, so they become new problems to solve. Kept short on purpose:
-- the fixed lenses (until `miss-lenses` picks the list: position and week);
-- plus at most 5 other tags whose average miss is clearly not zero (90% interval), largest first.
+*Models only.* Where the errors cluster, so they become new problems to solve. Copy it from the scorecard's "Where it misses" section (`pcf.validation.misses`; `pcf misses <id>` for a saved run). Kept short on purpose:
+- the fixed lenses, with the date of the lens list used (miss-lenses D1);
+- plus at most 5 other tags whose average miss is clearly not zero (99% interval: about 20 tags are scanned), largest first.
 
 Each pattern worth chasing becomes a line in `projects/IDEAS.md`.
 

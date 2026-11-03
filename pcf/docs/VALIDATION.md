@@ -211,5 +211,6 @@ Every validation run produces a one-page HTML scorecard, saved in MLflow and lin
 - main and readable scores against every baseline, with 90% intervals;
 - the signal and no-noise results (experts);
 - calibration charts and range coverage by group;
+- where the model misses: the dated lens list, each top group with a 90% interval, and at most 5 tags whose 99% interval excludes zero (about 20 are scanned, so 90% would flag 2 by chance; player-game models, `miss-lenses`);
 - the leakage checklist, every row pass or fail;
 - the sanity results and the CEO review status.

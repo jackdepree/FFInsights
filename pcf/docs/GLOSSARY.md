@@ -133,7 +133,10 @@
 | **Rank-to-points curve** | The points scored at each ECR rank in a position, fit on training weeks (isotonic: a better rank never projects fewer points). It turns a ranking into a projection | baselines |
 | **Variant** | One of several models under one project id, e.g. `baselines/ecr`; its outputs are in `outputs/<id>/<variant>/` | baselines |
 | **Discovery loop**, **confirmation loop** | Cheap, open searches for problems and ideas (explorations, `IDEAS.md`, where models miss), versus the strict harness that proves a result. A discovery result never counts as proof | CLAUDE.md |
-| **Miss lens** | A tag or category every model's errors are split by, in each RESULTS.md's "Where it misses". The short list is chosen by `miss-lenses` | miss-lenses |
+| **Miss lens** | A tag or category every model's errors are split by, in each RESULTS.md's "Where it misses". The short list is chosen by `miss-lenses` and named by its date (the first: 2026-11-03) | miss-lenses |
+| **Miss** | Actual minus projected (`y - mean`): positive means the model was too low | miss-lenses |
+| **Bias share**, **spread share** | How much of a model's squared miss (bias), or of the size of its misses (spread), a correction per lens group removes when learned on the other half of the seasons | miss-lenses |
+| **Diagnostic lens** | A lens known only after the game (snap share, team points): it explains a miss, never feeds a model | miss-lenses |
 | **Case against**, **spot-check** | Before a merge: Claude's strongest argument that the result is wrong, and one decision or finding the CEO picks to go through in depth | CLAUDE.md |
 | **Expert contract** | The interface every model implements (`pcf.core.contract.Expert`): id, cadence, grain, inputs, run, `features(view, games)`, `target`, `fit`, `predict` | validation-harness |
 | **Shuffled null**, **signal test** | A model trained on shuffled outcomes; beating 95 of 100 of them shows real signal | VALIDATION.md |

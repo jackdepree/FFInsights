@@ -23,6 +23,9 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 |---|---|---|---|---|
 | I1 | Where ECR's experts disagree (a wide `ecr_sd`), results are more spread out, so ranges should widen there | baselines (Could be improved, 2) | ECR's q10–q90 coverage by `ecr_sd` band: under 80% where experts disagree, over 80% where they agree | open: inconclusive. The spread mostly tracks rank; within ranks 1–24 the widest spreads cover a little less (74–77% vs 79–82%) on few rows (miss-lenses#F6). Recheck with more seasons |
 
+| I4 | Players active while questionable score less than box-score history says: playing hurt costs about a point | miss-lenses#F9 | A box-score model with an injury-report feature beats the same model without it, on held-out weeks; ECR, which already sees reports, shows no such miss | open |
+| I5 | Rookies improve during their first season, so season averages under-project them | miss-lenses#F9 | Rookies' average miss rises with week; a weight on recent games for rookies only beats the plain average | open |
+
 ## Graduated
 
 | # | Idea | Became |

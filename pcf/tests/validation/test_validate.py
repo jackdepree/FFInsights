@@ -41,7 +41,8 @@ def test_the_scorecard_has_every_section(v):
 
     html = render(v)
     for section in ("Scores", "Signal and no noise", "Range coverage", "Leakage checklist",
-                    "Football sanity", "Vault", "Versions tried", "CEO review"):  # fmt: skip
+                    "Football sanity", "Vault", "Versions tried", "CEO review",
+                    "Where it misses", "Lens list"):  # fmt: skip
         assert section in html, section
     assert "LastFour" in html and "<svg" not in html  # amounts get coverage, not the chart
 
@@ -58,6 +59,9 @@ def test_record_logs_checks_history_and_scorecard_and_allows_registration(v, tmp
         assert run.data.metrics["signal_beaten"] == 20
         assert path.read_text(encoding="utf-8").startswith("<!doctype html>")
         assert (path.parent / "history.parquet").exists()
+        assert pl.read_parquet(path.parent / "misses.parquet")["run_id"].unique().to_list() == [
+            run_id
+        ]
         assert v.versions_tried == 1
     finally:
         while mlflow.active_run():
