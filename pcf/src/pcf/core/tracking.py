@@ -309,6 +309,31 @@ def load_model(project_id: str, version: int | None = None, alias: str | None = 
     return mlflow.sklearn.load_model(uri)
 
 
+def version_run(project_id: str, version: int) -> str:
+    """The run a registered version came from (its outputs live under that run id)."""
+    found = _client().get_model_version(model_name(project_id), str(version))
+    return found.tags.get(f"{TAG}run_id") or found.run_id
+
+
+def active_run_id() -> str:
+    """The active run's id (inside `attempt` or `rung`)."""
+    return _active().info.run_id
+
+
+def log_metrics(metrics: Mapping[str, float], run_id: str | None = None) -> None:
+    """Record metrics on a run (default: the active one)."""
+    run_id = run_id or _active().info.run_id
+    client = _client()
+    for key, value in metrics.items():
+        client.log_metric(run_id, key, float(value))
+
+
+def log_text(text: str, name: str, run_id: str | None = None) -> None:
+    """Save a text artifact (e.g. the validation scorecard) on a run (default: the active one)."""
+    run_id = run_id or _active().info.run_id
+    _client().log_text(run_id, text, name)
+
+
 def versions_tried(project_id: str) -> int:
     """How many attempts the project has made, failed ones included (VALIDATION.md section 4)."""
     client = _client()

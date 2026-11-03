@@ -75,6 +75,46 @@ def _scan(name: str, part: str, seasons: Sequence[int] | None, root: Path | None
     return pl.concat([pl.scan_parquet(p) for p in chosen], how="diagonal_relaxed")
 
 
+def read_part(
+    name: str, part: str, seasons: Sequence[int] | None = None, root: Path | None = None
+) -> pl.LazyFrame:
+    """One part as saved: its keys, `season`, `known_at` and its own columns."""
+    return _scan(name, part, seasons, root)
+
+
+def chosen_parts(name: str, parts: Sequence[str] | None = None) -> list[str]:
+    """The spine, then the asked-for parts (all if None). Refuses parts the table doesn't have."""
+    t = table(name)
+    chosen = [t.spine, *(p for p in (t.parts if parts is None else parts) if p != t.spine)]
+    unknown = set(chosen) - set(t.parts)
+    if unknown:
+        raise ValueError(f"{name} has no parts {sorted(unknown)}. Parts: {', '.join(t.parts)}")
+    return chosen
+
+
+def visible(frame: pl.LazyFrame, at: datetime | None) -> pl.LazyFrame:
+    """The rows of a part known at `at` (all of them if None)."""
+    if at is None:
+        return frame
+    if at.tzinfo is None:
+        raise ValueError("at must be timezone-aware")
+    return frame.filter(pl.col("known_at") <= pl.lit(at).cast(KNOWN_AT))
+
+
+def assemble(name: str, frames: Mapping[str, pl.LazyFrame]) -> pl.DataFrame:
+    """Join parts onto the spine (the first frame): `known_at` is the spine's, and each other
+    part's is `<part>_known_at`. Used by `load` and by the gateway (validation-harness)."""
+    t = table(name)
+    chosen = list(frames)
+    if not chosen or chosen[0] != t.spine:
+        raise ValueError(f"{name}: the spine ({t.spine}) must come first")
+    out = frames[t.spine]
+    for part in chosen[1:]:
+        rows = frames[part].drop("season").rename({"known_at": f"{part}_known_at"})
+        out = out.join(rows, on=t.key_names, how="left", maintain_order="left")
+    return out.collect()
+
+
 def load(
     name: str,
     at: datetime | None = None,
@@ -86,20 +126,7 @@ def load(
     each part's columns where that part's row was known by then and empty otherwise. `known_at`
     is the spine's; each other part's is `<part>_known_at`. `parts` picks some parts (the spine
     always comes)."""
-    t = table(name)
-    chosen = [t.spine, *(p for p in (t.parts if parts is None else parts) if p != t.spine)]
-    unknown = set(chosen) - set(t.parts)
-    if unknown:
-        raise ValueError(f"{name} has no parts {sorted(unknown)}. Parts: {', '.join(t.parts)}")
+    chosen = chosen_parts(name, parts)
     if at is not None and at.tzinfo is None:
         raise ValueError("at must be timezone-aware")
-
-    def known(part: str) -> pl.LazyFrame:
-        lf = _scan(name, part, seasons, root)
-        return lf if at is None else lf.filter(pl.col("known_at") <= pl.lit(at).cast(KNOWN_AT))
-
-    out = known(t.spine)
-    for part in chosen[1:]:
-        rows = known(part).drop("season").rename({"known_at": f"{part}_known_at"})
-        out = out.join(rows, on=t.key_names, how="left", maintain_order="left")
-    return out.collect()
+    return assemble(name, {p: visible(_scan(name, p, seasons, root), at) for p in chosen})

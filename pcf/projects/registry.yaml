@@ -183,10 +183,20 @@ projects:
   - id: validation-harness
     name: Validation harness
     phase: 0
-    status: brief
+    status: done
     horizon: now
     depends_on: [package-scaffold, timeline, experiment-tracking]
-    summary: The as_of gateway's leakage suite (docs/ARCHITECTURE.md), walk-forward backtests, calibration, uncertainty checks, shuffled-null signal tests, feature selection inside CV folds.
+    summary: "The one way every model is fed, tested and judged: the expert contract, the as_of gateway, prediction moments (the weekly runs), walk-forward backtests, scores and 'beats', signal and no-noise tests, calibration and coverage, leakage checks 1-10 each with a planted leak, sanity rules and the scorecard. pcf backtest <id>."
+    interface:
+      inputs: grain-tables and tag-tables parts through the gateway; the calendar (timeline); registry.yaml; MLflow (experiment-tracking)
+      outputs: "pcf.core.contract (Expert, check_expert, check_output, find); pcf.data.gateway (Gateway, View, TableSource, FrameSource); pcf.data.timeline.moments (RUNS, game_moments, season_moments, event_moments); pcf.validation (splits, backtest, scores, compare, nulls, calibration, leakage, sanity, scorecard, validate, toy). Each validation writes outputs/<id>/<run_id>/history.parquet (standard schema) and scorecard.html, and logs metrics, checks and the scorecard in MLflow."
+      grain: any table (a model's grain)
+      interval: training from 2006, reported 2016-2024, vault 2025 (config.toml)
+      cadence: n/a (serves in_season, retrospective and offseason_events)
+      known_at: a view at moment t shows each part's rows with known_at <= t; post-season parts only for finished seasons in season; outputs with as_of <= t
+      model: pcf.validation-harness (the toy expert's runs only)
+      how_to_use: "Subclass Expert, declare inputs (table: parts; model: version), run and quantity, write features(view, games), target, fit and predict, then pcf backtest <id>. Never read tables directly. Add features_history only for speed; it must match the per-moment features. A new leakage check gets a planted leak and an honest twin in tests/validation/planted.py."
+      feeds: every expert, composite and product; baselines next
 
   - id: baselines
     name: Dumb baselines

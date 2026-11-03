@@ -1,8 +1,12 @@
 # Brief: Validation harness (`validation-harness`)
 
-> An infrastructure project: the machinery behind [`docs/VALIDATION.md`](../../docs/VALIDATION.md) and the leakage checks in [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md). The bars themselves were agreed on 2026-10-30. This brief only decides how they're built. **Two calls for the CEO (end of page).** Light exploration: [EXPLORATION.md](EXPLORATION.md).
+> An infrastructure project: the machinery behind [`docs/VALIDATION.md`](../../docs/VALIDATION.md) and the leakage checks in [`docs/ARCHITECTURE.md`](../../docs/ARCHITECTURE.md). The bars themselves were agreed on 2026-10-30. This brief only decides how they're built. **Two calls for the CEO (end of page). Answered: 1C, 2A.** Light exploration: [EXPLORATION.md](EXPLORATION.md).
 
-**Status:** draft · **Layer:** 0, foundation (Phase 0) · **Cadence:** — (used by every model's cadence)
+**Status:** agreed (2026-11-02): CEO chose 1C and 2A · **Layer:** 0, foundation (Phase 0) · **Cadence:** — (used by every model's cadence)
+
+**Agreed (CEO, 2026-11-02):**
+- **1C:** the three weekly runs (Tuesday, Wednesday, Saturday) are named prediction moments. Each model declares its run, and a game is predicted at the latest allowed run before its kickoff.
+- **2A:** everything a model needs to be done. Betting evaluation and the live-vs-backtest gap wait for an odds table and the ledger.
 
 ## The question
 Build the one way every PCF model is fed, tested and judged. A model sees the world only as it was at its prediction moment, is backtested week by week, and passes or fails the same leakage, signal, calibration and "beats" tests. The result lands on one scorecard.

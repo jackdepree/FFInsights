@@ -123,6 +123,12 @@
 | **Finding** | A numbered claim in a results page, cited as `<project>#F1` | ARCHITECTURE.md |
 | **Interface card** | A finished project's inputs, outputs, level of detail, cadence and how to use it | ARCHITECTURE.md |
 | **Vault**, **vault spent** | The season held back until a project's end; a model changed after the vault was opened | VALIDATION.md |
+| **Prediction moment** | When a prediction is made: one of the three weekly runs (Tuesday 10:00, Wednesday 16:00, Saturday 12:00 ET) that a model declares. Each game is predicted at the latest allowed run before its kickoff (CEO decision 1C) | validation-harness |
+| **Fallback moment** | 10:00 ET on the first day of a week window, used for a game when no allowed run comes before its kickoff (weeks that start mid-week, validation-harness#F11) | validation-harness |
+| **View** | What the gateway returns for one moment: a model's declared tables and outputs, as known then | validation-harness |
+| **Cutoff** | A moment at which a leakage check compares features with and without the data that came after it | validation-harness |
+| **Planted leak** | A deliberately leaky toy model kept in the tests: every blocking check must catch its own and pass the honest twin | validation-harness |
+| **Expert contract** | The interface every model implements (`pcf.core.contract.Expert`): id, cadence, grain, inputs, run, `features(view, games)`, `target`, `fit`, `predict` | validation-harness |
 | **Shuffled null**, **signal test** | A model trained on shuffled outcomes; beating 95 of 100 of them shows real signal | VALIDATION.md |
 | **No-noise test** | An expert must not make its downstream baseline clearly worse | VALIDATION.md |
 | **Scorecard** | The one-page validation report per run | VALIDATION.md |

@@ -50,7 +50,7 @@ pcf/
     data/
       sources/              one module per source (nflverse, espn_odds, odds_api, ...)
       clean/                the cleaning functions, ported from old/ and tested
-      timeline/             the NFL calendar, the offseason dates file and every source's known-at rule
+      timeline/             the NFL calendar, prediction moments, the offseason dates file and every source's known-at rule
       tables/               tables at each level of detail, saved as parts (game, team_game, play, player_play, player_game)
       tags/                 the tag catalog and builders: tags saved as table parts, and the drive table
       gateway.py            as_of(): the only way models read data
@@ -105,7 +105,7 @@ Polars is the default dataframe library. Data converts to pandas or NumPy only a
 **Models never read tables directly.** They ask the gateway for a view of the world at a moment:
 
 ```python
-view = gateway.as_of("2026-11-03 14:00 UTC", cadence="in_season", inputs=expert.inputs)
+view = Gateway().view(moment, cadence="in_season", inputs=expert.inputs)
 plays = view.table("play")        # only rows with known_at <= the moment
 ```
 
@@ -113,9 +113,12 @@ The gateway:
 - returns only rows with `known_at` at or before the moment;
 - for snapshotted sources, picks the latest snapshot taken at or before the moment;
 - for post-season-only sources (participation), returns only seasons finished before the moment when the caller is `in_season` (rule m);
-- refuses any table or expert output the caller didn't declare in `inputs`.
+- refuses any table, part or expert output the caller didn't declare in `inputs`;
+- shows an expert's outputs only where `as_of` <= the moment, and refuses rows whose `train_end` is after their `as_of` (check 6).
 
-The gateway is built by `timeline`, `grain-tables` and `validation-harness`.
+**Prediction moments** (`data/timeline/moments.py`, CEO decision 1C in the validation-harness brief): the three weekly runs are named moments. A model declares its `run`, and each game is predicted at the latest allowed run before its kickoff (a Saturday model predicts Thursday games at the Wednesday run). Retrospective models predict a season at 10:00 ET on the first day of its week-1 window; offseason-events models at the start of the event.
+
+The gateway (`pcf.data.gateway`) was built by `validation-harness` on `grain-tables`' `load`. **Features are defined per moment:** the backtest calls `features(view, games)` with a view at each prediction moment. A faster bulk `features_history` is allowed only if it matches the per-moment features at the leakage cutoffs (decision 0011).
 
 ### Leakage defense in depth
 
@@ -146,12 +149,15 @@ class VoeLive(Expert):
     id = "voe-live"                  # matches registry.yaml
     cadence = "in_season"
     grain = "player_game"            # one output row per player per game
-    inputs = ["play", "player_game", "context-live"]   # the gateway refuses anything else
+    inputs = {"play": ("pbp",), "player_game": ("stats",), "context-live": 3}  # tables: parts; models: version
+    quantity = "voe_rec_yards"
+    run = "tuesday"                  # its prediction moment
 
-    def features(self, view) -> pl.DataFrame: ...      # built from the as_of view only
-    def fit(self, train_window) -> Model: ...
-    def predict(self, model, view) -> pl.DataFrame: ... # in the standard output schema
-    def explain(self, model) -> dict: ...               # coefficients, importances, SHAP
+    def features(self, view, games) -> pl.DataFrame: ...  # the rows predicted at view.at, from the view only
+    def target(self, view) -> pl.DataFrame: ...           # keys, y, known_at
+    def fit(self, train) -> Model: ...                    # train: features, y, weight (recency)
+    def predict(self, model, rows) -> pl.DataFrame: ...   # keys, mean, q10, q50, q90
+    def explain(self, model) -> dict: ...                 # coefficients, importances, SHAP
 ```
 
 A test checks that `inputs` matches the project's `depends_on` in the registry, so the dependency graph on paper is the graph in the code.
@@ -245,7 +251,7 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 | `pcf champions` | Set MLflow's `champion` aliases from `registry.yaml`, on `main` only |
 | `pcf run weekly` | Run every due project in dependency order, using `champion` models. Write outputs and the ledger. |
 | `pcf run <id>` | Run one project (with `--upstream` to run what it needs first) |
-| `pcf backtest <id>` | Build the walk-forward history and the validation report |
+| `pcf backtest <id>` | Validate a model: walk-forward backtest, baselines, signal test, calibration, leakage checks, history in `outputs/<id>/<run_id>/` and the scorecard, as an MLflow attempt. About 7 minutes for a simple model over 2016-2024 (validation-harness#F16) |
 | `pcf check` | Validate the registry, schemas and leakage suite |
 | `pcf status` | Project statuses and the impact map |
 
@@ -301,3 +307,5 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0007: State snapshots are change logs](decisions/0007-state-change-logs.md)
 - [0008: Tables are saved as parts](decisions/0008-table-parts.md)
 - [0009: The champion changes only by merge](decisions/0009-champion-by-merge.md)
+- [0010: Prediction moments are the weekly runs](decisions/0010-prediction-moments.md)
+- [0011: Features are defined per moment](decisions/0011-features-per-moment.md)

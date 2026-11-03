@@ -107,6 +107,34 @@ def champions(args: argparse.Namespace) -> None:
         print(f"{model_name(project_id)}: champion = version {version}")
 
 
+def backtest(args: argparse.Namespace) -> None:
+    """Validate one model: walk-forward backtest, baselines, signal test, calibration, leakage
+    checks and the scorecard, recorded as an MLflow attempt."""
+    from pcf.core import tracking
+    from pcf.core.contract import check_expert, find
+    from pcf.validation.validate import record, validate
+
+    cls = find(args.project)
+    check_expert(cls)
+    expert = cls()
+    baselines = [b() for b in getattr(cls, "baselines", lambda: [])()]
+    v = validate(
+        expert,
+        seasons=args.seasons,
+        open_vault=args.open_vault,
+        baselines=baselines,
+        shuffles=args.shuffles,
+        refit=args.refit,
+    )
+    train_end = v.bt.history["train_end"].max()
+    with tracking.attempt(args.project, train_end=train_end, name="backtest"):
+        path = record(v)
+    for ch in v.checks:
+        mark = "pass" if ch.passed else ("FLAG" if not ch.blocking else "FAIL")
+        print(f"{ch.number:>2} {ch.name:<20} {mark:<5} {ch.detail}")
+    print(f"scorecard: {path}")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pcf", description="PCF: Principal Component Football")
     parser.add_argument("--version", action="version", version=f"pcf {__version__}")
@@ -144,7 +172,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         "champions", help="set MLflow's champion aliases from registry.yaml (on main only)"
     )
 
+    bt = commands.add_parser("backtest", help="validate a model and write its scorecard")
+    bt.add_argument("project", help="the model's registry id")
+    bt.add_argument(
+        "--seasons", nargs="+", type=int, help="test seasons (default: 2016 to vault-1)"
+    )
+    bt.add_argument("--shuffles", type=int, default=100, help="signal-test refits (100, or 20)")
+    bt.add_argument("--refit", choices=["step", "season"], default="step", help="refit every")
+    bt.add_argument(
+        "--open-vault", action="store_true", help="include the vault season (once, logged)"
+    )
+
     args = parser.parse_args(argv)
+    if args.command == "backtest":
+        backtest(args)
+        return 0
     if args.command == "info":
         info()
         return 0

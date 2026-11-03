@@ -19,9 +19,15 @@ KNOWN_AT = pl.Datetime("us", "UTC")
 
 @dataclass(frozen=True)
 class Table:
+    """`after`: parts about the game's result, never known before kickoff (leakage check 2).
+    `post_season`: parts published only after the season, which an in-season view sees only for
+    finished seasons (rule m, check 5)."""
+
     name: str
     keys: tuple[tuple[str, pl.DataType], ...]
     parts: tuple[str, ...]  # the spine first
+    after: tuple[str, ...] = ()
+    post_season: tuple[str, ...] = ()
 
     @property
     def key_names(self) -> list[str]:
@@ -41,15 +47,28 @@ _DRIVE = ("fixed_drive", pl.Int32)
 TABLES: dict[str, Table] = {
     t.name: t
     for t in [
-        Table("game", (_GAME,), ("schedule", "pregame", "result")),
+        Table("game", (_GAME,), ("schedule", "pregame", "result"), after=("result",)),
         Table(
             "team_game",
             (_GAME, _TEAM),
             ("schedule", "pregame", "result", "stats", "tags", "tags_result"),
+            after=("result", "stats", "tags_result"),
         ),
-        Table("play", (_GAME, _PLAY), ("pbp", "participation", "ftn", "tags")),
-        Table("drive", (_GAME, _DRIVE), ("summary", "tags")),
-        Table("player_play", (_GAME, _PLAY, _PLAYER), ("on_field",)),
+        Table(
+            "play",
+            (_GAME, _PLAY),
+            ("pbp", "participation", "ftn", "tags"),
+            after=("pbp", "participation", "ftn", "tags"),
+            post_season=("participation",),
+        ),
+        Table("drive", (_GAME, _DRIVE), ("summary", "tags"), after=("summary", "tags")),
+        Table(
+            "player_play",
+            (_GAME, _PLAY, _PLAYER),
+            ("on_field",),
+            after=("on_field",),
+            post_season=("on_field",),
+        ),
         Table(
             "player_game",
             (_PLAYER, _GAME),
@@ -66,6 +85,7 @@ TABLES: dict[str, Table] = {
                 "tags",
                 "tags_result",
             ),
+            after=("stats", "snaps", "ff_opportunity", "ngs", "pfr", "tags_result"),
         ),
     ]
 }
