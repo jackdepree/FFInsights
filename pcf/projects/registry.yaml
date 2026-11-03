@@ -220,7 +220,7 @@ projects:
   - id: miss-lenses
     name: Miss lenses
     phase: 0
-    status: idea
+    status: brief
     horizon: now
     depends_on: [baselines, tag-tables]
     summary: "Discovery: which tags and categories explain the most of our models' misses (the lasso's and ECR's to start), so every RESULTS.md looks through a short fixed list of lenses instead of all 52 tags (CEO, 2026-11-03). Revisited once a season."

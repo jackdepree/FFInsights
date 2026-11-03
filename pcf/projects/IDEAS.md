@@ -21,16 +21,16 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 
 | # | Idea | Source | How we'd know | Status |
 |---|---|---|---|---|
-| I1 | Where ECR's experts disagree (a wide `ecr_sd`), results are more spread out, so ranges should widen there | baselines (Could be improved, 2) | ECR's q10–q90 coverage by `ecr_sd` band: under 80% where experts disagree, over 80% where they agree | open |
-| I2 | Once the season-so-far average is known, the last 4 games add little | baselines#F11 | A lasso with both: the last-4 coefficient near zero, and dropping it doesn't hurt held-out pinball | open |
-| I3 | ECR misses more on players whose role just changed (a teammate out, a new starter) than on settled roles: information ECR may lack | Claude, 2026-11-03 | ECR's average miss by the depth-chart and injury tags of the player and their teammates | open |
+| I1 | Where ECR's experts disagree (a wide `ecr_sd`), results are more spread out, so ranges should widen there | baselines (Could be improved, 2) | ECR's q10–q90 coverage by `ecr_sd` band: under 80% where experts disagree, over 80% where they agree | open: inconclusive. The spread mostly tracks rank; within ranks 1–24 the widest spreads cover a little less (74–77% vs 79–82%) on few rows (miss-lenses#F6). Recheck with more seasons |
 
 ## Graduated
 
 | # | Idea | Became |
 |---|---|---|
+| I2 | Once the season-so-far average is known, the last 4 games add little | Confirmed, a finding: miss-lenses#F5. The last 4 games cut the error by only 0.01–0.04 points (most at RB) |
 
 ## Killed
 
 | # | Idea | Result |
 |---|---|---|
+| I3 | ECR misses more on players whose role just changed | Not for ECR: its misses are no bigger after a role change. The lasso's are (+0.61 points with a same-position teammate Out), so role changes matter for beating box-score baselines, not ECR (miss-lenses#F4) |
