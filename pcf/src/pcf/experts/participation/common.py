@@ -22,13 +22,13 @@ ACTIVE = (
 SHARE = pl.when(ACTIVE).then(c("offense_pct").fill_null(0.0)).otherwise(0.0)
 
 
-def known_shares(pg: pl.DataFrame) -> pl.DataFrame:
+def known_shares(pg: pl.DataFrame, extra: Sequence[str] = ()) -> pl.DataFrame:
     """A view's player-games whose game has snap counts, oldest first: gsis_id, game_id, season,
-    week, share, active and when the shares were known."""
+    week, share, active, when the shares were known, and the `extra` columns."""
     return (
         pg.with_columns(shares_known_at=c("snaps_known_at").max().over("game_id"))
         .filter(c("shares_known_at").is_not_null())
-        .select("gsis_id", "game_id", "season", "week", share=SHARE, active=ACTIVE,
+        .select("gsis_id", "game_id", "season", "week", *extra, share=SHARE, active=ACTIVE,
                 known_at="shares_known_at")  # fmt: skip
         .sort("gsis_id", "season", "week")
     )

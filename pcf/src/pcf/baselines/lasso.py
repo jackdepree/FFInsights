@@ -96,15 +96,15 @@ class Lasso(Expert):
         y = train["y"].to_numpy().astype(float)
         w = train["weight"].to_numpy().astype(float)
         cut = int(len(y) * (1 - HOLDOUT))  # train is in time order (`walk` sorts it)
-        early = _fit(x[:cut], y[:cut], w[:cut], ALPHAS)
-        errors = [_weighted_mse(_predict(m, x[cut:]), y[cut:], w[cut:]) for m in early]
+        early = fit_lasso(x[:cut], y[:cut], w[:cut], ALPHAS)
+        errors = [weighted_mse(predict_lasso(m, x[cut:]), y[cut:], w[cut:]) for m in early]
         alpha = float(ALPHAS[int(np.argmin(errors))])
-        (model,) = _fit(x, y, w, [alpha])
-        resid = train.select(*BY, "weight").with_columns(resid=pl.Series(y - _predict(model, x)))
+        (model,) = fit_lasso(x, y, w, [alpha])
+        resid = train.select(*BY, "weight").with_columns(resid=pl.Series(y - predict_lasso(model, x)))
         return model | {"alpha": alpha, "offsets": fit_offsets(resid, BY)}
 
     def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
-        mean = _predict(model, rows.select(FEATURES).to_numpy().astype(float))
+        mean = predict_lasso(model, rows.select(FEATURES).to_numpy().astype(float))
         out = rows.select(*self.keys(), *BY).with_columns(mean=pl.Series(mean))
         return with_ranges(out, model["offsets"], BY).select(
             *self.keys(), "mean", "q10", "q50", "q90"
@@ -122,7 +122,7 @@ class Lasso(Expert):
         return {"alpha": model["alpha"], "kept": int(np.sum(model["coef"] != 0)), **coef}
 
 
-def _fit(x: np.ndarray, y: np.ndarray, w: np.ndarray, alphas) -> list[dict[str, Any]]:
+def fit_lasso(x: np.ndarray, y: np.ndarray, w: np.ndarray, alphas) -> list[dict[str, Any]]:
     """Weighted lasso fits on standardized features, one per alpha: centre and scale with the
     weights, then scale each row by √weight so the squared loss is weighted."""
     w = w / w.sum()
@@ -136,9 +136,9 @@ def _fit(x: np.ndarray, y: np.ndarray, w: np.ndarray, alphas) -> list[dict[str, 
     return [{"mu": mu, "sd": sd, "y_mu": y_mu, "coef": coefs[:, i]} for i in range(len(alphas))]
 
 
-def _predict(model: dict[str, Any], x: np.ndarray) -> np.ndarray:
+def predict_lasso(model: dict[str, Any], x: np.ndarray) -> np.ndarray:
     return model["y_mu"] + ((x - model["mu"]) / model["sd"]) @ model["coef"]
 
 
-def _weighted_mse(pred: np.ndarray, y: np.ndarray, w: np.ndarray) -> float:
+def weighted_mse(pred: np.ndarray, y: np.ndarray, w: np.ndarray) -> float:
     return float(np.sum(w * (pred - y) ** 2) / np.sum(w))
