@@ -79,6 +79,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-03:** `participation` built, PCF's first expert: each rostered QB, RB, WR and TE's snap share and chance of being active, before each game, over the next 3 games and for the rest of the season, as four champions. It beats its shuffled self and improves the lasso's fantasy points (decision 0013). `career-snaps` added as an idea (D10).
 - **2026-10-28:** Charter (`CLAUDE.md`), `VISION.md`, this roadmap and the project registry created.
 - **2026-10-30:** `DATA_SOURCES.md` written. Experts now declare a `cadence` (rule m). Context and VOE are each split into in-season and retrospective experts, because play-level participation is published only after the season.
 - **2026-10-30:** `ARCHITECTURE.md` written, with five decision notes, brief and results templates, and `projects/KNOWLEDGE.md`. Added the `experiment-tracking` project.

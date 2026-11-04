@@ -29,6 +29,8 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 | I7 | Game conditions multiply a player's projection rather than add to it (big favorite, backup QB, home) | miss-lenses#F12 | A model with projection × condition terms, or trees, beats the lasso on held-out weeks | open |
 | I8 | ECR under-projects players at home by about 0.3 points | miss-lenses#F13 | The miss holds in 2025+ live weeks, and a home term on top of ECR improves held-out pinball | open |
 | I9 | Players new to a team are over-projected for snaps by about 2.3 points of share in their first 4 games, and their old team's history doesn't fix it; the role they're walking into might (who left, whose snaps are open) | participation#F9, CEO question | A vacated-snaps input reduces the error on those rows in the harness | open |
+| I10 | Players with no depth-chart slot are over-projected for snaps by 3.3 points of share (largest in 2016), so a roster-status or practice-squad input might fix it | participation (Where it misses) | The miss shrinks in the harness, and holds after 2016 | open |
+| I11 | Players coming off a bye are over-projected for snaps by 0.7 points of share | participation (Where it misses) | A bye term improves held-out pinball, or the miss is gone on new seasons | open |
 
 ## Graduated
 

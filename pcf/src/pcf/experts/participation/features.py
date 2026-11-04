@@ -23,7 +23,8 @@ PLAYS = ["attempts", "carries", "targets"]
 FEATURES = [
     "last_game", "last3", "last8", "season_avg", "active_last", "active3", "active8",
     "missed_streak", "was_active", "games", "no_history", "new_season", "last_season_active",
-    "no_last_season", "depth1", "depth2", "depth3", "unlisted", "depth_mean", "new_team", "changed_team",
+    "no_last_season", "depth1", "depth2", "depth3", "unlisted", "depth_mean", "new_team",
+    "changed_team",
     "rookie",
     "report", "practice", "no_practice", "mates_out", "mates_out_share",
 ]  # fmt: skip
@@ -111,24 +112,28 @@ def features(view, games: pl.DataFrame, keys: Sequence[str]) -> pl.DataFrame:
         .agg(n=pl.len(), taken=c("last3").fill_null(0.0).sum())
     )
     out = c("report") >= OUT
-    rows = rows.join(mates, on=["game_id", "team", "position"], how="left").with_columns(
-        mates_out=c("n").fill_null(0).cast(pl.Float64) - out.cast(pl.Float64),
-        mates_out_share=c("taken").fill_null(0.0)
-        - pl.when(out).then(c("last3").fill_null(0.0)).otherwise(0.0),
-        season_avg=pl.coalesce("season_avg", "last8"),
-        depth1=(c("depth") == 1).fill_null(False).cast(pl.Float64),
-        depth2=(c("depth") == 2).fill_null(False).cast(pl.Float64),
-        depth3=(c("depth") >= 3).fill_null(False).cast(pl.Float64),
-        unlisted=c("depth").is_null().cast(pl.Float64),
-        depth_mean=c("depth_mean").fill_null(5.0),
-        new_team=(c("team") != c("last_season_team")).fill_null(False).cast(pl.Float64),
-        changed_team=(c("team") != c("last_team")).fill_null(False).cast(pl.Float64),
-        draft=c("draft").fill_null(300.0),
-        back=(c("missed_streak") > 0).fill_null(False).cast(pl.Float64),
-        played_recently=(c("last8") > 0).fill_null(False),
-    ).with_columns(
-        back_career=c("back") * c("career_active").fill_null(0.0),
-        epa_per_play=pl.when(c("plays") > 0).then(c("epa") / c("plays")),
+    rows = (
+        rows.join(mates, on=["game_id", "team", "position"], how="left")
+        .with_columns(
+            mates_out=c("n").fill_null(0).cast(pl.Float64) - out.cast(pl.Float64),
+            mates_out_share=c("taken").fill_null(0.0)
+            - pl.when(out).then(c("last3").fill_null(0.0)).otherwise(0.0),
+            season_avg=pl.coalesce("season_avg", "last8"),
+            depth1=(c("depth") == 1).fill_null(False).cast(pl.Float64),
+            depth2=(c("depth") == 2).fill_null(False).cast(pl.Float64),
+            depth3=(c("depth") >= 3).fill_null(False).cast(pl.Float64),
+            unlisted=c("depth").is_null().cast(pl.Float64),
+            depth_mean=c("depth_mean").fill_null(5.0),
+            new_team=(c("team") != c("last_season_team")).fill_null(False).cast(pl.Float64),
+            changed_team=(c("team") != c("last_team")).fill_null(False).cast(pl.Float64),
+            draft=c("draft").fill_null(300.0),
+            back=(c("missed_streak") > 0).fill_null(False).cast(pl.Float64),
+            played_recently=(c("last8") > 0).fill_null(False),
+        )
+        .with_columns(
+            back_career=c("back") * c("career_active").fill_null(0.0),
+            epa_per_play=pl.when(c("plays") > 0).then(c("epa") / c("plays")),
+        )
     )
     numeric = [*FEATURES, *CAREER, *EXTRA, *BACK]
     return rows.with_columns(c(x).cast(pl.Float64).fill_nan(None).fill_null(0.0) for x in numeric)

@@ -28,8 +28,16 @@ def known_shares(pg: pl.DataFrame, extra: Sequence[str] = ()) -> pl.DataFrame:
     return (
         pg.with_columns(shares_known_at=c("snaps_known_at").max().over("game_id"))
         .filter(c("shares_known_at").is_not_null())
-        .select("gsis_id", "game_id", "season", "week", *extra, share=SHARE, active=ACTIVE,
-                known_at="shares_known_at")  # fmt: skip
+        .select(
+            "gsis_id",
+            "game_id",
+            "season",
+            "week",
+            *extra,
+            share=SHARE,
+            active=ACTIVE,
+            known_at="shares_known_at",
+        )  # fmt: skip
         .sort("gsis_id", "season", "week")
     )
 

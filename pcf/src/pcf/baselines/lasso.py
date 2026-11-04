@@ -63,6 +63,7 @@ class Lasso(Expert):
     run = "tuesday"
     groups = ("position",)
     scoring: ClassVar[str] = "ppr"
+    columns: ClassVar[list[str]] = FEATURES
 
     def features(self, view, games: pl.DataFrame) -> pl.DataFrame:
         season = int(games["season"].max())
@@ -92,7 +93,7 @@ class Lasso(Expert):
         return target_points(view.table("player_game"), self.scoring, self.keys())
 
     def fit(self, train: pl.DataFrame) -> dict[str, Any]:
-        x = train.select(FEATURES).to_numpy().astype(float)
+        x = train.select(self.columns).to_numpy().astype(float)
         y = train["y"].to_numpy().astype(float)
         w = train["weight"].to_numpy().astype(float)
         cut = int(len(y) * (1 - HOLDOUT))  # train is in time order (`walk` sorts it)
@@ -100,11 +101,13 @@ class Lasso(Expert):
         errors = [weighted_mse(predict_lasso(m, x[cut:]), y[cut:], w[cut:]) for m in early]
         alpha = float(ALPHAS[int(np.argmin(errors))])
         (model,) = fit_lasso(x, y, w, [alpha])
-        resid = train.select(*BY, "weight").with_columns(resid=pl.Series(y - predict_lasso(model, x)))
+        resid = train.select(*BY, "weight").with_columns(
+            resid=pl.Series(y - predict_lasso(model, x))
+        )
         return model | {"alpha": alpha, "offsets": fit_offsets(resid, BY)}
 
     def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
-        mean = predict_lasso(model, rows.select(FEATURES).to_numpy().astype(float))
+        mean = predict_lasso(model, rows.select(self.columns).to_numpy().astype(float))
         out = rows.select(*self.keys(), *BY).with_columns(mean=pl.Series(mean))
         return with_ranges(out, model["offsets"], BY).select(
             *self.keys(), "mean", "q10", "q50", "q90"
@@ -118,7 +121,7 @@ class Lasso(Expert):
 
     def explain(self, model: dict[str, Any]) -> dict[str, Any]:
         """Coefficients per standard deviation of each feature (zero: dropped by the lasso)."""
-        coef = dict(zip(FEATURES, np.round(model["coef"], 4).tolist(), strict=True))
+        coef = dict(zip(self.columns, np.round(model["coef"], 4).tolist(), strict=True))
         return {"alpha": model["alpha"], "kept": int(np.sum(model["coef"] != 0)), **coef}
 
 

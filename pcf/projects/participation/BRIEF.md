@@ -2,7 +2,7 @@
 
 > PCF's first expert: how much each skill player will be on the field next game, over the next few games and for the rest of the season. Exploration: [EXPLORATION.md](EXPLORATION.md). **Key decisions D1–D10 are at the end of this page; the CEO approved them on 2026-11-03.**
 
-**Status:** agreed 2026-11-03 · **Layer:** 1, experts · **Cadence:** in_season
+**Status:** agreed 2026-11-03, built 2026-11-03 ([RESULTS.md](RESULTS.md)) · **Layer:** 1, experts · **Cadence:** in_season
 
 ## The question
 Before each game, what share of their team's offensive snaps will each rostered QB, RB, WR and TE play, and how likely are they to play at all? The same question over the next 3 games and the rest of the season (D9).
@@ -83,6 +83,7 @@ Time box: three sessions.
 - *Alternative:* Tuesday, to be ready earlier in the week. It would give up most of the injury information.
 
 **D3. Two-part output, with ranges from the mixture (technical).** A probability of being active, and the share if active, combined into `mean` and q10/q50/q90. Shares are two-humped (F4), so one average with a symmetric spread would misstate both.
+- *Updated while building, 2026-11-03:* the spike is "no offensive snap", not "inactive", because the outcome says only that: 8% of rows are active with no snap (F1). The chance of being active is its own variant, `active`, which gives `p_active`. The longer horizons have no spike yet (RESULTS F14).
 
 **D4. The ladder (technical):** last-3 average → lasso per position → boosted trees. A rung that doesn't beat the one below stops the climb.
 

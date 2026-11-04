@@ -22,7 +22,7 @@
 | **Target share**, **air yards share** | A player's share of the team's targets, or air yards | `target_share`, `air_yards_share` (stats) | |
 | **WOPR** | Weighted opportunity rating: 1.5 × target share + 0.7 × air yards share | `wopr` (stats) | |
 | **RACR**, **PACR** | Yards gained per air yard, for receivers and passers | `racr`, `pacr` (stats) | |
-| **Snap share** | The share of the team's snaps a player was on the field for | `offense_pct`, `defense_pct` (snap counts, 0–1) | Snap counts key on `pfr_player_id` |
+| **Snap share** | The share of the team's snaps a player was on the field for | `offense_pct`, `defense_pct` (snap counts, 0–1) | Snap counts key on `pfr_player_id`. In `participation`, offensive only, and 0 when inactive or never on the field |
 | **Route participation** | The share of team dropbacks on which a player ran a route | — | **Not public.** Estimated from who was on the field on dropbacks (part., post-season only) |
 | **YPRR**, **TPRR** | Receiving yards and targets per route run | — | Uses estimated routes, so it's retrospective only |
 | **Personnel** | Who's on the field, e.g. "11" = 1 RB, 1 TE, 3 WR | `offense_personnel`, `defense_personnel` (part.) | |
@@ -137,6 +137,10 @@
 | **Miss** | Actual minus projected (`y - mean`): positive means the model was too low | miss-lenses |
 | **Bias share**, **spread share** | How much of a model's squared miss (bias), or of the size of its misses (spread), a correction per lens group removes when learned on the other half of the seasons | miss-lenses |
 | **Diagnostic lens** | A lens known only after the game (snap share, team points): it explains a miss, never feeds a model | miss-lenses |
+| **Active** | On the game-day active list. Known about 90 minutes before kickoff, so it's predicted (`p_active`). Before 2019 there are no statuses, so it means "has a snap-count row" | participation |
+| **Two-part prediction** | The chance of taking an offensive snap, times the share if they do. Its ranges come from the mixture: a spike at 0, otherwise the share plus residuals | participation |
+| **Horizon** | The window a forecast covers, counted in the team's games from the next one: 1, 3, or the rest of the regular season. The outcome is the average share over it, with 0 for games missed, inactive or off the roster | participation |
+| **Played recently** | Took an offensive snap in the last 8 games: the rows scores are reported on, as well as overall | participation |
 | **Case against**, **spot-check** | Before a merge: Claude's strongest argument that the result is wrong, and one decision or finding the CEO picks to go through in depth | CLAUDE.md |
 | **Expert contract** | The interface every model implements (`pcf.core.contract.Expert`): id, cadence, grain, inputs, run, `features(view, games)`, `target`, `fit`, `predict` | validation-harness |
 | **Shuffled null**, **signal test** | A model trained on shuffled outcomes; beating 95 of 100 of them shows real signal | VALIDATION.md |

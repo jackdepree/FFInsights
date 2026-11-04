@@ -112,9 +112,7 @@ def _games(week: int) -> pl.DataFrame:
         .unique()
     )
     return (
-        world.cal()
-        .games.join(theirs, on="game_id")
-        .select("game_id", "season", "week", "kickoff")
+        world.cal().games.join(theirs, on="game_id").select("game_id", "season", "week", "kickoff")
     )
 
 

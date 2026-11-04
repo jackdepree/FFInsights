@@ -320,11 +320,30 @@ projects:
   - id: participation
     name: Participation and snaps
     phase: 1
-    status: building
+    status: validating
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Snaps, routes run and share of plays, projected forward. Live from snap counts and daily depth charts. Play-level participation (routes) is available for training only.
+    summary: Each rostered QB, RB, WR and TE's offensive snap share and chance of being active, before each game, over the next 3 games and for the rest of the season. Routes are post-season only, so they aren't here.
+    interface:
+      inputs: player_game parts snaps, game_status, depth, injury, stats through the gateway; game schedule for the horizons
+      outputs: "pcf.experts.participation variants, histories in outputs/participation/<variant>/<run_id>/history.parquet. Champions by horizon: trees (next game's share), active (p_active), lasso_h3, lasso_rest; mean, and q10, q50, q90 for shares. No model registered yet (RESULTS, case against 6)."
+      grain: player-game; for horizons, the game the window starts on
+      interval: weekly, 2016-2024 reported, every rostered QB, RB, WR, TE
+      cadence: in_season
+      known_at: the Saturday run, 12:00 Eastern (decision 0010)
+      model: none registered yet
+      how_to_use: As a feature for fantasy points (share, and share x points), from saved histories only (rule e). Trust the means; the horizons' q10 is too high (F14). Next game's ranges hold about 85% by design because of the spike at 0 (F13). Filter or flag played_recently when scoring.
+      feeds: opportunity-quality, vacated-opportunity, injury-fatigue, roles-archetypes, player-opportunity
+
+  - id: career-snaps
+    name: Career snaps
+    phase: 1
+    status: idea
+    horizon: later
+    cadence: [offseason_events]
+    depends_on: [participation, aging]
+    summary: A player's snaps over the rest of their career, from age curves, contracts, draft capital and free agency (participation D10). Runs in the offseason, and most careers in the data aren't finished, so it must handle outcomes that are still open.
 
   - id: line-play
     name: Line play

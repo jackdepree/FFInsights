@@ -38,9 +38,7 @@ def window_share(
     known = known_shares(pg, ["team"])
     reg = schedule.filter(c("game_type") == "REG").select("game_id", "season", "week")
     teams = pl.concat(
-        schedule.filter(c("game_type") == "REG").select(
-            "game_id", "season", "week", team=c(side)
-        )
+        schedule.filter(c("game_type") == "REG").select("game_id", "season", "week", team=c(side))
         for side in ("home_team", "away_team")
     )
     rows = known.join(reg.select("game_id"), on="game_id").select(
