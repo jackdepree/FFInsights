@@ -139,6 +139,7 @@
 | **Diagnostic lens** | A lens known only after the game (snap share, team points): it explains a miss, never feeds a model | miss-lenses |
 | **Active** | On the game-day active list. Known about 90 minutes before kickoff, so it's predicted (`p_active`). Before 2019 there are no statuses, so it means "has a snap-count row" | participation |
 | **Two-part prediction** | The chance of taking an offensive snap, times the share if they do. Its ranges come from the mixture: a spike at 0, otherwise the share plus residuals | participation |
+| **Spike forecast** | A forecast where one exact result is common, here a share of 0 (no offensive snap), on top of a spread of ordinary results. With a 10%+ chance of 0, q10 is 0, so a 0 counts as inside the range and nothing can land below it: coverage settles above 80% even for a perfect forecast (participation#F13) | participation |
 | **Horizon** | The window a forecast covers, counted in the team's games from the next one: 1, 3, or the rest of the regular season. The outcome is the average share over it, with 0 for games missed, inactive or off the roster | participation |
 | **Played recently** | Took an offensive snap in the last 8 games: the rows scores are reported on, as well as overall | participation |
 | **Case against**, **spot-check** | Before a merge: Claude's strongest argument that the result is wrong, and one decision or finding the CEO picks to go through in depth | CLAUDE.md |
