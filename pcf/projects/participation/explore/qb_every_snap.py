@@ -65,6 +65,32 @@ def main() -> None:
     with pl.Config(float_precision=3, tbl_rows=12):
         print(r["table"])
 
+    # Spot-check (2026-11-04): who is it right for, is it steady, and does it beat knowing the starter?
+    tagged = on.with_columns(
+        every=(c("y") >= FULL).cast(pl.Float64),
+        season=c("game_id").str.slice(0, 4).cast(pl.Int32),
+    )
+    rows = []
+    groups = {"starter": c("depth1") == 1, "not starter": c("depth1") == 0}
+    groups |= {str(s): c("season") == s for s in SEASONS}
+    for name, e in groups.items():
+        g = tagged.filter(e)
+        x = g.select(y="every", mean="t")
+        one = calibration.probability_report(x)
+        rows.append({"group": name, "rows": g.height, "said": x["mean"].mean(),
+                     "was": x["y"].mean(), "error": one["error"], "slope": one["slope"]})  # fmt: skip
+    with pl.Config(float_precision=3, tbl_rows=20):
+        print(pl.DataFrame(rows))
+    # The simple rival: each season, last seasons' every-snap rate for starters and non-starters
+    rival = []
+    for s in SEASONS:
+        past = tagged.filter(c("season") < s).group_by("depth1").agg(r=c("every").mean())
+        rival.append(tagged.filter(c("season") == s).join(past, on="depth1", how="inner"))
+    rival = pl.concat(rival)
+    base = rival.select(((c("every") - c("r")) ** 2).mean()).item()
+    model = rival.select(((c("every") - c("t")) ** 2).mean()).item()
+    print(f"Brier on {rival.height:,} games: logistic {model:.4f}, starter rate only {base:.4f}")
+
     rest = on.filter(c("y") < FULL)
     print(f"Games neither 0 nor every snap: {rest.height:,}; range holds "
           f"{rest.select(((c('y') >= c('rest10')) & (c('y') <= c('rest90'))).mean()).item():.1%}, "

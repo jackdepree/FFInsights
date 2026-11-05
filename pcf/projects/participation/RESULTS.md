@@ -18,7 +18,7 @@ All scores are in points of share (0–100), on the rows every rung of that hori
 | Coverage 75–85% overall, 70–90% per position | **Next game: narrow miss as written,** 85.3% (F13). Per position pass, 83.5–86.9%. Players who hadn't played recently, 91.5%, also over the 70–90% bar: mostly easy zeros. Next 3 games 79.9%, rest of season 80.1%: pass (but see F14) |
 | Leakage | **Pass:** 9 of 9 blocking checks on every variant, identical at 25 cutoffs. Nothing from the game-day active list |
 | Football sanity (CEO review: pending) | Rule q10 ≤ q50 ≤ q90 has 0 violations. The top 20 predictions are all QBs at 99%+, and the bottom 20 all QBs at 0: starters and backups. Details in F16 |
-| CEO spot-check | Done 2026-11-04: the coverage miss. See below |
+| CEO spot-check | Done 2026-11-04: the coverage miss, then QBs' every-snap part. See below |
 
 ## Terms
 As in the brief, now in `docs/GLOSSARY.md`: **active**, **two-part prediction**, **horizon**. Changed since the brief:
@@ -101,6 +101,14 @@ The CEO chose F13 and asked what happens if the chance of exactly 0 snaps and th
 - **What would change the answer?** A large gap between actual and promised coverage, or a lopsided landing pattern. Neither appears overall, in any season (gaps −2.3 to +1.3), or at RB, WR or TE. Removing the 0-to-0 rows gives 84.5% against 85.0%.
 - **Verdict.** The miss is arithmetic, and the forecast is sound where it's used most, with QB and Questionable exceptions to fix. The bar and the scorecard are unchanged: it still says "fail" until the harness can judge parts.
 
+## CEO spot-check (2026-11-04): QBs' every-snap part (F26)
+
+- **The rows.** QBs played 6,054 games, 64.0% of them every snap, and the part says 64.3%. Starters said 78.7%, were 77.5%. Non-starters said 22.8%, were 25.2%.
+- **The alternatives.** No third part: QB pinball 3.150. Boosted trees for it: 3.028, slope 0.671. Logistic: 3.012, slope 0.889. A plain rate for starters and non-starters from earlier seasons has a Brier score of 0.1807, against the logistic's 0.1693 on the same 5,428 games.
+- **What it can't do.** It mostly knows who starts. Among starters its slope is 0.408: it says 70–85% for nearly all of them, and it can't really tell which starter will play every snap, probably because that turns on game flow. It's off by 3.2–8.0 points per season, with no bad-season pattern in the slope (0.81–1.04).
+- **A flaw this check found.** On 306 games (5.1%) the range collapses to 100% to 100%, and 17.6% of those results land below it, not 10%. Where q10 is 90%+ (1,843 games), 14.9% land below. The cause is the share if not every snap: on 2,179 games, boosted trees swing it (Josh Allen 2024: 81–96%, week to week), and adding residuals pushes it to 100%. Means stay right: said 82.1%, was 82.1%.
+- **What would change the answer.** Spot-check verdict: keep the third part, because it beats every alternative tried. It would lose if the pinball gain vanished in live weeks, or if higher layers relied on the top QBs' q10.
+
 ## Pitfalls
 - **A share of 0 after an absence is a trap.** An inactive game reads as a lost role in any simple average: last game's pinball for a player returning from 1–3 games is 12.5, against 5.5 here.
 - **Blank isn't 0 in cumulative sums.** `cum_sum` went null after an absence, blanking career share on exactly the rows it was for (fixed).
@@ -124,7 +132,7 @@ The CEO chose F13 and asked what happens if the chance of exactly 0 snaps and th
 2. **A vacated-snaps input** (I9), the natural next rung for new-team players and teammates of the injured.
 3. **Model games played × share per game at long horizons** (F24). Done 2026-11-04: judging next-game forecasts part by part, saving the parts, the QB's third part and Questionable players' residuals (decision 0014, F25).
 4. **Save a walk-forward history from 2014,** so downstream models needn't remake it.
-5. **Recalibrate `active` and the chance of a snap,** especially at Out and Doubtful, where `active` says about twice the rate seen, and for Questionable players (F27). Recalibrating the chance of every snap would close its narrow miss too (F26).
+5. **Recalibrate `active` and the chance of a snap,** especially at Out and Doubtful, where `active` says about twice the rate seen, and for Questionable players (F27). Recalibrating the chance of every snap would close its narrow miss too (F26). Use a simpler model for QBs' share when it isn't every snap, and stop ranges collapsing to 100% to 100% (spot-check on F26).
 6. **Give shares their own penalty grid** when these models are next rerun: a tiny gain, for free (F20).
 
 ## Don't redo
