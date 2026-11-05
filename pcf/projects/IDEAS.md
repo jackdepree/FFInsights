@@ -32,6 +32,8 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 | I10 | Players with no depth-chart slot are over-projected for snaps by 3.3 points of share (largest in 2016), so a roster-status or practice-squad input might fix it | participation (Where it misses) | The miss shrinks in the harness, and holds after 2016 | open |
 | I11 | Players coming off a bye are over-projected for snaps by 0.7 points of share | participation (Where it misses) | A bye term improves held-out pinball, or the miss is gone on new seasons | open |
 | I12 | A pre-trained tabular model (Google's TabFM, 2026) might beat trees, most likely on small groups such as movers and rookies. Its weights are non-commercial and non-production, so at most a benchmark | CEO question, 2026-11-04 | On the same rows as next-game trees, for one position and one season, its absolute error beats trees' by more than the paired interval | open |
+| I13 | The week of the season and the last week (times win rate) improve next-game share, and the gain survives the harness and the fantasy test | CEO question, 2026-11-05; participation#F29, F30 | A variant with them beats `trees_top` by more than the paired interval, passes the leakage checks, and top teams' last-week starters are no longer over-projected | open |
+| I14 | Ranges should widen with how much a player's share swings, as they do for players on the injury report | participation#F32 | Residuals per swing band even out coverage on games played, without worse pinball | open |
 
 ## Graduated
 
