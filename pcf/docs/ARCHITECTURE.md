@@ -176,6 +176,7 @@ Optional attributes: `groups` (where range coverage is also judged), `benchmark`
 | `model`, `model_version`, `run_id` | exactly which model made it (MLflow) |
 | `train_end` | the last `known_at` in that model's training data (check 6) |
 | `cadence` | in_season, retrospective or offseason_events |
+| `p_nonzero`, `if_nonzero_mean`, `if_nonzero_q10`, `_q50`, `_q90` | **Spike forecasts only** (`Expert.spike`, decision 0014): the chance the result is above 0, and the forecast if it is. `mean` is the two multiplied |
 
 **Two kinds of output per model version:**
 - **The walk-forward history.** For every past week (in-season) or season (retrospective), the prediction a model trained *only on earlier data* would have made. **Higher layers train on this,** which makes their features out-of-fold by construction (rule e).

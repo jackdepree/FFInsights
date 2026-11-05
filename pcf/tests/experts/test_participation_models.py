@@ -10,7 +10,7 @@ import pytest
 
 from pcf.core.contract import check_expert
 from pcf.data.gateway import END_OF_TIME, FrameSource, Gateway
-from pcf.experts.participation.features import features
+from pcf.experts.participation.features import FEATURES, features
 from pcf.experts.participation.horizons import (
     LassoH3,
     LassoRest,
@@ -19,8 +19,18 @@ from pcf.experts.participation.horizons import (
     TreesRest,
     window_share,
 )
-from pcf.experts.participation.twopart import Active, Lasso, Trees, TreesCareer, mixture_quantiles
+from pcf.experts.participation.twopart import (
+    Active,
+    Lasso,
+    Trees,
+    TreesCareer,
+    TreesSpikes,
+    TreesStatus,
+    mixture_quantiles,
+)
 from pcf.validation import backtest, leakage
+from pcf.validation.scorecard import render
+from pcf.validation.validate import validate
 
 from ..validation import world
 
@@ -122,7 +132,10 @@ def _at_kickoff_minus(gateway, games, hours=24):
 
 
 def test_the_models_meet_the_contract():
-    for cls in (Lasso, Trees, TreesCareer, Active, LassoH3, TreesH3, SeasonRest, TreesRest):
+    for cls in (
+        Lasso, Trees, TreesCareer, TreesStatus, TreesSpikes, Active, LassoH3, TreesH3, SeasonRest,
+        TreesRest,
+    ):  # fmt: skip
         check_expert(cls)
 
 
@@ -170,7 +183,81 @@ def test_mixture_quantiles_put_the_low_levels_at_zero():
     assert np.all(mixture_quantiles(p, s, grid, 0.9) <= 1)
 
 
-@pytest.mark.parametrize("cls", [Lasso, Trees])
+def test_mixture_quantiles_put_the_top_levels_at_every_snap():
+    grid = np.tile(np.linspace(-0.2, 0.2, 99), (5, 1))
+    p, s, full = np.ones(2), np.array([0.8, 0.8]), np.array([0.6, 0.0])
+    assert mixture_quantiles(p, s, grid, 0.5, full)[0] == 1  # the top 60% of results are 100%
+    assert mixture_quantiles(p, s, grid, 0.2, full)[0] < 1
+    assert mixture_quantiles(p, s, grid, 0.5, full)[1] < 1
+    # No third part gives the two-part answer exactly
+    assert (
+        mixture_quantiles(p, s, grid, 0.5, np.zeros(2)) == mixture_quantiles(p, s, grid, 0.5)
+    ).all()
+
+
+def test_mixture_quantiles_read_a_listed_players_own_residuals():
+    narrow, wide = np.linspace(-0.05, 0.05, 99), np.linspace(-0.3, 0.3, 99)
+    grid = np.stack([np.tile(narrow, (5, 1)), np.tile(wide, (5, 1))])
+    p, s, listed = np.ones(2), np.array([0.6, 0.6]), np.array([0, 1])
+    low = mixture_quantiles(p, s, grid, 0.1, None, listed)
+    assert low[1] < low[0]
+
+
+def _train(position: str, frac_full: float, n: int = 600) -> pl.DataFrame:
+    """Training rows where a share of on-field games are every snap, and listed players vary."""
+    rng = np.random.default_rng(1)
+    listed = rng.random(n) < 0.3
+    noise = np.where(listed, 0.25, 0.03)
+    y = np.clip(0.6 + rng.normal(0, 1, n) * noise, 0.01, 0.98)
+    y[rng.random(n) < frac_full] = 1.0
+    y[rng.random(n) < 0.1] = 0.0
+    x = {f: np.zeros(n) for f in FEATURES}
+    x["last3"] = rng.random(n)
+    x["report"] = listed.astype(float)
+    return pl.DataFrame(x).with_columns(
+        position=pl.lit(position), y=pl.Series(y), weight=pl.lit(1.0), gsis_id=pl.lit("a"),
+        game_id=pl.Series([str(i) for i in range(n)]),
+    )  # fmt: skip
+
+
+def test_the_third_part_appears_only_where_every_snap_is_common():
+    train = pl.concat([_train("QB", 0.6), _train("WR", 0.02)])
+    model = TreesSpikes().fit(train)
+    assert model["parts"]["QB"][1] is not None and model["parts"]["WR"][1] is None
+    pred = TreesSpikes().predict(model, train.filter(c("position") == "QB"))
+    assert pred["if_nonzero_q90"].max() == 1
+    assert (pred["mean"] - pred["p_nonzero"] * pred["if_nonzero_mean"]).abs().max() < 1e-12
+
+
+def _width_ratio(cls: type, train: pl.DataFrame) -> float:
+    """How much wider a listed player's range is than an unlisted player's."""
+    expert = cls()
+    pred = expert.predict(expert.fit(train), train).join(
+        train.select("game_id", "report"), on="game_id"
+    )  # fmt: skip
+    width = pred.with_columns(w=c("if_nonzero_q90") - c("if_nonzero_q10"))
+    return width.filter(c("report") == 1)["w"].mean() / width.filter(c("report") == 0)["w"].mean()
+
+
+def test_a_listed_player_gets_a_wider_range_only_with_status_residuals():
+    train = _train("WR", 0.0)
+    assert _width_ratio(Trees, train) < 1.2
+    assert _width_ratio(TreesStatus, train) > 1.5
+
+
+def test_both_parts_are_saved_and_the_harness_judges_each(gateway):
+    v = validate(Trees(), gateway, [2023], shuffles=0, n_cutoffs=2, refit="season")
+    h = v.bt.scored
+    assert (h["mean"] - h["p_nonzero"] * h["if_nonzero_mean"]).abs().max() < 1e-9
+    assert (h["if_nonzero_q10"] <= h["if_nonzero_q90"]).all()
+    cal = v.calibration
+    assert cal["spike"] and {"chance", "share", "blend"} <= set(cal)
+    assert cal["share"]["rows"] == h.filter(c("y") > 0).height
+    page = render(v)
+    assert "The two parts" in page and "reported and not judged" in page
+
+
+@pytest.mark.parametrize("cls", [Lasso, Trees, TreesStatus, TreesSpikes])
 def test_a_two_part_backtest_beats_shuffling_and_passes_the_leakage_checks(gateway, cls):
     bt = backtest.run(cls(), gateway, [2022, 2023], refit="season")
     h = bt.scored

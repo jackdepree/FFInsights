@@ -147,6 +147,7 @@ Judge this on held-out weeks, never on in-sample p-values or a lasso's coefficie
 | q50 | The result lands above it about half the time (45–55%) |
 
 - Groups with fewer than 200 predictions are reported but not judged.
+- **Spike forecasts** (amounts with a pile of results at exactly 0, such as snap share) are judged part by part, with the same bars (decision 0014, 2026-11-04). The chance of a result above 0 is judged as a probability. The range, its groups and q50 are judged on rows where the result was above 0. The blend's coverage is reported, not judged: a result of 0 counts as inside any range starting at 0, so even a perfect blended forecast covers more than 85%.
 - **Sharpness:** the average q10–q90 width is reported. Among models that pass coverage, the narrower one wins (ties go to the simpler).
 - **Recalibration is allowed:** isotonic or Platt scaling for probabilities, and conformal adjustment for ranges. It's always fit inside the training folds, never on the test weeks.
 

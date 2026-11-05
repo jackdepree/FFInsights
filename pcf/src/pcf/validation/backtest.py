@@ -22,7 +22,7 @@ from typing import Any
 import polars as pl
 
 from pcf.config import get_config
-from pcf.core.contract import OUTPUT_SCHEMA, Expert, check_output
+from pcf.core.contract import OUTPUT_SCHEMA, SPIKE_PARTS, Expert, check_output
 from pcf.core.log import get_logger
 from pcf.data.gateway import END_OF_TIME, HISTORY, Gateway
 from pcf.validation import scores
@@ -183,7 +183,12 @@ def standard(
         cadence=pl.lit(expert.cadence),
         **{q: c(q) if q in pred.columns else pl.lit(None) for q in ("q10", "q50", "q90")},
     )
-    out = out.select(*expert.keys(), *(pl.col(k).cast(v) for k, v in OUTPUT_SCHEMA.items()), "step")
+    extra = SPIKE_PARTS if expert.spike else {}
+    out = out.select(
+        *expert.keys(),
+        *(pl.col(k).cast(v) for k, v in {**OUTPUT_SCHEMA, **extra}.items()),
+        "step",
+    )
     check_output(out.drop("step"), expert.keys(), expert.kind)
     return out
 
@@ -243,6 +248,6 @@ def write_history(bt: Backtest, run_id: str, root: Path | None = None) -> Path:
     root = root or get_config().zone("outputs")
     path = root / bt.expert.id / bt.expert.variant / run_id / HISTORY
     path.parent.mkdir(parents=True, exist_ok=True)
-    cols = [*bt.expert.keys(), *OUTPUT_SCHEMA]
+    cols = [*bt.expert.keys(), *OUTPUT_SCHEMA, *(SPIKE_PARTS if bt.expert.spike else ())]
     bt.history.select(cols).with_columns(run_id=pl.lit(run_id)).write_parquet(path)
     return path

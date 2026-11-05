@@ -103,3 +103,22 @@ def coverage(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
         and bool(groups_df["ok"].all())
     )
     return {**overall, "groups": groups_df, "passed": passed}
+
+
+def spike_report(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
+    """A spike forecast's two parts, each against its usual bar (decision 0014): the chance the
+    result is above 0, as a probability, and on rows where it was, the range and q50. The blend's
+    coverage is reported, not judged: results of exactly 0 count as inside any range starting at
+    0, so even a perfect blended forecast covers more than 85% (participation#F13)."""
+    chance = probability_report(df.select(y=(c("y") > 0).cast(pl.Float64), mean=c("p_nonzero")))
+    above = df.filter(c("y") > 0).with_columns(
+        q10=c("if_nonzero_q10"), q50=c("if_nonzero_q50"), q90=c("if_nonzero_q90")
+    )
+    share = coverage(above, groups)
+    return {
+        "spike": True,
+        "chance": chance,
+        "share": share,
+        "blend": coverage(df, groups),
+        "passed": chance["passed"] and share["passed"],
+    }

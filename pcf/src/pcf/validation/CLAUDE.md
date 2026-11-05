@@ -9,7 +9,7 @@ The validation harness (`validation-harness` project): everything that decides w
 | `scores.py` | Pinball, log loss, Brier, MAE, points gained, rank correlation |
 | `compare.py` | "Beats": paired, resampled by whole weeks, 90% interval |
 | `nulls.py` | Signal test (shuffled outcomes, 95 of 100 or 20 of 20) and the no-noise verdict |
-| `calibration.py` | Calibration error and slope; range coverage by group; sharpness |
+| `calibration.py` | Calibration error and slope; range coverage by group; sharpness; `spike_report` judges a spike forecast part by part (decision 0014) |
 | `leakage.py` | Checks 1-8 and 10, each with a planted leak in `tests/validation/planted.py` |
 | `sanity.py` | Shared football-sanity rules and the CEO's review lists |
 | `misses.py` | Where a model misses: the dated lens list (`LENS_LIST`), the tags that stand out, `misses.parquet`. On every player-game scorecard; `pcf misses <id>` for a saved run. A new list is a new date, never an edit |

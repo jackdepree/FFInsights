@@ -53,6 +53,15 @@ OUTPUT_SCHEMA: dict[str, pl.DataType] = {
 }
 QUANTILES = ("q10", "q50", "q90")
 PREDICTION = ("mean", *QUANTILES)
+# What a spike forecast adds (`Expert.spike`): the chance the result is above 0, and the forecast
+# if it is. Higher layers read these, and the harness judges each part (VALIDATION.md §7).
+SPIKE_PARTS: dict[str, pl.DataType] = {
+    "p_nonzero": pl.Float64(),
+    "if_nonzero_mean": pl.Float64(),
+    "if_nonzero_q10": pl.Float64(),
+    "if_nonzero_q50": pl.Float64(),
+    "if_nonzero_q90": pl.Float64(),
+}
 # Model layers in the registry (phase 1-3) must be named in a consumer's inputs.
 MODEL_PHASES = (1, 2, 3)
 # Packages searched by `find`, in order. The harness's own toy expert lives in validation.
@@ -80,6 +89,8 @@ class Expert(ABC):
     - `event` (offseason events): one of `moments.EVENTS`.
     - `groups`: feature columns the range coverage is also judged in (VALIDATION.md §7), besides
       the season; e.g. position, rookie, starter.
+    - `spike`: an amount whose results pile up at exactly 0. `predict` also returns `SPIKE_PARTS`,
+      they're saved with the history, and the harness judges the two parts (decision 0014).
     """
 
     id: ClassVar[str]
@@ -94,6 +105,7 @@ class Expert(ABC):
     benchmark: ClassVar[bool] = False
     variant: ClassVar[str] = ""
     first_train: ClassVar[int | None] = None
+    spike: ClassVar[bool] = False
 
     @abstractmethod
     def features(self, view: View, games: pl.DataFrame) -> pl.DataFrame:
@@ -217,6 +229,27 @@ def check_output(df: pl.DataFrame, keys: list[str], kind: str = "amount") -> Non
         bad = df.filter((pl.col("q10") > pl.col("q50")) | (pl.col("q50") > pl.col("q90"))).height
         if bad or df.select(pl.sum_horizontal(pl.col(*QUANTILES).null_count())).item():
             raise ValueError(f"output quantiles are missing or out of order on {bad} rows")
+    if "p_nonzero" in df.columns:
+        check_spike_parts(df)
+
+
+def check_spike_parts(df: pl.DataFrame) -> None:
+    """The two parts of a spike forecast: all present, a real chance, ranges in order, and a mean
+    that is the chance times the share."""
+    c = pl.col
+    missing = [p for p in SPIKE_PARTS if p not in df.columns or df[p].null_count()]
+    if missing:
+        raise ValueError(f"output is missing spike parts {missing}")
+    if not df["p_nonzero"].is_between(0, 1).all():
+        raise ValueError("output p_nonzero must be between 0 and 1")
+    bad = df.filter(
+        (c("if_nonzero_q10") > c("if_nonzero_q50")) | (c("if_nonzero_q50") > c("if_nonzero_q90"))
+    ).height
+    if bad:
+        raise ValueError(f"output if_nonzero ranges are out of order on {bad} rows")
+    off = df.filter((c("p_nonzero") * c("if_nonzero_mean") - c("mean")).abs() > 1e-9).height
+    if off:
+        raise ValueError(f"output mean isn't p_nonzero × if_nonzero_mean on {off} rows")
 
 
 def find(project_id: str, variant: str | None = None) -> type[Expert]:

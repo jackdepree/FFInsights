@@ -111,7 +111,9 @@ def validate(
     groups = scored.join(
         bt.features.select(*keys, *expert.groups, "step_season"), on=keys, how="left"
     ).rename({"step_season": "season"})
-    if expert.kind == "amount":
+    if expert.spike:
+        calib = calibration.spike_report(groups, [*expert.groups, "season"])
+    elif expert.kind == "amount":
         calib = calibration.coverage(groups, [*expert.groups, "season"])
     else:
         calib = calibration.probability_report(scored)

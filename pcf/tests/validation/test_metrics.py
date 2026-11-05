@@ -154,3 +154,32 @@ def test_sanity_rules_count_violations():
     assert out["violations"].to_list() == [1, 1, 1, 1, 1]
     top, bottom = sanity.review_lists(df, ["team"], by="yards", n=1)
     assert top["yards"][0] == 10.0 and bottom["yards"][0] == -1.0
+
+
+def _spike_rows(stretch: float, width: float, n: int = 20000) -> pl.DataFrame:
+    """Each row's real chance of a result above 0 varies, and results above 0 spread evenly around
+    0.6. `stretch` above 1 overstates how sure the chance is; `width` is the stated range's
+    half-width."""
+    rng = np.random.default_rng(3)
+    real = rng.uniform(0.3, 0.95, n)
+    y = np.where(rng.random(n) < real, 0.6 + rng.uniform(-0.3, 0.3, n), 0.0)
+    logit = np.log(real / (1 - real)) * stretch
+    return pl.DataFrame({
+        "y": y, "p_nonzero": 1 / (1 + np.exp(-logit)),
+        "q10": np.zeros(n), "q50": np.full(n, 0.5), "q90": np.full(n, 0.84),
+        "if_nonzero_q10": np.full(n, 0.6 - width), "if_nonzero_q50": np.full(n, 0.6),
+        "if_nonzero_q90": np.full(n, 0.6 + width),
+    })  # fmt: skip
+
+
+def test_an_honest_spike_forecast_passes_though_its_blend_over_covers():
+    report = calibration.spike_report(_spike_rows(1.0, 0.24))
+    assert report["chance"]["passed"] and report["share"]["passed"] and report["passed"]
+    assert report["blend"]["inside"] > 0.85 and not report["blend"]["passed"]
+
+
+def test_a_spike_forecast_fails_on_either_bad_part():
+    sure = calibration.spike_report(_spike_rows(2.0, 0.24))  # too sure of who plays
+    assert not sure["chance"]["passed"] and sure["share"]["passed"] and not sure["passed"]
+    narrow = calibration.spike_report(_spike_rows(1.0, 0.05))  # too narrow if they do
+    assert narrow["chance"]["passed"] and not narrow["share"]["passed"] and not narrow["passed"]

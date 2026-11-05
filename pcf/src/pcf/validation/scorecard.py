@@ -227,7 +227,30 @@ def render(v: Validation) -> str:
         body.append('<p class="muted">No-noise test: no downstream target named.</p>')
 
     cal = v.calibration
-    if kind == "amount":
+    if cal.get("spike"):
+        chance, share, blend = cal["chance"], cal["share"], cal["blend"]
+        body += [
+            "<h2>The two parts</h2>",
+            f"<p>{_status(cal['passed'])} This forecast has a spike at 0, so each part is judged "
+            "on its own (decision 0014).</p>",
+            f"<p>{_status(chance['passed'])} <b>Chance the result is above 0:</b> calibration "
+            f"error {chance['error']:.2f} points (bar ≤ {calibration.MAX_ERROR:.0f}); slope "
+            f"{chance['slope']:.2f} (bar 0.9–1.1).</p>",
+            _calibration_svg(chance["table"]),
+            _table(chance["table"]),
+            f"<p>{_status(share['passed'])} <b>The result where it was above 0:</b> q10–q90 holds "
+            f"{share['inside']:.1%} of {share['rows']:,} results "
+            f"(bar {calibration.COVERAGE[0]:.0%}–{calibration.COVERAGE[1]:.0%}); "
+            f"{share['above']:.1%} land above q50 (bar 45–55%); average width "
+            f"{share['width']:.2f}.</p>",
+            '<p class="muted">Groups under 200 rows are shown, not judged (bar 70–90%).</p>',
+            _table(share["groups"]),
+            f'<p class="muted">The blend, reported and not judged: q10–q90 holds '
+            f"{blend['inside']:.1%}, and {blend['above']:.1%} land above q50, average width "
+            f"{blend['width']:.2f}. A result of exactly 0 counts as inside any range starting at "
+            "0, so even a perfect forecast covers more than the 75–85% bar.</p>",
+        ]
+    elif kind == "amount":
         body += [
             "<h2>Range coverage</h2>",
             f"<p>{_status(cal['passed'])} q10–q90 holds {cal['inside']:.1%} of results "
