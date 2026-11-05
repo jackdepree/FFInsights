@@ -26,6 +26,9 @@ from pcf.experts.participation.twopart import (
     TreesCareer,
     TreesSpikes,
     TreesStatus,
+    TreesTop,
+    calibrated,
+    fit_calibrator,
     mixture_quantiles,
 )
 from pcf.validation import backtest, leakage
@@ -195,6 +198,35 @@ def test_mixture_quantiles_put_the_top_levels_at_every_snap():
     ).all()
 
 
+def test_games_that_arent_every_snap_stay_below_100_when_truncated():
+    grid = np.tile(np.linspace(-0.2, 0.2, 99), (5, 1))
+    p, s, full = np.ones(1), np.array([0.95]), np.array([0.8])
+    # Level 0.15 falls 75% into the 20% of games that aren't every snap: s + a residual passes 100%
+    assert mixture_quantiles(p, s, grid, 0.15, full)[0] == 1
+    cut = mixture_quantiles(p, s, grid, 0.15, full, truncate=True)[0]
+    assert 0.9 < cut < 0.998  # 75% of the way through those games, cut off at 100%
+    # Every snap itself still reads 100%, and a forecast far below 100% doesn't move
+    assert mixture_quantiles(p, s, grid, 0.5, full, truncate=True)[0] == 1
+    low = np.array([0.5])
+    assert mixture_quantiles(p, low, grid, 0.15, full)[0] == pytest.approx(
+        mixture_quantiles(p, low, grid, 0.15, full, truncate=True)[0]
+    )
+    # Without a third part there's nothing to keep below
+    assert (
+        mixture_quantiles(p, s, grid, 0.9, truncate=True) == mixture_quantiles(p, s, grid, 0.9)
+    ).all()
+
+
+def test_a_recalibrated_chance_moves_toward_the_rate_seen():
+    t = np.repeat([0.2, 0.9], 500)
+    y = np.concatenate([np.zeros(400), np.ones(100), np.zeros(200), np.ones(300)]).astype(int)
+    w = np.ones(1000)
+    for how in ("isotonic", "platt"):
+        out = calibrated(fit_calibrator(t, y, w, how), np.array([0.2, 0.9]))
+        assert out == pytest.approx([0.2, 0.6], abs=0.01)
+    assert (calibrated(fit_calibrator(t, np.zeros(1000), w, "isotonic"), t) == t).all()
+
+
 def test_mixture_quantiles_read_a_listed_players_own_residuals():
     narrow, wide = np.linspace(-0.05, 0.05, 99), np.linspace(-0.3, 0.3, 99)
     grid = np.stack([np.tile(narrow, (5, 1)), np.tile(wide, (5, 1))])
@@ -227,6 +259,18 @@ def test_the_third_part_appears_only_where_every_snap_is_common():
     pred = TreesSpikes().predict(model, train.filter(c("position") == "QB"))
     assert pred["if_nonzero_q90"].max() == 1
     assert (pred["mean"] - pred["p_nonzero"] * pred["if_nonzero_mean"]).abs().max() < 1e-12
+
+
+def test_the_top_fix_keeps_the_parts_consistent_and_changes_only_the_third_parts_position():
+    train = pl.concat([_train("QB", 0.6), _train("WR", 0.02)])
+    model = TreesTop().fit(train)
+    pred = TreesTop().predict(model, train)
+    assert (pred["mean"] - pred["p_nonzero"] * pred["if_nonzero_mean"]).abs().max() < 1e-12
+    assert "QB" in model["calibrators"] and "WR" not in model["calibrators"]
+    wr = train.filter(c("position") == "WR")
+    ours = TreesTop().predict(model, wr)
+    theirs = TreesSpikes().predict(TreesSpikes().fit(train), wr)
+    assert ours["q10"].to_list() == theirs["q10"].to_list()
 
 
 def _width_ratio(cls: type, train: pl.DataFrame) -> float:

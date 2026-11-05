@@ -15,7 +15,8 @@ are active with no snap (F1). `Active` reports the chance of being active itself
 Every variant saves both parts next to the blend (`SPIKE_PARTS`), and the harness judges each. Two
 later variants fix what that showed (decision 0014, F23): `TreesStatus` gives players on the injury
 report their own residuals, and `TreesSpikes` adds a third part where exactly 100% is common, in
-practice QBs: the chance of taking every snap if they play.
+practice QBs: the chance of taking every snap if they play. `TreesTop` then fixes QB ranges that
+collapsed to 100% to 100% (spot-check on F26).
 """
 
 from __future__ import annotations
@@ -26,6 +27,7 @@ from typing import Any, ClassVar
 import numpy as np
 import polars as pl
 from sklearn.ensemble import HistGradientBoostingClassifier, HistGradientBoostingRegressor
+from sklearn.isotonic import IsotonicRegression
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
@@ -41,6 +43,7 @@ BINS = np.array([0.1, 0.25, 0.5, 0.75])  # sizes of the share-if-on-field predic
 LEVELS = np.linspace(0.01, 0.99, 99)
 MIN_BIN = 30
 FULL = 0.999  # a share this high is every snap
+BELOW_FULL = 0.998  # the most a game that isn't every snap can show
 MIN_FULL = 0.2  # a third part only where this many of a position's on-field games are every snap
 QUANTILES = {"q10": 0.1, "q50": 0.5, "q90": 0.9}
 TREES = {"max_iter": 150, "learning_rate": 0.08, "max_leaf_nodes": 15, "random_state": 0}
@@ -64,6 +67,28 @@ def fit_logistic(x: np.ndarray, y: np.ndarray, w: np.ndarray):
         return _constant(float(y[0]) if len(y) else 0.5)
     m = make_pipeline(StandardScaler(), LogisticRegression(max_iter=2000))
     return m.fit(x, y, logisticregression__sample_weight=w)
+
+
+def fit_calibrator(t: np.ndarray, y: np.ndarray, w: np.ndarray, how: str):
+    """A map from a model's chance to the rate seen, fit on rows the model didn't train on."""
+    if len(np.unique(y)) < 2:
+        return None
+    if how == "isotonic":
+        return IsotonicRegression(y_min=0.0, y_max=1.0, out_of_bounds="clip").fit(t, y, w)
+    return LogisticRegression(C=1e6, max_iter=2000).fit(_logit(t), y, w)
+
+
+def _logit(t: np.ndarray) -> np.ndarray:
+    t = np.clip(t, 1e-6, 1 - 1e-6)
+    return np.log(t / (1 - t)).reshape(-1, 1)
+
+
+def calibrated(cal: Any, t: np.ndarray) -> np.ndarray:
+    if cal is None:
+        return t
+    if isinstance(cal, IsotonicRegression):
+        return cal.predict(t)
+    return cal.predict_proba(_logit(t))[:, 1]
 
 
 def _by_size(pred: np.ndarray, resid: np.ndarray, fallback: np.ndarray) -> np.ndarray:
@@ -119,9 +144,12 @@ def mixture_quantiles(
     level: float,
     full: np.ndarray | None = None,
     listed: np.ndarray | None = None,
+    truncate: bool = False,
 ) -> np.ndarray:
     """The `level` quantile of "0 with chance 1-p, else every snap with chance `full`, else s + a
-    residual", kept between 0 and 1. A grid with a status dimension is read by `listed`."""
+    residual", kept between 0 and 1. A grid with a status dimension is read by `listed`. With
+    `truncate`, "else" stays below 100%: those games aren't every snap, so s + a residual can't
+    reach it, and the chance that would have spilled over goes back into the range."""
     p = np.clip(p, 1e-6, 1.0)
     u = (level - (1 - p)) / p  # where the level falls within the on-field part
     t = np.zeros(len(p)) if full is None else np.clip(full, 0.0, 1 - 1e-6)
@@ -135,7 +163,12 @@ def mixture_quantiles(
         rows = grid[st] if grid.ndim == 3 else grid
         for b in np.unique(bins[on_field & (status == st)]):
             i = on_field & (status == st) & (bins == b)
-            out[i] = s[i] + np.interp(v[i], LEVELS, rows[b])
+            at = v[i]
+            if truncate and full is not None:
+                at = at * np.interp(BELOW_FULL - s[i], rows[b], LEVELS, left=0.0, right=1.0)
+            out[i] = s[i] + np.interp(at, LEVELS, rows[b])
+            if truncate and full is not None:
+                out[i] = np.minimum(out[i], BELOW_FULL)
     return np.clip(out, 0.0, 1.0)
 
 
@@ -154,6 +187,8 @@ class _TwoPart(Expert):
     spike = True
     by_status: ClassVar[bool] = False  # residuals per injury-report status
     full_part: ClassVar[bool] = False  # a third part where exactly 100% is common
+    truncate: ClassVar[bool] = False  # games that aren't every snap stay below 100%
+    recalibrate: ClassVar[str | None] = None  # "platt" or "isotonic": the third part's chance
 
     @abstractmethod
     def fit_on_field(self, x: np.ndarray, y: np.ndarray, w: np.ndarray) -> Any: ...
@@ -186,7 +221,7 @@ class _TwoPart(Expert):
         return (x[:, self.columns.index("report")] >= 1).astype(int)
 
     def fit(self, train: pl.DataFrame) -> dict[str, Any]:
-        model, residuals = {}, []
+        model, residuals, calibrators = {}, [], {}
         for pos, g in train.partition_by("position", as_dict=True).items():
             x = g.select(self.columns).to_numpy().astype(float)
             y = g["y"].to_numpy().astype(float)
@@ -194,6 +229,13 @@ class _TwoPart(Expert):
             cut = int(len(y) * (1 - HOLDOUT))  # train is in time order (`walk` sorts it)
             _, full, early = self._parts(x[:cut], y[:cut], w[:cut])
             late = y[cut:] > 0
+            if full is not None and self.recalibrate:
+                calibrators[pos[0]] = fit_calibrator(
+                    full.predict_proba(x[cut:][late])[:, 1],
+                    (y[cut:][late] >= FULL).astype(int),
+                    w[cut:][late],
+                    self.recalibrate,
+                )
             if full is not None:
                 late &= y[cut:] < FULL
             xl, yl = x[cut:][late], y[cut:][late]
@@ -201,7 +243,7 @@ class _TwoPart(Expert):
             listed = self._listed(xl) if self.by_status else None
             residuals.append((pos[0], pred, yl - pred, listed))
             model[pos[0]] = self._parts(x, y, w)
-        return {"parts": model, "grid": _residual_grid(residuals)}
+        return {"parts": model, "grid": _residual_grid(residuals), "calibrators": calibrators}
 
     def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
         out = []
@@ -213,12 +255,17 @@ class _TwoPart(Expert):
             p = on_field.predict_proba(x)[:, 1]
             s = self.predict_share(share, x).clip(0, 1)
             t = None if full is None else full.predict_proba(x)[:, 1]
+            if t is not None:
+                t = calibrated(model["calibrators"].get(pos[0]), t)
             listed = self._listed(x) if self.by_status else None
             grid = model["grid"][pos[0]]
             if_on = s if t is None else t + (1 - t) * s
-            blend = {k: mixture_quantiles(p, s, grid, v, t, listed) for k, v in QUANTILES.items()}
+            cut = self.truncate
+            blend = {
+                k: mixture_quantiles(p, s, grid, v, t, listed, cut) for k, v in QUANTILES.items()
+            }
             given = {
-                f"if_nonzero_{k}": mixture_quantiles(np.ones(len(p)), s, grid, v, t, listed)
+                f"if_nonzero_{k}": mixture_quantiles(np.ones(len(p)), s, grid, v, t, listed, cut)
                 for k, v in QUANTILES.items()
             }
             out.append(g.select(self.keys()).with_columns(
@@ -330,6 +377,21 @@ class TreesSpikes(TreesStatus):
     variant = "trees_spikes"
     quantity = "snap_share"
     full_part = True
+
+
+class TreesTop(TreesSpikes):
+    """TreesSpikes with an honest low end at the top. Games that aren't every snap stay below 100%,
+    and the chance of every snap is recalibrated on the latest 20% of each training window: it
+    was too high at the top, saying 93% where 81% happened (spot-check on F26)."""
+
+    variant = "trees_top"
+    quantity = "snap_share"
+    truncate = True
+    recalibrate = "isotonic"
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [TreesSpikes]
 
 
 class Active(Expert):
