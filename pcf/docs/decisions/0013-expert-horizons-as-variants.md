@@ -6,7 +6,7 @@
 - **Each horizon is a variant of one project** (`participation/trees`, `participation/lasso_h3`, `participation/lasso_rest`), each a direct model with its own history and scorecard. The chance of being active is a variant too (`participation/active`).
 - **The ladder runs per horizon, so champions differ:** trees for the next game, the lasso for the next 3 games and the rest of the season. A tie goes to the simpler model.
 - **The next game's two parts are "takes an offensive snap" and "share if they do".** Its spike is "no offensive snap", not "inactive", because that's what the outcome says.
-- **Registering champions waits for the weekly run.** `registry.yaml` holds one `champion` number per project, and `tracking.log_model` takes one scikit-learn estimator. This expert has four champions, each a set of per-position parts. Nothing loads a registered model yet, and higher layers read saved histories (rule e). Pending the CEO's call at merge: `participation` RESULTS, case against 6.
+- **Registering champions waits for the weekly run.** `registry.yaml` holds one `champion` number per project, and `tracking.log_model` takes one scikit-learn estimator. This expert has four champions, each a set of per-position parts. Nothing loads a registered model yet, and higher layers read saved histories (rule e). The CEO approved merging without one on 2026-11-04 (`participation` RESULTS, case against 6).
 
 **Why:** the horizons have different models because they have different answers: trees win by 0.053 at one game and lose by 0.151 over the rest of the season (participation#F10, F17). Rolling one model forward understates how injuries pile up (D9). Variants reuse the harness as it stands.
 

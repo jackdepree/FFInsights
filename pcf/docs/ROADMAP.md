@@ -47,6 +47,7 @@ These are targets, not deadlines.
 - [ ] **Backups for MLflow and model outputs** (not urgent until the first expert is built). They live on one PC, and losing them means slow retraining. Options to brainstorm then: a synced folder (OneDrive), an external drive, or champions only into a private repo.
 
 Decided:
+- **2026-11-04 · Participation** ([results](../projects/participation/RESULTS.md)): merged without a registered champion, to be built with the weekly run. Next-game coverage of 85.3% is arithmetic (a perfect forecast scores 85.8%). The CEO proposed judging the chance of 0 and the share if they play separately; the bar is unchanged until the harness can do that.
 - **2026-11-03 · Ways of working:** two loops, discover then confirm; a hypothesis log (`projects/IDEAS.md`); a short fixed list of miss lenses in every RESULTS.md, chosen by discovery (`miss-lenses`) instead of every tag; the case against and a CEO spot-check before every merge.
 - **2026-11-03 · Baselines** ([results](../projects/baselines/RESULTS.md)): D1–D9 as written; to ship, the weekly fantasy product must match ECR if it doesn't use ECR, and clearly beat ECR if it uses ECR as an input; experts may name ECR as their no-noise baseline (VALIDATION.md §5–6).
 - **2026-11-02 · Validation harness** ([results](../projects/validation-harness/RESULTS.md)): prediction moments are the three weekly runs (1C); the harness covers everything a model needs to be done, with betting evaluation and the live gap later (2A); leakage comparisons allow a 1e-9 rounding tolerance.
