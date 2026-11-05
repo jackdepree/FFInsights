@@ -91,7 +91,8 @@ def main() -> None:
     print(f"Brier on {rival.height:,} games: logistic {model:.4f}, starter rate only {base:.4f}")
     st = tagged.filter(c("depth1") == 1)["t"]
     print(f"Starters' chance of every snap: 5th to 95th percentile {st.quantile(0.05):.1%} to "
-          f"{st.quantile(0.95):.1%}; 25th to 75th {st.quantile(0.25):.1%} to {st.quantile(0.75):.1%}")  # fmt: skip
+          f"{st.quantile(0.95):.1%}; 25th to 75th {st.quantile(0.25):.1%} to "
+          f"{st.quantile(0.75):.1%}")  # fmt: skip
 
     # Ranges that collapse to 100% to 100%: how often below, and which part put them there?
     ranges = on.with_columns(
