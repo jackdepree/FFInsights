@@ -56,16 +56,14 @@ def main() -> None:
 
     every = on.select(y=(c("y") >= FULL).cast(pl.Float64), mean="t")
     r = calibration.probability_report(every)
-    print(
-        f"QB games played: {on.height:,}; every snap in {every['y'].mean():.1%}, said {every['mean'].mean():.1%}"
-    )
-    print(
-        f"Chance of every snap: error {r['error']:.2f} points, slope {r['slope']:.3f}, passed {r['passed']}"
-    )
+    print(f"QB games played: {on.height:,}; every snap in {every['y'].mean():.1%}, "
+          f"said {every['mean'].mean():.1%}")  # fmt: skip
+    print(f"Chance of every snap: error {r['error']:.2f} points, slope {r['slope']:.3f}, "
+          f"passed {r['passed']}")  # fmt: skip
     with pl.Config(float_precision=3, tbl_rows=12):
         print(r["table"])
 
-    # Spot-check (2026-11-04): who is it right for, is it steady, and does it beat knowing the starter?
+    # Spot-check (2026-11-04): who is it right for, is it steady, does it beat knowing the starter?
     tagged = on.with_columns(
         every=(c("y") >= FULL).cast(pl.Float64),
         season=c("game_id").str.slice(0, 4).cast(pl.Int32),
@@ -78,7 +76,8 @@ def main() -> None:
         x = g.select(y="every", mean="t")
         one = calibration.probability_report(x)
         rows.append({"group": name, "rows": g.height, "said": x["mean"].mean(),
-                     "was": x["y"].mean(), "error": one["error"], "slope": one["slope"]})  # fmt: skip
+                     "was": x["y"].mean(), "error": one["error"],
+                     "slope": one["slope"]})  # fmt: skip
     with pl.Config(float_precision=3, tbl_rows=20):
         print(pl.DataFrame(rows))
     # The simple rival: each season, last seasons' every-snap rate for starters and non-starters
@@ -90,10 +89,44 @@ def main() -> None:
     base = rival.select(((c("every") - c("r")) ** 2).mean()).item()
     model = rival.select(((c("every") - c("t")) ** 2).mean()).item()
     print(f"Brier on {rival.height:,} games: logistic {model:.4f}, starter rate only {base:.4f}")
+    st = tagged.filter(c("depth1") == 1)["t"]
+    print(f"Starters' chance of every snap: 5th to 95th percentile {st.quantile(0.05):.1%} to "
+          f"{st.quantile(0.95):.1%}; 25th to 75th {st.quantile(0.25):.1%} to {st.quantile(0.75):.1%}")  # fmt: skip
+
+    # Ranges that collapse to 100% to 100%: how often below, and which part put them there?
+    ranges = on.with_columns(
+        flat=c("if_nonzero_q10") >= FULL,
+        below=c("y") < c("if_nonzero_q10"),
+        inside=(c("y") >= c("if_nonzero_q10")) & (c("y") <= c("if_nonzero_q90")),
+        every=c("y") >= FULL,
+        t90=c("t") >= 0.9,
+        s_full=c("s") >= FULL,
+        rest_full=c("rest10") >= FULL,
+    )
+    for name, e in {"100 to 100": c("flat"), "other": ~c("flat"), "all": c("y") > 0,
+                    "q10 at 90%+": c("if_nonzero_q10") >= 0.9}.items():  # fmt: skip
+        x = ranges.filter(e)
+        print(f"{name}: {x.height:,} games; every snap {x['every'].mean():.1%}, said "
+              f"{x['t'].mean():.1%}; below q10 {x['below'].mean():.1%}, inside "
+              f"{x['inside'].mean():.1%}; mean said {x['if_nonzero_mean'].mean():.1%}, was "
+              f"{x['y'].mean():.1%}")  # fmt: skip
+    flat = ranges.filter(c("flat"))
+    print(f"Why 100 to 100 ({flat.height:,}): chance of every snap at 90%+ on "
+          f"{flat['t90'].mean():.1%}; otherwise share at 100% on {flat['s_full'].mean():.1%}; "
+          f"otherwise share's low end at 100% on {flat['rest_full'].mean():.1%}; mean otherwise "
+          f"share {flat['s'].mean():.1%}")  # fmt: skip
+    for name, e in {"t at 90%+": c("t90"), "t under 90%": ~c("t90")}.items():
+        x = flat.filter(e)
+        if x.height:
+            print(f"  {name}: {x.height:,} games, every snap {x['every'].mean():.1%}, said "
+                  f"{x['t'].mean():.1%}")  # fmt: skip
+    off = flat.filter(~c("every"))
+    print(f"  Below-range games ({off.height:,}): said otherwise {off['s'].mean():.1%}, "
+          f"was {off['y'].mean():.1%}")  # fmt: skip
 
     rest = on.filter(c("y") < FULL)
-    print(f"Games neither 0 nor every snap: {rest.height:,}; range holds "
-          f"{rest.select(((c('y') >= c('rest10')) & (c('y') <= c('rest90'))).mean()).item():.1%}, "
+    held = rest.select(((c("y") >= c("rest10")) & (c("y") <= c("rest90"))).mean()).item()
+    print(f"Games neither 0 nor every snap: {rest.height:,}; range holds {held:.1%}, "
           f"{rest.select((c('y') < c('rest10')).mean()).item():.1%} below, "
           f"{rest.select((c('y') > c('rest90')).mean()).item():.1%} above")  # fmt: skip
 
@@ -126,8 +159,9 @@ def main() -> None:
     show = d.join(names, on=KEYS).filter(c("full_name") == "Josh Allen").sort("week")
     print("\nOne starter's 2024")
     for x in show.iter_rows(named=True):
-        print(f"  wk {x['week']:>2} chance of 0 {1 - x['p_nonzero']:>4.0%}  every snap {x['t']:>4.0%}  "
-              f"otherwise {x['s']:>4.0%}  range {x['if_nonzero_q10']:>4.0%} to {x['if_nonzero_q90']:>4.0%}  "
+        print(f"  wk {x['week']:>2} chance of 0 {1 - x['p_nonzero']:>4.0%}  "
+              f"every snap {x['t']:>4.0%}  otherwise {x['s']:>4.0%}  "
+              f"range {x['if_nonzero_q10']:>4.0%} to {x['if_nonzero_q90']:>4.0%}  "
               f"result {x['y']:>4.0%}")  # fmt: skip
 
 
