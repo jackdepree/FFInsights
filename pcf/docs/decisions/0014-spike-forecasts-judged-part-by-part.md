@@ -16,4 +16,6 @@
 - *A separate expert per part.* The harness would judge them as ordinary models, but the parts would have separate histories that could drift apart, and they'd fill the registry with near-copies.
 - *Direct quantile models for the share.* They might handle both misses at once, but they cost three fits per position and season, and the mixture needs every level. Worth trying if the simple fixes stop being enough.
 
+**Later (2026-11-05):** `trees_top` adds to `trees_spikes`: games that aren't every snap stay below 100%, and the chance of every snap is recalibrated with isotonic regression on the latest 20% of each training window, as residuals are. Platt scaling was worse (QB pinball +0.027) and fitting the part with trees was overconfident. QB's range then holds 90.7%, over the 90% group bar, and a true forecast would hold 90.2% (F28). The bar stays as written, and the CEO accepted the miss.
+
 **Not covered:** the long horizons. Their misses are mostly partial, from missed games rather than exact zeros (F24), so they need games played × share per game.

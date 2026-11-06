@@ -327,7 +327,7 @@ projects:
     summary: Each rostered QB, RB, WR and TE's offensive snap share and chance of being active, before each game, over the next 3 games and for the rest of the season. Routes are post-season only, so they aren't here.
     interface:
       inputs: player_game parts snaps, game_status, depth, injury, stats through the gateway; game schedule for the horizons
-      outputs: "pcf.experts.participation variants, histories in outputs/participation/<variant>/<run_id>/history.parquet. Champions by horizon: trees_spikes (next game's share, with p_nonzero and if_nonzero_mean, _q10, _q50, _q90), active (p_active), lasso_h3, lasso_rest; mean, and q10, q50, q90 for shares. No model registered yet (RESULTS, case against 6)."
+      outputs: "pcf.experts.participation variants, histories in outputs/participation/<variant>/<run_id>/history.parquet. Champions by horizon: trees_top (next game's share, with p_nonzero and if_nonzero_mean, _q10, _q50, _q90), active (p_active), lasso_h3, lasso_rest; mean, and q10, q50, q90 for shares. No model registered yet (RESULTS, case against 6)."
       grain: player-game; for horizons, the game the window starts on
       interval: weekly, 2016-2024 reported, every rostered QB, RB, WR, TE
       cadence: in_season

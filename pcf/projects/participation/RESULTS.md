@@ -1,9 +1,9 @@
 # Results: Participation and snaps (`participation`)
 
-**Date:** 2026-11-03 · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation` · **Champions:** `trees_spikes` (next game, from 2026-11-04, F25; before that `trees`), `active` (chance of being active), `lasso_h3` (next 3 games), `lasso_rest` (rest of the season). None registered as a model yet: see the case against, point 6.
+**Date:** 2026-11-03 · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation` · **Champions:** `trees_top` (next game, from 2026-11-05, F28; before that `trees_spikes`, then `trees`), `active` (chance of being active), `lasso_h3` (next 3 games), `lasso_rest` (rest of the season). None registered as a model yet: see the case against, point 6.
 
 ## In short
-PCF's first expert works. Before each game it forecasts each rostered QB, RB, WR and TE's snap share, explaining 74% of the variance against 58–59% for the last game or last 3 games, and cutting the pinball loss by a quarter. It beats its shuffled self 20 of 20 times and improves the lasso's fantasy points, and slightly improves ECR's. Boosted trees win for the next game; the simpler lasso wins or ties for longer horizons. **Two checks miss their bars narrowly, as written:** next-game range coverage (85.3%, bar 75–85%) and the active probability's slope (0.89, bar 0.9–1.1). The first is arithmetic, not a bad forecast: a perfect one would score 85.8% (F13). Judged part by part it passes (F22). Fixing the two real misses that showed, at QB and Questionable (F23), gave a new champion, `trees_spikes` (F25).
+PCF's first expert works. Before each game it forecasts each rostered QB, RB, WR and TE's snap share, explaining 74% of the variance against 58–59% for the last game or last 3 games, and cutting the pinball loss by a quarter. It beats its shuffled self 20 of 20 times and improves the lasso's fantasy points, and slightly improves ECR's. Boosted trees win for the next game; the simpler lasso wins or ties for longer horizons. **Two checks miss their bars narrowly, as written:** next-game range coverage (85.3%, bar 75–85%) and the active probability's slope (0.89, bar 0.9–1.1). The first is arithmetic, not a bad forecast: a perfect one would score 85.8% (F13). Judged part by part it passes (F22). Fixing the two real misses that showed, at QB and Questionable (F23), gave a new champion, `trees_spikes` (F25), and a spot-check on it found QB ranges collapsing to 100%, which `trees_top` fixes (F28). `trees_top` misses one bar as written: QB's range holds 90.7%, over the 90% group ceiling, where a true forecast would hold 90.2%.
 
 **Scorecards:** `outputs/participation/<variant>/<run_id>/scorecard.html` (also in MLflow) · **Vault:** not opened · **Versions tried:** 6 options for `trees_top` (F28), 2 for `trees`, `active`, `lasso_h3`, `lasso_rest` (the first without a signal test)
 
@@ -15,7 +15,7 @@ All scores are in points of share (0–100), on the rows every rung of that hori
 | No noise, downstream (D6) | **Pass, "adds value":** the lasso's fantasy points, pinball −0.0209 (−0.0233 to −0.0185), 52,522 rows, 193 weeks (F15) |
 | Each rung beats the one below | **Pass, and the rule picked the champions** (the ladder below). `last3` lost to `last_game`, so both stayed as rung 0 per the brief |
 | Chance of being active within 3 points | **Pass:** 0.79 points. **The harness's slope bar is a narrow miss:** 0.89, bar 0.9–1.1 (F12) |
-| Coverage 75–85% overall, 70–90% per position | **Next game: narrow miss as written,** 85.3% (F13). Per position pass, 83.5–86.9%. Players who hadn't played recently, 91.5%, also over the 70–90% bar: mostly easy zeros. Next 3 games 79.9%, rest of season 80.1%: pass (but see F14) |
+| Coverage 75–85% overall, 70–90% per position | **Next game: narrow miss as written,** 85.3% (F13); `trees_top` on games played 81.2%, but QB 90.7%, over the group ceiling (F28, CEO accepted 2026-11-05). `trees` per position pass, 83.5–86.9%. Players who hadn't played recently, 91.5%, also over the 70–90% bar: mostly easy zeros. Next 3 games 79.9%, rest of season 80.1%: pass (but see F14) |
 | Leakage | **Pass:** 9 of 9 blocking checks on every variant, identical at 25 cutoffs. Nothing from the game-day active list |
 | Football sanity (CEO review: pending) | Rule q10 ≤ q50 ≤ q90 has 0 violations. The top 20 predictions are all QBs at 99%+, and the bottom 20 all QBs at 0: starters and backups. Details in F16 |
 | CEO spot-check | Done 2026-11-04: the coverage miss, then QBs' every-snap part. See below |
@@ -153,7 +153,7 @@ Also in `registry.yaml`.
 | | |
 |---|---|
 | **Inputs** | `player_game` parts snaps, game_status, depth, injury, stats (through the gateway); `game` schedule for the horizons |
-| **Outputs** | `pcf.experts.participation` variants, walk-forward histories in `outputs/participation/<variant>/<run_id>/history.parquet`: `trees_spikes` (next game's share), `active` (`p_active`), `lasso_h3`, `lasso_rest`, each with `mean`; shares with `q10`, `q50`, `q90`. The next game also has `p_nonzero`, the chance of an offensive snap, and `if_nonzero_mean`, `_q10`, `_q50`, `_q90`, the share if they take one (decision 0014) |
+| **Outputs** | `pcf.experts.participation` variants, walk-forward histories in `outputs/participation/<variant>/<run_id>/history.parquet`: `trees_top` (next game's share), `active` (`p_active`), `lasso_h3`, `lasso_rest`, each with `mean`; shares with `q10`, `q50`, `q90`. The next game also has `p_nonzero`, the chance of an offensive snap, and `if_nonzero_mean`, `_q10`, `_q50`, `_q90`, the share if they take one (decision 0014) |
 | **Level of detail** | player-game; for the horizons, the row is the game the window starts on |
 | **Interval** | 2016–2024 reported, from each team's first game; every rostered QB, RB, WR, TE |
 | **Cadence** | in_season |
