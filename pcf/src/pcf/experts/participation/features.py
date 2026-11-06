@@ -31,6 +31,43 @@ FEATURES = [
 CAREER = ["career", "career_active"]
 EXTRA = [*[f"{s}_{n}" for s in BOX for n in (3, 8)], "epa_per_play", "age", "exp", "draft"]
 BACK = ["back", "back_career"]  # the lasso can't find this interaction itself (F9)
+WEEK = ["week_no", "final_week", "final_wins"]  # the week of the season, and resting starters (F29)
+
+
+def _win_rates(view, season: int) -> pl.DataFrame:
+    """Each team's win rate in this season's regular-season games known at this moment."""
+    g = view.table("game", seasons=[season]).filter(
+        (c("game_type") == "REG") & c("home_score").is_not_null()
+    )
+    margin = (c("home_score") - c("away_score")).cast(pl.Float64)
+    sides = pl.concat(
+        [g.select(team="home_team", margin=margin), g.select(team="away_team", margin=-margin)]
+    )
+    won = c("margin").gt(0).cast(pl.Float64) + 0.5 * c("margin").eq(0).cast(pl.Float64)
+    return sides.group_by("team").agg(win_rate=won.mean())
+
+
+def with_week(view, games: pl.DataFrame, rows: pl.DataFrame) -> pl.DataFrame:
+    """The week of the season, the last regular-season week, and that times the team's win rate so
+    far: a stand-in for having clinched, since seeding isn't in our tables (F29, F30). Reads `game`
+    with the `result` part, so an untouched win rate is 0.5 until a team's first result is known."""
+    season = int(games["season"].max())
+    sched = view.table("game", seasons=[season])
+    last = sched.filter(c("game_type") == "REG")["week"].max()
+    this = sched.filter(c("game_id").is_in(games["game_id"].implode())).select(
+        "game_id", "week", "game_type"
+    )
+    final = ((c("week") == last) & (c("game_type") == "REG")).cast(pl.Float64)
+    return (
+        rows.join(this, on="game_id", how="left")
+        .join(_win_rates(view, season), on="team", how="left")
+        .with_columns(
+            week_no=c("week").cast(pl.Float64),
+            final_week=final,
+            final_wins=final * c("win_rate").fill_null(0.5),
+        )
+        .drop("week", "game_type", "win_rate")
+    )
 
 
 def _history(known: pl.DataFrame, season: int) -> pl.DataFrame:

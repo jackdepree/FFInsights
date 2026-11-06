@@ -12,6 +12,7 @@ validated with `pcf backtest participation --variant <name>`.
 | `trees_status` | `trees`, with separate residuals for players on the injury report | 2 |
 | `trees_spikes` | `trees_status`, plus the chance of every snap where that's common (QBs) | 2 |
 | `trees_top` | `trees_spikes`, non-every-snap games kept below 100%, that chance recalibrated | 2 |
+| `trees_week` | `trees_top`, plus the week of the season and the last week times win rate | 2 |
 | `active` | The chance of being on the active list (trees) | n/a |
 | `season_h3`, `lasso_h3`, `trees_h3` | Average share over the next 3 team games | 0, 1, 2 |
 | `season_rest`, `lasso_rest`, `trees_rest` | Average share over the rest of the season | 0, 1, 2 |

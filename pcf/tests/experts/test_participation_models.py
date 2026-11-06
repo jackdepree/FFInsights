@@ -27,6 +27,7 @@ from pcf.experts.participation.twopart import (
     TreesSpikes,
     TreesStatus,
     TreesTop,
+    TreesWeek,
     calibrated,
     fit_calibrator,
     mixture_quantiles,
@@ -98,6 +99,11 @@ def _parts() -> dict:
         birth_date=pl.date(1995, 1, 1),
     )  # fmt: skip
     schedule = parts[("game", "schedule")].with_columns(game_type=pl.lit("REG"))
+    # The home team always wins by 3; a result is known a day after kickoff
+    result = schedule.select(
+        "game_id", "season", home_score=pl.lit(10), away_score=pl.lit(7),
+        known_at=c("kickoff") + pl.duration(days=1),
+    )  # fmt: skip
     return {
         **parts,
         ("player_game", "roster"): roster,
@@ -107,6 +113,7 @@ def _parts() -> dict:
         ("player_game", "injury"): injury,
         ("player_game", "stats"): stats,
         ("game", "schedule"): schedule,
+        ("game", "result"): result,
     }
 
 
@@ -136,8 +143,8 @@ def _at_kickoff_minus(gateway, games, hours=24):
 
 def test_the_models_meet_the_contract():
     for cls in (
-        Lasso, Trees, TreesCareer, TreesStatus, TreesSpikes, Active, LassoH3, TreesH3, SeasonRest,
-        TreesRest,
+        Lasso, Trees, TreesCareer, TreesStatus, TreesSpikes, TreesTop, TreesWeek, Active, LassoH3,
+        TreesH3, SeasonRest, TreesRest,
     ):  # fmt: skip
         check_expert(cls)
 
@@ -301,7 +308,39 @@ def test_both_parts_are_saved_and_the_harness_judges_each(gateway):
     assert "The two parts" in page and "reported and not judged" in page
 
 
-@pytest.mark.parametrize("cls", [Lasso, Trees, TreesStatus, TreesSpikes])
+def test_the_week_inputs_know_only_earlier_results_and_the_last_week():
+    regular = world.schedules().filter(c("game_type") == "REG")
+    last = regular["week"].max()
+    parts = _parts()
+    # This world marks every game REG for the other tests: the last game here is a real playoff
+    schedule = parts[("game", "schedule")].with_columns(
+        game_type=pl.when(c("week") > last).then(pl.lit("POST")).otherwise(pl.lit("REG"))
+    )
+    gateway = Gateway(FrameSource({**parts, ("game", "schedule"): schedule}), world.cal())
+    expert = TreesWeek()
+    for week in (1, 2, last):
+        games = _games(week)
+        at = games["kickoff"].min() - timedelta(hours=24)
+        rows = expert.features(gateway.view(at, expert.cadence, expert.inputs), games)
+        assert rows["week_no"].unique().to_list() == [float(week)]
+        assert rows["final_week"].unique().to_list() == [float(week == last)]
+        if week == last:
+            for team in rows["team"].unique():
+                known = schedule.filter(
+                    (c("season") == SEASON)
+                    & (c("kickoff") + pl.duration(days=1) <= at)
+                    & ((c("home_team") == team) | (c("away_team") == team))
+                )
+                # The home team always wins in this world, and a result is known a day later
+                assert known.height >= last - 2
+                rate = known.select((c("home_team") == team).mean()).item()
+                said = rows.filter(c("team") == team)["final_wins"].unique().to_list()
+                assert said == [pytest.approx(rate)]
+        else:
+            assert rows["final_wins"].unique().to_list() == [0.0]
+
+
+@pytest.mark.parametrize("cls", [Lasso, Trees, TreesStatus, TreesSpikes, TreesWeek])
 def test_a_two_part_backtest_beats_shuffling_and_passes_the_leakage_checks(gateway, cls):
     bt = backtest.run(cls(), gateway, [2022, 2023], refit="season")
     h = bt.scored

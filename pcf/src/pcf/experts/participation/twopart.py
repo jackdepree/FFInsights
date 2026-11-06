@@ -35,7 +35,16 @@ from sklearn.preprocessing import StandardScaler
 from pcf.baselines.lasso import ALPHAS, fit_lasso, predict_lasso, weighted_mse
 from pcf.core.contract import Expert
 from pcf.experts.participation.common import FIRST_SEASON, known_shares, target_share
-from pcf.experts.participation.features import BACK, CAREER, EXTRA, FEATURES, INPUTS, features
+from pcf.experts.participation.features import (
+    BACK,
+    CAREER,
+    EXTRA,
+    FEATURES,
+    INPUTS,
+    WEEK,
+    features,
+    with_week,
+)
 
 c = pl.col
 HOLDOUT = 0.2  # the latest share of each training window
@@ -392,6 +401,23 @@ class TreesTop(TreesSpikes):
     @classmethod
     def baselines(cls) -> list[type[Expert]]:
         return [TreesSpikes]
+
+
+class TreesWeek(TreesTop):
+    """TreesTop with the week of the season and the last week, times the team's win rate: top teams
+    rest starters, and it says 86% for QBs where 66% happened (F29, F30)."""
+
+    variant = "trees_week"
+    quantity = "snap_share"
+    inputs = {**INPUTS, "game": ("schedule", "result")}
+    columns = [*FEATURES, *WEEK]
+
+    def features(self, view, games: pl.DataFrame) -> pl.DataFrame:
+        return with_week(view, games, super().features(view, games))
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [TreesTop]
 
 
 class Active(Expert):
