@@ -139,7 +139,7 @@ No single check catches every leak, so we stack them. Each runs automatically. "
 | 10 | **Too good to be true** | A single feature that's implausibly predictive, or a backtest that beats the closing line or public benchmarks by an implausible margin. | Every validation report | Flags for review |
 | 11 | **Live vs backtest gap** | Leaks every test above missed. Once predictions are in the ledger, live accuracy is compared to backtest accuracy every week. A model that's much worse live than in backtest is suspect. | Weekly | Flags for review |
 
-**What these can't prove:** checks 1–9 prove the code respects `known_at`. They can't prove the known-at rules themselves are right (e.g. that injury reports really are final by noon the day before). That's why the rules lean late (DATA_SOURCES.md), and why check 11 exists.
+**What these can't prove:** checks 1–9 prove the code respects `known_at`. They can't prove the known-at rules themselves are right (e.g. that the final injury report really is in nflverse's file by noon the next day). That's why the rules lean late (DATA_SOURCES.md), and why check 11 exists. They also can't see data that never arrives, so each live run also runs the input check (`validation/inputs.py`, VALIDATION.md section 9), which flags for review.
 
 ## The expert contract
 

@@ -12,14 +12,18 @@ import polars as pl
 
 from pcf.core.log import get_logger
 from pcf.data.clean.standard import team
-from pcf.data.timeline.calendar import Calendar, day_start, team_kickoffs
+from pcf.data.timeline.calendar import ET, Calendar, day_start, team_kickoffs
 
 log = get_logger(__name__)
 
 ONE_DAY = pl.duration(days=1)
-# Injury reports without `date_modified` (2009, 2025→). Only 0.06% of 2010-2024 reports were
-# modified later than this (timeline#F4).
-INJURY_LEAD = pl.duration(hours=12)
+# Injury reports without `date_modified` (2009, 2025→). A game's final report comes two days before
+# a Saturday, Sunday or Monday game and the day before any other, and nflverse's file updates once
+# a day, between 9 and 12 Eastern, so it's in the file by noon the next day. Monday = 1. Too early
+# for 0.85% of 2021-2024 reports (prediction-ledger#F8, #F9).
+INJURY_DAY_BEFORE = [6, 7, 1]
+INJURY_HOUR = 12
+INJURY_LATEST = pl.duration(hours=1)  # an early kickoff: never known at or after it
 # Game-day inactives: teams name them 90 minutes before kickoff; this leans 30 minutes late.
 STATUS_LEAD = pl.duration(hours=1)
 # Draft years with no row in the offseason dates file: every draft has ended by June 1.
@@ -201,10 +205,26 @@ def weekly_rosters(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame
     return out.with_columns(status_known_at=keyed["kickoff"] - STATUS_LEAD)
 
 
+def _injury_fallback(kickoff: pl.Expr) -> pl.Expr:
+    """When a report without `date_modified` reaches nflverse's file: noon Eastern the day before a
+    Saturday, Sunday or Monday game, and noon on the day of any other. An earlier kickoff than that
+    (Thanksgiving's first game is 12:30): an hour before it."""
+    local = kickoff.dt.convert_time_zone(ET)
+    day = local.dt.date() - pl.when(local.dt.weekday().is_in(INJURY_DAY_BEFORE)).then(
+        ONE_DAY
+    ).otherwise(pl.duration(days=0))
+    noon = day.cast(pl.Datetime("us")) + pl.duration(hours=INJURY_HOUR)
+    return pl.min_horizontal(
+        noon.dt.replace_time_zone(ET).dt.convert_time_zone("UTC"), kickoff - INJURY_LATEST
+    )
+
+
 def injuries(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
     """Injury reports: `date_modified`, when the report was last changed. Without it (2009,
-    2025→): kickoff − 12 hours. "Noon ET the day before" was too early for 6-7% of 2021-2024
-    reports, mostly Thursday games (timeline#F4)."""
+    2025→), when the final report reaches nflverse's file (`_injury_fallback`). Noon the day before
+    for every game was too early for 6-7% of 2021-2024 reports, mostly Thursday games
+    (timeline#F4). Kickoff − 12 hours hid every report from the Saturday run
+    (prediction-ledger#F1)."""
     key = ["season", "week", "game_type", "team"]
     kick = pl.concat(
         [
@@ -217,9 +237,8 @@ def injuries(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
     keyed = df.select(
         pl.col("season").cast(pl.Int32), pl.col("week").cast(pl.Int32), "game_type", team("team")
     ).join(kick, on=key, how="left", maintain_order="left")
-    out = df.with_columns(
-        known_at=pl.coalesce(pl.col("date_modified"), keyed["kickoff"] - INJURY_LEAD)
-    )
+    fallback = keyed.select(_injury_fallback(pl.col("kickoff"))).to_series()
+    out = df.with_columns(known_at=pl.coalesce(pl.col("date_modified"), fallback))
     _require(out, "known_at", "no date_modified and no matching game")
     return out
 

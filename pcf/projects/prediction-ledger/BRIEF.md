@@ -14,7 +14,7 @@ Can we keep a permanent record of what PCF forecast before each game, made and s
 - **Standard terms used:** [range score (pinball), MAE, coverage, known-at, as_of, closing line value](../../docs/GLOSSARY.md).
 - **New terms:**
   - **Ledger row:** one forecast for one player and game, with the exact model and data behind it. Never changed once written.
-  - **First seen:** the moment our own pull first held a row of a source. It's proof of when we had it, where the source gives no date.
+  - **First seen:** the moment our own pull first held a row of a source. It's proof of when we had it, where the source gives no date. It checks the injury rule rather than setting it (decision 3).
   - **Input check:** at each run, how often each input is filled compared with the backtest. It catches inputs that have gone missing live.
   - **Replay:** a forecast remade later for a game already played. It's useful, but it's not a record, and it's never counted as one.
 
@@ -92,5 +92,6 @@ Time box: 2–3 sessions. No model ladder, as this is infrastructure.
 - **C. Put them in the ledger as if live (tempting, bad).** It looks like a longer track record, but it wouldn't be a real one, and that would undermine the whole ledger.
 
 **3. Injury rule: a technical call, shared for information. The CEO raised no objection.**
-- **Chosen:** a report counts as known when we first saw it in a pull. For rows before our snapshots began (the 2025 vault and 2026 before 2026-10-31), a fallback measured on 2021–2024's real timestamps, with its too-early rate logged.
+- **First proposed:** a report counts as known when we first saw it in a pull, with a fallback for earlier rows.
+- **Changed while building (Claude, 2026-11-06):** the measured rule alone, for every row without `date_modified`: noon Eastern the day before a Saturday, Sunday or Monday game, noon on the day of any other. It's too early for 0.85% of 2021–2024 reports. First seen doesn't work as the rule, because our daily snapshot runs hours after nflverse's update. It first held Friday's reports at 13:31 Eastern on Saturday, so it would hide them from the noon run even though the file had them at 9:34. A live run can't see the future in any case, because its pull holds only what's published. First seen stays as proof in each run's record ([decision 0015](../../docs/decisions/0015-injury-reports-without-a-date.md)).
 - **Rejected:** simply moving the rule to noon the day before. That's the old rule, and it was too early for 6–7% of reports (timeline#F4).

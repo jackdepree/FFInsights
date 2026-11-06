@@ -5,6 +5,7 @@ import pytest
 
 from pcf.data.sources.nflverse import DATASETS
 from pcf.data.timeline import RULES, calendar, check_known_at, known_at
+from pcf.data.timeline.known_at import _injury_fallback
 
 from .toy import OFFSEASON, SEASON, schedule, utc
 
@@ -45,26 +46,50 @@ def test_participation_is_known_after_the_super_bowl():
         known_at("participation", pl.DataFrame({"nflverse_game_id": ["2025_01_A"]}), no_sb)
 
 
-def test_injuries_use_date_modified_or_kickoff_minus_12_hours():
-    df = pl.DataFrame(
-        {
-            "season": [2025, 2025],
-            "week": [1, 1],
-            "game_type": ["REG", "REG"],
-            "team": ["KC", "KC"],
-            "date_modified": [utc(2025, 9, 3, 20), None],
-        }
+def _injury_rows(season: int, week: int, team: str, game_type: str = "REG") -> pl.DataFrame:
+    return pl.DataFrame(
+        {"season": [season], "week": [week], "game_type": [game_type], "team": [team]}
+    ).with_columns(date_modified=pl.lit(None, pl.Datetime("us", "UTC")))
+
+
+def test_injuries_prefer_date_modified():
+    df = _injury_rows(2025, 1, "KC").with_columns(
+        date_modified=pl.lit(utc(2025, 9, 3, 20), pl.Datetime("us", "UTC"))
     )
-    out = known_at("injuries", df, CAL)
-    assert out["known_at"].to_list() == [utc(2025, 9, 3, 20), WEEK1_KICK - timedelta(hours=12)]
+    assert known_at("injuries", df, CAL)["known_at"].item() == utc(2025, 9, 3, 20)
 
 
 def test_injury_teams_are_matched_in_pcf_codes():
-    df = pl.DataFrame(
-        {"season": [2025], "week": [2], "game_type": ["REG"], "team": ["KAN"]},
-    ).with_columns(date_modified=pl.lit(None, pl.Datetime("us", "UTC")))
-    out = known_at("injuries", df, CAL)
-    assert out["known_at"].item() == utc(2025, 9, 14, 17) - timedelta(hours=12)
+    # Sunday 2025-09-14: known at noon Eastern on Saturday, seen by the Saturday run
+    out = known_at("injuries", _injury_rows(2025, 2, "KAN"), CAL)
+    assert out["known_at"].item() == utc(2025, 9, 13, 16)
+
+
+@pytest.mark.parametrize(
+    ("kickoff", "known"),
+    [
+        (utc(2025, 9, 14, 17), utc(2025, 9, 13, 16)),  # Sunday
+        (utc(2025, 9, 15, 23), utc(2025, 9, 14, 16)),  # Monday
+        (utc(2025, 12, 20, 18), utc(2025, 12, 19, 17)),  # Saturday
+        # Thursday night (Eastern, so the next day in UTC): noon that Thursday
+        (utc(2025, 9, 12, 0, 15), utc(2025, 9, 11, 16)),
+        (utc(2025, 11, 28, 20), utc(2025, 11, 28, 17)),  # Friday
+        (utc(2024, 12, 25, 18), utc(2024, 12, 25, 17)),  # Wednesday
+        # Thanksgiving's 12:30 game: an hour before kickoff, since noon is too close
+        (utc(2025, 11, 27, 17, 30), utc(2025, 11, 27, 16, 30)),
+    ],
+)
+def test_injury_fallback_follows_the_report_day(kickoff, known):
+    got = pl.select(_injury_fallback(pl.lit(kickoff, pl.Datetime("us", "UTC")))).item()
+    assert got == known
+
+
+def test_injury_fallback_is_seen_by_the_saturday_run_only_for_sunday_games():
+    saturday_run = utc(2025, 9, 13, 16)
+    sunday = pl.lit(utc(2025, 9, 14, 17), pl.Datetime("us", "UTC"))
+    monday = pl.lit(utc(2025, 9, 15, 23), pl.Datetime("us", "UTC"))
+    assert pl.select(_injury_fallback(sunday)).item() <= saturday_run
+    assert pl.select(_injury_fallback(monday)).item() > saturday_run
 
 
 def test_depth_charts_use_dt_or_the_start_of_their_week():

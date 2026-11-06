@@ -188,6 +188,8 @@ The checks themselves are in [ARCHITECTURE.md](ARCHITECTURE.md#leakage-defense-i
 
 **Live vs backtest gap:** after at least 4 live weeks, a model is flagged if its live score falls outside its backtest's 90% interval on the worse side.
 
+**Input check** (`validation/inputs.py`, added 2026-11-06, prediction-ledger#F3): every live run compares each input with the same weeks of a backtest. It's flagged for review, not blocked, if its share of non-zero or missing rows moves by more than 5 points, with at least 200 live rows. It's also flagged if it's zero on every live row when the backtest's rate would have filled at least 5 of them. The leakage checks can't catch this: they find data seen too early, not data that never arrives.
+
 ## 10. The football sanity check
 
 Rule h, in two parts.

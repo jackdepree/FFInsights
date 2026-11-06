@@ -53,7 +53,7 @@
 | `timeline#F1` | Schedules' `gametime` is US Eastern for every game, international ones included; the first play comes a median 2 minutes after kickoff. 1999 has no times. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F2` | Actual starts can be hours late, and play-by-play's clock is sometimes wrong by 3–12 hours. Use the scheduled kickoff. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F3` | NFL weeks never overlap (at least 2 days apart), so contiguous week windows cover every moment of a season. | strong | [RESULTS.md](timeline/RESULTS.md) |
-| `timeline#F4` | "Noon ET the day before kickoff" was too early for 6–7% of 2021–2024 injury reports (mostly Thursday games). Use `date_modified`; without it, kickoff − 12 h. | strong | [RESULTS.md](timeline/RESULTS.md) |
+| `timeline#F4` | "Noon ET the day before kickoff" was too early for 6–7% of 2021–2024 injury reports (mostly Thursday games). Use `date_modified`; without it, kickoff − 12 h (replaced 2026-11-06: it hid every report from the Saturday run, prediction-ledger#F1, #F9). | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F5` | 2025+ depth-chart snapshots are taken in the early morning Eastern, so each game has a game-day chart before kickoff. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F6` | nflverse has almost no offseason dates (draft and combine: year only). Trades are dated. | strong | [RESULTS.md](timeline/RESULTS.md) |
 | `timeline#F7` | The nflverse trades file stops at 2026-04-17: no 2026 draft-day or in-season trades. | strong | [RESULTS.md](timeline/RESULTS.md) |

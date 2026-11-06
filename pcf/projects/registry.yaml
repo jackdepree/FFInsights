@@ -238,7 +238,7 @@ projects:
   - id: prediction-ledger
     name: Prediction ledger
     phase: 0
-    status: brief
+    status: building
     horizon: now
     depends_on: [package-scaffold, validation-harness]
     summary: An append-only record of every prediction made before kickoff, with the market line at that time. It feeds the track record and the scorecards.

@@ -53,6 +53,20 @@ This probably understates it, because the live gap also affects teammates' absen
 
 **7. Scheduled GitHub runs start hours late.** The last 6 `collect-odds` runs started 3h51 to 6h10 after their scheduled time. Monday's "before Monday Night Football" run started at 02:10 UTC on 2026-11-03, 55 minutes after kickoff, and Sunday's started 43 minutes before the 1 pm games. `snapshot-nflverse` ran 4.5 to 9.2 hours late. Forecasts on the PC's Task Scheduler avoid this, which is one more reason to run them there. The odds schedule itself needs moving earlier, as a separate fix.
 
+**8. nflverse's injury file updates once a day, in the morning (added 2026-11-06).** The 7 update times we've recorded fall between 9:14 and 11:59 Eastern, and on Friday 2026-11-06 the file was still unchanged at 17:45. So a report issued in the afternoon isn't in the file until the next morning. Saturday's file at 9:34 held Friday's reports for Sunday's games, and Sunday's file added the 11 statuses for Monday's game. One update, at 11:59, came close to the noon run, and 7 is a small sample.
+
+**9. A report's timing is regular enough for a rule (added 2026-11-06).** On 2021–2024's 23,081 reports with real times, the final version appears two days before a Sunday (92%), Monday (91%) or Saturday game (92%), and the day before a Thursday (93%), Friday (93%) or Wednesday game (93%), at a median of about 15:15 Eastern. So the rule is: noon the day before a Saturday, Sunday or Monday game, noon on the day of any other, or an hour before an earlier kickoff.
+
+| Rule | Too early | Reports at the Saturday run, 2026 |
+|---|---|---|
+| Kickoff − 12 hours (old) | 0.06% (2010–2024) | 0 of 1,357 rows |
+| Noon the day before every game (older) | 6–7% (2021–2024) | not measured |
+| **This rule** | **0.85%** (2021–2024; 0.53–1.14 by season; 1.83% of Sunday rows with a status) | **93 of 1,357 rows (6.9%)** |
+
+Rows with a report at each season's moments, weeks 6–8: 2022 9.9%, 2023 7.3%, 2024 7.8%, 2025 7.5%, 2026 6.9%. The input check now flags 0 of 30 inputs, against the 5 in finding 3. Week 8 of 2026 agrees: Sunday's statuses were in the file updated at 9:34 on Saturday, and Monday's in the one updated at 9:14 on Sunday, each before the rule's noon. Thursday's has no such record, because our logs begin after it. Too-early rows matter only for rebuilt rows (the replay and training), since a live pull can't hold anything unpublished. Scripts: [`explore/injury_timing.py`](explore/injury_timing.py), [`explore/injury_fix_check.py`](explore/injury_fix_check.py).
+
+**10. Thursday games still can't see their final report at the Wednesday run (added 2026-11-06).** In the backtest's real times, 76% of Thursday games' final reports were out by Wednesday 16:00. But the file doesn't update until Thursday morning: Wednesday 2026-11-04's file held 28 week-9 rows and no statuses. So the live Wednesday run sees no final report for Thursday's game, while the backtest mostly does. That's one game a week. Moving the run to Thursday noon would fix it, and it's a decision for the CEO, since it changes every backtest's Thursday rows.
+
 ## Assumptions and limits
 
 - Week 9 is a single week, and these numbers come from local files, not a scheduled run.

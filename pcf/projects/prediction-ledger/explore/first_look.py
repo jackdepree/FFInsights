@@ -103,7 +103,8 @@ def check_rows(pred: pl.DataFrame) -> None:
 
 def report_gap(variant: str = "trees_week") -> None:
     """Does the Saturday forecast see the injury report, in the backtest and in live seasons?
-    Files from 2025 have no `date_modified`, so their rule is kickoff - 12 hours (DATA_SOURCES)."""
+    Files from 2025 have no `date_modified`. On 2026-11-06 their rule was kickoff - 12 hours, which
+    these numbers exposed; `injury_fix_check.py` is the same count after the fix."""
     e = find("participation", variant)()
     gw = Gateway()
     every = steps(gw.calendar, e.cadence, range(2022, SEASON + 1), e.run, e.event)
