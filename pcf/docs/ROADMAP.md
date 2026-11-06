@@ -47,6 +47,7 @@ These are targets, not deadlines.
 - [ ] **Backups for MLflow and model outputs** (not urgent until the first expert is built). They live on one PC, and losing them means slow retraining. Options to brainstorm then: a synced folder (OneDrive), an external drive, or champions only into a private repo.
 
 Decided:
+- **2026-11-06 · Participation, next-game champion** ([results](../projects/participation/RESULTS.md)): `trees_week` replaces `trees_top`, after the CEO's spot-check on the playoffs. It keeps the plain week over a playoff flag, because the flag loses the ordinary-week gain (F34). Known misses stay open: the final week misleads playoff forecasts (F36, I17), and top teams' last-week starters are over-projected (F35).
 - **2026-11-05 · Participation, next-game champion** ([results](../projects/participation/RESULTS.md)): `trees_top` becomes the champion, with QB's range coverage of 90.7% logged as a narrow miss. The 90% group bar stays as written: a true forecast would hold 90.2%, and rewriting a bar after seeing results adds forking paths. The week and last-week inputs come next, on a new branch (F29, I13).
 - **2026-11-04 · Participation** ([results](../projects/participation/RESULTS.md)): merged without a registered champion, to be built with the weekly run. Next-game coverage of 85.3% is arithmetic (a perfect forecast scores 85.8%). The CEO proposed judging the chance of 0 and the share if they play separately; the bar is unchanged until the harness can do that.
 - **2026-11-03 · Ways of working:** two loops, discover then confirm; a hypothesis log (`projects/IDEAS.md`); a short fixed list of miss lenses in every RESULTS.md, chosen by discovery (`miss-lenses`) instead of every tag; the case against and a CEO spot-check before every merge.
@@ -81,6 +82,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-06:** `participation`'s next-game champion is now `trees_week`: `trees_top` plus the week of the season and the last week times win rate (F33). The spot-check corrected why the playoffs gain: mostly backups on the inactive list, not tighter rotations (F34), and found the final week misleads playoff forecasts (F36).
 - **2026-11-05:** `participation`'s next-game champion is now `trees_top`: spike forecasts are judged part by part and their parts saved (decision 0014), QBs get a chance of every snap, and players on the injury report get their own residuals (F25–F28). The Windows block on pandas cleared, so the full tests and MLflow runs are back.
 - **2026-11-03:** `participation` built, PCF's first expert: each rostered QB, RB, WR and TE's snap share and chance of being active, before each game, over the next 3 games and for the rest of the season, as four champions. It beats its shuffled self and improves the lasso's fantasy points (decision 0013). `career-snaps` added as an idea (D10).
 - **2026-10-28:** Charter (`CLAUDE.md`), `VISION.md`, this roadmap and the project registry created.

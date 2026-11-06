@@ -326,14 +326,14 @@ projects:
     depends_on: [grain-tables, validation-harness]
     summary: Each rostered QB, RB, WR and TE's offensive snap share and chance of being active, before each game, over the next 3 games and for the rest of the season. Routes are post-season only, so they aren't here.
     interface:
-      inputs: player_game parts snaps, game_status, depth, injury, stats through the gateway; game schedule for the horizons
-      outputs: "pcf.experts.participation variants, histories in outputs/participation/<variant>/<run_id>/history.parquet. Champions by horizon: trees_top (next game's share, with p_nonzero and if_nonzero_mean, _q10, _q50, _q90), active (p_active), lasso_h3, lasso_rest; mean, and q10, q50, q90 for shares. No model registered yet (RESULTS, case against 6)."
+      inputs: player_game parts snaps, game_status, depth, injury, stats through the gateway; game schedule for the horizons; game schedule and result for trees_week's week and win rate
+      outputs: "pcf.experts.participation variants, histories in outputs/participation/<variant>/<run_id>/history.parquet. Champions by horizon: trees_week (next game's share, with p_nonzero and if_nonzero_mean, _q10, _q50, _q90), active (p_active), lasso_h3, lasso_rest; mean, and q10, q50, q90 for shares. No model registered yet (RESULTS, case against 6)."
       grain: player-game; for horizons, the game the window starts on
       interval: weekly, 2016-2024 reported, every rostered QB, RB, WR, TE
       cadence: in_season
       known_at: the Saturday run, 12:00 Eastern (decision 0010)
       model: none registered yet
-      how_to_use: As a feature for fantasy points (share, and share x points), from saved histories only (rule e). Trust the means; the horizons' q10 is too high (F14). Next game's ranges hold about 85% by design because of the spike at 0 (F13). Filter or flag played_recently when scoring.
+      how_to_use: As a feature for fantasy points (share, and share x points), from saved histories only (rule e). Trust the means; the horizons' q10 is too high (F14). Next game's ranges hold about 85% by design because of the spike at 0 (F13). Filter or flag played_recently when scoring. Playoff forecasts lean too far on the final regular week (F36), and top teams' last-week starters are over-projected (F35).
       feeds: opportunity-quality, vacated-opportunity, injury-fatigue, roles-archetypes, player-opportunity
 
   - id: career-snaps
