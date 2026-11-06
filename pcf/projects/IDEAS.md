@@ -36,6 +36,7 @@ Each line: the claim, where it came from (a CEO hunch, a project's misses, a dis
 | I14 | Ranges should widen with how much a player's share swings, as they do for players on the injury report | participation#F32 | Residuals per swing band even out coverage on games played, without worse pinball | open |
 | I15 | Past share is partly game script, so a share earned in a blowout says less about the next game. Past share adjusted for each game's final margin should beat raw past share | CEO idea, 2026-11-05; participation#F31 | A script-adjusted recent share beats `trees_week` on held-out pinball by more than the paired interval | open |
 | I16 | Players have script tendencies: some gain snaps when trailing, others when leading. A player's tendency times the next game's expected script should move their forecast, which an average effect across players can't show (F29 tested only that) | CEO idea, 2026-11-05 | First, tendencies hold up from one season to the next (a player's tendency correlates across seasons). Only then, the interaction beats `trees_week` on the players with strong tendencies | open |
+| I17 | A player's share in the final regular-season week should count for little in playoff forecasts, because of rested starters and their fill-ins | participation#F36 | Discounting that game, or giving the model the change that week, cuts playoff error for those players by more than the paired interval | open |
 
 ## Graduated
 
