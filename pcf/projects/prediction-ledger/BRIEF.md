@@ -1,6 +1,6 @@
 # Brief: Prediction ledger (`prediction-ledger`)
 
-**Status:** draft, 2026-11-06 · **Layer:** data and infrastructure (phase 0) · **Cadence:** in_season
+**Status:** agreed, 2026-11-06 · **Layer:** data and infrastructure (phase 0) · **Cadence:** in_season
 
 ## The question
 Can we keep a permanent record of what PCF forecast before each game, made and saved automatically, so we can check how it really does on games it hasn't seen?
@@ -59,6 +59,7 @@ No bar in `docs/VALIDATION.md` changes. The specific ones:
 ## Inputs and outputs
 - **Inputs:** what each model already reads, through the gateway; `pcf refresh` at run time; our snapshots for first seen.
 - **Outputs:**
+  - One replay file, kept apart from the ledger and never counted as a record.
   - One file per run in the private `pcf-data` repo, at player-game level, per model: mean, q10, q50, q90 and the spike parts, as_of, kickoff, model, commit, training cutoff, data pull time, and input-check results. Empty market columns are ready for products.
   - A weekly scorecard on the PC.
   - Failed runs show as a Windows notice, and a small GitHub Action checks for new rows, as a backup.
@@ -74,21 +75,22 @@ Time box: 2–3 sessions. No model ladder, as this is infrastructure.
 3. A live run that reuses the harness's fit and predict, and pushes to `pcf-data`.
 4. The weekly scorecard.
 5. Task Scheduler, with one approval from the CEO, plus the backup check.
+6. One replay of weeks 1–8 in a separate file marked as a replay. Week 9 joins it once played: it comes before the first counted forecast, so otherwise no record would cover it.
 
 **First counted forecast:** Wednesday 2026-11-11, 16:00 Eastern, for week 10's Thursday game. Sunday's games follow at Saturday noon.
 
-## Decisions for the CEO
+## Decisions (CEO, 2026-11-06)
 
 **1. What goes in the ledger?**
-- **A. All four participation champions plus `last_game` as a yardstick (recommended).** It tests every horizon we'd hand to higher layers, and a simple comparison shows whether the gain survives live. New champions join with one line.
+- **A. All four participation champions plus `last_game` as a yardstick (chosen).** It tests every horizon we'd hand to higher layers, and a simple comparison shows whether the gain survives live. New champions join with one line.
 - **B. Next-game `trees_week` only.** The simplest, but the other horizons have no live record when fantasy needs them.
 - **C. Every variant we've built (tempting, bad).** It looks thorough, but with enough variants one will look good by luck, and we'd be picking winners after seeing results.
 
 **2. What about weeks 1–8 of 2026?**
-- **A. Replay them once, in a separate file marked as a replay (recommended).** These seasons weren't used to pick the inputs, so it's a useful early read: 8 weeks now, instead of waiting until week 13. It does use up 2026's early weeks as unseen data, and weeks before 2026-10-31 have no first-seen proof, so they use a fallback rule.
+- **A. Replay them once, in a separate file marked as a replay (chosen).** These seasons weren't used to pick the inputs, so it's a useful early read: 8 weeks now, instead of waiting until week 13. It does use up 2026's early weeks as unseen data, and weeks before 2026-10-31 have no first-seen proof, so they use a fallback rule.
 - **B. No replay.** The cleanest record, but no read on 2026 until 4 live weeks are in.
 - **C. Put them in the ledger as if live (tempting, bad).** It looks like a longer track record, but it wouldn't be a real one, and that would undermine the whole ledger.
 
-**3. Injury rule: for information, it's a technical call unless you object.**
-- **Recommended:** a report counts as known when we first saw it in a pull. For rows before our snapshots began (the 2025 vault and 2026 before 2026-10-31), a fallback measured on 2021–2024's real timestamps, with its too-early rate logged.
+**3. Injury rule: a technical call, shared for information. The CEO raised no objection.**
+- **Chosen:** a report counts as known when we first saw it in a pull. For rows before our snapshots began (the 2025 vault and 2026 before 2026-10-31), a fallback measured on 2021–2024's real timestamps, with its too-early rate logged.
 - **Rejected:** simply moving the rule to noon the day before. That's the old rule, and it was too early for 6–7% of reports (timeline#F4).
