@@ -29,14 +29,27 @@ Rungs 0–1, run 2026-11-07 with [`explore/ladder.py`](explore/ladder.py). There
 
 ## What this means for the brief
 
-- **The success bar needs a decision (CEO, taste call).** Within 1.5 points of the close is met by home field alone (F1). Rung 1 is already 0.37 behind on margins and 0.39 on totals.
+- **The success bar is tightened (CEO, 2026-11-07):** within 0.5 points of the close on margins and totals, with 0.25 a strong result. The old 1.5 was met by home field alone (F1).
 - **Rung 1 for the hunch tests is the margin Elo with a half pull, plus offense and defense ratings** (F3, F4). Each hunch is a variant of it, judged on the same 2,476 games.
+
+## H4: luck plays
+
+**Expected, written before running (Claude, 2026-11-07):** return touchdowns (defense and special teams) and which side recovers a fumble will barely repeat from one half of a season to the other, with a split-half correlation near 0. Kicking luck will repeat a little (kickers differ), and interceptions more (quarterbacks differ). Taking the luck out of the margin will help a little: about 0.03–0.08 points on the margin. That's real but small, because these plays add only a few points a game, and the Elo's small step already averages most of them away.
+
+Run 2026-11-07 with [`explore/h4_luck.py`](explore/h4_luck.py). Repeatability is each team-season's average per game, net of the opponent, in odd weeks against even weeks (regular season, 1999–2024). Ratings are scored against rung 1 on the same 2,476 games, 2016–2024.
+
+| # | Finding | Confidence |
+|---|---|---|
+| F7 | **Fumble recoveries are pure noise; the other candidates repeat a little.** Split-half correlation, net of the opponent: fumble recovery −0.05, kicking 0.09, long touchdowns 0.11, interceptions 0.13, return touchdowns 0.15. The margin itself is 0.51. Each candidate swings 1.6–4.2 points a game for a team. | strong |
+| F8 | **Taking luck plays out of the margin doesn't help the rating; it hurts slightly.** The gap to rung 1, where positive means worse, with a 90% interval: no fumble luck +0.02 (−0.00 to +0.05), no return TDs +0.02 (−0.01 to +0.05), no kicking luck +0.00, no long TDs +0.01, no interceptions +0.09 (+0.05 to +0.13). All three noisiest together: +0.05 (+0.00 to +0.09). At half weight: +0.00. 2020–2024 alone, where expected points are out of sample: +0.03 (−0.03 to +0.09). Totals from offense and defense ratings: +0.02 (−0.03 to +0.07). | strong |
+| F9 | **Why, probably:** the Elo's small step already averages luck away. A single play moves a rating by 6% of its points, so a 7-point return TD moves it by 0.4. Taking plays out also throws away the parts that do repeat (return TDs 0.15, interceptions 0.13). Fumble recovery (r = −0.05) is the cleanest test of pure noise, and it still didn't help. | moderate |
+
+**H4 verdict: failed, as tested.** Expected a small gain (0.03–0.08 points). Got a small loss (0.00–0.09). The idea that a fumble returned for a touchdown is "a random fluke" holds for the fumble recovery (F7). But a rating that ignores luck plays forecasts no better, because over a dozen games the luck washes out anyway. What could still work: luck plays as a separate signal for the first few weeks, when ratings rest on few games, or for reading single games (game script, garbage time). Neither was tested here.
 
 ## Still to do in this exploration
 
-1. **H4, luck plays:** find high-impact plays that teams don't repeat, and rate teams on the margin without them.
-2. **H2, turnover:** the pull set by the share of last season's snaps that return.
-3. **H3, average win probability:** judged on 2020–2024 only (tag-tables#F4).
-4. **H1, same-team share:** the share of a team's usual snaps on the field this week, from participation and the injury report.
-5. **H7, parts:** running and passing ratings, each kept only if it helps.
-6. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
+1. **H2, turnover:** the pull set by the share of last season's snaps that return.
+2. **H3, average win probability:** judged on 2020–2024 only (tag-tables#F4).
+3. **H1, same-team share:** the share of a team's usual snaps on the field this week, from participation and the injury report.
+4. **H7, parts:** running and passing ratings, each kept only if it helps.
+5. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.

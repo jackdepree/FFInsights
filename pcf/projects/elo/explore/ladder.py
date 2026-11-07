@@ -89,7 +89,16 @@ def weekly(g: pl.DataFrame):
 
 
 def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
-    """Walk the games week by week; return each game's pre-game home margin (and total)."""
+    """Walk the games week by week; return each game's pre-game home margin (and total).
+
+    Hooks for the hunch variants: `signal` (the column the margin ratings learn from, default
+    `margin`), `signals` (the home and away points the offense/defense ratings learn from),
+    `pull_fn(season, team)` (a team's own pull toward average), `step_fn(game, team)` (a
+    multiplier on a team's step size for one game)."""
+    sig = p.get("signal", "margin")
+    sh, sa = p.get("signals", ("home_pts", "away_pts"))
+    pull_fn = p.get("pull_fn")
+    step_fn = p.get("step_fn") or (lambda _x, _t: 1.0)
     r: dict[str, float] = defaultdict(float)  # overall rating (points or Elo points)
     o: dict[str, float] = defaultdict(float)  # offense (off_def)
     d: dict[str, float] = defaultdict(float)  # defense (off_def)
@@ -101,10 +110,10 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
         if s != season:
             pull = p.get("pull", 0.0)
             for t in list(r):
-                r[t] *= 1 - pull
+                r[t] *= 1 - (pull_fn(s, t) if pull_fn else pull)
             for t in list(o):
-                o[t] *= 1 - pull
-                d[t] *= 1 - pull
+                o[t] *= 1 - (pull_fn(s, t) if pull_fn else pull)
+                d[t] *= 1 - (pull_fn(s, t) if pull_fn else pull)
             mu = pr["total"] / 2
             season = s
         preds = []
@@ -132,9 +141,9 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
             h, a = x["home_team"], x["away_team"]
             hfa = 0.0 if x["neutral"] else pr["hfa"]
             if kind in ("margin", "margin_pull"):
-                e = x["margin"] - m
-                r[h] += p["k"] * e
-                r[a] -= p["k"] * e
+                e = x[sig] - m
+                r[h] += p["k"] * step_fn(x, h) * e
+                r[a] -= p["k"] * step_fn(x, a) * e
             elif kind in ("chess", "fte"):
                 gap = r[h] - r[a] + hfa * 25
                 exp = 1 / (1 + 10 ** (-gap / 400))
@@ -149,11 +158,12 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
             elif kind == "off_def":
                 ph = mu + o[h] - d[a] + hfa / 2
                 pa = mu + o[a] - d[h] - hfa / 2
-                eh, ea = x["home_pts"] - ph, x["away_pts"] - pa
-                o[h] += p["k"] * eh
-                d[a] -= p["k"] * eh
-                o[a] += p["k"] * ea
-                d[h] -= p["k"] * ea
+                eh, ea = x[sh] - ph, x[sa] - pa
+                kh, ka = p["k"] * step_fn(x, h), p["k"] * step_fn(x, a)
+                o[h] += kh * eh
+                d[a] -= ka * eh
+                o[a] += ka * ea
+                d[h] -= kh * ea
                 mu += p["k_mu"] * (eh + ea) / 2
     return pl.DataFrame(rows)
 
@@ -261,3 +271,70 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
+# ------------------------------------------------------------------ shared by the hunch scripts
+RUNG1 = {"k": 0.06, "pull": 0.5}  # margin Elo with a half pull (F3)
+RUNG1_OD = {"k": 0.05, "k_mu": 0.0, "pull": 1 / 3}  # offense and defense ratings (F4)
+
+
+def versus_rung1(
+    g: pl.DataFrame,
+    priors,
+    kind: str,
+    grid: list[dict],
+    lo: int = REPORT_FROM,
+    tune_lo: int = TUNE_FROM,
+) -> dict:
+    """Tune a variant on the tuning seasons, then score it against rung 1 on `lo`-2024: mean miss
+    on the margin (and the total for off_def), and the gap to rung 1 with a 90% week-block
+    interval. Negative gaps mean the variant misses by less."""
+    base_kind, base = ("off_def", RUNG1_OD) if kind == "off_def" else ("margin_pull", RUNG1)
+    best = min(grid, key=lambda p: mae(g, run(g, priors, kind, **p), tune_lo, lo - 1))
+    a = run(g, priors, kind, **best).rename({"pred": "v", "pred_total": "v_t"})
+    b = run(g, priors, base_kind, **base).rename({"pred": "b", "pred_total": "b_t"})
+    j = g.filter(c("season").is_between(lo, LAST)).join(a, on="game_id").join(b, on="game_id")
+    e = j.select(
+        "season",
+        "week",
+        v=c("margin") - c("v"),
+        b=c("margin") - c("b"),
+        close=c("margin") - c("spread"),
+    )
+    out = {
+        "chosen": {k: v for k, v in best.items() if not callable(v)},
+        "games": j.height,
+        "close": float(e["close"].abs().mean()),
+        "rung1": float(e["b"].abs().mean()),
+        "variant": float(e["v"].abs().mean()),
+        "gap": interval(e, "v", "b"),
+    }
+    if kind == "off_def":
+        et = j.select(
+            "season",
+            "week",
+            v=c("total") - c("v_t"),
+            b=c("total") - c("b_t"),
+            close=c("total") - c("total_line"),
+        )
+        out |= {
+            "close_t": float(et["close"].abs().mean()),
+            "rung1_t": float(et["b"].abs().mean()),
+            "variant_t": float(et["v"].abs().mean()),
+            "gap_t": interval(et, "v", "b"),
+        }
+    return out
+
+
+def show(name: str, r: dict) -> None:
+    g = r["gap"]
+    print(
+        f"  {name:28s} margin {r['variant']:.3f} (rung 1 {r['rung1']:.3f}, close {r['close']:.3f})"
+        f"  gap {g[0]:+.3f} [{g[1]:+.3f}, {g[2]:+.3f}]  {r['chosen']}"
+    )
+    if "gap_t" in r:
+        t = r["gap_t"]
+        print(
+            f"  {'':28s} total  {r['variant_t']:.3f} (rung 1 {r['rung1_t']:.3f}, close"
+            f" {r['close_t']:.3f})  gap {t[0]:+.3f} [{t[1]:+.3f}, {t[2]:+.3f}]"
+        )
