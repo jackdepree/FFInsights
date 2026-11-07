@@ -82,6 +82,8 @@ You can stop at the takeaway, or keep going as far down the rabbit hole as you w
 
 I want PCF to beat the sportsbooks, consensus rankings, ADP, and any one person's opinion, at every horizon: next week, next month, the next 10 games, the next Super Bowl or two, the next draft.
 
+The sportsbooks and the consensus are already the average of many smart people. Doing the correct, standard thing gets you to the average, and the average earns nothing. Our edge comes from being **different and right**: my football ideas and hunches, found through analogies and pattern recognition, kept honest by strict testing. Everything is already there in the data. The question is whether we know where to look.
+
 > **Claude's note:** To keep this ambition measurable and honest:
 > - **Main game spreads and totals** are among the most efficient betting markets in the world. We use them as a *benchmark*: if our win probabilities come close to the closing line, the lower layers are healthy. They aren't the main profit target.
 > - **Realistic edges** are in less efficient places: player props, touchdown scorers, early-week lines before the market settles, start/sit, DFS, best ball and dynasty values.
