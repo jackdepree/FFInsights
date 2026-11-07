@@ -10,6 +10,7 @@ from polars.testing import assert_frame_equal
 
 from pcf.core.contract import check_expert, find_all
 from pcf.data.gateway import END_OF_TIME, FrameSource, Gateway
+from pcf.experts.elo.horizons import EloNext3, EloRest, window_wins
 from pcf.experts.elo.model import EloMargin, EloTotal, EloWin
 from pcf.experts.elo.ratings import Settings, Walk, season_priors
 from pcf.experts.elo.same_team import same_team
@@ -164,14 +165,19 @@ def test_every_variant_meets_the_contract():
         "margin_simple",
         "total_simple",
         "win_simple",
+        "wins_next3",
+        "wins_next3_yardstick",
+        "wins_rest",
+        "wins_rest_yardstick",
     }
     for cls in find_all("elo"):
         check_expert(cls)
 
 
-def test_per_moment_features_equal_the_bulk_ones():
+@pytest.mark.parametrize("cls", [EloMargin, EloRest])
+def test_per_moment_features_equal_the_bulk_ones(cls):
     gw = _gateway()
-    ex = EloMargin()
+    ex = cls()
     every = steps(gw.calendar, ex.cadence, world.SEASONS, ex.run)
     bulk = ex.features_history(gw.view(END_OF_TIME, ex.cadence, ex.inputs),
                                pl.concat([s.games for s in every]))  # fmt: skip
@@ -179,11 +185,13 @@ def test_per_moment_features_equal_the_bulk_ones():
     for s in every:
         for (moment,), frame in s.games.group_by("moment", maintain_order=True):
             one = ex.features(gw.view(moment, ex.cadence, ex.inputs), frame.drop("moment"))
-            other = bulk.filter(c("game_id").is_in(one["game_id"].implode()))
-            assert_frame_equal(one.sort("game_id"), other.sort("game_id"), rel_tol=1e-9)
+            keys = ex.keys()
+            other = bulk.join(one.select(keys), on=keys)
+            assert_frame_equal(one.sort(keys), other.sort(keys), rel_tol=1e-9)
             seen += one.height
     assert seen == bulk.height
-    assert bulk["qb_diff"].abs().sum() > 0  # the injury reports reached the features
+    if cls is EloMargin:
+        assert bulk["qb_diff"].abs().sum() > 0  # the injury reports reached the features
 
 
 def test_ratings_find_the_strong_teams_and_forecasts_have_signal():
@@ -208,3 +216,39 @@ def test_the_other_variants_backtest(cls):
         assert h["mean"].is_between(0, 1).all()
     else:
         assert (h["q10"] <= h["q90"]).all()
+
+
+# ------------------------------------------------------------------------ the long horizon
+def test_window_wins_count_from_this_game_on_and_wait_for_the_whole_window():
+    t = [datetime(2023, 9, d, tzinfo=UTC) for d in (3, 10, 17, 24)]
+    game = pl.DataFrame(
+        {
+            "game_id": ["g1", "g2", "g3", "g4"],
+            "season": [2023] * 4,
+            "week": [1, 2, 3, 4],
+            "game_type": ["REG"] * 4,
+            "kickoff": t,
+            "home_team": ["A", "B", "A", "A"],
+            "away_team": ["B", "A", "B", "B"],
+            "location": ["Home"] * 4,
+            "home_score": [20, 17, 10, None],
+            "away_score": [10, 17, 13, None],
+            "result_known_at": [t[0], t[1], t[2], None],
+            "known_at": [t[0]] * 4,  # on the schedule from the start
+        }
+    )
+    a = window_wins(game, 3).filter(c("team") == "A").rows_by_key("game_id", named=True)
+    assert a["g1"][0]["y"] == 1.5  # won, tied, lost
+    assert "g2" not in a  # g4 isn't played yet
+    rest = window_wins(game, None)
+    assert rest.is_empty()  # every window reaches g4
+
+
+def test_long_horizon_forecasts_stay_inside_the_games_left():
+    gw = _gateway()
+    for cls in (EloNext3, EloRest):
+        bt = backtest.run(cls(), gateway=gw, seasons=[2022, 2023], bulk=True)
+        h = bt.scored
+        assert h.height > 0
+        assert (h["q10"] >= 0).all() and (h["q90"] <= bt.features["left"].max()).all()
+        assert (bt.features["elo_wins"] <= bt.features["left"]).all()

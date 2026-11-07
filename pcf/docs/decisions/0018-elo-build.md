@@ -13,6 +13,8 @@
 7. **Same-team share and the usual QB:** a team's usual players are its last 4 games' snap shares, known after each game. A player counts as missing if they're off the roster for the week, or listed Out or Doubtful on a report known before the forecast. The usual QB is the one with the top offense share; ties go to the lower player id, so runs repeat exactly.
 8. **Home field** is the mean home margin of the 3 seasons before, neutral games left out; league points per team are last season's mean. Both are known before the season starts.
 
+9. **The long horizon** (`wins_next3`, `wins_rest`, team-game rows) scores each game left with today's ratings, turns the edge into a win chance with a normal curve 13.5 points wide, and sums. A refit then scales the sum (wins = b1 × expected wins + b2 × games left). It assumes no rating changes and no future injuries over the window. Its yardstick pulls the season's win rate toward .500 by 8 games (exploration F26). Ranges are fitted per number of games left and kept between 0 and the games left.
+
 **Why:** each one keeps the package equal to what the exploration measured (2016–2024: margin miss 10.09 against the close's 9.79; total 10.76 against 10.44; win log loss 0.631 against 0.609), and keeps it point-in-time.
 
 **Alternatives:**

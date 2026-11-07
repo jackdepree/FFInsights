@@ -404,14 +404,19 @@ def test_label_check(
     by_index = {s.index: s for s in bt.steps}
     failed = []
     for index in picks:
+        step = by_index[index]
         later = pl.concat([s.games["game_id"] for s in bt.steps if s.index >= index])
+        # A result known before the step's last moment (Thursday's game, by the Saturday run) is
+        # a fair input to that moment's features (decision 0020), so it stays as it is.
+        last = pl.lit(step.games["moment"].max()).cast(UTC_TIME)
 
-        def rows(name: str, part: str, later=later) -> pl.Expr | None:
-            return c("game_id").is_in(later.implode()) if part in table(name).after else None
+        def rows(name: str, part: str, later=later, last=last) -> pl.Expr | None:
+            if part not in table(name).after:
+                return None
+            return c("game_id").is_in(later.implode()) & (c("known_at") > last)
 
         world = Gateway(Perturbed(gateway.source, rows, "scramble", seed), gateway.calendar,
                         gateway.output)  # fmt: skip
-        step = by_index[index]
         mine = feature_history(expert, world, [step])
         feats = pl.concat([bt.features.filter(c("step") != index), mine], how="diagonal_relaxed")
         before = walk(expert, bt.features, bt.targets, bt.steps, [index], bt.refit, bt.half_life)
