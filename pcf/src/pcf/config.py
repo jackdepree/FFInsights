@@ -43,6 +43,8 @@ class Config:
     seasons: Seasons
     seed: int
     log_level: str
+    ledger_remote: str
+    ledger_clone: Path
 
     def zone(self, name: str) -> Path:
         """The folder for one storage zone, e.g. `zone("raw")`."""
@@ -72,6 +74,8 @@ def load_config(path: Path = CONFIG_FILE, env: Mapping[str, str] | None = None) 
         seasons=Seasons(**raw["seasons"]),
         seed=int(raw["random"]["seed"]),
         log_level=str(raw["logging"]["level"]).upper(),
+        ledger_remote=str(raw["ledger"]["remote"]),
+        ledger_clone=(data_dir / raw["ledger"]["clone_dir"]).resolve(),
     )
 
 

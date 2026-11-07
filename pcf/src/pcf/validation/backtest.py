@@ -16,6 +16,7 @@ from __future__ import annotations
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -118,6 +119,32 @@ def shuffle_within_steps(pool: pl.DataFrame, seed: int) -> pl.DataFrame:
     return pool.with_columns(y=c("y").shuffle(seed=seed).over("step"))
 
 
+def fit_at(
+    expert: Expert,
+    pool: pl.DataFrame,
+    at: datetime,
+    season: int,
+    half_life: float | None = HALF_LIFE,
+) -> tuple[Any, datetime]:
+    """Fit on the pool's rows predicted before `at` whose outcomes were known by then, weighted by
+    age in seasons from `season`. Returns the model and its training cutoff (the latest outcome it
+    saw). The walk and the live run (`pcf.validation.live`) both fit here."""
+    moment = pl.lit(at).cast(pl.Datetime("us", "UTC"))
+    # In a fixed order, so a refit on the same rows gives the same model to the last digit
+    train = pool.filter((c("as_of") < moment) & (c("known_at") <= moment)).sort(
+        "as_of", *expert.keys()
+    )
+    if train.is_empty():
+        raise ValueError(f"{expert.id}: no training rows before {at}")
+    assert_walk_forward(train, at)
+    if half_life:
+        age = season - c("step_season")
+        train = train.with_columns(weight=0.5 ** (age / half_life))
+    else:
+        train = train.with_columns(weight=pl.lit(1.0))
+    return expert.fit(train), train["known_at"].max()
+
+
 def walk(
     expert: Expert,
     feats: pl.DataFrame,
@@ -143,21 +170,7 @@ def walk(
     for index in test:
         step = by_index[index]
         if refit == "step" or season_fit != step.season:
-            moment = pl.lit(step.at).cast(pl.Datetime("us", "UTC"))
-            # In a fixed order, so a refit on the same rows gives the same model to the last digit
-            train = pool.filter((c("as_of") < moment) & (c("known_at") <= moment)).sort(
-                "as_of", *keys
-            )
-            if train.is_empty():
-                raise ValueError(f"{expert.id}: no training rows before step {index}")
-            assert_walk_forward(train, step.at)
-            if half_life:
-                age = step.season - c("step_season")
-                train = train.with_columns(weight=0.5 ** (age / half_life))
-            else:
-                train = train.with_columns(weight=pl.lit(1.0))
-            model = expert.fit(train)
-            train_end = train["known_at"].max()
+            model, train_end = fit_at(expert, pool, step.at, step.season, half_life)
             season_fit = step.season
         rows = feats.filter(c("step") == index).sort(*keys)
         if rows.is_empty():

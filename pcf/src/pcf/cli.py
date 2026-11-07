@@ -170,6 +170,17 @@ def misses(args: argparse.Namespace) -> None:
     print(f"report: {page}")
 
 
+def ledger(args: argparse.Namespace) -> None:
+    """The prediction ledger: a live run of the games due now, or a replay of played weeks."""
+    from pcf.validation import live
+
+    if args.ledger_command == "replay":
+        out = live.replay(args.weeks, send=not args.no_push)
+    else:
+        out = live.run(refresh=not args.no_refresh, send=not args.no_push)
+    print(f"ledger run: {out.folder}" if out else "nothing due now")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="pcf", description="PCF: Principal Component Football")
     parser.add_argument("--version", action="version", version=f"pcf {__version__}")
@@ -224,7 +235,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     ms.add_argument("--variant", help="the variant (for projects with several)")
     ms.add_argument("--run", help="the run id (default: the latest)")
 
+    lg = commands.add_parser("ledger", help="the prediction ledger (live runs and replays)")
+    lg_commands = lg.add_subparsers(dest="ledger_command", required=True)
+    lr = lg_commands.add_parser("run", help="forecast the games due now and push them")
+    lr.add_argument("--no-refresh", action="store_true", help="use the data already pulled")
+    lr.add_argument("--no-push", action="store_true", help="write locally, don't push")
+    rp = lg_commands.add_parser("replay", help="remake forecasts for played weeks (not a record)")
+    rp.add_argument("weeks", nargs="+", type=int, help="the live season's weeks")
+    rp.add_argument("--no-push", action="store_true", help="write locally, don't push")
+
     args = parser.parse_args(argv)
+    if args.command == "ledger":
+        ledger(args)
+        return 0
     if args.command == "misses":
         misses(args)
         return 0

@@ -11,6 +11,7 @@ The validation harness (`validation-harness` project): everything that decides w
 | `nulls.py` | Signal test (shuffled outcomes, 95 of 100 or 20 of 20) and the no-noise verdict |
 | `calibration.py` | Calibration error and slope; range coverage by group; sharpness; `spike_report` judges a spike forecast part by part (decision 0014) |
 | `leakage.py` | Checks 1-8 and 10, each with a planted leak in `tests/validation/planted.py` |
+| `live.py` | The live run (`pcf ledger run`): the games due now, each model fit at the run's moment with the backtest's own `fit_at`, the input check, written to the ledger and pushed. `replay` remakes played weeks, marked as a replay |
 | `inputs.py` | The input check: each input's fill rates in a live run against a backtest. It catches data that never arrives, which the leakage checks can't |
 | `sanity.py` | Shared football-sanity rules and the CEO's review lists |
 | `misses.py` | Where a model misses: the dated lens list (`LENS_LIST`), the tags that stand out, `misses.parquet`. On every player-game scorecard; `pcf misses <id>` for a saved run. A new list is a new date, never an edit |

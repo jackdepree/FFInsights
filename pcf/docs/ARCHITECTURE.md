@@ -253,6 +253,7 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 | `pcf tables build` | Build the tables from the raw copy (all, or named tables and `--seasons`); about 20 seconds |
 | `pcf ui` | Open MLflow's browser view of every run and model (about 8 seconds to start) |
 | `pcf champions` | Set MLflow's `champion` aliases from `registry.yaml`, on `main` only |
+| `pcf ledger run` | Forecast the games due now with the ledger's models, check their inputs, and push the run to `pcf-data` (decision 0017). `pcf ledger replay <weeks>` remakes played weeks, marked as a replay |
 | `pcf run weekly` | Run every due project in dependency order, using `champion` models. Write outputs and the ledger. |
 | `pcf run <id>` | Run one project (with `--upstream` to run what it needs first) |
 | `pcf backtest <id>` | Validate a model: walk-forward backtest, baselines, signal test, calibration, leakage checks, history in `outputs/<id>/<run_id>/` and the scorecard, as an MLflow attempt. About 7 minutes for a simple model over 2016-2024 (validation-harness#F16) |

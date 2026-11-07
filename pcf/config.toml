@@ -18,3 +18,10 @@ seed = 2026
 
 [logging]
 level = "INFO"
+
+[ledger]
+# The prediction ledger can't be rebuilt, so it lives in the private pcf-data repo (rule g).
+# The live run keeps a sparse clone of that repo at clone_dir (relative to data_dir), holding only
+# ledger/ and replay/.
+remote = "https://github.com/jackdepree/pcf-data.git"
+clone_dir = "pcf-data"

@@ -1,0 +1,101 @@
+"""The live run on the synthetic league, with 2023 standing in for the live season: which games are
+due, that a live forecast is exactly the backtest's, and that a replay matches a live run."""
+
+from dataclasses import replace
+from datetime import timedelta
+
+import polars as pl
+import pytest
+
+from pcf.config import Seasons, get_config
+from pcf.validation import backtest, live
+from pcf.validation.toy import RecentPoints
+
+from . import world
+
+c = pl.col
+LIVE = 2023
+
+
+@pytest.fixture(autouse=True)
+def live_2023(monkeypatch):
+    cfg = replace(get_config(), seasons=Seasons(2020, 2021, 2022, LIVE))
+    monkeypatch.setattr(live, "get_config", lambda: cfg)
+
+
+@pytest.fixture(scope="module")
+def gw():
+    return world.gateway()
+
+
+def week3(gw):
+    from pcf.data.timeline.moments import game_moments
+
+    return (
+        game_moments(gw.calendar, "tuesday")
+        .filter((c("season") == LIVE) & (c("week") == 3))
+        .sort("kickoff")
+    )
+
+
+def test_due_games_are_past_their_moment_and_before_kickoff(gw):
+    games = week3(gw)
+    moment = games["moment"][0]
+    assert live.due_games(gw, "tuesday", moment - timedelta(minutes=1)).is_empty()
+    due = live.due_games(gw, "tuesday", moment + timedelta(hours=1))
+    assert due["game_id"].to_list() == games["game_id"].to_list()
+    after_first = games["kickoff"][0] + timedelta(minutes=1)
+    assert (
+        live.due_games(gw, "tuesday", after_first)["game_id"].to_list()
+        == (games["game_id"].to_list()[1:])
+    )
+
+
+def test_a_live_forecast_is_the_backtest_s_forecast(gw):
+    e = RecentPoints()
+    now = week3(gw)["moment"][0] + timedelta(hours=1)
+    f = live.forecast(e, gw, now, "check")
+    so_far = live.steps_so_far(e, gw, now)
+    step = [s for s in so_far if s.season == LIVE and s.week == 3][0]
+    feats = backtest.feature_history(e, gw, so_far)
+    walked = backtest.walk(e, feats, backtest.targets(e, gw), so_far, [step.index], "step")
+    keys = e.keys()
+    both = f.rows.join(walked, on=keys, suffix="_walk")
+    assert both.height == f.rows.height == walked.height
+    for q in ("mean", "q10", "q50", "q90"):
+        assert (both[q] - both[f"{q}_walk"]).abs().max() == 0
+    assert (f.rows["kickoff"] > now).all()
+    assert (f.rows["train_end"] <= f.rows["as_of"]).all()
+
+
+def test_a_live_run_sees_no_later_moment(gw):
+    e = RecentPoints()
+    now = week3(gw)["moment"][0] + timedelta(hours=1)
+    so_far = live.steps_so_far(e, gw, now)
+    latest = max(s.games["moment"].max() for s in so_far)
+    assert latest <= now
+
+
+def test_a_replay_matches_the_live_run_it_stands_for(gw):
+    e = RecentPoints()
+    now = week3(gw)["moment"][0] + timedelta(hours=1)
+    later = now + timedelta(days=14)
+    feats = backtest.feature_history(e, gw, live.steps_so_far(e, gw, later))
+    replayed = live.forecast(e, gw, now, "replay", feats)
+    direct = live.forecast(e, gw, now, "live")
+    keys = e.keys()
+    assert replayed.rows.drop("run_id").sort(keys).equals(direct.rows.drop("run_id").sort(keys))
+
+
+def test_the_input_check_compares_the_same_weeks(gw):
+    e = RecentPoints()
+    now = week3(gw)["moment"][0] + timedelta(hours=1)
+    f = live.forecast(e, gw, now, "check")
+    assert set(f.checks["input"]) == {"last4", "games", "season_avg"}
+    assert not f.checks["flag"].any()
+
+
+def test_nothing_is_due_between_weeks(gw):
+    games = week3(gw)
+    after = games["kickoff"].max() + timedelta(minutes=1)
+    assert live.forecast(RecentPoints(), gw, after, "x") is None
