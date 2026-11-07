@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 from collections.abc import Sequence
+from datetime import UTC, datetime
 
 from pcf import __version__
 from pcf.config import (
@@ -174,6 +175,25 @@ def ledger(args: argparse.Namespace) -> None:
     """The prediction ledger: a live run of the games due now, or a replay of played weeks."""
     from pcf.validation import live
 
+    if args.ledger_command == "score":
+        import polars as pl
+
+        from pcf.config import get_config
+        from pcf.validation.ledger_score import scorecard
+
+        record = "replay" if args.replay else "live"
+        card = scorecard(record)
+        if card.is_empty():
+            print(f"nothing scored yet in the {record} record")
+            return
+        folder = get_config().zone("ledger") / "scorecards"
+        folder.mkdir(parents=True, exist_ok=True)
+        path = folder / f"{datetime.now(UTC):%Y%m%dT%H%M}_{record}.parquet"
+        card.write_parquet(path)
+        with pl.Config(tbl_cols=12, tbl_width_chars=200, float_precision=3):
+            print(card)
+        print(f"saved: {path}")
+        return
     if args.ledger_command == "replay":
         out = live.replay(args.weeks, send=not args.no_push)
     else:
@@ -240,6 +260,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     lr = lg_commands.add_parser("run", help="forecast the games due now and push them")
     lr.add_argument("--no-refresh", action="store_true", help="use the data already pulled")
     lr.add_argument("--no-push", action="store_true", help="write locally, don't push")
+    sc = lg_commands.add_parser("score", help="score the ledger against each model's backtest")
+    sc.add_argument("--replay", action="store_true", help="score the replay, not the record")
     rp = lg_commands.add_parser("replay", help="remake forecasts for played weeks (not a record)")
     rp.add_argument("weeks", nargs="+", type=int, help="the live season's weeks")
     rp.add_argument("--no-push", action="store_true", help="write locally, don't push")
