@@ -255,7 +255,7 @@ projects:
   - id: elo
     name: Team Elo (weekly)
     phase: 1
-    status: building
+    status: validating
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]

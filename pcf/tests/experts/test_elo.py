@@ -157,7 +157,14 @@ def _gateway(**kw) -> Gateway:
 
 
 def test_every_variant_meets_the_contract():
-    assert {x.variant for x in find_all("elo")} == {"margin", "total", "win"}
+    assert {x.variant for x in find_all("elo")} == {
+        "margin",
+        "total",
+        "win",
+        "margin_simple",
+        "total_simple",
+        "win_simple",
+    }
     for cls in find_all("elo"):
         check_expert(cls)
 

@@ -8,6 +8,10 @@ The walk's settings are fixed (exploration F3, F4). What the harness fits, per t
 - **total:** total = a + b1 x the offense/defense total + b2 x QBs missing + b3 x share missing.
 - **win:** a logistic curve on the margin variant's four features, no intercept (exploration F24:
   a fitted curve rather than a fixed normal one). Ties have no outcome.
+
+Each has a `_simple` twin, the brief's yardstick (rung 1): the same walk with no QB or same-team
+adjustment (margin and win: rating gap and home field; total: the offense/defense total). The
+full variant must beat it, and both are judged against the closing line.
 """
 
 from __future__ import annotations
@@ -19,6 +23,7 @@ import polars as pl
 from sklearn.linear_model import LogisticRegression
 
 from pcf.baselines.common import fit_offsets, with_ranges
+from pcf.baselines.market import MarketMargin, MarketTotal, MarketWin
 from pcf.core.contract import Expert
 from pcf.experts.elo import features as F
 from pcf.experts.elo.ratings import Settings
@@ -26,6 +31,8 @@ from pcf.experts.elo.ratings import Settings
 c = pl.col
 MARGIN_X = ("gap", "hfa", "qb_diff", "share_diff")
 TOTAL_X = ("od_total", "qb_sum", "share_missing")
+SIMPLE_MARGIN_X = ("gap", "hfa")
+SIMPLE_TOTAL_X = ("od_total",)
 
 
 def _wls(x: np.ndarray, y: np.ndarray, w: np.ndarray) -> np.ndarray:
@@ -89,6 +96,21 @@ class EloMargin(_Elo):
     variant = "margin"
     quantity = "home_margin"
 
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [EloMarginSimple, MarketMargin]
+
+
+class EloMarginSimple(EloMargin):
+    """Rung 1: the rating gap and home field only."""
+
+    variant = "margin_simple"
+    x = SIMPLE_MARGIN_X
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [MarketMargin]
+
 
 class EloTotal(_Elo):
     """Total points, from the offense and defense ratings and H1's adjustments."""
@@ -100,6 +122,21 @@ class EloTotal(_Elo):
 
     def _y(self) -> pl.Expr:
         return (c("home_score") + c("away_score")).cast(pl.Float64)
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [EloTotalSimple, MarketTotal]
+
+
+class EloTotalSimple(EloTotal):
+    """The offense/defense total only."""
+
+    variant = "total_simple"
+    x = SIMPLE_TOTAL_X
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [MarketTotal]
 
 
 class EloWin(_Elo):
@@ -125,3 +162,18 @@ class EloWin(_Elo):
 
     def explain(self, model: LogisticRegression) -> dict[str, Any]:
         return {"coefficients": dict(zip(self.x, map(float, model.coef_[0]), strict=True))}
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [EloWinSimple, MarketWin]
+
+
+class EloWinSimple(EloWin):
+    """A logistic curve on the rating gap and home field only."""
+
+    variant = "win_simple"
+    x = SIMPLE_MARGIN_X
+
+    @classmethod
+    def baselines(cls) -> list[type[Expert]]:
+        return [MarketWin]

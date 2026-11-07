@@ -126,6 +126,7 @@ How strong is each team before each game? Strong enough to forecast who wins, by
   - The long horizon is judged against the simple yardstick below, since we have no market history for season wins.
 - **Each hunch:** held if its version beats rung 1 on next games' margins over 2016–2024 (2020–2024 for H3), with the 90% interval of the gap below zero, compared by whole weeks.
 - **Signal:** each rating beats 20 of 20 shuffled versions of itself (VALIDATION.md §5).
+- **No noise (proposed by Claude 2026-11-07, for the CEO's approval):** the downstream target is the closing line (margin, total, win), the baseline the sides, totals and win products must beat. Elo blended into the close must not make it clearly worse (VALIDATION.md §5). Expected: neutral.
 - **Calibration:** win chances calibrated; margin and total ranges hold about 80% inside q10–q90.
 - **Long horizon:** wins over the next 3 games and the rest of the season, against a simple yardstick (the current win rate pulled toward .500).
 - **Seasons:** trained from 1999 if old seasons help, reported 2016–2024; the 2025 vault stays closed.
