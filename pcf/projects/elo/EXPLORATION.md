@@ -59,9 +59,28 @@ Run 2026-11-07 with [`explore/h3_winprob.py`](explore/h3_winprob.py). Each game'
 
 **H3 verdict: unclear, leaning failed.** Expected a gain of 0.05–0.15 points. The best blend gains 0.02 at most, and its interval reaches zero. The CEO's example is real: a late underdog win scores lower on average win probability than on the margin. But it's rarer or smaller than the margin's other strengths. The margin already captures most of what win probability knows, and win probability is noisier from week to week (F10). It's worth keeping as a small ingredient for rung 3, where small gains may add up, but not as a replacement for the margin.
 
+## H2 and H1: is it the same team?
+
+**Expected, written before running (Claude, 2026-11-07):**
+- **H2, a pull set by turnover:** a small gain, 0.01–0.04 points, mostly in the first weeks. The half pull already catches most of the drift, and turnover is only part of why teams change.
+- **H1, same-team share:** a starting quarterback out is the big one, about 0.05–0.10 points over all games, since it's a few games but large misses. Every other absence adds a little more, 0.02–0.05.
+- **Data:** snap counts start in 2013, so H2 is measured from 2014 and H1 from 2013. H2 is tuned on 2014–2019 and reported on 2020–2024. H1 has no setting fit before 2016, so its size is tuned on 2013–2015 and reported on 2016–2024.
+
+Run 2026-11-07 with [`explore/h2_h1_same_team.py`](explore/h2_h1_same_team.py).
+
+| # | Finding | Confidence |
+|---|---|---|
+| F12 | **Teams bring back about two-thirds of last season's snaps:** a mean of 66%, ranging from 40% to 96% (2014–2024). | strong |
+| F13 | **Setting each team's pull by its turnover makes the rating worse, the harder it leans on turnover.** With pull = 0.5 + b × (league average returning share − the team's), the gap to rung 1 on 2016–2024 is +0.00 (b = 0.5), +0.01 (1.5), +0.04 (3) and +0.05 (4). Tuned on 2014–2019, it picks b = 0, plain rung 1. | strong |
+| F14 | **A missing usual quarterback is worth about 2–3 points, and it helps the rating.** The usual starter is out or off the roster in 5.7% of team-games. Tuned on 2013–2015, the adjustment is 2 points, with a gap of −0.036 (−0.056 to −0.016) on 2016–2024. | strong |
+| F15 | **Other absences matter too (H1).** The same-team share averages 0.94 (bottom tenth: 0.88 or less). On its own, tuned at 5 points per unit of share, the gap is −0.021 (−0.031 to −0.011). With the QB adjustment it adds about 0.02 more: QB 2 + share 5 gives −0.054 (−0.078 to −0.030). | strong |
+| F16 | **The best sizes are probably larger than tuning picked.** Tuning had only 2013–2015, and the 2016–2024 curve keeps improving up to QB 3 and share 10–20, reaching −0.07 with both. That's chosen with hindsight, so it isn't a result. In rung 3, sizes should be re-tuned each season on all seasons before it. | moderate |
+
+**H2 verdict: half held.** The CEO's "every team should regress towards the mean when the season turns over" holds strongly. A half pull is the biggest gain on the ladder (F3), and larger than the usual one-third. "It's really a new team every season" scaled by each team's turnover fails (F13). Returning snaps don't say how much a team will change. Probably who leaves matters more than how many, which is H1's question asked between seasons. Expected 0.01–0.04 points from turnover; got nothing.
+
+**H1 verdict: held, modestly.** Expected 0.05–0.10 from the quarterback and 0.02–0.05 from everyone else. Got 0.04 and 0.02, about 0.05 together, with intervals clear of zero. "Is this the same team that played last week?" is a real signal beyond the quarterback, the usual way's only adjustment. The tracking analogy's other half, trusting new results more after a big change, wasn't tested.
+
 ## Still to do in this exploration
 
-1. **H2, turnover:** the pull set by the share of last season's snaps that return.
-2. **H1, same-team share:** the share of a team's usual snaps on the field this week, from participation and the injury report.
-3. **H7, parts:** running and passing ratings, each kept only if it helps.
-4. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
+1. **H7, parts:** running and passing ratings, each kept only if it helps.
+2. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.

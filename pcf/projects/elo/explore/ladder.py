@@ -94,11 +94,13 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
     Hooks for the hunch variants: `signal` (the column the margin ratings learn from, default
     `margin`), `signals` (the home and away points the offense/defense ratings learn from),
     `pull_fn(season, team)` (a team's own pull toward average), `step_fn(game, team)` (a
-    multiplier on a team's step size for one game)."""
+    multiplier on a team's step size for one game), `adj_fn(game)` (points added to the home
+    margin before the game, for the margin ratings)."""
     sig = p.get("signal", "margin")
     sh, sa = p.get("signals", ("home_pts", "away_pts"))
     pull_fn = p.get("pull_fn")
     step_fn = p.get("step_fn") or (lambda _x, _t: 1.0)
+    adj_fn = p.get("adj_fn") or (lambda _x: 0.0)
     r: dict[str, float] = defaultdict(float)  # overall rating (points or Elo points)
     o: dict[str, float] = defaultdict(float)  # offense (off_def)
     d: dict[str, float] = defaultdict(float)  # defense (off_def)
@@ -129,7 +131,7 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
             elif kind in ("chess", "fte"):
                 m = (r[h] - r[a]) / 25 + hfa
             elif kind in ("margin", "margin_pull"):
-                m = r[h] - r[a] + hfa
+                m = r[h] - r[a] + hfa + adj_fn(x)
             elif kind == "off_def":
                 ph = mu + o[h] - d[a] + hfa / 2
                 pa = mu + o[a] - d[h] - hfa / 2
