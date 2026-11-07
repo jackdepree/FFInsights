@@ -62,7 +62,7 @@ No bar in `docs/VALIDATION.md` changes. The specific ones:
   - One replay file, kept apart from the ledger and never counted as a record.
   - One file per run in the private `pcf-data` repo, at player-game level, per model: mean, q10, q50, q90 and the spike parts, as_of, kickoff, model, commit, training cutoff, data pull time, and input-check results. Empty market columns are ready for products.
   - A weekly scorecard on the PC.
-  - Failed runs show as a Windows notice, and a small GitHub Action checks for new rows, as a backup.
+  - Failed runs show as a Windows notice, and a small GitHub Action checks for new rows, as a backup. When that check fails, GitHub emails the CEO: they got 3 emails for the runs stopped by the billing lock (CEO, 2026-11-07). It works only once the lock is cleared.
 
 ## How it will be used
 - **Now:** the real test of `trees_week`. If it holds up, we trust it, and if not, we find out why.
