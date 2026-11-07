@@ -18,9 +18,9 @@ from pcf.data.gateway import Gateway
 
 c = pl.col
 RUNS = {
-    "margin": "79753c39ebfb4be7a54d6268e58858b2",
-    "total": "9faeb3f7847447e987d60e3dd54a2f24",
-    "win": "3af8cd13296d4780af90b69c05192dd8",
+    "margin": "3963e4d79a6e4b67a181507df11efa61",
+    "total": "417b504c3ce84c748d0b541e4de3fcc4",
+    "win": "ba61e29527324c26bd40f13c49582e23",
 }
 
 

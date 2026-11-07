@@ -39,3 +39,15 @@
 Measured 2026-11-07 with [`projects/elo/explore/consistency_so_far.py`](elo/explore/consistency_so_far.py): 829 team-seasons, 1999–2024 regular season (384 from 2013 for the snap and injury measures). The vault (2025) isn't read.
 
 **Caveat for state-like measures:** odd and even weeks sit next to each other, so a measure that lasts for weeks (an injury) looks consistent week to week. The season r tells a trait from a state.
+
+## Feature candidates
+
+> **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
+
+| Output | Expert | Where to read it | Consistent? | Quality against the close | Note |
+|---|---|---|---|---|---|
+| Team rating (points against an average team) | elo | `home_rating`, `away_rating` in the `margin` history (decision 0021) | Yes: the end-of-season rating repeats into next season at r 0.58, and its inputs (margin, same-team share) are traits | Its margin forecast is 0.29 points behind the close (elo#F2), 0.24 outside the final week | Ties the close when blended (elo#F4), so a betting model gains little from it directly. Most useful to other experts and before a line exists |
+| Offense and defense ratings | elo | `home_offense`, `home_defense`, `away_offense`, `away_defense` | Yes: points scored r 0.44 and allowed 0.31 season to season | Its total is 0.30 behind the close (elo#F2) | Game environments for fantasy and props |
+| Usual QB out, same-team share | elo | `h_qb`, `a_qb`, `h_share`, `a_share` | State (QB) and trait (share), above | Part of the 0.29 | Point-in-time availability, known by the Saturday run |
+| Margin, total, win chance | elo | `margin`, `total`, `win` histories | Built from traits | 0.29, 0.30 and 0.022 log loss behind the close | Calibrated ranges (elo#F5) |
+| Wins next 3 games, rest of season | elo | `wins_next3`, `wins_rest` histories | Built from traits | No close to compare with; beats the record-based yardstick at every point in the season (elo#F8) | For futures and season-win markets |
