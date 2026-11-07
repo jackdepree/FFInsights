@@ -2,7 +2,7 @@
 due, that a live forecast is exactly the backtest's, and that a replay matches a live run."""
 
 from dataclasses import replace
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
 
 import polars as pl
 import pytest
@@ -99,3 +99,36 @@ def test_nothing_is_due_between_weeks(gw):
     games = week3(gw)
     after = games["kickoff"].max() + timedelta(minutes=1)
     assert live.forecast(RecentPoints(), gw, after, "x") is None
+
+
+# --------------------------------------------------- the late injury file (found by the 2026-11-07
+# test run: a time-zone name was passed where Python needs the zone)
+
+SATURDAY_NOON = datetime(2026, 11, 7, 17, 0, tzinfo=UTC)
+
+
+def fresh(updated):
+    return lambda season: {"injuries": {"file_updated": updated, "fetched": updated}}
+
+
+def test_no_wait_on_a_tuesday(monkeypatch):
+    def fail(season):
+        raise AssertionError("shouldn't look at the file")
+
+    monkeypatch.setattr(live, "freshness", fail)
+    tuesday = SATURDAY_NOON - timedelta(days=4)
+    out = live.wait_for_injuries(tuesday, tuesday + timedelta(days=5), LIVE)
+    assert out == {"waited_minutes": 0, "injury_file_today": None}
+
+
+def test_no_wait_when_today_s_file_is_in(monkeypatch):
+    monkeypatch.setattr(live, "freshness", fresh(SATURDAY_NOON - timedelta(hours=3)))
+    out = live.wait_for_injuries(SATURDAY_NOON, SATURDAY_NOON + timedelta(days=1), LIVE)
+    assert out["injury_file_today"] is True and out["waited_minutes"] == 0
+
+
+def test_a_stale_file_near_kickoff_runs_without_waiting(monkeypatch):
+    monkeypatch.setattr(live, "freshness", fresh(SATURDAY_NOON - timedelta(days=1)))
+    soon = SATURDAY_NOON + timedelta(minutes=30)
+    out = live.wait_for_injuries(SATURDAY_NOON, soon, LIVE)
+    assert out["injury_file_today"] is False and out["waited_minutes"] == 0

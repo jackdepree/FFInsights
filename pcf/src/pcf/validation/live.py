@@ -16,6 +16,7 @@ import time
 from dataclasses import dataclass, replace
 from datetime import UTC, datetime, timedelta
 from typing import Any
+from zoneinfo import ZoneInfo
 
 import polars as pl
 
@@ -32,6 +33,7 @@ from pcf.validation.splits import Step, steps
 
 log = get_logger(__name__)
 c = pl.col
+EASTERN = ZoneInfo(ET)  # `ET` is the zone's name, for polars; datetimes need the zone itself
 
 # What the ledger forecasts (brief, decision 1): the four participation champions, one per
 # horizon, and `last_game` as a yardstick. A new champion joins with one line. The first is run
@@ -194,9 +196,9 @@ def wait_for_injuries(
     nflverse updates it once each morning (prediction-ledger#F8). Gives up an hour after the run
     starts or 45 minutes before the first kickoff, whichever comes first, and says so in the
     record."""
-    if now.astimezone(ET).weekday() not in (3, 5):  # Thursday, Saturday
+    if now.astimezone(EASTERN).weekday() not in (3, 5):  # Thursday, Saturday
         return {"waited_minutes": 0, "injury_file_today": None}
-    today = now.astimezone(ET).replace(hour=0, minute=0, second=0, microsecond=0)
+    today = now.astimezone(EASTERN).replace(hour=0, minute=0, second=0, microsecond=0)
     deadline = min(now + timedelta(hours=1), first_kickoff - timedelta(minutes=45))
     from pcf.data.sources.nflverse import refresh
 
@@ -266,7 +268,7 @@ def run(
         gateway = Gateway()
     if send:
         ledger.ensure_clone()
-    label = label or now.astimezone(ET).strftime("%a").lower()
+    label = label or now.astimezone(EASTERN).strftime("%a").lower()
     out = ledger.open_run(
         season, label, started, code["commit"], pulled["pulled_at"], record, trial(send)
     )
