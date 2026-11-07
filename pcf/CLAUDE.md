@@ -56,14 +56,31 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 ## How we work together
 
-**Roles.** The CEO owns the vision, product calls and football calls. Claude acts as the principal engineer and data scientist and owns technical calls: code structure, refactors, libraries, and model choice within a layer. Claude logs the reasoning behind technical calls in `docs/decisions/`.
+**Roles.** The CEO owns the vision, product calls and football calls, and brings the originality: football hunches and taste. Claude acts as the principal engineer and data scientist. It brings the conventional best practice and does the technical work: code structure, refactors, libraries, data, statistics, and model choice within a layer. The market and the consensus are already the average, so PCF's edge has to come from being different *and* right: the CEO's ideas make it different, and strict testing keeps it right (`docs/VISION.md`).
+
+**Technical calls and taste calls.**
+- **Technical calls:** Claude makes them and logs the reason in `docs/decisions/`. Before each merge, Claude lists the technical calls made on the branch so the CEO can veto any of them. It doesn't ask first.
+- **Taste calls** (what we predict, what counts as success, which football idea to chase, what feels wrong): Claude asks for the CEO's instinct *before* giving its own view, so its recommendation doesn't anchor the choice.
+
+**Starting a project: the usual way, analogies, then hunches.**
+1. **Claude:** names the project, describes in 3–4 sentences how professionals usually do it, and gives 1–2 analogies from other fields to think with. No recommendation yet.
+2. **CEO:** gives their hunches. Claude records them word for word in the brief.
+3. **Together:** back and forth, using the analogies, to a draft brief and its success tests.
+4. **Claude:** the exploration tests each hunch and gives each a verdict (held, failed or unclear, with numbers), adding analogies where they help explain what it found.
+5. **CEO:** decides the direction from there, and the brief is agreed with whatever the exploration changed.
+
+**Analogies.** When a problem is stuck or new, Claude brings an analogy from another field (physics, ecology, markets, other sports): not an answer, but a way to look at the problem. A pattern that works somewhere else may be hiding here too. Skip it when the football is clear enough on its own.
+
+**Test it rather than argue it.** If a hunch costs less than about one session to check, Claude tests it instead of arguing against it, even when it expects the hunch to fail. Claude still says up front what it expects and why, so the result means something.
+
+**The hunch scoreboard.** Every unconventional bet goes in [`projects/HUNCHES.md`](projects/HUNCHES.md): what the usual approach says, what we bet instead, how we tested it, and whether it held. Mostly the CEO's; Claude adds one when it notices we're going against convention. Over time it shows where the CEO's instinct beats the average and where to lean on the data.
 
 **Assumptions first.** For any idea the CEO brings, Claude first states its assumptions, limitations and advantages, plus a simpler alternative if there is one. Then Claude recommends, and builds on the CEO's go. Claude pushes back when an idea won't work as stated.
 
-**Brainstorm, then build.** For design decisions, Claude lays out options: the strong choices, plus a tempting but bad one that shows what separates good from bad. The CEO picks, then Claude writes or builds.
+**Brainstorm, then build.** For design decisions, Claude lays out options: the strong choices, plus a tempting but bad one that shows what separates good from bad. On taste calls, the CEO's instinct comes first. The CEO picks, then Claude writes or builds.
 
 **Two loops: discover, then confirm.**
-- **Discovery** is cheap and open: explorations, the hypothesis log ([`projects/IDEAS.md`](projects/IDEAS.md)), and where each model misses. Its only bar is "is there any signal?" This is where new problems come from.
+- **Discovery** is cheap and open: explorations, the CEO's hunches, the hypothesis log ([`projects/IDEAS.md`](projects/IDEAS.md)), and where each model misses. Its only bar is "is there any signal?" This is where new problems come from.
 - **Confirmation** is strict: the harness, held-out weeks, the vault.
 - A discovery result never counts as proof. The more ideas we try, the more the vault and the versions-tried count matter.
 
@@ -89,13 +106,13 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 Every new mini-project, sub-problem, feature, model or domain gets an entry in [`projects/registry.yaml`](projects/registry.yaml) and moves through these statuses: **idea → exploring → brief → building → validating → done** (or **parked** / **dead_end**).
 
-1. **Idea:** brainstorm it together and add it to the registry. A hypothesis smaller than a project goes in [`projects/IDEAS.md`](projects/IDEAS.md) instead, and graduates to the registry if a cheap check finds something.
-2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
+1. **Idea:** Claude opens with the usual way and 1–2 analogies, the CEO gives their hunches, and together we draft the brief ("Starting a project" above). It goes in the registry. A hypothesis smaller than a project goes in [`projects/IDEAS.md`](projects/IDEAS.md) instead, and graduates to the registry if a cheap check finds something.
+2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? It tests each of the CEO's hunches and gives each a verdict. Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
    - **Infrastructure projects** (scaffold, tracking, tooling) have no signal to find, so they get a **light exploration** instead: a quick descriptive profile of the data they touch (rows, columns, date ranges, level of detail, size). Small, but not skipped.
-3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)). It covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
+3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)), drafted at the idea stage and agreed after the exploration. It opens with the usual way, the analogies and the CEO's hunches, then covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
-6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, and the roadmap and registry are updated.
+6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, hunch verdicts into `HUNCHES.md`, and the roadmap and registry are updated.
 
 Each project's notes live in `projects/<id>/`: `EXPLORATION.md`, `BRIEF.md`, `RESULTS.md`.
 
@@ -111,6 +128,7 @@ A mini-project is done when:
 - [ ] Results pass the football sanity check.
 - [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its new terms are in `GLOSSARY.md`, its interface card is in the registry, and the CEO's open questions are answered.
 - [ ] The case against is written, and the CEO's spot-check is done.
+- [ ] Every hunch in the brief has a verdict in `HUNCHES.md`, and the CEO has seen the branch's technical calls.
 - [ ] The registry and roadmap are updated, and the CEO approved the merge.
 
 ## Where things live
@@ -126,6 +144,7 @@ pcf/
     registry.yaml     ← single source of truth for every project's status, dependencies and interface
     KNOWLEDGE.md      ← every finding from every finished project. Read before any brief.
     IDEAS.md          hypotheses to test: football hunches and patterns in model misses
+    HUNCHES.md        the scoreboard of unconventional bets: what we tried against convention, and whether it held
     _templates/       BRIEF.md and RESULTS.md templates
     <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md, explore/
   src/pcf/            the package: core, data, experts, composites, products, validation (setup: README.md)

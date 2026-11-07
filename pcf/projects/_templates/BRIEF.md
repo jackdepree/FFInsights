@@ -1,9 +1,22 @@
 # Brief: <project name> (`<id>`)
 
-> Written with the CEO **before building**. One page. Copy to `projects/<id>/BRIEF.md`.
+> Written with the CEO **before building**: drafted at the idea stage, agreed after the exploration. One page plus the opening sections. Copy to `projects/<id>/BRIEF.md`.
 > Before writing it, read `projects/KNOWLEDGE.md` and the RESULTS.md of every project this one depends on.
 
 **Status:** draft | agreed (date) · **Layer:** expert / composite / product · **Cadence:** in_season / retrospective / offseason_events
+
+## The usual way
+*Claude, before any research.* How professionals usually do this, in 3–4 sentences. No recommendation.
+
+## Analogies
+*Claude.* 1–2 problems from other fields with the same shape (physics, ecology, markets, other sports), and what each suggests looking at. Skip if the football is clear enough on its own.
+
+## CEO hunches
+*The CEO's words, recorded as said, before Claude's research.* Each hunch gets an id (H1, H2, ...), is tested in the exploration, and gets a verdict in [`projects/HUNCHES.md`](../HUNCHES.md).
+
+| # | Hunch | What the usual way says | How the exploration will test it |
+|---|---|---|---|
+| H1 | | | |
 
 ## The question
 One or two sentences, in plain football language.

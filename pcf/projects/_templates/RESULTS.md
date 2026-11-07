@@ -18,6 +18,13 @@ Two or three sentences: what we learned and whether it worked against the brief'
 | Football sanity (CEO review date) | |
 | CEO spot-check (date): what was checked | |
 
+## Hunch verdicts
+Each hunch from the brief, and any unconventional bet made along the way. Copied into [`projects/HUNCHES.md`](../HUNCHES.md).
+
+| # | Hunch | Verdict (held / failed / unclear) | Evidence, with its size |
+|---|---|---|---|
+| H1 | | | |
+
 ## Terms
 The project's terms as they ended up: anything new, or anything whose definition changed since the brief. These are copied into `docs/GLOSSARY.md`.
 
