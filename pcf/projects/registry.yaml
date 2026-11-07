@@ -238,7 +238,7 @@ projects:
   - id: prediction-ledger
     name: Prediction ledger
     phase: 0
-    status: building
+    status: validating
     horizon: now
     depends_on: [package-scaffold, validation-harness]
     summary: An append-only record of every prediction made before kickoff, with the market line at that time. It feeds the track record and the scorecards.
@@ -255,8 +255,8 @@ projects:
   - id: elo
     name: Team Elo (weekly)
     phase: 1
-    status: idea
-    horizon: next
+    status: exploring
+    horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: Weekly team strength rating, with optional offense/defense split and QB adjustment. Doubles as a win-probability baseline.

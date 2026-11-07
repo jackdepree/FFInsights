@@ -82,6 +82,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-07:** The prediction ledger is on main and scheduled (Tuesday 10:00, Thursday and Saturday noon Eastern); its first counted forecasts come Thursday 2026-11-12, and it moves to validating until two live weeks are scored. Team Elo starts, the first project to open with the CEO's hunches (`projects/elo/BRIEF.md`).
 - **2026-11-06:** `participation`'s next-game champion is now `trees_week`: `trees_top` plus the week of the season and the last week times win rate (F33). The spot-check corrected why the playoffs gain: mostly backups on the inactive list, not tighter rotations (F34), and found the final week misleads playoff forecasts (F36).
 - **2026-11-05:** `participation`'s next-game champion is now `trees_top`: spike forecasts are judged part by part and their parts saved (decision 0014), QBs get a chance of every snap, and players on the injury report get their own residuals (F25–F28). The Windows block on pandas cleared, so the full tests and MLflow runs are back.
 - **2026-11-03:** `participation` built, PCF's first expert: each rostered QB, RB, WR and TE's snap share and chance of being active, before each game, over the next 3 games and for the rest of the season, as four champions. It beats its shuffled self and improves the lasso's fantasy points (decision 0013). `career-snaps` added as an idea (D10).
