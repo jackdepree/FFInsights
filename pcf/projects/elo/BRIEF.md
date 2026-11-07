@@ -1,6 +1,6 @@
 # Brief: Team Elo (`elo`)
 
-**Status:** draft, 2026-11-07 · **Layer:** expert · **Cadence:** in_season
+**Status:** agreed 2026-11-07 (CEO: "Build it", after the exploration) · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-07, before any research.* The standard is FiveThirtyEight's NFL Elo:
@@ -67,6 +67,14 @@
 > "I think the team ratings should predict all three. So who wins by how much and the total points. But I think it should also predict a fourth thing, which would be future wins. So maybe like next three games or next the rest of the season, or things like that, or like given how many wins they have now, the rest of the season. So some sort of long horizon."
 
 **On order (CEO, 2026-11-07):** Elo in two parts. Part 1 is the rating, with H1–H4 and H7 as its experiments. Part 2, conditional strength (H5), comes after the consistency project (H6).
+
+## What the exploration changed (2026-11-07)
+The verdicts are in [`EXPLORATION.md`](EXPLORATION.md) and [`HUNCHES.md`](../HUNCHES.md). The champion to build is rung 3:
+- **The rating:** a margin Elo in points (step 0.06, a half pull toward average between seasons), with offense and defense ratings for totals (step 0.05, a one-third pull).
+- **H1's adjustments:** the usual QB missing, and the same-team share. Their sizes are fit by the harness inside each training window, not tuned once.
+- **Left out:** H2's turnover-scaled pull, H4's luck-free margin, H3's win-probability blend and H7's passing and running parts. They failed or added nothing.
+- **Bars:** within 0.5 points of the close on margins and totals, with 0.25 a strong result. The exploration's rung 3 is 0.31 and 0.39 behind.
+- **Second test:** every measure built also goes in [`CONSISTENCY.md`](../CONSISTENCY.md).
 
 ## The question
 How strong is each team before each game? Strong enough to forecast who wins, by how much, the total points, and the wins still to come.
