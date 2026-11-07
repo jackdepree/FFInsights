@@ -95,6 +95,7 @@ class EloMargin(_Elo):
 
     variant = "margin"
     quantity = "home_margin"
+    publishes = F.PUBLISHED  # the ratings, for higher layers (decision 0021)
 
     @classmethod
     def baselines(cls) -> list[type[Expert]]:
@@ -106,6 +107,7 @@ class EloMarginSimple(EloMargin):
 
     variant = "margin_simple"
     x = SIMPLE_MARGIN_X
+    publishes = ()
 
     @classmethod
     def baselines(cls) -> list[type[Expert]]:

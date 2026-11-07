@@ -206,6 +206,23 @@ def test_outputs_from_a_model_trained_later_fail_check_6(honest, late):
     assert leakage.vintage_check(bt, gw).passed is not late
 
 
+def test_the_future_world_scrambles_published_features_too():
+    t = pl.Datetime("us", "UTC")
+    as_of = [datetime(2022, 10, 4, tzinfo=UTC)] * 5 + [datetime(2023, 10, 4, tzinfo=UTC)] * 5
+    df = pl.DataFrame(
+        {"game_id": [f"g{i}" for i in range(10)], "as_of": as_of, "train_end": as_of,
+         "mean": [float(i) for i in range(10)], "home_rating": [float(i) for i in range(10)]},
+        schema_overrides={"as_of": t, "train_end": t},
+    )  # fmt: skip
+    gw = Gateway(world.gateway().source, world.cal(), lambda _p, _v: df)
+    cut = datetime(2023, 1, 1, tzinfo=UTC)
+    out = leakage.future_world(gw, cut, "scramble", seed=1).output("elo", 1).sort("game_id")
+    late = c("as_of") > pl.lit(cut).cast(t)
+    assert out.filter(~late).equals(df.filter(~late).sort("game_id"))
+    moved = out.filter(late).join(df, on="game_id", suffix="_was")
+    assert moved.height == 5 and (moved["home_rating"] != moved["home_rating_was"]).all()
+
+
 # --- 8 ----------------------------------------------------------------------------------------
 
 

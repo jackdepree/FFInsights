@@ -10,8 +10,9 @@ from polars.testing import assert_frame_equal
 
 from pcf.core.contract import check_expert, find_all
 from pcf.data.gateway import END_OF_TIME, FrameSource, Gateway
+from pcf.experts.elo import features as F
 from pcf.experts.elo.horizons import EloNext3, EloRest, window_wins
-from pcf.experts.elo.model import EloMargin, EloTotal, EloWin
+from pcf.experts.elo.model import EloMargin, EloMarginSimple, EloTotal, EloWin
 from pcf.experts.elo.ratings import Settings, Walk, season_priors
 from pcf.experts.elo.same_team import same_team
 from pcf.validation import backtest
@@ -45,14 +46,14 @@ def test_one_result_moves_both_teams_by_k_times_the_miss():
     assert walk.d["A"] == pytest.approx(0.05 * 6)
 
 
-def test_a_new_season_pulls_ratings_halfway_once():
+def test_a_new_season_pulls_ratings_toward_average_once():
     empty = {"season": pl.Int32, "neutral": pl.Boolean, "margin": pl.Float64, "total": pl.Float64}
     walk = Walk(season_priors(pl.DataFrame(schema=empty)))
     walk.add(_result(2020, "A", "B", 30.0, 0.0))
     before = walk.r["A"]
     walk.edges(2021, "A", "B", False)
     walk.edges(2021, "A", "B", False)
-    assert walk.r["A"] == pytest.approx(before * 0.5)
+    assert walk.r["A"] == pytest.approx(before * (1 - 0.4))  # decision 0021
 
 
 def test_home_field_is_the_previous_three_seasons_mean_home_margin():
@@ -205,6 +206,16 @@ def test_ratings_find_the_strong_teams_and_forecasts_have_signal():
     miss = float((y - bt.scored["mean"]).abs().mean())
     flat = float((y - y.mean()).abs().mean())  # the same number for every game, chosen in hindsight
     assert miss < flat - 1
+
+
+def test_the_margin_history_carries_the_ratings_for_higher_layers(tmp_path):
+    bt = backtest.run(EloMargin(), gateway=_gateway(), seasons=[2023], bulk=True)
+    h = pl.read_parquet(backtest.write_history(bt, "r1", tmp_path))
+    assert set(F.PUBLISHED) <= set(h.columns)
+    assert h.select(F.PUBLISHED).null_count().sum_horizontal().item() == 0
+    j = h.join(bt.features.select("game_id", "gap"), on="game_id")
+    assert (j["home_rating"] - j["away_rating"] - j["gap"]).abs().max() < 1e-9
+    assert EloMarginSimple.publishes == () and EloTotal.publishes == ()
 
 
 @pytest.mark.parametrize("cls", [EloTotal, EloWin])

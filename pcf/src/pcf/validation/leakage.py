@@ -33,7 +33,7 @@ import polars as pl
 from pcf.core.contract import Expert
 from pcf.core.registry import project
 from pcf.data.gateway import Gateway, Source
-from pcf.data.schemas import table
+from pcf.data.schemas import TABLES, table
 from pcf.data.timeline import Calendar
 from pcf.data.timeline.moments import season_ends
 from pcf.validation.backtest import Backtest, feature_history, targets, walk
@@ -223,7 +223,10 @@ def future_world(gateway: Gateway, cutoff: datetime, mode: str, seed: int = 0) -
         late = c("as_of") > pl.lit(cutoff).cast(UTC_TIME)
         if mode == "delete":
             return df.filter(~late)
-        keys = [x for x in df.columns if x not in ("mean", "q10", "q50", "q90")]
+        # scramble every value: the forecast and any published features (decision 0021)
+        ids = {"as_of", "quantity", "model", "model_version", "run_id", "train_end", "cadence"}
+        ids |= {k for t in TABLES.values() for k in t.key_names} | {"season", "week", "team"}
+        keys = [x for x in df.columns if x in ids]
         return pl.concat([df.filter(~late), scramble(df.filter(late), keys, seed)])
 
     return Gateway(source, gateway.calendar, outputs)

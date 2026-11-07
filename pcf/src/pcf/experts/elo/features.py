@@ -17,6 +17,13 @@ FEATURES = (
     "gap", "hfa", "od_margin", "od_total",
     "qb_diff", "share_diff", "qb_sum", "share_missing",
 )  # fmt: skip
+# Each team's own numbers at the moment, saved with the margin's walk-forward history for higher
+# layers (decision 0021). Ratings are in points against an average team; offense and defense in
+# points scored and kept off the board against the league average; qb 1 = the usual QB is out.
+RATINGS = (
+    "home_rating", "away_rating", "home_offense", "home_defense", "away_offense", "away_defense",
+)  # fmt: skip
+PUBLISHED = ("hfa", *RATINGS, "h_qb", "a_qb", "h_share", "a_share")
 
 
 def results(games: pl.DataFrame) -> pl.DataFrame:
@@ -92,6 +99,7 @@ def _with_same_team(rated: pl.DataFrame, st: pl.DataFrame, sched: pl.DataFrame) 
             "away_team",
             "neutral",
             *FEATURES,
+            *RATINGS,
             "h_share",
             "a_share",
             "h_qb",

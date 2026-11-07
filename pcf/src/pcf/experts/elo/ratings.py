@@ -26,10 +26,12 @@ c = pl.col
 
 @dataclass(frozen=True)
 class Settings:
-    """Chosen on 2002-2015 in the exploration (F3, F4), fixed before the backtest."""
+    """Chosen on 2002-2015 in the exploration (F3, F4), fixed before the backtest. The margin pull
+    is 0.4 since 2026-11-07 (the CEO's carryover question, decision 0021): Elo's end-of-season
+    rating keeps 0.60-0.68 of itself into next season, and 0.4 ties 0.5 in the forecast test."""
 
     k: float = 0.06
-    pull: float = 0.5
+    pull: float = 0.4
     k_points: float = 0.05
     pull_points: float = 1 / 3
     hfa_seasons: int = 3
@@ -102,8 +104,8 @@ class Walk:
         return self.priors.hfa.get(season, self.settings.default_hfa)
 
     def edges(self, season: int, home: str, away: str, neutral: bool) -> dict[str, float]:
-        """A game's pre-game numbers: the rating gap, home field, and the offense/defense margin
-        and total."""
+        """A game's pre-game numbers: the rating gap, home field, the offense/defense margin and
+        total, and each team's own ratings (published for higher layers)."""
         self.roll_to(season)
         h = self.hfa(season, neutral)
         mu = self.priors.points.get(season, self.settings.default_points)
@@ -114,6 +116,12 @@ class Walk:
             "hfa": h,
             "od_margin": ph - pa,
             "od_total": ph + pa,
+            "home_rating": self.r[home],
+            "away_rating": self.r[away],
+            "home_offense": self.o[home],
+            "home_defense": self.d[home],
+            "away_offense": self.o[away],
+            "away_defense": self.d[away],
         }
 
     def add(self, x: dict) -> None:
