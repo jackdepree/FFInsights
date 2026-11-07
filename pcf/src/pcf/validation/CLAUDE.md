@@ -14,6 +14,7 @@ The validation harness (`validation-harness` project): everything that decides w
 | `live.py` | The live run (`pcf ledger run`): the games due now, each model fit at the run's moment with the backtest's own `fit_at`, the input check, written to the ledger and pushed. `replay` remakes played weeks, marked as a replay |
 | `inputs.py` | The input check: each input's fill rates in a live run against a backtest. It catches data that never arrives, which the leakage checks can't |
 | `sanity.py` | Shared football-sanity rules and the CEO's review lists |
+| `consistency.py` | The second test every new measure gets: does it repeat week to week (odd against even weeks) and season to season, with a 90% interval; `noise` when the week-to-week interval reaches 0. Results go in `projects/CONSISTENCY.md` |
 | `misses.py` | Where a model misses: the dated lens list (`LENS_LIST`), the tags that stand out, `misses.parquet`. On every player-game scorecard; `pcf misses <id>` for a saved run. A new list is a new date, never an edit |
 | `scorecard.py`, `validate.py` | One validation run and its HTML scorecard, recorded in MLflow (`pcf backtest <id> [--variant v]`). Baselines rerun at the model's run (`at_run`), benchmarks at their own |
 | `toy.py` | The harness's own toy expert (`validation-harness`): recent PPR points |
