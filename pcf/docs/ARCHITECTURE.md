@@ -117,7 +117,7 @@ The gateway:
 - refuses any table, part or expert output the caller didn't declare in `inputs`;
 - shows an expert's outputs only where `as_of` <= the moment, and refuses rows whose `train_end` is after their `as_of` (check 6).
 
-**Prediction moments** (`data/timeline/moments.py`, CEO decision 1C in the validation-harness brief): the three weekly runs are named moments. A model declares its `run`, and each game is predicted at the latest allowed run before its kickoff (a Saturday model predicts Thursday games at the Wednesday run). Retrospective models predict a season at 10:00 ET on the first day of its week-1 window; offseason-events models at the start of the event. **Benchmarks** from outside PCF (the closing line) are predicted at each game's kickoff, the `kickoff` moment, which only a benchmark may declare (decision 0012).
+**Prediction moments** (`data/timeline/moments.py`, CEO decision 1C in the validation-harness brief): the three weekly runs are named moments. A model declares its `run`, and each game is predicted at the latest allowed run before its kickoff (a Saturday model predicts Thursday games at the Thursday run). Retrospective models predict a season at 10:00 ET on the first day of its week-1 window; offseason-events models at the start of the event. **Benchmarks** from outside PCF (the closing line) are predicted at each game's kickoff, the `kickoff` moment, which only a benchmark may declare (decision 0012).
 
 The gateway (`pcf.data.gateway`) was built by `validation-harness` on `grain-tables`' `load`. **Features are defined per moment:** the backtest calls `features(view, games)` with a view at each prediction moment. A faster bulk `features_history` is allowed only if it matches the per-moment features at the leakage cutoffs (decision 0011).
 
@@ -270,7 +270,7 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 
 The first schedule (US Eastern, refined in `weekly-run`):
 - **Tuesday morning:** the full weekly run, since Monday night's data is in by then.
-- **Wednesday afternoon:** an update with Thursday's final injury report.
+- **Thursday noon:** an update with Thursday's final injury report (decision 0016).
 - **Saturday afternoon:** an update with Sunday's final injury reports.
 
 The tasks are set to wake the PC and to run as soon as possible after a missed start. Logs go to `pcf/data/logs/`.

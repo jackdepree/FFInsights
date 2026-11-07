@@ -628,7 +628,7 @@ projects:
     horizon: later
     cadence: [in_season]
     depends_on: [weekly-report]
-    summary: The whole pipeline runs on a schedule, end to end, on the CEO's PC via Windows Task Scheduler (Tue, Wed, Sat; docs/ARCHITECTURE.md).
+    summary: The whole pipeline runs on a schedule, end to end, on the CEO's PC via Windows Task Scheduler (Tue, Thu, Sat; docs/ARCHITECTURE.md).
 
   - id: email-reports
     name: Emailed reports

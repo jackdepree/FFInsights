@@ -30,10 +30,10 @@ Can we keep a permanent record of what PCF forecast before each game, made and s
 **Already tried:** the exploration ran a real forecast for week 9. The path works, and it found the injury problem ([EXPLORATION.md](EXPLORATION.md)).
 
 ## Assumptions
-- **Injury reports reach nflverse before the Saturday noon run.** Seen by 13:31 Eastern once. Tested on the first live Saturday.
+- **Injury reports reach nflverse before the Thursday and Saturday noon runs.** The 7 recorded updates came between 9:14 and 11:59 Eastern. Tested on the first live Saturday and Thursday.
 - **This PC is on, or can wake, at run times, with the CEO logged in.** A missed run leaves a gap, and the record says so.
 - **A model refit each run scores about like one refit each season,** as validated. It has fresher data, so if anything it should do a little better. The live-gap check would catch the opposite.
-- **Fill-in roster rows are good enough for the Wednesday run** when this week's rows haven't landed. Those rows are marked.
+- **Fill-in roster rows are good enough for the Thursday run** when this week's rows haven't landed. Those rows are marked.
 
 ## Goals
 1. **Fix the injury rule first,** so live forecasts see what the backtest saw.
@@ -74,10 +74,10 @@ Time box: 2–3 sessions. No model ladder, as this is infrastructure.
 2. `pcf.core.ledger`: write-once files, refusal after kickoff, rows that can be traced.
 3. A live run that reuses the harness's fit and predict, and pushes to `pcf-data`.
 4. The weekly scorecard.
-5. Task Scheduler, with one approval from the CEO, plus the backup check.
+5. Task Scheduler (Thursday and Saturday noon), with one approval from the CEO, plus the backup check.
 6. One replay of weeks 1–8 in a separate file marked as a replay. Week 9 joins it once played: it comes before the first counted forecast, so otherwise no record would cover it.
 
-**First counted forecast:** Wednesday 2026-11-11, 16:00 Eastern, for week 10's Thursday game. Sunday's games follow at Saturday noon.
+**First counted forecast:** Thursday 2026-11-12, 12:00 Eastern, for week 10's Thursday game. Sunday's games follow at Saturday noon.
 
 ## Decisions (CEO, 2026-11-06)
 
@@ -95,3 +95,8 @@ Time box: 2–3 sessions. No model ladder, as this is infrastructure.
 - **First proposed:** a report counts as known when we first saw it in a pull, with a fallback for earlier rows.
 - **Changed while building (Claude, 2026-11-06):** the measured rule alone, for every row without `date_modified`: noon Eastern the day before a Saturday, Sunday or Monday game, noon on the day of any other. It's too early for 0.85% of 2021–2024 reports. First seen doesn't work as the rule, because our daily snapshot runs hours after nflverse's update. It first held Friday's reports at 13:31 Eastern on Saturday, so it would hide them from the noon run even though the file had them at 9:34. A live run can't see the future in any case, because its pull holds only what's published. First seen stays as proof in each run's record ([decision 0015](../../docs/decisions/0015-injury-reports-without-a-date.md)).
 - **Rejected:** simply moving the rule to noon the day before. That's the old rule, and it was too early for 6–7% of reports (timeline#F4).
+
+**4. Should the Wednesday 16:00 run move to Thursday noon? (Raised while building.)**
+- **A. Move it to Thursday noon (chosen).** Live matches the backtest's rows, and the backtest's Thursday scores improve ([decision 0016](../../docs/decisions/0016-thursday-run.md)). The forecast comes about 8 hours before a Thursday-night kickoff, not 28.
+- **B. Keep Wednesday.** Nothing to rerun, but Thursday's game goes without its final report live.
+- **C. Mark the report as known by Wednesday 16:00 (tempting, bad).** The tables would look consistent while the live file didn't have it.
