@@ -46,10 +46,22 @@ Run 2026-11-07 with [`explore/h4_luck.py`](explore/h4_luck.py). Repeatability is
 
 **H4 verdict: failed, as tested.** Expected a small gain (0.03–0.08 points). Got a small loss (0.00–0.09). The idea that a fumble returned for a touchdown is "a random fluke" holds for the fumble recovery (F7). But a rating that ignores luck plays forecasts no better, because over a dozen games the luck washes out anyway. What could still work: luck plays as a separate signal for the first few weeks, when ratings rest on few games, or for reading single games (game script, garbage time). Neither was tested here.
 
+## H3: average win probability
+
+**Expected, written before running (Claude, 2026-11-07):** a game's average home win probability across its plays measures control more steadily than the final margin. A late comeback barely moves it, and neither do garbage-time points. On its own, it will be about as good as the margin. Blended with the margin, it will help by 0.05–0.15 points. nflverse's win probability is fit on seasons through 2019 (tag-tables#F4), so the verdict rests on 2020–2024. It uses the model without the betting line (`home_wp`, not `vegas_home_wp`), so no market number leaks in.
+
+Run 2026-11-07 with [`explore/h3_winprob.py`](explore/h3_winprob.py). Each game's average home win probability is turned into points by a straight line fit on 2002–2015: 52 points per unit above 0.5, so an average of 60% is worth about 5 points. The 3 games from 1999–2000 with no play-by-play fall back to their margin.
+
+| # | Finding | Confidence |
+|---|---|---|
+| F10 | **Average win probability repeats less than the margin, not more.** Split-half correlation: 0.41 against the margin's 0.51. Game by game, the two agree closely (correlation 0.84). | strong |
+| F11 | **On its own, it forecasts worse than the margin; blended in, it adds almost nothing.** Gaps to rung 1, where negative means better, with a 90% interval. 2016–2024: win probability alone +0.10 (+0.03 to +0.16), half and half +0.01, three-quarters margin −0.01 (−0.02 to +0.01). 2020–2024, out of sample for the win-probability model: alone +0.05 (−0.04 to +0.14), half and half −0.01 (−0.06 to +0.04), three-quarters margin −0.02 (−0.04 to +0.00). Tuning the blend picks three-quarters margin. | strong |
+
+**H3 verdict: unclear, leaning failed.** Expected a gain of 0.05–0.15 points. The best blend gains 0.02 at most, and its interval reaches zero. The CEO's example is real: a late underdog win scores lower on average win probability than on the margin. But it's rarer or smaller than the margin's other strengths. The margin already captures most of what win probability knows, and win probability is noisier from week to week (F10). It's worth keeping as a small ingredient for rung 3, where small gains may add up, but not as a replacement for the margin.
+
 ## Still to do in this exploration
 
 1. **H2, turnover:** the pull set by the share of last season's snaps that return.
-2. **H3, average win probability:** judged on 2020–2024 only (tag-tables#F4).
-3. **H1, same-team share:** the share of a team's usual snaps on the field this week, from participation and the injury report.
-4. **H7, parts:** running and passing ratings, each kept only if it helps.
-5. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
+2. **H1, same-team share:** the share of a team's usual snaps on the field this week, from participation and the injury report.
+3. **H7, parts:** running and passing ratings, each kept only if it helps.
+4. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
