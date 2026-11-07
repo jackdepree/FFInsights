@@ -3,18 +3,18 @@
 > Is a simple rating near the closing line, and do the CEO's hunches beat it? Rungs 0–1 first, then each hunch as a variant of rung 1.
 > Started 2026-11-07. Games 1999–2024; settings are tuned on 2002–2015 and results reported on 2016–2024. The vault (2025) isn't read.
 
-**Where it stands (2026-11-07, part-way): GO.** A margin Elo with a half pull between seasons is 0.37 points behind the closing line on margins and 0.39 on totals. That passes the tightened 0.5-point bar (F3, F4). The hunches, each against that rating, on 2016–2024, where negative means it helped:
+**Verdict (2026-11-07): GO.** A margin Elo with a half pull between seasons is 0.37 points behind the closing line on margins and 0.39 on totals. That passes the tightened 0.5-point bar (F3, F4). The hunches, each against that rating, on 2016–2024, where negative means it helped:
 
 | Hunch | Verdict | Gap to rung 1 (points) |
 |---|---|---|
-| H1 same team this week | **held**, modestly | −0.05 (QB −0.04, other absences −0.02) |
+| H1 same team this week | **held**, modestly | −0.06 in rung 3 (QB −0.04, other absences −0.02) |
 | H2 regress between seasons | **held** | −0.21 (the half pull, F3) |
 | H2 pull scaled by turnover | **failed** | +0.00 to +0.05, worse the more it leans on turnover |
 | H3 average win probability | **unclear**, leaning failed | −0.01 to −0.02 as a blend; +0.10 alone |
 | H4 luck plays removed | **failed** | +0.00 to +0.09 |
 | H7 passing and running parts | **unclear**, no gain | −0.01 to +0.00 |
 
-With H1, the best rating is about 0.32 behind the close on margins. The 0.25 "strong" bar isn't reached yet. Still to do: win chances, ranges and the long horizon, then rung 3.
+**Rung 3** (rung 1 + H1, re-tuned each season) is 0.31 behind the close on margins and 0.39 on totals. Win chances are close to calibrated, ranges cover 81–82%, and the season-wins forecast beats its yardstick at every week (F22–F26). The 0.25 "strong" bar isn't reached. The CEO's second test, consistency, is in [`projects/CONSISTENCY.md`](../CONSISTENCY.md); finishing is a trait that doesn't help the margin (F19, F23).
 
 ## Expectations, written before running (Claude, 2026-11-07)
 
@@ -85,13 +85,13 @@ Run 2026-11-07 with [`explore/h2_h1_same_team.py`](explore/h2_h1_same_team.py).
 |---|---|---|
 | F12 | **Teams bring back about two-thirds of last season's snaps:** a mean of 66%, ranging from 40% to 96% (2014–2024). | strong |
 | F13 | **Setting each team's pull by its turnover makes the rating worse, the harder it leans on turnover.** With pull = 0.5 + b × (league average returning share − the team's), the gap to rung 1 on 2016–2024 is +0.00 (b = 0.5), +0.01 (1.5), +0.04 (3) and +0.05 (4). Tuned on 2014–2019, it picks b = 0, plain rung 1. | strong |
-| F14 | **A missing usual quarterback is worth about 2–3 points, and it helps the rating.** The usual starter is out or off the roster in 5.7% of team-games. Tuned on 2013–2015, the adjustment is 2 points, with a gap of −0.036 (−0.056 to −0.016) on 2016–2024. | strong |
+| F14 | **A missing usual quarterback is worth about 2–3 points, and it helps the rating.** The usual starter is out or off the roster in 5.7% of team-games. Tuned on 2013–2015, the adjustment is 2 points, with a gap of −0.039 (−0.059 to −0.019) on 2016–2024. (Rerun 2026-11-07 after ties between two quarterbacks with equal shares were broken by player id; it was −0.036 before.) | strong |
 | F15 | **Other absences matter too (H1).** The same-team share averages 0.94 (bottom tenth: 0.88 or less). On its own, tuned at 5 points per unit of share, the gap is −0.021 (−0.031 to −0.011). With the QB adjustment it adds about 0.02 more: QB 2 + share 5 gives −0.054 (−0.078 to −0.030). | strong |
 | F16 | **The best sizes are probably larger than tuning picked.** Tuning had only 2013–2015, and the 2016–2024 curve keeps improving up to QB 3 and share 10–20, reaching −0.07 with both. That's chosen with hindsight, so it isn't a result. In rung 3, sizes should be re-tuned each season on all seasons before it. | moderate |
 
 **H2 verdict: half held.** The CEO's "every team should regress towards the mean when the season turns over" holds strongly. A half pull is the biggest gain on the ladder (F3), and larger than the usual one-third. "It's really a new team every season" scaled by each team's turnover fails (F13). Returning snaps don't say how much a team will change. Probably who leaves matters more than how many, which is H1's question asked between seasons. Expected 0.01–0.04 points from turnover; got nothing.
 
-**H1 verdict: held, modestly.** Expected 0.05–0.10 from the quarterback and 0.02–0.05 from everyone else. Got 0.04 and 0.02, about 0.05 together, with intervals clear of zero. "Is this the same team that played last week?" is a real signal beyond the quarterback, the usual way's only adjustment. The tracking analogy's other half, trusting new results more after a big change, wasn't tested.
+**H1 verdict: held, modestly.** Expected 0.05–0.10 from the quarterback and 0.02–0.05 from everyone else. Got 0.04 and 0.02, about 0.05–0.06 together, with intervals clear of zero. "Is this the same team that played last week?" is a real signal beyond the quarterback, the usual way's only adjustment. The tracking analogy's other half, trusting new results more after a big change, wasn't tested.
 
 ## H7: parts of a team
 
@@ -106,7 +106,39 @@ Run 2026-11-07 with [`explore/h7_parts.py`](explore/h7_parts.py). Passing, runni
 
 **H7 verdict: unclear, failed as a forecasting gain.** The CEO's "overall predictor ... easy for downstream models to learn from" holds: one rating does the work. Offense and defense ratings earn their place because totals need them (F4). Passing and running parts don't improve next games' margins or totals (F18), against an expected 0.03–0.08 from passing. Two caveats: they may still be useful downstream, for game script, play mix or fantasy, and that's those projects' question; and the winning and losing parts of H7 are part 2 (H5).
 
-## Still to do in this exploration
+## Consistency of every measure (the CEO's second test)
 
-1. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
-2. **Rung 3:** rung 1 plus what held (H1's quarterback and same-team adjustments, sizes re-tuned each season), with a small win-probability blend (H3) tried on top, scored against the 0.5 and 0.25 bars.
+The CEO asked on 2026-11-07 that every measure also gets a consistency test, kept even when it doesn't help the target. All 20 Elo measures are in [`projects/CONSISTENCY.md`](../CONSISTENCY.md). Three things are new here:
+
+| # | Finding | Confidence |
+|---|---|---|
+| F19 | **"Finishing" is a team trait.** It's the result minus average win probability, so it's high when a team wins games it didn't control: the CEO's late underdog win. Week to week r = 0.28 (90% interval from 0.22), and season to season r = 0.22. It carries into next season. Average win probability helped the rating only a little (F11), but the gap between control and result isn't random. | strong |
+| F20 | **Kicking "luck" is kicker skill (r = 0.24, season 0.30). The opponents' kicking repeats too (0.16, season 0.28), probably the home stadium.** Only fumble recoveries and long TDs allowed are noise. | strong |
+| F21 | **Same-team share is a trait across seasons (0.40), but a missing QB is only a state (0.06).** Some teams are reliably healthier, year after year. | moderate |
+
+## Rung 3: what held, combined
+
+**Expected, written before running (Claude, 2026-11-07):**
+- **The combined rating:** rung 1 + H1, with sizes re-tuned each season on all seasons before it, plus the small H3 blend. About 0.05–0.07 points better than rung 1, so about 0.30–0.32 behind the close on margins: past the 0.5 floor, short of 0.25.
+- **Finishing (F19):** may help win chances more than margins. About 0.00–0.02 points on margins.
+- **Win chances:** close to calibrated, with log loss a little worse than the no-vig closing line.
+- **Ranges:** q10–q90 near 80% once their width is fit on past seasons.
+- **Long horizon:** summed game win chances beat the yardstick (the current win rate pulled toward .500) for the rest of the season, more so early in the season.
+
+Run 2026-11-07 with [`explore/rung3.py`](explore/rung3.py). Settings are re-chosen before every season from 2016, on all seasons from 2013 up to it. The choice is rounded to 0.001 points, and ties go to the simpler setting, so float noise can't flip it. Three runs give the same forecasts.
+
+| # | Finding | Confidence |
+|---|---|---|
+| F22 | **Rung 3 misses the margin by 10.10, 0.31 behind the close.** That's 0.06 better than rung 1, with a 90% interval of 0.03 to 0.09, on 2016–2024. On 2020–2024 it's 10.09, 0.10 better than rung 1 (0.06 to 0.15) and 0.31 behind the close. Each season picked the QB adjustment (2 points) and the same-team share (10 points per unit) almost every time. It never picked the win-probability blend. | strong |
+| F23 | **Finishing (F19) is a trait but adds nothing to the margin:** 0.000 (−0.005 to +0.005), even though it was picked in 5 of 9 seasons. It may matter for win chances or game states (H5), which this didn't test. | strong |
+| F24 | **Win chances: log loss 0.633 against the close's 0.609, Brier score 0.221 against 0.211.** Calibration is close but a little too timid in the middle. Forecasts of 0.40–0.50 win 38.5% (forecast 45.3%), and forecasts of 0.60–0.70 win 70.2% (forecast 64.8%). A wider margin-to-win-chance curve, or one fit by logistic regression, should help. | strong |
+| F25 | **Ranges hold:** 82.4% of margins and 80.9% of totals land inside q10–q90, against an 80% target. Both are about 35 points wide, from earlier seasons' misses. | strong |
+| F26 | **The long horizon beats the yardstick at every point in the season.** Mean miss in wins, Elo against the yardstick, with the yardstick pulling the win rate toward .500 by 8 games: rest of season before week 1, 2.34 against 2.58; after 4 games, 1.93 against 1.99; after 8, 1.38 against 1.44; after 12, 0.91 against 0.97. Next 3 games: 0.70 against 0.73 overall. It uses ratings as they stood, with no future injuries. | strong |
+
+**Against the bars:** margins are 0.31 behind the close and totals 0.39 (F4). Both pass the 0.5 floor; neither reaches the 0.25 "strong" mark. Matching expectations: the margin gain (0.06) and the gap (0.31) came in as expected. Finishing's gain came in at the low end (0.00). Win chances are a little worse calibrated than expected (F24), and ranges and the long horizon came in as expected.
+
+## Still to do
+
+The exploration's questions are answered. Before building, for the CEO:
+1. **Direction:** build rung 3 as the champion (the margin Elo with a half pull, QB and same-team adjustments, offense and defense ratings for totals, the long horizon), or chase the last 0.06 to the 0.25 bar first?
+2. **Part 2** (H5, conditional strength) waits for `stabilization` (H6). Finishing (F19) and the same-team share (F21) are its first leads.

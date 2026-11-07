@@ -16,7 +16,7 @@
 | Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
 |---|---|---|---|---|---|---|---|
 | Same-team share | elo (H1) | Share of a team's usual snaps available this week | 0.83 (0.81–) | 0.40 | trait | Yes: −0.02 points on next margin, more with the QB (F15) | Some teams are reliably healthier from season to season, not just this season. Worth asking why (age, medical staff, depth) |
-| Usual QB missing | elo (H1) | Starter out or off the roster | 0.66 (0.61–) | 0.06 | state | Yes: −0.04 points (F14) | Injuries last for weeks but don't carry over to next season, as expected |
+| Usual QB missing | elo (H1) | Starter out or off the roster | 0.66 (0.61–) | 0.03 | state | Yes: −0.04 points (F14) | Injuries last for weeks but don't carry over to next season, as expected |
 | Points scored | elo | | 0.55 (0.50–) | 0.44 | trait | In the rating (F4) | Offense repeats more than defense |
 | Pass EPA, offense | elo (H7) | Expected points per pass play | 0.53 (0.49–) | 0.45 | trait | No, on top of the points rating (F18) | The most consistent efficiency measure. Use it where points aren't the target: game script, play mix, fantasy |
 | Margin | elo | | 0.51 (0.46–) | 0.41 | trait | The rating's input | The reference |
@@ -24,7 +24,7 @@
 | Rush EPA, offense | elo (H7) | Expected points per run | 0.40 (0.35–) | 0.34 | trait | No (F18) | |
 | Points allowed | elo | | 0.36 (0.31–) | 0.31 | trait | In the rating (F4) | |
 | Rush EPA allowed | elo (H7) | | 0.31 (0.25–) | 0.27 | trait | No (F18) | Run defense repeats more than pass defense |
-| **Finishing** | elo (H3) | Result (win 1, tie 0.5, loss 0) minus average win probability: high when a team wins games it "shouldn't have" | 0.28 (0.22–) | 0.22 | **trait** | Not tested | **The CEO's late-underdog-win idea, measured directly: it repeats.** Some teams reliably finish better or worse than their game control says, and it carries into next season. A candidate for H5/H6 (game-state strength) and win forecasts |
+| **Finishing** | elo (H3) | Result (win 1, tie 0.5, loss 0) minus average win probability: high when a team wins games it "shouldn't have" | 0.28 (0.22–) | 0.22 | **trait** | No on margins: +0.00 in rung 3 (F23). Win chances not tested | **The CEO's late-underdog-win idea, measured directly: it repeats.** Some teams reliably finish better or worse than their game control says, and it carries into next season. A candidate for H5/H6 (game-state strength) and win forecasts |
 | Pass EPA allowed | elo (H7) | | 0.25 (0.20–) | 0.28 | trait | No (F18) | |
 | Kicking luck, own | elo (H4) | Field goals and extra points against the league's make rate at that distance | 0.24 (0.18–) | 0.30 | trait | Removing it: +0.00 (F8) | Kickers differ: it's skill, not luck |
 | Return TDs allowed | elo (H4) | Defensive and special-teams TDs given up | 0.17 (0.12–) | 0.17 | trait | Removing it: +0.02 (F8) | Ball security and coverage units are partly a team trait |

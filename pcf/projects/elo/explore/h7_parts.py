@@ -62,7 +62,7 @@ def edges(g: pl.DataFrame, te: pl.DataFrame, k: float) -> pl.DataFrame:
     d = {x: defaultdict(float) for x in PARTS}
     mu = {x: 0.0 for x in PARTS}
     season, rows = None, []
-    for (s, _w), wk in gg.group_by(["season", "week"], maintain_order=True):
+    for (s, _w), wk in gg.sort("order").group_by(["season", "week"], maintain_order=True):
         if s != season:
             for x in PARTS:
                 for t in list(o[x]):

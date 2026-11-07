@@ -10,7 +10,7 @@
 
 | # | Date | Who | Project | The usual way | Our bet | How it was tested | Verdict | Size |
 |---|---|---|---|---|---|---|---|---|
-| H1 | 2026-11-07 | CEO | elo | Only a QB adjustment | Injury reports and snap shares say whether it's the same team this week | Rating adjusted by the usual QB missing and the same-team share (2016–2024) | held | 0.05 points on the margin (QB 0.04, other absences 0.02), intervals clear of zero |
+| H1 | 2026-11-07 | CEO | elo | Only a QB adjustment | Injury reports and snap shares say whether it's the same team this week | Rating adjusted by the usual QB missing and the same-team share (2016–2024) | held | 0.06 points on the margin in rung 3 (QB 0.04, other absences 0.02), intervals clear of zero |
 | H2a | 2026-11-07 | CEO | elo | Pull a third of the way to average between seasons | Every team should regress toward the mean when the season turns over | Pull sizes tried on 2002–2015, scored on 2016–2024 | held | A half pull is the biggest gain on the ladder: 0.21 points over no pull, and better than a third |
 | H2b | 2026-11-07 | CEO | elo | The same pull for every team | It's a new team every season: turnover sets how far a team moves | Pull scaled by the share of last season's snaps that return (2014–2024) | failed | Worse the more it leans on turnover (+0.00 to +0.05) |
 | H3 | 2026-11-07 | CEO | elo | Final margin, damped | Average win probability across plays says more than the margin | Ratings learning from a blend of the two (2016–2024; 2020–2024 out of sample) | unclear | At most 0.02 points as a blend, interval reaching zero; worse alone (+0.10) |

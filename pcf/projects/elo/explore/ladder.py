@@ -39,20 +39,25 @@ RNG = np.random.default_rng(20261107)
 
 def games() -> pl.DataFrame:
     g = load("game").filter(c("season").is_between(FIRST, LAST) & c("result").is_not_null())
-    return g.sort("kickoff", "game_id").select(
-        "game_id",
-        "season",
-        "week",
-        "game_type",
-        "home_team",
-        "away_team",
-        neutral=c("location") == "Neutral",
-        margin=c("result").cast(pl.Float64),
-        total=c("total").cast(pl.Float64),
-        home_pts=c("home_score").cast(pl.Float64),
-        away_pts=c("away_score").cast(pl.Float64),
-        spread="spread_line",
-        total_line="total_line",
+    return (
+        g.sort("kickoff", "game_id")
+        .with_row_index("order")
+        .select(
+            "order",
+            "game_id",
+            "season",
+            "week",
+            "game_type",
+            "home_team",
+            "away_team",
+            neutral=c("location") == "Neutral",
+            margin=c("result").cast(pl.Float64),
+            total=c("total").cast(pl.Float64),
+            home_pts=c("home_score").cast(pl.Float64),
+            away_pts=c("away_score").cast(pl.Float64),
+            spread="spread_line",
+            total_line="total_line",
+        )
     )
 
 
@@ -107,7 +112,7 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
     season = None
     mu = None
     rows = []
-    for s, _w, wk in weekly(g):
+    for s, _w, wk in weekly(g.sort("order")):  # joins may reorder rows; the walk mustn't
         pr = priors[s]
         if s != season:
             pull = p.get("pull", 0.0)
@@ -118,6 +123,8 @@ def run(g: pl.DataFrame, priors, kind: str, **p) -> pl.DataFrame:
                 d[t] *= 1 - (pull_fn(s, t) if pull_fn else pull)
             mu = pr["total"] / 2
             season = s
+        if "snap" in p:  # ratings as they stood before this week (for the long horizon)
+            p["snap"][(s, _w)] = dict(r)
         preds = []
         for x in wk:
             h, a = x["home_team"], x["away_team"]

@@ -111,7 +111,9 @@ def same_team(pg: pl.DataFrame) -> pl.DataFrame:
             )
             off = float((u["off"] * u["avail"]).sum() / max(u["off"].sum(), 1e-9))
             de = float((u["de"] * u["avail"]).sum() / max(u["de"].sum(), 1e-9))
-            qbs = u.filter(c("qb")).sort("off", descending=True)
+            qbs = u.filter(c("qb")).sort(
+                ["off", "gsis_id"], descending=[True, False]
+            )  # ties: by id
             qb_out = float(qbs.height > 0 and not qbs["avail"][0])
             rows.append(
                 {"game_id": row["game_id"], "team": team, "share": (off + de) / 2, "qb_out": qb_out}
