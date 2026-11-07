@@ -84,6 +84,13 @@ On 2016–2024, `trees_week`'s Thursday rows improve: range score ×100 3.392 �
 
 `lasso_rest` can't be scored until the season ends. These weeks weren't used to pick `trees_week`'s inputs, so this is the first read on unseen weeks, but it's a replay, not a record: it uses today's data cut by the known-at rules, and weeks before 2026-10-31 have no first-seen proof. On these weeks `trees_week` beats `last_game` by 1.205 (26%). The replay took 25 minutes for all five models.
 
+**14. The full live run works end to end (added 2026-11-07).** A test run at Saturday noon, written to a local trial folder, not the record:
+- **Coverage:** all 14 of week 9's Sunday and Monday games, 433 rows a model, none after kickoff.
+- **Time:** 17 minutes for all five models, about 4 minutes each to build features.
+- **Data:** the injury file was already in (updated 8:53), so the run didn't wait. Injury inputs matched the backtest's same weeks: a report on 9.0% of rows against 8.1%, and a practice status on 11.1% against 10.0%.
+- **A bug the first attempt caught:** the injury-file wait passed the Eastern zone's name where Python needs the zone, and crashed. It's fixed and tested.
+- **The one flag:** `new_season`, players with no game yet this season. It's set on 1.8% of the backtest's week-9 rows and 0 of 433 live, so the "gone quiet" rule fired (7.8 expected). It isn't a data gap: across all of 2026 week 9 it's set on 1 row, against 3 to 9 in past seasons' week 9, and on 17 in 2026 week 5, the most of any season since 2018. These players come in clumps (suspensions ending, returns from injured reserve), so a quiet week happens. The flag meant "look", and this was the look.
+
 ## Assumptions and limits
 
 - Week 9 is a single week, and these numbers come from local files, not a scheduled run.
