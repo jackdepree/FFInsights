@@ -2,7 +2,7 @@
 
 The three weekly runs are the named moments. A model declares its run, and each game is
 predicted at the latest run before its kickoff whose kind it may use: a `saturday` model
-predicts Thursday games at the Wednesday run, never after kickoff.
+predicts Thursday games at the Thursday run, never after kickoff.
 
 Retrospective models predict a season at 10:00 ET on the first day of its week-1 window;
 offseason-events models at the start of the event's phase.
@@ -23,7 +23,7 @@ c = pl.col
 # The weekly runs (ARCHITECTURE.md, "Running it"): weekday (Monday = 1) and hour, Eastern time.
 RUNS: dict[str, tuple[int, int]] = {
     "tuesday": (2, 10),  # the full weekly run, after Monday night
-    "wednesday": (3, 16),  # Thursday's injury reports and the week's practice news
+    "thursday": (4, 12),  # Thursday's final injury report is in nflverse's file (decision 0016)
     "saturday": (6, 12),  # Sunday's final injury reports; before any Saturday game
 }
 # The benchmarks' moment: each game's kickoff.

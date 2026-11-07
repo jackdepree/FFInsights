@@ -47,7 +47,7 @@ def test_runs_fall_on_their_days_inside_each_week(cal):
     r = runs(cal).filter((c("season") == 2025) & (c("week") == 2))
     assert [(n, local(at)) for n, at in r.select("run", "at").iter_rows()] == [
         ("tuesday", "Tue 10:00"),
-        ("wednesday", "Wed 16:00"),
+        ("thursday", "Thu 12:00"),
         ("saturday", "Sat 12:00"),
     ]
 
@@ -59,15 +59,15 @@ def test_each_game_gets_the_latest_allowed_run_before_kickoff(cal):
 
     assert moments("tuesday") == {g: "Tue 10:00" for g in moments("tuesday")}
     sat = moments("saturday")
-    assert sat["2025_01_A"] == "Wed 16:00"  # Thursday night: never Saturday's run
+    assert sat["2025_01_A"] == "Thu 12:00"  # Thursday night: never Saturday's run
     assert sat["2025_01_B"] == "Sat 12:00"  # Monday night
-    assert sat["2025_02_A"] == "Wed 16:00"
+    assert sat["2025_02_A"] == "Thu 12:00"
     assert sat["2025_02_B"] == "Sat 12:00"
-    assert moments("wednesday")["2025_02_B"] == "Wed 16:00"
+    assert moments("thursday")["2025_02_B"] == "Thu 12:00"
 
 
 def test_no_moment_is_at_or_after_kickoff(cal):
-    for run in ("tuesday", "wednesday", "saturday"):
+    for run in ("tuesday", "thursday", "saturday"):
         m = game_moments(cal, run)
         assert m.filter(c("moment") >= c("kickoff")).is_empty()
 
@@ -96,7 +96,7 @@ def test_a_week_that_starts_after_its_runs_falls_back_to_10_am_on_its_first_day(
 
 def test_the_runs_are_ordered():
     assert allowed("tuesday") == ["tuesday"]
-    assert allowed("saturday") == ["tuesday", "wednesday", "saturday"]
+    assert allowed("saturday") == ["tuesday", "thursday", "saturday"]
     with pytest.raises(ValueError):
         allowed("sunday")
 
@@ -106,3 +106,29 @@ def test_season_event_and_end_moments(cal):
     draft = event_moments(cal, "draft").filter(c("season") == 2025)["moment"][0]
     assert draft.date() == date(2025, 4, 24)
     assert season_ends(cal)[2025] == utc(2026, 2, 9, 5)
+
+
+def test_the_thursday_run_comes_before_the_earliest_thanksgiving_kickoff():
+    rows = schedule(
+        [
+            ("2025_12_A", 2025, 12, "REG", "2025-11-23", "13:00"),
+            ("2025_13_A", 2025, 13, "REG", "2025-11-27", "12:30"),
+            ("2025_13_B", 2025, 13, "REG", "2025-11-30", "13:00"),
+            ("2025_22_A", 2025, 22, "SB", "2026-02-08", "18:30"),
+        ]
+    )
+    m = game_moments(calendar(rows, OFFSEASON), "saturday").filter(c("game_id") == "2025_13_A")
+    assert local(m["moment"][0]) == "Thu 12:00" and not m["fallback"][0]
+
+
+def test_a_wednesday_game_falls_to_the_tuesday_run():
+    rows = schedule(
+        [
+            ("2025_12_A", 2025, 12, "REG", "2025-11-23", "13:00"),
+            ("2025_13_A", 2025, 13, "REG", "2025-11-26", "20:00"),
+            ("2025_13_B", 2025, 13, "REG", "2025-11-30", "13:00"),
+            ("2025_22_A", 2025, 22, "SB", "2026-02-08", "18:30"),
+        ]
+    )
+    m = game_moments(calendar(rows, OFFSEASON), "saturday").filter(c("game_id") == "2025_13_A")
+    assert local(m["moment"][0]) == "Tue 10:00"
