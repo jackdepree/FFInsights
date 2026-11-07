@@ -71,6 +71,19 @@ Rows with a report at each season's moments, weeks 6–8: 2022 9.9%, 2023 7.3%, 
 
 On 2016–2024, `trees_week`'s Thursday rows improve: range score ×100 3.392 → 3.297 (−0.095, −0.143 to −0.051; 5,043 rows). Average miss goes from 11.26 to 11.02 points. For Thursday players with a report status (467 rows), the forecast goes from 21.7 to 18.6 against 17.7 played, and the average miss from 13.40 to 10.71. Other champions and the costs are in [decision 0016](../../docs/decisions/0016-thursday-run.md). This week's roster rows at Thursday noon are unproven: none on Wednesday at 15:19, there by Friday at 11:13, and Thursday's snapshot failed because of the account lock.
 
+**12. The live run forecasts exactly what the backtest would (added 2026-11-07).** Week 9's Thursday game (`2026_09_JAX_BAL`, 32 rows), forecast by the live code at Thursday noon, matches `backtest.walk` refitting at the same moment: the largest difference in mean, q10, q50 and q90 is 0, and both trained through 2026-11-04 01:15 UTC. One model took 277 seconds, 263 of them building features. The input check flagged nothing; on 32 rows only an input gone entirely quiet can be flagged. Script: [`explore/live_matches_walk.py`](explore/live_matches_walk.py).
+
+**13. The replay of 2026's weeks 1–8 scores like the backtest (added 2026-11-07).** Remade on 2026-11-07 and pushed to `pcf-data` under `replay/` (3,903 rows a model, 121 games). Scores ×100 against the same weeks of the 2016–2024 backtest, with the backtest's middle 90% for that many weeks:
+
+| Model | Weeks | 2026 replay | Backtest, same weeks | Backtest's 90% range | Coverage |
+|---|---|---|---|---|---|
+| `trees_week`, range score | 8 | 3.464 | 3.486 | 3.284–3.714 | 85.1% |
+| `active`, log loss | 8 | 17.949 | 22.317 | 17.475–31.842 | — |
+| `lasso_h3`, range score | 7 | 4.157 | 4.196 | 3.893–4.529 | 79.8% |
+| `last_game`, range score | 8 | 4.669 | 4.712 | 4.059–5.613 | 80.1% |
+
+`lasso_rest` can't be scored until the season ends. These weeks weren't used to pick `trees_week`'s inputs, so this is the first read on unseen weeks, but it's a replay, not a record: it uses today's data cut by the known-at rules, and weeks before 2026-10-31 have no first-seen proof. On these weeks `trees_week` beats `last_game` by 1.205 (26%). The replay took 25 minutes for all five models.
+
 ## Assumptions and limits
 
 - Week 9 is a single week, and these numbers come from local files, not a scheduled run.
