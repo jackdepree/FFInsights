@@ -3,6 +3,19 @@
 > Is a simple rating near the closing line, and do the CEO's hunches beat it? Rungs 0–1 first, then each hunch as a variant of rung 1.
 > Started 2026-11-07. Games 1999–2024; settings are tuned on 2002–2015 and results reported on 2016–2024. The vault (2025) isn't read.
 
+**Where it stands (2026-11-07, part-way): GO.** A margin Elo with a half pull between seasons is 0.37 points behind the closing line on margins and 0.39 on totals. That passes the tightened 0.5-point bar (F3, F4). The hunches, each against that rating, on 2016–2024, where negative means it helped:
+
+| Hunch | Verdict | Gap to rung 1 (points) |
+|---|---|---|
+| H1 same team this week | **held**, modestly | −0.05 (QB −0.04, other absences −0.02) |
+| H2 regress between seasons | **held** | −0.21 (the half pull, F3) |
+| H2 pull scaled by turnover | **failed** | +0.00 to +0.05, worse the more it leans on turnover |
+| H3 average win probability | **unclear**, leaning failed | −0.01 to −0.02 as a blend; +0.10 alone |
+| H4 luck plays removed | **failed** | +0.00 to +0.09 |
+| H7 passing and running parts | **unclear**, no gain | −0.01 to +0.00 |
+
+With H1, the best rating is about 0.32 behind the close on margins. The 0.25 "strong" bar isn't reached yet. Still to do: win chances, ranges and the long horizon, then rung 3.
+
 ## Expectations, written before running (Claude, 2026-11-07)
 
 - **Rung 0 (home field only):** misses the margin by about 11.3 points and the total by about 11.0. That is roughly the "near the close" bar for margins (11.3), so the bar may be met by a rating that knows nothing. If so, the real test is beating rung 1, and the CEO should hear that the 1.5-point bar is loose.
@@ -80,7 +93,20 @@ Run 2026-11-07 with [`explore/h2_h1_same_team.py`](explore/h2_h1_same_team.py).
 
 **H1 verdict: held, modestly.** Expected 0.05–0.10 from the quarterback and 0.02–0.05 from everyone else. Got 0.04 and 0.02, about 0.05 together, with intervals clear of zero. "Is this the same team that played last week?" is a real signal beyond the quarterback, the usual way's only adjustment. The tracking analogy's other half, trusting new results more after a big change, wasn't tested.
 
+## H7: parts of a team
+
+**Expected, written before running (Claude, 2026-11-07):** offense and defense ratings are already in (F4). They don't improve the margin but are needed for totals. Passing ratings, built from expected points per pass play for offense and defense, will add to the points rating: about 0.03–0.08 on the margin, because passing efficiency is steadier than points. Running ratings will add about nothing. Splitting into passing and running will beat a single efficiency rating only slightly. Expected points are fit through 2019 (tag-tables#F4), so 2020–2024 is the check.
+
+Run 2026-11-07 with [`explore/h7_parts.py`](explore/h7_parts.py). Passing, running and all-play ratings of expected points per play are added to rung 1's forecasts, with weights fit on 2002–2015.
+
+| # | Finding | Confidence |
+|---|---|---|
+| F17 | **Efficiency ratings mostly repeat what the points rating knows.** An all-play efficiency rating's edge correlates 0.93 with rung 1's forecast. On its own, it misses the margin by 10.24 on 2016–2024, against rung 1's 10.16. | strong |
+| F18 | **Passing and running ratings add nothing measurable on top.** Gaps to rung 1 on 2016–2024, with a 90% interval. Passing: margin −0.003 (−0.023 to +0.016), total −0.004. Running: −0.003 and −0.001. Both: −0.007 (−0.032 to +0.017) and −0.003. All plays: −0.005 and −0.006. 2020–2024 is the same story, all within ±0.01. | strong |
+
+**H7 verdict: unclear, failed as a forecasting gain.** The CEO's "overall predictor ... easy for downstream models to learn from" holds: one rating does the work. Offense and defense ratings earn their place because totals need them (F4). Passing and running parts don't improve next games' margins or totals (F18), against an expected 0.03–0.08 from passing. Two caveats: they may still be useful downstream, for game script, play mix or fantasy, and that's those projects' question; and the winning and losing parts of H7 are part 2 (H5).
+
 ## Still to do in this exploration
 
-1. **H7, parts:** running and passing ratings, each kept only if it helps.
-2. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
+1. **Win chances, ranges and the long horizon:** calibration, q10–q90 coverage, and wins over the next 3 games and the rest of the season.
+2. **Rung 3:** rung 1 plus what held (H1's quarterback and same-team adjustments, sizes re-tuned each season), with a small win-probability blend (H3) tried on top, scored against the 0.5 and 0.25 bars.
