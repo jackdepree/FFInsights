@@ -18,6 +18,7 @@
 | H5 | 2026-11-07 | CEO | elo | One rating plus a home bonus | Strength is conditional (home, opponent's QB, coverage, game state) | Part 2, after `stabilization` | open | |
 | H6 | 2026-11-07 | CEO | stabilization | Not part of Elo | First find which conditions are consistent and predict the future | Its own project | open | |
 | H7 | 2026-11-07 | CEO | elo | One rating, sometimes offense and defense | An overall rating plus parts: offense, defense, running, passing | Passing, running and all-play efficiency ratings added to the points rating | unclear | Offense and defense needed for totals; passing and running add nothing (±0.01) |
+| H8 | 2026-11-07 | CEO | elo | A rating ignores what a game means for the standings | Teams with their playoff seed locked rest starters in the final week: flag them from the tiebreakers ("cheap and easy and reliable") | Seed-locked flag in the margin and win forecasts, through the harness (2016–2024) | held | Final-week margin miss −0.43 points (−0.80 to −0.08), gap to the close 1.32 → 0.89 (elo#F14). Not cheap: it needed the NFL's tiebreakers (`pcf.data.standings`) |
 
 ## Tally
 
@@ -25,5 +26,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 2 | 2 | 2 | 2 |
+| CEO | 3 | 2 | 2 | 2 |
 | Claude | 0 | 0 | 0 | 0 |
