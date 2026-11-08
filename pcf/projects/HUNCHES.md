@@ -19,6 +19,9 @@
 | H6 | 2026-11-07 | CEO | stabilization | Not part of Elo | First find which conditions are consistent and predict the future | Its own project | open | |
 | H7 | 2026-11-07 | CEO | elo | One rating, sometimes offense and defense | An overall rating plus parts: offense, defense, running, passing | Passing, running and all-play efficiency ratings added to the points rating | unclear | Offense and defense needed for totals; passing and running add nothing (±0.01) |
 | H8 | 2026-11-07 | CEO | elo | A rating ignores what a game means for the standings | Teams with their playoff seed locked rest starters in the final week: flag them from the tiebreakers ("cheap and easy and reliable") | Seed-locked flag in the margin and win forecasts, through the harness (2016–2024) | held | Final-week margin miss −0.43 points (−0.80 to −0.08), gap to the close 1.32 → 0.89 (elo#F14). Not cheap: it needed the NFL's tiebreakers (`pcf.data.standings`) |
+| H9 | 2026-11-08 | CEO | schemes-v2 | Teams rated on one line: strength plus home field | Rock-paper-scissors: circles come from flukes in close games, or from schemes that give one team an edge over another | First look: circles against chance models (`schemes-v2/explore/cycles.py`); the real test is style pairings on margins | open | First look: circles are rarer than chance (18.1% against 21.2%), and circle games are closer. Win/loss can't show a point-sized edge; margins can |
+| H10 | 2026-11-08 | CEO | schemes-v2 | Schemes are charted labels, often by coaching tree; roles are usage at one team | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role | The movers design: does each tendency move with the play caller, the player, or stay with the roster? | open | |
+| H11 | 2026-11-08 | CEO | schemes-v2 | Scheme labels are judged by whether they look right on film | A real scheme predicts performance under conditions (e.g. trailing at halftime) or the matchups in H9 | Scheme tendencies against the win-probability model's expectation for a game state, held-out seasons | open | |
 
 ## Tally
 
@@ -26,5 +29,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 3 | 2 | 2 | 2 |
+| CEO | 3 | 2 | 2 | 5 |
 | Claude | 0 | 0 | 0 | 0 |

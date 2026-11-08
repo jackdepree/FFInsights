@@ -451,11 +451,11 @@ projects:
     name: Schemes v2
     phase: 1
     status: idea
-    horizon: later
-    cadence: [retrospective]
-    depends_on: [roles-archetypes, context-retro]
+    horizon: now
+    cadence: [in_season, retrospective]
+    depends_on: [grain-tables, tag-tables, validation-harness, elo]
     origin: Schemes_Model.ipynb
-    summary: A full expert (CEO call, 2026-10-28). Retry team schemes from the roles-and-archetypes angle; the exploration must first check why schemes-v1 found little signal.
+    summary: "A full expert (CEO call, 2026-10-28), offense and defense. Started 2026-11-08 with the CEO's hunches H9-H11 (projects/schemes-v2/BRIEF.md): a scheme is what moves with a play caller who changes teams, a role what moves with a player; tested on matchups (rock-paper-scissors) and game states. Not v1's structure; the exploration first checks why v1 found little. Likely two experts by cadence (live fields vs post-season participation)."
 
   - id: qb-talent
     name: QB true talent
