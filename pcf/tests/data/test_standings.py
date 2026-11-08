@@ -45,16 +45,60 @@ def test_a_tie_nothing_breaks_is_unresolved():
         S.best(["BUF", "KC"], rec, "conference")
 
 
-def test_no_locks_outside_the_nfl_or_the_final_week():
+def _season(last_known: bool = False, playoff_row: bool = False) -> pl.DataFrame:
+    """A tiny NFL season: week 1 played (BUF beat MIA), week 2 the final week (MIA@NE, BUF@NYJ),
+    optionally a playoff row listed later."""
+    t = pl.Datetime("us", "UTC")
+    d = lambda day: datetime(2023, 9, day, 17, tzinfo=UTC)  # noqa: E731
+    rows = {
+        "season": [2023, 2023, 2023], "game_type": ["REG"] * 3, "week": [1, 2, 2],
+        "home_team": ["BUF", "NE", "NYJ"], "away_team": ["MIA", "MIA", "BUF"],
+        "kickoff": [d(10), d(17), d(17)], "known_at": [d(1)] * 3,
+        "home_score": [20, 10 if last_known else None, None],
+        "away_score": [10, 3 if last_known else None, None],
+        "result_known_at": [d(11), d(18) if last_known else None, None],
+    }  # fmt: skip
+    if playoff_row:
+        for k, v in {"season": 2023, "game_type": "REG", "week": 9, "home_team": "BUF",
+                     "away_team": "NE", "kickoff": d(25), "known_at": d(24), "home_score": None,
+                     "away_score": None, "result_known_at": None}.items():  # fmt: skip
+            rows[k].append(v)
+    types = {"kickoff": t, "known_at": t, "result_known_at": t, "season": pl.Int32}
+    return pl.DataFrame(rows, schema_overrides=types)
+
+
+def test_no_locks_outside_the_nfl():
     t = pl.Datetime("us", "UTC")
     game = pl.DataFrame(
-        {"season": [2023, 2023], "game_type": ["REG", "REG"], "week": [1, 2],
-         "home_team": ["AAA", "BBB"], "away_team": ["BBB", "AAA"],
-         "home_score": [10, None], "away_score": [7, None],
-         "result_known_at": [datetime(2023, 9, 11, tzinfo=UTC), None]},
-        schema_overrides={"result_known_at": t, "season": pl.Int32},
+        {"season": [2023], "game_type": ["REG"], "week": [1], "home_team": ["AAA"],
+         "away_team": ["BBB"], "kickoff": [datetime(2023, 9, 10, tzinfo=UTC)],
+         "known_at": [datetime(2023, 9, 1, tzinfo=UTC)], "home_score": [None],
+         "away_score": [None], "result_known_at": [None]},
+        schema_overrides={"kickoff": t, "known_at": t, "result_known_at": t, "season": pl.Int32},
     )  # fmt: skip
-    assert S.final_week_locks(game, 2023, datetime(2023, 9, 16, tzinfo=UTC)).is_empty()
+    assert S.final_week_locks(game, 2023, datetime(2023, 9, 9, tzinfo=UTC)).is_empty()
+
+
+def test_no_locks_before_the_final_week_or_after_its_results():
+    early = datetime(2023, 9, 9, tzinfo=UTC)  # week 1 not played yet
+    assert S.final_week_locks(_season(), 2023, early).is_empty()
+    late = datetime(2023, 9, 19, tzinfo=UTC)  # a final-week result is known
+    assert S.final_week_locks(_season(last_known=True), 2023, late).is_empty()
+    run = datetime(2023, 9, 16, 16, tzinfo=UTC)
+    assert S.final_week_locks(_season(), 2023, run).height == 32
+
+
+def test_rows_listed_after_the_moment_are_ignored():
+    run = datetime(2023, 9, 16, 16, tzinfo=UTC)
+    assert S.final_week_locks(_season(playoff_row=True), 2023, run).equals(
+        S.final_week_locks(_season(), 2023, run)
+    )
+
+
+def test_an_outcome_left_unresolved_never_makes_a_lock():
+    # two teams, nothing to separate them: every outcome is unresolved
+    lk = S.locks([g("BUF", "KC", 0.5)], [], 2023)
+    assert not any(v["locked"] for v in lk.values())
 
 
 @pytest.mark.local_data

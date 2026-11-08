@@ -244,7 +244,8 @@ def locks(played: list[Game], remaining: list[Game], season: int) -> dict[str, d
             for t in teams:
                 seen[t].add(s.get(t))
         for t in teams:
-            only = next(iter(seen[t])) if len(seen[t]) == 1 else None
+            # one seed in every outcome; an outcome left unresolved ("?") never makes a lock
+            only = next(iter(seen[t])) if len(seen[t]) == 1 and "?" not in seen[t] else None
             out[t] = {
                 "seed": only,
                 "locked": only is not None,
@@ -271,26 +272,34 @@ def _games(frame: pl.DataFrame) -> list[Game]:
 
 def final_week_locks(game: pl.DataFrame, season: int, moment) -> pl.DataFrame:
     """season, team, seed_locked, eliminated at `moment`, from a view of `game` (schedule and
-    result). Empty unless the moment is in the final regular-season week, before any of its
-    results (a game from an earlier week with no result, like 2022's cancelled BUF-CIN, counts as
-    not played), and the teams are the NFL's."""
+    result). Empty unless every earlier week's games have kicked off and none of the final week's
+    results is known (a game from an earlier week with no result, like 2022's cancelled BUF-CIN,
+    counts as not played), and the teams are the NFL's. Only schedule rows listed by the moment
+    count (`known_at`): a bulk view also holds rows listed later."""
     schema = {"season": pl.Int32, "team": pl.String, "seed_locked": pl.Float64,
               "eliminated": pl.Float64}  # fmt: skip
-    reg = game.filter((c("season") == season) & (c("game_type") == "REG"))
+    at = pl.lit(moment).cast(pl.Datetime("us", "UTC"))
+    reg = game.filter((c("season") == season) & (c("game_type") == "REG") & (c("known_at") <= at))
     if season < FIRST_SEASON or reg.is_empty():
         return pl.DataFrame(schema=schema)
     if not set(reg["home_team"]) | set(reg["away_team"]) <= set(DIVISION):
         return pl.DataFrame(schema=schema)  # not the NFL's 32 teams (a synthetic league)
     known = (
         c("result_known_at").is_not_null()
-        & (c("result_known_at") <= moment)
+        & (c("result_known_at") <= at)
         & c("home_score").is_not_null()
     )
     last = reg["week"].max()
     played = reg.filter(known)
     remaining = reg.filter((c("week") == last) & ~known)
-    if remaining.is_empty() or reg.filter((c("week") == last) & known).height > 0:
-        return pl.DataFrame(schema=schema)  # not before the final week
+    started = reg.filter(c("week") < last)["kickoff"].max()
+    if (
+        remaining.is_empty()
+        or reg.filter((c("week") == last) & known).height > 0
+        or started is None
+        or started >= moment
+    ):
+        return pl.DataFrame(schema=schema)  # not the final week's run
     rest = remaining.with_columns(home_score=0, away_score=0)
     lk = _cached_locks(tuple(_games(played)), tuple(_games(rest)), season)
     return pl.DataFrame(
