@@ -28,7 +28,10 @@ c = pl.col
 def per_moment_matches(gw: Gateway) -> None:
     every = steps(gw.calendar, "in_season", range(2006, 2025), "saturday")
     sample = [
-        s for s in every if (s.season, s.week) in {(2016, 1), (2019, 9), (2023, 2), (2024, 17)}
+        s
+        for s in every
+        if (s.season, s.week)
+        in {(2016, 1), (2019, 9), (2020, 17), (2023, 2), (2024, 17), (2024, 18)}
     ]
     ex = EloMargin()
     view = gw.view(END_OF_TIME, ex.cadence, ex.inputs)

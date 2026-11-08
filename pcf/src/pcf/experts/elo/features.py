@@ -9,13 +9,14 @@ from datetime import datetime
 
 import polars as pl
 
+from pcf.data.standings import final_week_locks
 from pcf.experts.elo.ratings import DEFAULT, Settings, Walk, result_order, season_priors
 from pcf.experts.elo.same_team import NEED, same_team
 
 c = pl.col
 FEATURES = (
     "gap", "hfa", "od_margin", "od_total",
-    "qb_diff", "share_diff", "qb_sum", "share_missing",
+    "qb_diff", "share_diff", "qb_sum", "share_missing", "lock_diff",
 )  # fmt: skip
 # Each team's own numbers at the moment, saved with the margin's walk-forward history for higher
 # layers (decision 0021). Ratings are in points against an average team; offense and defense in
@@ -23,7 +24,8 @@ FEATURES = (
 RATINGS = (
     "home_rating", "away_rating", "home_offense", "home_defense", "away_offense", "away_defense",
 )  # fmt: skip
-PUBLISHED = ("hfa", *RATINGS, "h_qb", "a_qb", "h_share", "a_share")
+# h_lock, a_lock: 1 = the team's playoff seed is locked going into the final week (I19)
+PUBLISHED = ("hfa", *RATINGS, "h_qb", "a_qb", "h_share", "a_share", "h_lock", "a_lock")
 
 
 def results(games: pl.DataFrame) -> pl.DataFrame:
@@ -76,15 +78,38 @@ def _ratings(res: pl.DataFrame, sched: pl.DataFrame, settings: Settings) -> pl.D
     return pl.DataFrame(out)
 
 
-def _with_same_team(rated: pl.DataFrame, st: pl.DataFrame, sched: pl.DataFrame) -> pl.DataFrame:
+def _locks(game: pl.DataFrame, sched: pl.DataFrame) -> pl.DataFrame:
+    """game_id, h_lock, a_lock: each team's seed locked going into the final week (the CEO's
+    I19 flag), from the results known at each game's moment; 0 in every other week."""
+    pairs = sched.select("season", "moment").unique().sort("season", "moment")
+    frames = [
+        final_week_locks(game, s, m).with_columns(moment=pl.lit(m).cast(sched["moment"].dtype))
+        for s, m in pairs.iter_rows()
+    ]
+    lk = pl.concat(frames).select("season", "moment", "team", "seed_locked")
+    out = sched.select("game_id", "season", "moment", "home_team", "away_team")
+    return (
+        out.join(lk.rename({"team": "home_team", "seed_locked": "h_lock"}),
+                 on=["season", "moment", "home_team"], how="left")
+        .join(lk.rename({"team": "away_team", "seed_locked": "a_lock"}),
+              on=["season", "moment", "away_team"], how="left")
+        .select("game_id", c("h_lock", "a_lock").fill_null(0.0))
+    )  # fmt: skip
+
+
+def _with_same_team(
+    rated: pl.DataFrame, st: pl.DataFrame, sched: pl.DataFrame, locks: pl.DataFrame
+) -> pl.DataFrame:
     home = st.rename({"team": "home_team", "share": "h_share", "qb_out": "h_qb"})
     away = st.rename({"team": "away_team", "share": "a_share", "qb_out": "a_qb"})
     return (
         sched.drop("moment")
         .join(rated, on="game_id")
+        .join(locks, on="game_id")
         .join(home, on=["game_id", "home_team"], how="left")
         .join(away, on=["game_id", "away_team"], how="left")
         .with_columns(c("h_share", "a_share").fill_null(1.0), c("h_qb", "a_qb").fill_null(0.0))
+        .with_columns(lock_diff=c("a_lock") - c("h_lock"))
         .with_columns(
             qb_diff=c("a_qb") - c("h_qb"),
             share_diff=c("h_share") - c("a_share"),
@@ -104,6 +129,8 @@ def _with_same_team(rated: pl.DataFrame, st: pl.DataFrame, sched: pl.DataFrame) 
             "a_share",
             "h_qb",
             "a_qb",
+            "h_lock",
+            "a_lock",
         )  # fmt: skip
         .sort("game_id")
     )
@@ -126,7 +153,7 @@ def at_moment(view, games: pl.DataFrame, settings: Settings = DEFAULT) -> pl.Dat
     pg = player_rows(view, seasons)
     kick = game.filter(c("season").is_in(seasons)).select("game_id", "kickoff")
     st = same_team(pg, kick, sched.select("game_id", "moment"))
-    return _with_same_team(rated, st, sched)
+    return _with_same_team(rated, st, sched, _locks(game, sched))
 
 
 def history(view, moments: pl.DataFrame, settings: Settings = DEFAULT) -> pl.DataFrame:
@@ -139,4 +166,4 @@ def history(view, moments: pl.DataFrame, settings: Settings = DEFAULT) -> pl.Dat
     pg = player_rows(view, seasons)
     kick = game.filter(c("season").is_in(seasons)).select("game_id", "kickoff")
     st = same_team(pg, kick, sched.select("game_id", "moment"))
-    return _with_same_team(rated, st, sched)
+    return _with_same_team(rated, st, sched, _locks(game, sched))

@@ -3,10 +3,10 @@ same features (`features.py`) and each fit inside the harness's training window.
 
 The walk's settings are fixed (exploration F3, F4). What the harness fits, per training window:
 - **margin:** home margin = b1 x rating gap + b2 x home field + b3 x QB-missing difference
-  + b4 x same-team-share difference, weighted least squares, no intercept; ranges from the
-  training misses (q10, q50, q90).
+  + b4 x same-team-share difference + b5 x seed-locked difference (away - home, final week only;
+  I19), weighted least squares, no intercept; ranges from the training misses (q10, q50, q90).
 - **total:** total = a + b1 x the offense/defense total + b2 x QBs missing + b3 x share missing.
-- **win:** a logistic curve on the margin variant's four features, no intercept (exploration F24:
+- **win:** a logistic curve on the margin variant's five features, no intercept (exploration F24:
   a fitted curve rather than a fixed normal one). Ties have no outcome.
 
 Each has a `_simple` twin, the brief's yardstick (rung 1): the same walk with no QB or same-team
@@ -29,7 +29,7 @@ from pcf.experts.elo import features as F
 from pcf.experts.elo.ratings import Settings
 
 c = pl.col
-MARGIN_X = ("gap", "hfa", "qb_diff", "share_diff")
+MARGIN_X = ("gap", "hfa", "qb_diff", "share_diff", "lock_diff")
 TOTAL_X = ("od_total", "qb_sum", "share_missing")
 SIMPLE_MARGIN_X = ("gap", "hfa")
 SIMPLE_TOTAL_X = ("od_total",)

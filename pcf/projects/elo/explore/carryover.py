@@ -150,7 +150,10 @@ def schedule_strength(ts: pl.DataFrame) -> None:
     )
 
 
-def resting(g: pl.DataFrame, pre: pl.DataFrame) -> None:
+def qb_rest(g: pl.DataFrame) -> pl.DataFrame:
+    """Per regular-season team-game, 2013-2024, for teams with a clear usual QB (75%+ of offense
+    snaps over the previous 4 games): `sat` (on the roster, not listed Out or Doubtful, under half
+    the snaps), `listed_out`, and `final` (the season's last regular-season week)."""
     seasons = list(range(2013, LAST + 1))
     roster = (
         read_part("player_game", "roster", seasons=seasons)
@@ -205,6 +208,15 @@ def resting(g: pl.DataFrame, pre: pl.DataFrame) -> None:
             final=c("week") == c("last"),
         )
     )
+    return u
+
+
+def resting(g: pl.DataFrame, pre: pl.DataFrame) -> None:
+    u = qb_rest(g)
+    reg = g.filter((c("game_type") == "REG") & c("season").is_in(list(range(2013, LAST + 1)))).select(
+        "game_id", "season", "week", "kickoff", "home_team", "away_team", "home_score", "away_score"
+    )
+    last_week = reg.group_by("season").agg(last=c("week").max())
     base = u.filter(~c("final") & (c("n") >= 5))
     fin = u.filter(c("final"))
     print(
