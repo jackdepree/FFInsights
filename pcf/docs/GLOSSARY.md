@@ -33,6 +33,9 @@
 | **Explosive play** | A big gain | `rushing_10`, `rushing_12`, `passing_20`, … (stats) | No single standard. Thresholds set in the first brief that uses it. |
 | **Stabilization** | How many plays or games a stat needs before it reflects skill more than noise | — | The `stabilization` expert |
 | **Regression to the mean** | Extreme results tend to move back toward average, more so for noisy stats | — | |
+| **Elo rating** | A team strength number updated after every game by how much the result beat or missed the expectation. Only surprises move it | — | `elo`: in points against an average team on a neutral field; each team moves by 6% of the miss on the margin |
+| **Strength of schedule** | How good a team's opponents were. A rating that scores each result against what was expected credits it automatically | — | In Elo, end rating ≈ 0.70 × mean margin + 0.82 × opponents' mean rating (elo#F10) |
+| **Seed locked** | A team's playoff seed can't change whatever the remaining games do, so it has nothing to play for and may rest starters | — | `pcf.data.standings`: going into the final week, by the NFL's tiebreakers; `h_lock`, `a_lock` in Elo (decision 0022) |
 
 ## Fantasy
 
@@ -152,3 +155,8 @@
 | **Prediction ledger** | The append-only record of every prediction made before kickoff | ARCHITECTURE.md |
 | **VOE** (value over expected) | *Provisional:* how much a player added beyond what the situation and teammates predicted. Final definition in the `voe-retro` and `voe-live` briefs. | to be defined in its brief |
 | **Context** | *Provisional:* how hard a play's situation was (personnel, coverage, pressure, down and distance), as an expected outcome. Final definition in the `context-live` and `context-retro` briefs. | to be defined in its brief |
+| **Pull** (between seasons) | How far every rating moves back toward average when a new season starts: rosters change and luck doesn't repeat. 0.4 means 40% of the way | elo (F9, decision 0021) |
+| **Carryover** | How much of a season's measure repeats next season: the slope of next season's value on this one's. A season's margin keeps 0.42; Elo's end-of-season rating 0.60–0.68 | elo#F9 |
+| **Usual QB**, **same-team share** | The usual QB: the QB with the top offense snap share over a team's last 4 games. Same-team share: the share of the team's usual snaps (offense and defense) whose players are available this week | elo (H1) |
+| **Published features** | Numbers an expert computes at a forecast's moment without fitting, saved next to its forecasts so higher layers can use them (`Expert.publishes`): Elo's ratings | decision 0021 |
+| **Feature candidate** | An expert output that is consistent and close to as good as the close: recorded in CONSISTENCY.md for downstream models to try (the CEO, 2026-11-07) | CONSISTENCY.md |

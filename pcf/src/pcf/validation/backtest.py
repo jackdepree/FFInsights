@@ -242,6 +242,10 @@ def run(
     history = standard(expert, pred, run_id=run_id).join(
         outcomes.select(*expert.keys(), "y"), on=expert.keys(), how="left"
     )
+    if expert.publishes:
+        history = history.join(
+            feats.select(*expert.keys(), *expert.publishes), on=expert.keys(), how="left"
+        )
     history = scores.row_losses(history, expert.kind)
     log.info(
         "%s backtest: %d steps (%d tested), %d predictions; features %.1f s, walk %.1f s",
@@ -256,11 +260,13 @@ def run(
 
 
 def write_history(bt: Backtest, run_id: str, root: Path | None = None) -> Path:
-    """Save the walk-forward history in the standard schema: outputs/<id>/<run_id>/history.parquet
-    (the gateway reads registered versions from here), or outputs/<id>/<variant>/<run_id>/."""
+    """Save the walk-forward history in the standard schema, with the expert's published features:
+    outputs/<id>/<run_id>/history.parquet (the gateway reads registered versions from here), or
+    outputs/<id>/<variant>/<run_id>/."""
     root = root or get_config().zone("outputs")
     path = root / bt.expert.id / bt.expert.variant / run_id / HISTORY
     path.parent.mkdir(parents=True, exist_ok=True)
-    cols = [*bt.expert.keys(), *OUTPUT_SCHEMA, *(SPIKE_PARTS if bt.expert.spike else ())]
+    cols = [*bt.expert.keys(), *OUTPUT_SCHEMA, *(SPIKE_PARTS if bt.expert.spike else ()),
+            *bt.expert.publishes]  # fmt: skip
     bt.history.select(cols).with_columns(run_id=pl.lit(run_id)).write_parquet(path)
     return path

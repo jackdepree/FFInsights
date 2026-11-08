@@ -238,7 +238,7 @@ projects:
   - id: prediction-ledger
     name: Prediction ledger
     phase: 0
-    status: building
+    status: validating
     horizon: now
     depends_on: [package-scaffold, validation-harness]
     summary: An append-only record of every prediction made before kickoff, with the market line at that time. It feeds the track record and the scorecards.
@@ -255,11 +255,21 @@ projects:
   - id: elo
     name: Team Elo (weekly)
     phase: 1
-    status: idea
-    horizon: next
+    status: done
+    horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Weekly team strength rating, with optional offense/defense split and QB adjustment. Doubles as a win-probability baseline.
+    summary: Weekly team strength rating in points (margin, offense, defense), with the usual-QB and same-team adjustments and the final-week seed lock. Forecasts margins 0.27 and totals 0.30 points behind the close, win chances 0.019 log loss behind, and wins over the next 3 games and the rest of the season.
+    interface:
+      inputs: game parts schedule, result; player_game parts roster, snaps, injury (gateway only)
+      outputs: "pcf.experts.elo variants, histories in outputs/elo/<variant>/<run_id>/history.parquet: margin (home_margin), total (total_points), win (home_win), wins_next3 and wins_rest (per team-game); mean and q10, q50, q90 (win: mean only). The margin history also carries the ratings (decision 0021): hfa, home_rating, away_rating, home_offense, home_defense, away_offense, away_defense, h_qb, a_qb, h_share, a_share, h_lock, a_lock. Live runs don't carry the ratings yet."
+      grain: game; team-game for wins_next3 and wins_rest
+      interval: every game from week 1, 2016-2024 reported; ratings carry over, pulled 40% toward average each season
+      cadence: in_season
+      known_at: the Saturday run, 12:00 Eastern (Thursday noon for Thursday games; decision 0016)
+      model: none registered yet (registering needs a logged model; no project has one yet)
+      how_to_use: "As a feature and a yardstick, from saved histories only (rule e). It ties the close when blended (F4), so a betting model gains little from it directly; it's a strength summary for other experts and for moments with no line. Ranges for season wins must come from fitted misses, never independent games (F13). The final week is still its weakest (F12, F14)."
+      feeds: sides, totals and win products; the prediction ledger; team-efficiency, game script, fantasy game environments, futures
 
   - id: team-efficiency
     name: Opponent-adjusted efficiency

@@ -73,6 +73,14 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 
 **Test it rather than argue it.** If a hunch costs less than about one session to check, Claude tests it instead of arguing against it, even when it expects the hunch to fail. Claude still says up front what it expects and why, so the result means something.
 
+**Two tests for every new measure.** Whenever we build a new measure (a feature, a condition, or a way of summing up what happened, like a game's average win probability), Claude reports two things:
+1. **Does it help this project's target** (for example, next game's margin)? That decides whether this project uses it.
+2. **Is it consistent?** Does it repeat from week to week and season to season, and differ between teams rather than being the same for everyone? Measure it with `pcf.validation.consistency`.
+
+Both kinds go in [`projects/CONSISTENCY.md`](projects/CONSISTENCY.md):
+- **A consistent measure is kept even when it fails test 1.** It's something real about a team, so it may explain something else later.
+- **An inconsistent one is marked noise**, so nobody builds on it, or so it's used deliberately as noise (CEO, 2026-11-07).
+
 **The hunch scoreboard.** Every unconventional bet goes in [`projects/HUNCHES.md`](projects/HUNCHES.md): what the usual approach says, what we bet instead, how we tested it, and whether it held. Mostly the CEO's; Claude adds one when it notices we're going against convention. Over time it shows where the CEO's instinct beats the average and where to lean on the data.
 
 **Assumptions first.** For any idea the CEO brings, Claude first states its assumptions, limitations and advantages, plus a simpler alternative if there is one. Then Claude recommends, and builds on the CEO's go. Claude pushes back when an idea won't work as stated.
@@ -112,7 +120,7 @@ Every new mini-project, sub-problem, feature, model or domain gets an entry in [
 3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)), drafted at the idea stage and agreed after the exploration. It opens with the usual way, the analogies and the CEO's hunches, then covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
-6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, hunch verdicts into `HUNCHES.md`, and the roadmap and registry are updated.
+6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, hunch verdicts into `HUNCHES.md`, new measures into `CONSISTENCY.md`, and the roadmap and registry are updated.
 
 Each project's notes live in `projects/<id>/`: `EXPLORATION.md`, `BRIEF.md`, `RESULTS.md`.
 
@@ -145,6 +153,7 @@ pcf/
     KNOWLEDGE.md      ← every finding from every finished project. Read before any brief.
     IDEAS.md          hypotheses to test: football hunches and patterns in model misses
     HUNCHES.md        the scoreboard of unconventional bets: what we tried against convention, and whether it held
+    CONSISTENCY.md    every measure we've built: does it repeat week to week and season to season (signal), or not (noise)?
     _templates/       BRIEF.md and RESULTS.md templates
     <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md, explore/
   src/pcf/            the package: core, data, experts, composites, products, validation (setup: README.md)

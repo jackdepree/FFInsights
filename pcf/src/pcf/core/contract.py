@@ -91,6 +91,9 @@ class Expert(ABC):
       the season; e.g. position, rookie, starter.
     - `spike`: an amount whose results pile up at exactly 0. `predict` also returns `SPIKE_PARTS`,
       they're saved with the history, and the harness judges the two parts (decision 0014).
+    - `publishes`: feature columns saved with the walk-forward history for higher layers (rule e;
+      decision 0021): numbers the expert computes at the row's moment from data known by then,
+      with no fitting (Elo's ratings). Higher layers read them with the forecasts.
     """
 
     id: ClassVar[str]
@@ -106,6 +109,7 @@ class Expert(ABC):
     variant: ClassVar[str] = ""
     first_train: ClassVar[int | None] = None
     spike: ClassVar[bool] = False
+    publishes: ClassVar[tuple[str, ...]] = ()
 
     @abstractmethod
     def features(self, view: View, games: pl.DataFrame) -> pl.DataFrame:
