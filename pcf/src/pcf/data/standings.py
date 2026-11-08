@@ -21,6 +21,7 @@ relocated teams: LV, LAC, LA).
 
 from __future__ import annotations
 
+import functools
 import itertools
 from collections import defaultdict
 from collections.abc import Iterable
@@ -252,6 +253,13 @@ def locks(played: list[Game], remaining: list[Game], season: int) -> dict[str, d
     return out
 
 
+@functools.lru_cache(maxsize=2048)
+def _cached_locks(played: tuple[Game, ...], remaining: tuple[Game, ...], season: int) -> dict:
+    """`locks`, remembered: a backtest and its leakage checks ask the same question many times
+    (a perturbed world changes only the seasons after its cutoff). Callers mustn't change it."""
+    return locks(list(played), list(remaining), season)
+
+
 def _games(frame: pl.DataFrame) -> list[Game]:
     m = c("home_score") - c("away_score")
     rows = frame.select(
@@ -283,7 +291,8 @@ def final_week_locks(game: pl.DataFrame, season: int, moment) -> pl.DataFrame:
     remaining = reg.filter((c("week") == last) & ~known)
     if remaining.is_empty() or reg.filter((c("week") == last) & known).height > 0:
         return pl.DataFrame(schema=schema)  # not before the final week
-    lk = locks(_games(played), _games(remaining.with_columns(home_score=0, away_score=0)), season)
+    rest = remaining.with_columns(home_score=0, away_score=0)
+    lk = _cached_locks(tuple(_games(played)), tuple(_games(rest)), season)
     return pl.DataFrame(
         [{"season": season, "team": t, "seed_locked": float(v["locked"]),
           "eliminated": float(v["eliminated"])} for t, v in sorted(lk.items())],
