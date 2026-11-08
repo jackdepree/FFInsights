@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (kickoff; the CEO's hunches recorded, back and forth under way) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (kickoff; the CEO's hunches H9-H12 recorded, back and forth under way) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -23,6 +23,7 @@
 |---|---|---|---|
 | H9 | Rock-paper-scissors: circles (A beats B, B beats C, C beats A) come either from flukes in close games or from schemes that give one team an edge over another | Matchups are a scouting talking point; models rate teams on one line (strength plus home field) | (1) Are circles more common than strength plus luck produce? (first look below). (2) The sharper test: do offense-style × defense-style pairings predict margins beyond Elo? |
 | H10 | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role. Schemes and roles are the consistent parts of play style | Schemes are labels from charting, often by coaching tree; roles come from usage at one team | The movers design (analogy 3): for each tendency, does it move with the play caller, the player, or stay with the roster? |
+| H12 | Player performance depends on the fit between a player and a scheme, beyond the talent around them: a QB who moves between two offenses of equal EPA but different tendencies can go from +0.10 to −0.10. The golden goose is a causal process, close to double machine learning | A player's efficiency is theirs, adjusted for teammates and opponents; scheme isn't in the model | Movers again: a player's change in efficiency after a move, against the distance between the old and new schemes, with the talent around them, age and regression to the mean partialled out (double machine learning, with a simple fixed-effects version as the yardstick) |
 | H11 | Knowing a scheme should predict performance under conditions (for example, a team losing at halftime most likely won't come back), or predict the matchups in H9 | Scheme labels are judged by whether they look right to film people | Do scheme tendencies predict how a team does in a game state, beyond the win-probability model's expectation for that state? |
 
 **H9.**
@@ -34,12 +35,20 @@
 **H11.**
 > "A successful criteria of knowing a scheme could be two things, either the same as my first hunch like rock-paper-scissors or that we can predict performance based on conditions, like if a team is losing at halftime then they will most likely not be able to come back."
 
+**H12.**
+> "Another hunch of mine is that player performance is related to schemes and roles in some way that is not explained by personnel performance. Let me explain by example, a quarterback is averaging 0.10 epa per play, then they leave their team and join another offense that is averaging 0.10 epa per play, however this new offense has statistically significant differences in playcalling and charter tendencies. Then, we notice that this quarterback averages -0.10 epa per play on this new and different offense. Most of my discovery hunches that are somewhat original follow this pattern. Essentially, I think that the golden goose in scheme identification comes from a causal process; something close to double machine learning."
+
 **Scope and the old model (the CEO's words).**
 > "This expert would definitely cover both offense and defense respectively."
 
 > "I'm not quite sure what the old model got wrong, I think my exploration was too narrow and I ended up finding nothing reliable."
 
 > "I do not think it necessarily should follow the same exact structure as my old model."
+
+### CEO decisions so far
+- **2026-11-08, game states:** in-game states are for diagnosis (H11), never live predictions: "we can use that data for diagnosis but you are still correct that we will not be making live production level predictions."
+- **2026-11-08, play callers:** head coaches first, from the schedule, "to ensure we have the correct methodology to discover schemes and discover the exact features to best describe schemes". Coordinators come after, as their own small table (a new data source, signed off in principle; built once the method works).
+- **2026-11-08, hunches:** Claude proposes causal ideas in the same pattern; they count as hunches only if the CEO edits them significantly, otherwise they go in IDEAS.md as Claude's.
 
 ### First look at H9 (2026-11-08, discovery only)
 [`explore/cycles.py`](explore/cycles.py), 2016–2024, 2,467 games, 4,495 triangles of teams that all played each other in a season.
@@ -55,6 +64,19 @@
 - **Circles are *rarer* than strength plus luck predicts, not more common.** Real seasons are more ordered than any of the chance models. My expectation (about as common as chance) failed in the other direction. The likely reason: strength differences are larger, or move more within a season, than the forecasts know. That's a team-strength finding (it echoes elo#F13), not a scheme one.
 - **Flukes, partly:** games inside circles are closer than games inside ordinary triangles (54% decided by 7 or fewer, against 47%; at least one game decided by 3 or fewer in 62% of circles, against 55%).
 - **What it doesn't rule out:** a circle uses one bit per game (who won). A scheme edge worth a point or two would barely change who wins, so it can't show here. H9's real test is on margins (the table above, column 3, test 2).
+
+### Claude's proposed ideas, in the CEO's causal pattern (2026-11-08, awaiting the CEO)
+*Each becomes a hunch only if the CEO edits it significantly; otherwise it goes in IDEAS.md as Claude's. My expectation is given with each, so the result means something.*
+
+| # | Idea | Design | My expectation |
+|---|---|---|---|
+| C1 | **Stayers for coaches.** When a head coach changes but the QB and most starters stay, the tendencies that change (against teams that kept their coach) are the coach's; those that don't are the roster's | Difference in differences: a mirror image of H10's movers design. The two must agree | Pass rate over expected, pace, shotgun rate and 4th-down aggressiveness move with the coach; efficiency mostly stays with the roster |
+| C2 | **QB coverage fit**, a player-level rock-paper-scissors. A QB's efficiency against man versus zone is a lasting trait, and that split times the opposing defense's man rate predicts the QB's game beyond both teams' ratings | Participation coverage, 2016–2025 (retrospective, so diagnosis and next-season priors) | Small but real. It has far more data than circles: every dropback, not one bit per game |
+| C3 | **Receiver depth fit.** A receiver's target depth moves with them (role), but their efficiency per target depends on whether the new offense throws deep: deep threats lose most when they move to a short-passing scheme | Movers: many receivers change teams each year | The best first test of H12's method: the most movers, so the narrowest intervals, before QBs |
+| C4 | **A learning curve.** A player new to a scheme (moved, or a new coach arrived) plays below their eventual level for the first few games, more so the further the new scheme is from the old | Efficiency by games since the change, against scheme distance | A small dip that fades by midseason; useful for early-season projections |
+| C5 | **Tendencies settle fast; efficiency doesn't.** A new head coach's tendencies settle within about 4 games, long before efficiency does | `pcf.validation.consistency` by games into a coach's tenure | Pass rate over expected repeats strongly after 3–4 games. It sets how much a live scheme expert trusts this season against the coach's history |
+
+**The null every scheme-fit test has to beat:** a placebo move. Give each mover the scheme distance of a random team instead of their real one; the effect has to vanish. Regression to the mean shows up just as strongly in the placebo, so it can't fake a result.
 
 ## The question
 How does each team play, on offense and on defense, in ways that belong to its play caller rather than to its players or to luck? And do those styles explain who beats whom and how teams do in particular game states?
@@ -89,17 +111,24 @@ How does each team play, on offense and on defense, in ways that belong to its p
 - **Tendencies can be measured from free data.** Play-by-play has shotgun, no-huddle, pass rate over expected, pass depth and direction (1999 on). FTN charting has play-action, motion, blitzers and men in the box (2022 on, about two weeks behind). Participation has formation, personnel, coverage and routes (2016–2025, after the season only).
 - **Play callers can be identified.** nflverse has head coaches only. Coordinators and who calls plays aren't in our data (an open decision below).
 - **Enough movers.** Each season perhaps 10–20 coordinators and many players change teams. Coordinators are few, so intervals will be wide.
+- **For H12 (Claude's assumptions, stated first):**
+  - *Movers aren't random.* Players move because they declined, got expensive or were cut. A QB at +0.10 who moves would drift down anyway (regression to the mean, age). Double machine learning removes only what we measure; the main confounders to measure are prior efficiency (shrunk), age, the new and old supporting cast *without* the player, and opponents.
+  - *The new offense's +0.10 includes its old QB.* The supporting cast has to be measured without the position that changed.
+  - *Scheme distance must be known before the move:* the new team's tendencies from before the player arrived, or the new coach's at their previous team. Otherwise the player's own play shapes the "scheme".
+  - *Few movers, noisy outcomes.* QB EPA per play needs hundreds of plays to settle; a few dozen QB moves since 2006. Intervals will be wide; receivers and backs move far more often.
+  - *Simpler alternative first (rule k):* a movers regression with a player effect, a team-season effect and one fit term (player style × scheme distance). Double machine learning must beat or match it.
 - **A tendency is a choice, not a forced response.** Shotgun when trailing is the game state talking; neutral situations and an expected-rate adjustment are meant to remove that.
 
 ## Goals
 1. A map of tendencies: which ones are consistent (CONSISTENCY.md), and whose they are (play caller, player, roster).
-2. A test of matchups on margins (H9) and of game-state performance (H11).
+2. A test of matchups on margins (H9), of game-state performance (H11, diagnosis only) and of scheme fit (H12).
 3. Scheme features for downstream experts, saved like Elo's ratings.
 
 ## Tests
 *Draft, to agree with the CEO.*
 - **H9, matchups:** an offense-style × defense-style term improves held-out margin (or total) forecasts over Elo, with an interval clear of zero; the shuffled-pairings version doesn't.
 - **H10, whose is it:** for each tendency, the share that moves with a play caller (and with players) across movers, with an interval. A tendency counts as **scheme** if it moves with the play caller clearly more than it stays with the roster.
+- **H12, scheme fit:** among movers, the distance between the old and new schemes predicts the change in a player's efficiency beyond prior efficiency, age and supporting cast, with an interval clear of zero, and in the direction the fit term says (the same move is worse for some styles than others); the shuffled-scheme version shows nothing.
 - **H11, conditions:** scheme tendencies predict a team's result from a given game state (e.g. trailing at halftime) beyond the win-probability model's expectation for that state, on held-out seasons.
 - **Signal and no noise** (VALIDATION.md): beats its shuffled self; the no-noise target to be proposed after the exploration (CEO approves).
 - **Failure looks like:** no tendency moves with play callers more than chance, and neither matchup nor game-state test finds anything. Then schemes are roster traits, and that is itself a finding for `roles-archetypes`.

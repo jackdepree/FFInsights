@@ -2,7 +2,7 @@
 
 > Where PCF went against the usual way, and whether it paid off (CLAUDE.md, "The hunch scoreboard"). The market and the consensus are the average, so our edge comes from bets that are different *and* right. This page counts both.
 
-- **Who adds rows:** mostly the CEO, from each brief's "CEO hunches". Claude adds one when it notices we're doing something unconventional.
+- **Who adds rows:** the CEO, from each brief's "CEO hunches". **Whose hunch it is (the CEO, 2026-11-08):** this log tests the CEO's domain knowledge. A hunch Claude proposes counts as a hunch only if the CEO edits it significantly; otherwise it is recorded in IDEAS.md as Claude's idea or discovery. The point is not to diminish Claude's ideas but to keep this page a clean measure of the CEO's instinct, so we can learn which kinds of hunches give an edge.
 - **When:** a row is added when the bet is made, and its verdict filled in when it's tested. Failed bets stay: they show where to lean on the data.
 - **Verdicts:** **held** (beat the usual way on held-out data, or the exploration found the signal it predicted), **failed** (it didn't, or the usual way won), **unclear** (too little data, or mixed), **open** (not tested yet).
 - **The size matters as much as the verdict.** Each verdict gives its numbers, so a small win isn't counted like a large one.
@@ -22,6 +22,7 @@
 | H9 | 2026-11-08 | CEO | schemes-v2 | Teams rated on one line: strength plus home field | Rock-paper-scissors: circles come from flukes in close games, or from schemes that give one team an edge over another | First look: circles against chance models (`schemes-v2/explore/cycles.py`); the real test is style pairings on margins | open | First look: circles are rarer than chance (18.1% against 21.2%), and circle games are closer. Win/loss can't show a point-sized edge; margins can |
 | H10 | 2026-11-08 | CEO | schemes-v2 | Schemes are charted labels, often by coaching tree; roles are usage at one team | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role | The movers design: does each tendency move with the play caller, the player, or stay with the roster? | open | |
 | H11 | 2026-11-08 | CEO | schemes-v2 | Scheme labels are judged by whether they look right on film | A real scheme predicts performance under conditions (e.g. trailing at halftime) or the matchups in H9 | Scheme tendencies against the win-probability model's expectation for a game state, held-out seasons | open | |
+| H12 | 2026-11-08 | CEO | schemes-v2 | A player's efficiency is theirs, adjusted for teammates and opponents | Performance depends on the fit between player and scheme, beyond the talent around them; found by a causal process close to double machine learning | Movers: change in efficiency against old-to-new scheme distance, with prior efficiency, age and supporting cast partialled out | open | |
 
 ## Tally
 
@@ -29,5 +30,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 3 | 2 | 2 | 5 |
+| CEO | 3 | 2 | 2 | 6 |
 | Claude | 0 | 0 | 0 | 0 |
