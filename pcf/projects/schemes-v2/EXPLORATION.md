@@ -468,4 +468,4 @@ What didn't hold:
 - a general scheme-change cost for movers (F13, F14);
 - comebacks beyond the win chance (F19).
 
-Which of these the expert is built around (traits and anti-traits as features, scheme-against-scheme terms, or both) is the CEO's call, with the brief agreed after it.
+**The CEO's call (2026-11-09):** traits and anti-traits first; scheme against scheme stays in discovery, starting with the rematch ceiling (see the brief's CEO decisions).
