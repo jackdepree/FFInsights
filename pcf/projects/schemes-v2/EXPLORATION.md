@@ -9,6 +9,7 @@
 - [`explore/morphs.py`](explore/morphs.py): H13.
 - [`explore/fit.py`](explore/fit.py): H12, I22–I24.
 - [`explore/restricted.py`](explore/restricted.py): H15.
+- [`explore/anticlusters.py`](explore/anticlusters.py): H15 further (anti-directions, the box lead, before kickoff).
 - [`explore/cycles.py`](explore/cycles.py): the first look at H9 (in the brief).
 
 ## In short
@@ -45,7 +46,9 @@
 13. **What a team avoids is partly what it can't do (F17, H15).**
     - Teams that avoid passing, shotgun, heavy personnel, blitzes or man coverage are worse at them when they do use them, beyond shuffled teams. Passing is the largest: pass avoiders gain about 0.10 EPA per pass less than the league, relative to their runs. No-huddle, a strategic choice, shows nothing.
     - Passing up a favorable plan costs a little: about −0.003 to −0.006 EPA per play per sd for passing and shotgun.
-    - What teams usually do *against this opponent* adds no cost, except one lead: defenses that avoid stacking the box lose more against offenses that usually draw stacked boxes.
+    - What teams usually do *against this opponent* adds no cost, except one lead: defenses that avoid stacking the box lose more against offenses that usually draw stacked boxes. The loss comes on dropbacks, not runs: about 0.07 EPA per dropback (F18).
+    - Anti-clusters are really **anti-directions**. Styles don't form clusters even per regime, but avoidances go together: spread against heavy on offense, man and pressure against two-high on defense. On defense, the combined direction predicts the penalty better than any single option (F18).
+    - Passing and shotgun avoidance work before kickoff, from earlier games only (F18).
 
 ## Data and definitions
 - **Team-games:**
@@ -338,6 +341,47 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
   - The usual way to stop the run against run-heavy teams, then, is the one opponent-specific plan whose avoidance costs something.
 - **(c) Whose limit: only passing's limit is measurable, and it belongs to the team.** The passing gap repeats season to season (r +0.33 with the same coach and QB) and survives a new QB (+0.23) or a new head coach (+0.31). That points to the roster (line, receivers) more than either person. The other options' gaps don't repeat season to season (−0.24 to +0.15), so their owner can't be read yet. Avoidance itself follows the same owners as F3: shotgun use follows the coach (r +0.57 with a new QB, +0.16 with a new coach).
 
+**F18. H15 a little further: anti-directions, the box lead, and before kickoff** ([`explore/anticlusters.py`](explore/anticlusters.py), 2026-11-09, from F17's cached tables).
+
+*1. The anti-cluster (the CEO's framing).* Use over expected per regime, offense 2016+ (403 regimes), defense 2018+ (327).
+- **Avoidances go together, but in directions, not clusters.**
+  - Offense: passing, shotgun and no-huddle rise and fall together (r +0.12 to +0.40), with heavy personnel against them (−0.07 to −0.14). The first component (40% of the spread) is spread against heavy and under center.
+  - Defense: man and blitz go together (+0.23), against two-high (−0.41, −0.25). The first component (42%) is aggressive man and pressure against two-high zone.
+  - **No clusters even per regime:** k-means silhouettes (0.20–0.23) are no better than the same data with each column shuffled on its own (0.22 offense, 0.20 defense). Styles are a continuum. So the CEO's anti-cluster reads best as an **anti-direction**: the end of a component a team stays away from.
+- **Does the combined direction predict the penalty better than single options?** A regime's score in one half against its gaps along the same direction in the other half:
+
+| | Component 1 | Component 2 | Best single option |
+|---|---|---|---|
+| Offense | r +0.110 (6% shuffled) | **r +0.174** (0%; heavy and no-huddle against passing) | passing r +0.159 (0%) |
+| Defense | r +0.077 (11%) | **r +0.129** (1%; stacked boxes against man) | man r +0.089 (9%) |
+
+  - On defense, the combined direction beats every single option; on offense, it's about as good as passing alone. The combined tests use only the 132–143 regimes with every gap measured, so they're noisier; 4 components were tried.
+
+*2. The box-count lead, in football units* (defenses that avoid stacking, the bottom fifth, against offenses that usually draw stacked boxes, the top fifth; EPA allowed per play beyond the situation):
+
+| | Against box-drawing offenses | Against others | Difference in differences (90%) |
+|---|---|---|---|
+| Runs: avoiders | −0.061 (13% stacked) | −0.075 (10%) | |
+| Runs: the rest | −0.060 (23% stacked) | −0.096 (20%) | −0.022 (−0.056 to +0.018) |
+| Dropbacks: avoiders | +0.134 | +0.066 | |
+| Dropbacks: the rest | +0.053 | +0.054 | **+0.068** (+0.011 to +0.122) |
+
+- **The cost isn't on runs; it's through the air.** Box avoiders do no worse on runs against run-heavy offenses (if anything better). They give up about 0.07 EPA per dropback more against them, which is about 0.5 points a game.
+- **Football sense check (rule h): flagged.** It isn't the CEO's "zone against the run" mechanism. One story: run-heavy offenses set up play-action and heavy-personnel passes, and defenses that won't commit to the run get the worst of both. Another: chance, from 3,353 plays. It stays a lead for the confirmation loop.
+
+*3. Before kickoff (point in time):* avoidance from the regime's earlier games only (3+), as a feature would see it; within each team-game; against prior avoidance shuffled within the week.
+
+| Option | Gap per sd of prior use (H15: +) | Loss where favored per sd (H15: −) |
+|---|---|---|
+| Passing | **+0.031** (0%) | **−0.015** (0%) |
+| Shotgun | **+0.016** (0%) | **−0.014** (0%) |
+| Man coverage | +0.006 (34%) | **−0.013** (4%) |
+| Heavy personnel | +0.006 (23%) | −0.004 (22%) |
+| Blitz, two-high, 8+ box, no-huddle | −0.015 to −0.005 (59–89%) | −0.002 to +0.001 |
+
+- **Passing and shotgun hold before kickoff,** about as strongly as in F17. Man coverage holds for the loss where favored.
+- **Heavy personnel and blitz fade before kickoff:** they held between halves of a regime (F17), but early-regime estimates from fewer games aren't enough. They need a prior from earlier seasons (the coach's history, F4) to be usable.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
@@ -350,7 +394,9 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
   - (a) holds: avoidance predicts being worse at the option in 5 of 8 options, beyond shuffled teams; not for no-huddle, as expected.
   - (b) passing up a favorable plan costs a little for passing and shotgun. The opponent-specific part of "favorable" adds nothing except the box-count lead.
   - (c) only passing's limit is measurable, and it stays with the team through QB and coach changes.
-  - Stays **open:** the anti-cluster as a cluster isn't tested (clusters were noise, F12), and the box lead needs the confirmation loop.
+  - The anti-cluster (F18): styles don't cluster even per regime, but avoidances go together in directions. On defense, the combined direction predicts the penalty better than any single option.
+  - Before kickoff (F18): passing and shotgun avoidance hold from earlier games only.
+  - Stays **open:** the box lead (its cost comes through the air, not on runs) needs the confirmation loop.
 - **H11:** not yet tested.
 
 ## Pitfalls found
@@ -371,6 +417,6 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
    - shotgun's main effect against a strength measure that adapts faster.
 4. **For later, with more data:** H9's faint signal could be settled by adding 2025+ seasons live (the ledger) rather than more tries on 2006–2024, which would spend the same data again.
 5. **The coordinator table** (signed off in principle) is the place to retest H13: game plans are a coordinator's.
-6. **Anti-traits as features (H15):** a team's avoidance × the play's expected choice is consistent and carries a cost, so it's a feature candidate for the team-strength and matchup models. Passing avoidance is the strongest. The box-count lead (avoiding stacked boxes against run-heavy offenses) goes to the confirmation loop, not more tries on 2006–2024.
+6. **Anti-traits as features (H15):** a team's avoidance × the play's expected choice is consistent and carries a cost, so it's a feature candidate for the team-strength and matchup models. Passing and shotgun avoidance work before kickoff (F18). Heavy personnel and blitz need a prior from the coach's earlier seasons. On defense, use the combined direction (F18). The box-count lead (avoiding stacked boxes against run-heavy offenses, paid on dropbacks) goes to the confirmation loop, not more tries on 2006–2024.
 
 If regimes keep finding little, the CEO's fallback is high season-to-season player turnover as a boundary.

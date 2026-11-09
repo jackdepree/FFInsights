@@ -161,7 +161,7 @@ def option_table(p: pl.DataFrame, name: str) -> pl.DataFrame:
     r0 = epa - crossfit(X, epa, fold, False)                         # given the situation only
     unit = "o_regime" if side == "off" else "d_regime"
     gir = "o_gir" if side == "off" else "d_gir"
-    return q.select("game_id", "season", "posteam", "defteam", "o_coach", "o_qb", "d_coach", c(unit).alias("unit"),
+    return q.select("game_id", "play_id", "season", "week", "rush", "posteam", "defteam", "o_coach", "o_qb", "d_coach", c(unit).alias("unit"),
                     (c(gir) % 2).alias("half")).with_columns(
         choice=pl.Series(y), exp=pl.Series(e), exp_opp=pl.Series(e - e0), r1=pl.Series(r1), r0=pl.Series(r0),
         team=c("posteam") if side == "off" else c("defteam"),
