@@ -73,6 +73,10 @@
     > "I think another good way to help the schemes versus schemes, rock, paper, scissors analogy is maybe it's not an entire team beats an entire other team, and then you have the rock, paper, scissors, circular winning strategy, but rather it's offense A does way better against defense B, and then offense A doesn't do very well against defense C. Then, offense D plays well against defense C and then offense D plays poorly against defense B."
     - *Claude's reading:* the circle is between an offense and a defense, not two whole teams. That is the level H14's test already used (an offense's EPA against a defense, beyond both units' strength: F7, held-out r +0.028), so the tests so far do address this version. What they haven't asked is how much unit-against-unit structure exists at all. So the rematch ceiling runs at this level: when offense A beats its expectation against defense B in their first meeting, does it again in the second?
   - **What the exploration already says:** circles are rarer than chance (18.1% against 21.2%), and style pairings predict the miss against the close at r +0.035. So the expectation is a low ceiling; the rematch test says how low.
+- **2026-11-09, anti-traits (the CEO's calls, after the traits slice):** "D1 should be pass and shotgun plus defense first. D2 should be the team's gain from that option in its next game." So:
+  - **Which:** offense pass and shotgun, live; and defense man coverage, two-high shells and blitzes, from participation, so from finished seasons only (rule m).
+  - **Judged on:** the team's gain from the option in its next game: how much better its plays go when it takes the option than when it doesn't, against the league's usual gain. The anti-trait claim: a team that avoids an option gains less from it.
+  - *Claude's assumptions, stated before building:* the anti-trait is expected to be faint (pregame avoidance carried +0.03 and +0.02 per sd for pass and shotgun in F18); the defensive ones can only help the next season's forecasts; if a variant doesn't keep F18's sign on held-out seasons it is recorded as noise.
 - **2026-11-08, regimes (the CEO's call):** "A change in coach or starting quarterback should define the end of a regime, plus I think if that finds very little patterns then we can look for high player turnover from season to season." So the regime is head coach plus starting QB; high roster turnover between seasons is the fallback boundary if that finds little.
 
 ### First look at H9 (2026-11-08, discovery only)
@@ -176,7 +180,7 @@ How does each team play, on offense and on defense, in ways that belong to its p
 ## Goals
 1. A map of tendencies: which ones are consistent (CONSISTENCY.md), and whose they are (play caller, player, roster).
 2. A test of matchups on margins (H9), of game-state performance (H11, diagnosis only), of scheme fit (H12) and of morphs against opposing schemes (H13).
-3. Scheme features for downstream experts, saved like Elo's ratings. **First build (CEO, 2026-11-09): traits and anti-traits.** Per team-week, known before kickoff: each tendency against the league's usual choice (the trait), shrunk toward the coach's history; low use is the anti-trait (F17, F18).
+3. Scheme features for downstream experts, saved like Elo's ratings. **First build (CEO, 2026-11-09): traits and anti-traits.** Per team-week, known before kickoff: each tendency against the league's usual choice (the trait), shrunk toward the coach's history; low use is the anti-trait (F17, F18). *Built 2026-11-09: traits RESULTS R1–R4, anti-traits R5–R9.*
 4. Discovery continues on scheme against scheme (H9, H14): the rematch ceiling first.
 
 ## Tests

@@ -46,13 +46,13 @@ def _wmean(value: str, weight: str, where: pl.Expr | None = None) -> pl.Expr:
     return (c(value) * c(weight)).filter(ok).sum() / c(weight).filter(ok).sum()
 
 
-def _team_aggs() -> list[pl.Expr]:
+def _team_aggs(traits: dict[str, tuple[str, str]]) -> list[pl.Expr]:
     this, last = c("h_season") == c("season"), c("h_season") == c("season") - 1
     aggs = [
         c("coach").drop_nulls().last().alias("coach_now"),
         this.sum().cast(pl.Float64).alias("games"),
     ]
-    for t, (v, w) in TRAITS.items():
+    for t, (v, w) in traits.items():
         measured = c(v).is_not_null() & (c(w) > 0)
         aggs += [
             _wmean(v, w, this).alias(f"{t}_season"),
@@ -68,9 +68,12 @@ def _team_aggs() -> list[pl.Expr]:
     return aggs
 
 
-def _features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
-    """`targets`: game_id, team, season, moment. `tg`: team-games with their tendencies."""
-    columns = sorted({col for pair in TRAITS.values() for col in pair})
+def _features(
+    tg: pl.DataFrame, targets: pl.DataFrame, traits: dict[str, tuple[str, str]] = TRAITS
+) -> pl.DataFrame:
+    """`targets`: game_id, team, season, moment. `tg`: team-games with their tendencies.
+    `traits`: the measures to average (default `TRAITS`; the anti-traits add their own)."""
+    columns = sorted({col for pair in traits.values() for col in pair})
     played = tg.filter(c("tendencies_known_at").is_not_null()).select(
         "team", "kickoff", "coach", *columns, h_season="season", known="tendencies_known_at"
     )
@@ -81,7 +84,7 @@ def _features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
         .filter((c("known") <= c("moment")) & (c("h_season") >= c("season") - 1))
         .sort(*KEYS, "kickoff")
     )
-    team = own.group_by(KEYS, maintain_order=True).agg(_team_aggs())
+    team = own.group_by(KEYS, maintain_order=True).agg(_team_aggs(traits))
     # The league: every game known by the moment in this season and the last
     pairs = targets.select("season", "moment").unique()
     league = (
@@ -90,7 +93,7 @@ def _features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
             (c("known") <= c("moment")) & c("h_season").is_between(c("season") - 1, c("season"))
         )
         .group_by("season", "moment")
-        .agg(_wmean(v, w).alias(f"{t}_league") for t, (v, w) in TRAITS.items())
+        .agg(_wmean(v, w).alias(f"{t}_league") for t, (v, w) in traits.items())
     )
     out = targets.join(team, on=KEYS, how="left").join(league, on=["season", "moment"], how="left")
     # The head coach's games for any team, known by the moment
@@ -100,10 +103,10 @@ def _features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
         .join(played.drop_nulls("coach"), left_on="coach_now", right_on="coach", how="inner")
         .filter((c("known") <= c("moment")) & (c("h_season") > c("season") - COACH_SEASONS))
         .group_by(KEYS)
-        .agg(_wmean(v, w).alias(f"{t}_coach") for t, (v, w) in TRAITS.items())
+        .agg(_wmean(v, w).alias(f"{t}_coach") for t, (v, w) in traits.items())
     )
     out = out.join(coached, on=KEYS, how="left").with_columns(c("games").fill_null(0.0))
-    for t in TRAITS:
+    for t in traits:
         lg = c(f"{t}_league")
         # the league's level, worth the plays of PRIOR_GAMES typical games
         prior = PRIOR_GAMES * c(f"{t}_per_game").fill_null(0.0)
@@ -118,7 +121,7 @@ def _features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
                 for p in ("last4", "last_season", "coach")
             ],
         )  # fmt: skip
-    cols = [f"{t}_{p}" for t in TRAITS for p in PARTS]
+    cols = [f"{t}_{p}" for t in traits for p in PARTS]
     return (
         out.select(*KEYS, "season", "games", *[c(x).fill_nan(None) for x in cols])
         .drop_nulls(cols)  # no league level yet: nothing known at all

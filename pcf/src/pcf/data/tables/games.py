@@ -102,10 +102,11 @@ def team_game_parts(
     cal: Calendar,
     team_stats: pl.DataFrame | None = None,
     tendencies: pl.DataFrame | None = None,
+    charted: pl.DataFrame | None = None,
 ) -> dict[str, pl.DataFrame]:
-    """`standard.schedules` rows (+ raw team stats, + `tendency_rows`) → the `team_game` parts:
-    schedule (the spine), pregame, result, stats, tendencies. Spreads are betting style for each
-    team (−3.5 = favored)."""
+    """`standard.schedules` rows (+ raw team stats, + `tendency_rows`, + `charted_rows`) → the
+    `team_game` parts: schedule (the spine), pregame, result, stats, tendencies, charted. Spreads
+    are betting style for each team (−3.5 = favored)."""
     s = _schedules(schedules, cal)
     keys = ["game_id", "team"]
     spine = (
@@ -146,4 +147,11 @@ def team_game_parts(
     if tendencies is not None:
         rows = known_at("pbp", tendencies, cal)  # known when play-by-play is
         parts["tendencies"] = on_spine(rows, spine, keys, "team_game.tendencies")
+    if charted is not None:
+        # known when participation is: after the season
+        # (the rule sets `season` from the calendar itself)
+        rows = charted.drop("season").rename({"game_id": "nflverse_game_id"})
+        rows = known_at("participation", rows, cal).rename({"nflverse_game_id": "game_id"})
+        rows = rows.join(charted.select("game_id", "team", "season"), on=keys)
+        parts["charted"] = on_spine(rows, spine, keys, "team_game.charted")
     return parts

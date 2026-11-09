@@ -19,6 +19,8 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
+from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
+from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.games import game_parts, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
 from pcf.data.tables.plays import play_parts, player_play_parts
@@ -94,8 +96,21 @@ def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | N
             for s in seasons
             if s in local_seasons("pbp")
         ]
+        # Defenses' charted choices: seasons with participation
+        charted = [
+            charted_rows(
+                scan("pbp", [s]).select(CHARTED_PBP).collect(),
+                scan("participation", [s]).select(PARTICIPATION_COLUMNS).collect(),
+            )
+            for s in seasons
+            if s in local_seasons("pbp") and s in local_seasons("participation")
+        ]
         parts = team_game_parts(
-            schedules, cal, stats.collect(), pl.concat(tendencies) if tendencies else None
+            schedules,
+            cal,
+            stats.collect(),
+            pl.concat(tendencies) if tendencies else None,
+            pl.concat(charted) if charted else None,
         )
     write_parts(parts, name, seasons, root)
 

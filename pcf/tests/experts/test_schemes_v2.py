@@ -65,9 +65,11 @@ def _gateway(**kw) -> Gateway:
 
 def test_every_variant_meets_the_contract():
     found = {x.variant for x in find_all("schemes-v2")}
-    assert found == set(VARIANTS)
-    assert found == {f"{t}_{p}" for t in F.TRAITS for p in ("league", "last4", "season", "shrunk")}
-    for cls in find_all("schemes-v2"):
+    assert set(VARIANTS) <= found  # with the anti-traits (test_schemes_v2_anti.py)
+    assert set(VARIANTS) == {
+        f"{t}_{p}" for t in F.TRAITS for p in ("league", "last4", "season", "shrunk")
+    }
+    for cls in VARIANTS.values():
         check_expert(cls)
     blend = VARIANTS["pass_oe_shrunk"]
     assert [b.variant for b in blend.baselines()] == [

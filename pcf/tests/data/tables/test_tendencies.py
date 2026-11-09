@@ -22,14 +22,14 @@ def _play(play_id, posteam, **over):
         "half_seconds_remaining": 1500, "game_seconds_remaining": 3300 - 30 * play_id,
         "pass": 0, "rush": 1, "xpass": 0.4, "shotgun": 0, "no_huddle": 0, "qb_dropback": 0,
         "qb_scramble": 0, "qb_kneel": 0, "qb_spike": 0, "air_yards": None, "pass_attempt": 0,
-        "sack": 0, "qb_hit": 0, "penalty": 0, "out_of_bounds": 0, "fixed_drive": 1,
+        "sack": 0, "qb_hit": 0, "penalty": 0, "out_of_bounds": 0, "fixed_drive": 1, "epa": 0.0,
     }  # fmt: skip
     return row | over
 
 
 def _throw(play_id, posteam, air, **over):
     return _play(play_id, posteam, rush=0, qb_dropback=1, pass_attempt=1, air_yards=air,
-                 shotgun=1, **{"pass": 1} | over)  # fmt: skip
+                 **{"pass": 1, "shotgun": 1} | over)  # fmt: skip
 
 
 def _pbp(rows):
@@ -90,6 +90,28 @@ def test_the_part_is_known_the_day_after_and_passes_the_table_contract():
     ten = parts["tendencies"]
     assert ten.height == 2
     assert ten["known_at"].to_list() == [KICK + timedelta(days=1)] * 2
+
+
+def test_gains_are_epa_with_the_option_less_without():
+    pbp = _pbp(
+        [
+            _play(1, "KC", epa=-0.2),
+            _play(2, "KC", epa=0.0, shotgun=1),
+            _throw(3, "KC", 8.0, epa=0.6),  # shotgun
+            _throw(4, "KC", 8.0, epa=1.0, shotgun=0),
+            _throw(5, "KC", 8.0, epa=0.8, wp=0.99),  # not neutral
+        ]
+    )
+    kc = tendency_rows(pbp).row(by_predicate=pl.col("team") == "KC", named=True)
+    assert kc["pass_gain"] == pytest.approx(0.8 - (-0.1))
+    assert kc["pass_gain_n"] == pytest.approx(2 * 2 / 4)
+    # within runs: 0.0 - (-0.2); within passes: 0.6 - 1.0; equal weights (1 * 1 / 2 each)
+    assert kc["shotgun_gain"] == pytest.approx((0.2 - 0.4) / 2)
+    assert kc["shotgun_gain_n"] == pytest.approx(1.0)
+    buf = tendency_rows(pbp).row(by_predicate=pl.col("team") == "BUF", named=True)
+    assert buf["def_shotgun_rate"] == pytest.approx(0.5)
+    only_runs = tendency_rows(_pbp([_play(1, "KC"), _play(2, "KC")]))
+    assert only_runs.select("pass_gain", "pass_gain_n", "shotgun_gain").row(0) == (None, None, None)
 
 
 def test_every_needed_column_is_read():
