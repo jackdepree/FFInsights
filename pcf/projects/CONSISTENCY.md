@@ -46,6 +46,7 @@
 | 4th-and-short go rate | schemes-v2 | Went for it on 4th and ≤2 between the 30s, per game | 0.01 (−0.06–) | 0.06 | noise | — | Too few plays a game; may be a coach trait over a season. Looked like a trait (0.31) before taking out the league trend |
 | Man / two-high / blitz / box | schemes-v2 | Defensive choices (participation; man and shells 2018+, after the season) | 0.73 / 0.71 / 0.64 / 0.72 | 0.49 / 0.48 / 0.45 / 0.48 | trait | No alone (F6); pairs with offense only as a whisper (F7) | Man and two-high follow the head coach |
 | Pass rate / aDOT faced, pressure | schemes-v2 | What offenses do against a defense | 0.24 / 0.17 / 0.10 | 0.24 / 0.24 / 0.24 | trait | Pass rate faced −0.006 beyond strength (F6) | Defenses mostly react; their choices repeat far more than what they allow |
+| QB man-less-zone EPA split | schemes-v2 (I22) | A QB's EPA per dropback against man less against zone (2018–2024, after the season) | −0.07 (odd against even weeks, per QB-season) | 0.04 | noise | No (schemes-v2#F15) | A QB isn't a man beater or a zone beater in EPA terms; per QB, not per team |
 
 Measured 2026-11-07 with [`projects/elo/explore/consistency_so_far.py`](elo/explore/consistency_so_far.py): 829 team-seasons, 1999–2024 regular season (384 from 2013 for the snap and injury measures). The vault (2025) isn't read.
 

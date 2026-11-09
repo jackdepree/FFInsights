@@ -1,12 +1,13 @@
 # Exploration: Schemes v2 (`schemes-v2`)
 
-**Status:** in progress, 2026-11-08. Parts 1–4 of the plan done (part 4: matchups on margins, H9, and morphs, H13), plus a first look at H14. Still to do: game states (H11, diagnosis); scheme fit for receivers, then QBs (H12, I22–I24). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
+**Status:** in progress, 2026-11-08. Parts 1–4 and 6 of the plan done (matchups on margins, H9; morphs, H13; scheme fit for receivers and QBs, H12, I22–I24), plus a first look at H14. Still to do: game states (H11, diagnosis). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
 
 **Scripts:**
 - [`explore/tendencies.py`](explore/tendencies.py): builds the team-game tendency table, then consistency, whose it is, coach movers and how fast tendencies settle.
 - [`explore/conditions.py`](explore/conditions.py): H14.
 - [`explore/margins.py`](explore/margins.py): H9 on margins.
 - [`explore/morphs.py`](explore/morphs.py): H13.
+- [`explore/fit.py`](explore/fit.py): H12, I22–I24.
 - [`explore/cycles.py`](explore/cycles.py): the first look at H9 (in the brief).
 
 ## In short
@@ -34,6 +35,12 @@
    - A head coach's own bend, beyond the average, doesn't repeat: no more pairs than chance (5 of 98), in seasons or in games.
    - The test would have seen own bends of about a third of the largest average bend.
 9. **The cluster version shows nothing either (F12).** A game sits in its own regime's usual cluster only 47% of the time, so game-level clusters are mostly noise, as in v1.
+10. **Scheme fit (H12): no general cost of changing schemes, for receivers or QBs (F13, F14).**
+    - For both receivers (193 movers) and QBs (59), the distance between the old and new scheme doesn't predict the change in efficiency. Both a regression and double machine learning say so, and placebo moves do as well half the time.
+    - QBs lean the CEO's way (−0.015 EPA per dropback per sd of distance) but far inside chance.
+    - One specific fit leans right: deep receivers do better in deeper-throwing schemes (+0.03 EPA per target per sd; 85% of placebo moves smaller).
+11. **A QB's man-against-zone split is noise (F15).** It doesn't repeat (r −0.07 within a season, +0.04 across), so it can't make a coverage matchup.
+12. **No learning curve: movers start *better* and fade (F16).** It's the opposite of I24, and it doesn't grow with scheme distance.
 
 ## Data and definitions
 - **Team-games:**
@@ -240,13 +247,63 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **The off-cluster rate barely moves with the opponent's cluster:** 50% to 56%.
 - **A coach's off-cluster rate against a given defense cluster** (beyond the average for that cluster), even games against odd: r +0.13 over 163 coach × cluster cells. Shuffled opponents reach that 65% of the time: nothing.
 
+**F13. H12, scheme fit for wide receivers** ([`explore/fit.py`](explore/fit.py); receivers with 40+ targets in consecutive seasons, 2006–2024: 193 who changed teams, 966 who stayed):
+- **The outcome:** the change in EPA per target, next season less this season.
+- **The new scheme, known before the move:** if the new team's head coach next season was a head coach this season, the scheme that coach ran this season (schemes follow the coach, F4; 73% of moves); otherwise the new team's scheme this season.
+- **Distance:** the root mean square of seven standardized tendency differences (pass rate over expected, shotgun, no-huddle, tempo, aDOT, deep rate, middle share).
+- **Controls:**
+  - this season's EPA per target (regression to the mean);
+  - targets and age;
+  - the receiver's own depth and middle share;
+  - the old and the new team's passing EPA without the receiver (this includes the QB);
+  - both schemes' levels.
+- **Three estimates:** a regression with every control; double machine learning (gradient boosting, 5-fold cross-fitted, residual on residual); and placebo moves (each mover gets a random other team's scheme, 200 times).
+
+| Treatment | Regression (90%) | Double ML (90%) | Real beyond the placebo moves |
+|---|---|---|---|
+| Scheme distance (per unit; movers' mean distance 1.39) | −0.030 (−0.102 to +0.041) | +0.012 (−0.055 to +0.078) | 48% |
+| Distance, new scheme measured in the arrival season | −0.009 (−0.085 to +0.066) | +0.033 (−0.036 to +0.103) | — |
+| Depth fit (I23): own aDOT × new scheme's aDOT, per sd | +0.028 EPA per target | +0.023 (−0.012 to +0.059) | 85% |
+
+- **Distance doesn't cost receivers anything measurable.** The estimates straddle zero, the two methods disagree in sign, and the placebo moves produce the real number half the time.
+- **Stayers agree:** 966 receivers whose own team's scheme changed around them (mean change 0.97) show +0.003 (−0.034 to +0.040).
+- **Depth fit points the way I23 expected:** deep receivers do better moving to deeper-throwing schemes, about +0.03 EPA per target per sd, and both methods agree. But both intervals touch zero, and 15% of placebo moves do as well: **unclear**.
+
+**F14. H12, scheme fit for QBs** (200+ dropbacks in consecutive seasons: 59 who changed teams, 359 who stayed; scrambles included):
+
+| Treatment | Regression (90%) | Double ML (90%) | Real beyond the placebo moves |
+|---|---|---|---|
+| Scheme distance (per unit; movers' mean 1.39) | −0.024 (−0.097 to +0.050) | −0.022 (−0.078 to +0.033) | 38% |
+| Distance, new scheme measured in the arrival season | +0.028 (−0.047 to +0.103) | +0.019 (−0.052 to +0.089) | — |
+
+- **The direction the CEO expects** (a bigger scheme change costs EPA, about −0.015 per dropback per sd of distance, with both methods agreeing), **but far inside chance.** 59 movers can't show an effect of this size; the CEO's example (−0.20) would show easily, and nothing that large happens on average.
+- **Measuring the new scheme in the arrival season is circular for QBs.** Stayers whose team's scheme changed more *improved* more: +0.033 (+0.004 to +0.061). That is the QB shaping the scheme (a good season raises pass rate over expected), not fit. It confirms H12's assumption that the scheme must be measured before the player arrives.
+
+**F15. QB coverage fit (I22), 2018–2024:**
+- **The split:** a QB's EPA per dropback against man less against zone, over 231 QB-seasons with 60+ dropbacks against man and 150+ against zone.
+- **It doesn't repeat:** odd against even weeks r −0.07 (217); season to season +0.04 (141). **Noise:** a QB isn't a "man beater" or a "zone beater" in EPA terms.
+- **Game level, as expected from noise:** last season's split × the opponent's man rate in its earlier games gives −0.006 EPA per dropback (−0.017 to +0.006), inside the shuffled-opponent range (1,690 QB-games).
+
+**F16. The learning curve (I24): no dip, the reverse.**
+- **The measure:** EPA in a player's first 4 games with a team, less games 9+ the same season.
+- **Receivers:**
+  - movers +0.133 per target (± 0.064, 183);
+  - stayers +0.060 (± 0.025, 925).
+- **QBs:**
+  - movers +0.071 per dropback (± 0.071, 50);
+  - stayers +0.026 (± 0.017, 331).
+- **Everyone is better early,** probably late-season weather and wear. Movers are *more* so: a fade, not a learning curve. Defenses may adjust once there's film of the player in the new offense.
+- **The fade doesn't grow with scheme distance:** receivers +0.03 per unit (−0.07 to +0.13); QBs +0.08 (−0.04 to +0.19).
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
-- **H11, H12:** not yet tested.
+- **H12:** **unclear, leaning failed** for a general scheme-change cost (F13, F14). Distance predicts nothing for receivers. QBs lean the CEO's way, but 59 movers are too few. One specific fit (receiver depth) leans right: unclear.
+- **I22:** killed (F15). **I23:** unclear, right direction (F13). **I24:** failed, the reverse (F16).
+- **H11:** not yet tested.
 
 ## Pitfalls found
 - **League trends pass for consistency** unless every tendency is taken against its season mean (4th-down rate: 0.31 → 0.06).
@@ -257,9 +314,7 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 
 ## Next
 1. **Game states (H11, diagnosis):** do pass rate over expected and tempo predict how teams do when trailing at halftime, beyond the win-probability model?
-2. **Scheme fit (H12): receivers first, then QBs.**
-   - Receivers who change teams: their target depth × the new offense's depth before they arrived, with prior efficiency, age and the new QB partialled out, against placebo moves (I23).
-   - Then QBs against coverage (I22) and the learning curve (I24).
+2. **Scheme fit, if pursued:** specific fits like receiver depth (I23) rather than one distance. Candidates: a receiver's middle share × the scheme's, a QB's scramble rate × the scheme's shotgun rate. Each must beat placebo moves.
 3. **Small checks:**
    - the outside-run artefact (home against away);
    - shotgun's main effect against a strength measure that adapts faster.
