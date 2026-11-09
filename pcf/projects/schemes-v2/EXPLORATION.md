@@ -366,7 +366,7 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 | Dropbacks: avoiders | +0.134 | +0.066 | |
 | Dropbacks: the rest | +0.053 | +0.054 | **+0.068** (+0.011 to +0.122) |
 
-- **The cost isn't on runs; it's through the air.** Box avoiders do no worse on runs against run-heavy offenses (if anything better). They give up about 0.07 EPA per dropback more against them, which is about 0.5 points a game.
+- **The cost isn't on runs; it's through the air.** Box avoiders do no worse on runs against run-heavy offenses (if anything better). They give up about 0.07 EPA per dropback more against them, about 2 points a game at a typical 30 dropbacks.
 - **Football sense check (rule h): flagged.** It isn't the CEO's "zone against the run" mechanism. One story: run-heavy offenses set up play-action and heavy-personnel passes, and defenses that won't commit to the run get the worst of both. Another: chance, from 3,353 plays. It stays a lead for the confirmation loop.
 
 *3. Before kickoff (point in time):* avoidance from the regime's earlier games only (3+), as a feature would see it; within each team-game; against prior avoidance shuffled within the week.
