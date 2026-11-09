@@ -25,6 +25,7 @@
 | H12 | 2026-11-08 | CEO | schemes-v2 | A player's efficiency is theirs, adjusted for teammates and opponents | Performance depends on the fit between player and scheme, beyond the talent around them; found by a causal process close to double machine learning. QBs and receivers first | Movers: change in efficiency against old-to-new scheme distance, with prior efficiency, age and supporting cast partialled out | open | First look (schemes-v2#F13, F14): distance predicts nothing for 193 receiver movers (regression −0.030, double ML +0.012, inside placebo moves); QBs lean the CEO's way (−0.015 EPA per dropback per sd, both methods) but 59 movers is far too few. Receiver depth fit leans right (+0.03 per target per sd, 85% of placebos smaller). Leaning failed for a general cost; specific fits unclear |
 | H13 | 2026-11-08 | CEO | schemes-v2 | Opponent adjustment is one average response for every team | Each scheme morphs consistently against an opposing scheme: team A sits in its own cluster but uses a different one against cluster-3 opponents | Leave-one-opponent-out deviation, beyond the average team's response, repeated out of sample; shuffled-cluster null | open | First look, head coaches (schemes-v2#F10–F12): teams bend against opposing styles (22 of 98 pairs), but all the same way; a coach's own bend doesn't repeat (5 of 98 pairs, chance is 5; it would have seen about sd 0.05 pooled); clusters nothing. Leaning failed for head coaches; coordinators untested |
 | H14 | 2026-11-08 | CEO | schemes-v2 | Styles are judged on their own; ratings and the market price them | Schemes are like conditions: almost no association with EPA or winning on their own, alpha only against an opposing scheme | Main effect beyond strength against the offense × defense interaction, shuffled-opponent null | open | First look (schemes-v2#F6–F8): alone, near zero beyond strength except shotgun (+0.008 EPA a play per sd); against each other, no single pair beats chance, all 77 pairs held out r +0.028 (2.5% by chance); clusters nothing |
+| H15 | 2026-11-08 | CEO | schemes-v2 | What a team doesn't do is its style; only what it does is measured | Restricted schemes: teams use the most favorable plan unless they can't execute it, so what they avoid (the anti-cluster) is the limit of the team, coach or QB, and predicts a loss when attempted or when a favorable plan is passed up | (a) avoided options against frequent users in the same situation; (b) avoidance × opponent weakness on EPA beyond strength; (c) whose limit | open | |
 
 ## Tally
 
@@ -32,5 +33,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 3 | 2 | 2 | 8 |
+| CEO | 3 | 2 | 2 | 9 |
 | Claude | 0 | 0 | 0 | 0 |

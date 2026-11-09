@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (the CEO's hunches H9-H14 recorded; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (the CEO's hunches H9-H15 recorded; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -15,6 +15,7 @@
 1. **Investment style analysis.** A fund's style can be read from what it holds, or only from how its returns move with known factors. Schemes can likewise be read from charted labels, or from the patterns they leave in results: who gets the ball, where, and when.
 2. **Dialects.** Most words are shared; what differs is how often each is used. Dialects spread with people as schemes spread with coaches, so coaching trees work like language families, and a team is often a blend, not one category.
 3. *(Added 2026-11-08, for H10.)* **Movers in labor economics.** To tell whether a worker's pay comes from the worker or from the firm, economists follow people who switch firms: what moves with them is theirs, and what stays is the firm's (the "movers" design). Health economists do the same with patients who move between regions, to separate a doctor's habits from a place's. H10 is this design applied to football: coaches and players who change teams.
+4. *(Added 2026-11-08, for H15.)* **The realized niche (ecology) and revealed preference (economics).** A species' *fundamental* niche is everywhere it could live; its *realized* niche is where it actually lives, narrowed by competitors and its own limits. Where it's absent though the habitat suits it says something about the species. Economists read preferences and constraints from what people choose, and from what they pass up when it's on offer. H15 reads a team's limits from the plays it passes up.
 
 ## CEO hunches
 *The CEO's words as said on 2026-11-08, before Claude's research. Each gets a verdict in [`projects/HUNCHES.md`](../HUNCHES.md).*
@@ -26,6 +27,7 @@
 | H12 | Player performance depends on the fit between a player and a scheme, beyond the talent around them: a QB who moves between two offenses of equal EPA but different tendencies can go from +0.10 to −0.10. The golden goose is a causal process, close to double machine learning | A player's efficiency is theirs, adjusted for teammates and opponents; scheme isn't in the model | Movers again: a player's change in efficiency after a move, against the distance between the old and new schemes, with the talent around them, age and regression to the mean partialled out (double machine learning, with a simple fixed-effects version as the yardstick) |
 | H13 | Each scheme breaks or morphs consistently against an opposing scheme: with 5–7 scheme clusters (pass over expected, zone over expected, …), team A sits in its own cluster but, whenever it plays a cluster-3 opponent, it uses a different cluster than normal | Opponent adjustment is one average response: every team passes a little more against a strong run defense | Leave-one-opponent-out: team A's tendencies against cluster-3 opponents against its tendencies in its other games, beyond the average team's response to cluster 3, and whether the same morph repeats (later games, next season, the same coach) |
 | H14 | Schemes are like conditions: noise on their own, alpha against another scheme. Each offensive scheme (or cluster) should show almost no association with EPA or winning until a defensive scheme is introduced as the condition | Styles are judged on their own ("pass-heavy offenses are better"); ratings and the market price the main effects | Two parts per tendency and per cluster pair: the main effect on game EPA and margin beyond team strength (expected near zero) and the offense × defense interaction (expected clearly non-zero), against a shuffled-opponent null |
+| H15 | Restricted schemes: a team deploys the most favorable plan against each opponent unless its personnel or coaching can't execute it. What a team avoids, especially when it would be favorable, is its **anti-cluster**: the limits of the team, coach or QB. It predicts a performance loss when they attempt it (rare) or when a clearly favorable plan is avoided | What a team doesn't do is read as its style or preference, and only what it does is measured | (a) When a team does use its avoided option, it does worse than teams that use it often, in the same situation; (b) against opponents weak to the avoided option, it falls short of its strength more than other teams do; (c) whose limit it is (coach, QB, roster), by the movers design |
 | H11 | Knowing a scheme should predict performance under conditions (for example, a team losing at halftime most likely won't come back), or predict the matchups in H9 | Scheme labels are judged by whether they look right to film people | Do scheme tendencies predict how a team does in a game state, beyond the win-probability model's expectation for that state? |
 
 **H9.**
@@ -45,6 +47,9 @@
 
 **H14.**
 > "Also, one good check is like to add to our schemes expert when exploring is that schemes should be like conditions. Schemes are considered to be noise on their own but schemes become alpha when compared against another scheme. The check essentially means that each scheme itself should show almost zero association with epa or winning, however when two teams' schemes are compared against each other then we should expect a significant result in epa or winning odds. So, if we look at clusters of schemes for offense we would expect each cluster to have no effect on outcomes until we introduce a defensive cluster as a condition."
+
+**H15.**
+> "I think I have another hunch! Restricted schemes… a team will always deploy the most favorable scheme and game plan against their opponent, unless their personnel or coaching prowess is incapable of effective implementation. Therefore a team can have a fluid scheme but when we find them avoiding a specific cluster then that team or coaching prowess or quarterback should be assigned the anti-cluster. An anti-cluster describes the limits of a team or personnel or coach, therefore it should predict performance loss when they either attempt that scheme (unlikely) or when they have a clearly favorable plan that is avoided (zone against the run)."
 
 **Scope and the old model (the CEO's words).**
 > "This expert would definitely cover both offense and defense respectively."
@@ -145,6 +150,14 @@ How does each team play, on offense and on defense, in ways that belong to its p
   - *Many pairs are tried*, so the interaction is judged against a shuffled-opponent null (the largest effect among all pairs when opponents are shuffled), not one pair's p-value.
   - *Tendencies must be known before the game:* season-to-date, never the game's own plays (the game's own tendencies are partly the game script).
   - *Simpler alternative first:* continuous offense × defense products before clusters; clusters must beat them.
+- **For H15 (Claude's assumptions, stated first):**
+  - *Teams choose rationally, and game theory says how to read it.* A team mixing two options well makes both about equally good at the margin (a mixed strategy), so *avoiding* one isn't a limit by itself: it may be a style or a bluff. It's a limit only if the avoided option does *worse* when the team uses it. So test (a) is the key one: avoidance plus a penalty is a limit; avoidance without one is a preference.
+  - *"Favorable" needs a definition that doesn't use the team itself:* either what works against this opponent for the league (EPA allowed by the opponent to that option), or what the average team does against this opponent (the average bend, F10). The CEO's call (question below).
+  - *Rare uses are selected.* A spread team goes under center mostly on short yardage and at the goal line; a zone team plays man in the red zone or when desperate. Every comparison has to be within the same situation (down, distance, field position, score), against teams that use the option often.
+  - *The opponent chooses too:* a defense may sit in zone *because* the offense beats man. What the opponent did is part of the situation.
+  - *Clusters were noise at game level (F12),* so the simpler version comes first: an anti-trait per tendency (the options a team uses least against the league's rate), then clusters only if they beat it.
+  - *Whose limit:* the same split as F3 (coach, QB or roster), from what happens to the avoidance when the coach or QB changes.
+  - *My expectation:* (a) a penalty for some constraint-like options (under center for shotgun-heavy QBs, heavy personnel for spread offenses, man coverage for zone-heavy defenses), little for strategic ones (no-huddle, tempo); (b) small, like H14's faint signal.
 - **A tendency is a choice, not a forced response.** Shotgun when trailing is the game state talking; neutral situations and an expected-rate adjustment are meant to remove that.
 
 ## Goals
@@ -159,6 +172,7 @@ How does each team play, on offense and on defense, in ways that belong to its p
 - **H12, scheme fit:** among movers, the distance between the old and new schemes predicts the change in a player's efficiency beyond prior efficiency, age and supporting cast, with an interval clear of zero, and in the direction the fit term says (the same move is worse for some styles than others); the shuffled-scheme version shows nothing.
 - **H13, morphs:** a team's (or coach's) deviation from its own normal against an opponent cluster, beyond the average team's deviation, repeats out of sample (the second half of a season, or the next season under the same coach) with an interval clear of zero; with shuffled opponent clusters it doesn't. If it holds, a morph term improves held-out game-environment forecasts (pass rate, pace) or margins.
 - **H14, schemes as conditions:** per tendency (and per cluster), the main effect on game EPA residuals beyond strength is near zero, while the offense × defense interaction is larger than the shuffled-opponent null's 95th percentile.
+- **H15, anti-clusters:** (a) plays from a team's avoided options have lower EPA than the same options by frequent users, in the same situation, with an interval clear of zero and a shuffled-team null; (b) a team's avoidance × the opponent's weakness to that option lowers the team's EPA beyond strength, held out; (c) the avoidance follows the coach or the QB, not chance.
 - **H11, conditions:** scheme tendencies predict a team's result from a given game state (e.g. trailing at halftime) beyond the win-probability model's expectation for that state, on held-out seasons.
 - **Signal and no noise** (VALIDATION.md): beats its shuffled self; the no-noise target to be proposed after the exploration (CEO approves).
 - **Failure looks like:** no tendency moves with play callers more than chance, and neither matchup nor game-state test finds anything. Then schemes are roster traits, and that is itself a finding for `roles-archetypes`.
