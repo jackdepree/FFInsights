@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (the CEO's hunches H9-H15 recorded; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (the CEO's hunches H9-H15 recorded and first-looked except H11; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -65,6 +65,7 @@
 - **2026-11-08, Claude's ideas C1–C5:** the CEO: "I think your proposed ideas are great!" Kept unedited, so they are Claude's ideas I21–I25 in IDEAS.md, tested in this exploration.
 - **2026-11-08, H12 starts with QBs and wide receivers:** "Let's start with QBs and wide receivers for h12 scheme fits."
 - **2026-11-08, schemes change within a season:** "A scheme can definitely change when there is a faculty change or a personnel change within a season." So a scheme is measured per *regime*, not per team-season: a stretch of games with the same head coach and the same starting QB (coordinators join when their table exists). A regime ends at a mid-season firing, a QB change, or the season's end.
+- **2026-11-09, "clearly favorable" for H15 (the CEO's call):** "Clearly favorable should be defined as what teams usually do against that opponent combined with standard football strategy like running the ball more when leading or playing zone coverage against a play that has a high chance of being a rushing attempt." So the favorable plan for a play is the league's expected choice there: a model of what the average team does, given the situation (down, distance, field position, score, time, the offense's run chance and personnel on the play) and this opponent's normal tendencies. A team avoids an option when it uses it less than that expectation.
 - **2026-11-08, regimes (the CEO's call):** "A change in coach or starting quarterback should define the end of a regime, plus I think if that finds very little patterns then we can look for high player turnover from season to season." So the regime is head coach plus starting QB; high roster turnover between seasons is the fallback boundary if that finds little.
 
 ### First look at H9 (2026-11-08, discovery only)
@@ -152,7 +153,7 @@ How does each team play, on offense and on defense, in ways that belong to its p
   - *Simpler alternative first:* continuous offense × defense products before clusters; clusters must beat them.
 - **For H15 (Claude's assumptions, stated first):**
   - *Teams choose rationally, and game theory says how to read it.* A team mixing two options well makes both about equally good at the margin (a mixed strategy), so *avoiding* one isn't a limit by itself: it may be a style or a bluff. It's a limit only if the avoided option does *worse* when the team uses it. So test (a) is the key one: avoidance plus a penalty is a limit; avoidance without one is a preference.
-  - *"Favorable" needs a definition that doesn't use the team itself:* either what works against this opponent for the league (EPA allowed by the opponent to that option), or what the average team does against this opponent (the average bend, F10). The CEO's call (question below).
+  - *"Favorable" needs a definition that doesn't use the team itself:* the CEO chose (2026-11-09) what the average team does against this opponent, combined with standard football strategy for the situation (see CEO decisions). It measures the usual choice, not whether the choice works, so test (a) still has to show that avoiding it costs something.
   - *Rare uses are selected.* A spread team goes under center mostly on short yardage and at the goal line; a zone team plays man in the red zone or when desperate. Every comparison has to be within the same situation (down, distance, field position, score), against teams that use the option often.
   - *The opponent chooses too:* a defense may sit in zone *because* the offense beats man. What the opponent did is part of the situation.
   - *Clusters were noise at game level (F12),* so the simpler version comes first: an anti-trait per tendency (the options a team uses least against the league's rate), then clusters only if they beat it.

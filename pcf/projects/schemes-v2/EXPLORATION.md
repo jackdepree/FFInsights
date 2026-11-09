@@ -1,6 +1,6 @@
 # Exploration: Schemes v2 (`schemes-v2`)
 
-**Status:** in progress, 2026-11-08. Parts 1–4 and 6 of the plan done (matchups on margins, H9; morphs, H13; scheme fit for receivers and QBs, H12, I22–I24), plus a first look at H14. Still to do: game states (H11, diagnosis). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
+**Status:** in progress, 2026-11-09. Parts 1–4 and 6 of the plan done (matchups on margins, H9; morphs, H13; scheme fit for receivers and QBs, H12, I22–I24), plus first looks at H14 and H15. Still to do: game states (H11, diagnosis). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
 
 **Scripts:**
 - [`explore/tendencies.py`](explore/tendencies.py): builds the team-game tendency table, then consistency, whose it is, coach movers and how fast tendencies settle.
@@ -8,6 +8,7 @@
 - [`explore/margins.py`](explore/margins.py): H9 on margins.
 - [`explore/morphs.py`](explore/morphs.py): H13.
 - [`explore/fit.py`](explore/fit.py): H12, I22–I24.
+- [`explore/restricted.py`](explore/restricted.py): H15.
 - [`explore/cycles.py`](explore/cycles.py): the first look at H9 (in the brief).
 
 ## In short
@@ -41,6 +42,10 @@
     - One specific fit leans right: deep receivers do better in deeper-throwing schemes (+0.03 EPA per target per sd; 85% of placebo moves smaller).
 11. **A QB's man-against-zone split is noise (F15).** It doesn't repeat (r −0.07 within a season, +0.04 across), so it can't make a coverage matchup.
 12. **No learning curve: movers start *better* and fade (F16).** It's the opposite of I24, and it doesn't grow with scheme distance.
+13. **What a team avoids is partly what it can't do (F17, H15).**
+    - Teams that avoid passing, shotgun, heavy personnel, blitzes or man coverage are worse at them when they do use them, beyond shuffled teams. Passing is the largest: pass avoiders gain about 0.10 EPA per pass less than the league, relative to their runs. No-huddle, a strategic choice, shows nothing.
+    - Passing up a favorable plan costs a little: about −0.003 to −0.006 EPA per play per sd for passing and shotgun.
+    - What teams usually do *against this opponent* adds no cost, except one lead: defenses that avoid stacking the box lose more against offenses that usually draw stacked boxes.
 
 ## Data and definitions
 - **Team-games:**
@@ -295,6 +300,44 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **Everyone is better early,** probably late-season weather and wear. Movers are *more* so: a fade, not a learning curve. Defenses may adjust once there's film of the player in the new offense.
 - **The fade doesn't grow with scheme distance:** receivers +0.03 per unit (−0.07 to +0.13); QBs +0.08 (−0.04 to +0.19).
 
+**F17. H15, restricted schemes and anti-traits** ([`explore/restricted.py`](explore/restricted.py), 2026-11-09; 473,436 plays, 2006–2024, downs 1–3, win chance 5–95%; personnel, box and blitz 2016+, coverage 2018+ on dropbacks only).
+- **The favorable plan (the CEO's definition):** the league's usual choice on each play. A gradient-boosted model of what the average team does, given:
+  - the situation (down, distance, field position, score, win chance, time, home, season);
+  - for defensive options, the offense's look (shotgun, backs and tight ends on the field, pass chance);
+  - this opponent's normal tendencies.
+  It's fitted on other seasons, so a team never sets its own expectation.
+- **Avoidance (the anti-trait):** a team's use of an option against that expectation, per regime and per half of its games (odd and even). Clusters were noise at game level (F12), so this works per option.
+- **The gap:** how much better than the league a team is when it uses the option, less when it doesn't (EPA per play; for defenses, EPA prevented). Team strength cancels.
+
+| Option | Avoidance repeats (split-half r) | (a) Gap per sd of use, other half (90%) | Shuffled at or above | Avoiders' gap / frequent users' (bottom / top fifth) | (b) All plays | (b) Passed-up plays only | (b) Opponent part only |
+|---|---|---|---|---|---|---|---|
+| Pass | 0.51 | **+0.039** (+0.026 to +0.051) | 0% | −0.103 / +0.019 | **−0.021** (0%) | **−0.003** (4%) | +0.002 (93%) |
+| Shotgun | 0.80 | **+0.021** (+0.009 to +0.032) | 0% | −0.021 / +0.017 | **−0.013** (0%) | **−0.006** (2%) | +0.006 |
+| Heavy personnel | 0.75 | **+0.027** (+0.012 to +0.042) | 0% | −0.032 / +0.042 | **−0.006** (4%) | −0.005 (10%) | +0.004 |
+| Man coverage | 0.55 | +0.029 (+0.002 to +0.055) | 6% | +0.003 / +0.083 | **−0.014** (3%) | −0.003 (42%) | −0.004 (9%) |
+| Blitz | 0.42 | **+0.026** (+0.002 to +0.053) | 4% | +0.025 / +0.086 | **−0.010** (0%) | −0.004 (22%) | −0.001 |
+| 8+ in the box | 0.53 | +0.013 (−0.003 to +0.030) | 8% | −0.002 / +0.073 | +0.001 | +0.003 | **−0.005** (0%) |
+| Two-high | 0.47 | +0.011 (−0.015 to +0.037) | 26% | +0.012 / +0.052 | −0.003 | −0.002 | +0.001 (passed up −0.007, 6%) |
+| No-huddle | 0.78 | −0.002 (−0.019 to +0.018) | 22% | — | +0.001 | +0.001 | +0.001 |
+| Deep throw | 0.05 | — | — | — | — | — | — |
+
+(b) is EPA per play per sd of avoidance per sd of the expected choice, within each team-game; in brackets, how often shuffled avoidance does as well. Deep throws over expected don't repeat (0.05), so there's no anti-trait to test.
+
+- **(a) holds: teams that avoid an option are worse at it when they use it.** In 5 of 8 options, avoidance in one half of a regime predicts a lower gap in the other, beyond shuffled teams: passing, shotgun, heavy personnel and blitz (shuffles reach it 4% of the time or less), and man coverage (6%).
+  - **Passing is the largest:** pass-avoiding teams (the bottom fifth) gain 0.10 EPA per play less on passes, relative to their runs, than the league; frequent passers gain 0.02 more.
+  - **No-huddle shows nothing,** as expected for a strategic choice rather than a constraint.
+  - Selection works *against* this result (rare users pick their best spots), so it's conservative. Each option's gap alone barely repeats (split-half r −0.10 to +0.12): the limit shows through what a team avoids, not through its own noisy gap.
+  - **What it means for the game-theory alternative:** if avoidance were only style, it wouldn't predict the gap. It does, so avoidance is at least partly a limit, as H15 says.
+- **(b) The cost of passing up a favorable plan is real but small.**
+  - On all plays, avoiders lose more where the option is favored: passing −0.021 EPA per play per sd of each, shotgun −0.013, man −0.014, blitz −0.010.
+  - Most of that is (a) again: the loss comes from plays where they *do* use the option and are worse at it.
+  - On the plays they pass up, the loss is a sixth to a half as large: passing −0.003 (4%), shotgun −0.006 (2%), heavy personnel −0.005 (10%). That is the CEO's literal case, and it holds for these offensive options.
+- **"Against this opponent" adds nothing, with one exception:** the 8+ man box.
+  - The opponent's part of the favorable plan (the usual choice against this opponent, beyond the situation) shows no cost for 8 of 9 options.
+  - The exception: defenses that avoid stacking the box lose more against offenses that usually draw stacked boxes (−0.005, no shuffle as large, in all plays and in passed-up plays). It's close to the CEO's "zone against the run" example. It's 1 of 18 opponent tests, so it is a lead, not a finding.
+  - The usual way to stop the run against run-heavy teams, then, is the one opponent-specific plan whose avoidance costs something.
+- **(c) Whose limit: only passing's limit is measurable, and it belongs to the team.** The passing gap repeats season to season (r +0.33 with the same coach and QB) and survives a new QB (+0.23) or a new head coach (+0.31). That points to the roster (line, receivers) more than either person. The other options' gaps don't repeat season to season (−0.24 to +0.15), so their owner can't be read yet. Avoidance itself follows the same owners as F3: shotgun use follows the coach (r +0.57 with a new QB, +0.16 with a new coach).
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
@@ -303,6 +346,11 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
 - **H12:** **unclear, leaning failed** for a general scheme-change cost (F13, F14). Distance predicts nothing for receivers. QBs lean the CEO's way, but 59 movers are too few. One specific fit (receiver depth) leans right: unclear.
 - **I22:** killed (F15). **I23:** unclear, right direction (F13). **I24:** failed, the reverse (F16).
+- **H15:** **holds in part** (F17).
+  - (a) holds: avoidance predicts being worse at the option in 5 of 8 options, beyond shuffled teams; not for no-huddle, as expected.
+  - (b) passing up a favorable plan costs a little for passing and shotgun. The opponent-specific part of "favorable" adds nothing except the box-count lead.
+  - (c) only passing's limit is measurable, and it stays with the team through QB and coach changes.
+  - Stays **open:** the anti-cluster as a cluster isn't tested (clusters were noise, F12), and the box lead needs the confirmation loop.
 - **H11:** not yet tested.
 
 ## Pitfalls found
@@ -311,6 +359,9 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **The starting QB by most dropbacks** is known only after the game. `game.pregame` has the listed starters (`home_qb_id`, `away_qb_id`), known before kickoff, which is better for anything live.
 - **Participation has no man/zone or coverage shell before 2018.**
 - **Run gaps may be charted differently by stadium crew** (F3).
+- **Coverage and shells are charted on dropbacks only,** so "zone against the run" can't be seen on run plays; the box count is the run-defense choice that can (F17).
+- **For defenses, flip EPA** (EPA prevented) before comparing gaps, or every sign reads backwards (F17).
+- **A cost over all plays mixes two things:** being worse at an option when using it, and passing it up. Split them (F17).
 
 ## Next
 1. **Game states (H11, diagnosis):** do pass rate over expected and tempo predict how teams do when trailing at halftime, beyond the win-probability model?
@@ -320,5 +371,6 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
    - shotgun's main effect against a strength measure that adapts faster.
 4. **For later, with more data:** H9's faint signal could be settled by adding 2025+ seasons live (the ledger) rather than more tries on 2006–2024, which would spend the same data again.
 5. **The coordinator table** (signed off in principle) is the place to retest H13: game plans are a coordinator's.
+6. **Anti-traits as features (H15):** a team's avoidance × the play's expected choice is consistent and carries a cost, so it's a feature candidate for the team-strength and matchup models. Passing avoidance is the strongest. The box-count lead (avoiding stacked boxes against run-heavy offenses) goes to the confirmation loop, not more tries on 2006–2024.
 
 If regimes keep finding little, the CEO's fallback is high season-to-season player turnover as a boundary.
