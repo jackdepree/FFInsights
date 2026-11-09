@@ -450,7 +450,7 @@ projects:
   - id: schemes-v2
     name: Schemes v2
     phase: 1
-    status: idea
+    status: exploring
     horizon: now
     cadence: [in_season, retrospective]
     depends_on: [grain-tables, tag-tables, validation-harness, elo]

@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (kickoff; the CEO's hunches H9-H13 recorded, back and forth under way) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (the CEO's hunches H9-H14 recorded; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -25,6 +25,7 @@
 | H10 | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role. Schemes and roles are the consistent parts of play style | Schemes are labels from charting, often by coaching tree; roles come from usage at one team | The movers design (analogy 3): for each tendency, does it move with the play caller, the player, or stay with the roster? |
 | H12 | Player performance depends on the fit between a player and a scheme, beyond the talent around them: a QB who moves between two offenses of equal EPA but different tendencies can go from +0.10 to −0.10. The golden goose is a causal process, close to double machine learning | A player's efficiency is theirs, adjusted for teammates and opponents; scheme isn't in the model | Movers again: a player's change in efficiency after a move, against the distance between the old and new schemes, with the talent around them, age and regression to the mean partialled out (double machine learning, with a simple fixed-effects version as the yardstick) |
 | H13 | Each scheme breaks or morphs consistently against an opposing scheme: with 5–7 scheme clusters (pass over expected, zone over expected, …), team A sits in its own cluster but, whenever it plays a cluster-3 opponent, it uses a different cluster than normal | Opponent adjustment is one average response: every team passes a little more against a strong run defense | Leave-one-opponent-out: team A's tendencies against cluster-3 opponents against its tendencies in its other games, beyond the average team's response to cluster 3, and whether the same morph repeats (later games, next season, the same coach) |
+| H14 | Schemes are like conditions: noise on their own, alpha against another scheme. Each offensive scheme (or cluster) should show almost no association with EPA or winning until a defensive scheme is introduced as the condition | Styles are judged on their own ("pass-heavy offenses are better"); ratings and the market price the main effects | Two parts per tendency and per cluster pair: the main effect on game EPA and margin beyond team strength (expected near zero) and the offense × defense interaction (expected clearly non-zero), against a shuffled-opponent null |
 | H11 | Knowing a scheme should predict performance under conditions (for example, a team losing at halftime most likely won't come back), or predict the matchups in H9 | Scheme labels are judged by whether they look right to film people | Do scheme tendencies predict how a team does in a game state, beyond the win-probability model's expectation for that state? |
 
 **H9.**
@@ -42,6 +43,9 @@
 **H13.**
 > "Another hunch of mine would be that each scheme will break or morph consistently against an opposing scheme. For example, we find 5 or 6 or 7 clusters of scheme across one or more domains - passing over expected or zone over expected - and team a will fit into a cluster but whenever team a plays a cluster type-3 then that team a utilizes a different than normal schematic cluster."
 
+**H14.**
+> "Also, one good check is like to add to our schemes expert when exploring is that schemes should be like conditions. Schemes are considered to be noise on their own but schemes become alpha when compared against another scheme. The check essentially means that each scheme itself should show almost zero association with epa or winning, however when two teams' schemes are compared against each other then we should expect a significant result in epa or winning odds. So, if we look at clusters of schemes for offense we would expect each cluster to have no effect on outcomes until we introduce a defensive cluster as a condition."
+
 **Scope and the old model (the CEO's words).**
 > "This expert would definitely cover both offense and defense respectively."
 
@@ -56,6 +60,7 @@
 - **2026-11-08, Claude's ideas C1–C5:** the CEO: "I think your proposed ideas are great!" Kept unedited, so they are Claude's ideas I21–I25 in IDEAS.md, tested in this exploration.
 - **2026-11-08, H12 starts with QBs and wide receivers:** "Let's start with QBs and wide receivers for h12 scheme fits."
 - **2026-11-08, schemes change within a season:** "A scheme can definitely change when there is a faculty change or a personnel change within a season." So a scheme is measured per *regime*, not per team-season: a stretch of games with the same head coach and the same starting QB (coordinators join when their table exists). A regime ends at a mid-season firing, a QB change, or the season's end.
+- **2026-11-08, regimes (the CEO's call):** "A change in coach or starting quarterback should define the end of a regime, plus I think if that finds very little patterns then we can look for high player turnover from season to season." So the regime is head coach plus starting QB; high roster turnover between seasons is the fallback boundary if that finds little.
 
 ### First look at H9 (2026-11-08, discovery only)
 [`explore/cycles.py`](explore/cycles.py), 2016–2024, 2,467 games, 4,495 triangles of teams that all played each other in a season.
@@ -134,6 +139,12 @@ How does each team play, on offense and on defense, in ways that belong to its p
   - *Few games per cell.* About 17 games across 5–7 opponent clusters is 2–4 games a cell a season. A morph has to be pooled across a coach's tenure to be measurable, which ties H13 to H10: if a morph is a choice, it should follow the play caller.
   - *Simpler alternative first (rule k):* no clusters. Each team (or coach) gets a slope: how its pass rate over expected moves with the opponent's defensive tendencies. Consistent slopes are the morph. Clusters earn their place only if they beat the slopes.
   - *My expectation:* the average response is clearly real; the team-specific morph is small and mostly noise, except for a few game-planning coaches, where it repeats.
+- **For H14 (Claude's assumptions, stated first):**
+  - *"No association" has to mean beyond team strength.* Good offenses pass more and play faster because they are good, and teams that lead run more. A raw tendency will correlate with EPA through talent and game state. The claim is about the part left after the ratings (Elo, the close, season-to-date EPA).
+  - *A main effect isn't a failure of the useful part.* A tendency with a main effect is partly a talent proxy; one with neither a main effect nor an interaction is noise; one with only an interaction is a condition in the CEO's sense. Every tendency gets one of those three labels.
+  - *Many pairs are tried*, so the interaction is judged against a shuffled-opponent null (the largest effect among all pairs when opponents are shuffled), not one pair's p-value.
+  - *Tendencies must be known before the game:* season-to-date, never the game's own plays (the game's own tendencies are partly the game script).
+  - *Simpler alternative first:* continuous offense × defense products before clusters; clusters must beat them.
 - **A tendency is a choice, not a forced response.** Shotgun when trailing is the game state talking; neutral situations and an expected-rate adjustment are meant to remove that.
 
 ## Goals
@@ -147,6 +158,7 @@ How does each team play, on offense and on defense, in ways that belong to its p
 - **H10, whose is it:** for each tendency, the share that moves with a play caller (and with players) across movers, with an interval. A tendency counts as **scheme** if it moves with the play caller clearly more than it stays with the roster.
 - **H12, scheme fit:** among movers, the distance between the old and new schemes predicts the change in a player's efficiency beyond prior efficiency, age and supporting cast, with an interval clear of zero, and in the direction the fit term says (the same move is worse for some styles than others); the shuffled-scheme version shows nothing.
 - **H13, morphs:** a team's (or coach's) deviation from its own normal against an opponent cluster, beyond the average team's deviation, repeats out of sample (the second half of a season, or the next season under the same coach) with an interval clear of zero; with shuffled opponent clusters it doesn't. If it holds, a morph term improves held-out game-environment forecasts (pass rate, pace) or margins.
+- **H14, schemes as conditions:** per tendency (and per cluster), the main effect on game EPA residuals beyond strength is near zero, while the offense × defense interaction is larger than the shuffled-opponent null's 95th percentile.
 - **H11, conditions:** scheme tendencies predict a team's result from a given game state (e.g. trailing at halftime) beyond the win-probability model's expectation for that state, on held-out seasons.
 - **Signal and no noise** (VALIDATION.md): beats its shuffled self; the no-noise target to be proposed after the exploration (CEO approves).
 - **Failure looks like:** no tendency moves with play callers more than chance, and neither matchup nor game-state test finds anything. Then schemes are roster traits, and that is itself a finding for `roles-archetypes`.
