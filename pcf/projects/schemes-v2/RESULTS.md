@@ -49,16 +49,17 @@
 | Option | Typical miss: league's gain | Own past gain | **Anti-trait** | Blend | Signal test (shuffled refits beaten, 95 needed) |
 |---|---|---|---|---|---|
 | Pass | 0.405 | 0.437 | 0.405 | **0.404** | anti-trait 70; **blend 100** |
-| Shotgun | 0.471 | 0.513 | **0.471** | 0.471 | anti-trait 88; blend SHOTGUN_BLEND |
-| Man | 0.754 | 0.778 | 0.754 | 0.754 | anti-trait MAN_AVOID |
-| Two-high | 0.689 | 0.706 | 0.691 | 0.692 | anti-trait TWO_HIGH_AVOID |
-| Blitz | 0.777 | 0.798 | 0.777 | 0.777 | anti-trait BLITZ_AVOID |
+| Shotgun | 0.471 | 0.513 | **0.471** | 0.471 | anti-trait 88; blend 72 |
+| Man | 0.754 | 0.778 | 0.754 | 0.754 | anti-trait 32 |
+| Two-high | 0.689 | 0.706 | 0.691 | 0.692 | anti-trait 55 |
+| Blitz | 0.777 | 0.798 | 0.777 | 0.777 | anti-trait 76 |
 
 - **Typical miss** is the mean absolute error, in EPA per play.
 - **The pass blend:**
   - On the range score, it beats the league's gain, its own past gain and the anti-trait alone, with each 90% interval below zero. Against the league, the gap is −0.001, with an interval from −0.001 to −0.000.
   - Its ranges hold 80.3% of results.
-- **Every blocking leakage check passes** for every variant run.
+- **Every blocking leakage check passes** for every variant run. The only failures are signal tests.
+- MLflow runs (experiment `schemes-v2`): `efe03777` pass anti-trait, `9633e3c8` pass blend, `ce2bb226` shotgun anti-trait, `956e22ef` shotgun blend, `a1f436e6` man, `0c667ca0` two-high, `d7f0a2f0` blitz. The defensive blends weren't run through the harness: their anti-trait fails and their quick walk-forward is no better (the table above).
 - **A team's own past gain alone is worse than the league's for every option.** Single-game gains are too noisy to average.
 - **Football sanity:**
   - the pass blend's top forecasts are the 2016–18 Falcons (Matt Ryan, with Shanahan, then Sarkisian) and Brady's 2017 Patriots;
