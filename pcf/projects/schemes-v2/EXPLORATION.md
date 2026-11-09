@@ -1,6 +1,6 @@
 # Exploration: Schemes v2 (`schemes-v2`)
 
-**Status:** in progress, 2026-11-09. Parts 1–4 and 6 of the plan done (matchups on margins, H9; morphs, H13; scheme fit for receivers and QBs, H12, I22–I24), plus first looks at H14 and H15. Still to do: game states (H11, diagnosis). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
+**Status:** first round done, 2026-11-09. All six parts of the plan done, and every hunch (H9–H15) has a first-look verdict. **Go** (see the end); the CEO decides the direction. Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
 
 **Scripts:**
 - [`explore/tendencies.py`](explore/tendencies.py): builds the team-game tendency table, then consistency, whose it is, coach movers and how fast tendencies settle.
@@ -10,6 +10,7 @@
 - [`explore/fit.py`](explore/fit.py): H12, I22–I24.
 - [`explore/restricted.py`](explore/restricted.py): H15.
 - [`explore/anticlusters.py`](explore/anticlusters.py): H15 further (anti-directions, the box lead, before kickoff).
+- [`explore/states.py`](explore/states.py): H11, game states (diagnosis).
 - [`explore/cycles.py`](explore/cycles.py): the first look at H9 (in the brief).
 
 ## In short
@@ -49,6 +50,9 @@
     - What teams usually do *against this opponent* adds no cost, except one lead: defenses that avoid stacking the box lose more against offenses that usually draw stacked boxes. The loss comes on dropbacks, not runs: about 0.07 EPA per dropback (F18).
     - Anti-clusters are really **anti-directions**. Styles don't form clusters even per regime, but avoidances go together: spread against heavy on offense, man and pressure against two-high on defense. On defense, the combined direction predicts the penalty better than any single option (F18).
     - Passing and shotgun avoidance work before kickoff, from earlier games only (F18).
+14. **Game states (F19, H11): schemes don't predict comebacks, but the leader's defense shapes the second half.**
+    - Teams losing at halftime rarely come back, and the win-probability model already knows exactly how often. Tendencies add nothing to it (held-out r +0.01).
+    - A leading team with a pressure, man and blitz defense gives back fewer second-half points; a two-high defense gives back more: about 0.7 points per sd. That changes margins, not results. Held out: r +0.09, 4% by chance.
 
 ## Data and definitions
 - **Team-games:**
@@ -382,6 +386,37 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **Passing and shotgun hold before kickoff,** about as strongly as in F17. Man coverage holds for the loss where favored.
 - **Heavy personnel and blitz fade before kickoff:** they held between halves of a regime (F17), but early-regime estimates from fewer games aren't enough. They need a prior from earlier seasons (the coach's history, F4) to be usable.
 
+**F19. H11, game states: comebacks and second-half margins** ([`explore/states.py`](explore/states.py), 2026-11-09; 8,037 team-games, weeks 4+, 2006–2024; tendencies from the regime's earlier games, 3+; diagnosis only).
+- **Two outcomes beyond what's known at halftime:**
+  - *win beyond the win chance:* the result less the closing line's win chance at the start of the second half (`vegas_home_wp`: it knows the score, the clock, the ball and both teams' strength);
+  - *second-half margin beyond the close:* second-half points for less against, less half the closing spread.
+
+*1. The usual way already knows the CEO's example.*
+
+| Halftime | Games | Won | Win chance at half | Second-half margin beyond the close |
+|---|---|---|---|---|
+| Down 9+ | 1,729 | 9.7% | 10.4% | +1.45 ± 0.39 points |
+| Down 1–8 | 1,986 | 33.6% | 32.5% | +0.87 ± 0.34 |
+| Tied | 606 | 50.0% | 50.0% | 0.00 |
+| Up 1–8 | 1,986 | 66.4% | 67.5% | −0.87 ± 0.34 |
+| Up 9+ | 1,730 | 90.3% | 89.6% | −1.45 ± 0.39 |
+
+- **Teams losing at halftime mostly don't come back, and the win-probability model knows exactly how often.** It's calibrated within a point in every state.
+- **Leaders give some points back:** a team up 9+ is outscored by about 1.5 points in the second half beyond the spread's expectation (the clock running, softer defense), without losing more often than expected.
+
+*2. Each tendency, among trailing and leading teams* (per sd; the null is the largest |t| among 216 slopes with tendencies shuffled within the week: 95th 3.4):
+- **Comebacks (win beyond the win chance): nothing.** The largest |t| is 2.1. My expectation failed: pass-avoiding teams don't come back less often (pass rate over expected among trailing teams: 0.000 per sd).
+- **Second-half margins: the leading team's defense matters.**
+  - A leading team whose defense creates more pressure gives back less: **+0.69 points per sd (t 3.9, beyond the shuffled max).**
+  - The rest of the same picture, each about |t| 2.5–2.9, not beyond the max on its own: man coverage +0.77, blitz +0.59, two-high −0.77.
+  - Among trailing teams, the same numbers appear with the sign flipped, because they are the same games seen from the other side.
+  - **Football sense:** a trailing offense has to throw, and a defense built to rush and play man feasts on obvious passing downs. Two-high, soft-zone defenses give back more: the "prevent defense prevents you from winning" story.
+  - It changes margins, not results: leaders win about as often as expected either way.
+
+*3. Held out* (all tendencies × halftime state, ridge, even seasons predicting odd and the reverse):
+- Win beyond the win chance: r +0.010 (shuffled reach it 29% of the time): **nothing.**
+- Second-half margin: r +0.091 (4%): **a faint signal,** carried by the leading team's defensive style.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
@@ -397,7 +432,7 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
   - The anti-cluster (F18): styles don't cluster even per regime, but avoidances go together in directions. On defense, the combined direction predicts the penalty better than any single option.
   - Before kickoff (F18): passing and shotgun avoidance hold from earlier games only.
   - Stays **open:** the box lead (its cost comes through the air, not on runs) needs the confirmation loop.
-- **H11:** not yet tested.
+- **H11:** **failed for comebacks, a faint signal on margins** (F19). Trailing teams rarely come back, as the CEO said, but the win-probability model already knows exactly how often, and schemes add nothing to it. Schemes do predict the second-half margin a little, through the leading team's defense (pressure, man, blitz against two-high). **Unclear** overall.
 
 ## Pitfalls found
 - **League trends pass for consistency** unless every tendency is taken against its season mean (4th-down rate: 0.31 → 0.06).
@@ -410,7 +445,7 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **A cost over all plays mixes two things:** being worse at an option when using it, and passing it up. Split them (F17).
 
 ## Next
-1. **Game states (H11, diagnosis):** do pass rate over expected and tempo predict how teams do when trailing at halftime, beyond the win-probability model?
+1. **Game states, if pursued (H11):** the leader's defense on second-half margins is a diagnosis lead. Check it on 2025+ live rather than more slices of 2006–2024.
 2. **Scheme fit, if pursued:** specific fits like receiver depth (I23) rather than one distance. Candidates: a receiver's middle share × the scheme's, a QB's scramble rate × the scheme's shotgun rate. Each must beat placebo moves.
 3. **Small checks:**
    - the outside-run artefact (home against away);
@@ -420,3 +455,17 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 6. **Anti-traits as features (H15):** a team's avoidance × the play's expected choice is consistent and carries a cost, so it's a feature candidate for the team-strength and matchup models. Passing and shotgun avoidance work before kickoff (F18). Heavy personnel and blitz need a prior from the coach's earlier seasons. On defense, use the combined direction (F18). The box-count lead (avoiding stacked boxes against run-heavy offenses, paid on dropbacks) goes to the confirmation loop, not more tries on 2006–2024.
 
 If regimes keep finding little, the CEO's fallback is high season-to-season player turnover as a boundary.
+
+## Go / no-go
+**Go** (2026-11-09). The bar is any signal, and there is some:
+- tendencies are real, consistent traits with clear owners (F2–F4);
+- anti-traits carry a cost and work before kickoff (F17, F18);
+- scheme against scheme is faint but in the right direction on EPA and margins (F7, F9, F19).
+
+What didn't hold:
+- discrete clusters, at game or regime level (F8, F12, F18);
+- a team's own morphs (F11);
+- a general scheme-change cost for movers (F13, F14);
+- comebacks beyond the win chance (F19).
+
+Which of these the expert is built around (traits and anti-traits as features, scheme-against-scheme terms, or both) is the CEO's call, with the brief agreed after it.

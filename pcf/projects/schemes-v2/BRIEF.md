@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (the CEO's hunches H9-H15 recorded and first-looked except H11; exploration under way, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (the CEO's hunches H9-H15 recorded and first-looked; exploration first round done, go, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -131,6 +131,11 @@ How does each team play, on offense and on defense, in ways that belong to its p
 - **Tendencies can be measured from free data.** Play-by-play has shotgun, no-huddle, pass rate over expected, pass depth and direction (1999 on). FTN charting has play-action, motion, blitzers and men in the box (2022 on, about two weeks behind). Participation has formation, personnel, coverage and routes (2016–2025, after the season only).
 - **Play callers can be identified.** nflverse has head coaches only. Coordinators and who calls plays aren't in our data (an open decision below).
 - **Enough movers.** Each season perhaps 10–20 coordinators and many players change teams. Coordinators are few, so intervals will be wide.
+- **For H11 (Claude's assumptions, stated first, 2026-11-09):**
+  - *"Can't come back" is already in the win-probability model.* A team trailing at halftime already has a low win chance. The hunch matters only if schemes predict the result *beyond* that chance, so the test uses the closing line's win chance at halftime, which knows both teams' strength.
+  - *Win or loss is blunt:* one bit per game. The second-half margin beyond the close carries far more.
+  - *Tendencies must be known before the game* (the regime's earlier games), so the game's own script can't leak in.
+  - *My expectation:* pass-avoiding, slow and heavy teams come back less often when trailing (tying to H15); small effects otherwise.
 - **For H12 (Claude's assumptions, stated first):**
   - *Movers aren't random.* Players move because they declined, got expensive or were cut. A QB at +0.10 who moves would drift down anyway (regression to the mean, age). Double machine learning removes only what we measure; the main confounders to measure are prior efficiency (shrunk), age, the new and old supporting cast *without* the player, and opponents.
   - *The new offense's +0.10 includes its old QB.* The supporting cast has to be measured without the position that changed.
