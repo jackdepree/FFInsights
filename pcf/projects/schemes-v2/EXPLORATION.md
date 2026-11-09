@@ -1,10 +1,12 @@
 # Exploration: Schemes v2 (`schemes-v2`)
 
-**Status:** in progress, 2026-11-08. Parts 1–3 of the plan done, plus a first look at H14. Still to do: matchups on margins (H9) and morphs (H13); game states (H11, diagnosis); scheme fit for receivers, then QBs (H12, I22–I24). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
+**Status:** in progress, 2026-11-08. Parts 1–4 of the plan done (part 4: matchups on margins, H9, and morphs, H13), plus a first look at H14. Still to do: game states (H11, diagnosis); scheme fit for receivers, then QBs (H12, I22–I24). Discovery only: nothing here counts as proof, and the vault (2025) wasn't read.
 
 **Scripts:**
 - [`explore/tendencies.py`](explore/tendencies.py): builds the team-game tendency table, then consistency, whose it is, coach movers and how fast tendencies settle.
 - [`explore/conditions.py`](explore/conditions.py): H14.
+- [`explore/margins.py`](explore/margins.py): H9 on margins.
+- [`explore/morphs.py`](explore/morphs.py): H13.
 - [`explore/cycles.py`](explore/cycles.py): the first look at H9 (in the brief).
 
 ## In short
@@ -23,6 +25,15 @@
    - All pairs together, fitted on some seasons and tested on others, predict the residual at r +0.028. Shuffled opponents get there 2.5% of the time. Real, maybe, but tiny.
    - Clusters show nothing.
 6. **Tendencies settle within 1–2 games; efficiency takes 6+ (F5).**
+7. **Style pairings against the close's margin: a faint signal, at the edge of chance (F9, H9).**
+   - The pairings fitted on other seasons predict the margin's miss against the close at r +0.035. Shuffled opponents get there 5% of the time.
+   - About 0.4 points per standard deviation; no cover edge (48% against 46% between the extreme fifths).
+   - Settling it needs about 7,000 games; we have 4,018.
+8. **Teams do bend against opposing styles, but all the same way (F10, F11, H13).**
+   - The average bend is real and football-sensible in 22 of 98 pairs: defenses put fewer in the box and blitz less against pass-heavy offenses, and offenses throw deeper against man.
+   - A head coach's own bend, beyond the average, doesn't repeat: no more pairs than chance (5 of 98), in seasons or in games.
+   - The test would have seen own bends of about a third of the largest average bend.
+9. **The cluster version shows nothing either (F12).** A game sits in its own regime's usual cluster only 47% of the time, so game-level clusters are mostly noise, as in v1.
 
 ## Data and definitions
 - **Team-games:**
@@ -183,11 +194,59 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **Nothing.** 36 cells of about 55 sides each can only show a large effect.
 - **Here continuous tendencies beat clusters,** as the dialects analogy expects: blends, not categories. Clusters haven't earned their place (rule k).
 
+**F9. H9, style pairings on margins** ([`explore/margins.py`](explore/margins.py), 4,018 games, weeks 4+, 2006–2024). Each game's matchup term is the home offense's summed offense × defense prediction less the away offense's. It comes from F7's 77 pairs, fitted on the other half of the seasons, with every tendency known before the game.
+
+| Against | Games | r with the margin's miss | Shuffled opponents at or above |
+|---|---|---|---|
+| The close (result less `spread_line`) | 4,018 | +0.029 | 5.5% |
+| The close, both sides with 3+ earlier regime games | 2,713 | +0.035 | 5.0% |
+| Elo's validated margin (2016–2024) | 1,935 | +0.032 | 11.0% |
+| The close, 2006–2017 (play-by-play tendencies) | 2,500 | +0.037 | 3.5% |
+| The close, 2018–2024 (with coverage) | 1,518 | +0.026 | 17.0% |
+
+- **Size:** one standard deviation of the term is about 0.4 points of margin.
+  - The fifth of games where it favours home most: home beats the close by +0.56 points on average. The fifth where it favours away most: −0.53.
+  - Cover rates are 48% and 46%: no betting edge at this size.
+- **Power:** an r of 0.03 needs about 7,000 games to show reliably (80% power); we have 4,018. The faint signal is the right size to be real and the wrong size to prove here.
+- **Coverage data doesn't help:** the seasons with coverage (2018–2024) are no stronger than those without.
+- **H9's circles:** circles are rarer than chance (brief) and their games closer. A term this small couldn't make circles common, consistent with the first look.
+
+**F10. H13, the average bend (ordinary opponent adjustment)** ([`explore/morphs.py`](explore/morphs.py), 7,518 team-games in regimes of 6+ games):
+- The morph is a game's tendency less the team's own normal: the mean of its *other* games in the regime.
+- The condition is the opponent's normal on the other side of the ball.
+- **22 of 98 pairs bend clearly (|t| > 3).** In sd of the game's deviation per sd of the opponent's tendency:
+  - defenses put fewer in the box against pass-heavy offenses (−0.28), more against heavy personnel (+0.22) and fewer against 11 personnel (−0.19);
+  - they blitz less against pass-heavy offenses (−0.14) and play more two-high against them (+0.12);
+  - offenses throw deeper against man (+0.09 aDOT, +0.06 deep rate) and against defenses that give up depth (+0.08);
+  - offenses pass more against blitz-heavy and box-heavy defenses (+0.08, +0.07).
+- That is the usual way: every team bends, and a model can know it from the two teams' tendencies.
+
+**F11. H13, a coach's own bend** (the CEO's hunch: team A morphs *its own way*, and does it again):
+- **The test:** after the average bend, each head coach's own slope against the condition, measured in even seasons and in odd seasons separately, then correlated across coaches.
+- **Nothing:**
+  - The mean split r across the 98 pairs is +0.005. Shuffled opponents give +0.004 (95th +0.039).
+  - 5 of 98 pairs beat their own null's 95th; 5 are expected by chance.
+  - Splitting by even and odd games instead: 6 of 98.
+- **Could it have seen one?** Planting made-up coach slopes into one typical pair (pass rate over expected against the opponent's man rate) raises its split r:
+  - from +0.10 to +0.17 at sd 0.05;
+  - to +0.32 at sd 0.10, reaching that pair's null 95th of +0.36 at about sd 0.12;
+  - to +0.49 at sd 0.15.
+  - Pooled over 98 pairs, the test would see own bends of about sd 0.05.
+  - So coaches' own bends are smaller than about a fifth to a third of the largest average bends, if they exist.
+- **Limitation:** the head coach is the unit. Defensive game plans belong to defensive coordinators, who aren't in our data yet; the coordinator table is where H13 could still hold.
+
+**F12. H13 with clusters, the CEO's framing** (2018–2024, 2,841 team-games; 6 offense clusters from game-level tendencies, 6 defense clusters from opponents' normals):
+- **A game sits in its regime's usual cluster only 47% of the time.** Game-level cluster labels are mostly noise, the same problem v1 had.
+- **The off-cluster rate barely moves with the opponent's cluster:** 50% to 56%.
+- **A coach's off-cluster rate against a given defense cluster** (beyond the average for that cluster), even games against odd: r +0.13 over 163 coach × cluster cells. Shuffled opponents reach that 65% of the time: nothing.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
 - **I25:** partly holds (F5).
-- **H9, H11, H12, H13:** not yet tested here (H9's first look is in the brief).
+- **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
+- **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
+- **H11, H12:** not yet tested.
 
 ## Pitfalls found
 - **League trends pass for consistency** unless every tendency is taken against its season mean (4th-down rate: 0.31 → 0.06).
@@ -197,15 +256,14 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **Run gaps may be charted differently by stadium crew** (F3).
 
 ## Next
-1. **Matchups on margins (H9) with H14's terms:**
-   - the held-out interaction sum against the close's margin miss, not just EPA;
-   - then morphs (H13): each team's tendencies against an opponent type beyond the average team's response, and whether they repeat.
-2. **Game states (H11, diagnosis):** do pass rate over expected and tempo predict how teams do when trailing at halftime, beyond the win-probability model?
-3. **Scheme fit (H12): receivers first, then QBs.**
+1. **Game states (H11, diagnosis):** do pass rate over expected and tempo predict how teams do when trailing at halftime, beyond the win-probability model?
+2. **Scheme fit (H12): receivers first, then QBs.**
    - Receivers who change teams: their target depth × the new offense's depth before they arrived, with prior efficiency, age and the new QB partialled out, against placebo moves (I23).
    - Then QBs against coverage (I22) and the learning curve (I24).
-4. **Small checks:**
+3. **Small checks:**
    - the outside-run artefact (home against away);
    - shotgun's main effect against a strength measure that adapts faster.
+4. **For later, with more data:** H9's faint signal could be settled by adding 2025+ seasons live (the ledger) rather than more tries on 2006–2024, which would spend the same data again.
+5. **The coordinator table** (signed off in principle) is the place to retest H13: game plans are a coordinator's.
 
 If regimes keep finding little, the CEO's fallback is high season-to-season player turnover as a boundary.
