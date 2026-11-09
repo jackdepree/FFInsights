@@ -22,7 +22,8 @@
 | H9 | 2026-11-08 | CEO | schemes-v2 | Teams rated on one line: strength plus home field | Rock-paper-scissors: circles come from flukes in close games, or from schemes that give one team an edge over another | First look: circles against chance models (`schemes-v2/explore/cycles.py`); the real test is style pairings on margins | open | First look: circles are rarer than chance (18.1% against 21.2%), and circle games are closer. Win/loss can't show a point-sized edge; margins can |
 | H10 | 2026-11-08 | CEO | schemes-v2 | Schemes are charted labels, often by coaching tree; roles are usage at one team | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role | The movers design: does each tendency move with the play caller, the player, or stay with the roster? | open | |
 | H11 | 2026-11-08 | CEO | schemes-v2 | Scheme labels are judged by whether they look right on film | A real scheme predicts performance under conditions (e.g. trailing at halftime) or the matchups in H9 | Scheme tendencies against the win-probability model's expectation for a game state, held-out seasons | open | |
-| H12 | 2026-11-08 | CEO | schemes-v2 | A player's efficiency is theirs, adjusted for teammates and opponents | Performance depends on the fit between player and scheme, beyond the talent around them; found by a causal process close to double machine learning | Movers: change in efficiency against old-to-new scheme distance, with prior efficiency, age and supporting cast partialled out | open | |
+| H12 | 2026-11-08 | CEO | schemes-v2 | A player's efficiency is theirs, adjusted for teammates and opponents | Performance depends on the fit between player and scheme, beyond the talent around them; found by a causal process close to double machine learning. QBs and receivers first | Movers: change in efficiency against old-to-new scheme distance, with prior efficiency, age and supporting cast partialled out | open | |
+| H13 | 2026-11-08 | CEO | schemes-v2 | Opponent adjustment is one average response for every team | Each scheme morphs consistently against an opposing scheme: team A sits in its own cluster but uses a different one against cluster-3 opponents | Leave-one-opponent-out deviation, beyond the average team's response, repeated out of sample; shuffled-cluster null | open | |
 
 ## Tally
 
@@ -30,5 +31,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 3 | 2 | 2 | 6 |
+| CEO | 3 | 2 | 2 | 7 |
 | Claude | 0 | 0 | 0 | 0 |

@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** draft, 2026-11-08 (kickoff; the CEO's hunches H9-H12 recorded, back and forth under way) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** draft, 2026-11-08 (kickoff; the CEO's hunches H9-H13 recorded, back and forth under way) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*
@@ -24,6 +24,7 @@
 | H9 | Rock-paper-scissors: circles (A beats B, B beats C, C beats A) come either from flukes in close games or from schemes that give one team an edge over another | Matchups are a scouting talking point; models rate teams on one line (strength plus home field) | (1) Are circles more common than strength plus luck produce? (first look below). (2) The sharper test: do offense-style × defense-style pairings predict margins beyond Elo? |
 | H10 | What follows a coach or coordinator to a new team is the scheme; what follows a player is their role. Schemes and roles are the consistent parts of play style | Schemes are labels from charting, often by coaching tree; roles come from usage at one team | The movers design (analogy 3): for each tendency, does it move with the play caller, the player, or stay with the roster? |
 | H12 | Player performance depends on the fit between a player and a scheme, beyond the talent around them: a QB who moves between two offenses of equal EPA but different tendencies can go from +0.10 to −0.10. The golden goose is a causal process, close to double machine learning | A player's efficiency is theirs, adjusted for teammates and opponents; scheme isn't in the model | Movers again: a player's change in efficiency after a move, against the distance between the old and new schemes, with the talent around them, age and regression to the mean partialled out (double machine learning, with a simple fixed-effects version as the yardstick) |
+| H13 | Each scheme breaks or morphs consistently against an opposing scheme: with 5–7 scheme clusters (pass over expected, zone over expected, …), team A sits in its own cluster but, whenever it plays a cluster-3 opponent, it uses a different cluster than normal | Opponent adjustment is one average response: every team passes a little more against a strong run defense | Leave-one-opponent-out: team A's tendencies against cluster-3 opponents against its tendencies in its other games, beyond the average team's response to cluster 3, and whether the same morph repeats (later games, next season, the same coach) |
 | H11 | Knowing a scheme should predict performance under conditions (for example, a team losing at halftime most likely won't come back), or predict the matchups in H9 | Scheme labels are judged by whether they look right to film people | Do scheme tendencies predict how a team does in a game state, beyond the win-probability model's expectation for that state? |
 
 **H9.**
@@ -38,6 +39,9 @@
 **H12.**
 > "Another hunch of mine is that player performance is related to schemes and roles in some way that is not explained by personnel performance. Let me explain by example, a quarterback is averaging 0.10 epa per play, then they leave their team and join another offense that is averaging 0.10 epa per play, however this new offense has statistically significant differences in playcalling and charter tendencies. Then, we notice that this quarterback averages -0.10 epa per play on this new and different offense. Most of my discovery hunches that are somewhat original follow this pattern. Essentially, I think that the golden goose in scheme identification comes from a causal process; something close to double machine learning."
 
+**H13.**
+> "Another hunch of mine would be that each scheme will break or morph consistently against an opposing scheme. For example, we find 5 or 6 or 7 clusters of scheme across one or more domains - passing over expected or zone over expected - and team a will fit into a cluster but whenever team a plays a cluster type-3 then that team a utilizes a different than normal schematic cluster."
+
 **Scope and the old model (the CEO's words).**
 > "This expert would definitely cover both offense and defense respectively."
 
@@ -49,6 +53,9 @@
 - **2026-11-08, game states:** in-game states are for diagnosis (H11), never live predictions: "we can use that data for diagnosis but you are still correct that we will not be making live production level predictions."
 - **2026-11-08, play callers:** head coaches first, from the schedule, "to ensure we have the correct methodology to discover schemes and discover the exact features to best describe schemes". Coordinators come after, as their own small table (a new data source, signed off in principle; built once the method works).
 - **2026-11-08, hunches:** Claude proposes causal ideas in the same pattern; they count as hunches only if the CEO edits them significantly, otherwise they go in IDEAS.md as Claude's.
+- **2026-11-08, Claude's ideas C1–C5:** the CEO: "I think your proposed ideas are great!" Kept unedited, so they are Claude's ideas I21–I25 in IDEAS.md, tested in this exploration.
+- **2026-11-08, H12 starts with QBs and wide receivers:** "Let's start with QBs and wide receivers for h12 scheme fits."
+- **2026-11-08, schemes change within a season:** "A scheme can definitely change when there is a faculty change or a personnel change within a season." So a scheme is measured per *regime*, not per team-season: a stretch of games with the same head coach and the same starting QB (coordinators join when their table exists). A regime ends at a mid-season firing, a QB change, or the season's end.
 
 ### First look at H9 (2026-11-08, discovery only)
 [`explore/cycles.py`](explore/cycles.py), 2016–2024, 2,467 games, 4,495 triangles of teams that all played each other in a season.
@@ -65,16 +72,16 @@
 - **Flukes, partly:** games inside circles are closer than games inside ordinary triangles (54% decided by 7 or fewer, against 47%; at least one game decided by 3 or fewer in 62% of circles, against 55%).
 - **What it doesn't rule out:** a circle uses one bit per game (who won). A scheme edge worth a point or two would barely change who wins, so it can't show here. H9's real test is on margins (the table above, column 3, test 2).
 
-### Claude's proposed ideas, in the CEO's causal pattern (2026-11-08, awaiting the CEO)
-*Each becomes a hunch only if the CEO edits it significantly; otherwise it goes in IDEAS.md as Claude's. My expectation is given with each, so the result means something.*
+### Claude's ideas, in the CEO's causal pattern (2026-11-08; the CEO kept them unedited, so they are IDEAS I21–I25)
+*My expectation is given with each, so the result means something.*
 
 | # | Idea | Design | My expectation |
 |---|---|---|---|
-| C1 | **Stayers for coaches.** When a head coach changes but the QB and most starters stay, the tendencies that change (against teams that kept their coach) are the coach's; those that don't are the roster's | Difference in differences: a mirror image of H10's movers design. The two must agree | Pass rate over expected, pace, shotgun rate and 4th-down aggressiveness move with the coach; efficiency mostly stays with the roster |
-| C2 | **QB coverage fit**, a player-level rock-paper-scissors. A QB's efficiency against man versus zone is a lasting trait, and that split times the opposing defense's man rate predicts the QB's game beyond both teams' ratings | Participation coverage, 2016–2025 (retrospective, so diagnosis and next-season priors) | Small but real. It has far more data than circles: every dropback, not one bit per game |
-| C3 | **Receiver depth fit.** A receiver's target depth moves with them (role), but their efficiency per target depends on whether the new offense throws deep: deep threats lose most when they move to a short-passing scheme | Movers: many receivers change teams each year | The best first test of H12's method: the most movers, so the narrowest intervals, before QBs |
-| C4 | **A learning curve.** A player new to a scheme (moved, or a new coach arrived) plays below their eventual level for the first few games, more so the further the new scheme is from the old | Efficiency by games since the change, against scheme distance | A small dip that fades by midseason; useful for early-season projections |
-| C5 | **Tendencies settle fast; efficiency doesn't.** A new head coach's tendencies settle within about 4 games, long before efficiency does | `pcf.validation.consistency` by games into a coach's tenure | Pass rate over expected repeats strongly after 3–4 games. It sets how much a live scheme expert trusts this season against the coach's history |
+| C1 (I21) | **Stayers for coaches.** When a head coach changes but the QB and most starters stay, the tendencies that change (against teams that kept their coach) are the coach's; those that don't are the roster's | Difference in differences: a mirror image of H10's movers design. The two must agree | Pass rate over expected, pace, shotgun rate and 4th-down aggressiveness move with the coach; efficiency mostly stays with the roster |
+| C2 (I22) | **QB coverage fit**, a player-level rock-paper-scissors. A QB's efficiency against man versus zone is a lasting trait, and that split times the opposing defense's man rate predicts the QB's game beyond both teams' ratings | Participation coverage, 2016–2025 (retrospective, so diagnosis and next-season priors) | Small but real. It has far more data than circles: every dropback, not one bit per game |
+| C3 (I23) | **Receiver depth fit.** A receiver's target depth moves with them (role), but their efficiency per target depends on whether the new offense throws deep: deep threats lose most when they move to a short-passing scheme | Movers: many receivers change teams each year | The best first test of H12's method: the most movers, so the narrowest intervals, before QBs |
+| C4 (I24) | **A learning curve.** A player new to a scheme (moved, or a new coach arrived) plays below their eventual level for the first few games, more so the further the new scheme is from the old | Efficiency by games since the change, against scheme distance | A small dip that fades by midseason; useful for early-season projections |
+| C5 (I25) | **Tendencies settle fast; efficiency doesn't.** A new head coach's tendencies settle within about 4 games, long before efficiency does | `pcf.validation.consistency` by games into a coach's tenure | Pass rate over expected repeats strongly after 3–4 games. It sets how much a live scheme expert trusts this season against the coach's history |
 
 **The null every scheme-fit test has to beat:** a placebo move. Give each mover the scheme distance of a random team instead of their real one; the effect has to vanish. Regression to the mean shows up just as strongly in the placebo, so it can't fake a result.
 
@@ -96,6 +103,8 @@ How does each team play, on offense and on defense, in ways that belong to its p
   - **Roster trait:** the tendencies that stay with the team when the play caller leaves.
   - **Circle:** three teams that each beat one of the others in the same season (H9).
   - **Mover:** a play caller or player who changes teams between seasons (or mid-season).
+  - **Regime:** a stretch of a team's games with the same head coach and the same starting QB (later, the same coordinators). A scheme is measured per regime.
+  - **Morph:** how a team's tendencies change against one kind of opponent, beyond how the average team changes against it (H13).
 
 ## Builds on
 | Project | What we use | Why |
@@ -117,11 +126,19 @@ How does each team play, on offense and on defense, in ways that belong to its p
   - *Scheme distance must be known before the move:* the new team's tendencies from before the player arrived, or the new coach's at their previous team. Otherwise the player's own play shapes the "scheme".
   - *Few movers, noisy outcomes.* QB EPA per play needs hundreds of plays to settle; a few dozen QB moves since 2006. Intervals will be wide; receivers and backs move far more often.
   - *Simpler alternative first (rule k):* a movers regression with a player effect, a team-season effect and one fit term (player style × scheme distance). Double machine learning must beat or match it.
+  - *QBs and receivers together (the CEO's choice):* receivers first test the method (many movers, narrow intervals), QBs carry the stakes. A receiver's "move" also includes a new QB throwing to them, so the QB is part of the receiver's supporting cast.
+- **For H13 (Claude's assumptions, stated first):**
+  - *"Normal" must leave the opponent out.* Team A's usual cluster is measured from its games against other clusters, or the morph is partly measured against itself.
+  - *The opponent's cluster must be known before the game:* from the opponent's earlier games that season (or regime), never from the game itself.
+  - *The hunch is the team-specific part.* Every team bends against some opponents (more passing against a run-stuffing defense); that average response is ordinary opponent adjustment. H13 says team A bends *its own way*, and does it again. So the test removes the average team's response to cluster 3 first.
+  - *Few games per cell.* About 17 games across 5–7 opponent clusters is 2–4 games a cell a season. A morph has to be pooled across a coach's tenure to be measurable, which ties H13 to H10: if a morph is a choice, it should follow the play caller.
+  - *Simpler alternative first (rule k):* no clusters. Each team (or coach) gets a slope: how its pass rate over expected moves with the opponent's defensive tendencies. Consistent slopes are the morph. Clusters earn their place only if they beat the slopes.
+  - *My expectation:* the average response is clearly real; the team-specific morph is small and mostly noise, except for a few game-planning coaches, where it repeats.
 - **A tendency is a choice, not a forced response.** Shotgun when trailing is the game state talking; neutral situations and an expected-rate adjustment are meant to remove that.
 
 ## Goals
 1. A map of tendencies: which ones are consistent (CONSISTENCY.md), and whose they are (play caller, player, roster).
-2. A test of matchups on margins (H9), of game-state performance (H11, diagnosis only) and of scheme fit (H12).
+2. A test of matchups on margins (H9), of game-state performance (H11, diagnosis only), of scheme fit (H12) and of morphs against opposing schemes (H13).
 3. Scheme features for downstream experts, saved like Elo's ratings.
 
 ## Tests
@@ -129,6 +146,7 @@ How does each team play, on offense and on defense, in ways that belong to its p
 - **H9, matchups:** an offense-style × defense-style term improves held-out margin (or total) forecasts over Elo, with an interval clear of zero; the shuffled-pairings version doesn't.
 - **H10, whose is it:** for each tendency, the share that moves with a play caller (and with players) across movers, with an interval. A tendency counts as **scheme** if it moves with the play caller clearly more than it stays with the roster.
 - **H12, scheme fit:** among movers, the distance between the old and new schemes predicts the change in a player's efficiency beyond prior efficiency, age and supporting cast, with an interval clear of zero, and in the direction the fit term says (the same move is worse for some styles than others); the shuffled-scheme version shows nothing.
+- **H13, morphs:** a team's (or coach's) deviation from its own normal against an opponent cluster, beyond the average team's deviation, repeats out of sample (the second half of a season, or the next season under the same coach) with an interval clear of zero; with shuffled opponent clusters it doesn't. If it holds, a morph term improves held-out game-environment forecasts (pass rate, pace) or margins.
 - **H11, conditions:** scheme tendencies predict a team's result from a given game state (e.g. trailing at halftime) beyond the win-probability model's expectation for that state, on held-out seasons.
 - **Signal and no noise** (VALIDATION.md): beats its shuffled self; the no-noise target to be proposed after the exploration (CEO approves).
 - **Failure looks like:** no tendency moves with play callers more than chance, and neither matchup nor game-state test finds anything. Then schemes are roster traits, and that is itself a finding for `roles-archetypes`.
@@ -143,4 +161,4 @@ How does each team play, on offense and on defense, in ways that belong to its p
 Matchup terms for sides and totals; coaching-change priors in the offseason; scheme context for `roles-archetypes` and player projections; game-environment features for fantasy and props.
 
 ## Plan
-Exploration first, time-boxed: (1) why v1 found little; (2) the tendency list and its consistency; (3) the movers design (H10); (4) matchups on margins (H9); (5) game states (H11). The ladder after: tendencies as plain rates → shrunk rates → a few axes → (only if it beats them) clusters.
+Exploration first, time-boxed: (1) why v1 found little; (2) the tendency list and its consistency, per regime (I25); (3) the movers and stayers designs with head coaches (H10, I21); (4) matchups on margins (H9) and morphs (H13); (5) game states (H11, diagnosis); (6) scheme fit for receivers and QBs (H12, I22–I24). The ladder after: tendencies as plain rates → shrunk rates → a few axes → (only if it beats them) clusters.
