@@ -98,10 +98,14 @@ def _per_team(s: pl.DataFrame, columns: list[str]) -> pl.DataFrame:
 
 
 def team_game_parts(
-    schedules: pl.DataFrame, cal: Calendar, team_stats: pl.DataFrame | None = None
+    schedules: pl.DataFrame,
+    cal: Calendar,
+    team_stats: pl.DataFrame | None = None,
+    tendencies: pl.DataFrame | None = None,
 ) -> dict[str, pl.DataFrame]:
-    """`standard.schedules` rows (+ raw team stats) → the `team_game` parts: schedule (the
-    spine), pregame, result, stats. Spreads are betting style for each team (−3.5 = favored)."""
+    """`standard.schedules` rows (+ raw team stats, + `tendency_rows`) → the `team_game` parts:
+    schedule (the spine), pregame, result, stats, tendencies. Spreads are betting style for each
+    team (−3.5 = favored)."""
     s = _schedules(schedules, cal)
     keys = ["game_id", "team"]
     spine = (
@@ -139,4 +143,7 @@ def team_game_parts(
             "team_stats", standard.standard_teams(team_stats, "team", "opponent_team"), cal
         ).with_columns(pl.col("season").cast(pl.Int32))
         parts["stats"] = on_spine(stats.drop(TEAM_STATS_DROP), spine, keys, "team_game.stats")
+    if tendencies is not None:
+        rows = known_at("pbp", tendencies, cal)  # known when play-by-play is
+        parts["tendencies"] = on_spine(rows, spine, keys, "team_game.tendencies")
     return parts

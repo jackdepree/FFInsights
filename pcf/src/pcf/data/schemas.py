@@ -51,8 +51,8 @@ TABLES: dict[str, Table] = {
         Table(
             "team_game",
             (_GAME, _TEAM),
-            ("schedule", "pregame", "result", "stats", "tags", "tags_result"),
-            after=("result", "stats", "tags_result"),
+            ("schedule", "pregame", "result", "stats", "tendencies", "tags", "tags_result"),
+            after=("result", "stats", "tendencies", "tags_result"),
         ),
         Table(
             "play",
