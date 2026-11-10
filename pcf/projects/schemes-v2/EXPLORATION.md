@@ -509,6 +509,31 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 - **The "good against bad" check:** results do agree a little more against opponents of similar strength (+0.008 to +0.011 r per sd). *This may be an artefact.* Strength is removed with weights below 1 (0.75 and 0.52, because season means are noisy), so opponents with similar measured strength leave similar leftovers in the residual. Read it as unclear, not as evidence that "good teams beat bad teams" beyond their ratings.
 - **The overall level isn't interpreted.** Two games of one unit agree at r +0.04 to +0.05 whatever the opponents. That's the leftover strength and the shared strength estimate, which is the same for every pair. Only the slopes on similarity are read.
 
+**F23. E, the CEO's four candidate matchups (H16)** ([`explore/candidates.py`](explore/candidates.py), 2026-11-09; 2016–2024, 4,732 offense-against-defense sides).
+- **Directions were fixed in advance.** The outcome is F20's residual: an offense's EPA per play beyond both units' strength.
+- **The test:** the product term with both main effects in. The null is defenses shuffled within the week, 1,000 times, one-sided. The bar is 1.25% each, for four tries.
+- **Two new measures:**
+  - *target spread:* the effective number of receivers, 1 / the sum of squared target shares;
+  - *DL weight:* the mean listed weight of the defensive linemen on the field, from participation joined to `players`.
+
+| Pairing (the CEO's expected winner) | Expected sign | Earlier games only: per sd² (t), shuffled as far | The season's other games: per sd² (t), shuffled as far |
+|---|---|---|---|
+| E1 two-high against deep throwers (defense) | − | +0.0020 (0.6), 66% | −0.0023 (−0.8), 21% |
+| E2 spreading the ball against loaded boxes (offense) | + | +0.0033 (1.1), 13% | +0.0026 (0.9), 15% |
+| E3 blitzers against short throwers (offense) | − | −0.0038 (−1.3), 11% | −0.0029 (−1.1), 15% |
+| E4 heavy DL against run-heavy offenses (defense) | + | −0.0046 (−1.6), 94% | −0.0018 (−0.7), 76% |
+| *E1 variant: two-high × throw depth* | − | −0.0004 (−0.1), 38% | −0.0042 (−1.4), 8% |
+| *E2 variant: spread across WR, TE, RB* | + | −0.0007 (−0.3), 58% | −0.0014 (−0.5), 69% |
+| **All four, signed as expected** | | r +0.003, 40% | r +0.016, 15% (0.3% of F20's ceiling) |
+
+- **No pairing passes the bar.**
+  - **E2 and E3 lean the CEO's way in both versions** (11–15% by chance).
+  - **E1** leans right only with the whole season's styles.
+  - **E4 points the other way:** heavy lines do slightly *worse* against run-heavy offenses.
+- **Power:** an effect of about 0.009 EPA per play per sd² would have been caught 80% of the time. That's about half a point of margin in a game where both units are a standard deviation out. So any real effect here is smaller than that.
+- **This agrees with F21–F22.** The play map does have E3's mechanism at the play level (play action into a blitz −0.11, shotgun into a blitz +0.05), but season styles don't carry it into games.
+- **H17's caution applies to every row** (confounding by indication). A short-throwing offense may throw short *because* its line can't block, so the style stands for a weakness that the blitz exploits, and the two effects cancel. Testing that needs the roster behind the style, not the style alone.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it. **F21–F22:** neither the play-by-play matchup map carried to games (r +0.013, 0.2% of the ceiling) nor look-alike opponents (style similarity −0.008 and 0.000 r per sd) explain it. On this evidence the conditional part belongs to the specific opponent this season, not to scheme types. **Leaning failed** for schemes-as-types; the matchup itself is real.
@@ -566,6 +591,6 @@ What didn't hold:
 1. A, the rematch ceiling (done: F20, a real within-season matchup part of about 9% that styles reach only 1% of);
    - A2, the CEO's look-alike opponents (done: F22, the matchup doesn't follow the style);
 2. B, the play-by-play matchup map, then one game-level test (done: F21, real play-level interactions that don't reach games);
-3. E, the CEO's own candidate matchups;
+3. E, the CEO's own candidate matchups (done: F23, none passes; two lean the CEO's way);
 4. C, matchup traits learned from results (latent factors);
 5. D, the wider pair and cluster scan, expected to fail, as the bad example.
