@@ -48,6 +48,7 @@ Final verdicts, copied into [`projects/HUNCHES.md`](../HUNCHES.md).
   - two averages (rung 0): the league's gain and the team's own past gain;
   - the anti-trait (rung 1): the league's gain plus a weight on the team's use;
   - a blend (rung 1): the same plus its past gains.
+- **Retrospective traits** ([decision 0026](../../docs/decisions/0026-team-season-charted-traits.md)): a new table, **`team_season`**, with one part, `charted`. It holds each team's charted choices per season, 2016 on, known after the season, with `prior_for` saying which season may use them (R13).
 
 ## Findings
 
@@ -181,6 +182,34 @@ How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
 - **The pass anti-trait forecast is gone on the vault,** as the case against warned (point 2): its 0.001 edge on 2016–2024 was the size of a single season's noise. The anti-trait's *sign* (R6) wasn't re-tested on 2025, and shotgun and the defensive options weren't final models, so they weren't run.
 - **The vault is now spent for these models:** any change to them goes to the live ledger as its only honest test (VALIDATION §1).
 
+**R13. The retrospective traits table (2026-11-10, the CEO's call): every charted trait repeats season to season, and the charting's level shifts by season, so compare seasons over expected.** ([`explore/team_season_check.py`](explore/team_season_check.py); [decision 0026](../../docs/decisions/0026-team-season-charted-traits.md))
+- **What it is:**
+  - `team_season.charted` has one row per team and season, 2016–2025 (320 rows);
+  - it holds each team's charted choices over the regular season, in neutral situations;
+  - the offense's personnel 11, 12, 21 and heavy, the pistol, and time to throw;
+  - what the offense faced: box, man, two-high and blitz;
+  - the defense's box, man, two-high, blitz, pass rushers, nickel and dime;
+  - each comes raw and over expected, with play counts.
+- **Timing, for later models:**
+  - `known_at` is the day after the Super Bowl (participation's rule);
+  - `first_kickoff` and `last_kickoff` give the games it sums up;
+  - `prior_for` (the season + 1) is the first season an in-season model may use the row.
+  - The gateway hides an unfinished season's row from in-season views whatever its date says, and leakage check 2 fails any row known before its last game.
+- **Consistency** (per team-game, odd weeks against even and season to season):
+  - every measure is a trait;
+  - offense choices repeat 0.84–0.95 within a season and 0.38–0.71 across seasons. 21 personnel (0.68) and the pistol (0.71) are the most lasting choices PCF has measured;
+  - defense choices repeat 0.67–0.93 and 0.44–0.54. Nickel and dime are the strongest;
+  - what an offense faces repeats less within a season (0.18–0.44), but as much across seasons (0.33–0.37). That's how defenses respect an offense.
+- **Football sanity holds:**
+  - most man: the 2018–19 Patriots; least man and least two-high: the Chargers (single-high zone);
+  - most 21 personnel: the 2023 Dolphins and 2018 and 2025 49ers;
+  - most pistol: the 2019–20 Ravens;
+  - most blitz: the 2023 and 2025 Vikings (Flores);
+  - quickest throws: the 2020–21 Steelers and 2023 Dolphins; slowest: the 2016 Bills.
+  - Some teams never use two backs on neutral plays (2–5 a season), which is real.
+- **The raw rates aren't comparable across seasons.** The league's man rate is 0.41 in 2023, 0.49 in 2024 and 0.30 in 2025; the pistol is 0.044, 0.105 and 0.057. Those are charting shifts, not football. Use the `_oe` columns across seasons.
+- **A fix it brought:** `team_game.charted` missed fullbacks from 2023 on, so 5–7% of plays had the wrong look. The heavy share was 28–34%; it's 34–40% with fullbacks counted. The part is rebuilt. The defensive anti-trait variants, which read it, weren't rerun: they're research only and not on the vault.
+
 ## The ladder
 | Rung | Method | Result vs the rung below | Takeaway carried forward |
 |---|---|---|---|
@@ -245,6 +274,10 @@ The strongest argument that these results are wrong or overstated:
 10. **Rung 2's opponent bend uses what offenses did against the defense, which partly reflects which offenses it faced.** The shrinkage and the league gap soften this, but a strong schedule can pass for a bend. The leakage checks can't see it: it's a confound, not a leak.
 11. **The coach rule assumes every opening coach was announced before week 1.** That's true for every hire in 2016–2024 as far as I know, but it's not checked against dated news.
 12. **The project's one surviving anti-trait forecast is gone** (R12). The anti-trait story now rests on R6's held-out sign, which is a relationship, not a forecast, and was itself chosen on the same seasons.
+13. **The retrospective table is measured, not tested** (R13):
+    - Nothing shows it helps a forecast. "Trait" means it repeats, not that it predicts anything.
+    - Its `known_at` trusts participation's rule (the day after the Super Bowl), which isn't checked against when nflverse actually published each season. If it's early, only a model run in the weeks right after a Super Bowl could see a row too soon.
+    - The fullback fix changed `team_game.charted` for 2023–2025 after R6 and R9 were measured on it. Neither was rerun; both used 2016–2024, so only 2023–2024 moved.
 
 ## The CEO's spot-check (2026-11-09): F20 and F24
 **F20, the rematch ceiling: wrong as first written, now corrected.** ([`explore/spot_f20.py`](explore/spot_f20.py), [`explore/spot_f20b.py`](explore/spot_f20b.py))
@@ -318,7 +351,7 @@ The strongest argument that these results are wrong or overstated:
 
 ## Not looked at
 - **Coordinators:** the table is signed off in principle but not built. H10 and H13 are tested for head coaches only.
-- **Retrospective traits from participation** (personnel, coverage, blitz, box) as their own output: *waiting on the CEO's call, table or second expert (asked 2026-11-10).*
+- **Retrospective traits as forecasts:** the table (R13) measures them; whether last season's row helps any in-season model is untested.
 - **Rung 3 (trees)** for the traits (technical call below).
 - **Downstream use:** the traits as features in a margin, total, pace or player model (case against point 9).
 - **The anti-trait's sign on the vault** (only the forecast was run there), and the shotgun and defensive options on the vault (not final models).
@@ -344,16 +377,16 @@ Also in this project's `interface` block in `registry.yaml`.
 | | |
 |---|---|
 | **Inputs** | `team_game` parts `schedule`, `pregame`, `opening_coach`, `tendencies` (live); `charted` (post-season, defensive anti-traits only); gateway only |
-| **Outputs** | `pcf.experts.schemes_v2` variants; histories in `outputs/schemes-v2/<variant>/<run_id>/history.parquet`, per team-game: mean, q10, q50, q90. **Final:** `pass_oe_rung2`, `shotgun_rung2`, `depth_rung2`, `tempo_shrunk`. Anti-traits (`<option>_gain_*`) are kept for research, not as features: none passes the vault |
+| **Outputs** | `pcf.experts.schemes_v2` variants; histories in `outputs/schemes-v2/<variant>/<run_id>/history.parquet`, per team-game: mean, q10, q50, q90. **Final:** `pass_oe_rung2`, `shotgun_rung2`, `depth_rung2`, `tempo_shrunk`. Anti-traits (`<option>_gain_*`) are kept for research, not as features: none passes the vault. **Retrospective traits:** the table `team_season.charted` (R13), per team-season, raw and over expected, read through the gateway |
 | **Level of detail** | team-game (the offense's tendency in its next game) |
 | **Interval** | every regular-season and playoff game, from week 1; 2016–2024 reported, 2025 the vault |
-| **Cadence** | in_season |
+| **Cadence** | in_season (the `team_season` table: retrospective; in season, a prior from finished seasons only, `prior_for`) |
 | **Known at** | the Saturday run (Thursday noon for Thursday games), like Elo; tendencies are known the day after each game |
 | **How to use it** | As features for pace, totals and player volume, from saved histories only (rule e). Expect a typical miss of about 0.07 in pass rate over expected, 0.09 in shotgun rate, 1.9 seconds a snap and 2.2 air yards. Throw depth barely beats the league: weight it lightly. Add a playoff adjustment, or expect the playoff misses above. Live runs aren't scheduled yet |
 | **Feeds** | pace (`pace`), game environments and totals, player opportunity and fantasy projections; scheme context for `roles-archetypes` |
 
 ## Open questions for the CEO
-1. **Retrospective traits:** a measured table per team-season (no model), or a second expert with its own forecasts? (asked 2026-11-10)
+1. **Retrospective traits:** a measured table per team-season (no model), or a second expert with its own forecasts? (asked 2026-11-10) *Answered 2026-11-10: a table, with timing columns so later models can use it without leaking. Built: R13, decision 0026.*
 2. **Which downstream model should test the traits first:** pace and totals, or player opportunity?
 3. **Should the anti-traits be retired** after the vault, or kept for the 2026 live season as one more honest test of the pass sign (R6)?
 
@@ -395,3 +428,11 @@ Also in this project's `interface` block in `registry.yaml`.
   - **tempo stays at the blend** (rung 2 ties it);
   - **the vault ran the five final models only** (four traits and the pass anti-trait blend) with the league averages as yardsticks, test season 2025 alone;
   - **anti-traits aren't offered as features** after failing the vault.
+- **Decision 0026's calls (2026-11-10, the retrospective traits table):**
+  - a new `team_season` table (keys team and season), not a part of `team_game`;
+  - regular season only, in neutral situations;
+  - "over expected" against the league's season cell: down and distance for offense choices; plus shotgun and personnel group for defense choices and what an offense faced;
+  - the timing columns `known_at`, `first_kickoff`, `last_kickoff` and `prior_for`;
+  - one personnel parser for both formats, counting fullbacks as backs, which fixes and rebuilds `team_game.charted` (2023–2025);
+  - 0 pass rushers on a dropback counts as uncharted, in both tables;
+  - leakage checks 2 and 8 handle a table keyed by season.

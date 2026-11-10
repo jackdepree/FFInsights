@@ -51,7 +51,7 @@ pcf/
       sources/              one module per source (nflverse, espn_odds, odds_api, ...)
       clean/                the cleaning functions, ported from old/ and tested
       timeline/             the NFL calendar, prediction moments, the offseason dates file and every source's known-at rule
-      tables/               tables at each level of detail, saved as parts (game, team_game, play, player_play, player_game)
+      tables/               tables at each level of detail, saved as parts (game, team_game, team_season, play, player_play, player_game)
       tags/                 the tag catalog and builders: tags saved as table parts, and the drive table
       gateway.py            as_of(): the only way models read data
       schemas.py            the table contract: each table's keys and parts, checked on every write

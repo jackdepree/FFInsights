@@ -88,6 +88,8 @@
 | **Anti-trait** | A team's low use of an option, read as a possible limit: do low users gain less from it? | decision 0024 |
 | **Gain from an option** | EPA per play with the option less without, in neutral situations | decision 0024 |
 | **Opening coach** | A team's head coach for its first regular-season game, known from the start of week 1 (`team_game.opening_coach`) | decision 0025 |
+| **Retrospective traits** (`team_season.charted`) | A team's charted choices over a finished season (personnel, box, coverage, blitz, nickel and dime), raw and over expected; a prior for the next season, never a live input | decision 0026 |
+| **`prior_for`** | On a season's row: the first season whose in-season models may use it (the season + 1) | decision 0026 |
 | **Opponent's bend** | How far offenses move off the league's level against a given defense, as a shrunk season gap | decision 0025 |
 | **Regime** | A stretch of a team's games with the same head coach and starting QB; schemes are measured per regime | schemes-v2 BRIEF |
 | **Matchup type (learned)** | Two hidden numbers per offense and per defense, learned from a season's results, whose product is the matchup part | schemes-v2 EXPLORATION F24 |

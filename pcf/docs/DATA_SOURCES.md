@@ -84,6 +84,8 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 > - **retrospective:** updated between seasons, and may use participation. Useful for player value, archetypes and next-season priors.
 >
 > Where an idea needs both, it becomes two experts.
+>
+> **Season summaries of participation live in `team_season.charted`** (decision 0026): each team's charted traits for a season, known the day after its Super Bowl, with `prior_for` (the season + 1) marking the first season an in-season model may use them, as a prior.
 
 ## Tier 2 to 4: other free sources
 
