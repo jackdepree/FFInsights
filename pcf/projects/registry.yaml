@@ -243,6 +243,15 @@ projects:
     depends_on: [package-scaffold, validation-harness]
     summary: An append-only record of every prediction made before kickoff, with the market line at that time. It feeds the track record and the scorecards.
 
+  - id: live-experts
+    name: Live runs for the finished experts
+    phase: 0
+    status: idea
+    horizon: now
+    cadence: [in_season]
+    depends_on: [prediction-ledger, elo, schemes-v2]
+    summary: "The CEO's pick, 2026-11-10: make what we have run every week. The scheduled ledger run (Tue, Thu, Sat) forecasts participation only; this adds Elo (margins, totals, win chances, against the collected lines) and the schemes-v2 trait forecasts, saved before kickoff, so 2026 gives them a live record."
+
   - id: registry-tooling
     name: Registry tooling
     phase: 0
