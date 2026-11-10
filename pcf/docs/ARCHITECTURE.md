@@ -315,3 +315,5 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0010: Prediction moments are the weekly runs](decisions/0010-prediction-moments.md)
 - [0011: Features are defined per moment](decisions/0011-features-per-moment.md)
 - [0012: Benchmarks run at kickoff; baselines at the model's run](decisions/0012-benchmarks-and-baseline-moments.md)
+- [0023: Scheme tendencies are a part of the team-game table](decisions/0023-team-game-tendencies.md)
+- [0024: Anti-traits are judged on the next game's gain; defenses' choices are a post-season part](decisions/0024-anti-traits.md)

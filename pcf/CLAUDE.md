@@ -81,7 +81,7 @@ Both kinds go in [`projects/CONSISTENCY.md`](projects/CONSISTENCY.md):
 - **A consistent measure is kept even when it fails test 1.** It's something real about a team, so it may explain something else later.
 - **An inconsistent one is marked noise**, so nobody builds on it, or so it's used deliberately as noise (CEO, 2026-11-07).
 
-**The hunch scoreboard.** Every unconventional bet goes in [`projects/HUNCHES.md`](projects/HUNCHES.md): what the usual approach says, what we bet instead, how we tested it, and whether it held. Mostly the CEO's; Claude adds one when it notices we're going against convention. Over time it shows where the CEO's instinct beats the average and where to lean on the data.
+**The hunch scoreboard.** Every unconventional bet goes in [`projects/HUNCHES.md`](projects/HUNCHES.md): what the usual approach says, what we bet instead, how we tested it, and whether it held. It holds the CEO's hunches only: a hunch Claude proposes becomes one only if the CEO edits it significantly, and otherwise goes in `IDEAS.md` as Claude's idea (CEO, 2026-11-08). Claude is encouraged to propose them. Over time it shows where the CEO's instinct beats the average and where to lean on the data.
 
 **Assumptions first.** For any idea the CEO brings, Claude first states its assumptions, limitations and advantages, plus a simpler alternative if there is one. Then Claude recommends, and builds on the CEO's go. Claude pushes back when an idea won't work as stated.
 

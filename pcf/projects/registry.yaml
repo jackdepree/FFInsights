@@ -450,12 +450,12 @@ projects:
   - id: schemes-v2
     name: Schemes v2
     phase: 1
-    status: idea
-    horizon: later
-    cadence: [retrospective]
-    depends_on: [roles-archetypes, context-retro]
+    status: building
+    horizon: now
+    cadence: [in_season, retrospective]
+    depends_on: [grain-tables, validation-harness]
     origin: Schemes_Model.ipynb
-    summary: A full expert (CEO call, 2026-10-28). Retry team schemes from the roles-and-archetypes angle; the exploration must first check why schemes-v1 found little signal.
+    summary: "A full expert (CEO call, 2026-10-28), offense and defense. Started 2026-11-08 with the CEO's hunches H9-H13 (projects/schemes-v2/BRIEF.md): a scheme is what moves with a play caller who changes teams, a role what moves with a player; tested on matchups (rock-paper-scissors), morphs against opposing schemes, game states (diagnosis) and player-scheme fit (QBs and receivers, a movers design close to double machine learning). Measured per regime (head coach and starting QB); head coaches first, coordinators later. Not v1's structure; the exploration first checks why v1 found little. Likely two experts by cadence (live fields vs post-season participation). Exploration's first round done 2026-11-09 (go, EXPLORATION.md F1-F19); CEO direction: traits and anti-traits first, scheme against scheme stays in discovery. Built 2026-11-09: trait forecasts (all four beat their averages, RESULTS R1-R4) and anti-traits (offense keeps the sign on held-out seasons, defense doesn't; R5-R9)."
 
   - id: qb-talent
     name: QB true talent
