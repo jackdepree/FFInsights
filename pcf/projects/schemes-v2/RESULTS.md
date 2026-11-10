@@ -65,7 +65,7 @@
   - the pass blend's top forecasts are the 2016–18 Falcons (Matt Ryan, with Shanahan, then Sarkisian) and Brady's 2017 Patriots;
   - its bottom ones are the 2024 Panthers, around Bryce Young's benching.
 
-**R6. The offensive anti-traits keep F18's sign on held-out seasons. The defensive ones don't.**
+**R6. The offensive anti-traits keep F18's sign on held-out seasons. The defensive ones don't.** *(Spot-checked 2026-11-09, below: pass holds after a situation adjustment but lives at the pass-heavy end; shotgun's weighted version is fragile.)*
 
 How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
 - nothing is fitted, so every season is held out;
@@ -164,6 +164,26 @@ The strongest argument that these results are wrong or overstated:
   - an in-season trend per unit (teams improving or fading) leaves it at +0.055.
 - **What would change the answer:** the forecast version (earlier games only) failing, or 2025+ live seasons showing nothing, as 2006–2014 did.
 - **Its own design** (the strengths and the matchup part both fit on the same training folds, and a shuffled-pairing null centred at about 0) doesn't have F20's flaw.
+
+**R6, the pass anti-trait: the slope is real, but it lives at the pass-heavy end.** ([`explore/spot_r6.py`](explore/spot_r6.py), the CEO's second pick)
+- **The worry checked:** `pass_gain` is plain EPA on dropbacks less EPA on runs, while use is situation-adjusted. So run-heavy teams might show a lower gain just because they throw on third and long.
+- **The alternative:** each play is measured against the league's mean EPA for the same choice in the same down, distance (4 buckets), field zone (4) and season. The same features go through R6's exact test.
+
+| Version | Pass: slope per sd [90%], shuffles beaten, seasons positive | Shotgun |
+|---|---|---|
+| As published (raw gain, weighted by plays) | +0.0153 [+0.0038, +0.0258], 196/200, 8/9 | +0.0183 [+0.0046, +0.0336], 197/200, 7/9 |
+| **Situation-adjusted** | **+0.0129 [+0.0014, +0.0241], 194/200, 7/9** | **+0.0074 [−0.0064, +0.0214], 128/200** |
+| Raw, unweighted | +0.0185 [+0.0028, +0.0337], 199/200 | +0.0405 [+0.0199, +0.0628], 200/200 |
+| Situation-adjusted, unweighted | +0.0159 [−0.0004, +0.0320], 189/200 | +0.0372 [+0.0160, +0.0580], 200/200 |
+
+- **Pass survives:** the situation mix explains about a sixth of the slope.
+- **Shotgun is fragile.** Weighted by plays, as published, it falls below the bar once adjusted. Unweighted, as the expert's target is (decision 0024), it stays strong. The difference comes from games where one side of the choice has few plays. So R6's shotgun line needs this caveat.
+- **The rows** (team-seasons with 8+ test games; gain in EPA a play):
+  - *Most pass-heavy:* the 2016–2022 Chiefs (adjusted gain +0.16 to +0.30), the 2022–2024 Bengals (+0.06 to +0.25), and the 2016 Packers (+0.23).
+  - *Most pass-avoiding:* mixed. The 2020 Patriots (−0.56), 2017 Bears (−0.30), 2022 Falcons (−0.12) and 2022 Bears (−0.09) are low, but the 2018 Seahawks (+0.28) and 2022 Saints (+0.15) are high.
+  - *By fifth of use:* adjusted gain −0.037, −0.039, −0.044, −0.006, **+0.070**.
+- **What this changes:** the bottom three fifths are flat. **Avoiders are no worse at passing than average teams. Heavy passers are better.** That's comparative advantage (the CEO's H17: coaches lean into what their players do best), not a limit marked by avoidance (H15's reading). As a forecast feature it's still sound, but it mostly says "elite passing teams pass a lot". In the blend, the past gains already carry most of it (R8).
+- **What would change the answer:** the vault or live seasons, and a version with the QB's own past efficiency in the baseline (does use add anything beyond the QB?).
 
 ## Left to do
 1. ~~Anti-traits~~ (done: R5–R9). Possible follow-ups: defensive avoidance from this season's live columns (pressure rate faced), and a defense's coordinator once that table exists.
