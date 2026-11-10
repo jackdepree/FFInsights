@@ -185,6 +185,21 @@ The strongest argument that these results are wrong or overstated:
 - **What this changes:** the bottom three fifths are flat. **Avoiders are no worse at passing than average teams. Heavy passers are better.** That's comparative advantage (the CEO's H17: coaches lean into what their players do best), not a limit marked by avoidance (H15's reading). As a forecast feature it's still sound, but it mostly says "elite passing teams pass a lot". In the blend, the past gains already carry most of it (R8).
 - **What would change the answer:** the vault or live seasons, and a version with the QB's own past efficiency in the baseline (does use add anything beyond the QB?).
 
+## The CEO's spot-check (2026-11-10): F28, the matchup term in Elo's margin forecast
+**F28 holds: the term points the right way, but it's too small to pay for itself.** ([`explore/spot_f28.py`](explore/spot_f28.py))
+- **Reconciled with F26:** on the 1,663 games of 2016–2024 that have a term, it correlates with the margin's miss at +0.035 against the close and +0.037 against Elo. That's the same signal as F26 (+0.029), so the pipeline is right.
+- **The weight is positive in 8 of 9 seasons:** about +0.35 to +0.6 points per sd of the term. The exceptions are +0.97 in 2019 and −0.13 in 2021.
+- **The rows:**
+  - by fifth of the term, the margin beats the no-term blend by −0.62, +0.43, −0.57, +0.95 and **+1.63** points (the top fifth favours home most). The ends point the right way; the middle is noise.
+  - the 12 games the term moved most are all in weeks 14–18, ten of them in the season's final two weeks, when teams rest starters and Elo is weakest (elo F12, F14). The term moved 3 of those 12 closer to the result, and 44% of the 100 biggest moves.
+- **Other scores agree:** the means' typical miss goes from 10.060 to 10.068 points, and the squared miss from 169.15 to 169.18.
+- **The alternative:** blends trained from 2015, where F26's signal lives, are no better (+0.0016, −0.0025 to +0.0059, neutral; weeks 6+ +0.0027).
+- **Why a real but tiny signal fails here:** r +0.037 explains about 0.14% of a margin's variance. At best that's about 0.01 points of typical miss, and learning the weight from earlier weeks costs about as much as it gains.
+- **What would change the answer:**
+  - many more games (each live season adds about 270 with a term);
+  - a term several times larger;
+  - dropping the final two weeks, where the biggest moves go wrong. That's a cut chosen after seeing the rows, so it would have to be tested on live seasons, not here.
+
 ## Left to do
 1. ~~Anti-traits~~ (done: R5–R9). Possible follow-ups: defensive avoidance from this season's live columns (pressure rate faced), and a defense's coordinator once that table exists.
 2. **Retrospective traits** from participation (personnel, coverage, blitz, box), feeding in-season models from finished seasons only (rule m).
