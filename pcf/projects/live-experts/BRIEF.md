@@ -1,6 +1,6 @@
 # Brief: Live runs for the finished experts (`live-experts`)
 
-**Status:** draft (2026-11-10) · **Layer:** data and infrastructure (phase 0) · **Cadence:** in_season
+**Status:** agreed (2026-11-10) · **Layer:** data and infrastructure (phase 0) · **Cadence:** in_season
 
 ## The usual way
 A scheduled job pulls fresh data, loads the approved version of each model, and scores the upcoming games. It writes every forecast to a store that can't be edited, stamped with the model version and the time. It watches for inputs that go missing or drift, and grades the forecasts once results arrive against what the backtest promised. Betting shops also stamp each number against the market price at that moment and at the close.
@@ -66,20 +66,20 @@ No bar in `docs/VALIDATION.md` changes.
 - **Now:** the honest test of Elo against the market, and of schemes' live-only questions.
 - **Later:** the saved forecasts are the walk-forward history pace, totals and player opportunity train on.
 
-## Decisions for the CEO
+## Decisions (CEO, 2026-11-10: 1A, 2A, 3A)
 
 **1. What goes in the ledger?** *(why it matters: whatever isn't logged now has no live record later, but every extra model is one more chance of a lucky-looking winner)*
-- **A. The nine final forecasts, with yardsticks that cost nothing extra.** Elo's five finals, scored after each game against the closing line (already in our tables, so no extra rows); schemes' four finals, plus each trait's season-to-date average as its simple comparison, as `last_game` is for participation.
+- **A. The nine final forecasts, with yardsticks that cost nothing extra (chosen).** Elo's five finals, scored after each game against the closing line (already in our tables, so no extra rows); schemes' four finals, plus each trait's season-to-date average as its simple comparison, as `last_game` is for participation.
 - **B. Elo's margin, total and win chance only.** The market test, and nothing else. Simplest, but schemes' live questions and the long-horizon wins forecasts get no record.
 - **C. Every variant we've built (tempting, bad).** It looks thorough, but with 40-odd variants one will look good by luck, and the anti-traits are retired.
 
 **2. What about 2026 weeks 1–9?**
-- **A. Replay them once, in a separate file marked as a replay**, as for participation: an early read now, never counted as a record.
+- **A. Replay them once, in a separate file marked as a replay (chosen)**, as for participation: an early read now, never counted as a record.
 - **B. No replay.** The cleanest record, but no read until 4 live weeks are in (early December).
 - **C. Put them in the ledger as if live (tempting, bad).** A longer-looking record that isn't one.
 
 **3. The collectors have been down since 2026-11-05 (GitHub's billing lock).** *(why it matters: The Odds API's prices and props, and the line at any moment, are lost for every week they're down; ESPN's open and close can be backfilled later)*
-- **A. Run both collectors from this PC, on their usual days, until GitHub is unlocked.** One more scheduled task (your approval), using the key already in `pcf/.env`. It changes where collectors run (decision 0005) for now, so it needs your sign-off.
+- **A. Run both collectors from this PC, on their usual days, until GitHub is unlocked (chosen; the CEO's approval of the scheduled task and of the sign-off).** One more scheduled task, using the key already in `pcf/.env`. It changes where collectors run (decision 0005) for now, so it needs your sign-off.
 - **B. Wait for GitHub Support.** Nothing to set up, but each week waiting is lost.
 - **C. Clear the billing issue on GitHub's side.** Only you can do this; it can go with A or B.
 

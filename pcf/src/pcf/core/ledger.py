@@ -118,9 +118,11 @@ class Run:
         keys: list[str],
         kind: str = "amount",
         now: datetime | None = None,
+        publishes: tuple[str, ...] = (),
     ) -> dict[str, Any]:
-        """Write one model's forecasts: the standard output plus `kickoff`. Live rows for games
-        that have kicked off by now are left out. Returns what was written and left out."""
+        """Write one model's forecasts: the standard output plus `kickoff`, and the columns the
+        expert `publishes` for higher layers (Elo's ratings). Live rows for games that have kicked
+        off by now are left out. Returns what was written and left out."""
         if self.closed:
             raise LedgerRefused(f"{self.name} is closed")
         now = (now or datetime.now(UTC)).astimezone(UTC)
@@ -130,7 +132,12 @@ class Run:
             raise LedgerRefused(f"{model}: every row needs its kickoff")
         late = rows.filter(c("kickoff") <= now) if self.record == "live" else rows.clear()
         keep = rows.filter(c("kickoff") > now) if self.record == "live" else rows
-        check_output(keep.drop([x for x in LEDGER_COLUMNS if x in keep.columns]), keys, kind)
+        missing = [x for x in publishes if x not in rows.columns]
+        if missing:
+            raise LedgerRefused(f"{model}: published columns missing: {', '.join(missing)}")
+        check_output(
+            keep.drop([x for x in (*LEDGER_COLUMNS, *publishes) if x in keep.columns]), keys, kind
+        )
         extra = {k: v for k, v in SPIKE_PARTS.items() if k in keep.columns}
         out = keep.with_columns(
             record=pl.lit(self.record),
@@ -142,6 +149,7 @@ class Run:
         ).select(
             *keys,
             *(c(k).cast(v) for k, v in {**OUTPUT_SCHEMA, **extra, **LEDGER_COLUMNS}.items()),
+            *publishes,
         )
         path = self.folder / file_name(model)
         with path.open("xb") as f:  # exclusive: an existing file is never replaced

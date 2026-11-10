@@ -35,20 +35,38 @@ log = get_logger(__name__)
 c = pl.col
 EASTERN = ZoneInfo(ET)  # `ET` is the zone's name, for polars; datetimes need the zone itself
 
-# What the ledger forecasts (brief, decision 1): the four participation champions, one per
-# horizon, and `last_game` as a yardstick. A new champion joins with one line. The first is run
-# first, so on a tight Thanksgiving it's the one most likely to make kickoff.
+# What the ledger forecasts, in run order. Participation first (prediction-ledger brief, decision
+# 1): the four champions, one per horizon, and `last_game` as a yardstick; the first is run first,
+# so on a tight Thanksgiving it's the one most likely to make kickoff. Then the live-experts brief
+# (decision 1A, 2026-11-10): Elo's five finals (scored against the closing line, which needs no
+# rows of its own) and schemes-v2's four trait finals, each with its season-to-date average as a
+# yardstick. A new model joins with one line.
 MODELS: list[tuple[str, str]] = [
     ("participation", "trees_week"),
     ("participation", "active"),
     ("participation", "lasso_h3"),
     ("participation", "lasso_rest"),
     ("participation", "last_game"),
+    ("elo", "margin"),
+    ("elo", "total"),
+    ("elo", "win"),
+    ("elo", "wins_next3"),
+    ("elo", "wins_rest"),
+    ("schemes-v2", "pass_oe_rung2"),
+    ("schemes-v2", "shotgun_rung2"),
+    ("schemes-v2", "depth_rung2"),
+    ("schemes-v2", "tempo_shrunk"),
+    ("schemes-v2", "pass_oe_season"),
+    ("schemes-v2", "shotgun_season"),
+    ("schemes-v2", "depth_season"),
+    ("schemes-v2", "tempo_season"),
 ]
 # Bookkeeping columns `feature_history` adds: not inputs.
 STEP_COLUMNS = ("step", "step_season", "step_week", "as_of")
 # The input check compares a run with the same weeks of these many seasons before the live one.
 CHECK_SEASONS = 3
+# How long a failed refresh waits before its one retry.
+RETRY_SECONDS = 60
 
 
 @dataclass
@@ -132,6 +150,10 @@ def forecast(
         .join(due.select("game_id", "kickoff"), on="game_id", how="left")
     )
     live = feats.filter(c("game_id").is_in(due["game_id"].implode()))
+    if expert.publishes:  # what higher layers read with the forecast, as in the backtest history
+        rows = rows.join(
+            live.select(*keys, "as_of", *expert.publishes), on=[*keys, "as_of"], how="left"
+        )
     return Forecast(expert, rows, check_inputs(expert, feats, live), seconds)
 
 
@@ -161,7 +183,15 @@ def pull(live_season: int) -> dict[str, Any]:
     from pcf.data.sources.nflverse import refresh
     from pcf.data.tables import build
 
-    summary = refresh()
+    try:
+        summary = refresh()
+    except RuntimeError as err:
+        # nflverse sometimes replaces a file while we download it, so its content no longer
+        # matches the fingerprint we listed (live-experts, 2026-11-10). Listing again a minute
+        # later fixes it; a second failure is real.
+        log.warning("refresh failed (%s); trying again in %d seconds", err, RETRY_SECONDS)
+        time.sleep(RETRY_SECONDS)
+        summary = refresh()
     build(seasons=[live_season])
     pulled_at = datetime.now(UTC)
     return {"pulled_at": pulled_at, "downloaded": summary.downloaded, **freshness(live_season)}
@@ -283,7 +313,7 @@ def run(
             continue
         if f is None:
             continue
-        out.write(name, f.rows, expert.keys(), expert.kind)
+        out.write(name, f.rows, expert.keys(), expert.kind, publishes=expert.publishes)
         flagged = f.checks.filter(c("flag"))
         checks[name] = {
             "flagged": flagged["input"].to_list(),
@@ -346,7 +376,16 @@ def replay(
             f = forecast(expert, gateway, moment, out.name, feats)
             if f is not None:
                 rows.append(f.rows.filter(c("as_of") == moment))
-        out.write(expert.label(), pl.concat(rows), expert.keys(), expert.kind, now=started)
+        if not rows:
+            continue
+        out.write(
+            expert.label(),
+            pl.concat(rows),
+            expert.keys(),
+            expert.kind,
+            now=started,
+            publishes=expert.publishes,
+        )
         seconds[expert.label()] = round(time.perf_counter() - t, 1)
     out.close(
         {

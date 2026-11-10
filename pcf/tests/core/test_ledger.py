@@ -86,6 +86,20 @@ def test_rows_must_meet_the_standard_output(tmp_path):
         run.write("participation/trees_week", bad, KEYS, now=T0)
 
 
+def test_published_columns_are_kept_with_the_forecast(tmp_path):
+    """Elo's ratings ride with its live rows, as in its backtest history (live-experts, goal 2)."""
+    run = new_run(tmp_path)
+    r = rows([T0 + timedelta(hours=8)]).with_columns(home_rating=pl.lit(3.5))
+    info = run.write("elo/margin", r, KEYS, now=T0, publishes=("home_rating",))
+    assert pl.read_parquet(run.folder / info["file"])["home_rating"].to_list() == [3.5]
+
+
+def test_a_missing_published_column_is_refused(tmp_path):
+    run = new_run(tmp_path)
+    with pytest.raises(ledger.LedgerRefused, match="published"):
+        run.write("elo/margin", rows([T0 + timedelta(hours=8)]), KEYS, now=T0, publishes=("hfa",))
+
+
 def test_close_records_each_file_and_ends_the_run(tmp_path):
     run = new_run(tmp_path)
     info = run.write("participation/trees_week", rows([T0 + timedelta(hours=8)]), KEYS, now=T0)

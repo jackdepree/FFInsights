@@ -246,11 +246,11 @@ projects:
   - id: live-experts
     name: Live runs for the finished experts
     phase: 0
-    status: brief
+    status: building
     horizon: now
     cadence: [in_season]
     depends_on: [prediction-ledger, elo, schemes-v2]
-    summary: "The CEO's pick, 2026-11-10: make what we have run every week. The scheduled ledger run (Tue, Thu, Sat) forecasts participation only; this adds Elo (margins, totals, win chances, against the collected lines) and the schemes-v2 trait forecasts, saved before kickoff, so 2026 gives them a live record. No CEO hunches. Exploration 2026-11-10 (go): all nine forecasts already pass through the live path for week 10, about 6 minutes; the GitHub collectors are down since 2026-11-05 (billing lock). Brief drafted, waiting on the CEO's three decisions."
+    summary: "The CEO's pick, 2026-11-10: make what we have run every week. The scheduled ledger run (Tue, Thu, Sat) forecasts participation only; this adds Elo (margins, totals, win chances, against the collected lines) and the schemes-v2 trait forecasts, saved before kickoff, so 2026 gives them a live record. No CEO hunches. Exploration 2026-11-10 (go): all nine forecasts already pass through the live path for week 10, about 6 minutes; the GitHub collectors are down since 2026-11-05 (billing lock). Brief agreed 2026-11-10 (1A the nine finals plus free yardsticks, 2A a weeks 1-9 replay, 3A the collectors from this PC while GitHub is locked)."
 
   - id: registry-tooling
     name: Registry tooling

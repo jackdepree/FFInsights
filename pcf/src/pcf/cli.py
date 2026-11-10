@@ -179,7 +179,7 @@ def ledger(args: argparse.Namespace) -> None:
         import polars as pl
 
         from pcf.config import get_config
-        from pcf.validation.ledger_score import scorecard
+        from pcf.validation.ledger_score import close_card, scorecard
 
         record = "replay" if args.replay else "live"
         card = scorecard(record)
@@ -188,10 +188,16 @@ def ledger(args: argparse.Namespace) -> None:
             return
         folder = get_config().zone("ledger") / "scorecards"
         folder.mkdir(parents=True, exist_ok=True)
-        path = folder / f"{datetime.now(UTC):%Y%m%dT%H%M}_{record}.parquet"
+        stamp = f"{datetime.now(UTC):%Y%m%dT%H%M}_{record}"
+        path = folder / f"{stamp}.parquet"
         card.write_parquet(path)
+        close = close_card(record)
         with pl.Config(tbl_cols=12, tbl_width_chars=200, float_precision=3):
             print(card)
+            if not close.is_empty():
+                close.write_parquet(folder / f"{stamp}_close.parquet")
+                print("Elo against the closing line (behind_close above 0: the close was better)")
+                print(close)
         print(f"saved: {path}")
         return
     if args.ledger_command == "replay":
