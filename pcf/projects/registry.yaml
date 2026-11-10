@@ -286,8 +286,8 @@ projects:
     status: idea
     horizon: next
     cadence: [in_season]
-    depends_on: [grain-tables, validation-harness]
-    summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume.
+    depends_on: [grain-tables, validation-harness, schemes-v2]
+    summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10).
 
   - id: environment
     name: Environment
@@ -313,9 +313,9 @@ projects:
     status: idea
     horizon: next
     cadence: [in_season]
-    depends_on: [grain-tables, tag-tables, validation-harness]
+    depends_on: [grain-tables, tag-tables, validation-harness, schemes-v2]
     origin: Context_Model_Training.ipynb
-    summary: The situation and pressure each play happened in, using only fields available during the season (play-by-play, lagged FTN charting, weekly NGS and PFR). Updates between games.
+    summary: Schemes-v2's traits are a planned input (CEO, 2026-11-10). The situation and pressure each play happened in, using only fields available during the season (play-by-play, lagged FTN charting, weekly NGS and PFR). Updates between games.
 
   - id: context-retro
     name: Context (retrospective)
@@ -323,9 +323,9 @@ projects:
     status: idea
     horizon: later
     cadence: [retrospective]
-    depends_on: [grain-tables, tag-tables, validation-harness]
+    depends_on: [grain-tables, tag-tables, validation-harness, schemes-v2]
     origin: Context_Model_Training.ipynb
-    summary: The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons.
+    summary: Schemes-v2's retrospective traits (team_season.charted) are a planned input (CEO, 2026-11-10). The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons.
 
   - id: participation
     name: Participation and snaps
@@ -450,12 +450,22 @@ projects:
   - id: schemes-v2
     name: Schemes v2
     phase: 1
-    status: building
+    status: done
     horizon: now
     cadence: [in_season, retrospective]
     depends_on: [grain-tables, validation-harness]
     origin: Schemes_Model.ipynb
-    summary: "A full expert (CEO call, 2026-10-28), offense and defense. Started 2026-11-08 with the CEO's hunches H9-H13 (projects/schemes-v2/BRIEF.md): a scheme is what moves with a play caller who changes teams, a role what moves with a player; tested on matchups (rock-paper-scissors), morphs against opposing schemes, game states (diagnosis) and player-scheme fit (QBs and receivers, a movers design close to double machine learning). Measured per regime (head coach and starting QB); head coaches first, coordinators later. Not v1's structure; the exploration first checks why v1 found little. Likely two experts by cadence (live fields vs post-season participation). Exploration's first round done 2026-11-09 (go, EXPLORATION.md F1-F19); CEO direction: traits and anti-traits first, scheme against scheme stays in discovery. Built 2026-11-09: trait forecasts (all four beat their averages, RESULTS R1-R4) and anti-traits (offense keeps the sign on held-out seasons, defense doesn't; R5-R9)."
+    summary: "A full expert (CEO call, 2026-10-28), offense and defense. Started 2026-11-08 with the CEO's hunches H9-H13 (projects/schemes-v2/BRIEF.md): a scheme is what moves with a play caller who changes teams, a role what moves with a player; tested on matchups (rock-paper-scissors), morphs against opposing schemes, game states (diagnosis) and player-scheme fit (QBs and receivers, a movers design close to double machine learning). Measured per regime (head coach and starting QB); head coaches first, coordinators later. Not v1's structure; the exploration first checks why v1 found little. Likely two experts by cadence (live fields vs post-season participation). Exploration's first round done 2026-11-09 (go, EXPLORATION.md F1-F19); CEO direction: traits and anti-traits first, scheme against scheme stays in discovery. Built 2026-11-09: trait forecasts (all four beat their averages, RESULTS R1-R4) and anti-traits (offense keeps the sign on held-out seasons, defense doesn't; R5-R9). Finished 2026-11-10: opening-coach known-at rule and rung 2 (R10, R11); the vault (R12): traits hold except throw depth (ties the league), the pass anti-trait fails. Scheme against scheme found nothing usable (F20-F28). Retrospective traits (CEO call 2026-11-10: a table, not an expert): team_season.charted, each team's charted traits per season with timing columns (R13, decision 0026). Done 2026-11-10 (CEO approved the merge): anti-traits retired; downstream users are pace, player opportunity, which players each team goes after in trades and free agency (H18) and context."
+    interface:
+      inputs: "team_game parts schedule, pregame, opening_coach, tendencies (live); charted (post-season, defensive anti-traits only); gateway only"
+      outputs: "pcf.experts.schemes_v2 variants, histories in outputs/schemes-v2/<variant>/<run_id>/history.parquet: per team-game mean, q10, q50, q90. Final: pass_oe_rung2 (neutral_pass_oe), shotgun_rung2 (shotgun_rate), depth_rung2 (air_yards_per_att), tempo_shrunk (tempo_seconds). Anti-traits (<option>_gain_*) are retired (CEO, 2026-11-10): none passes the vault; code kept only to rerun the findings. Retrospective traits: the table team_season.charted (per team-season, raw and over expected; known_at the day after the Super Bowl, prior_for = season + 1), read through the gateway."
+      grain: team_game
+      interval: every game from week 1, 2016-2024 reported, 2025 the vault (opened 2026-11-10)
+      cadence: in_season
+      known_at: the Saturday run, 12:00 Eastern (Thursday noon for Thursday games)
+      model: none registered yet (registering needs a logged model; no project has one yet)
+      how_to_use: "As features for pace, totals and player volume, from saved histories only (rule e). Typical miss about 0.07 pass rate over expected, 0.09 shotgun rate, 1.9 seconds a snap, 2.2 air yards. Throw depth barely beats the league; playoff teams pass more, use the shotgun more and play slower than forecast. Live runs aren't scheduled yet."
+      feeds: "the CEO's four users (2026-11-10): pace and totals, player opportunity and fantasy projections, which players each team goes after in trades and free agency (H18, no project yet), context-live and context-retro; also roles-archetypes"
 
   - id: qb-talent
     name: QB true talent
@@ -527,8 +537,8 @@ projects:
     status: idea
     horizon: later
     cadence: [in_season]
-    depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, injury-fatigue]
-    summary: Projected volume and role for each player for the coming game.
+    depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, injury-fatigue, schemes-v2]
+    summary: Projected volume and role for each player for the coming game. Tests schemes-v2's traits as features (CEO, 2026-11-10).
 
   - id: game-simulator
     name: Game simulator

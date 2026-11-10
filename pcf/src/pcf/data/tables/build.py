@@ -25,6 +25,8 @@ from pcf.data.tables.games import game_parts, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
 from pcf.data.tables.plays import play_parts, player_play_parts
 from pcf.data.tables.store import write_parts
+from pcf.data.tables.team_season import PARTICIPATION_COLUMNS as SEASON_PARTICIPATION
+from pcf.data.tables.team_season import team_season_parts
 from pcf.data.tables.tendencies import PBP_COLUMNS, tendency_rows
 from pcf.data.timeline import Calendar, calendar, team_kickoffs
 
@@ -125,6 +127,15 @@ def build_play(season: int, cal: Calendar, root: Path | None) -> None:
     write_parts(parts, "play", [season], root)
 
 
+def build_team_season(season: int, cal: Calendar, root: Path | None) -> None:
+    parts = team_season_parts(
+        scan("pbp", [season]).select(CHARTED_PBP).collect(),
+        scan("participation", [season]).select(SEASON_PARTICIPATION).collect(),
+        cal,
+    )
+    write_parts(parts, "team_season", [season], root)
+
+
 def build_player_play(season: int, cal: Calendar, root: Path | None) -> None:
     pbp = scan("pbp", [season]).select(
         "game_id", "play_id", "play_type", "season", "week", "season_type", "posteam", "defteam"
@@ -171,12 +182,13 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
 Builder = Callable[[int, Calendar, Path | None], None]
 # Each table: the dataset that decides its seasons, and its builder (per season, or all at once).
 PER_SEASON: dict[str, tuple[str, Builder]] = {
+    "team_season": ("participation", build_team_season),
     "play": ("pbp", build_play),
     "player_play": ("participation", build_player_play),
     "player_game": ("weekly_rosters", build_player_game),
 }
 ALL_SEASONS = {"game", "team_game"}
-TABLE_ORDER = ["game", "team_game", "play", "player_play", "player_game"]
+TABLE_ORDER = ["game", "team_game", "team_season", "play", "player_play", "player_game"]
 
 
 def build(

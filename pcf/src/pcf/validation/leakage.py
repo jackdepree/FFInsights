@@ -13,6 +13,9 @@
 | 9 | Shuffled-target null | `pcf.validation.nulls.signal_test` |
 | 10 | Too good to be true | `too_good`: flags for review, never blocks |
 
+A table keyed by season (`team_season`) has no kickoff per row: check 2 holds its result parts to
+their season's last game, and check 8 scrambles the rows not yet known.
+
 Checks 3 and 4 compare a model's features with and without the data after a cutoff. Per-moment
 features read views that already end at their moment, so for them the checks prove the gateway
 and catch code that reaches around it. A bulk `features_history` gets the full test.
@@ -146,7 +149,7 @@ def known_at_sanity(expert: Expert, gateway: Gateway) -> Check:
                 continue
             if df["known_at"].null_count():
                 problems.append(f"{name}.{part}: {df['known_at'].null_count()} rows lack known_at")
-            if part in t.after:
+            if part in t.after and "game_id" in df.columns:
                 early = (
                     df.select("game_id", "known_at")
                     .join(kickoffs, on="game_id")
@@ -155,6 +158,10 @@ def known_at_sanity(expert: Expert, gateway: Gateway) -> Check:
                 )
                 if early:
                     problems.append(f"{name}.{part}: {early} rows known before kickoff")
+            elif part in t.after:  # a season's rows (team_season): not before its last game
+                early = df.filter(c("known_at") < c("last_kickoff")).height
+                if early:
+                    problems.append(f"{name}.{part}: {early} rows known before their last game")
     return Check(2, "known_at_sanity", not problems, "; ".join(problems) or "all parts sound")
 
 
@@ -414,8 +421,11 @@ def test_label_check(
         last = pl.lit(step.games["moment"].max()).cast(UTC_TIME)
 
         def rows(name: str, part: str, later=later, last=last) -> pl.Expr | None:
-            if part not in table(name).after:
+            t = table(name)
+            if part not in t.after:
                 return None
+            if "game_id" not in t.key_names:  # a season's rows: whatever isn't known yet
+                return c("known_at") > last
             return c("game_id").is_in(later.implode()) & (c("known_at") > last)
 
         world = Gateway(Perturbed(gateway.source, rows, "scramble", seed), gateway.calendar,

@@ -19,6 +19,7 @@ The builder is pure: play-by-play and participation rows in, the part's rows out
 
 import polars as pl
 
+from pcf.data.clean import personnel
 from pcf.data.tables.tendencies import scrimmage
 
 c = pl.col
@@ -38,16 +39,21 @@ OPTIONS = ("man", "two_high", "blitz")
 COLUMNS = [f"{o}_{x}" for o in OPTIONS for x in ("plays", "rate", "oe", "gain", "gain_n")]
 
 
-def _choices() -> list[pl.Expr]:
-    """Each option as 1.0 / 0.0 where it's charted, else null."""
+def rushers() -> pl.Expr:
+    """Pass rushers where charted: 1-11 (0 is a dropback left uncharted, 0.1-0.4% a season)."""
+    r = c("number_of_pass_rushers")
+    return pl.when(r.is_between(1, 11)).then(r)
+
+
+def choices() -> list[pl.Expr]:
+    """Each option as 1.0 / 0.0 where it's charted, else null. For dropbacks only."""
     mz, cov = c("defense_man_zone_type"), c("defense_coverage_type")
-    rushers = c("number_of_pass_rushers")
     return [
         pl.when(mz.is_in(["MAN_COVERAGE", "ZONE_COVERAGE"]))
         .then((mz == "MAN_COVERAGE").cast(pl.Float64))
         .alias("man"),
         pl.when(cov.is_in(SHELLS)).then(cov.is_in(TWO_HIGH).cast(pl.Float64)).alias("two_high"),
-        pl.when(rushers.is_not_null()).then((rushers >= 5).cast(pl.Float64)).alias("blitz"),
+        (rushers() >= 5).cast(pl.Float64).alias("blitz"),
     ]
 
 
@@ -76,14 +82,11 @@ def charted_rows(pbp: pl.DataFrame, participation: pl.DataFrame) -> pl.DataFrame
         .filter(c("neutral") & (c("qb_dropback") == 1) & c("epa").is_not_null())
         .join(part, on=["game_id", "play_id"], how="inner")
         .with_columns(
-            *_choices(),
+            *choices(),
             # 0: 1-3 yards to go, 1: 4-6, 2: 7-10, 3: 11+
             dist=pl.sum_horizontal(c("ydstogo") > b for b in DISTANCE_BUCKETS),
-            heavy=(
-                c("offense_personnel").str.extract(r"(\d) RB").cast(pl.Int32, strict=False)
-                + c("offense_personnel").str.extract(r"(\d) TE").cast(pl.Int32, strict=False)
-                >= 3
-            ).fill_null(False),
+            # backs (fullbacks too, 2023 on) and tight ends
+            heavy=personnel.heavy(c("offense_personnel")),
         )
     )
     cell = ["season", "down", "dist", "shotgun", "heavy"]

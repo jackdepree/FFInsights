@@ -3,6 +3,10 @@ same features (`features.py`). Ranges are the prediction plus the training misse
 
 The blend (`<trait>_shrunk`) is weighted least squares on the league's level and four gaps from
 it: the shrunk season to date, the last 4 games, last season, and the head coach's history.
+
+Rung 2 (`<trait>_rung2`, decision 0025) adds weights that change with games played (each gap times
+the early weight PRIOR_GAMES / (PRIOR_GAMES + games)) and the opponent's bend (`<trait>_opp`;
+not for tempo). It's judged against the blend and kept only if it beats it.
 """
 
 from __future__ import annotations
@@ -85,6 +89,30 @@ class _Blend(_Trait):
         }
 
 
+class _Rung2(_Blend):
+    """Rung 2: the blend, with early-season weights and the opponent's bend."""
+
+    def _names(self) -> list[str]:
+        opp = ["opp"] if self.trait in F.DEF_TRAITS else []
+        return ["league", *BLEND, *[f"{p}_early" for p in BLEND], *opp]
+
+    def _design(self, rows: pl.DataFrame) -> np.ndarray:
+        league = c(f"{self.trait}_league")
+        early = F.PRIOR_GAMES / (F.PRIOR_GAMES + c("games"))
+        gaps = [(c(f"{self.trait}_{p}") - league).alias(p) for p in BLEND]
+        cols = [league.alias("league"), *gaps]
+        cols += [((c(f"{self.trait}_{p}") - league) * early).alias(f"{p}_early") for p in BLEND]
+        if self.trait in F.DEF_TRAITS:
+            cols.append(c(f"{self.trait}_opp").alias("opp"))
+        return rows.select(cols).to_numpy().astype(float)
+
+    def explain(self, model: dict[str, Any]) -> dict[str, Any]:
+        return {
+            "coefficients": dict(zip(self._names(), map(float, model["beta"]), strict=True)),
+            "offsets": model["offsets"].to_dicts(),
+        }
+
+
 def _yardsticks(models: list[type[Expert]]) -> classmethod:
     return classmethod(lambda cls: list(models))
 
@@ -112,6 +140,11 @@ def _variants(trait: str) -> list[type[Expert]]:
             "variant": f"{trait}_shrunk",
             "baselines": _yardsticks([made[p] for p in AVERAGES]),
         },
+    )
+    made["rung2"] = type(
+        f"{name}Rung2",
+        (_Rung2,),
+        {**common, "variant": f"{trait}_rung2", "baselines": _yardsticks([made["shrunk"]])},
     )
     return list(made.values())
 

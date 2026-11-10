@@ -28,7 +28,7 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 ## Later
 
-- **The remaining experts:** line play, game script, Context (retrospective), VOE (in-season), VOE (retrospective), opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, schemes v2, QB talent, prospects, kicker & DST, market, crowd, news
+- **The remaining experts:** line play, game script, Context (retrospective), VOE (in-season), VOE (retrospective), opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, QB talent, prospects, kicker & DST, market, crowd, news
 - **Then** composites, products, automation and public, in dependency order
 
 ## Milestones
@@ -47,6 +47,7 @@ These are targets, not deadlines.
 - [ ] **Backups for MLflow and model outputs** (not urgent until the first expert is built). They live on one PC, and losing them means slow retraining. Options to brainstorm then: a synced folder (OneDrive), an external drive, or champions only into a private repo.
 
 Decided:
+- **2026-11-10 · Schemes v2** ([results](../projects/schemes-v2/RESULTS.md)): merged as done. Retrospective traits are a table with timing columns, not an expert (decision 0026). The anti-traits are retired after failing the vault. Schemes feed pace, player opportunity, which players each team goes after in trades and free agency (H18), and context.
 - **2026-11-06 · Participation, next-game champion** ([results](../projects/participation/RESULTS.md)): `trees_week` replaces `trees_top`, after the CEO's spot-check on the playoffs. It keeps the plain week over a playoff flag, because the flag loses the ordinary-week gain (F34). Known misses stay open: the final week misleads playoff forecasts (F36, I17), and top teams' last-week starters are over-projected (F35).
 - **2026-11-05 · Participation, next-game champion** ([results](../projects/participation/RESULTS.md)): `trees_top` becomes the champion, with QB's range coverage of 90.7% logged as a narrow miss. The 90% group bar stays as written: a true forecast would hold 90.2%, and rewriting a bar after seeing results adds forking paths. The week and last-week inputs come next, on a new branch (F29, I13).
 - **2026-11-04 · Participation** ([results](../projects/participation/RESULTS.md)): merged without a registered champion, to be built with the weekly run. Next-game coverage of 85.3% is arithmetic (a perfect forecast scores 85.8%). The CEO proposed judging the chance of 0 and the share if they play separately; the bar is unchanged until the harness can do that.
@@ -82,6 +83,9 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-10:** `schemes-v2` reaches validating: next-game forecasts of four team tendencies (pass rate over expected, shotgun rate, tempo, throw depth) that follow the head coach, beat every simple average, and hold on the 2025 vault except throw depth. Anti-traits hold as a relationship on offense but fail as a forecast. Scheme against scheme (the CEO's H14) found nothing usable. Done once the CEO calls the retrospective traits.
+- **2026-11-10:** `schemes-v2` is **done** and merged (CEO approved). Added the retrospective traits table `team_season.charted` (each team's charted traits per season, with `known_at` and `prior_for`; decision 0026). The CEO retired the anti-traits and named the downstream users: pace, player opportunity, which players each team goes after in trades and free agency (H18), and context.
+- **2026-11-10:** The retrospective traits are a table, the CEO's call: `team_season.charted`. It holds each team's charted choices per season, 2016–2025: personnel, box, coverage, blitz, nickel and dime, raw and over expected. Each row carries `known_at` and `prior_for`, so in-season models use it only from the next season (decision 0026). It also fixes `team_game.charted`, which missed fullbacks from 2023 on.
 - **2026-11-07:** `elo` done, PCF's second expert: a team rating in points (margin, offense, defense) with the usual-QB, same-team and seed-locked adjustments (the CEO's H1 and H8). It forecasts margins 0.27 and totals 0.30 points behind the close, adds nothing to the close when blended, and saves its ratings for higher layers (decisions 0018-0022). New shared module `pcf.data.standings`: NFL tiebreakers, seeds and final-week locks, matching every real playoff field 2002-2024.
 - **2026-11-07:** The prediction ledger is on main and scheduled (Tuesday 10:00, Thursday and Saturday noon Eastern); its first counted forecasts come Thursday 2026-11-12, and it moves to validating until two live weeks are scored. Team Elo starts, the first project to open with the CEO's hunches (`projects/elo/BRIEF.md`).
 - **2026-11-06:** `participation`'s next-game champion is now `trees_week`: `trees_top` plus the week of the season and the last week times win rate (F33). The spot-check corrected why the playoffs gain: mostly backups on the inactive list, not tighter rotations (F34), and found the final week misleads playoff forecasts (F36).

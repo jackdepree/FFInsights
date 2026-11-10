@@ -610,9 +610,90 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 - **One survivor at the edge:** outside runs against man-heavy defenses (both high: −0.066 EPA a play, t −3.7, against a bar of 3.70). It's F7's top pair again (product t −2.7). Football reading: man defenders chase receivers and turn their backs, which should help outside runs, but the sign says the opposite. It's a single edge-of-chance term out of 308, so it goes to IDEAS for the live seasons, not into a model.
 - **What separates good from bad:** routes A, B, E and C each asked one question chosen in advance, or validated on data they didn't use. D asks hundreds of questions of the same data. Same data, same people, same football: the difference is all in the counting.
 
+**F26. I26, matchup types learned from results, as a forecast** ([`explore/walkforward.py`](explore/walkforward.py), 2026-11-09, after the merge, the CEO's next step).
+- **Each week from week 6, only that season's earlier games are used** to learn each unit's strength and hidden numbers (k 2, λ 1, fixed from F24, so nothing is tuned here). The model then predicts that week's sides.
+- **Measure:** r between the matchup part and what strength (from the same earlier games) misses.
+- **Null:** defenses swapped within the week, 30 times.
+
+| | Sides or games | r | Shuffled at or above |
+|---|---|---|---|
+| 2006–2014 | 3,242 | +0.011 | (not run) |
+| **2015–2024** | 3,685 | **+0.031** | **3%** (null mean +0.002, 95th +0.024) |
+| … pairs that already met this season | 960 | +0.045 | 10% |
+| … not yet met | 2,725 | +0.025 | 17% |
+| … weeks 6–9 / 10–13 / 14–18 | 1,130 / 1,168 / 1,387 | −0.016 / +0.031 / +0.045 | |
+| **Against the closing line** (home part less away part, against margin less the spread) | 1,842 games | **+0.029** (+0.37 points per sd) | 7% |
+
+- **The forecast version keeps a faint signal.** It's about 60% of F24's size (+0.031 against +0.05), and it grows as the season fills in: nothing before week 10, +0.045 from week 14.
+- **By season:** 15 +0.02, 16 −0.10, 17 −0.01, 18 +0.14, 19 +0.01, 20 −0.07, 21 +0.09, 22 +0.04, 23 +0.02, 24 +0.04. That's 6 of 10 positive, still lumpy.
+- **Size:** +0.006 EPA per play per sd. In margin terms, +0.37 points per sd against the close.
+  - The fifth of games where it favours home most: home beats the close by +1.37.
+  - The fifth where it favours away most: −0.72.
+  - Cover rates are 49.3% and 46.1%: **no betting edge** at this size.
+- **What it is, so far:** a small, late-season, recent-era matchup term that the closing line doesn't fully carry. It matches no charted style (F24's spot-check). Not yet worth a model of its own, but it's the one scheme-against-scheme lead that survives a forecast design.
+- **Ways to make it stronger** (not tried):
+  - learn the types from quieter outcomes, such as success rate, or passing and rushing EPA separately (four numbers per pair instead of one);
+  - carry each unit's types into the next season, shrunk;
+  - start from last season's types in the early weeks.
+
+**F27. Strengthening the learned types: none of the four variants does it** ([`explore/strengthen.py`](explore/strengthen.py), 2026-11-09, the CEO: "Strengthen the matchup types").
+- **The variants were fixed before running,** and all of them are reported here.
+- **Each is judged exactly as F26:**
+  - earlier games only;
+  - the same strength-only miss (offense EPA per play over all scrimmage plays);
+  - k 2, λ 1;
+  - weeks 6+ of 2015–2024;
+  - defenses swapped within the week, 20 times;
+  - the close.
+- **V0** is F26 rerun through the same code, as a check.
+
+| Variant | What changes | r, weeks 6+ | Shuffled at or above | Against the close |
+|---|---|---|---|---|
+| V0 (F26 again) | nothing | **+0.030** | 5% (null 95th +0.029) | +0.030 (+0.38 points per sd), 5% |
+| V1 | types learned from success rate, not EPA | −0.019 | 80% | −0.017, 85% |
+| V2 | passing and rushing types apart, mixed by the offense's pass share | +0.011 | 5% (null 95th +0.011) | +0.027 (+0.34), 10% |
+| V3 | carried across seasons: pulled toward last season's types (weight 4) | −0.000 | 45% | +0.012 (+0.15), 25% |
+| … V3, weeks 2–5 (only it can forecast them) | | +0.012 | 25% | |
+| V2 + V3 | both | +0.004 | 40% | +0.025 (+0.31), 10% |
+
+- **Nothing beats the plain version.** F26 stays the best form of the lead, and V0 reproduces it (+0.030 against +0.031). With these 20 shuffles it sits at the edge of chance (5%, not 3%).
+- **Carrying last season's types kills the signal (V3).**
+  - Last season's types predict nothing in weeks 2–5 (+0.012, 25%).
+  - Pulled toward them, this season's types lose what they had (+0.030 to −0.000).
+  - **Reading:** whatever the types catch is this season's, not a lasting trait of a unit or its scheme. That fits F24's spot-check, where they matched no charted style.
+- **Success rate points the wrong way (V1).** It's quieter per game, but the types it learns don't carry EPA's matchup part. The part F26 sees lives in big plays more than in steady gains.
+- **Passing and rushing apart (V2) halves it.** Four numbers per pair, each learned from fewer plays, add more noise than they separate. V2 does beat its own nulls at the same 5%, but those nulls sit lower.
+- **What it means for I26:** the lead is narrow. It shows up only as EPA, within a season, and late in the season. That's what in-season form looks like (injuries, a new play-caller, a unit finding its way), more than scheme against scheme. It stays open as a late-season feature candidate for the team-strength model, not as a matchup model of its own.
+- **Not run:** 2006–2014, because no variant beat F26 on 2015–2024. The settings stayed fixed (λ0 4 was set before running, not tuned).
+
+**F28. The term as a feature in the strength model: neutral, and no signal** ([`explore/feature_test.py`](explore/feature_test.py), 2026-11-09, the CEO: "Try it as a feature in the team-strength model").
+- **The strength model in use is Elo** (the team-strength composite is still an idea). The test is Elo's own no-noise test (VALIDATION §5, `elo/explore/no_noise.py`) with the term added.
+- **The term:** F26's walk-forward matchup part, home offense's less away offense's. It's 0 before week 6.
+- **The blends:**
+  - each blend is a + b × the line, then the same plus c × the term;
+  - they are trained from 2010 and refit every week;
+  - they are scored on 2016–2024 by the range score (points), compared by whole weeks.
+- **Signal:** the same term built from shuffled pairings, 20 times. The real term must beat all 20.
+- **Expected before running:** neutral, a few hundredths of a point at most.
+
+| Next game's margin, 2,476 games | Range score without | With the term | Change (90%) | Verdict | Signal: beats shuffled terms |
+|---|---|---|---|---|---|
+| **A. Elo**, all weeks | 3.2455 | 3.2466 | +0.0011 (−0.0018 to +0.0044) | neutral | 13 of 20 (needs 20) |
+| … weeks 6+ | 3.2381 | 3.2394 | +0.0013 (−0.0028 to +0.0057) | neutral | |
+| **B. The close**, all weeks | 3.1760 | 3.1769 | +0.0008 (−0.0020 to +0.0039) | neutral | 16 of 20 (needs 20) |
+| … weeks 6+ | 3.1589 | 3.1603 | +0.0015 (−0.0026 to +0.0056) | neutral | |
+
+- **The term doesn't help the margin forecast.** It's a hair worse on both, well inside noise (lower is better).
+- **It passes no-noise but fails signal.** The real term beats only 13 and 16 of its 20 shuffled versions, where it needs all 20. So it doesn't go into the strength model.
+- **Why F26's +0.37 points per sd doesn't survive here:**
+  - the blend learns its weight (about 40 points per unit of term) from 2010 on, including 2010–2014, where the term is weakest (F26: r +0.011);
+  - the range score judges the whole forecast's spread, where one sd of the term is a few tenths of a point against a margin's spread of about 13;
+  - F26's 7% against the close was a single in-sample correlation; here the weight is learned only from earlier weeks.
+- **Verdict for I26:** not a feature now. Parked for the 2025+ live seasons, the only test that isn't the same data again.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
-- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20, as corrected at the CEO's spot-check:** a rematch repeats only as much as each unit's own form predicts; the pairing-specific part is +0.1% of what strength leaves (90% −4.2% to +4.6%), so at most a small conditional part exists. **F21–F23:** the play-by-play map carried to games (r +0.013), look-alike opponents (−0.008 and 0.000 r per sd) and the CEO's four pairings find nothing. **F24:** types learned from *results* (not charted styles) predict held-out pairings at r +0.05 in 2015–2024 (+0.036 without 2021, beyond 95% of shuffles; surviving an in-season trend control), including pairs that never met, but not in 2006–2014: **unclear**, the one lead (I26). **F25:** the wide scan finds nothing that holds out. **Leaning failed** for charted scheme types.
+- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20, as corrected at the CEO's spot-check:** a rematch repeats only as much as each unit's own form predicts; the pairing-specific part is +0.1% of what strength leaves (90% −4.2% to +4.6%), so at most a small conditional part exists. **F21–F23:** the play-by-play map carried to games (r +0.013), look-alike opponents (−0.008 and 0.000 r per sd) and the CEO's four pairings find nothing. **F24:** types learned from *results* (not charted styles) predict held-out pairings at r +0.05 in 2015–2024 (+0.036 without 2021, beyond 95% of shuffles; surviving an in-season trend control), including pairs that never met, but not in 2006–2014: **unclear**, the one lead (I26). **F26–F27:** as a forecast it keeps r +0.031; no variant strengthens it, and types carried from last season predict nothing, so it reads as this season's form more than a scheme trait. **F28:** as a feature in Elo's margin forecast, or with the close, it's neutral and fails signal (13 and 16 of 20 shuffled versions beaten): parked for 2025+ live. **F25:** the wide scan finds nothing that holds out. **Leaning failed** for charted scheme types.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.

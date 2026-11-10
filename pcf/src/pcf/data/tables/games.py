@@ -97,6 +97,24 @@ def _per_team(s: pl.DataFrame, columns: list[str]) -> pl.DataFrame:
     return pl.concat(sides)
 
 
+def opening_coach(s: pl.DataFrame) -> pl.DataFrame:
+    """Each team's head coach for its first regular-season game, on that game's row, known at the
+    start of week 1 (decision 0025). Head coaches are hired and announced in the offseason, months
+    before week 1, so this leans late. Only the first game gets a row: a later game's coach (after
+    a mid-season firing) stays in `pregame`, known at its own kickoff, so no row hints at a firing
+    ahead of time. `s`: `_schedules` rows."""
+    reg = s.filter(pl.col("game_type") == "REG")
+    rows = _per_team(reg, ["coach"]).join(
+        reg.select("game_id", "season", "week", known_at="facts_known_at"), on="game_id"
+    )
+    first = rows.group_by("season", "team").agg(pl.col("week").min())
+    return (
+        rows.join(first, on=["season", "team", "week"], how="semi")
+        .drop_nulls("coach")
+        .select("game_id", "team", "season", "known_at", opening_coach="coach")
+    )
+
+
 def team_game_parts(
     schedules: pl.DataFrame,
     cal: Calendar,
@@ -138,7 +156,12 @@ def team_game_parts(
         .rename({"score": "points_for"})
         .with_columns(margin=pl.col("points_for") - pl.col("points_against"))
     )
-    parts = {"schedule": spine, "pregame": pregame, "result": result}
+    parts = {
+        "schedule": spine,
+        "pregame": pregame,
+        "result": result,
+        "opening_coach": opening_coach(s),
+    }
     if team_stats is not None:
         stats = known_at(
             "team_stats", standard.standard_teams(team_stats, "team", "opponent_team"), cal

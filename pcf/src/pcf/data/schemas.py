@@ -43,6 +43,7 @@ _TEAM = ("team", pl.String)
 _PLAY = ("play_id", pl.Int64)
 _PLAYER = ("gsis_id", pl.String)
 _DRIVE = ("fixed_drive", pl.Int32)
+_SEASON = ("season", pl.Int32)
 
 TABLES: dict[str, Table] = {
     t.name: t
@@ -55,6 +56,7 @@ TABLES: dict[str, Table] = {
                 "schedule",
                 "pregame",
                 "result",
+                "opening_coach",
                 "stats",
                 "tendencies",
                 "charted",
@@ -62,6 +64,14 @@ TABLES: dict[str, Table] = {
                 "tags_result",
             ),
             after=("result", "stats", "tendencies", "charted", "tags_result"),
+            post_season=("charted",),
+        ),
+        # One row per team and season; retrospective (decision 0026)
+        Table(
+            "team_season",
+            (_TEAM, _SEASON),
+            ("charted",),
+            after=("charted",),
             post_season=("charted",),
         ),
         Table(

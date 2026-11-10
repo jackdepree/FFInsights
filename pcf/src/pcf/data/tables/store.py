@@ -110,7 +110,9 @@ def assemble(name: str, frames: Mapping[str, pl.LazyFrame]) -> pl.DataFrame:
         raise ValueError(f"{name}: the spine ({t.spine}) must come first")
     out = frames[t.spine]
     for part in chosen[1:]:
-        rows = frames[part].drop("season").rename({"known_at": f"{part}_known_at"})
+        rows = frames[part].rename({"known_at": f"{part}_known_at"})
+        if "season" not in t.key_names:  # a key in `team_season`
+            rows = rows.drop("season")
         out = out.join(rows, on=t.key_names, how="left", maintain_order="left")
     return out.collect()
 
