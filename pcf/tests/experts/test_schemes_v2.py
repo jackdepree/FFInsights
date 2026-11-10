@@ -44,6 +44,12 @@ def _frames(seed: int = 5, noise_only: bool = False) -> dict:
         tempo_seconds=pl.Series(38 - 20 * style + rng.normal(0, 2, n)),
         air_attempts=pl.Series(rng.integers(10, 30, n)).cast(pl.Int32),
         air_yards_per_att=pl.Series(8 + 30 * style + rng.normal(0, 2, n)),
+        # what offenses do against the team's defense (rung 2's opponent bend): no style here
+        def_neutral_plays=pl.Series(rng.integers(20, 50, n)).cast(pl.Int32),
+        def_pass_oe=pl.Series(rng.normal(0, 0.06, n)),
+        def_shotgun_rate=pl.Series(np.clip(0.6 + rng.normal(0, 0.1, n), 0, 1)),
+        def_air_attempts=pl.Series(rng.integers(10, 30, n)).cast(pl.Int32),
+        def_air_yards_per_att=pl.Series(8 + rng.normal(0, 2, n)),
         known_at=(sides["kickoff"] + pl.duration(hours=24)).cast(UTC_T),
     )
     pregame = sides.select(
@@ -51,10 +57,23 @@ def _frames(seed: int = 5, noise_only: bool = False) -> dict:
         coach=pl.concat_str(pl.lit("Coach "), c("team")),
         known_at=c("kickoff").cast(UTC_T),
     )  # fmt: skip
+    # the coach each team opens its season with, known 3 days before the season's first kickoff
+    first = sides.filter(c("game_type") == "REG").group_by("season", "team").agg(c("week").min())
+    start = sides.group_by("season").agg(c("kickoff").min().alias("first_kick"))
+    opening = (
+        sides.join(first, on=["season", "team", "week"], how="semi")
+        .join(start, on="season")
+        .select(
+            "game_id", "team", "season",
+            opening_coach=pl.concat_str(pl.lit("Coach "), c("team")),
+            known_at=(c("first_kick") - pl.duration(days=3)).cast(UTC_T),
+        )
+    )  # fmt: skip
     return {
         ("game", "schedule"): sched,
         ("team_game", "schedule"): sides,
         ("team_game", "pregame"): pregame,
+        ("team_game", "opening_coach"): opening,
         ("team_game", "tendencies"): tendencies,
     }
 
@@ -67,7 +86,7 @@ def test_every_variant_meets_the_contract():
     found = {x.variant for x in find_all("schemes-v2")}
     assert set(VARIANTS) <= found  # with the anti-traits (test_schemes_v2_anti.py)
     assert set(VARIANTS) == {
-        f"{t}_{p}" for t in F.TRAITS for p in ("league", "last4", "season", "shrunk")
+        f"{t}_{p}" for t in F.TRAITS for p in ("league", "last4", "season", "shrunk", "rung2")
     }
     for cls in VARIANTS.values():
         check_expert(cls)
@@ -104,7 +123,10 @@ def test_a_feature_never_uses_the_game_itself_or_later_ones():
     changed[("team_game", "tendencies")] = (
         frames[("team_game", "tendencies")]
         .join(later.with_columns(late=pl.lit(True)), on=F.KEYS, how="left")
-        .with_columns(neutral_pass_oe=pl.when(c("late")).then(9.0).otherwise(c("neutral_pass_oe")))
+        .with_columns(
+            neutral_pass_oe=pl.when(c("late")).then(9.0).otherwise(c("neutral_pass_oe")),
+            def_pass_oe=pl.when(c("late")).then(9.0).otherwise(c("def_pass_oe")),  # rung 2's
+        )
         .drop("late")
     )
     ex = VARIANTS["pass_oe_shrunk"]()
@@ -120,6 +142,33 @@ def test_a_feature_never_uses_the_game_itself_or_later_ones():
     ]
     assert rows[0].height == 2 * games.height
     assert_frame_equal(rows[0], rows[1])
+
+
+def test_a_new_coach_counts_from_week_1_once_the_opening_coach_is_known():
+    """AAA opens 2022 with BBB's coach: before AAA's first 2022 game, its coach history is BBB's
+    coach's, but only from the moment the opening coach is known."""
+    frames = _frames()
+    oc = frames[("team_game", "opening_coach")]
+    swapped = oc.with_columns(
+        opening_coach=pl.when((c("team") == "AAA") & (c("season") == 2022))
+        .then(pl.lit("Coach BBB"))
+        .otherwise(c("opening_coach"))
+    )
+    frames = frames | {("team_game", "opening_coach"): swapped}
+    gw = Gateway(FrameSource(frames), world.cal())
+    ex = VARIANTS["pass_oe_shrunk"]()
+    known = swapped.filter((c("team") == "AAA") & (c("season") == 2022))["known_at"][0]
+    games = (
+        frames[("game", "schedule")]
+        .filter((c("season") == 2022) & (c("week") == 1))
+        .select("game_id", "season", "week", "kickoff")
+    )
+    after = ex.features(gw.view(known + timedelta(hours=1), ex.cadence, ex.inputs), games)
+    coach = dict(after.select("team", "pass_oe_coach").iter_rows())
+    assert coach["AAA"] == pytest.approx(coach["BBB"])
+    before = ex.features(gw.view(known - timedelta(hours=1), ex.cadence, ex.inputs), games)
+    coach = dict(before.select("team", "pass_oe_coach").iter_rows())
+    assert coach["AAA"] != pytest.approx(coach["BBB"])  # still AAA's own last coach
 
 
 def test_the_season_average_shrinks_toward_the_league_early():

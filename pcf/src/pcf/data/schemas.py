@@ -55,6 +55,7 @@ TABLES: dict[str, Table] = {
                 "schedule",
                 "pregame",
                 "result",
+                "opening_coach",
                 "stats",
                 "tendencies",
                 "charted",

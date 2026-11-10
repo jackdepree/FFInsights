@@ -23,6 +23,19 @@ def test_game_parts_are_known_at_release_kickoff_and_the_day_after():
     assert "home_score" not in parts["schedule"].columns
 
 
+def test_opening_coach_is_known_at_week_1_on_the_first_regular_game_only():
+    s = schedules().with_columns(
+        home_coach=pl.lit("Andy Reid"), away_coach=pl.lit("Sean McDermott")
+    )
+    parts = team_game_parts(s, cal())
+    check_parts(parts, "team_game")
+    oc = parts["opening_coach"].sort("team")
+    assert oc["game_id"].to_list() == ["2025_01_BUF_KC", "2025_01_BUF_KC"]  # not the Super Bowl
+    assert oc["known_at"].to_list() == [WEEK1_START, WEEK1_START]  # before the pregame's kickoff
+    pre = parts["pregame"].filter(pl.col("game_id") == "2025_01_BUF_KC").sort("team")
+    assert oc["opening_coach"].to_list() == pre["coach"].to_list()
+
+
 def test_team_game_has_two_rows_per_game_with_team_spreads_and_margins():
     parts = team_game_parts(schedules(), cal())
     check_parts(parts, "team_game")

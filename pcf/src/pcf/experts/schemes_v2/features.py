@@ -9,9 +9,15 @@ Per trait `<t>` (see `TRAITS`), every average weighted by the plays it was measu
 - `<t>_last_season`: the team's last season;
 - `<t>_coach`: every game the team's head coach has coached in the last three seasons, for any
   team (schemes follow the coach: exploration F4). The coach is the one from the team's latest
-  known game: a game's own coach is known only at its kickoff.
+  known game this season; before its first, the coach it opens the season with (`opening_coach`,
+  known from the start of week 1: decision 0025), else last season's last. A later game's own
+  coach is known only at its kickoff, so a mid-season change counts from the new coach's first
+  game.
 A missing average falls back to the league's, so every feature is filled; `games` is the team's
 games this season.
+
+For rung 2 (`<t>_opp`, decision 0025): the opponent's bend, the shrunk season gap from the league
+of what offenses do against the opposing defense (`DEF_TRAITS`; 0 where unknown). Tempo has none.
 
 `at_moment` is the per-moment version the contract defines; `history` computes every game's in one
 pass and must give the same rows (the leakage checks compare them).
@@ -22,7 +28,7 @@ from __future__ import annotations
 import polars as pl
 
 c = pl.col
-INPUTS = {"team_game": ("schedule", "pregame", "tendencies")}
+INPUTS = {"team_game": ("schedule", "pregame", "opening_coach", "tendencies")}
 KEYS = ["game_id", "team"]
 # trait → (the tendency column, the plays it's measured on)
 TRAITS: dict[str, tuple[str, str]] = {
@@ -30,6 +36,12 @@ TRAITS: dict[str, tuple[str, str]] = {
     "shotgun": ("shotgun_rate", "neutral_plays"),
     "tempo": ("tempo_seconds", "tempo_plays"),
     "depth": ("air_yards_per_att", "air_attempts"),
+}
+# trait → what offenses do against a team's defense, and the plays it's measured on (rung 2)
+DEF_TRAITS: dict[str, tuple[str, str]] = {
+    "pass_oe": ("def_pass_oe", "def_neutral_plays"),
+    "shotgun": ("def_shotgun_rate", "def_neutral_plays"),
+    "depth": ("def_air_yards_per_att", "def_air_attempts"),
 }
 PRIOR_GAMES = 4.0  # the league's weight in the shrunk season average, in games
 LAST_N = 4
@@ -96,6 +108,20 @@ def _features(
         .agg(_wmean(v, w).alias(f"{t}_league") for t, (v, w) in traits.items())
     )
     out = targets.join(team, on=KEYS, how="left").join(league, on=["season", "moment"], how="left")
+    # Before the team's first game of the season, the coach it opens with, if known by then
+    if "opening_coach" in tg.columns:
+        opening = tg.filter(c("opening_coach").is_not_null()).select(
+            "team", "season", "opening_coach", oc_known="opening_coach_known_at"
+        )
+        out = (
+            out.join(opening, on=["team", "season"], how="left")
+            .with_columns(
+                coach_now=pl.when((c("games").fill_null(0) == 0) & (c("oc_known") <= c("moment")))
+                .then(c("opening_coach"))
+                .otherwise(c("coach_now"))
+            )
+            .drop("opening_coach", "oc_known")
+        )
     # The head coach's games for any team, known by the moment
     coached = (
         out.select(*KEYS, "season", "moment", "coach_now")
@@ -129,6 +155,24 @@ def _features(
     )
 
 
+def _with_opponent(tg: pl.DataFrame, targets: pl.DataFrame, out: pl.DataFrame) -> pl.DataFrame:
+    """`out` plus `<t>_opp`: the opposing defense's shrunk gap from the league, known by then."""
+    d = _features(tg, targets, {f"opp_{t}": v for t, v in DEF_TRAITS.items()})
+    gaps = [(c(f"opp_{t}_shrunk") - c(f"opp_{t}_league")).alias(f"{t}_opp") for t in DEF_TRAITS]
+    other = d.select("game_id", c("team").alias("opp_team"), *gaps)
+    opp = (
+        targets.select(KEYS)
+        .join(other, on="game_id")
+        .filter(c("opp_team") != c("team"))
+        .drop("opp_team")
+    )
+    return (
+        out.join(opp, on=KEYS, how="left")
+        .with_columns(c(f"{t}_opp").fill_null(0.0) for t in DEF_TRAITS)
+        .sort(KEYS)
+    )
+
+
 def _targets(tg: pl.DataFrame, games: pl.DataFrame) -> pl.DataFrame:
     return tg.select(*KEYS, "season").join(games.select("game_id", "moment"), on="game_id")
 
@@ -138,11 +182,13 @@ def at_moment(view, games: pl.DataFrame) -> pl.DataFrame:
     season = int(games["season"].max())
     tg = view.table("team_game", seasons=list(range(season - COACH_SEASONS, season + 1)))
     moment = games.with_columns(moment=pl.lit(view.at).cast(MOMENT))
-    return _features(tg, _targets(tg, moment))
+    targets = _targets(tg, moment)
+    return _with_opponent(tg, targets, _features(tg, targets))
 
 
 def history(view, moments: pl.DataFrame) -> pl.DataFrame:
     """Every game in `moments` (game_id, …, moment) at its own moment, in one pass, from a view
     that sees everything."""
     tg = view.table("team_game")
-    return _features(tg, _targets(tg, moments))
+    targets = _targets(tg, moments)
+    return _with_opponent(tg, targets, _features(tg, targets))

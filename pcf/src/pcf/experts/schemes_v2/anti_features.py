@@ -37,7 +37,7 @@ OFFENSE: dict[str, tuple[str, str]] = {  # option → (its use, the level oppone
     "shotgun": ("shotgun_rate", "def_shotgun_rate"),
 }
 DEFENSE = ("man", "two_high", "blitz")
-OFFENSE_INPUTS = {"team_game": ("schedule", "pregame", "tendencies")}
+OFFENSE_INPUTS = {"team_game": ("schedule", "pregame", "opening_coach", "tendencies")}
 DEFENSE_INPUTS = {"team_game": ("schedule", "charted")}
 DEFENSE_SEASONS = 2  # the league's gain: the last two finished seasons
 
