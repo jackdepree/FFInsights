@@ -610,6 +610,32 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 - **One survivor at the edge:** outside runs against man-heavy defenses (both high: −0.066 EPA a play, t −3.7, against a bar of 3.70). It's F7's top pair again (product t −2.7). Football reading: man defenders chase receivers and turn their backs, which should help outside runs, but the sign says the opposite. It's a single edge-of-chance term out of 308, so it goes to IDEAS for the live seasons, not into a model.
 - **What separates good from bad:** routes A, B, E and C each asked one question chosen in advance, or validated on data they didn't use. D asks hundreds of questions of the same data. Same data, same people, same football: the difference is all in the counting.
 
+**F26. I26, matchup types learned from results, as a forecast** ([`explore/walkforward.py`](explore/walkforward.py), 2026-11-09, after the merge, the CEO's next step).
+- **Each week from week 6, only that season's earlier games are used** to learn each unit's strength and hidden numbers (k 2, λ 1, fixed from F24, so nothing is tuned here). The model then predicts that week's sides.
+- **Measure:** r between the matchup part and what strength (from the same earlier games) misses.
+- **Null:** defenses swapped within the week, 30 times.
+
+| | Sides or games | r | Shuffled at or above |
+|---|---|---|---|
+| 2006–2014 | 3,242 | +0.011 | (not run) |
+| **2015–2024** | 3,685 | **+0.031** | **3%** (null mean +0.002, 95th +0.024) |
+| … pairs that already met this season | 960 | +0.045 | 10% |
+| … not yet met | 2,725 | +0.025 | 17% |
+| … weeks 6–9 / 10–13 / 14–18 | 1,130 / 1,168 / 1,387 | −0.016 / +0.031 / +0.045 | |
+| **Against the closing line** (home part less away part, against margin less the spread) | 1,842 games | **+0.029** (+0.37 points per sd) | 7% |
+
+- **The forecast version keeps a faint signal.** It's about 60% of F24's size (+0.031 against +0.05), and it grows as the season fills in: nothing before week 10, +0.045 from week 14.
+- **By season:** 15 +0.02, 16 −0.10, 17 −0.01, 18 +0.14, 19 +0.01, 20 −0.07, 21 +0.09, 22 +0.04, 23 +0.02, 24 +0.04. That's 6 of 10 positive, still lumpy.
+- **Size:** +0.006 EPA per play per sd. In margin terms, +0.37 points per sd against the close.
+  - The fifth of games where it favours home most: home beats the close by +1.37.
+  - The fifth where it favours away most: −0.72.
+  - Cover rates are 49.3% and 46.1%: **no betting edge** at this size.
+- **What it is, so far:** a small, late-season, recent-era matchup term that the closing line doesn't fully carry. It matches no charted style (F24's spot-check). Not yet worth a model of its own, but it's the one scheme-against-scheme lead that survives a forecast design.
+- **Ways to make it stronger** (not tried):
+  - learn the types from quieter outcomes, such as success rate, or passing and rushing EPA separately (four numbers per pair instead of one);
+  - carry each unit's types into the next season, shrunk;
+  - start from last season's types in the early weeks.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
 - **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20, as corrected at the CEO's spot-check:** a rematch repeats only as much as each unit's own form predicts; the pairing-specific part is +0.1% of what strength leaves (90% −4.2% to +4.6%), so at most a small conditional part exists. **F21–F23:** the play-by-play map carried to games (r +0.013), look-alike opponents (−0.008 and 0.000 r per sd) and the CEO's four pairings find nothing. **F24:** types learned from *results* (not charted styles) predict held-out pairings at r +0.05 in 2015–2024 (+0.036 without 2021, beyond 95% of shuffles; surviving an in-season trend control), including pairs that never met, but not in 2006–2014: **unclear**, the one lead (I26). **F25:** the wide scan finds nothing that holds out. **Leaning failed** for charted scheme types.

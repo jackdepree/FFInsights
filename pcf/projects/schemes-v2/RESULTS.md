@@ -191,7 +191,7 @@ The strongest argument that these results are wrong or overstated:
 3. **Rung 2,** only if it beats the blend: weights that change with games played; the opponent's average bend (F10).
 4. **A known-at rule for head coaches** (announced months before kickoff), so a new coach's history helps in week 1.
 5. The vault, the interface card, KNOWLEDGE rows (the case against is written above; the spot-check is done at this merge).
-6. **The forecast version of matchup types learned from results** (I26), from earlier games only: the CEO's next step after the merge (2026-11-09).
+6. ~~The forecast version of matchup types learned from results~~ (done after the merge: EXPLORATION F26, r +0.031 in 2015–2024, 3% by chance; +0.37 points per sd against the close, no cover edge). Possible next: quieter outcomes (success rate, pass and run EPA separately), and types carried across seasons.
 
 ## Technical calls so far (for veto at merge)
 - **Decision 0023's eight calls:**
