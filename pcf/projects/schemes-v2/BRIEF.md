@@ -1,6 +1,6 @@
 # Brief: Schemes v2 (`schemes-v2`)
 
-**Status:** building, 2026-11-09 (agreed 2026-11-09 for the first build: traits and anti-traits, the CEO's "Yes, start building"; scheme against scheme stays in discovery; building, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
+**Status:** validating, 2026-11-10 (vault opened; results in [RESULTS.md](RESULTS.md)). Earlier: building, 2026-11-09 (agreed 2026-11-09 for the first build: traits and anti-traits, the CEO's "Yes, start building"; scheme against scheme stays in discovery; building, [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** to be decided: likely two experts, in_season and retrospective (rule m; see Inputs)
 
 ## The usual way
 *Claude, 2026-11-07, before any research.*

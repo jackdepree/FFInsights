@@ -1,6 +1,42 @@
-# Schemes v2: results (draft, build in progress)
+# Results: Schemes v2 (`schemes-v2`)
 
-**Status:** building, 2026-11-09. Done: live traits (R1–R4), anti-traits (R5–R9), scheme-against-scheme discovery (EXPLORATION F20–F25), and the case against. Merging to main mid-build at the CEO's call (2026-11-09: "I think we should merge now"). Not done: retrospective traits, the vault, the interface card. This page is filled in as the build goes; the template's remaining sections come at the end.
+**Date:** 2026-11-10 · **Brief:** [BRIEF.md](BRIEF.md) · **MLflow experiment:** `schemes-v2` · **Champion:** none registered (no project has a logged model yet; registry `elo` card)
+
+## In short
+A team's play style is a real, lasting trait that follows its head coach, and PCF now forecasts four of them for the next game before kickoff: pass rate over expected, shotgun rate, tempo and throw depth. All four beat every simple average on 2016–2024, and three of the four do on the 2025 vault (throw depth ties the league average). Using an option less is a real anti-trait on offense (teams that pass less gain less when they pass), but as a next-game forecast it fails the vault. Scheme against scheme, the CEO's conditional question, found nothing usable: charted types show nothing, and types learned from results are a faint in-season signal that doesn't help a margin forecast.
+
+**Scorecards:** `data/outputs/schemes-v2/<variant>/<run_id>/scorecard.html` (MLflow experiment `schemes-v2`) · **Vault:** opened 2026-11-10, once, for the five final models (R12) · **Versions tried:** traits 2 (rung 1, rung 2), anti-traits 4 per option
+
+| Check (docs/VALIDATION.md) | Result |
+|---|---|
+| Signal, or beats baselines | Traits: every final model beats 100 of 100 shuffled refits, on 2016–2024 and on the vault, and beats its averages (R1, R11, R12). Pass anti-trait blend: passes on 2016–2024 (R5), **fails on the vault** (4 of 100; R12) |
+| Calibration and range coverage | 80% ranges hold 79–80% for every final model, on 2016–2024 and the vault |
+| Leakage | Every blocking check passes for every run (R2, R10) |
+| Football sanity | The pass blend's top and bottom teams make sense (R5); playoffs are the one clear miss (Where it misses) |
+| CEO spot-checks | 2026-11-09: F20 (corrected), F24 (holds), R6 (holds, as comparative advantage). 2026-11-10: F28 (holds) |
+
+## Hunch verdicts
+Final verdicts, copied into [`projects/HUNCHES.md`](../HUNCHES.md).
+
+| # | Hunch | Verdict | Evidence, with its size |
+|---|---|---|---|
+| H9 | Style pairings (rock-paper-scissors) predict margins | **unclear, leaning failed** | Pairings predict the margin's miss against the close at r +0.035 (5% by chance, about 0.4 points per sd: F9); no pairing part in rematches (F20), and learned types don't help Elo or the close (F28) |
+| H10 | What follows a coach is the scheme; what follows a player is the role | **held, for head coaches** | Shotgun, no-huddle, tempo, personnel and coverage follow the coach (F3, F4); the coach's history earns 0.15–0.29 of the blend's weight for three traits (R3). Coordinators untested |
+| H11 | Schemes explain game states and comebacks | **failed for comebacks** | The win chance already knows comebacks; schemes add a faint second-half margin signal (F19) |
+| H12 | Changing schemes costs players | **unclear, leaning failed** | No general cost for 193 receivers or 59 QBs; receiver depth fit leans right (F13, F14) |
+| H13 | Teams morph against opposing schemes | **failed for head coaches** | Teams bend, but all the same way (22 of 98 pairs); a coach's own bend doesn't repeat (5 of 98: F10–F12). The average bend is in rung 2 (R11) |
+| H14 | Schemes are conditional: an offense does well against one type of defense and badly against another | **failed for charted types; unclear for learned ones** | Charted types: nothing (F7, F8, F21–F23, F25). Types learned from results: r +0.031 as a forecast (F26), not strengthened (F27), no help in a margin forecast (F28) |
+| H15 | Anti-clusters: avoided options are limits | **held in part, as comparative advantage** | Offense keeps the sign held out (+0.015 per sd, 196 of 200: R6), but it lives at the pass-heavy end (spot-check), and the forecast fails the vault (R12). Defense: no |
+| H16 | The CEO's four pairings | **failed** | None passes; two lean the CEO's way (F23) |
+| H17 | Schemes mask weaknesses (coaches lean into strengths) | **unclear, supported in direction** | Avoiders are no worse at passing than average teams; heavy passers are better (R6 spot-check: fifths −0.037, −0.039, −0.044, −0.006, +0.070) |
+
+## Terms
+- **Trait:** a team's tendency (pass rate over expected, shotgun rate, tempo, throw depth) as a lasting property, forecast for its next game.
+- **Anti-trait:** a team's low use of an option, read as a possible limit; tested by whether low users gain less from the option (decision 0024).
+- **Gain from an option:** EPA per play with the option less without, in neutral situations (decision 0024).
+- **Opening coach:** a team's head coach for its first regular-season game, known from the start of week 1 (decision 0025).
+- **Opponent's bend:** how far offenses move off the league's level against a given defense (exploration F10), as a shrunk season gap (decision 0025).
+- **Matchup type (learned):** two hidden numbers per offense and defense, learned from results within a season, whose product is the matchup part (F24, F26).
 
 ## What's built so far
 - **`team_game.tendencies`** ([decision 0023](../../docs/decisions/0023-team-game-tendencies.md)): each team's tendencies per game from play-by-play, in neutral situations, 1999 on, known the day after the game. Any project can read it.
@@ -102,14 +138,77 @@ How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
 - **Defensive use over expected is a strong trait:** 0.67–0.76 week to week, about 0.48 season to season.
 - So, on this evidence, a defense's avoidance is a real style but not a limit.
 
+**R10. A new head coach now counts from week 1 (decision 0025). It's a small gain, and only the shotgun shows it clearly.** ([`explore/rung2_check.py`](explore/rung2_check.py))
+- **The rule:** each team's coach for its first regular-season game is a new part, `team_game.opening_coach`, known at the start of week 1 (hires are announced months earlier). Before, a new coach's history could only help from their second game (R4).
+- **What it changed** (the same blend before and after; 2016–2024; 61 first games with a new coach that have a result):
+
+| Blend | All rows: range score change (90%) | First games with a new coach: change (90%) | Their typical miss, before → after |
+|---|---|---|---|
+| Pass rate over expected | −0.00000 (tie) | −0.00022 (−0.00056 to +0.00018), tie | 0.0660 → 0.0654 |
+| **Shotgun rate** | **−0.00004 (−0.00007 to −0.00002), better** | **−0.0016 (−0.0031 to −0.0001), better** | **0.1451 → 0.1404** |
+| Tempo | −0.0001 (tie) | −0.012 (−0.049 to +0.031), tie | 2.844 → 2.850 |
+| Throw depth | −0.00001 (tie) | −0.0002 (tie) | 2.078 → 2.072 |
+| Pass anti-trait blend | +0.00001 (tie) | −0.00000 (tie) | 0.3669 → 0.3642 |
+
+- **Football reading:** the shotgun follows the coach most (exploration F4), so it gains most when the coach is known in time. Leakage checks pass for every variant (gateway, known-at, future perturbation and deletion at 25 cutoffs, test labels; the signal test beat 100 of 100).
+
+**R11. Rung 2 beats the blend for pass rate, shotgun and throw depth, by small margins. Tempo stays at the blend.** (Regular-season rows, 2016–2024, where a team's game number is known.)
+
+| Trait | All rows: range score change (90%) | Games 1–4 | Games 5+ | Typical miss, blend → rung 2 | Verdict |
+|---|---|---|---|---|---|
+| Pass rate over expected | −0.00015 (−0.00023 to −0.00008) | −0.00012, tie | −0.00016, better | 0.0703 → 0.0699 | **rung 2** |
+| Shotgun rate | −0.00031 (−0.00043 to −0.00018) | −0.00061, better | −0.00021, better | 0.0973 → 0.0964 | **rung 2** |
+| Tempo | −0.00045 (−0.00153 to +0.00067), tie | tie | tie | 1.999 → 1.996 | blend |
+| Throw depth | −0.0014 (−0.0027 to −0.0001) | −0.0006, tie | −0.0016, better | 2.239 → 2.232 | **rung 2** |
+
+- **What rung 2 adds:** early-season weights (each gap × 4 ÷ (4 + games)) and the opponent's bend (what offenses do against the opposing defense: F10's average bend). Tempo has no defensive column, so it gets only the early weights, and they don't help.
+- **The takeaways it used from rung 1 (rule k):** the same four gaps (R3), R4's smaller early-season edge (so weights that change with games), and the exploration's average bend (F10), not a coach's own bend (failed, F11).
+- **The gains are about 0.5–1% of the typical miss.** They're real by the harness's bar but small, which is about what a sticky trait leaves for a better model.
+- **Rung 3 (trees) wasn't tried** (a technical call, below): the gain from rung 1 to rung 2 is already this small.
+
+**R12. The vault (2025, opened once on 2026-11-10): the trait forecasts hold, except throw depth, which ties the league. The pass anti-trait fails.** ([`explore/vault_check.py`](explore/vault_check.py); 570 team-games each)
+
+| Final model | Against the league's level: range score change (90%) | Typical miss, league → model | Prediction against result (r) | Against its own yardsticks | Signal (shuffled refits beaten) | Ranges hold |
+|---|---|---|---|---|---|---|
+| Pass rate over expected (rung 2) | −0.0011 (−0.0016 to −0.0006), **better** | 0.0747 → 0.0717 | +0.31 | ties the blend | 100 of 100 | 78.9% |
+| Shotgun rate (rung 2) | −0.0118 (−0.0138 to −0.0100), **better** | 0.132 → 0.093 | +0.67 | beats the blend | 100 of 100 | 80.5% |
+| Throw depth (rung 2) | −0.0071 (−0.0149 to +0.0005), tie | 2.234 → 2.208 | +0.13 | beats the blend | 100 of 100 | 79.5% |
+| Tempo (blend) | −0.034 (−0.053 to −0.015), **better** | 2.043 → 1.931 | +0.28 | beats the league, last 4 and season averages | 100 of 100 | 79.8% |
+| Pass anti-trait (blend) | +0.0005 (−0.0003 to +0.0013), tie | 0.399 → 0.400 | −0.01 | ties the league and the anti-trait alone; beats its own past gain | **4 of 100: fails** | 79.8% |
+
+- **The traits generalise to an unseen season.** Throw depth's tie matches R1, where it was the weak one.
+- **Rung 2's edge doesn't show for pass rate on one season.** It beats the blend for shotgun and depth, and ties it for pass rate. One season is 570 rows, against 4,777 in development.
+- **The pass anti-trait forecast is gone on the vault,** as the case against warned (point 2): its 0.001 edge on 2016–2024 was the size of a single season's noise. The anti-trait's *sign* (R6) wasn't re-tested on 2025, and shotgun and the defensive options weren't final models, so they weren't run.
+- **The vault is now spent for these models:** any change to them goes to the live ledger as its only honest test (VALIDATION §1).
+
+## The ladder
+| Rung | Method | Result vs the rung below | Takeaway carried forward |
+|---|---|---|---|
+| 0 | Averages: the league's level, last 4 games, season to date (traits); the league's gain, own past gain (anti-traits) | — | The own averages beat the league for the sticky traits (shotgun, tempo); single-game gains are too noisy to average (R5) |
+| 1 | Weighted least squares on the league's level and four gaps (shrunk season, last 4, last season, the head coach's); the anti-trait adds the team's use | Beats every average for all four traits (R1); only the pass anti-trait blend beats its averages, by a sliver (R5) | The coach's history earns weight for three traits (R3); the early season gains less (R4) |
+| 2 | Rung 1 + early-season weights + the opponent's bend | Beats rung 1 for pass rate, shotgun and depth; ties for tempo (R11); on the vault, beats it for shotgun and depth, ties for pass rate (R12) | Stop here: the gain is about 0.5–1% of the typical miss |
+
+## Where it misses
+The miss lenses are for player-game models; for team-games, these (the final models, 2016–2024; average miss is actual less predicted, 90% interval by week; [`explore/rung2_check.py`](explore/rung2_check.py)):
+
+| Lens | Group | Rows | Pass rate over expected | Shotgun rate | Tempo (seconds a snap) | Throw depth (yards) |
+|---|---|---|---|---|---|---|
+| Season stage | **Playoffs** | 174 | **+0.013 (+0.005 to +0.023)** | **+0.015 (+0.001 to +0.030)** | **+0.47 (+0.22 to +0.72)** | +0.07, tie |
+| Season stage | A team's games 1–4 | 1,152 | +0.002, tie | −0.000, tie | −0.09, tie | −0.03, tie |
+| Coaching | First game with a new head coach | 61 | −0.012, tie | +0.008, tie | +0.17, tie | −0.25, tie |
+| Season stage | Everything else | 3,625 | −0.005 (−0.007 to −0.002) | −0.004 (−0.007 to −0.001) | +0.04, tie | −0.05, tie |
+
+- **Playoff teams pass more, use the shotgun more and play slower than their regular season says.** That's a playoff flag (IDEAS I28).
+- The regular season's small negative misses are the other side of the same thing: the model's level carries a little of the playoffs.
+
 ## Against the brief's draft tests
 | Test | Result so far |
 |---|---|
 | Each trait repeats | Yes (CONSISTENCY.md, exploration F2) |
-| Known before kickoff, it predicts the team's own next-game tendencies better than the league average and a rolling mean | **Yes, all four** (R1) |
+| Known before kickoff, it predicts the team's own next-game tendencies better than the league average and a rolling mean | **Yes, all four** (R1); on the vault, three of four beat the league (throw depth ties: R12) |
 | The shuffled version shows nothing | **Yes** (R2) |
 | The anti-trait term keeps F18's sign on held-out seasons | **Yes on offense** (pass, shotgun: R6); **no on defense** (man, two-high, blitz) |
-| The shuffled-team version of each shows nothing | Offense: the real slopes beat 196 and 198 of 200 shuffles (R6). As forecasts, only the pass blend passes the harness's signal test (R5) |
+| The shuffled-team version of each shows nothing | Offense: the real slopes beat 196 and 198 of 200 shuffles (R6). As forecasts, only the pass blend passes the harness's signal test (R5), and it fails on the vault (R12) |
 
 ## Scheme against scheme (discovery, not confirmed)
 Discovery ran the CEO's order A → B → E → C → D on 2026-11-09. Full write-up in [EXPLORATION.md](EXPLORATION.md), F20–F25.
@@ -119,7 +218,7 @@ Discovery ran the CEO's order A → B → E → C → D on 2026-11-09. Full writ
   - look-alike opponents don't get look-alike results (F22);
   - the CEO's four pairings don't pass (F23);
   - the wide scan holds out at the shuffled level (F25).
-- **Types learned from results are the one lead:** in 2015–2024 they predict held-out pairings at r +0.05 (+0.036 without 2021, beyond 95% of shuffles), even for pairs that never met, and survive an in-season trend control. There's nothing before 2015, and they match no charted style (F24). Next: the forecast version, from earlier games only (IDEAS I26).
+- **Types learned from results are the one lead:** in 2015–2024 they predict held-out pairings at r +0.05 (+0.036 without 2021, beyond 95% of shuffles), even for pairs that never met, and survive an in-season trend control. There's nothing before 2015, and they match no charted style (F24). As a forecast from earlier games only, r +0.031 (F26); no variant strengthens it, and last season's types predict nothing (F27); in Elo's margin forecast it's neutral and fails signal (F28). Parked for live seasons (IDEAS I26).
 
 ## The case against (2026-11-09, written before the merge)
 The strongest argument that these results are wrong or overstated:
@@ -137,7 +236,15 @@ The strongest argument that these results are wrong or overstated:
    - home and away aren't modelled (they alternate in rematches, which biases *against* finding a repeat).
    **The CEO's spot-check confirmed this one:** the baselines were biased low, and the 9% falls to +0.1% when corrected (see below).
 6. **Seven cuts were looked at in F20 and many settings in F24.** F24's robustness check was run after seeing the result, and 2021 drives much of it.
-7. **The project isn't done.** The vault, the interface card, saved walk-forward outputs and retrospective traits are still open. This merge brings tested, unvalidated code to main. Nothing reads it yet, and the scheduled workflows (odds, nflverse snapshots) don't run it.
+7. **The project isn't done.** The vault, the interface card, saved walk-forward outputs and retrospective traits are still open. This merge brings tested, unvalidated code to main. Nothing reads it yet, and the scheduled workflows (odds, nflverse snapshots) don't run it. *(2026-11-10: the vault and the interface card are done; see points 8–12.)*
+
+**Added 2026-11-10, before the second merge:**
+
+8. **The vault is one season.** 570 team-games can confirm a large edge (shotgun, tempo) but not a small one: pass rate's rung-2 gain and throw depth both tie there. Rung 2 was chosen on 2016–2024 alone, and for pass rate it's unconfirmed.
+9. **The trait forecasts haven't been shown to help anything downstream.** They beat averages of themselves. Whether a margin, total or player model gains from them is untested (case against point 3 still stands). Of the downstream tests run, the only one (the learned matchup term in Elo, F28) found nothing.
+10. **Rung 2's opponent bend uses what offenses did against the defense, which partly reflects which offenses it faced.** The shrinkage and the league gap soften this, but a strong schedule can pass for a bend. The leakage checks can't see it: it's a confound, not a leak.
+11. **The coach rule assumes every opening coach was announced before week 1.** That's true for every hire in 2016–2024 as far as I know, but it's not checked against dated news.
+12. **The project's one surviving anti-trait forecast is gone** (R12). The anti-trait story now rests on R6's held-out sign, which is a relationship, not a forecast, and was itself chosen on the same seasons.
 
 ## The CEO's spot-check (2026-11-09): F20 and F24
 **F20, the rematch ceiling: wrong as first written, now corrected.** ([`explore/spot_f20.py`](explore/spot_f20.py), [`explore/spot_f20b.py`](explore/spot_f20b.py))
@@ -200,15 +307,57 @@ The strongest argument that these results are wrong or overstated:
   - a term several times larger;
   - dropping the final two weeks, where the biggest moves go wrong. That's a cut chosen after seeing the rows, so it would have to be tested on live seasons, not here.
 
-## Left to do
-1. ~~Anti-traits~~ (done: R5–R9). Possible follow-ups: defensive avoidance from this season's live columns (pressure rate faced), and a defense's coordinator once that table exists.
-2. **Retrospective traits** from participation (personnel, coverage, blitz, box), feeding in-season models from finished seasons only (rule m).
-3. **Rung 2,** only if it beats the blend: weights that change with games played; the opponent's average bend (F10).
-4. **A known-at rule for head coaches** (announced months before kickoff), so a new coach's history helps in week 1.
-5. The vault, the interface card, KNOWLEDGE rows (the case against is written above; the spot-check is done at this merge).
-6. ~~The forecast version of matchup types learned from results~~ (done after the merge: EXPLORATION F26, r +0.031 in 2015–2024, 3% by chance; +0.37 points per sd against the close, no cover edge). Strengthening tried (F27): success rate, passing and rushing apart, and types carried across seasons each do worse (−0.019, +0.011, −0.000). Last season's types predict nothing, so the lead is this season's form. As a feature in Elo's margin forecast (F28) it's neutral and fails signal (13 of 20 shuffled versions beaten; 16 of 20 with the close), so it isn't used. Parked for 2025+ live.
+## Pitfalls
+- **Asymmetric exclusions in a leave-out baseline** (F20): a baseline pair must leave out both of its games, or a negative correlation is built in. It turned a +0.1% result into 9%, caught only at the CEO's spot-check.
+- **League trends pass for consistency** unless every tendency is taken against its season mean (exploration pitfalls).
+- **A situation mix can pass for a limit** (R6 spot-check): pass gain is plain EPA on dropbacks less runs, so run-heavy teams' third-and-long throws pull it down. Adjusting by down, distance and field zone took a sixth off the slope.
+- **Weighted and unweighted versions can disagree** (R6 spot-check, shotgun): games where one side of a choice has few plays drive the weighted slope.
+- **A tiny real signal fails a downstream forecast** (F28): r +0.037 is about 0.14% of a margin's variance, less than the cost of learning its weight.
+- **Defensive charting is post-season and dropbacks only:** "zone against the run" can't be seen, and an in-season model can use only finished seasons (rule m).
+- **A game's own coach is known only at kickoff** in nflverse; the opening-coach part fixes week 1 only (decision 0025).
 
-## Technical calls so far (for veto at merge)
+## Not looked at
+- **Coordinators:** the table is signed off in principle but not built. H10 and H13 are tested for head coaches only.
+- **Retrospective traits from participation** (personnel, coverage, blitz, box) as their own output: *waiting on the CEO's call, table or second expert (asked 2026-11-10).*
+- **Rung 3 (trees)** for the traits (technical call below).
+- **Downstream use:** the traits as features in a margin, total, pace or player model (case against point 9).
+- **The anti-trait's sign on the vault** (only the forecast was run there), and the shotgun and defensive options on the vault (not final models).
+- **Player-level scheme fit** beyond receivers' depth (I23) and a QB's coverage split (I22, killed).
+
+## Could be improved
+1. **A playoff flag** for the traits (Where it misses: playoff teams pass more, use the shotgun more and play slower; IDEAS I28).
+2. **Test the traits downstream:** pace and totals (tempo, pass rate) and player volume (pass rate, depth) are the natural first users.
+3. **The coordinator table,** then retest H13 and split the coach's weight between head coach and play caller.
+4. **Live checks on 2026+** for what the vault couldn't settle: rung 2 for pass rate, throw depth against the league, the learned matchup term (I26) and outside runs against man (I27).
+5. **Dated coach hires** (a new source, needs sign-off) if week-1 forecasts ever matter more than about 6–8 teams a year.
+
+## Don't redo
+- **Charted scheme-against-scheme matchups on 2006–2024** (F7, F8, F21–F23, F25): every route found nothing, and the wide scan showed how a model can look strong in-sample and still do no better than shuffled pairings. Retry only with new seasons or a new kind of data (coordinators, tracking).
+- **Strengthening the learned matchup types** (F27): success rate, passing and rushing apart, and types carried across seasons all did worse.
+- **The learned matchup term in Elo or with the close** (F28): neutral, fails signal.
+- **A general scheme-change cost for movers** (F13, F14) and **a coach's own morph** (F11, F12).
+- **Defensive anti-traits from last season** (R6): no sign held out. Retry only with live in-season defensive columns or coordinators.
+
+## Interface card
+Also in this project's `interface` block in `registry.yaml`.
+
+| | |
+|---|---|
+| **Inputs** | `team_game` parts `schedule`, `pregame`, `opening_coach`, `tendencies` (live); `charted` (post-season, defensive anti-traits only); gateway only |
+| **Outputs** | `pcf.experts.schemes_v2` variants; histories in `outputs/schemes-v2/<variant>/<run_id>/history.parquet`, per team-game: mean, q10, q50, q90. **Final:** `pass_oe_rung2`, `shotgun_rung2`, `depth_rung2`, `tempo_shrunk`. Anti-traits (`<option>_gain_*`) are kept for research, not as features: none passes the vault |
+| **Level of detail** | team-game (the offense's tendency in its next game) |
+| **Interval** | every regular-season and playoff game, from week 1; 2016–2024 reported, 2025 the vault |
+| **Cadence** | in_season |
+| **Known at** | the Saturday run (Thursday noon for Thursday games), like Elo; tendencies are known the day after each game |
+| **How to use it** | As features for pace, totals and player volume, from saved histories only (rule e). Expect a typical miss of about 0.07 in pass rate over expected, 0.09 in shotgun rate, 1.9 seconds a snap and 2.2 air yards. Throw depth barely beats the league: weight it lightly. Add a playoff adjustment, or expect the playoff misses above. Live runs aren't scheduled yet |
+| **Feeds** | pace (`pace`), game environments and totals, player opportunity and fantasy projections; scheme context for `roles-archetypes` |
+
+## Open questions for the CEO
+1. **Retrospective traits:** a measured table per team-season (no model), or a second expert with its own forecasts? (asked 2026-11-10)
+2. **Which downstream model should test the traits first:** pace and totals, or player opportunity?
+3. **Should the anti-traits be retired** after the vault, or kept for the 2026 live season as one more honest test of the pass sign (R6)?
+
+## Technical calls (for veto at merge)
 - **Decision 0023's eight calls:**
   - neutral situations only;
   - raw rates;
@@ -235,3 +384,14 @@ The strongest argument that these results are wrong or overstated:
   - style similarity is the Euclidean distance between season style vectors (F22);
   - DL weight is the current listed weight (F23);
   - the learned-type settings were chosen on 2006–2014 and applied once to 2015–2024 (F24).
+  - after the first merge: the forecast settings fixed from F24 (k 2, λ 1, from week 6: F26); the four strengthening variants and the prior's weight (λ0 4) fixed before running (F27); the term tested in Elo's own no-noise test, blends trained from 2010, 20 shuffles (F28).
+- **Decision 0025's four calls (2026-11-10):**
+  - the opening coach is known at the start of week 1, not the hire date;
+  - only the first game gets an opening-coach row;
+  - rung 2's early weight is 4 ÷ (4 + games), one per gap;
+  - the opponent's bend is the opposing defense's shrunk gap from the league.
+- **Finishing calls (2026-11-10):**
+  - **stop the ladder at rung 2** (no trees): the rung-2 gain is about 0.5–1% of the typical miss;
+  - **tempo stays at the blend** (rung 2 ties it);
+  - **the vault ran the five final models only** (four traits and the pass anti-trait blend) with the league averages as yardsticks, test season 2025 alone;
+  - **anti-traits aren't offered as features** after failing the vault.

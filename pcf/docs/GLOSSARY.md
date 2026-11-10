@@ -84,6 +84,13 @@
 | **PCF** | Principal Component Football | VISION.md |
 | **Layer**: data, expert, composite, product | The four levels of the system. Experts model one part of football, composites combine experts, products are what users see. | CLAUDE.md |
 | **Registry** | `projects/registry.yaml`: every project's status, dependencies, cadence and interface | CLAUDE.md |
+| **Trait** (schemes) | A team's tendency (pass rate over expected, shotgun rate, tempo, throw depth) as a lasting property, forecast for its next game | schemes-v2 RESULTS |
+| **Anti-trait** | A team's low use of an option, read as a possible limit: do low users gain less from it? | decision 0024 |
+| **Gain from an option** | EPA per play with the option less without, in neutral situations | decision 0024 |
+| **Opening coach** | A team's head coach for its first regular-season game, known from the start of week 1 (`team_game.opening_coach`) | decision 0025 |
+| **Opponent's bend** | How far offenses move off the league's level against a given defense, as a shrunk season gap | decision 0025 |
+| **Regime** | A stretch of a team's games with the same head coach and starting QB; schemes are measured per regime | schemes-v2 BRIEF |
+| **Matchup type (learned)** | Two hidden numbers per offense and per defense, learned from a season's results, whose product is the matchup part | schemes-v2 EXPLORATION F24 |
 | **Cadence**: `in_season`, `retrospective`, `offseason_events` | When a project updates, and therefore which data it may use | CLAUDE.md rule m |
 | **known_at** | The earliest moment PCF could have had a row of data, for a live prediction | DATA_SOURCES.md |
 | **as_of** | The moment a prediction is made; only data known by then may be used | ARCHITECTURE.md |
