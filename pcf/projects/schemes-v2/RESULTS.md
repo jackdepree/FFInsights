@@ -113,13 +113,13 @@ How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
 
 ## Scheme against scheme (discovery, not confirmed)
 Discovery ran the CEO's order A → B → E → C → D on 2026-11-09. Full write-up in [EXPLORATION.md](EXPLORATION.md), F20–F25.
-- **The conditional outcome exists:** an offense's result against a defense, beyond both units' strength, repeats in the rematch within a season. That part is about 9% of what strength leaves (F20), and it's gone by next season.
-- **Charted scheme types don't explain it:**
+- **No measurable conditional part in rematches (F20, corrected at the CEO's spot-check):** an offense's result against a defense repeats in the rematch only as much as each unit's own form predicts. The pairing-specific part is +0.1% of what strength leaves (90% −4.2% to +4.6%). The first reading, 9%, came from a bias in the baselines.
+- **Charted scheme types show nothing either:**
   - the play-by-play map has real interactions but carries nothing to games (F21);
   - look-alike opponents don't get look-alike results (F22);
   - the CEO's four pairings don't pass (F23);
   - the wide scan holds out at the shuffled level (F25).
-- **Types learned from results might:** in 2015–2024 they reach about 4% of the ceiling, even for pairs that never met, but not before 2015, and one season carries much of it (F24). Next: the forecast version, from earlier games only (IDEAS I26).
+- **Types learned from results are the one lead:** in 2015–2024 they predict held-out pairings at r +0.05 (+0.036 without 2021, beyond 95% of shuffles), even for pairs that never met, and survive an in-season trend control. There's nothing before 2015, and they match no charted style (F24). Next: the forecast version, from earlier games only (IDEAS I26).
 
 ## The case against (2026-11-09, written before the merge)
 The strongest argument that these results are wrong or overstated:
@@ -135,9 +135,35 @@ The strongest argument that these results are wrong or overstated:
    - the nulls use the 3 nearest games;
    - strengths use the whole season;
    - home and away aren't modelled (they alternate in rematches, which biases *against* finding a repeat).
-   A different decomposition could move the 9%.
+   **The CEO's spot-check confirmed this one:** the baselines were biased low, and the 9% falls to +0.1% when corrected (see below).
 6. **Seven cuts were looked at in F20 and many settings in F24.** F24's robustness check was run after seeing the result, and 2021 drives much of it.
 7. **The project isn't done.** The vault, the interface card, saved walk-forward outputs and retrospective traits are still open. This merge brings tested, unvalidated code to main. Nothing reads it yet, and the scheduled workflows (odds, nflverse snapshots) don't run it.
+
+## The CEO's spot-check (2026-11-09): F20 and F24
+**F20, the rematch ceiling: wrong as first written, now corrected.** ([`explore/spot_f20.py`](explore/spot_f20.py), [`explore/spot_f20b.py`](explore/spot_f20b.py))
+- **The rows:** the strongest repeats look football-sensible:
+  - the 2021 Bengals offense against the Ravens: +1.5 and +2.3 sd;
+  - the 2020 Browns offense against the Bengals: +1.6 and +2.2;
+  - the 2019 Jets offense against the Patriots: −2.4 and −2.0.
+- **The alternative that broke it:** F22's symmetric exclusions, where every pair leaves out both of its games.
+  - Under them, the same offense against *other* defenses agrees at +0.046, and the same defense against other offenses at +0.041.
+  - The rematch's +0.088 is just those two added together.
+  - F20's baselines had let the first meeting's strength include the baseline game, which built in a negative correlation and pushed both baselines to about 0.
+- **Corrected:**
+  - **pairing share +0.1% (90% −4.2% to +4.6%);**
+  - gap-matched +0.8%;
+  - strength removed in full −1.4%;
+  - home field changes nothing.
+- **What would change the answer:** more rematches. The data still allows up to about 5% (r up to about 0.2), so a small conditional part isn't ruled out.
+
+**F24, types learned from results: holds up.** ([`explore/spot_f24.py`](explore/spot_f24.py))
+- **The rows:** the learned 2021 defensive direction runs from Cleveland, Chicago and New England at one end to Buffalo, Baltimore and Indianapolis at the other. Its offensive direction runs from Houston and San Francisco to Cincinnati and Indianapolis. It matches no charted style beyond chance (the largest is blitz, r +0.32).
+- **The alternatives:**
+  - 5 random seeds give r +0.046 to +0.062;
+  - without 2021 it's +0.036, beyond the shuffled 95th percentile of +0.026;
+  - an in-season trend per unit (teams improving or fading) leaves it at +0.055.
+- **What would change the answer:** the forecast version (earlier games only) failing, or 2025+ live seasons showing nothing, as 2006–2014 did.
+- **Its own design** (the strengths and the matchup part both fit on the same training folds, and a shuffled-pairing null centred at about 0) doesn't have F20's flaw.
 
 ## Left to do
 1. ~~Anti-traits~~ (done: R5–R9). Possible follow-ups: defensive avoidance from this season's live columns (pressure rate faced), and a defense's coordinator once that table exists.

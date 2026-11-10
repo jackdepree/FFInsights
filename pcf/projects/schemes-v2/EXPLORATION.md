@@ -419,6 +419,20 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 
 **F20. H14 and H9 at unit level: the rematch ceiling** ([`explore/rematch.py`](explore/rematch.py), 2026-11-09, discovery route A of the CEO's A → B → E → C → D). Division rivals meet twice a season: 1,824 offense-against-defense rematches, 2006–2024.
 
+> **Corrected at the CEO's spot-check (2026-11-09): the 9% below was an artefact. The corrected pairing share is +0.1% (90% −4.2% to +4.6%).** ([`explore/spot_f20.py`](explore/spot_f20.py), [`explore/spot_f20b.py`](explore/spot_f20b.py))
+> - **The bug:** in the baseline pairs, the first meeting's strength *included* the baseline game. A good baseline game raised the strength used for the first meeting and lowered its residual, so a negative correlation was built in. That pulled both baselines from about +0.045 down to about 0. The rematch pair has no such term, because both meetings leave out both meetings.
+> - **Corrected,** with every pair leaving out both of its games:
+>   - rematch r +0.088;
+>   - offense baseline +0.046 and defense baseline +0.041, measured over all of each unit's other games;
+>   - **pairing share +0.1% (−4.2% to +4.6%).**
+>   - Gap-matched (other games within 2 weeks of the rematch): +0.8% (−4.1% to +5.5%).
+>   - With strength removed in full instead of with fitted weights: −1.4%.
+>   - Home field changes nothing (its weight is −0.003).
+>   - By era: 2006–2015 −3.3%, 2016–2024 +4.0%. Neither is clear of zero.
+> - **So:** an offense's result against a defense repeats in the rematch only as much as each unit's own form and strength predict. There's no measurable pairing-specific part within a season. The data allows at most about 5% of the residual, which means r up to about 0.2 for any matchup term on one game.
+> - **The pairs, by name, still look football-sensible** (2021 Bengals offense against the Ravens: +1.5 and +2.3 sd; 2019 Jets offense against the Patriots: −2.4 and −2.0). But those pairs don't repeat more than their units' general form predicts.
+> - **The rest of this entry is kept as first written,** for the record. Its table, its "9%", and the "share of F20's ceiling" figures in F21–F24 are all superseded by this note.
+
 *How it's measured:*
 - **The outcome** is an offense's EPA per play beyond both units' strength. Strength is each unit's season mean, leaving out the games being compared.
 - **What the residual is made of:** offense form, defense form, a part specific to the pairing, and noise.
@@ -554,7 +568,13 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 | … pairs that met in the training folds | 1,772 | +0.056 | 4% |
 | … **pairs that never met** | 3,473 | **+0.064** | 2% |
 
-- **Size:** +0.011 EPA per play per sd of the matchup part, about 4% of F20's ceiling.
+- **Size:** +0.011 EPA per play per sd of the matchup part (r² about 0.3% of the residual, inside corrected F20's interval of up to about 5%).
+- **Spot-check (2026-11-09, [`explore/spot_f24.py`](explore/spot_f24.py)):**
+  - 5 seeds give r +0.046 to +0.062 (mean +0.051);
+  - without 2021 it's +0.036 (5 seeds), against shuffled mean −0.008 and 95th percentile +0.026;
+  - with each unit's in-season trend (a week slope) in the baseline and the model, +0.055, so it isn't teams improving or fading;
+  - the learned 2021 types line up with no charted style beyond chance (the largest is blitz, r +0.32 across 32 defenses).
+  So the signal holds where it was found, and it's something charting doesn't record.
 - **The striking part is the pairs that never met.** There, only shared structure can help ("offenses that beat B also beat B′"). So in recent seasons, results do group defenses into types that offenses do alike against. F22 found charted styles don't; outcomes do.
 
 *Robustness (looked at after the result, so it's reported as such):*
@@ -592,7 +612,7 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
-- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it. **F21–F22:** neither the play-by-play matchup map carried to games (r +0.013, 0.2% of the ceiling) nor look-alike opponents (style similarity −0.008 and 0.000 r per sd) explain it. On this evidence the conditional part belongs to the specific opponent this season, not to scheme types. **Leaning failed** for schemes-as-types; the matchup itself is real. **F24:** types learned from *results* (not charted styles) reach about 4% of the ceiling in 2015–2024, including pairs that never met, but not in 2006–2014 and lumpy by season: **unclear**, a lead for live seasons (I26). **F25:** the wide scan finds nothing that holds out.
+- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20, as corrected at the CEO's spot-check:** a rematch repeats only as much as each unit's own form predicts; the pairing-specific part is +0.1% of what strength leaves (90% −4.2% to +4.6%), so at most a small conditional part exists. **F21–F23:** the play-by-play map carried to games (r +0.013), look-alike opponents (−0.008 and 0.000 r per sd) and the CEO's four pairings find nothing. **F24:** types learned from *results* (not charted styles) predict held-out pairings at r +0.05 in 2015–2024 (+0.036 without 2021, beyond 95% of shuffles; surviving an in-season trend control), including pairs that never met, but not in 2006–2014: **unclear**, the one lead (I26). **F25:** the wide scan finds nothing that holds out. **Leaning failed** for charted scheme types.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
@@ -644,7 +664,7 @@ What didn't hold:
 **The CEO's call (2026-11-09):** traits and anti-traits first; scheme against scheme stays in discovery, starting with the rematch ceiling (see the brief's CEO decisions).
 
 **The CEO's order for scheme against scheme (2026-11-09, after the anti-traits):**
-1. A, the rematch ceiling (done: F20, a real within-season matchup part of about 9% that styles reach only 1% of);
+1. A, the rematch ceiling (done: F20; first read as a 9% matchup part, corrected at the CEO's spot-check to +0.1%, 90% −4.2% to +4.6%);
    - A2, the CEO's look-alike opponents (done: F22, the matchup doesn't follow the style);
 2. B, the play-by-play matchup map, then one game-level test (done: F21, real play-level interactions that don't reach games);
 3. E, the CEO's own candidate matchups (done: F23, none passes; two lean the CEO's way);
