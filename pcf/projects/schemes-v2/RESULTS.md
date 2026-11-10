@@ -191,7 +191,7 @@ The strongest argument that these results are wrong or overstated:
 3. **Rung 2,** only if it beats the blend: weights that change with games played; the opponent's average bend (F10).
 4. **A known-at rule for head coaches** (announced months before kickoff), so a new coach's history helps in week 1.
 5. The vault, the interface card, KNOWLEDGE rows (the case against is written above; the spot-check is done at this merge).
-6. ~~The forecast version of matchup types learned from results~~ (done after the merge: EXPLORATION F26, r +0.031 in 2015–2024, 3% by chance; +0.37 points per sd against the close, no cover edge). Strengthening tried (F27): success rate, passing and rushing apart, and types carried across seasons each do worse (−0.019, +0.011, −0.000). Last season's types predict nothing, so the lead is this season's form. It stays a late-season feature candidate for team strength, to be checked on 2025+ live.
+6. ~~The forecast version of matchup types learned from results~~ (done after the merge: EXPLORATION F26, r +0.031 in 2015–2024, 3% by chance; +0.37 points per sd against the close, no cover edge). Strengthening tried (F27): success rate, passing and rushing apart, and types carried across seasons each do worse (−0.019, +0.011, −0.000). Last season's types predict nothing, so the lead is this season's form. As a feature in Elo's margin forecast (F28) it's neutral and fails signal (13 of 20 shuffled versions beaten; 16 of 20 with the close), so it isn't used. Parked for 2025+ live.
 
 ## Technical calls so far (for veto at merge)
 - **Decision 0023's eight calls:**
