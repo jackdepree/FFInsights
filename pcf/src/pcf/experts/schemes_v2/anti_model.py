@@ -13,6 +13,9 @@ defenses, EPA prevented):
 | `<o>_gain_blend` | The same plus the team's past gains | 1 |
 
 The anti-trait claim (H15, F17-F18) is that the weight on use is above zero: avoiders gain less.
+
+**Retired (the CEO, 2026-11-10)** after the pass blend failed the 2025 vault (RESULTS R12). Not a
+feature and not run live; kept only so RESULTS R5-R9 and R12 can be rerun.
 """
 
 from __future__ import annotations

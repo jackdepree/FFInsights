@@ -3,7 +3,7 @@
 **Date:** 2026-11-10 · **Brief:** [BRIEF.md](BRIEF.md) · **MLflow experiment:** `schemes-v2` · **Champion:** none registered (no project has a logged model yet; registry `elo` card)
 
 ## In short
-A team's play style is a real, lasting trait that follows its head coach, and PCF now forecasts four of them for the next game before kickoff: pass rate over expected, shotgun rate, tempo and throw depth. All four beat every simple average on 2016–2024, and three of the four do on the 2025 vault (throw depth ties the league average). Using an option less is a real anti-trait on offense (teams that pass less gain less when they pass), but as a next-game forecast it fails the vault. Scheme against scheme, the CEO's conditional question, found nothing usable: charted types show nothing, and types learned from results are a faint in-season signal that doesn't help a margin forecast.
+A team's play style is a real, lasting trait that follows its head coach, and PCF now forecasts four of them for the next game before kickoff: pass rate over expected, shotgun rate, tempo and throw depth. All four beat every simple average on 2016–2024, and three of the four do on the 2025 vault (throw depth ties the league average). Using an option less is a real anti-trait on offense (teams that pass less gain less when they pass), but as a next-game forecast it fails the vault, and the CEO retired it (2026-11-10). Scheme against scheme, the CEO's conditional question, found nothing usable: charted types show nothing, and types learned from results are a faint in-season signal that doesn't help a margin forecast.
 
 **Scorecards:** `data/outputs/schemes-v2/<variant>/<run_id>/scorecard.html` (MLflow experiment `schemes-v2`) · **Vault:** opened 2026-11-10, once, for the five final models (R12) · **Versions tried:** traits 2 (rung 1, rung 2), anti-traits 4 per option
 
@@ -354,7 +354,7 @@ The strongest argument that these results are wrong or overstated:
 - **Retrospective traits as forecasts:** the table (R13) measures them; whether last season's row helps any in-season model is untested.
 - **Rung 3 (trees)** for the traits (technical call below).
 - **Downstream use:** the traits as features in a margin, total, pace or player model (case against point 9).
-- **The anti-trait's sign on the vault** (only the forecast was run there), and the shotgun and defensive options on the vault (not final models).
+- **The anti-trait's sign on the vault** (only the forecast was run there), and the shotgun and defensive options on the vault (not final models). Now retired, so these stay unlooked at.
 - **Player-level scheme fit** beyond receivers' depth (I23) and a QB's coverage split (I22, killed).
 
 ## Could be improved
@@ -370,6 +370,7 @@ The strongest argument that these results are wrong or overstated:
 - **The learned matchup term in Elo or with the close** (F28): neutral, fails signal.
 - **A general scheme-change cost for movers** (F13, F14) and **a coach's own morph** (F11, F12).
 - **Defensive anti-traits from last season** (R6): no sign held out. Retry only with live in-season defensive columns or coordinators.
+- **Anti-trait forecasts** (R5, R12): retired by the CEO on 2026-11-10 after the pass blend failed the vault. Avoidance as comparative advantage (H15, H17) is the lead worth keeping, not the forecast.
 
 ## Interface card
 Also in this project's `interface` block in `registry.yaml`.
@@ -377,18 +378,18 @@ Also in this project's `interface` block in `registry.yaml`.
 | | |
 |---|---|
 | **Inputs** | `team_game` parts `schedule`, `pregame`, `opening_coach`, `tendencies` (live); `charted` (post-season, defensive anti-traits only); gateway only |
-| **Outputs** | `pcf.experts.schemes_v2` variants; histories in `outputs/schemes-v2/<variant>/<run_id>/history.parquet`, per team-game: mean, q10, q50, q90. **Final:** `pass_oe_rung2`, `shotgun_rung2`, `depth_rung2`, `tempo_shrunk`. Anti-traits (`<option>_gain_*`) are kept for research, not as features: none passes the vault. **Retrospective traits:** the table `team_season.charted` (R13), per team-season, raw and over expected, read through the gateway |
+| **Outputs** | `pcf.experts.schemes_v2` variants; histories in `outputs/schemes-v2/<variant>/<run_id>/history.parquet`, per team-game: mean, q10, q50, q90. **Final:** `pass_oe_rung2`, `shotgun_rung2`, `depth_rung2`, `tempo_shrunk`. Anti-traits (`<option>_gain_*`) are **retired** (the CEO, 2026-11-10): none passes the vault; the code stays for rerunning the findings only. **Retrospective traits:** the table `team_season.charted` (R13), per team-season, raw and over expected, read through the gateway |
 | **Level of detail** | team-game (the offense's tendency in its next game) |
 | **Interval** | every regular-season and playoff game, from week 1; 2016–2024 reported, 2025 the vault |
 | **Cadence** | in_season (the `team_season` table: retrospective; in season, a prior from finished seasons only, `prior_for`) |
 | **Known at** | the Saturday run (Thursday noon for Thursday games), like Elo; tendencies are known the day after each game |
 | **How to use it** | As features for pace, totals and player volume, from saved histories only (rule e). Expect a typical miss of about 0.07 in pass rate over expected, 0.09 in shotgun rate, 1.9 seconds a snap and 2.2 air yards. Throw depth barely beats the league: weight it lightly. Add a playoff adjustment, or expect the playoff misses above. Live runs aren't scheduled yet |
-| **Feeds** | pace (`pace`), game environments and totals, player opportunity and fantasy projections; scheme context for `roles-archetypes` |
+| **Feeds** | the CEO's four users (2026-11-10): pace (`pace`) and totals; player opportunity and fantasy projections; which players each team goes after in trades and free agency (H18, no project yet); context (`context-live`, `context-retro`). Also scheme context for `roles-archetypes` |
 
 ## Open questions for the CEO
 1. **Retrospective traits:** a measured table per team-season (no model), or a second expert with its own forecasts? (asked 2026-11-10) *Answered 2026-11-10: a table, with timing columns so later models can use it without leaking. Built: R13, decision 0026.*
-2. **Which downstream model should test the traits first:** pace and totals, or player opportunity?
-3. **Should the anti-traits be retired** after the vault, or kept for the 2026 live season as one more honest test of the pass sign (R6)?
+2. **Which downstream model should test the traits first:** pace and totals, or player opportunity? *Answered 2026-11-10: schemes should help four users: pace, player opportunity, predicting the players each team is most likely to go after (trades and free agency), and context. The acquisition idea is the CEO's hunch H18. Each user's own project tests the traits as features when it's built; none is built yet.*
+3. **Should the anti-traits be retired** after the vault, or kept for the 2026 live season as one more honest test of the pass sign (R6)? *Answered 2026-11-10: retired now. They aren't features, aren't run live and aren't checked on 2026. The code stays so R5–R9 and R12 can be rerun (technical call below).*
 
 ## Technical calls (for veto at merge)
 - **Decision 0023's eight calls:**
@@ -428,6 +429,8 @@ Also in this project's `interface` block in `registry.yaml`.
   - **tempo stays at the blend** (rung 2 ties it);
   - **the vault ran the five final models only** (four traits and the pass anti-trait blend) with the league averages as yardsticks, test season 2025 alone;
   - **anti-traits aren't offered as features** after failing the vault.
+  - **`schemes-v2` added to `depends_on`** for `pace`, `player-opportunity`, `context-live` and `context-retro` (the CEO's downstream users); the acquisitions hunch (H18) has no project yet, so it's only in HUNCHES;
+  - **retiring the anti-traits (the CEO's call, 2026-11-10) keeps their code** (`anti_model.py`, `anti_features.py`, their tests and explore scripts), marked retired, rather than deleting it: the findings R5–R9 and R12 stay rerunnable, and the gain columns in `team_game.tendencies` are measurements other projects may use.
 - **Decision 0026's calls (2026-11-10, the retrospective traits table):**
   - a new `team_season` table (keys team and season), not a part of `team_game`;
   - regular season only, in neutral situations;

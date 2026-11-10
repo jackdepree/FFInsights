@@ -85,7 +85,7 @@
 | **Layer**: data, expert, composite, product | The four levels of the system. Experts model one part of football, composites combine experts, products are what users see. | CLAUDE.md |
 | **Registry** | `projects/registry.yaml`: every project's status, dependencies, cadence and interface | CLAUDE.md |
 | **Trait** (schemes) | A team's tendency (pass rate over expected, shotgun rate, tempo, throw depth) as a lasting property, forecast for its next game | schemes-v2 RESULTS |
-| **Anti-trait** | A team's low use of an option, read as a possible limit: do low users gain less from it? | decision 0024 |
+| **Anti-trait** | A team's low use of an option, read as a possible limit: do low users gain less from it? Retired as a forecast (the CEO, 2026-11-10) after failing the vault | decision 0024 |
 | **Gain from an option** | EPA per play with the option less without, in neutral situations | decision 0024 |
 | **Opening coach** | A team's head coach for its first regular-season game, known from the start of week 1 (`team_game.opening_coach`) | decision 0025 |
 | **Retrospective traits** (`team_season.charted`) | A team's charted choices over a finished season (personnel, box, coverage, blitz, nickel and dime), raw and over expected; a prior for the next season, never a live input | decision 0026 |
