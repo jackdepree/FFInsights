@@ -417,9 +417,47 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - Win beyond the win chance: r +0.010 (shuffled reach it 29% of the time): **nothing.**
 - Second-half margin: r +0.091 (4%): **a faint signal,** carried by the leading team's defensive style.
 
+**F20. H14 and H9 at unit level: the rematch ceiling** ([`explore/rematch.py`](explore/rematch.py), 2026-11-09, discovery route A of the CEO's A → B → E → C → D). Division rivals meet twice a season: 1,824 offense-against-defense rematches, 2006–2024.
+
+*How it's measured:*
+- **The outcome** is an offense's EPA per play beyond both units' strength. Strength is each unit's season mean, leaving out the games being compared.
+- **What the residual is made of:** offense form, defense form, a part specific to the pairing, and noise.
+- **Three comparisons**, each with the first meeting:
+  - the rematch;
+  - the same offense against other defenses near the rematch's week (the offense null);
+  - other offenses against the same defense near that week (the defense null).
+- **The pairing's part** is the rematch's covariance less both nulls' covariances. It's the ceiling on what any matchup explanation (schemes, one player against another, anything) can add.
+- 90% intervals come from resampling team pairs.
+
+*1. Something specific to the pairing exists, and it's not small.*
+
+| | Rematches | r with the rematch | Offense null | Defense null | **Pairing's share of the residual** (90%) | Largest r a matchup term could reach |
+|---|---|---|---|---|---|---|
+| 2006–2024 | 1,824 | **+0.089** (+0.049 to +0.128) | −0.010 | +0.007 | **9.2%** (4.0% to 14.2%) | 0.30 |
+| 2006–2015 | 960 | +0.058 | −0.017 | +0.008 | 6.6% (−0.1% to 13.5%) | 0.26 |
+| 2016–2024 | 864 | +0.122 | −0.004 | +0.006 | 12.0% (5.3% to 19.0%) | 0.35 |
+| Meetings 1–5 weeks apart | 550 | +0.176 | −0.019 | +0.004 | 19.0% (8.9% to 28.8%) | 0.44 |
+| 6–9 weeks apart | 614 | +0.045 | −0.013 | +0.041 | 1.7% (−6.5% to 9.6%) | 0.13 |
+| 10–17 weeks apart | 660 | +0.066 | −0.002 | −0.022 | 9.0% (0.7% to 16.9%) | 0.30 |
+| **Next season's first meeting** | 3,058 | +0.018 | +0.010 | +0.022 | **−1.4%** (−5.5% to +2.6%) | 0 |
+
+- **Within a season, an offense that beats its expectation against a defense does it again in the rematch.** That's beyond what either unit carries into its other games: both nulls are near zero, and a placebo (other offenses against other defenses) is −0.005.
+- **The ceiling is far above what styles reach.** F7's tendency pairs, held out, reach r +0.028: about 1% of the pairing's part (0.08% of the residual against 9%). So the matchup is real, but the 11 offense and 7 defense tendencies don't capture it.
+- **It doesn't carry to next season,** with the interval's top at 2.6%. Whatever it is lives in things that change between seasons: rosters, coordinators, game plans. That fits schemes and personnel, and rules out "this franchise always has this team's number".
+- **It's stronger in 2016–2024 and when the meetings are close together.** The middle gap (6–9 weeks) is weaker than the long one, so the fade isn't smooth. Treat the gap pattern as unclear.
+
+*2. The market (912 rematch games): nothing.* The first meeting's raw residual (home offense's less the away offense's, with strengths from games before the rematch only) predicts the rematch's margin beyond the close at r +0.008. That's +0.10 points per sd, and shuffles reach it 24.5% of the time. One game's residual is a very noisy measure of a 9% part, and the market may already see it. Either way, it isn't a usable feature as is.
+
+*Football reading:* a matchup is mostly this-season-specific: who is healthy, who is calling plays, which corner draws which receiver. The style averages blur it. To catch it we need either finer matchups (play by play, route B) or matchup traits learned from results within a season (route C).
+
+*The case against:*
+- **Other things are shared by two meetings of the same pair:** the same key players' health, or a coordinator's familiarity with that opponent. These count as matchup effects too, just not as schemes.
+- **Not a forecast:** strengths use the whole season. As a ceiling that's fine; as a feature it isn't (part 2 is the honest version).
+- **Seven cuts were looked at.** The headline (all seasons) was the one planned.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
-- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides.
+- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
@@ -469,3 +507,10 @@ What didn't hold:
 - comebacks beyond the win chance (F19).
 
 **The CEO's call (2026-11-09):** traits and anti-traits first; scheme against scheme stays in discovery, starting with the rematch ceiling (see the brief's CEO decisions).
+
+**The CEO's order for scheme against scheme (2026-11-09, after the anti-traits):**
+1. A, the rematch ceiling (done: F20, a real within-season matchup part of about 9% that styles reach only 1% of);
+2. B, the play-by-play matchup map, then one game-level test;
+3. E, the CEO's own candidate matchups;
+4. C, matchup traits learned from results (latent factors);
+5. D, the wider pair and cluster scan, expected to fail, as the bad example.
