@@ -1,6 +1,6 @@
 # Schemes v2: results (draft, build in progress)
 
-**Status:** building, 2026-11-09. Done: live traits (R1–R4) and anti-traits (R5–R9). Not done: retrospective traits, the vault, the case against, the interface card. This page is filled in as the build goes; the template's remaining sections come at the end.
+**Status:** building, 2026-11-09. Done: live traits (R1–R4), anti-traits (R5–R9), scheme-against-scheme discovery (EXPLORATION F20–F25), and the case against. Merging to main mid-build at the CEO's call (2026-11-09: "I think we should merge now"). Not done: retrospective traits, the vault, the interface card. This page is filled in as the build goes; the template's remaining sections come at the end.
 
 ## What's built so far
 - **`team_game.tendencies`** ([decision 0023](../../docs/decisions/0023-team-game-tendencies.md)): each team's tendencies per game from play-by-play, in neutral situations, 1999 on, known the day after the game. Any project can read it.
@@ -111,12 +111,41 @@ How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
 | The anti-trait term keeps F18's sign on held-out seasons | **Yes on offense** (pass, shotgun: R6); **no on defense** (man, two-high, blitz) |
 | The shuffled-team version of each shows nothing | Offense: the real slopes beat 196 and 198 of 200 shuffles (R6). As forecasts, only the pass blend passes the harness's signal test (R5) |
 
+## Scheme against scheme (discovery, not confirmed)
+Discovery ran the CEO's order A → B → E → C → D on 2026-11-09. Full write-up in [EXPLORATION.md](EXPLORATION.md), F20–F25.
+- **The conditional outcome exists:** an offense's result against a defense, beyond both units' strength, repeats in the rematch within a season. That part is about 9% of what strength leaves (F20), and it's gone by next season.
+- **Charted scheme types don't explain it:**
+  - the play-by-play map has real interactions but carries nothing to games (F21);
+  - look-alike opponents don't get look-alike results (F22);
+  - the CEO's four pairings don't pass (F23);
+  - the wide scan holds out at the shuffled level (F25).
+- **Types learned from results might:** in 2015–2024 they reach about 4% of the ceiling, even for pairs that never met, but not before 2015, and one season carries much of it (F24). Next: the forecast version, from earlier games only (IDEAS I26).
+
+## The case against (2026-11-09, written before the merge)
+The strongest argument that these results are wrong or overstated:
+1. **The confirmation isn't independent of the discovery.**
+   - Pass and shotgun were picked as the anti-trait options *because* they worked in the exploration (F17–F18), on the same 2006–2024 seasons the build then "confirms" on (R6).
+   - The walk-forward harness keeps each forecast honest in time, but not the choice of what to forecast.
+   - Only the vault (2025, unread) or live seasons are a clean test, and neither has been run.
+2. **The one anti-trait forecast that passes does so by a sliver.** The pass blend beats the league's gain by 0.001 on the range score (interval −0.001 to −0.000). That's practically nothing, and it could vanish on the vault.
+3. **The trait forecasts beat easy yardsticks.** Tendencies are sticky, so beating the league and season averages is the expected part. Whether any of this helps a downstream model (margins, totals, player projections) is untested.
+4. **Defensive charting comes after the season,** and it's charted on dropbacks only. Every defensive number rests on one source's charting, which nobody has audited.
+5. **The matchup ceiling (F20) rests on a model of the residual:**
+   - it assumes form adds up (offense form + defense form + pairing);
+   - the nulls use the 3 nearest games;
+   - strengths use the whole season;
+   - home and away aren't modelled (they alternate in rematches, which biases *against* finding a repeat).
+   A different decomposition could move the 9%.
+6. **Seven cuts were looked at in F20 and many settings in F24.** F24's robustness check was run after seeing the result, and 2021 drives much of it.
+7. **The project isn't done.** The vault, the interface card, saved walk-forward outputs and retrospective traits are still open. This merge brings tested, unvalidated code to main. Nothing reads it yet, and the scheduled workflows (odds, nflverse snapshots) don't run it.
+
 ## Left to do
 1. ~~Anti-traits~~ (done: R5–R9). Possible follow-ups: defensive avoidance from this season's live columns (pressure rate faced), and a defense's coordinator once that table exists.
 2. **Retrospective traits** from participation (personnel, coverage, blitz, box), feeding in-season models from finished seasons only (rule m).
 3. **Rung 2,** only if it beats the blend: weights that change with games played; the opponent's average bend (F10).
 4. **A known-at rule for head coaches** (announced months before kickoff), so a new coach's history helps in week 1.
-5. The vault, the case against, the spot-check, the interface card, KNOWLEDGE and CONSISTENCY rows.
+5. The vault, the interface card, KNOWLEDGE rows (the case against is written above; the spot-check is done at this merge).
+6. **The forecast version of matchup types learned from results** (I26), from earlier games only: the CEO's next step after the merge (2026-11-09).
 
 ## Technical calls so far (for veto at merge)
 - **Decision 0023's eight calls:**
@@ -137,3 +166,11 @@ How it's tested ([`explore/anti_sign.py`](explore/anti_sign.py)):
   - unweighted targets;
   - first training seasons 2017 (blitz) and 2019 (coverage);
   - the sign test as a script.
+- **Discovery method calls (explore scripts only, no package code):**
+  - the matchup residual is EPA per play beyond both units' season strength, leaving out the games compared (F20);
+  - each null averages the 3 games nearest in week (F20);
+  - the play map uses EPA beyond the situation, with each call interacted with down and long distance (F21);
+  - unit splits are shrunk with 800 plays' weight (F21);
+  - style similarity is the Euclidean distance between season style vectors (F22);
+  - DL weight is the current listed weight (F23);
+  - the learned-type settings were chosen on 2006–2014 and applied once to 2015–2024 (F24).
