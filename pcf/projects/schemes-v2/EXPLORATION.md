@@ -534,9 +534,65 @@ The outcome is F20's residual: an offense's EPA per play beyond both units' stre
 - **This agrees with F21–F22.** The play map does have E3's mechanism at the play level (play action into a blitz −0.11, shotgun into a blitz +0.05), but season styles don't carry it into games.
 - **H17's caution applies to every row** (confounding by indication). A short-throwing offense may throw short *because* its line can't block, so the style stands for a weakness that the blitz exploits, and the two effects cancel. Testing that needs the roster behind the style, not the style alone.
 
+**F24. C, matchup traits learned from results** ([`explore/latent.py`](explore/latent.py), robustness in [`explore/latent_check.py`](explore/latent_check.py), 2026-11-09; 9,853 sides, 2006–2024).
+
+*How it works (the Netflix approach):*
+- Within a season, each offense and each defense gets a strength plus k hidden numbers.
+- An offense's EPA per play against a defense = league + both strengths + (offense's numbers · defense's numbers).
+- Two defenses come out "alike" if the same offenses do well against both, whatever their charted styles.
+- **Held out:** 10 folds within each season, so it uses the season's other games. It's a ceiling-style test, not a forecast.
+- **Measure:** r between the held-out matchup part and what strength alone misses.
+- **Settings** (k hidden numbers, ridge λ) were chosen on 2006–2014 and applied once to 2015–2024.
+- **Null:** defenses swapped among sides in the same week.
+
+*Results:*
+
+| | Held-out sides | r | Shuffled at or above |
+|---|---|---|---|
+| 2006–2014, every setting (choosing) | 4,608 | −0.018 to −0.000 | null level (null centre −0.005) |
+| **2015–2024, the chosen setting (k 2, λ 1)** | 5,245 | **+0.059** | **2%** (null centre −0.001, sd 0.023) |
+| … pairs that met in the training folds | 1,772 | +0.056 | 4% |
+| … **pairs that never met** | 3,473 | **+0.064** | 2% |
+
+- **Size:** +0.011 EPA per play per sd of the matchup part, about 4% of F20's ceiling.
+- **The striking part is the pairs that never met.** There, only shared structure can help ("offenses that beat B also beat B′"). So in recent seasons, results do group defenses into types that offenses do alike against. F22 found charted styles don't; outcomes do.
+
+*Robustness (looked at after the result, so it's reported as such):*
+- **Every setting is positive on 2015–2024** (+0.006 to +0.089). Light penalties (λ 0.5–1) do best (+0.06 to +0.09), and heavier ones fall to about +0.01. So it isn't one lucky setting. The run-to-run spread from random folds is about ±0.015.
+- **Season by season it's lumpy:**
+  - 2006–2014: 2 of 9 seasons positive.
+  - 2015–2024: 7 of 10 positive.
+  - **2021 alone is +0.23.** Without 2021, the other test seasons average about +0.02.
+- **So it's a faint, era-dependent signal.** It matches F20, where the pairing part was larger in 2016–2024 (12%) than in 2006–2015 (6.6%), but it's too lumpy to build on yet.
+
+*Football reading:* a "type" learned from results isn't a scheme label. It's whatever makes the same offenses succeed against two defenses: personnel (a pass rush against weak tackles, corners against size), or a coordinator's habits. H17's point fits: the type may be the weakness a scheme hides, which is why charted styles miss it.
+
+*The case against:*
+- Discovery-grade: the fit uses the season's later games.
+- One season drives much of it.
+- The older era shows nothing.
+- The forecast version (earlier games only) and the live seasons (2025+) are where it would have to hold.
+
+
+
+**F25. D, the wide scan, run as the tempting-but-bad option** ([`explore/wide.py`](explore/wide.py), 2026-11-09; F7's 8,036 sides, 2006–2024).
+- **Expected before running:** in-sample "winners" that vanish on held-out seasons, because the more terms are tried, the bigger a real effect must be to stand out.
+- **The held-out results** are what count. The in-sample numbers show how good it would have looked.
+
+| Approach | In-sample | Held out | Shuffled defenses, held out |
+|---|---|---|---|
+| 308 terms (77 pairs × the product and 3 corners), one at a time | largest \|t\| 3.74 (outside runs high × man high) | — | 95th percentile of the largest \|t\|: 3.70, so 1 term above the bar; 16 above \|t\| 2 against about 14 by chance |
+| The top 20 terms picked on half the seasons | r **+0.120** | r **+0.008** | in-sample +0.122, held out +0.003 (38% at or above the real) |
+| Clusters, k = 3 to 10 (9 to 100 cells) | — | r −0.040 to +0.027 | 25% to 88% at or above: nothing at any k |
+| Boosted trees on all 18 tendencies of both sides | r **+0.646** | r **+0.021** | in-sample +0.640, held out +0.022 (50%) |
+
+- **This is the trap, measured.** A model that "explains" 42% of the variance in-sample (trees, r 0.65) does exactly as well on shuffled opponents. Picking the best 20 pairs looks like r 0.12 and holds out at 0.008.
+- **One survivor at the edge:** outside runs against man-heavy defenses (both high: −0.066 EPA a play, t −3.7, against a bar of 3.70). It's F7's top pair again (product t −2.7). Football reading: man defenders chase receivers and turn their backs, which should help outside runs, but the sign says the opposite. It's a single edge-of-chance term out of 308, so it goes to IDEAS for the live seasons, not into a model.
+- **What separates good from bad:** routes A, B, E and C each asked one question chosen in advance, or validated on data they didn't use. D asks hundreds of questions of the same data. Same data, same people, same football: the difference is all in the counting.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
-- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it. **F21–F22:** neither the play-by-play matchup map carried to games (r +0.013, 0.2% of the ceiling) nor look-alike opponents (style similarity −0.008 and 0.000 r per sd) explain it. On this evidence the conditional part belongs to the specific opponent this season, not to scheme types. **Leaning failed** for schemes-as-types; the matchup itself is real.
+- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it. **F21–F22:** neither the play-by-play matchup map carried to games (r +0.013, 0.2% of the ceiling) nor look-alike opponents (style similarity −0.008 and 0.000 r per sd) explain it. On this evidence the conditional part belongs to the specific opponent this season, not to scheme types. **Leaning failed** for schemes-as-types; the matchup itself is real. **F24:** types learned from *results* (not charted styles) reach about 4% of the ceiling in 2015–2024, including pairs that never met, but not in 2006–2014 and lumpy by season: **unclear**, a lead for live seasons (I26). **F25:** the wide scan finds nothing that holds out.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
@@ -592,5 +648,5 @@ What didn't hold:
    - A2, the CEO's look-alike opponents (done: F22, the matchup doesn't follow the style);
 2. B, the play-by-play matchup map, then one game-level test (done: F21, real play-level interactions that don't reach games);
 3. E, the CEO's own candidate matchups (done: F23, none passes; two lean the CEO's way);
-4. C, matchup traits learned from results (latent factors);
-5. D, the wider pair and cluster scan, expected to fail, as the bad example.
+4. C, matchup traits learned from results (done: F24, a faint, era-dependent signal that also reaches pairs that never met);
+5. D, the wider pair and cluster scan, expected to fail, as the bad example (done: F25, failed as expected: in-sample fits up to r 0.65 hold out at the shuffled level).
