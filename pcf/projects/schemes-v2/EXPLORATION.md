@@ -455,9 +455,63 @@ For comparison, offensive EPA per play is 0.60 and 0.43; defensive EPA allowed i
 - **Not a forecast:** strengths use the whole season. As a ceiling that's fine; as a feature it isn't (part 2 is the honest version).
 - **Seven cuts were looked at.** The headline (all seasons) was the one planned.
 
+**F21. Route B: the play-by-play matchup map, then one game term** ([`explore/matchups.py`](explore/matchups.py), 2026-11-09; 227,272 neutral plays, 2016–2024; FTN calls 2022–2024, 77,861 plays; coverage and blitz on dropbacks only).
+
+*1. The map: on single plays, some calls do interact.*
+- **Measure (Δ):** how much more the offense gains from its call when the defense makes its call. It's in EPA per play beyond the situation, with each call's link to down and distance taken out, and game-clustered errors.
+- **27 pairs had enough plays.** With that many, the bar is |t| above 3.0.
+
+| Offense call × defense call | Δ (EPA a play) | t | Football reading |
+|---|---|---|---|
+| Pass × 8+ man box | **+0.123** | **6.8** | The one pair past the bar: passing into a stacked box. The defense guessed run and lost |
+| Play action × blitz | −0.112 | −2.9 | Play action takes time, and a blitz punishes it |
+| Play action × two-high | −0.078 | −2.1 | |
+| Motion × two-high | −0.059 | −1.9 | |
+| Motion × man | +0.054 | 1.6 | The lore that motion beats man: right sign, not significant |
+| Shotgun × blitz | +0.049 | 2.1 | |
+| Heavy personnel × two-high | −0.049 | −2.2 | |
+
+- Five pairs are above |t| 2, against about 1.4 expected by chance. **The map has some real football in it.**
+
+*2. Carried to games, it explains nothing.* Each side gets one number, so no game-level fitting is needed:
+- **B1, styles × styles:** Δ fitted without that season × the offense's use of its call × the defense's use of its call.
+- **B2, units × calls:** each offense's own gain against each defense call × the defense's use of that call, plus the mirror for the defense.
+
+The outcome is F20's residual: an offense's EPA per play beyond both units' strength.
+
+| Uses from | Sides | B1 r (shuffled at or above) | B2 r (shuffled at or above) | Share of F20's 9.2% |
+|---|---|---|---|---|
+| The season's other games (ceiling version) | 4,732 | +0.013 (17.5%) | +0.007 (51.5%) | 0.2%, 0.1% |
+| Earlier games only (what a forecast knows) | 3,866 | −0.019 (84%) | +0.003 (44.5%) | 0 |
+
+- **Football reading, through game theory.** The play-level interactions are about *surprise within a play*: a stacked box against a pass, a blitz against play action. A season's style doesn't set them. Both sides mix their calls, so a team's average use carries almost none of the edge into a game.
+- **So F20's within-season matchup part isn't made of average call mixes.** What's left is what changes inside a season and is specific to the pair: personnel (who's healthy, which corner draws which receiver), the game plan for that opponent, and possibly the coordinator.
+
+*The case against:*
+- The splits are shrunk hard (800 plays' weight), and F15 already found a QB's man-against-zone split to be noise. B2 may be too blunt rather than empty.
+- FTN covers three seasons only.
+- Coverage is charted on dropbacks only, so "zone against the run" stays invisible.
+
+**F22. A2, the CEO's look-alike test** ([`explore/lookalike.py`](explore/lookalike.py), 2026-11-09).
+- **The CEO's question:** if the rematch pattern is about schemes, it should hold against *other* opponents with the same style.
+- **The pairs:** every pair of one unit's games in a season against two different opponents.
+- **The test:** do the two results beyond strength agree more when the two opponents look alike in style (the distance between their season style vectors)? Strength similarity and weeks apart are controls.
+- **The null:** styles shuffled among teams within each season, 200 times.
+
+| | Pairs of games | Most alike fifth: r | Least alike fifth: r | Style similarity (r per sd, 90%) | Shuffled at or above | Strength similarity (r per sd, 90%) |
+|---|---|---|---|---|---|---|
+| Offense against look-alike defenses (man, two-high, blitz, box; 2018–2024) | 28,209 | +0.054 | +0.063 | **−0.008** (−0.016 to −0.001) | 96% | +0.011 (+0.001 to +0.021) |
+| Defense against look-alike offenses (6 tendencies; 2006–2024) | 73,137 | +0.048 | +0.036 | **−0.000** (−0.005 to +0.005) | 52% | +0.008 (+0.002 to +0.014) |
+| The same, 2016–2024 with personnel | 35,697 | +0.043 | +0.041 | +0.003 (−0.004 to +0.010) | 26% | +0.008 (−0.002 to +0.017) |
+
+- **The matchup doesn't follow the style.** An offense that beats its expectation against one defense does no better against defenses that look like it. If anything, it does slightly worse, and that edge is at the edge of chance.
+- **So F20's pairing part belongs to the opponent, not its scheme type.** It's the same answer as F21, from a different direction. What repeats is this offense against *this* defense this season: its players, its health, its plan.
+- **The "good against bad" check:** results do agree a little more against opponents of similar strength (+0.008 to +0.011 r per sd). *This may be an artefact.* Strength is removed with weights below 1 (0.75 and 0.52, because season means are noisy), so opponents with similar measured strength leave similar leftovers in the residual. Read it as unclear, not as evidence that "good teams beat bad teams" beyond their ratings.
+- **The overall level isn't interpreted.** Two games of one unit agree at r +0.04 to +0.05 whatever the opponents. That's the leftover strength and the shared strength estimate, which is the same for every pair. Only the slopes on similarity are read.
+
 ## Hunch verdicts so far (first looks)
 - **H10:** supported for head coaches (F3, F4). Shotgun, no-huddle, tempo, personnel and coverage follow the coach; scrambling and efficiency follow the QB. Stays **open** until coordinators and player movers are in.
-- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it.
+- **H14:** the first half holds: schemes alone are near zero beyond strength, except shotgun (F6). The second half is a whisper at most: held-out r +0.028, 2.5% by chance; clusters show nothing (F7, F8). **Unclear** for now. The margins test (with H9) decides. **F20:** offense-against-defense outcomes *do* have a real pairing-specific part within a season (about 9% of what strength leaves), so the CEO's "conditional" outcome exists; the tendencies tried so far explain about 1% of it. **F21–F22:** neither the play-by-play matchup map carried to games (r +0.013, 0.2% of the ceiling) nor look-alike opponents (style similarity −0.008 and 0.000 r per sd) explain it. On this evidence the conditional part belongs to the specific opponent this season, not to scheme types. **Leaning failed** for schemes-as-types; the matchup itself is real.
 - **I25:** partly holds (F5).
 - **H9:** **unclear.** Style pairings predict the margin's miss against the close at r +0.035, 5% by chance, about 0.4 points per sd. The direction is right; the data is too small to settle it (F9).
 - **H13:** **failed for head coaches** in its team-specific form (F11, F12). Teams bend against opposing styles, but all the same way (F10). Coordinators are untested: if morphs are game plans, they belong to coordinators.
@@ -510,7 +564,8 @@ What didn't hold:
 
 **The CEO's order for scheme against scheme (2026-11-09, after the anti-traits):**
 1. A, the rematch ceiling (done: F20, a real within-season matchup part of about 9% that styles reach only 1% of);
-2. B, the play-by-play matchup map, then one game-level test;
+   - A2, the CEO's look-alike opponents (done: F22, the matchup doesn't follow the style);
+2. B, the play-by-play matchup map, then one game-level test (done: F21, real play-level interactions that don't reach games);
 3. E, the CEO's own candidate matchups;
 4. C, matchup traits learned from results (latent factors);
 5. D, the wider pair and cluster scan, expected to fail, as the bad example.
