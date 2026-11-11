@@ -113,3 +113,18 @@ def test_write_history_saves_the_standard_schema(tmp_path, bt):
     assert path == tmp_path / "validation-harness" / "run123" / "history.parquet"
     assert set(saved["run_id"]) == {"run123"}
     assert "y" not in saved.columns and "loss" not in saved.columns
+
+
+def test_a_season_keyed_grain_gets_one_step_per_season():
+    """player_season rows have no game_id: each joins its season's retrospective step (0029)."""
+    from datetime import datetime
+
+    at = [datetime(y, 9, 1, tzinfo=UTC) for y in (2021, 2021, 2022)]
+    games = pl.DataFrame(
+        {"game_id": ["a", "b", "c"], "step": [0, 0, 1], "step_season": [2021, 2021, 2022],
+         "step_week": [1, 1, 1], "as_of": at}
+    )  # fmt: skip
+    rows = pl.DataFrame({"gsis_id": ["p", "p", "q"], "season": [2021, 2022, 2023], "x": [1, 2, 3]})
+    out = backtest._with_steps(rows, games).sort("season")
+    assert out["step"].to_list() == [0, 1]  # 2023 has no step: dropped
+    assert out["as_of"].to_list() == [at[0], at[2]]

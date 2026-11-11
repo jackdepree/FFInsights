@@ -27,8 +27,9 @@ from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
 from pcf.data.tables.games import game_parts, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
+from pcf.data.tables.player_pace import ON_FIELD_COLUMNS, player_pace_rows, player_season_rows
 from pcf.data.tables.plays import play_parts, player_play_parts
-from pcf.data.tables.store import write_parts
+from pcf.data.tables.store import read_part, write_parts
 from pcf.data.tables.team_season import PARTICIPATION_COLUMNS as SEASON_PARTICIPATION
 from pcf.data.tables.team_season import team_season_parts
 from pcf.data.tables.tendencies import PBP_COLUMNS, tendency_rows
@@ -213,7 +214,53 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
         ecr=ecr,
         ids=ids,
     )
+    on_field = on_field_pace(season, root)
+    if on_field is not None:
+        parts["on_field_pace"] = on_spine(
+            on_field, parts["roster"], ["gsis_id", "game_id"], "player_game.on_field_pace"
+        )
     write_parts(parts, "player_game", [season], root)
+
+
+def on_field_pace(season: int, root: Path | None) -> pl.DataFrame | None:
+    """Each player's team rates on and off the field (`player_pace`), from the saved `play` and
+    `player_play` parts, so those tables are built first (TABLE_ORDER). None without them."""
+    try:
+        on = read_part("player_play", "on_field", [season], root).select(ON_FIELD_COLUMNS)
+        paced = read_part("play", "pace", [season], root).select(
+            "game_id", "play_id", "pcf_pass_oe", "pace_oe"
+        )
+        pbp = read_part("play", "pbp", [season], root).select("game_id", "play_id", "posteam")
+        pers = read_part("play", "participation", [season], root).select(
+            "game_id", "play_id", "offense_personnel"
+        )
+        plays = (
+            paced.join(pbp, on=["game_id", "play_id"])
+            .join(pers, on=["game_id", "play_id"], how="left")
+            .collect()
+        )
+        on = on.collect()
+    except (FileNotFoundError, pl.exceptions.ComputeError):
+        return None
+    if plays.is_empty() or on.is_empty():
+        return None
+    plays = standard.standard_teams(plays, "posteam")
+    return player_pace_rows(plays, on)
+
+
+def build_player_season(season: int, cal: Calendar, root: Path | None) -> None:
+    """`player_season.on_field_pace` from the saved `player_game` parts (built first)."""
+    try:
+        games = read_part("player_game", "on_field_pace", [season], root).collect()
+        roster = read_part("player_game", "roster", [season], root).select(
+            "gsis_id", "game_id", "team", "position"
+        ).collect()
+    except FileNotFoundError:
+        return
+    if games.is_empty():
+        return
+    rows = player_season_rows(games, roster, cal.games.select("game_id", "kickoff"))
+    write_parts({"on_field_pace": rows}, "player_season", [season], root)
 
 
 Builder = Callable[[int, Calendar, Path | None], None]
@@ -223,9 +270,12 @@ PER_SEASON: dict[str, tuple[str, Builder]] = {
     "play": ("pbp", build_play),
     "player_play": ("participation", build_player_play),
     "player_game": ("weekly_rosters", build_player_game),
+    "player_season": ("participation", build_player_season),
 }
 ALL_SEASONS = {"game", "team_game"}
-TABLE_ORDER = ["game", "team_game", "team_season", "play", "player_play", "player_game"]
+TABLE_ORDER = [
+    "game", "team_game", "team_season", "play", "player_play", "player_game", "player_season",
+]  # fmt: skip
 
 
 def build(
