@@ -45,6 +45,13 @@ Every model wrote rows for all 13 due games (408 player rows for participation, 
 - 12 of the 13 new models can be scored so far (wins over the rest of the season waits for the season's end). None is worse than its backtest's 90% interval for 9 weeks; tempo is better than its interval (59.3 against 59.7–72.7 on the range score ×100). The schemes finals beat their season-to-date yardsticks here too (pass rate over expected 2.15 against 2.36).
 - It's a replay, made today with today's data, so it says the pipeline scores correctly and nothing looks broken. It is not evidence of live skill.
 
+## Spot-check before merge (the CEO's pick: Elo against the close, 2026-11-10)
+Recomputed by hand from the raw replay files and nflverse's raw schedule, with none of pcf's scoring code:
+- **The numbers match.** Margin 9.766 against the close's 9.485 (0.280 behind) and total 11.100 against 10.596 (0.504 behind), both to the last digit. Win chance 0.635 against 0.623 (0.012 behind) by hand, where `close_card` reads 0.6346 against 0.6223 on 135 games. The one game apart is the week 5 tie (NYG 27, WAS 27): the scorecard leaves ties out of win chance, as Elo's backtest does.
+- **The line's direction is right.** A positive `spread_line` means the home team is favored (SEA −166 at +3.0 in week 1), the same direction as Elo's margin and the result (home minus away).
+- **Every game is there, and every forecast came before its game.** All 136 finished games of weeks 1–9, each forecast at least 8 hours before kickoff; the 9 Thursday games were forecast at Thursday noon.
+- **Six games walked through,** one every few weeks. In week 1, ARI won 26–14 at LAC: Elo had LAC by 6.0 and missed by 18.0, while the close had LAC by 8.5 and missed by 20.5. Elo and the close are usually a few points apart and both miss big upsets.
+
 ## Case against
 1. **Nothing has run live.** Every number above is a trial at a future moment with Tuesday's data. The first real test is Thursday 2026-11-12 (participation only, unless this merges first) and Saturday 2026-11-14.
 2. **Thanksgiving is the tightest run.** On Thursday 2026-11-26 the first game (CHI at DET) is at 13:00, so the noon run waits for the injury file until 12:15 at the latest, then takes about 20 minutes: participation done by about 12:30, Elo and schemes by about 12:36. That leaves about 25 minutes. A slow pull or a slower PC could push the last models past kickoff; their rows would be left out, and the record would say so.
