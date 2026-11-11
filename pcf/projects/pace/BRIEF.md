@@ -1,6 +1,6 @@
 # Brief: Pace and play-calling (`pace`)
 
-**Status:** draft (kickoff and hunches 2026-11-10; the CEO chose C, both; exploration done the same day, GO: [EXPLORATION.md](EXPLORATION.md), and its changes below wait for the CEO's agreement) · **Layer:** expert · **Cadence:** in_season
+**Status:** agreed 2026-11-10 (the CEO: "let's build the pace (team) expert as is", after the exploration and its follow-up: [EXPLORATION.md](EXPLORATION.md)) · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-10, before any research.* Pace analysts (Football Outsiders' pace stats, Sharp Football, the fantasy sites' team-volume projections) work in three steps:
@@ -118,8 +118,9 @@ Player opportunity (volume × shares), game script, the game simulator, totals, 
 
 ## CEO decisions
 1. **What pace forecasts for each team's next game** (taste call, 2026-11-10): **C, both.** The habits (pace over expected and pass rate over expected, on every play) as features, and volume (plays, passes, runs) as the forecast. The other options were A, volume only, and B, habits only, leaving volume to game script and the simulator.
+2. **Team only; players get their own expert** (2026-11-10). The CEO asked whether pace should include individual players' tendencies. Pace stays at team level ("build the pace (team) expert as is"), and a separate player pace expert (`player-pace`) is built after it. The starting QB, who moves pass rate over expected about as much as the head coach does (schemes-v2#F3: 0.26 season to season with a new QB, 0.32 with a new coach, 0.53 with neither), goes to `player-pace` too. Pace publishes its per-play measures, so the player expert can average them by who played.
 
-## What the exploration changed (proposed, 2026-11-10; for the CEO to agree)
+## What the exploration changed (agreed by the CEO, 2026-11-10)
 *From [EXPLORATION.md](EXPLORATION.md).* Verdicts: H19 unclear (mixed), H20 held, H21 held small, H22 unclear (mixed), H23 held, H24 failed, H25 failed.
 1. **The habits are measured on every play** (F1, F5, F6): PROE on every play, with early downs and 3rd down as separate habits; pace over expected on every snap, from an expected pace that knows when the clock stopped; and the no-huddle rate. The neutral versions remain as yardsticks.
 2. **Volume is drives times plays per drive, for both teams together** (F9): the line (favorites run more, F2), both teams' habits, and both offenses' and defenses' efficiency (Elo's offense and defense ratings or EPA). Ranges come first: a single game's plays are hard to forecast (F8).
