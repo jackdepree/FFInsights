@@ -311,11 +311,30 @@ projects:
   - id: player-pace
     name: Player pace and play-calling
     phase: 1
-    status: idea
+    status: dead_end
     horizon: next
     cadence: [in_season]
-    depends_on: [pace, participation]
-    summary: How individual players move their team's pace and pass rate over expected, starting with the starting QB (schemes-v2#F3), from pace's per-play measures averaged by who played, with the shrinkage a plus-minus needs. The CEO's call (2026-11-10), built after the team pace expert is done.
+    depends_on: [grain-tables, validation-harness]
+    summary: "In season: each player's effect on his team's pace over expected and pass rate over expected before each game, from what's known in season (passer and rusher per play, weekly snap counts), as features for team pace and the layers above. Starts with the QB (schemes-v2#F3). The CEO's call (2026-11-10), after team pace. Kickoff 2026-11-11 in projects/player-pace/BRIEF.md; the CEO's hunches H26-H31 (rates by condition, movers, plus-minus and whether it repeats, age, defenders). The CEO's call (2026-11-11): both in season and between seasons, so its retrospective twin is player-pace-retro; one brief, one exploration. Exploration GO (2026-11-11): skill players' pass-rate plus-minus repeats and follows tight ends and receivers (a role tell); QBs carry pace more than PROE; rookie QBs pass less; pace mostly stays with the team. Brief agreed 2026-11-11 (the CEO: 'Build both as drafted'). Validating 2026-11-11: at the team-game grain, the expected starting QB improves next-game PROE a little (0.3%, 4% in expected changes; R2) but not volume (R3, the brief's main test failed); who's out adds nothing (R4). Dead end 2026-11-11 (the CEO: 'keep the results and findings of the in-season expert but discard the model'): the code is removed; RESULTS and player-pace#R2-R6 stay."
+
+  - id: player-pace-retro
+    name: Player pace and play-calling (retrospective)
+    phase: 1
+    status: done
+    horizon: next
+    cadence: [retrospective]
+    depends_on: [grain-tables, validation-harness]
+    summary: "Between seasons: each player-season's on-field pace over expected and pass rate over expected, and his plus-minus against his team, from who was on the field on every play (participation, 2016 on), known the day after the Super Bowl; priors for later seasons only (rule m). The CEO's call (2026-11-11): player pace gives downstream models both in-season and between-season features. Shares player-pace's brief and exploration. Validating 2026-11-11: a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average (player-pace#R1); defenders 0.8%, QBs none, pace 0.2%. The CEO's spot-check of R1 held (2026-11-11: steady every season, 12.7% beyond playing time). Done and merged 2026-11-11 (the CEO: 'Merge now')."
+    interface:
+      inputs: player_season.on_field_pace; no model outputs
+      outputs: "Per player-season, mean q10 q50 q90 of next season's pm_proe, pm_proe_pers, pm_pace (<m>_shrunk). Tables player_game.on_field_pace and player_season.on_field_pace (2016 on)"
+      grain: player_season; player_game for the table part
+      interval: once a season
+      cadence: retrospective
+      known_at: the day after the Super Bowl; for later seasons only (rule m)
+      model: none registered
+      how_to_use: "A prior for skill players' role (the pass tell, player-pace#R1); not for QBs (no weight) or pace (R7)"
+      feeds: player opportunity, fantasy projections, roles
 
   - id: environment
     name: Environment

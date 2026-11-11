@@ -98,6 +98,10 @@
 | **Matchup type (learned)** | Two hidden numbers per offense and per defense, learned from a season's results, whose product is the matchup part | schemes-v2 EXPLORATION F24 |
 | **Cadence**: `in_season`, `retrospective`, `offseason_events` | When a project updates, and therefore which data it may use | CLAUDE.md rule m |
 | **known_at** | The earliest moment PCF could have had a row of data, for a live prediction | DATA_SOURCES.md |
+| **On-field rate** | A team's pace over expected or PROE on the plays a player was on the field for (participation); a defender's is the opposing offense's | decision 0029 |
+| **Player plus-minus** | His team's rate on the field minus off it, same team-game, weighted by on × off ÷ team snaps (`player_game.on_field_pace`); shrunk toward his position group in forecasts | decision 0029 |
+| **Expected starting QB** | The team's last starter known by the Saturday run, unless ruled out (Out, Doubtful) or off the roster; then the rostered QB with the most snaps | decision 0029 |
+| **Mover** | A player who played for one team and then another, between or within seasons | player-pace BRIEF |
 | **as_of** | The moment a prediction is made; only data known by then may be used | ARCHITECTURE.md |
 | **Gateway** | The `as_of` function: the only way models read data | ARCHITECTURE.md |
 | **Leakage** | A model using information it wouldn't have had at prediction time | CLAUDE.md rule c |

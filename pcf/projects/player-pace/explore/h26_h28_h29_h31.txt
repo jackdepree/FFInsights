@@ -1,0 +1,201 @@
+
+=== Spread: how far players' plus-minus (by play) sits from 0, per player-season (shrunk only by sample)
+=== H26: on-field rates, split-half (week) and season to season, by side and group
+shape: (32, 16)
+┌─────────┬───────┬─────────┬────────┬─────────┬───────┬──────────┬───────────┬───────┬─────────────────┬──────┬───────────┬─────┬──────────┬───────┬─────┐
+│ side    ┆ group ┆ measure ┆ week_r ┆ week_lo ┆ units ┆ season_r ┆ season_lo ┆ pairs ┆ same_team_coach ┆ n1   ┆ new_coach ┆ n2  ┆ new_team ┆ nt_lo ┆ n3  │
+│ ---     ┆ ---   ┆ ---     ┆ ---    ┆ ---     ┆ ---   ┆ ---      ┆ ---       ┆ ---   ┆ ---             ┆ ---  ┆ ---       ┆ --- ┆ ---      ┆ ---   ┆ --- │
+│ str     ┆ str   ┆ str     ┆ f64    ┆ f64     ┆ i64   ┆ f64      ┆ f64       ┆ i64   ┆ f64             ┆ i64  ┆ f64       ┆ i64 ┆ f64      ┆ f64   ┆ i64 │
+╞═════════╪═══════╪═════════╪════════╪═════════╪═══════╪══════════╪═══════════╪═══════╪═════════════════╪══════╪═══════════╪═════╪══════════╪═══════╪═════╡
+│ defense ┆ DB    ┆ pace    ┆ 0.09   ┆ 0.06    ┆ 2873  ┆ -0.02    ┆ -0.06     ┆ 2191  ┆ -0.02           ┆ 1243 ┆ -0.05     ┆ 325 ┆ -0.02    ┆ -0.09 ┆ 623 │
+│ defense ┆ DL    ┆ pace    ┆ 0.06   ┆ 0.03    ┆ 2546  ┆ 0.06     ┆ 0.02      ┆ 1885  ┆ 0.01            ┆ 1021 ┆ 0.12      ┆ 268 ┆ 0.1      ┆ 0.03  ┆ 596 │
+│ defense ┆ LB    ┆ pace    ┆ 0.01   ┆ -0.02   ┆ 2061  ┆ -0.01    ┆ -0.05     ┆ 1532  ┆ 0.04            ┆ 874  ┆ 0.02      ┆ 239 ┆ -0.12    ┆ -0.2  ┆ 419 │
+│ defense ┆ OL    ┆ pace    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 1     ┆ NaN             ┆ 1    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ QB    ┆ pace    ┆ NaN    ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ 0     ┆ NaN             ┆ 0    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ RB    ┆ pace    ┆ NaN    ┆ NaN     ┆ 6     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 2    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ TE    ┆ pace    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 0    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 1   │
+│ defense ┆ WR    ┆ pace    ┆ NaN    ┆ NaN     ┆ 3     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 1    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ DB    ┆ proe    ┆ 0.1    ┆ 0.07    ┆ 2899  ┆ 0.06     ┆ 0.02      ┆ 2201  ┆ 0.07            ┆ 1251 ┆ 0.14      ┆ 327 ┆ 0.01     ┆ -0.06 ┆ 623 │
+│ defense ┆ DL    ┆ proe    ┆ 0.18   ┆ 0.15    ┆ 2559  ┆ 0.15     ┆ 0.11      ┆ 1893  ┆ 0.17            ┆ 1022 ┆ 0.06      ┆ 270 ┆ 0.14     ┆ 0.07  ┆ 601 │
+│ defense ┆ LB    ┆ proe    ┆ 0.11   ┆ 0.07    ┆ 2076  ┆ 0.03     ┆ -0.01     ┆ 1544  ┆ 0.11            ┆ 882  ┆ 0.13      ┆ 242 ┆ -0.12    ┆ -0.2  ┆ 420 │
+│ defense ┆ OL    ┆ proe    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 1     ┆ NaN             ┆ 1    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ QB    ┆ proe    ┆ NaN    ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ 0     ┆ NaN             ┆ 0    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ RB    ┆ proe    ┆ NaN    ┆ NaN     ┆ 6     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 2    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ defense ┆ TE    ┆ proe    ┆ NaN    ┆ NaN     ┆ 3     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 0    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 1   │
+│ defense ┆ WR    ┆ proe    ┆ NaN    ┆ NaN     ┆ 3     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 1    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 0   │
+│ offense ┆ DB    ┆ pace    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 0     ┆ NaN             ┆ 0    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ offense ┆ DL    ┆ pace    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 1    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 0   │
+│ offense ┆ LB    ┆ pace    ┆ -0.01  ┆ -0.63   ┆ 8     ┆ NaN      ┆ NaN       ┆ 6     ┆ NaN             ┆ 4    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 1   │
+│ offense ┆ OL    ┆ pace    ┆ 0.53   ┆ 0.51    ┆ 2459  ┆ 0.29     ┆ 0.25      ┆ 1904  ┆ 0.45            ┆ 1120 ┆ 0.15      ┆ 318 ┆ 0.03     ┆ -0.05 ┆ 466 │
+│ offense ┆ QB    ┆ pace    ┆ 0.5    ┆ 0.45    ┆ 535   ┆ 0.29     ┆ 0.22      ┆ 442   ┆ 0.42            ┆ 241  ┆ 0.35      ┆ 53  ┆ 0.12     ┆ -0.02 ┆ 148 │
+│ offense ┆ RB    ┆ pace    ┆ 0.42   ┆ 0.38    ┆ 1216  ┆ 0.18     ┆ 0.12      ┆ 896   ┆ 0.24            ┆ 516  ┆ 0.22      ┆ 137 ┆ 0.02     ┆ -0.08 ┆ 243 │
+│ offense ┆ TE    ┆ pace    ┆ 0.46   ┆ 0.42    ┆ 1084  ┆ 0.27     ┆ 0.22      ┆ 777   ┆ 0.33            ┆ 447  ┆ 0.35      ┆ 119 ┆ 0.1      ┆ -0.01 ┆ 211 │
+│ offense ┆ WR    ┆ pace    ┆ 0.45   ┆ 0.41    ┆ 1807  ┆ 0.25     ┆ 0.2       ┆ 1312  ┆ 0.35            ┆ 739  ┆ 0.34      ┆ 190 ┆ 0.02     ┆ -0.06 ┆ 383 │
+│ offense ┆ DB    ┆ proe    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 0     ┆ NaN             ┆ 0    ┆ NaN       ┆ 0   ┆ NaN      ┆ NaN   ┆ 0   │
+│ offense ┆ DL    ┆ proe    ┆ NaN    ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ 2     ┆ NaN             ┆ 1    ┆ NaN       ┆ 1   ┆ NaN      ┆ NaN   ┆ 0   │
+│ offense ┆ LB    ┆ proe    ┆ 0.02   ┆ -0.54   ┆ 10    ┆ NaN      ┆ NaN       ┆ 7     ┆ NaN             ┆ 4    ┆ NaN       ┆ 2   ┆ NaN      ┆ NaN   ┆ 1   │
+│ offense ┆ OL    ┆ proe    ┆ 0.46   ┆ 0.43    ┆ 2475  ┆ 0.2      ┆ 0.17      ┆ 1922  ┆ 0.29            ┆ 1127 ┆ 0.22      ┆ 322 ┆ 0.04     ┆ -0.03 ┆ 473 │
+│ offense ┆ QB    ┆ proe    ┆ 0.44   ┆ 0.39    ┆ 545   ┆ 0.19     ┆ 0.12      ┆ 450   ┆ 0.38            ┆ 242  ┆ 0.07      ┆ 55  ┆ -0.06    ┆ -0.19 ┆ 153 │
+│ offense ┆ RB    ┆ proe    ┆ 0.49   ┆ 0.45    ┆ 1232  ┆ 0.29     ┆ 0.24      ┆ 905   ┆ 0.45            ┆ 520  ┆ 0.11      ┆ 137 ┆ 0.08     ┆ -0.03 ┆ 248 │
+│ offense ┆ TE    ┆ proe    ┆ 0.58   ┆ 0.55    ┆ 1096  ┆ 0.46     ┆ 0.41      ┆ 782   ┆ 0.5             ┆ 449  ┆ 0.34      ┆ 119 ┆ 0.44     ┆ 0.34  ┆ 214 │
+│ offense ┆ WR    ┆ proe    ┆ 0.47   ┆ 0.44    ┆ 1825  ┆ 0.32     ┆ 0.28      ┆ 1321  ┆ 0.38            ┆ 745  ┆ 0.48      ┆ 192 ┆ 0.13     ┆ 0.05  ┆ 384 │
+└─────────┴───────┴─────────┴────────┴─────────┴───────┴──────────┴───────────┴───────┴─────────────────┴──────┴───────────┴─────┴──────────┴───────┴─────┘
+
+=== H26 by snap share: on-field PROE and pace, split-half by group and share of the team's plays (season share)
+shape: (74, 10)
+┌─────────┬───────┬──────────┬─────────┬───────────┬───────┬───────────┬───────┬───────┬───────┐
+│ side    ┆ group ┆ band     ┆ measure ┆ on_week_r ┆ on_lo ┆ pm_week_r ┆ pm_lo ┆ pm_hi ┆ units │
+│ ---     ┆ ---   ┆ ---      ┆ ---     ┆ ---       ┆ ---   ┆ ---       ┆ ---   ┆ ---   ┆ ---   │
+│ str     ┆ str   ┆ str      ┆ str     ┆ f64       ┆ f64   ┆ f64       ┆ f64   ┆ f64   ┆ i64   │
+╞═════════╪═══════╪══════════╪═════════╪═══════════╪═══════╪═══════════╪═══════╪═══════╪═══════╡
+│ defense ┆ DB    ┆ a <30%   ┆ pace    ┆ 0.07      ┆ -0.01 ┆ 0.11      ┆ 0.03  ┆ 0.18  ┆ 483   │
+│ defense ┆ DB    ┆ b 30-70% ┆ pace    ┆ 0.05      ┆ -0.0  ┆ 0.05      ┆ -0.0  ┆ 0.1   ┆ 1006  │
+│ defense ┆ DB    ┆ c 70%+   ┆ pace    ┆ 0.18      ┆ 0.13  ┆ 0.01      ┆ -0.04 ┆ 0.05  ┆ 1273  │
+│ defense ┆ DL    ┆ a <30%   ┆ pace    ┆ 0.05      ┆ -0.01 ┆ 0.01      ┆ -0.05 ┆ 0.07  ┆ 709   │
+│ defense ┆ DL    ┆ b 30-70% ┆ pace    ┆ 0.07      ┆ 0.03  ┆ -0.01     ┆ -0.05 ┆ 0.03  ┆ 1575  │
+│ defense ┆ DL    ┆ c 70%+   ┆ pace    ┆ 0.1       ┆ -0.01 ┆ 0.01      ┆ -0.09 ┆ 0.12  ┆ 246   │
+│ defense ┆ LB    ┆ a <30%   ┆ pace    ┆ -0.05     ┆ -0.11 ┆ -0.04     ┆ -0.1  ┆ 0.03  ┆ 612   │
+│ defense ┆ LB    ┆ b 30-70% ┆ pace    ┆ 0.12      ┆ 0.06  ┆ 0.05      ┆ -0.0  ┆ 0.11  ┆ 819   │
+│ defense ┆ LB    ┆ c 70%+   ┆ pace    ┆ 0.16      ┆ 0.09  ┆ 0.03      ┆ -0.04 ┆ 0.09  ┆ 583   │
+│ defense ┆ OL    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ defense ┆ QB    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ defense ┆ RB    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 6     │
+│ defense ┆ RB    ┆ c 70%+   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ defense ┆ TE    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ defense ┆ TE    ┆ b 30-70% ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ defense ┆ WR    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ defense ┆ WR    ┆ b 30-70% ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ defense ┆ DB    ┆ a <30%   ┆ proe    ┆ 0.05      ┆ -0.02 ┆ 0.09      ┆ 0.02  ┆ 0.16  ┆ 505   │
+│ defense ┆ DB    ┆ b 30-70% ┆ proe    ┆ 0.05      ┆ -0.01 ┆ 0.07      ┆ 0.02  ┆ 0.12  ┆ 1016  │
+│ defense ┆ DB    ┆ c 70%+   ┆ proe    ┆ 0.31      ┆ 0.27  ┆ 0.14      ┆ 0.09  ┆ 0.18  ┆ 1283  │
+│ defense ┆ DL    ┆ a <30%   ┆ proe    ┆ 0.15      ┆ 0.09  ┆ 0.13      ┆ 0.07  ┆ 0.19  ┆ 725   │
+│ defense ┆ DL    ┆ b 30-70% ┆ proe    ┆ 0.2       ┆ 0.16  ┆ 0.05      ┆ 0.01  ┆ 0.1   ┆ 1577  │
+│ defense ┆ DL    ┆ c 70%+   ┆ proe    ┆ 0.32      ┆ 0.22  ┆ -0.01     ┆ -0.12 ┆ 0.09  ┆ 246   │
+│ defense ┆ LB    ┆ a <30%   ┆ proe    ┆ 0.04      ┆ -0.03 ┆ 0.06      ┆ -0.01 ┆ 0.12  ┆ 629   │
+│ defense ┆ LB    ┆ b 30-70% ┆ proe    ┆ 0.21      ┆ 0.16  ┆ 0.12      ┆ 0.06  ┆ 0.17  ┆ 822   │
+│ defense ┆ LB    ┆ c 70%+   ┆ proe    ┆ 0.27      ┆ 0.2   ┆ 0.18      ┆ 0.12  ┆ 0.25  ┆ 585   │
+│ defense ┆ OL    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ defense ┆ QB    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ defense ┆ RB    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 6     │
+│ defense ┆ RB    ┆ c 70%+   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ defense ┆ TE    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ defense ┆ TE    ┆ b 30-70% ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ defense ┆ WR    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ defense ┆ WR    ┆ b 30-70% ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ offense ┆ DB    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ offense ┆ DB    ┆ c 70%+   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ offense ┆ DL    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ offense ┆ LB    ┆ a <30%   ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 6     │
+│ offense ┆ LB    ┆ b 30-70% ┆ pace    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ offense ┆ OL    ┆ a <30%   ┆ pace    ┆ 0.1       ┆ -0.01 ┆ 0.02      ┆ -0.1  ┆ 0.14  ┆ 200   │
+│ offense ┆ OL    ┆ b 30-70% ┆ pace    ┆ 0.48      ┆ 0.42  ┆ 0.04      ┆ -0.04 ┆ 0.12  ┆ 434   │
+│ offense ┆ OL    ┆ c 70%+   ┆ pace    ┆ 0.76      ┆ 0.74  ┆ 0.07      ┆ 0.03  ┆ 0.12  ┆ 1577  │
+│ offense ┆ QB    ┆ a <30%   ┆ pace    ┆ 0.3       ┆ 0.08  ┆ 0.4       ┆ 0.17  ┆ 0.59  ┆ 46    │
+│ offense ┆ QB    ┆ b 30-70% ┆ pace    ┆ 0.34      ┆ 0.18  ┆ 0.13      ┆ -0.08 ┆ 0.32  ┆ 67    │
+│ offense ┆ QB    ┆ c 70%+   ┆ pace    ┆ 0.72      ┆ 0.68  ┆ 0.14      ┆ 0.05  ┆ 0.22  ┆ 333   │
+│ offense ┆ RB    ┆ a <30%   ┆ pace    ┆ 0.32      ┆ 0.26  ┆ 0.04      ┆ -0.03 ┆ 0.1   ┆ 621   │
+│ offense ┆ RB    ┆ b 30-70% ┆ pace    ┆ 0.58      ┆ 0.53  ┆ 0.28      ┆ 0.21  ┆ 0.34  ┆ 535   │
+│ offense ┆ RB    ┆ c 70%+   ┆ pace    ┆ 0.82      ┆ 0.72  ┆ 0.19      ┆ -0.07 ┆ 0.43  ┆ 41    │
+│ offense ┆ TE    ┆ a <30%   ┆ pace    ┆ 0.27      ┆ 0.2   ┆ 0.11      ┆ 0.03  ┆ 0.19  ┆ 391   │
+│ offense ┆ TE    ┆ b 30-70% ┆ pace    ┆ 0.66      ┆ 0.62  ┆ 0.18      ┆ 0.11  ┆ 0.25  ┆ 529   │
+│ offense ┆ TE    ┆ c 70%+   ┆ pace    ┆ 0.78      ┆ 0.72  ┆ 0.13      ┆ -0.0  ┆ 0.26  ┆ 148   │
+│ offense ┆ WR    ┆ a <30%   ┆ pace    ┆ 0.28      ┆ 0.21  ┆ 0.02      ┆ -0.05 ┆ 0.09  ┆ 543   │
+│ offense ┆ WR    ┆ b 30-70% ┆ pace    ┆ 0.51      ┆ 0.46  ┆ 0.06      ┆ 0.0   ┆ 0.12  ┆ 740   │
+│ offense ┆ WR    ┆ c 70%+   ┆ pace    ┆ 0.82      ┆ 0.8   ┆ 0.14      ┆ 0.06  ┆ 0.21  ┆ 500   │
+│ offense ┆ DB    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 0     │
+│ offense ┆ DB    ┆ c 70%+   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 2     │
+│ offense ┆ DL    ┆ a <30%   ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ offense ┆ LB    ┆ a <30%   ┆ proe    ┆ 0.0       ┆ -0.59 ┆ NaN       ┆ NaN   ┆ NaN   ┆ 7     │
+│ offense ┆ LB    ┆ b 30-70% ┆ proe    ┆ NaN       ┆ NaN   ┆ NaN       ┆ NaN   ┆ NaN   ┆ 1     │
+│ offense ┆ OL    ┆ a <30%   ┆ proe    ┆ 0.19      ┆ 0.08  ┆ 0.14      ┆ 0.03  ┆ 0.25  ┆ 218   │
+│ offense ┆ OL    ┆ b 30-70% ┆ proe    ┆ 0.4       ┆ 0.33  ┆ 0.13      ┆ 0.06  ┆ 0.21  ┆ 455   │
+│ offense ┆ OL    ┆ c 70%+   ┆ proe    ┆ 0.65      ┆ 0.63  ┆ 0.05      ┆ 0.01  ┆ 0.09  ┆ 1607  │
+│ offense ┆ QB    ┆ a <30%   ┆ proe    ┆ 0.29      ┆ 0.09  ┆ 0.3       ┆ 0.08  ┆ 0.49  ┆ 55    │
+│ offense ┆ QB    ┆ b 30-70% ┆ proe    ┆ 0.35      ┆ 0.2   ┆ 0.14      ┆ -0.06 ┆ 0.32  ┆ 72    │
+│ offense ┆ QB    ┆ c 70%+   ┆ proe    ┆ 0.68      ┆ 0.63  ┆ 0.1       ┆ 0.01  ┆ 0.18  ┆ 343   │
+│ offense ┆ RB    ┆ a <30%   ┆ proe    ┆ 0.42      ┆ 0.37  ┆ 0.44      ┆ 0.39  ┆ 0.49  ┆ 639   │
+│ offense ┆ RB    ┆ b 30-70% ┆ proe    ┆ 0.68      ┆ 0.64  ┆ 0.6       ┆ 0.55  ┆ 0.65  ┆ 536   │
+│ offense ┆ RB    ┆ c 70%+   ┆ proe    ┆ 0.73      ┆ 0.58  ┆ 0.69      ┆ 0.52  ┆ 0.8   ┆ 41    │
+│ offense ┆ TE    ┆ a <30%   ┆ proe    ┆ 0.49      ┆ 0.43  ┆ 0.48      ┆ 0.42  ┆ 0.54  ┆ 403   │
+│ offense ┆ TE    ┆ b 30-70% ┆ proe    ┆ 0.67      ┆ 0.62  ┆ 0.72      ┆ 0.68  ┆ 0.75  ┆ 529   │
+│ offense ┆ TE    ┆ c 70%+   ┆ proe    ┆ 0.71      ┆ 0.63  ┆ 0.44      ┆ 0.33  ┆ 0.55  ┆ 148   │
+│ offense ┆ WR    ┆ a <30%   ┆ proe    ┆ 0.32      ┆ 0.26  ┆ 0.27      ┆ 0.21  ┆ 0.34  ┆ 567   │
+│ offense ┆ WR    ┆ b 30-70% ┆ proe    ┆ 0.61      ┆ 0.57  ┆ 0.48      ┆ 0.43  ┆ 0.52  ┆ 742   │
+│ offense ┆ WR    ┆ c 70%+   ┆ proe    ┆ 0.66      ┆ 0.62  ┆ 0.36      ┆ 0.29  ┆ 0.42  ┆ 500   │
+└─────────┴───────┴──────────┴─────────┴───────────┴───────┴───────────┴───────┴───────┴───────┘
+
+=== H28/H29/H31: plus-minus by play (on minus off, same team-game), split-half and season to season
+shape: (32, 16)
+┌─────────┬───────┬─────────┬────────┬─────────┬─────────┬───────┬──────────┬───────────┬───────────┬───────┬────────────┬────────┬────────┬──────────┬───────┐
+│ side    ┆ group ┆ measure ┆ week_r ┆ week_lo ┆ week_hi ┆ units ┆ season_r ┆ season_lo ┆ season_hi ┆ pairs ┆ new_team_r ┆ nt_lo  ┆ nt_hi  ┆ nt_pairs ┆ sd_pm │
+│ ---     ┆ ---   ┆ ---     ┆ ---    ┆ ---     ┆ ---     ┆ ---   ┆ ---      ┆ ---       ┆ ---       ┆ ---   ┆ ---        ┆ ---    ┆ ---    ┆ ---      ┆ ---   │
+│ str     ┆ str   ┆ str     ┆ f64    ┆ f64     ┆ f64     ┆ i64   ┆ f64      ┆ f64       ┆ f64       ┆ i64   ┆ f64        ┆ f64    ┆ f64    ┆ i64      ┆ f64   │
+╞═════════╪═══════╪═════════╪════════╪═════════╪═════════╪═══════╪══════════╪═══════════╪═══════════╪═══════╪════════════╪════════╪════════╪══════════╪═══════╡
+│ defense ┆ DB    ┆ pace    ┆ 0.047  ┆ 0.016   ┆ 0.078   ┆ 2762  ┆ -0.017   ┆ -0.052    ┆ 0.018     ┆ 2173  ┆ -0.069     ┆ -0.135 ┆ -0.003 ┆ 619      ┆ 1.036 │
+│ defense ┆ DL    ┆ pace    ┆ 0.003  ┆ -0.03   ┆ 0.035   ┆ 2530  ┆ 0.079    ┆ 0.042     ┆ 0.117     ┆ 1875  ┆ 0.091      ┆ 0.023  ┆ 0.158  ┆ 587      ┆ 0.744 │
+│ defense ┆ LB    ┆ pace    ┆ 0.002  ┆ -0.034  ┆ 0.039   ┆ 2014  ┆ -0.021   ┆ -0.064    ┆ 0.021     ┆ 1509  ┆ -0.084     ┆ -0.164 ┆ -0.003 ┆ 409      ┆ 0.963 │
+│ defense ┆ OL    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ defense ┆ QB    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ defense ┆ RB    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 6     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ 1.234 │
+│ defense ┆ TE    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 1        ┆ NaN   │
+│ defense ┆ WR    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 3     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ defense ┆ DB    ┆ proe    ┆ 0.15   ┆ 0.119   ┆ 0.18    ┆ 2804  ┆ 0.122    ┆ 0.087     ┆ 0.156     ┆ 2187  ┆ 0.103      ┆ 0.037  ┆ 0.167  ┆ 622      ┆ 0.064 │
+│ defense ┆ DL    ┆ proe    ┆ 0.09   ┆ 0.057   ┆ 0.122   ┆ 2548  ┆ 0.024    ┆ -0.013    ┆ 0.062     ┆ 1887  ┆ 0.013      ┆ -0.055 ┆ 0.08   ┆ 595      ┆ 0.043 │
+│ defense ┆ LB    ┆ proe    ┆ 0.119  ┆ 0.083   ┆ 0.154   ┆ 2036  ┆ 0.031    ┆ -0.011    ┆ 0.073     ┆ 1526  ┆ -0.017     ┆ -0.097 ┆ 0.064  ┆ 419      ┆ 0.06  │
+│ defense ┆ OL    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ defense ┆ QB    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ defense ┆ RB    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 6     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ 0.03  │
+│ defense ┆ TE    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 1        ┆ 0.084 │
+│ defense ┆ WR    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 3     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 2     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ 0.04  │
+│ offense ┆ DB    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ offense ┆ DL    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 1     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 1     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ offense ┆ LB    ┆ pace    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 7     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 6     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 1        ┆ 0.633 │
+│ offense ┆ OL    ┆ pace    ┆ 0.058  ┆ 0.024   ┆ 0.093   ┆ 2211  ┆ 0.021    ┆ -0.018    ┆ 0.059     ┆ 1834  ┆ -0.002     ┆ -0.081 ┆ 0.077  ┆ 434      ┆ 1.218 │
+│ offense ┆ QB    ┆ pace    ┆ 0.196  ┆ 0.12    ┆ 0.27    ┆ 446   ┆ 0.032    ┆ -0.049    ┆ 0.114     ┆ 406   ┆ -0.102     ┆ -0.246 ┆ 0.046  ┆ 126      ┆ 1.399 │
+│ offense ┆ RB    ┆ pace    ┆ 0.127  ┆ 0.08    ┆ 0.174   ┆ 1197  ┆ 0.063    ┆ 0.008     ┆ 0.118     ┆ 886   ┆ 0.077      ┆ -0.03  ┆ 0.182  ┆ 238      ┆ 0.929 │
+│ offense ┆ TE    ┆ pace    ┆ 0.15   ┆ 0.101   ┆ 0.199   ┆ 1068  ┆ 0.05     ┆ -0.009    ┆ 0.109     ┆ 771   ┆ 0.077      ┆ -0.038 ┆ 0.189  ┆ 209      ┆ 0.901 │
+│ offense ┆ WR    ┆ pace    ┆ 0.077  ┆ 0.038   ┆ 0.116   ┆ 1783  ┆ 0.081    ┆ 0.035     ┆ 0.126     ┆ 1299  ┆ -0.005     ┆ -0.09  ┆ 0.08   ┆ 379      ┆ 0.899 │
+│ offense ┆ DB    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ offense ┆ DL    ┆ proe    ┆ NaN    ┆ NaN     ┆ NaN     ┆ 1     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 1     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 0        ┆ NaN   │
+│ offense ┆ LB    ┆ proe    ┆ 0.156  ┆ -0.522  ┆ 0.713   ┆ 8     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 6     ┆ NaN        ┆ NaN    ┆ NaN    ┆ 1        ┆ 0.1   │
+│ offense ┆ OL    ┆ proe    ┆ 0.088  ┆ 0.054   ┆ 0.122   ┆ 2280  ┆ 0.057    ┆ 0.019     ┆ 0.095     ┆ 1865  ┆ 0.007      ┆ -0.07  ┆ 0.085  ┆ 449      ┆ 0.071 │
+│ offense ┆ QB    ┆ proe    ┆ 0.133  ┆ 0.058   ┆ 0.207   ┆ 470   ┆ 0.083    ┆ 0.002     ┆ 0.163     ┆ 416   ┆ -0.011     ┆ -0.156 ┆ 0.134  ┆ 130      ┆ 0.083 │
+│ offense ┆ RB    ┆ proe    ┆ 0.493  ┆ 0.457   ┆ 0.528   ┆ 1216  ┆ 0.384    ┆ 0.336     ┆ 0.43      ┆ 896   ┆ 0.226      ┆ 0.124  ┆ 0.324  ┆ 246      ┆ 0.083 │
+│ offense ┆ TE    ┆ proe    ┆ 0.615  ┆ 0.582   ┆ 0.645   ┆ 1080  ┆ 0.559    ┆ 0.516     ┆ 0.598     ┆ 775   ┆ 0.535      ┆ 0.449  ┆ 0.612  ┆ 210      ┆ 0.095 │
+│ offense ┆ WR    ┆ proe    ┆ 0.424  ┆ 0.392   ┆ 0.455   ┆ 1809  ┆ 0.407    ┆ 0.368     ┆ 0.444     ┆ 1310  ┆ 0.312      ┆ 0.234  ┆ 0.386  ┆ 381      ┆ 0.077 │
+└─────────┴───────┴─────────┴────────┴─────────┴─────────┴───────┴──────────┴───────────┴───────────┴───────┴────────────┴────────┴────────┴──────────┴───────┘
+
+=== H28/H29, in season: with and without by game (snap shares), split-half and season to season
+shape: (24, 13)
+┌─────────┬───────┬─────────┬────────────────┬────────┬────────┬─────────┬─────────┬───────┬──────────┬───────────┬───────────┬───────┐
+│ side    ┆ group ┆ measure ┆ player_seasons ┆ mean_d ┆ week_r ┆ week_lo ┆ week_hi ┆ units ┆ season_r ┆ season_lo ┆ season_hi ┆ pairs │
+│ ---     ┆ ---   ┆ ---     ┆ ---            ┆ ---    ┆ ---    ┆ ---     ┆ ---     ┆ ---   ┆ ---      ┆ ---       ┆ ---       ┆ ---   │
+│ str     ┆ str   ┆ str     ┆ i64            ┆ f64    ┆ f64    ┆ f64     ┆ f64     ┆ i64   ┆ f64      ┆ f64       ┆ f64       ┆ i64   │
+╞═════════╪═══════╪═════════╪════════════════╪════════╪════════╪═════════╪═════════╪═══════╪══════════╪═══════════╪═══════════╪═══════╡
+│ defense ┆ DB    ┆ pace    ┆ 2219           ┆ -0.04  ┆ -0.017 ┆ -0.059  ┆ 0.026   ┆ 1494  ┆ -0.016   ┆ -0.065    ┆ 0.034     ┆ 1127  │
+│ defense ┆ DL    ┆ pace    ┆ 1136           ┆ 0.008  ┆ 0.061  ┆ -0.008  ┆ 0.13    ┆ 567   ┆ 0.089    ┆ 0.007     ┆ 0.169     ┆ 410   │
+│ defense ┆ LB    ┆ pace    ┆ 1232           ┆ 0.044  ┆ -0.046 ┆ -0.106  ┆ 0.015   ┆ 735   ┆ -0.024   ┆ -0.094    ┆ 0.047     ┆ 540   │
+│ defense ┆ RB    ┆ pace    ┆ 2              ┆ 1.29   ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ defense ┆ WR    ┆ pace    ┆ 3              ┆ -0.471 ┆ NaN    ┆ NaN     ┆ NaN     ┆ 1     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 1     │
+│ defense ┆ DB    ┆ proe    ┆ 2219           ┆ 0.002  ┆ 0.065  ┆ 0.022   ┆ 0.107   ┆ 1494  ┆ 0.024    ┆ -0.025    ┆ 0.073     ┆ 1127  │
+│ defense ┆ DL    ┆ proe    ┆ 1136           ┆ -0.004 ┆ 0.003  ┆ -0.066  ┆ 0.072   ┆ 567   ┆ -0.051   ┆ -0.131    ┆ 0.031     ┆ 410   │
+│ defense ┆ LB    ┆ proe    ┆ 1232           ┆ -0.003 ┆ -0.02  ┆ -0.08   ┆ 0.041   ┆ 735   ┆ -0.014   ┆ -0.085    ┆ 0.057     ┆ 540   │
+│ defense ┆ RB    ┆ proe    ┆ 2              ┆ 0.002  ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ defense ┆ WR    ┆ proe    ┆ 3              ┆ -0.02  ┆ NaN    ┆ NaN     ┆ NaN     ┆ 1     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 1     │
+│ offense ┆ DB    ┆ pace    ┆ 2              ┆ 1.165  ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ offense ┆ LB    ┆ pace    ┆ 1              ┆ -2.343 ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ offense ┆ OL    ┆ pace    ┆ 1945           ┆ -0.004 ┆ 0.245  ┆ 0.202   ┆ 0.286   ┆ 1359  ┆ 0.01     ┆ -0.042    ┆ 0.062     ┆ 993   │
+│ offense ┆ QB    ┆ pace    ┆ 436            ┆ 0.051  ┆ 0.372  ┆ 0.284   ┆ 0.455   ┆ 276   ┆ 0.257    ┆ 0.147     ┆ 0.362     ┆ 206   │
+│ offense ┆ RB    ┆ pace    ┆ 538            ┆ -0.003 ┆ 0.197  ┆ 0.098   ┆ 0.292   ┆ 269   ┆ -0.138   ┆ -0.246    ┆ -0.026    ┆ 216   │
+│ offense ┆ TE    ┆ pace    ┆ 526            ┆ 0.069  ┆ 0.24   ┆ 0.141   ┆ 0.334   ┆ 260   ┆ 0.163    ┆ 0.054     ┆ 0.269     ┆ 223   │
+│ offense ┆ WR    ┆ pace    ┆ 1149           ┆ -0.027 ┆ 0.222  ┆ 0.161   ┆ 0.282   ┆ 672   ┆ -0.009   ┆ -0.083    ┆ 0.064     ┆ 504   │
+│ offense ┆ DB    ┆ proe    ┆ 2              ┆ 0.014  ┆ NaN    ┆ NaN     ┆ NaN     ┆ 2     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ offense ┆ LB    ┆ proe    ┆ 1              ┆ 0.055  ┆ NaN    ┆ NaN     ┆ NaN     ┆ 0     ┆ NaN      ┆ NaN       ┆ NaN       ┆ 0     │
+│ offense ┆ OL    ┆ proe    ┆ 1945           ┆ -0.001 ┆ 0.211  ┆ 0.168   ┆ 0.253   ┆ 1359  ┆ -0.033   ┆ -0.085    ┆ 0.02      ┆ 993   │
+│ offense ┆ QB    ┆ proe    ┆ 436            ┆ -0.003 ┆ 0.361  ┆ 0.272   ┆ 0.445   ┆ 276   ┆ 0.142    ┆ 0.028     ┆ 0.253     ┆ 206   │
+│ offense ┆ RB    ┆ proe    ┆ 538            ┆ -0.0   ┆ 0.286  ┆ 0.191   ┆ 0.376   ┆ 269   ┆ 0.078    ┆ -0.034    ┆ 0.189     ┆ 216   │
+│ offense ┆ TE    ┆ proe    ┆ 526            ┆ -0.003 ┆ 0.297  ┆ 0.2     ┆ 0.387   ┆ 260   ┆ 0.048    ┆ -0.063    ┆ 0.157     ┆ 223   │
+│ offense ┆ WR    ┆ proe    ┆ 1149           ┆ 0.004  ┆ 0.23   ┆ 0.169   ┆ 0.289   ┆ 672   ┆ 0.035    ┆ -0.039    ┆ 0.108     ┆ 504   │
+└─────────┴───────┴─────────┴────────────────┴────────┴────────┴─────────┴─────────┴───────┴──────────┴───────────┴───────────┴───────┘
+
+QB with minus without (team-seasons with both): 436  PROE mean -0.0034 median -0.0025  pace mean 0.051

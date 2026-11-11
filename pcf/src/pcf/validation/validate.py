@@ -108,9 +108,11 @@ def validate(
         comps[name] = compare(scored, base_hist[name], keys, "step", (expert.id, name), seed=seed)
     # A benchmark (ECR, the closing line) isn't PCF's model: there's no signal of ours to test.
     signal = nulls.signal_test(bt, shuffles, seed) if shuffles and not expert.benchmark else None
-    groups = scored.join(
-        bt.features.select(*keys, *expert.groups, "step_season"), on=keys, how="left"
-    ).rename({"step_season": "season"})
+    # a season-keyed grain (player_season) already has its season
+    step = [] if "season" in keys else ["step_season"]
+    groups = scored.join(bt.features.select(*keys, *expert.groups, *step), on=keys, how="left")
+    if step:
+        groups = groups.rename({"step_season": "season"})
     if expert.spike:
         calib = calibration.spike_report(groups, [*expert.groups, "season"])
     elif expert.kind == "amount":

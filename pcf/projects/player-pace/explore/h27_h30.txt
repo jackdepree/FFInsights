@@ -1,0 +1,28 @@
+team-games 11902 seasons 2002 - 2024
+
+=== H27: what carries to the next season (coefficients, 90% interval)
+  QB moved: PROE   {'proe': (0.099, -0.039, 0.25), 'proe_team_prior': (0.157, 0.034, 0.301), 'n': 155}
+  QB moved: pace   {'pace_oe': (0.213, 0.103, 0.342), 'pace_team_prior': (0.443, 0.176, 0.665), 'n': 155}
+  QB stayed: PROE   {'proe': (0.273, 0.108, 0.451), 'proe_team_prior': (0.327, 0.134, 0.515), 'n': 562}
+  QB stayed: pace   {'pace_oe': (0.271, 0.047, 0.475), 'pace_team_prior': (0.424, 0.236, 0.64), 'n': 562}
+  head coach moved: PROE   {'proe': (0.319, -0.112, 0.701), 'proe_team_prior': (0.009, -0.404, 0.725), 'n': 31}
+  head coach moved: pace   {'pace_oe': (0.101, -0.275, 0.285), 'pace_team_prior': (0.673, 0.166, 1.015), 'n': 31}
+  QB movers: 155 ; per season 7.0
+
+=== H30: team-season rates against age, within the head coach's stint at the team
+  QB ['qb_age'], 2002-2024, PROE: {'qb_age': (0.002, 0.001, 0.002), 'n': 736}
+  QB ['qb_age'], 2002-2024, pace: {'qb_age': (-0.006, -0.026, 0.017), 'n': 736}
+  QB ['qb_age', 'stint_year'], 2002-2024, PROE: {'qb_age': (0.002, 0.001, 0.002), 'stint_year': (-0.001, -0.002, 0.0), 'n': 736}
+  QB ['qb_age', 'stint_year'], 2002-2024, pace: {'qb_age': (-0.007, -0.029, 0.017), 'stint_year': (0.002, -0.038, 0.039), 'n': 736}
+  QB ['qb_rookie'], 2002-2024, PROE: {'qb_rookie': (-0.025, -0.033, -0.016), 'n': 736}
+  QB ['qb_rookie'], 2002-2024, pace: {'qb_rookie': (-0.185, -0.383, 0.012), 'n': 736}
+  QB ['qb_rookie', 'stint_year'], 2002-2024, PROE: {'qb_rookie': (-0.025, -0.034, -0.017), 'stint_year': (-0.001, -0.002, 0.0), 'n': 736}
+  QB ['qb_rookie', 'stint_year'], 2002-2024, pace: {'qb_rookie': (-0.185, -0.387, 0.015), 'stint_year': (-0.001, -0.039, 0.035), 'n': 736}
+  team-seasons with ages (2013-2024): 384
+  offense ages, PROE: {'QB': (0.001, -0.0, 0.002), 'RB': (-0.003, -0.006, 0.0), 'WR': (0.005, 0.003, 0.007), 'TE': (0.003, 0.001, 0.005), 'OL': (0.005, 0.002, 0.009), 'n': 384}
+  offense ages + years into the stint, PROE: {'QB': (0.001, -0.0, 0.002), 'RB': (-0.003, -0.006, 0.001), 'WR': (0.005, 0.003, 0.007), 'TE': (0.003, 0.001, 0.005), 'OL': (0.005, 0.001, 0.009), 'stint_year': (0.0, -0.002, 0.002), 'n': 384}
+  offense ages, pace: {'QB': (-0.007, -0.043, 0.035), 'RB': (-0.013, -0.088, 0.062), 'WR': (0.001, -0.1, 0.092), 'TE': (0.056, 0.001, 0.111), 'OL': (-0.007, -0.092, 0.086), 'n': 384}
+  defense ages, opponent PROE: {'DL': (-0.001, -0.003, 0.001), 'LB': (0.003, 0.001, 0.005), 'DB': (-0.0, -0.002, 0.002), 'n': 384}
+  defense ages, opponent pace: {'DL': (0.042, 0.002, 0.085), 'LB': (0.001, -0.052, 0.054), 'DB': (-0.008, -0.056, 0.045), 'n': 384}
+  sd of team-season PROE within stint 0.0284  pace 0.667
+  sd of age within stint: {'QB': 2.97, 'RB': 1.11, 'WR': 0.9, 'TE': 1.45, 'OL': 0.86, 'DL': 0.85, 'LB': 0.92, 'DB': 0.8}

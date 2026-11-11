@@ -100,6 +100,13 @@ def feature_history(
 
 def _with_steps(rows: pl.DataFrame, games: pl.DataFrame) -> pl.DataFrame:
     rows = rows.drop([c_ for c_ in ("step", "as_of") if c_ in rows.columns])
+    if "game_id" not in rows.columns:
+        # a season-keyed grain (player_season; decision 0029): one retrospective step per season
+        seasons = games.group_by("step_season").agg(
+            c("step").first(), c("step_week").first(), c("as_of").min()
+        )
+        seasons = seasons.with_columns(season=c("step_season"))
+        return rows.join(seasons, on="season", how="inner")
     return rows.join(games, on="game_id", how="inner")
 
 

@@ -72,6 +72,21 @@
 | Drives / plays per drive per game | pace (B1) | Drives with a scrimmage play; scrimmage plays over drives | 0.30 / 0.37 | 0.34 / 0.40 | trait | Plays per drive weighs little once efficiency is in (R3) | |
 | What a defense allows: plays / PROE / pace over expected | pace (B1) | The opposing offenses' values against this defense | 0.15 / 0.23 / 0.08 | 0.23 / 0.31 / 0.26 | trait (pace barely) | Plays allowed helps next plays (+0.44 per sd, R3) | Pace is the offense's choice |
 
+**Player measures** (player-pace exploration, 2026-11-11): per **player** per regular-season game, not per team. Week r is the split-half across player-seasons, each half weighted by the plays that measure it (n_on × n_off / n_team for a plus-minus). Groups pooled as shown.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| On-field PROE, offense | player-pace (H26) | The team's PROE on the plays he was on the field | 0.42–0.58 by group (0.38–) | 0.19–0.46; new team −0.06 to 0.13, TE 0.44 | trait | Not tested | His team's rate: it doesn't follow him to a new team (F1) |
+| On-field pace over expected, offense | player-pace (H26) | The same for pace | 0.42–0.53 (0.38–) | 0.18–0.29; new team 0.02–0.12 | trait | Not tested | Under 30% of snaps: 0.27–0.32; linemen 0.10, noise (F2) |
+| PROE plus-minus, TE / WR / RB | player-pace (H28, H29) | On-field minus off-field PROE, same team-game | 0.62 / 0.42 / 0.49 (0.39–) | 0.56 / 0.41 / 0.38; moved 0.54 / 0.31 / 0.23 | trait | **Yes:** next season's, 15% better than the group (player-pace#R1) | A role tell; within personnel groupings TE 0.46, WR 0.29 hold, RB 0.30 doesn't follow him (F3, F4) |
+| PROE plus-minus, QB / OL | player-pace (H28, H29) | The same | 0.13 (0.06–) / 0.09 (0.05–) | 0.08 / 0.06 | trait, weak | QB no (+0.7%, tie); OL not reported | Starters rarely sit, so few plays measure it |
+| Pace plus-minus, offense | player-pace (H28, H29) | On-field minus off-field pace over expected | 0.06–0.20 (QB 0.20, 0.12–) | 0.02–0.08 | state (most groups) | Barely: 0.2% (player-pace#R7) | Pace stays with the team (F3) |
+| With-or-without by game, QB | player-pace (H28, in season) | Team's rate in games he played half the snaps minus games he didn't | inflated (F5) | PROE 0.14 (0.03–0.25), pace 0.26 (0.15–0.36) | trait | As the QB's start history: team PROE 0.3%, 4% in expected changes; not volume (player-pace#R2, R3) | Known in season from snap counts; other groups about 0 (TE pace 0.16) |
+| PROE plus-minus, defense DB / LB / DL | player-pace (H31) | The opponent's PROE on-field minus off-field | 0.15 / 0.12 / 0.09 (0.06–) | 0.12 / 0.03 / 0.02 | DB trait; LB, DL state | Barely: 0.8% (player-pace#R8) | Substitution following the offense's (F8) |
+| Pace, defense (on-field and plus-minus) | player-pace (H31) | The opponent's pace with him on | 0.00–0.09 | about 0 | noise or state | Not tested | Nothing a defender carries |
+
+Player rows measured 2026-11-11 with [`projects/player-pace/explore/h26_h28_h29_h31.py`](player-pace/explore/h26_h28_h29_h31.py) and [`personnel.py`](player-pace/explore/personnel.py), 2016–2024.
+
 Built pace rows measured 2026-11-11 with [`projects/pace/build/consistency_built.py`](pace/build/consistency_built.py), each measure centred on its season's league level (pace B2).
 
 Pace rows measured 2026-11-10 with [`projects/pace/explore/h22_h23_pace.py`](pace/explore/h22_h23_pace.py): 608 team-seasons, regular seasons 2006–2024 (2020–2024 the same shape).
