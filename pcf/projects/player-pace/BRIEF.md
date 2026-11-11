@@ -1,6 +1,6 @@
 # Brief: Player pace and play-calling (`player-pace`)
 
-**Status:** draft (kickoff 2026-11-11, the CEO: "Start player pace"; hunches H26–H31 recorded 2026-11-11; one CEO call open) · **Layer:** expert · **Cadence:** in_season, retrospective, or one of each (the CEO's call, "Open for the CEO"; who was on the field per play is post-season only)
+**Status:** draft (kickoff 2026-11-11, the CEO: "Start player pace"; hunches H26–H31 recorded 2026-11-11; the CEO's call on timing 2026-11-11: both; exploring) · **Layer:** expert · **Cadence:** two experts, `player-pace` (in_season) and `player-pace-retro` (retrospective), one brief and one exploration (rule m)
 
 ## The usual way
 *Claude, 2026-11-11, before any research.* Analysts mostly treat pace and pass rate as the play caller's, and move them for players only at the edges:
@@ -93,10 +93,12 @@ Team pace forecasts each team's plays, dropbacks and runs from the coach's habit
 
 ## Inputs and outputs
 - **Inputs:** `play.pace` (every snap's expected pass chance, PROE, pace over expected), play-by-play passer and rusher, weekly snap counts, participation (post-season, 2016→), rosters (age, position), team pace's forecasts, coaches. All already in PCF; nothing new to sign off.
-- **Outputs:** depend on the CEO's call below: per player, the effect on his team's pace and PROE, with q10, q50 and q90, in the standard schema.
+- **Outputs** (the CEO's call below: both):
+  - **`player-pace`, in season:** per player, before each game, his effect on his team's pace over expected and PROE, from what's known in season (who threw and ran each play, weekly snap counts), with q10, q50 and q90 in the standard schema. Features for team pace's volume and anything downstream, made walk-forward.
+  - **`player-pace-retro`, between seasons:** per player-season, on-field rates and plus-minus from who was on the field on every play (participation), known the day after the Super Bowl. Fed to in-season models only for later seasons, as priors (rule m).
 
 ## How it will be used
 Team pace's volume forecasts (in the weeks a starter changes), player opportunity, fantasy projections, and the game simulator.
 
 ## Open for the CEO
-1. **What should player pace give the layers above, and when?** *(taste call; your instinct first)* It decides whether the expert runs in season, between seasons, or both (rule m: two experts if both).
+1. ~~What should player pace give the layers above, and when?~~ **Answered 2026-11-11:** "Both, the pace expert for players should give downstream models within-season features and between-season features to learn from." So two experts (rule m): `player-pace` (in_season) and `player-pace-retro` (retrospective), sharing this brief and the exploration.

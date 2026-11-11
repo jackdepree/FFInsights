@@ -311,11 +311,20 @@ projects:
   - id: player-pace
     name: Player pace and play-calling
     phase: 1
-    status: idea
+    status: exploring
     horizon: next
     cadence: [in_season]
     depends_on: [pace, participation]
-    summary: How individual players move their team's pace and pass rate over expected, starting with the starting QB (schemes-v2#F3), from pace's per-play measures averaged by who played, with the shrinkage a plus-minus needs. The CEO's call (2026-11-10), built after the team pace expert is done. Kickoff 2026-11-11 ("Start player pace") in projects/player-pace/BRIEF.md; the CEO's hunches H26-H31 recorded (rates by condition, movers, plus-minus and whether it repeats, age, defenders); one CEO call open (in season, between seasons, or both).
+    summary: "In season: each player's effect on his team's pace over expected and pass rate over expected before each game, from what's known in season (passer and rusher per play, weekly snap counts), as features for team pace and the layers above. Starts with the QB (schemes-v2#F3). The CEO's call (2026-11-10), after team pace. Kickoff 2026-11-11 in projects/player-pace/BRIEF.md; the CEO's hunches H26-H31 (rates by condition, movers, plus-minus and whether it repeats, age, defenders). The CEO's call (2026-11-11): both in season and between seasons, so its retrospective twin is player-pace-retro; one brief, one exploration."
+
+  - id: player-pace-retro
+    name: Player pace and play-calling (retrospective)
+    phase: 1
+    status: exploring
+    horizon: next
+    cadence: [retrospective]
+    depends_on: [pace, participation]
+    summary: "Between seasons: each player-season's on-field pace over expected and pass rate over expected, and his plus-minus against his team, from who was on the field on every play (participation, 2016 on), known the day after the Super Bowl; priors for later seasons only (rule m). The CEO's call (2026-11-11): player pace gives downstream models both in-season and between-season features. Shares player-pace's brief and exploration."
 
   - id: environment
     name: Environment
