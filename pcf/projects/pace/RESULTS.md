@@ -1,6 +1,6 @@
 # Results: Pace and play-calling (`pace`)
 
-**Date:** 2026-11-11 · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `pace` · **Technical calls:** [decision 0028](../../docs/decisions/0028-pace.md)
+**Date:** 2026-11-11 · **Status:** done (merged 2026-11-11, the CEO approved; H22 held) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `pace` · **Technical calls:** [decision 0028](../../docs/decisions/0028-pace.md)
 
 ## In short
 PCF now measures each team's habits on every play. Two yardsticks: its own expected pass chance, and an expected pace that knows when the clock stopped. From those it forecasts each team's next-game habits and volume before kickoff.
@@ -218,7 +218,7 @@ Not run: the miss lenses are built for player-game (`pcf.validation.misses`). Tw
    - **In the ledger:** all 12 finals, each with its season-to-date average as a yardstick. That's 21 models in `pcf.validation.live.MODELS`, with their 2016–2024 backtests pinned in `ledger_score.BACKTESTS`.
    - **The replay:** a local, unpushed replay of 2026 weeks 1–10 forecast all 272 team-games for every model, with no missing values.
    - **When it starts:** once the branch is merged, since the scheduled ledger run uses `main`.
-2. Is the small H22 gain enough to call H22 held, or does it stay mixed until it helps something downstream? *(open)*
+2. ~~Is the small H22 gain enough to call H22 held, or does it stay mixed until it helps something downstream?~~ **Answered 2026-11-11:** "Call it held". H22 is **held** in HUNCHES.md: the full-sample measurement beats the neutral one like for like (R1 and the spot-check). Whether it helps a downstream model stays a test for `player-pace` and the projections.
 
 ## Technical calls (for veto at merge)
 All in [decision 0028](../../docs/decisions/0028-pace.md):
