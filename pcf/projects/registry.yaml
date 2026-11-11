@@ -296,7 +296,7 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness, schemes-v2]
-    summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10).
+    summary: Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10). The CEO's pick for the next expert (2026-11-10); kickoff in projects/pace/BRIEF.md, waiting for the CEO's hunches.
 
   - id: environment
     name: Environment
