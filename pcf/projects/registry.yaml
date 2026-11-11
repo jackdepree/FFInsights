@@ -320,11 +320,11 @@ projects:
   - id: player-pace-retro
     name: Player pace and play-calling (retrospective)
     phase: 1
-    status: validating
+    status: done
     horizon: next
     cadence: [retrospective]
     depends_on: [grain-tables, validation-harness]
-    summary: "Between seasons: each player-season's on-field pace over expected and pass rate over expected, and his plus-minus against his team, from who was on the field on every play (participation, 2016 on), known the day after the Super Bowl; priors for later seasons only (rule m). The CEO's call (2026-11-11): player pace gives downstream models both in-season and between-season features. Shares player-pace's brief and exploration. Validating 2026-11-11: a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average (player-pace#R1); defenders 0.8%, QBs none, pace 0.2%."
+    summary: "Between seasons: each player-season's on-field pace over expected and pass rate over expected, and his plus-minus against his team, from who was on the field on every play (participation, 2016 on), known the day after the Super Bowl; priors for later seasons only (rule m). The CEO's call (2026-11-11): player pace gives downstream models both in-season and between-season features. Shares player-pace's brief and exploration. Validating 2026-11-11: a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average (player-pace#R1); defenders 0.8%, QBs none, pace 0.2%. The CEO's spot-check of R1 held (2026-11-11: steady every season, 12.7% beyond playing time). Done and merged 2026-11-11 (the CEO: 'Merge now')."
     interface:
       inputs: player_season.on_field_pace; no model outputs
       outputs: "Per player-season, mean q10 q50 q90 of next season's pm_proe, pm_proe_pers, pm_pace (<m>_shrunk). Tables player_game.on_field_pace and player_season.on_field_pace (2016 on)"

@@ -1,6 +1,6 @@
 # Results: Player pace and play-calling (`player-pace`, `player-pace-retro`)
 
-**Date:** 2026-11-11 · **Status:** `player-pace-retro` validating (the CEO's spot-check: R1, below); `player-pace` (in season) a dead end, its model discarded and its findings kept (the CEO, 2026-11-11) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiments:** `player-pace`, `player-pace-retro` · **Technical calls:** [decision 0029](../../docs/decisions/0029-player-pace.md)
+**Date:** 2026-11-11 · **Status:** `player-pace-retro` done (merged 2026-11-11, the CEO: "Merge now"; the spot-check of R1 held, below); `player-pace` (in season) a dead end, its model discarded and its findings kept (the CEO, 2026-11-11) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiments:** `player-pace`, `player-pace-retro` · **Technical calls:** [decision 0029](../../docs/decisions/0029-player-pace.md)
 
 ## In short
 Two experts, as the CEO asked: one for between seasons and one for within a season.
