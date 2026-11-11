@@ -98,3 +98,16 @@ def test_a_season_of_player_game_loads_in_under_two_seconds():
     t = time.time()
     load("player_game", seasons=[2024])
     assert time.time() - t < 2
+
+
+def test_pace_covers_every_played_game_with_sane_volume():
+    tg = load("team_game", seasons=range(2002, 2027), parts=["result", "pace"])
+    played = tg.filter(pl.col("result_known_at").is_not_null())
+    assert played["pace_known_at"].is_not_null().all()
+    assert (played["dropbacks"] + played["runs"] == played["plays"]).all()
+    game = played.group_by("game_id").agg(pl.col("plays").sum())["plays"]
+    # the brief's football sanity: a game's plays stay between about 110 and 150
+    assert game.quantile(0.01) >= 105
+    assert game.quantile(0.99) <= 165
+    seasons = played.group_by("season").agg(pl.col("proe").mean())
+    assert seasons["proe"].abs().max() < 0.04  # PCF's expected pass chance has no big drift

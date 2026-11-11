@@ -6,10 +6,12 @@ The builders in `games`, `plays` and `player_game` are pure; this module reads t
 
 import time
 from collections.abc import Callable, Sequence
+from functools import cache
 from pathlib import Path
 
 import polars as pl
 
+from pcf.config import get_config
 from pcf.core.log import get_logger
 from pcf.data.clean import standard
 from pcf.data.clean.depth_charts import (
@@ -19,8 +21,10 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
+from pcf.data.tables import pace
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
+from pcf.data.tables.frames import on_spine
 from pcf.data.tables.games import game_parts, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
 from pcf.data.tables.plays import play_parts, player_play_parts
@@ -28,7 +32,7 @@ from pcf.data.tables.store import write_parts
 from pcf.data.tables.team_season import PARTICIPATION_COLUMNS as SEASON_PARTICIPATION
 from pcf.data.tables.team_season import team_season_parts
 from pcf.data.tables.tendencies import PBP_COLUMNS, tendency_rows
-from pcf.data.timeline import Calendar, calendar, team_kickoffs
+from pcf.data.timeline import Calendar, calendar, known_at, team_kickoffs
 
 log = get_logger(__name__)
 
@@ -114,7 +118,36 @@ def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | N
             pl.concat(tendencies) if tendencies else None,
             pl.concat(charted) if charted else None,
         )
+        paced = [pace_snaps(s) for s in seasons]
+        paced = [pace.pace_rows(s) for s in paced if s is not None]
+        if paced:
+            rows = known_at("pbp", pl.concat(paced), cal)  # known when play-by-play is
+            spine = parts["schedule"]
+            parts["pace"] = on_spine(rows, spine, ["game_id", "team"], "team_game.pace")
     write_parts(parts, name, seasons, root)
+
+
+@cache
+def _snaps(season: int) -> pl.DataFrame:
+    """A season's snaps for the pace measures (`pace.snap_rows`), kept for the process."""
+    return pace.snap_rows(scan("pbp", [season]).select(pace.PBP_COLUMNS).collect())
+
+
+def pace_snaps(season: int) -> pl.DataFrame | None:
+    """A season's snaps with PCF's expected pass chance and expected gap, from models fit only
+    on earlier seasons (cached in the interim zone), or None without play-by-play or enough
+    earlier seasons."""
+    have = local_seasons("pbp")
+    if season not in have:
+        return None
+    cache_dir = get_config().zone("interim") / "pace" / "expected"
+    models = pace.expected_for(season, have, _snaps, cache_dir)
+    if models is None:
+        return None
+    t = time.time()
+    out = pace.apply_expected(_snaps(season), models)
+    log.info("pace %d: expected values on %d snaps in %.0fs", season, out.height, time.time() - t)
+    return out
 
 
 def build_play(season: int, cal: Calendar, root: Path | None) -> None:
@@ -124,6 +157,10 @@ def build_play(season: int, cal: Calendar, root: Path | None) -> None:
         participation=_season("participation", season),
         ftn=_season("ftn_charting", season),
     )
+    paced = pace_snaps(season)
+    if paced is not None:
+        rows = pace.play_rows(paced).with_columns(pl.col("play_id").cast(pl.Int64))
+        parts["pace"] = known_at("pbp", rows, cal)  # every snap is a play on the spine
     write_parts(parts, "play", [season], root)
 
 

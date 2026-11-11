@@ -62,8 +62,9 @@ TABLES: dict[str, Table] = {
                 "charted",
                 "tags",
                 "tags_result",
+                "pace",
             ),
-            after=("result", "stats", "tendencies", "charted", "tags_result"),
+            after=("result", "stats", "tendencies", "charted", "tags_result", "pace"),
             post_season=("charted",),
         ),
         # One row per team and season; retrospective (decision 0026)
@@ -77,8 +78,8 @@ TABLES: dict[str, Table] = {
         Table(
             "play",
             (_GAME, _PLAY),
-            ("pbp", "participation", "ftn", "tags"),
-            after=("pbp", "participation", "ftn", "tags"),
+            ("pbp", "participation", "ftn", "tags", "pace"),
+            after=("pbp", "participation", "ftn", "tags", "pace"),
             post_season=("participation",),
         ),
         Table("drive", (_GAME, _DRIVE), ("summary", "tags"), after=("summary", "tags")),

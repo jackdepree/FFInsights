@@ -14,6 +14,9 @@
 | **Win probability (WP)**, **WPA** | The chance the offense wins, and how much a play changed it | `wp`, `vegas_wp` (uses the spread), `wpa` | |
 | **CPOE** | Completion percentage over expected, given throw depth, location and situation | `cpoe` (pbp, **0–100 scale**), `passing_cpoe` (stats) | Converted to 0–1 in derived columns |
 | **xpass**, **PROE** | The chance a play is a dropback given the situation; pass rate over expected | `xpass` (0–1), `pass_oe` (**0–100 scale**) | Pace & play-calling expert |
+| **PCF expected pass chance**, **PCF PROE** | PCF's own version, fit each season only on the 10 seasons before it (nflverse's `xpass` is in-sample before 2020 and runs 1–2 points high after) | `play.pace`: `pcf_xpass`, `pcf_pass_oe` (0–1); `team_game.pace`: `proe`, `proe_1st`/`_2nd`/`_3rd` | pace, decision 0028 |
+| **Pace over expected** (clock-aware) | Game seconds from the previous snap of the drive, less what PCF expects from win chance, expected points, the clock and what stopped it (an incompletion, out of bounds, a penalty, a spike, a sack, a timeout). Negative is fast | `play.pace`: `exp_gap`, `pace_oe`; `team_game.pace`: `pace_oe` (seconds) | pace#F4, decision 0028 |
+| **Volume** | A team's scrimmage plays in a game, split into dropbacks and runs | `team_game.pace`: `plays`, `dropbacks`, `runs` | pace's forecast |
 | **Neutral situation** | Game states where play-calling isn't forced by the score or clock | — | No single standard. Defined in the `pace` brief. |
 | **Dropback** | A play where the QB drops back to pass (passes, sacks, scrambles) | `qb_dropback` | |
 | **Air yards** | How far the ball travels past the line of scrimmage | `air_yards` (pbp), `receiving_air_yards` (stats) | |
