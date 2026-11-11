@@ -315,7 +315,7 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [pace, participation]
-    summary: How individual players move their team's pace and pass rate over expected, starting with the starting QB (schemes-v2#F3), from pace's per-play measures averaged by who played, with the shrinkage a plus-minus needs. The CEO's call (2026-11-10), built after the team pace expert is done.
+    summary: How individual players move their team's pace and pass rate over expected, starting with the starting QB (schemes-v2#F3), from pace's per-play measures averaged by who played, with the shrinkage a plus-minus needs. The CEO's call (2026-11-10), built after the team pace expert is done. Kickoff 2026-11-11 ("Start player pace") in projects/player-pace/BRIEF.md, waiting for the CEO's hunches.
 
   - id: environment
     name: Environment
