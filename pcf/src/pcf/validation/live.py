@@ -40,7 +40,7 @@ EASTERN = ZoneInfo(ET)  # `ET` is the zone's name, for polars; datetimes need th
 # so on a tight Thanksgiving it's the one most likely to make kickoff. Then the live-experts brief
 # (decision 1A, 2026-11-10): Elo's five finals (scored against the closing line, which needs no
 # rows of its own) and schemes-v2's four trait finals, each with its season-to-date average as a
-# yardstick. A new model joins with one line.
+# yardstick. Then pace's 12 finals (2026-11-11), the same way. A new model joins with one line.
 MODELS: list[tuple[str, str]] = [
     ("participation", "trees_week"),
     ("participation", "active"),
@@ -60,6 +60,29 @@ MODELS: list[tuple[str, str]] = [
     ("schemes-v2", "shotgun_season"),
     ("schemes-v2", "depth_season"),
     ("schemes-v2", "tempo_season"),
+    # pace (the CEO, 2026-11-11: "add the 12 forecasts now"): volume first, then the habits,
+    # then each one's season-to-date average as its yardstick
+    ("pace", "plays_full"),
+    ("pace", "dropbacks_full"),
+    ("pace", "runs_full"),
+    ("pace", "plays_neutral"),
+    ("pace", "dropbacks_neutral"),
+    ("pace", "runs_neutral"),
+    ("pace", "pace_oe_shrunk"),
+    ("pace", "proe_shrunk"),
+    ("pace", "proe_1st_shrunk"),
+    ("pace", "proe_2nd_shrunk"),
+    ("pace", "proe_3rd_shrunk"),
+    ("pace", "no_huddle_shrunk"),
+    ("pace", "plays_season"),
+    ("pace", "dropbacks_season"),
+    ("pace", "runs_season"),
+    ("pace", "pace_oe_season"),
+    ("pace", "proe_season"),
+    ("pace", "proe_1st_season"),
+    ("pace", "proe_2nd_season"),
+    ("pace", "proe_3rd_season"),
+    ("pace", "no_huddle_season"),
 ]
 # Bookkeeping columns `feature_history` adds: not inputs.
 STEP_COLUMNS = ("step", "step_season", "step_week", "as_of")

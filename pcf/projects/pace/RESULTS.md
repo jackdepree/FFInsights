@@ -20,7 +20,7 @@ PCF now measures each team's habits on every play. Two yardsticks: its own expec
 | Calibration and range coverage | 80% ranges hold 79.4–81.8% for every final model, with every season inside the bar |
 | Leakage | Every blocking check passes for every run: identical at 25 cutoffs when future data is changed or deleted |
 | Football sanity | Game totals are forecast at 121–144 plays, inside 110–150. Coach changes move pace (R4). "Favorites run more" can't be tested without a line (R5). The CEO's review is pending |
-| CEO spot-check | pending |
+| CEO spot-check | 2026-11-11: R1, the H22 volume test. It holds: the win is the measurement, not the extra input (see below) |
 
 ## What's built
 - **`team_game.pace`** (decision 0028): each team's volume and habits per game, 2002 on (the first season with three earlier ones to fit on), known the day after the game.
@@ -110,6 +110,13 @@ Pass rate over expected: 0.54 against 0.23.
 - **What happened:** every Saturday forecast saw the fallback (a pick'em, a 44-point total), the same on every row. A column that never varies can't change a prediction, so it's now removed. A rerun of plays_full without it gives the same predictions on all 4,952 rows (run `dbdb566f`; largest difference 3×10⁻¹³ plays), and beats 100 of 100 shuffled refits.
 - **What it costs:** the brief's "favorites run more" can't be tested here. Efficiency stands in for team strength (good offenses run more, R3).
 
+**R6. On a local replay of 2026 weeks 1–10, no pace model is worse than its backtest's range.** This is not a record: it's unpushed and remade today with today's data, as live-experts' replay was. It shows the live path runs and scores, not live skill.
+- **The run:** `live.replay` for the 21 pace ledger models, scored with `ledger_score.scorecard` against the pinned backtests. 136 games, 272 team-games, 9 weeks scored.
+- **Flags:** none of the 21 is flagged.
+- **80% ranges:** hold 77–89%.
+- **Against the backtest:** the full-sample volume models score inside or better than their backtest's 90% range for 9 weeks. For example, plays_full scores 2.09 (×100: 208.6) against a backtest of 2.20 and a range of 2.05–2.36.
+- **No-huddle:** both no-huddle models score better than their range. 2026 teams huddle less often, so they're easier to call.
+
 ## The ladder
 | Rung | Method | Result vs the rung below | Takeaway carried forward |
 |---|---|---|---|
@@ -136,9 +143,45 @@ Not run: the miss lenses are built for player-game (`pcf.validation.misses`). Tw
 6. **The fitted models are cached by code version and seasons, not by the raw data.** If nflverse revises an old season, the cache keeps the old fit until `MODEL_VERSION` is bumped.
 7. **Nothing reads these yet.** Whether they help player volume or fantasy projections is untested.
 
+## The CEO's spot-check (2026-11-11): R1, the H22 volume test
+**The question:** is the full-sample habits' win over the neutral ones real, and is it the measurement, or something else?
+
+**The method:** [`build/spot_r1.py`](build/spot_r1.py) reran the same walk-forward (2016–2024, Saturday run, refit every step) with seven habit sets. Each is scored against the usual way on the range score, with the harness's week-block 90% interval (negative means better than the usual way).
+
+| Habits in the volume model | Plays | Dropbacks | Runs |
+|---|---|---|---|
+| None | +0.005 (+0.002 to +0.010) | +0.008 (+0.004 to +0.013) | +0.005 (+0.002 to +0.009) |
+| **Usual way:** tempo, neutral PROE | 0 | 0 | 0 |
+| Usual way + neutral no-huddle | +0.001 (+0.000 to +0.002) | +0.000 (−0.001 to +0.001) | +0.000 (−0.001 to +0.001) |
+| **Full, as published:** pace over expected, PROE, no-huddle | −0.004 (−0.007 to −0.001) | −0.009 (−0.012 to −0.005) | −0.007 (−0.010 to −0.004) |
+| Full without no-huddle (two against two) | −0.005 (−0.007 to −0.002) | −0.009 (−0.013 to −0.006) | −0.007 (−0.011 to −0.004) |
+| Only pace swapped in (with neutral PROE) | −0.004 (−0.007 to −0.002) | −0.001 (−0.002 to +0.000) | −0.000 (−0.001 to +0.001) |
+| Only PROE swapped in (with tempo) | −0.001 (−0.002 to +0.000) | −0.008 (−0.011 to −0.005) | −0.006 (−0.010 to −0.004) |
+
+**What it shows:**
+1. **The win is the measurement, not the extra input.**
+   - The published race was three habits against two, which wasn't strictly like for like.
+   - Without no-huddle (two against two), full wins by as much or slightly more.
+   - Adding no-huddle to the usual way doesn't help it.
+   - No-huddle adds nothing to volume once pace over expected is in. The published models keep it, so as not to re-pick a model on the test seasons.
+2. **Each full-sample habit wins where football says it should.**
+   - Plays: clock-aware pace carries the whole gain. PROE adds nothing.
+   - Dropbacks and runs: every-play PROE carries it. Pace adds nothing.
+3. **Habits matter at all.** With no habits, the model is worse than the usual way for all three.
+4. **It holds across seasons.** Full beats neutral in 8 of 9 seasons for each measure. The misses are plays in 2024 (+0.003), dropbacks in 2018 (+0.001) and runs in 2016 (+0.003). The largest gain is plays in 2022 (−0.016).
+5. **The two forecasts rarely disagree by much.**
+   - Plays: full minus usual has an sd of 0.48 plays, and 95% of games are within 1 play.
+   - The biggest gaps are the 2022 Buccaneers (Brady's no-huddle, quick passing), at about +2 plays.
+   - In the fifth of games where they disagree most, full is on the right side 53% of the time (524 of 990). Real, but faint, as the range scores say.
+
+**What would change the answer:** the gain survives the week-block interval, so no single week drives it, and no single season either. But it is 0.01–0.03 plays of typical miss. A downstream model (player volume, fantasy) could find it worth nothing, and the 2026 live record could erase it.
+
+**Verdict:** R1 holds, and H22's like-for-like test holds for the measurement, specifically for clock-aware pace (plays) and every-play PROE (dropbacks, runs).
+
 ## Pitfalls
 - **Pooled consistency needs centring by season** whenever a measure's league level moves (B2). The defense's pace looked like a strong trait until it was centred.
 - **A line known only at kickoff vanishes at the Saturday run.** Check what a feature looks like at the moment, not in the table (R5).
+- **Rate ranges can dip below zero.** Ranges are the forecast plus fixed offsets, so the no-huddle forecast's q10 sits below 0 for some teams (about −0.02 on average in the 2026 replay). It's harmless as a feature; a product showing ranges should clip it at 0.
 - **Two column names clashed with existing parts:** `def_dropbacks`, and nflverse's `pass_oe`. `check_parts` caught both.
 
 ## Not looked at
@@ -171,8 +214,11 @@ Not run: the miss lenses are built for player-game (`pcf.validation.misses`). Tw
 | **Feeds** | player-pace (the play part), player opportunity, fantasy projections, environment |
 
 ## Open questions for the CEO
-1. Should the 12 final models go into the live ledger now, or after the line is added?
-2. Is the small H22 gain enough to call H22 held, or does it stay mixed until it helps something downstream?
+1. ~~Should the 12 final models go into the live ledger now, or after the line is added?~~ **Answered 2026-11-11:** "add the 12 forecasts now".
+   - **In the ledger:** all 12 finals, each with its season-to-date average as a yardstick. That's 21 models in `pcf.validation.live.MODELS`, with their 2016–2024 backtests pinned in `ledger_score.BACKTESTS`.
+   - **The replay:** a local, unpushed replay of 2026 weeks 1–10 forecast all 272 team-games for every model, with no missing values.
+   - **When it starts:** once the branch is merged, since the scheduled ledger run uses `main`.
+2. Is the small H22 gain enough to call H22 held, or does it stay mixed until it helps something downstream? *(open)*
 
 ## Technical calls (for veto at merge)
 All in [decision 0028](../../docs/decisions/0028-pace.md):

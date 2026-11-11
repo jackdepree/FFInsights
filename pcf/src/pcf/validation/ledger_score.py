@@ -61,6 +61,30 @@ BACKTESTS = {
     "schemes-v2/shotgun_season": "5d02ab2e4bf24c5e9c24281d9d80fea9",
     "schemes-v2/depth_season": "c5668b5ba84548f6bc3409cd60b0f43a",
     "schemes-v2/tempo_season": "1a254c4d28664558a50e50f4e4566b4e",
+    # pace (2026-11-11): the 12 finals' 2016-2024 runs (RESULTS R1, R2; plays_full rerun without
+    # the never-visible line, the others' predictions equal to a run without it: R5) and the
+    # season-to-date yardsticks (20 shuffled refits each). Decision 0028, call 9.
+    "pace/plays_full": "dbdb566f93b34a97befed76c35debe2d",
+    "pace/dropbacks_full": "d39f53b16f874b9ba3fb67d4c38d9853",
+    "pace/runs_full": "252161d4d41c4a1595be839ef139d961",
+    "pace/plays_neutral": "dc7b718140354f35a618c9ef161f70df",
+    "pace/dropbacks_neutral": "151465b7f981459588031a88ff9ed848",
+    "pace/runs_neutral": "cdb7590fc52643d286d1b1ec532639ac",
+    "pace/pace_oe_shrunk": "fdbdc0e59fc44adabd927a917a787ade",
+    "pace/proe_shrunk": "331e6a9ada5d4d26be2bccad4456c32b",
+    "pace/proe_1st_shrunk": "6562ef306005483983c59428befe3682",
+    "pace/proe_2nd_shrunk": "9d0879f994b64778aa58fc7a6739ab19",
+    "pace/proe_3rd_shrunk": "abd4c79c707344cca89a93077c46295c",
+    "pace/no_huddle_shrunk": "0ec004d4c76e4a78a1e29272704dd445",
+    "pace/plays_season": "d320f02207f54a6b9b010410b33f57b7",
+    "pace/dropbacks_season": "f554bcfdb8924971955a863aab398c12",
+    "pace/runs_season": "84811799b2d34cde948b8eac10d25c71",
+    "pace/pace_oe_season": "f38c764a1c094a8ca8b174a49cf71273",
+    "pace/proe_season": "6392746209ef4ec486424d5837f8d4f2",
+    "pace/proe_1st_season": "5dfbbc588b824f14a641bb988db438c1",
+    "pace/proe_2nd_season": "f0434bfc70934b56ac78aaadd26f4714",
+    "pace/proe_3rd_season": "451e205504eb49daa66ed12c65fee430",
+    "pace/no_huddle_season": "ba5d1ceb861241009c80e8092d8742ef",
 }
 # Elo's game forecasts and the closing line each is set against (None: the no-vig moneylines).
 CLOSE: dict[str, str | None] = {
