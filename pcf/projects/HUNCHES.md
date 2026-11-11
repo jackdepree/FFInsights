@@ -36,6 +36,12 @@
 | H23 | 2026-11-10 | CEO | pace | Neutral pace and pass rate repeat; most per-game numbers are noisy | "I would expect our features to always be consistent from game to game" | Every measure this project makes through `pcf.validation.consistency`, with a verdict each | held | All 14 measures are traits (week to week 0.35–0.89, season to season 0.38–0.56); single games are noisy (plays 0.07 game to next game). PROE and pace repeat in all 18 conditions, least in lopsided games and the last two minutes. pace#F7, F14 |
 | H24 | 2026-11-10 | CEO | pace | Injury risk comes from season workload, not one game's pace | High pace early in a game predicts more injuries later in it | In-game injuries from play descriptions: first-half pace against second-half injuries, per game and per play, beyond the number of plays | failed | No carry-over: first-half pace and second-half injuries per snap +0.003 per second (90% −0.03 to +0.03); defenses facing more first-half snaps have more injuries per snap in both halves alike. pace#F10 |
 | H25 | 2026-11-10 | CEO | pace | Commentators' lore; time-of-possession studies find little | High pace early in a game tires the defense later | A defense's first-half plays faced and the opponent's early pace against its fourth-quarter EPA allowed per play, beyond both teams' strength | failed | Q4 EPA allowed per play +0.000 per 10 first-half snaps faced (90% −0.013 to +0.013). pace#F12 |
+| H26 | 2026-11-11 | CEO | player-pace | Player-level splits are noise, except the QB's | Some conditions make a player's rates over expected inconsistent as forecasts; find them | Each player's on-field pace over expected and PROE through the consistency test, overall and by condition (position, snap share, starter or backup, new coach, new team, sample size) | open | |
+| H27 | 2026-11-11 | CEO | player-pace | Pace and PROE follow the coach; the QB carries scrambling and efficiency | "if a player is traded will they carry their rates to the new team?" | Movers' rates at the old team against the new one, beside the new team's rate the season before and beside coaches who moved | open | |
+| H28 | 2026-11-11 | CEO | player-pace | With-and-without splits are hints; plus-minus is for basketball and hockey | Players carry a plus or minus relative to their team's pace or pass rate | On-field against off-field team rates, shrunk toward 0 (regularized plus-minus), team-game level taken out | open | |
+| H29 | 2026-11-11 | CEO | player-pace | Plus-minus needs years of data to settle | That plus or minus repeats game to game and season to season | H28's plus-minus through the consistency test, odd against even weeks and season to season | open | |
+| H30 | 2026-11-11 | CEO | player-pace | Aging curves are for efficiency and playing time; lore says rookie QBs are protected with the run | Pace or pass rate is associated with the age of players at different positions | Team-game pace over expected and PROE against snap-weighted age per position, beyond the coach's history | open | |
+| H31 | 2026-11-11 | CEO | player-pace | Defenses barely set the other team's pace; what a defense allows barely repeats (pace#B1) | Defensive players carry the same features and consistencies as offensive ones | H26, H28 and H29 for defenders, on the opponent's plays they were on the field for | open | |
 
 ## Tally
 
@@ -43,5 +49,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 7 | 4 | 3 | 10 |
+| CEO | 7 | 4 | 3 | 16 |
 | Claude | 0 | 0 | 0 | 0 |
