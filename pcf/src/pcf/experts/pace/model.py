@@ -8,9 +8,9 @@ from it, reused).
 league's level:
 - `<v>_league`, `<v>_season`, `<v>_last_season`: rung 0 averages (the brief's simple averages).
 - `<v>_neutral`: rung 1, the usual way: the team's own volume history, what the opposing defense
-  allows, the line (favorites run more: pace#F2), both offenses' and defenses' efficiency and
-  plays per drive (pace#F9), and both teams' **neutral** habits (tempo, neutral pass rate over
-  expected).
+  allows, both offenses' and defenses' efficiency and plays per drive (pace#F9), and both teams'
+  **neutral** habits (tempo, neutral pass rate over expected). No line: it's known only at
+  kickoff (`features`).
 - `<v>_full`: the same with the **full-sample** habits (pace over expected, pass rate over
   expected, no-huddle) in place of the neutral ones. It must beat `<v>_neutral` (the brief's test
   of H22) and the averages.
@@ -92,7 +92,6 @@ class _VolumeModel(_Pace):
         cols += [(p, c(f"{v}_{p}") - league) for p in HISTORY]
         a = ALLOWED[v]
         cols.append(("opp_allows", c(f"opp_{a}_shrunk") - c(f"opp_{a}_league")))
-        cols += [("spread", c("spread")), ("total_line", c("total_line"))]
         for e in EFFICIENCY:
             cols.append((e, c(f"{e}_shrunk") - c(f"{e}_league")))
             cols.append((f"opp_def_{e}", c(f"opp_def_{e}_shrunk") - c(f"opp_def_{e}_league")))

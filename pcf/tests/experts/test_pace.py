@@ -145,8 +145,8 @@ def test_per_moment_features_equal_the_bulk_ones(variant):
 
 
 def test_a_feature_never_uses_the_game_itself_or_later_ones():
-    """Change every pace measure and line from one game on: that game's features stay the same,
-    for the team and its opponent, except the line, which is known before kickoff."""
+    """Change every pace measure from one game on: that game's features stay the same, for the
+    team and its opponent."""
     frames = _frames()
     sched = frames[("team_game", "schedule")]
     cut = sched.filter((c("season") == 2022) & (c("week") == 3))["kickoff"].min()
@@ -175,22 +175,6 @@ def test_a_feature_never_uses_the_game_itself_or_later_ones():
     ]
     assert rows[0].height == 2 * games.height
     assert_frame_equal(rows[0], rows[1])
-
-
-def test_the_line_is_used_only_once_it_is_known():
-    frames = _frames()
-    ex = VARIANTS["plays_full"]()
-    gw = Gateway(FrameSource(frames), world.cal())
-    games = (
-        frames[("game", "schedule")]
-        .filter((c("season") == 2022) & (c("week") == 3))
-        .select("game_id", "season", "week", "kickoff")
-    )
-    kick = games["kickoff"].min()
-    known = ex.features(gw.view(kick - timedelta(days=1), ex.cadence, ex.inputs), games)
-    assert known["spread"].abs().sum() > 0
-    early = ex.features(gw.view(kick - timedelta(days=5), ex.cadence, ex.inputs), games)
-    assert (early["spread"] == 0).all() and (early["total_line"] == F.TOTAL_FALLBACK).all()
 
 
 def _miss(bt) -> float:

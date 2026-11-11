@@ -67,6 +67,13 @@
 | Plays per game | pace | A team's scrimmage snaps | 0.35 (0.29–) | 0.38 | trait | (the target) | One game to the next 0.07: mostly what happened in the game |
 | Dropbacks / runs per game | pace | Passes (with sacks and scrambles) and runs | 0.56 / 0.51 | 0.41 / 0.41 | trait | (targets) | Pass rate: 0.58, 0.42 |
 
+| Pace over expected, built (`team_game.pace`) | pace (R2) | Clock-aware, every snap, against PCF's expected gap fit on the 10 seasons before | 0.84 (0.82–) | 0.57 | trait | Next plays: the full-sample volume model beats the neutral one (R1) | Centred by season (B2); raw it reads 0.92 |
+| PROE, built (PCF's expected pass chance) | pace (R2) | Pass minus PCF's walk-forward expected pass chance, every scrimmage play | 0.77 (0.74–) | 0.49 | trait | Next dropbacks and runs (R1, R3) | By down: 1st 0.67, 2nd 0.68, 3rd 0.59 week to week; 3rd down repeats most across seasons (0.52) |
+| Drives / plays per drive per game | pace (B1) | Drives with a scrimmage play; scrimmage plays over drives | 0.30 / 0.37 | 0.34 / 0.40 | trait | Plays per drive weighs little once efficiency is in (R3) | |
+| What a defense allows: plays / PROE / pace over expected | pace (B1) | The opposing offenses' values against this defense | 0.15 / 0.23 / 0.08 | 0.23 / 0.31 / 0.26 | trait (pace barely) | Plays allowed helps next plays (+0.44 per sd, R3) | Pace is the offense's choice |
+
+Built pace rows measured 2026-11-11 with [`projects/pace/build/consistency_built.py`](pace/build/consistency_built.py), each measure centred on its season's league level (pace B2).
+
 Pace rows measured 2026-11-10 with [`projects/pace/explore/h22_h23_pace.py`](pace/explore/h22_h23_pace.py): 608 team-seasons, regular seasons 2006–2024 (2020–2024 the same shape).
 
 Measured 2026-11-07 with [`projects/elo/explore/consistency_so_far.py`](elo/explore/consistency_so_far.py): 829 team-seasons, 1999–2024 regular season (384 from 2013 for the snap and injury measures). The vault (2025) isn't read.

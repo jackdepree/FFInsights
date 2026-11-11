@@ -9,9 +9,11 @@ apart, and the no-huddle rate. Per habit `<h>`, the same history averages as sch
 **Volume** (`VOLUME`): plays, dropbacks and runs, each game weighted alike. For a volume forecast
 each row also has `CONTEXT` (what the team's defense allows, its offense's and defense's EPA per
 play and plays per drive), the usual neutral habits (`NEUTRAL`, from `tendencies`: the yardstick
-the full-sample habits must beat), the opponent's version of all of them (`opp_<name>`), and the
-game's line (`spread` for this team, `total_line`), each only once it is known by the moment
-(otherwise a pick'em and `TOTAL_FALLBACK`).
+the full-sample habits must beat), and the opponent's version of all of them (`opp_<name>`).
+
+No line: nflverse's spreads and totals sit near the close, so PCF knows them only at kickoff, after
+the Saturday run (docs/DATA_SOURCES.md). Elo's margin or the odds PCF collects are the
+replacement (pace RESULTS, "Could be improved").
 
 `at_moment` is the per-moment version the contract defines; `history` computes every game's in one
 pass and must give the same rows (the leakage checks compare them).
@@ -59,7 +61,6 @@ NEUTRAL: dict[str, tuple[str, str]] = {
     "neutral_pass_oe": ("neutral_pass_oe", "neutral_plays"),
 }
 FULL_HABITS = ("pace_oe", "proe", "no_huddle")  # the habits a volume forecast reads
-TOTAL_FALLBACK = 44.0  # points: a typical total, for a game whose line isn't known yet
 
 
 def _played(tg: pl.DataFrame) -> pl.DataFrame:
@@ -71,26 +72,8 @@ def habit_features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
     return S._features(_played(tg), targets, HABITS, KNOWN)
 
 
-def _line(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
-    """The game's line for each target, if known by its moment."""
-    lines = tg.select(*KEYS, "spread", "total_line", known="pregame_known_at")
-    known = c("known").is_not_null() & (c("known") <= c("moment"))
-    return (
-        targets.select(*KEYS, "moment")
-        .join(lines, on=KEYS, how="left")
-        .select(
-            *KEYS,
-            spread=pl.when(known).then(c("spread")).fill_null(0.0).cast(pl.Float64),
-            total_line=pl.when(known)
-            .then(c("total_line"))
-            .fill_null(TOTAL_FALLBACK)
-            .cast(pl.Float64),
-        )
-    )
-
-
 def volume_features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
-    """Volume, context and habit averages for each target and its opponent, plus the line."""
+    """Volume, context and habit averages for each target and its opponent."""
     played = _played(tg)
     own = S._features(
         played, targets, {**VOLUME, **CONTEXT, **{h: HABITS[h] for h in FULL_HABITS}}, KNOWN
@@ -108,7 +91,7 @@ def volume_features(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
         .drop("opp_team")
     )
     # both teams' histories are needed: a game whose opponent has none yet is left out
-    return rows.join(opp, on=KEYS, how="inner").join(_line(tg, targets), on=KEYS).sort(KEYS)
+    return rows.join(opp, on=KEYS, how="inner").sort(KEYS)
 
 
 def _targets(tg: pl.DataFrame, games: pl.DataFrame) -> pl.DataFrame:

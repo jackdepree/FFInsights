@@ -292,11 +292,21 @@ projects:
   - id: pace
     name: Pace and play-calling
     phase: 1
-    status: building
+    status: validating
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
     summary: "Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10). The CEO's pick for the next expert (2026-11-10); hunches H19-H25 recorded and the brief drafted (projects/pace/BRIEF.md); the CEO chose C (habits as features, volume as the forecast). Exploration GO (2026-11-10): every habit is a trait, full-sample clock-aware pace and full-sample PROE are steadier than neutral-only, volume is noisy but forecastable and is mostly plays per drive (efficiency). Brief agreed 2026-11-10, team level only (players: player-pace)."
+    interface:
+      inputs: team_game (schedule, pregame, opening_coach, tendencies, pace); no model outputs
+      outputs: "Per team-game, mean q10 q50 q90: next-game plays, dropbacks, runs (<v>_full) and habits pace_oe, proe, proe_1st/_2nd/_3rd, no_huddle (<h>_shrunk). Tables team_game.pace (2002 on) and play.pace (per snap)"
+      grain: team_game; play for play.pace
+      interval: weekly, Saturday run (Thursday games Thursday), from week 1
+      cadence: in_season
+      known_at: forecasts at the Saturday run; table parts the day after each game
+      model: none registered
+      how_to_use: "Features for player volume and fantasy projections; habits are team traits that follow the head coach. Use gaps from the league level, never raw pace_oe before 2010 (pace#B2). No line inside: add it downstream at kickoff (pace#R5)"
+      feeds: player-pace, player opportunity, fantasy projections, environment
 
   - id: player-pace
     name: Player pace and play-calling
