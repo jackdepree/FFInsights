@@ -83,6 +83,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-11:** `pace` is **done**: the CEO called H22 held (the full-sample measurement beats the neutral one like for like, pace#R1). Next: `player-pace`, as the CEO planned.
 - **2026-11-11:** `pace` merged (CEO approved) after the CEO's spot-check of R1 (holds: the full-sample win is the measurement). Its 12 finals and their season-to-date yardsticks join the weekly ledger (39 models) from the next run. Stays validating until the CEO's call on H22's verdict.
 - **2026-11-11:** `pace` reaches validating: new parts `team_game.pace` (volume and habits per game, measured on every play against PCF's own expected pass chance and clock-aware expected pace) and `play.pace` (per snap, for `player-pace`), and next-game forecasts of plays, dropbacks, runs and six habits, all beating their averages. The CEO's H22 holds as a like-for-like test (full-sample habits beat neutral ones), by a small margin. No line at the Saturday run (pace#R5).
 - **2026-11-10:** `schemes-v2` reaches validating: next-game forecasts of four team tendencies (pass rate over expected, shotgun rate, tempo, throw depth) that follow the head coach, beat every simple average, and hold on the 2025 vault except throw depth. Anti-traits hold as a relationship on offense but fail as a forecast. Scheme against scheme (the CEO's H14) found nothing usable. Done once the CEO calls the retrospective traits.
