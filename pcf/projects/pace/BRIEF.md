@@ -1,6 +1,6 @@
 # Brief: Pace and play-calling (`pace`)
 
-**Status:** draft (kickoff and hunches 2026-11-10; one CEO call open, see the end) · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (kickoff and hunches 2026-11-10; the CEO chose C, both; exploration done the same day, GO: [EXPLORATION.md](EXPLORATION.md), and its changes below wait for the CEO's agreement) · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-10, before any research.* Pace analysts (Football Outsiders' pace stats, Sharp Football, the fantasy sites' team-volume projections) work in three steps:
@@ -96,7 +96,7 @@ Fantasy points are volume times efficiency, and volume is the half PCF can forec
 
 ## Goals
 1. **The measures:** pass rate over expected and pace over expected on every play (H19, H22), each through the two tests (does it help the target; is it consistent).
-2. **The forecasts:** for each team's next game, its volume and its lean (the CEO's call below decides which), with q10, q50 and q90.
+2. **The forecasts (the CEO's call C, 2026-11-10: both):** each team's habits, pace over expected and pass rate over expected on every play, as features; and its volume for the next game (plays, passes, runs) as the forecast, with q10, q50 and q90.
 3. **Discovery for injury & fatigue:** H24 and H25, handed on with numbers.
 
 ## Success and failure, as tests
@@ -111,10 +111,18 @@ Fantasy points are volume times efficiency, and volume is the half PCF can forec
 
 ## Inputs and outputs
 - **Inputs:** the play table (pass, expected pass chance, win chance, expected points, game clock, no-huddle, clock stops), team-game tables, schemes-v2's trait forecasts, Elo's win chances, the schedule's line, in-game injuries from play descriptions. All free, all already in PCF; nothing new to sign off.
-- **Outputs:** per team-game, at each weekly run: the forecasts the CEO's call below picks, in the standard schema, plus the per-play measures as a table for higher layers.
+- **Outputs:** per team-game, at each weekly run: next-game plays, passes and runs (q10, q50, q90, in the standard schema), and the habits (pace over expected, pass rate over expected) as forecasts for the next game; the per-play measures as a table for higher layers.
 
 ## How it will be used
 Player opportunity (volume × shares), game script, the game simulator, totals, and the injury & fatigue expert (H24, H25).
 
-## Open for the CEO
-1. **What should pace forecast for each team's next game?** (taste call; your instinct first)
+## CEO decisions
+1. **What pace forecasts for each team's next game** (taste call, 2026-11-10): **C, both.** The habits (pace over expected and pass rate over expected, on every play) as features, and volume (plays, passes, runs) as the forecast. The other options were A, volume only, and B, habits only, leaving volume to game script and the simulator.
+
+## What the exploration changed (proposed, 2026-11-10; for the CEO to agree)
+*From [EXPLORATION.md](EXPLORATION.md).* Verdicts: H19 unclear (mixed), H20 held, H21 held small, H22 unclear (mixed), H23 held, H24 failed, H25 failed.
+1. **The habits are measured on every play** (F1, F5, F6): PROE on every play, with early downs and 3rd down as separate habits; pace over expected on every snap, from an expected pace that knows when the clock stopped; and the no-huddle rate. The neutral versions remain as yardsticks.
+2. **Volume is drives times plays per drive, for both teams together** (F9): the line (favorites run more, F2), both teams' habits, and both offenses' and defenses' efficiency (Elo's offense and defense ratings or EPA). Ranges come first: a single game's plays are hard to forecast (F8).
+3. **H24 and H25 leave this project:** reported to `injury-fatigue` with the long-drive lead (F10–F12, I29).
+4. **Goal 3 is replaced** by a stronger success test for the habits: the full-sample measures against the neutral ones, on consistency and on next-game volume.
+
