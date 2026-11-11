@@ -295,7 +295,7 @@ projects:
     status: building
     horizon: next
     cadence: [in_season]
-    depends_on: [grain-tables, validation-harness, schemes-v2]
+    depends_on: [grain-tables, validation-harness]
     summary: "Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10). The CEO's pick for the next expert (2026-11-10); hunches H19-H25 recorded and the brief drafted (projects/pace/BRIEF.md); the CEO chose C (habits as features, volume as the forecast). Exploration GO (2026-11-10): every habit is a trait, full-sample clock-aware pace and full-sample PROE are steadier than neutral-only, volume is noisy but forecastable and is mostly plays per drive (efficiency). Brief agreed 2026-11-10, team level only (players: player-pace)."
 
   - id: player-pace

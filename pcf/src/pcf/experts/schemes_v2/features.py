@@ -81,13 +81,17 @@ def _team_aggs(traits: dict[str, tuple[str, str]]) -> list[pl.Expr]:
 
 
 def _features(
-    tg: pl.DataFrame, targets: pl.DataFrame, traits: dict[str, tuple[str, str]] = TRAITS
+    tg: pl.DataFrame,
+    targets: pl.DataFrame,
+    traits: dict[str, tuple[str, str]] = TRAITS,
+    known: str = "tendencies_known_at",
 ) -> pl.DataFrame:
     """`targets`: game_id, team, season, moment. `tg`: team-games with their tendencies.
-    `traits`: the measures to average (default `TRAITS`; the anti-traits add their own)."""
+    `traits`: the measures to average (default `TRAITS`; the anti-traits add their own).
+    `known`: the known-at column of the part the measures come from (pace reads its own part)."""
     columns = sorted({col for pair in traits.values() for col in pair})
-    played = tg.filter(c("tendencies_known_at").is_not_null()).select(
-        "team", "kickoff", "coach", *columns, h_season="season", known="tendencies_known_at"
+    played = tg.filter(c(known).is_not_null()).select(
+        "team", "kickoff", "coach", *columns, h_season="season", known=known
     )
     targets = targets.select(*KEYS, "season", "moment")
     # The team's own games known by the moment, oldest first
