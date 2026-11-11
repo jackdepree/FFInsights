@@ -267,6 +267,7 @@ The bar for each check (scores, calibration, thresholds, the vault) is in [`VALI
 | What | Where | Why |
 |---|---|---|
 | Odds collectors | GitHub Actions (live) | Must run on time even when the PC is off. Small. The data can't be re-downloaded, so it's pushed to `pcf-data`. |
+| Odds collectors and nflverse snapshots, **while Actions is locked** (from 2026-11-10) | The CEO's PC: `ops/collect-run.ps1`, tasks "PCF odds (PC)" and "PCF nflverse (PC)" (decision 0027) | The same scripts and days. They stand down once GitHub's own collector pushes again; then remove them with `ops/register-collector-tasks.ps1 -Remove`. |
 | Refresh, modeling, reports | The CEO's PC, via **Windows Task Scheduler** | Needs the local data and MLflow. Heavy. Keeps outputs private, since Actions logs on this repo are public. |
 
 The first schedule (US Eastern, refined in `weekly-run`):
@@ -317,3 +318,6 @@ The tasks are set to wake the PC and to run as soon as possible after a missed s
 - [0012: Benchmarks run at kickoff; baselines at the model's run](decisions/0012-benchmarks-and-baseline-moments.md)
 - [0023: Scheme tendencies are a part of the team-game table](decisions/0023-team-game-tendencies.md)
 - [0024: Anti-traits are judged on the next game's gain; defenses' choices are a post-season part](decisions/0024-anti-traits.md)
+- [0025: A head coach is known from the start of week 1; the traits' rung 2](decisions/0025-opening-coach-and-rung-2.md)
+- [0026: A `team_season` table of charted traits, measured and dated](decisions/0026-team-season-charted-traits.md)
+- [0027: Elo and schemes-v2 join the ledger; the collectors run from the PC while GitHub is locked](decisions/0027-live-experts.md)

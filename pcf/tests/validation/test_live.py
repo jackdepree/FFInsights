@@ -68,6 +68,38 @@ def test_a_live_forecast_is_the_backtest_s_forecast(gw):
     assert (f.rows["train_end"] <= f.rows["as_of"]).all()
 
 
+class Publishing(RecentPoints):
+    """The toy, publishing one of its features, as Elo publishes its ratings."""
+
+    variant = "publishing"
+    publishes = ("last4",)
+
+
+def test_a_live_forecast_carries_what_the_expert_publishes(gw):
+    e = Publishing()
+    now = week3(gw)["moment"][0] + timedelta(hours=1)
+    f = live.forecast(e, gw, now, "check")
+    feats = backtest.feature_history(e, gw, live.steps_so_far(e, gw, now))
+    both = f.rows.join(feats.select(*e.keys(), "as_of", "last4"), on=[*e.keys(), "as_of"])
+    assert both.height == f.rows.height
+    assert both.filter(c("last4") != c("last4_right")).is_empty()
+
+
+def test_the_ledger_runs_participation_first():
+    """A slow run must never cost participation its kickoff (live-experts, technical call)."""
+    projects = [p for p, _ in live.MODELS]
+    last_participation = max(i for i, p in enumerate(projects) if p == "participation")
+    assert projects[: last_participation + 1] == ["participation"] * (last_participation + 1)
+    assert len(set(live.MODELS)) == len(live.MODELS)
+
+
+def test_every_ledger_model_exists():
+    from pcf.core.contract import find
+
+    for project, variant in live.MODELS:
+        assert find(project, variant).variant == variant
+
+
 def test_a_live_run_sees_no_later_moment(gw):
     e = RecentPoints()
     now = week3(gw)["moment"][0] + timedelta(hours=1)
@@ -132,3 +164,33 @@ def test_a_stale_file_near_kickoff_runs_without_waiting(monkeypatch):
     soon = SATURDAY_NOON + timedelta(minutes=30)
     out = live.wait_for_injuries(SATURDAY_NOON, soon, LIVE)
     assert out["injury_file_today"] is False and out["waited_minutes"] == 0
+
+
+def test_a_refresh_that_fails_once_is_tried_again(monkeypatch):
+    """nflverse can replace a file mid-download (live-experts, 2026-11-10): one retry, then real."""
+    from types import SimpleNamespace
+
+    from pcf.data import tables
+    from pcf.data.sources import nflverse
+
+    calls = []
+
+    def flaky():
+        calls.append(1)
+        if len(calls) == 1:
+            raise RuntimeError("schedules/games.parquet: downloaded content doesn't match")
+        return SimpleNamespace(downloaded=0)
+
+    monkeypatch.setattr(nflverse, "refresh", flaky)
+    monkeypatch.setattr(tables, "build", lambda **_: None)
+    monkeypatch.setattr(live, "freshness", lambda season: {})
+    monkeypatch.setattr(live, "RETRY_SECONDS", 0)
+    assert live.pull(LIVE)["downloaded"] == 0
+    assert len(calls) == 2
+
+    def down():
+        raise RuntimeError("down")
+
+    monkeypatch.setattr(nflverse, "refresh", down)
+    with pytest.raises(RuntimeError, match="down"):
+        live.pull(LIVE)

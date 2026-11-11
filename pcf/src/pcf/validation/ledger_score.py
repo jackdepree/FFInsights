@@ -14,6 +14,11 @@ and range coverage. Then they're set against the model's own backtest:
   a record.
 
 The backtests are pinned in `BACKTESTS`, so a new experiment run never changes the yardstick.
+
+**Elo against the close** (live-experts brief, goal 3): `close_card` sets Elo's margin, total and
+win chance beside the closing line on the same games, in the measure of Elo's own results
+(elo#F2): the average miss in points for margins and totals, log loss for win chances. The close
+is nflverse's (the `game` table), known only at kickoff, so it's scored here, not forecast.
 """
 
 from __future__ import annotations
@@ -21,10 +26,11 @@ from __future__ import annotations
 import numpy as np
 import polars as pl
 
+from pcf.baselines.market import LINES, MarketMargin, no_vig_home
 from pcf.config import get_config
 from pcf.core import ledger
 from pcf.core.contract import find
-from pcf.data.gateway import Gateway
+from pcf.data.gateway import END_OF_TIME, Gateway
 from pcf.validation import scores
 from pcf.validation.backtest import targets, test_seasons
 
@@ -39,6 +45,28 @@ BACKTESTS = {
     "participation/lasso_h3": "f0da29878af8420a9266b12159974a17",
     "participation/lasso_rest": "2de0578db3d7464db2607b0ded902481",
     "participation/last_game": "f4bd4f92864b40ebb83d5e979c174ae4",
+    # live-experts (2026-11-10): Elo's final runs (elo RESULTS, 2026-11-07; margin and win after
+    # the seed-locked flag) and schemes-v2's 2016-2024 runs of its finals (RESULTS R11) and of the
+    # season-to-date yardsticks.
+    "elo/margin": "21082e26cec94ea1920081554197d201",
+    "elo/total": "417b504c3ce84c748d0b541e4de3fcc4",
+    "elo/win": "b811be4301f54f1491bfce1ef29e06d5",
+    "elo/wins_next3": "90d57816ef164d3395dd5221ed385e87",
+    "elo/wins_rest": "4cad4574dece445aab2aa8a24ca2ca16",
+    "schemes-v2/pass_oe_rung2": "113ae2db33d9420e94bff28115903c70",
+    "schemes-v2/shotgun_rung2": "dfa8be869d8141c2804a0fd1bd8bdc30",
+    "schemes-v2/depth_rung2": "b3fb56d819f942b5a78148aa42864347",
+    "schemes-v2/tempo_shrunk": "88ffef17f0334deeb8612daf9c3fa093",
+    "schemes-v2/pass_oe_season": "dd60066c72b84035b373b5e0390f7524",
+    "schemes-v2/shotgun_season": "5d02ab2e4bf24c5e9c24281d9d80fea9",
+    "schemes-v2/depth_season": "c5668b5ba84548f6bc3409cd60b0f43a",
+    "schemes-v2/tempo_season": "1a254c4d28664558a50e50f4e4566b4e",
+}
+# Elo's game forecasts and the closing line each is set against (None: the no-vig moneylines).
+CLOSE: dict[str, str | None] = {
+    "elo/margin": "spread_line",
+    "elo/total": "total_line",
+    "elo/win": None,
 }
 
 
@@ -118,4 +146,58 @@ def scorecard(record: str = "live", clone=None, gateway: Gateway | None = None) 
                 "flag": record == "live" and len(weeks) >= MIN_WEEKS and score > hi,
             }
         )
+    return pl.DataFrame(out)
+
+
+def closing_lines(gateway: Gateway) -> pl.DataFrame:
+    """Every game's closing spread, total and moneylines, as the market benchmarks read them."""
+    m = MarketMargin()
+    g = gateway.view(END_OF_TIME, m.cadence, m.inputs).table("game")
+    return g.filter(c("pregame_known_at").is_not_null()).select("game_id", *LINES)
+
+
+def against_close(scored: pl.DataFrame, label: str, lines: pl.DataFrame) -> dict | None:
+    """One Elo model's scored rows beside the close on the same games: games, the measure, Elo's
+    value, the close's, and how far Elo is behind (positive: the close was better)."""
+    line = CLOSE[label]
+    close = no_vig_home(c("home_moneyline"), c("away_moneyline")) if line is None else c(line)
+    both = scored.join(
+        lines.select("game_id", close=close.cast(pl.Float64)), on="game_id"
+    ).drop_nulls("close")
+    if both.is_empty():
+        return None
+    if line is None:
+        measure = "log loss"
+        ours = both.select(scores.log_loss()).to_series().mean()
+        theirs = both.select(scores.log_loss(p="close")).to_series().mean()
+    else:
+        measure = "average miss, points"
+        ours = both.select(scores.absolute_error()).to_series().mean()
+        theirs = both.select(scores.absolute_error(q="close")).to_series().mean()
+    return {
+        "model": label,
+        "games": both.height,
+        "measure": measure,
+        "elo": ours,
+        "close": theirs,
+        "behind_close": ours - theirs,
+    }
+
+
+def close_card(record: str = "live", clone=None, gateway: Gateway | None = None) -> pl.DataFrame:
+    """One row per Elo game model with scored forecasts: Elo against the closing line."""
+    gateway = gateway or Gateway()
+    rows = ledger.read(record, clone)
+    if rows.is_empty():
+        return pl.DataFrame()
+    lines = closing_lines(gateway)
+    out = []
+    for label in CLOSE:
+        part = rows.filter(c("model") == label)
+        if part.is_empty():
+            continue
+        scored = _scored(part, label, gateway)
+        row = against_close(scored, label, lines) if scored.height else None
+        if row:
+            out.append(row)
     return pl.DataFrame(out)
