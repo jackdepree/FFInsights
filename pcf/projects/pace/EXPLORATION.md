@@ -135,11 +135,73 @@ So a volume forecast should be drives times plays per drive, made for both teams
 - per 10 first-half snaps faced: +0.000 (90% −0.013 to +0.013; the sd of Q4 EPA per play is 0.39);
 - per second faster opposing first-half pace: +0.002 (−0.003 to +0.006).
 
+## Follow-up: which conditions hold, and is PROE measured right? (the CEO, 2026-11-10)
+*The CEO asked which conditions hold for each hunch, whether PROE is measured correctly, and how consistent PROE and pace over expected are.* Scripts: [`proe_check.py`](explore/proe_check.py), [`conditions.py`](explore/conditions.py), [`conditions_fatigue.py`](explore/conditions_fatigue.py). The conditions are H19's slices. With about 100 tests, about 10 would exclude zero by chance, so one slice alone is a lead, not a finding.
+
+| # | Finding | Confidence |
+|---|---|---|
+| F13 | PROE is measured correctly for comparing teams, but nflverse's expected pass chance is drifting | strong |
+| F14 | PROE and pace over expected repeat in every condition; lopsided games and the last two minutes are the noisiest | strong |
+| F15 | Pace is one habit in every condition but the last two minutes; PROE in every condition but downs and the last two minutes | strong |
+| F16 | Win chance lowers pass rate only in the second half, through the score | strong |
+| F17 | Pass success raises next game's PROE in all 18 conditions, most when ahead and late | strong |
+| F18 | No condition shows fatigue building up (H24, H25); pass defense after a long first half is a lead with a confound | moderate |
+
+**F13. PROE is measured correctly for comparing teams, but nflverse's expected pass chance is drifting.**
+- *Definitions are right.* Dropbacks count as passes, including sacks and scrambles (scrambles are logged as runs; nflverse's `pass` flag catches them). Kneels and spikes are left out. Penalty plays that count as no play (4% of plays) count by the call: 76% of them were passes, because passes draw more flags.
+- *nflverse's `xpass` is in-sample before 2020.* Our own expected pass chance, walk-forward (each season fit only on earlier ones, from the situation alone), is worse than `xpass` on 2010–2019 (log loss 0.511–0.530 against 0.500–0.517), and as good from 2020 (0.524–0.532 against 0.523–0.533). So `xpass`'s edge before 2020 is its fit on those seasons.
+- *It's drifting.* Teams passed 1–2 points less than `xpass` expected in 2022–2024 (2022 −2.0, 2023 −1.1, 2024 −1.7). On 2020–2024 the gap is largest in the red zone (−3.1), on 3rd down (−2.6), in the last two minutes (−2.4) and in the fourth quarter (−1.9).
+- *Rankings don't change.* Team-season PROE from our model and from nflverse's agree at r 0.988 (they differ by 1.75 points on average, against a spread of 4.2 between teams) and are equally consistent (week to week 0.76–0.77).
+- *So:* any team comparison is safe, but the level is off by a league-wide 1–2 points, which a volume forecast would carry. The build uses our own walk-forward expected pass chance, refit each season and centred on the league's level so far (a technical call).
+
+**F14. PROE and pace over expected repeat in every condition; lopsided games and the last two minutes are the noisiest (H23).** Every one of the 36 condition-measure pairs is a trait (`pcf.validation.consistency`, 2006–2024). Overall: PROE 0.77 week to week, 0.46 season to season; clock-aware pace over expected 0.85 and 0.54.
+
+| Condition | Plays per game | PROE week / season r | Pace week / season r |
+|---|---|---|---|
+| 1st / 2nd / 3rd down | 28 / 22 / 14 | 0.68 / 0.40; 0.66 / 0.45; 0.62 / 0.54 | 0.75 / 0.50; 0.80 / 0.53; 0.61 / 0.46 |
+| Down 9+ / within 8 / up 9+ | 30 / 42 / 24 | 0.33 / 0.28; 0.65 / 0.39; 0.23 / 0.24 | 0.37 / 0.33; 0.81 / 0.52; 0.15 / 0.14 |
+| Win chance <20% / 20–80% / >80% | 25 / 39 / 24 | 0.24 / 0.24; 0.65 / 0.40; 0.26 / 0.30 | 0.27 / 0.27; 0.82 / 0.52; 0.17 / 0.15 |
+| Own half / their 21–50 / red zone | 36 / 19 / 10 | 0.68 / 0.41; 0.59 / 0.38; 0.54 / 0.43 | 0.80 / 0.54; 0.71 / 0.49; 0.52 / 0.37 |
+| Quarter 1 / 2 / 3 / 4 | 15 / 18 / 15 / 17 | 0.56; 0.61; 0.56; 0.52 (season 0.34–0.41) | 0.75; 0.68; 0.72; 0.50 (season 0.35–0.52) |
+| Last 2 minutes / rest of half | 8 / 58 | 0.33 / 0.34; 0.75 / 0.45 | 0.10 / 0.14; 0.86 / 0.54 |
+
+**F15. Pace is one habit in every condition but the last two minutes; PROE in every condition but downs and the last two minutes (H19, H22).** Each condition's team-season mean against the team's mean on all its other plays, divided by the most both sides' noise allows (1.0 = the same habit):
+
+| Condition | PROE | Pace |
+|---|---|---|
+| 1st / 2nd / 3rd down | **0.58 / 0.68 / 0.60** | 0.96 / 1.00 / 0.88 |
+| Down 9+ / within 8 / up 9+ | 0.82 / 0.94 / 0.98 | 0.92 / 1.01 / 1.08 |
+| Win chance <20% / 20–80% / >80% | 0.77 / 1.01 / 1.00 | 0.88 / 1.00 / 1.06 |
+| Own half / their 21–50 / red zone | 0.82 / 0.93 / 0.76 | 1.00 / 1.02 / 0.95 |
+| Quarter 1 / 2 / 3 / 4 | 0.85 / 0.99 / 0.99 / 0.89 | 0.97 / 1.01 / 1.01 / 0.90 |
+| Last 2 minutes against the rest | **0.70** | **0.51** |
+
+So the low consistency in lopsided games (F14) is noise from fewer plays, not a different habit: those plays still match the team's other plays (0.77–1.08). The real exceptions are PROE by down, and both measures in the last two minutes, where everyone hurries.
+
+**F16. Win chance lowers pass rate only in the second half, through the score (H20).** A team's pass rate in each condition, per +10 points of pre-game win chance, beyond its season-to-date PROE (90% interval):
+- **By quarter:** Q1 +0.2 (+0.1 to +0.3), Q2 +0.2 (+0.1 to +0.3), Q3 −0.7 (−0.8 to −0.6), **Q4 −3.6 (−3.9 to −3.3)**; the last two minutes −1.2.
+- **By down and field:** −0.7 to −1.2 everywhere.
+- **Within a score band:** about 0 (down 9+: +0.1; within 8: −0.0; up 9+: +0.1).
+
+So favorites don't start out running more; they run more once they're ahead, mostly in the fourth quarter. Once the score is known, the pre-game odds add nothing. Within in-game win chance bands the sign even turns positive (+0.2 to +1.0): a favorite that's behind passes more than an underdog that's behind. On PROE (after `xpass`) every condition is within ±0.4 points.
+
+**F17. Pass success raises next game's PROE in all 18 conditions, most when ahead and late (H21).** Per sd of opponent-adjusted pass success so far, beyond the team's PROE history (overall and in that condition). Every interval is above zero, far more than chance:
+- *strongest:* up 9+ +0.93 (+0.54 to +1.33), Q4 +0.76, win chance >80% +0.72, 2nd down +0.72;
+- *weakest:* when trailing (+0.35 to +0.38) and on 3rd down (+0.36).
+
+Teams that pass well keep passing when they don't have to. When the situation forces a pass, passing quality matters less.
+
+**F18. No condition shows fatigue building up (H24, H25); pass defense after a long first half is a lead with a confound.** Per +10 first-half snaps faced by a defense, 90% intervals:
+- *H24, its injuries per 100 snaps:* on runs +0.13 in the second half against +0.16 in the first; on passes +0.15 against +0.11; on 3rd down −0.00 against +0.18; close or not, nothing in the second half. Every rise in the second half is matched in the first, so it's those games, not fatigue.
+- *H25, EPA allowed per play:* on passes Q4 +0.031 (+0.013 to +0.049) and Q3 +0.020 (+0.006 to +0.035); on runs Q4 −0.014 (−0.030 to −0.000); 3rd down, close and not close all include zero in Q4. Pass defense is a little worse all second half after a long first half. But a defense that faced many first-half snaps was usually being moved on that day, which our season-strength controls don't capture. It's a lead for `injury-fatigue` (I30), not a verdict change.
+
 ## What this changes in the brief
 1. **The habits are measured on every play.** PROE on every play (F1, F6), with early downs and 3rd down as separate habits (F1). Pace over expected on every snap, from an expected pace that knows when the clock stopped (F4, F5). The no-huddle rate stays as a third habit (F5). The neutral versions remain as yardsticks.
 2. **Volume is built as drives times plays per drive,** for both teams together (F9). It uses the line (F2: favorites run more), both teams' habits, and both offenses' and defenses' efficiency, from Elo's offense and defense ratings or EPA (F9). Ranges come first (F8).
 3. **H24 and H25 leave this project.** F10 and F12 are reported to `injury-fatigue`, with F11 as its lead (I29).
-4. **Schemes-v2's pass rate and tempo could move to the full sample** (F5, F6), as a new version of schemes. It's a technical call for later: pace tests the full-sample habits first.
+4. **Our own walk-forward expected pass chance** replaces nflverse's `xpass` for levels (F13): refit each season, centred on the league's level so far. A technical call.
+5. **Volume uses the game state, not just the line** (F16): the line's effect comes through the score, mostly in the fourth quarter.
+6. **Schemes-v2's pass rate and tempo could move to the full sample** (F5, F6), as a new version of schemes. It's a technical call for later: pace tests the full-sample habits first.
 
 ## What not to redo
 - Close-games-only pace as the main measure: once the clock is known, the full sample is steadier (F5).

@@ -124,5 +124,7 @@ Player opportunity (volume × shares), game script, the game simulator, totals, 
 1. **The habits are measured on every play** (F1, F5, F6): PROE on every play, with early downs and 3rd down as separate habits; pace over expected on every snap, from an expected pace that knows when the clock stopped; and the no-huddle rate. The neutral versions remain as yardsticks.
 2. **Volume is drives times plays per drive, for both teams together** (F9): the line (favorites run more, F2), both teams' habits, and both offenses' and defenses' efficiency (Elo's offense and defense ratings or EPA). Ranges come first: a single game's plays are hard to forecast (F8).
 3. **H24 and H25 leave this project:** reported to `injury-fatigue` with the long-drive lead (F10–F12, I29).
-4. **Goal 3 is replaced** by a stronger success test for the habits: the full-sample measures against the neutral ones, on consistency and on next-game volume.
+4. **Our own walk-forward expected pass chance** for levels (F13): nflverse's `xpass` was fit through 2019 and now expects 1–2 points more passing than teams throw. Team rankings don't change (r 0.988).
+5. **Volume follows the game state:** the line's effect on pass rate comes through the score, mostly in the fourth quarter (F16).
+6. **Goal 3 is replaced** by a stronger success test for the habits: the full-sample measures against the neutral ones, on consistency and on next-game volume.
 
