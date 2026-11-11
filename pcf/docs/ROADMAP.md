@@ -78,11 +78,13 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 | Project | What we tried | Why it failed | What would make us retry |
 |---|---|---|---|
 | `schemes-v1` (`old/code/Schemes_Model.ipynb`) | Over-expectation features → PCA → clustering into team schemes | Little usable signal | Being retried as the `schemes-v2` expert, from the roles & archetypes angle |
+| `player-pace` (in season, 2026-11-11) | Team pace's forecasts plus the expected starting QB and who's ruled out | Pass rate over expected improved 0.3% (4% in expected starter changes); volume didn't (player-pace#R2, R3). The CEO kept the findings and discarded the model | A starter-change forecast with probabilities (only 32% of real changes are visible by Saturday, R5), or a Sunday-morning run that sees inactives |
 
 ## Changelog
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-11:** The CEO discarded the in-season `player-pace` model and kept its results and findings (dead end); `player-pace-retro` goes on to the spot-check.
 - **2026-11-11:** `player-pace` and `player-pace-retro` reach validating. New tables `player_game.on_field_pace` and `player_season.on_field_pace` (2016 on). Between seasons, a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average (player-pace#R1). In season, the expected starting QB improves team PROE a little (0.3%; 4% in expected changes) but not volume, so the brief's main test failed (R3).
 - **2026-11-11:** `pace` is **done**: the CEO called H22 held (the full-sample measurement beats the neutral one like for like, pace#R1). Next: `player-pace`, as the CEO planned.
 - **2026-11-11:** `pace` merged (CEO approved) after the CEO's spot-check of R1 (holds: the full-sample win is the measurement). Its 12 finals and their season-to-date yardsticks join the weekly ledger (39 models) from the next run. Stays validating until the CEO's call on H22's verdict.

@@ -1,6 +1,6 @@
 # Results: Player pace and play-calling (`player-pace`, `player-pace-retro`)
 
-**Date:** 2026-11-11 · **Status:** validating (waiting for the CEO's spot-check and merge approval) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiments:** `player-pace`, `player-pace-retro` · **Technical calls:** [decision 0029](../../docs/decisions/0029-player-pace.md)
+**Date:** 2026-11-11 · **Status:** `player-pace-retro` validating (the CEO's spot-check: R1, below); `player-pace` (in season) a dead end, its model discarded and its findings kept (the CEO, 2026-11-11) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiments:** `player-pace`, `player-pace-retro` · **Technical calls:** [decision 0029](../../docs/decisions/0029-player-pace.md)
 
 ## In short
 Two experts, as the CEO asked: one for between seasons and one for within a season.
@@ -18,13 +18,13 @@ Two experts, as the CEO asked: one for between seasons and one for within a seas
 | Calibration and range coverage | **Retro:** 80% ranges hold 79.5–80.2%, every group and season inside the bar. **In season:** 79.4–80.9% for all 8, 49–52% above the median |
 | Leakage | Every blocking check passes for every final run of both: identical at 25 cutoffs when future data is changed or deleted. The first in-season run failed checks 3 and 4 (a bulk-versus-moment mismatch, fixed; see Pitfalls) |
 | Football sanity | Backups lower PROE; running QBs carry it; a player's own effect is smaller than the coach's (R6). The retro lists' ends are the right players (blocking tight ends and fullbacks low, receiving backs high). The CEO's review is pending |
-| CEO spot-check | Pending |
+| CEO spot-check | 2026-11-11: R1, the 15% between-seasons result. It holds: every season, every skill group, movers too, and 12.7% beyond playing time (see below) |
 
 ## What's built
 - **`player_game.on_field_pace`** (2016 on, post-season): per player and game, his team's PROE and pace over expected on the snaps he played and sat, his plus-minus, its weight (on × off ÷ team snaps), and his pass-rate plus-minus within each personnel grouping. A defender's rates are the opposing offense's.
 - **`player_season.on_field_pace`** (new table `player_season`): his season's weighted plus-minus, side, position group, main team, games, plays and last game's kickoff.
 - **`player-pace-retro`** (`pcf.experts.player_pace_retro`), 9 variants: for PROE, PROE within personnel and pace, his group's average, his last season, and his decayed history shrunk toward his group with a slope per group (`<m>_shrunk`, the finals).
-- **`player-pace`** (`pcf.experts.player_pace`), 8 variants at the team-game grain: team pace's habit features plus the expected starting QB's own history, a change of starter, a rookie (`<h>_qb`, the finals for PROE and pace), plus who's ruled out (`proe_lineup`), and team pace's full volume models plus the QB columns (`<v>_qb`).
+- **`player-pace`** (was `pcf.experts.player_pace`; **removed 2026-11-11**, the CEO discarded the model and kept these results), 8 variants at the team-game grain: team pace's habit features plus the expected starting QB's own history, a change of starter, a rookie (`<h>_qb`, the finals for PROE and pace), plus who's ruled out (`proe_lineup`), and team pace's full volume models plus the QB columns (`<v>_qb`).
 - **The harness** learned a season-keyed grain (one retrospective step per season).
 
 ## Findings
@@ -59,6 +59,40 @@ The miss lenses run on player-game amount models only; neither expert is one. By
 - **Seven seasons.** Participation starts in 2016, so the retro walk is 2018–2024: seven held-out seasons, resampled by season. The intervals are tight because there are many players, but a regime change (a league-wide shift in personnel use) would hit every player at once.
 - **The expected starter rule can't see surprises.** 68% of real changes aren't visible by Saturday: the last starter isn't ruled out and is still on the roster. Why (benchings, late scratches, injuries during the game) isn't broken down here. A Sunday-morning run would see more; PCF doesn't run then.
 
+## The CEO's spot-check (2026-11-11): R1, the 15% between-seasons result
+The claim: for backs, receivers and tight ends, `proe_shrunk` forecasts next season's pass-rate plus-minus 15% better than `proe_group` (the position's average). Script and output: [explore/spot_r1.py](explore/spot_r1.py), [spot_r1.txt](explore/spot_r1.txt).
+
+**The rows.** 2,594 skill player-seasons, 2018–2024, each measured on at least 20 weight (on × off ÷ team snaps). In plain units, the range score falls from 2.03 to 1.72 points of PROE: −15.4%. The features use only earlier finished seasons (leakage checks 3 and 4, and a test).
+
+**Where the 15% comes from.**
+
+| Cut | Rows | Better than the group average by |
+|---|---|---|
+| Tight ends / backs / receivers | 687 / 756 / 1,151 | 22.3% / 14.5% / 10.9% |
+| Each season, 2018 to 2024 | 350–396 each | 13.6%, 18.1%, 14.8%, 14.8%, 12.2%, 16.9%, 17.5% |
+| Outcome season lightly / moderately / heavily measured (weight 20–50 / 50–150 / 150+) | 308 / 1,079 / 1,207 | 5.9% / 15.1% / 19.2% |
+| History brought in (decayed weight under 50 / 50–200 / 200+) | 197 / 716 / 1,681 | 4.2% / 11.6% / 18.7% |
+| Stayed with his team / moved to a new one | 1,913 / 681 | 16.8% / 11.6% |
+
+Every interval is below zero (by group and the other cuts, resampled by season; a single season is its own block, so it has no interval, but all seven point the same way). The gain grows with the evidence on both sides: more history in, and an outcome season measured well enough to see it. That's what a real trait looks like; a fluke would not sort itself that way.
+
+**The forecast's lean comes true at full size.** Split by how far `proe_shrunk` leans from the group's average, in fifths: leans of −5.7, −1.8, +0.1, +2.0 and +6.2 points are followed by actual gaps of −5.9, −2.5, −0.4, +1.8 and +6.5. The lean and the actual gap correlate at 0.53. So the shrinkage is about right: it doesn't overreach.
+
+**The alternative: is it only playing time?** The case against said part of it could be role. A yardstick of group × last season's plays per game (under 20, 20–40, 40+), fit walk-forward on earlier seasons, beats the group average by only 3.1%. `proe_shrunk` beats that role yardstick by 12.7% (tight ends 19.1%, backs 14.3%, receivers 6.9%; all intervals below zero). So playing time explains little of it. The personnel package explains some, more for backs: within personnel (`proe_pers_shrunk`) the gain is 10.7% (F4).
+
+**Named rows, 2024** (points of PROE; group average −2.6 for tight ends, +0.2 for receivers, −2.1 for backs):
+- Highest forecasts: Lucas Krull (TE) +12.1, actual +12.3; Chris Olave (WR) +11.5, actual +15.0; Kyle Pitts (TE) +10.7, actual +14.6. Two that faded: Tyreek Hill +8.4, actual +2.0; DeAndre Hopkins +8.8 after a trade to KC, actual +4.6.
+- Lowest forecasts: Charlie Kolar (TE) −13.4, actual −13.0; Patrick Ricard (fullback, listed RB) −12.0, actual −8.0; Chris Manhertz (TE) −11.1, actual −10.8. A miss: Chris Rodriguez Jr. (RB), one season of history at −26.7, forecast −12.9, actual +2.4.
+
+The ends are the right players: pass-catching tight ends and deep threats at the top, blocking tight ends and a fullback at the bottom.
+
+**What would change the answer.**
+- A role yardstick built on personnel and alignment (snap share in 12 and 21 personnel, in-line or slot) that matches `proe_shrunk`. Then R1 is a role measure under another name, still useful but redundant with `roles`. Plays per game already fails to match it.
+- A drop in the vault season (2025, closed): it opens once, for the final check.
+- A league-wide change in how teams use personnel, which would move every player's plus-minus at once (seven seasons can't rule it out).
+
+**Verdict:** R1 holds as stated: 15% against the position's average, 12.7% against playing time, steady across seasons and groups, and strongest where there's the most evidence.
+
 ## Pitfalls
 - **Leakage check 2 needed `last_kickoff` on season rows.** The first validation crashed; `player_season` now carries each player's last game.
 - **A season-keyed grain had no step join.** The harness joined steps on `game_id`; season rows now join their season's retrospective step.
@@ -81,16 +115,18 @@ The miss lenses run on player-game amount models only; neither expert is one. By
 - `proe_lineup` as built (ties); retry only with this season's plus-minus, which needs in-season participation.
 
 ## Interface card
+`player-pace-retro` only; the in-season model was discarded (the CEO, 2026-11-11).
+
 | | |
 |---|---|
-| **Inputs** | `player-pace`: `team_game` (schedule, pregame, opening_coach, tendencies, pace), `player_game` (roster, injury, snaps), `player_season.on_field_pace` (earlier seasons only). `player-pace-retro`: `player_season.on_field_pace`. No model outputs |
-| **Outputs** | Retro: per player-season, mean q10 q50 q90 of next season's `pm_proe`, `pm_proe_pers`, `pm_pace` (`<m>_shrunk`). In season: per team-game, next-game `proe` and `pace_oe` (`<h>_qb`), with the published `qb_proe_gap`, `qb_pace_gap`, `qb_share`, `qb_change`, `qb_rookie`, `lineup_out`. Tables `player_game.on_field_pace`, `player_season.on_field_pace` (2016 on) |
-| **Level of detail** | Retro: player-season. In season: team-game |
-| **Interval** | Retro: once a season. In season: weekly at the Saturday run, from week 1 |
-| **Cadence** | Retro: retrospective. In season: in_season |
-| **Known at** | Retro: the day after the Super Bowl, for later seasons only. In season: the Saturday run |
-| **How to use it** | Retro: as a prior for skill players' role (pass tell); not for QBs (no weight) or pace. In season: the QB columns as features; the PROE forecast only where a small gain matters. Not for volume (R3) |
-| **Feeds** | player opportunity, fantasy projections, game simulator; team pace's volume stays its own |
+| **Inputs** | `player_season.on_field_pace`. No model outputs |
+| **Outputs** | Per player-season, mean q10 q50 q90 of next season's `pm_proe`, `pm_proe_pers`, `pm_pace` (`<m>_shrunk`). Tables `player_game.on_field_pace`, `player_season.on_field_pace` (2016 on) |
+| **Level of detail** | Player-season (the tables also per player-game) |
+| **Interval** | Once a season |
+| **Cadence** | retrospective |
+| **Known at** | The day after the Super Bowl, for later seasons only (rule m) |
+| **How to use it** | As a prior for skill players' role (the pass tell, R1); not for QBs (no weight) or pace (R7) |
+| **Feeds** | player opportunity, fantasy projections, roles |
 
 ## Hunch verdicts (build)
 The exploration's verdicts stand (HUNCHES.md). The build adds:
@@ -99,8 +135,8 @@ The exploration's verdicts stand (HUNCHES.md). The build adds:
 - **H31 (defenders like offense):** failed, confirmed: 0.8% against 15% (R8).
 
 ## Open questions for the CEO
-1. **The brief's main test failed (R3): the QB doesn't help team pace's volume.** Keep `player-pace` (in season) as it is, a small PROE gain and published QB columns, or park the in-season expert and keep only the retro one?
-2. Which one decision or finding do you want spot-checked before the merge?
+1. ~~The brief's main test failed (R3). Keep `player-pace` (in season) as it is, or park it and keep only the retro one?~~ **Answered 2026-11-11:** "keep the results and findings of the in-season expert but discard the model". The code and its tests are removed, `player-pace` is a dead end in the registry and ROADMAP, and R2–R6 stay in KNOWLEDGE.
+2. ~~Which one decision or finding to spot-check?~~ **Answered 2026-11-11:** "please spot check the 15% between season result" (R1, below).
 
 ## Technical calls (for veto at merge)
 All in [decision 0029](../../docs/decisions/0029-player-pace.md):

@@ -2,6 +2,8 @@
 
 **Date:** 2026-11-11 · **Decided by:** the CEO chose both cadences ("Both, the pace expert for players should give downstream models within-season features and between-season features to learn from", 2026-11-11) and agreed the brief ("Build both as drafted, it looks great so far, thank you", 2026-11-11). The calls below are Claude's technical calls, listed for veto at merge. · **Projects:** `player-pace`, `player-pace-retro`
 
+**Update (2026-11-11):** the CEO kept the in-season expert's results and findings but discarded the model ("keep the results and findings of the in-season expert but discard the model"). `pcf.experts.player_pace` and its tests are removed; `player-pace` is a dead end in the registry. Calls 2–5 below are kept as the record of what was tried. The tables, the harness changes and `player-pace-retro` stay.
+
 **Decision:**
 - **Two new table parts** (`pcf.data.tables.player_pace`):
   - `player_game.on_field_pace`: per player and game, his team's pass rate over expected and pace over expected on the snaps he played and on the snaps he sat, the gaps between them (his plus-minus), each gap's weight (on × off ÷ team snaps), and the pass-rate gap within each personnel grouping. A defender's rates are the opposing offense's.
