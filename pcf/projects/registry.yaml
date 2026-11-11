@@ -315,7 +315,7 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [pace, participation]
-    summary: "In season: each player's effect on his team's pace over expected and pass rate over expected before each game, from what's known in season (passer and rusher per play, weekly snap counts), as features for team pace and the layers above. Starts with the QB (schemes-v2#F3). The CEO's call (2026-11-10), after team pace. Kickoff 2026-11-11 in projects/player-pace/BRIEF.md; the CEO's hunches H26-H31 (rates by condition, movers, plus-minus and whether it repeats, age, defenders). The CEO's call (2026-11-11): both in season and between seasons, so its retrospective twin is player-pace-retro; one brief, one exploration."
+    summary: "In season: each player's effect on his team's pace over expected and pass rate over expected before each game, from what's known in season (passer and rusher per play, weekly snap counts), as features for team pace and the layers above. Starts with the QB (schemes-v2#F3). The CEO's call (2026-11-10), after team pace. Kickoff 2026-11-11 in projects/player-pace/BRIEF.md; the CEO's hunches H26-H31 (rates by condition, movers, plus-minus and whether it repeats, age, defenders). The CEO's call (2026-11-11): both in season and between seasons, so its retrospective twin is player-pace-retro; one brief, one exploration. Exploration GO (2026-11-11): skill players' pass-rate plus-minus repeats and follows tight ends and receivers (a role tell); QBs carry pace more than PROE; rookie QBs pass less; pace mostly stays with the team."
 
   - id: player-pace-retro
     name: Player pace and play-calling (retrospective)

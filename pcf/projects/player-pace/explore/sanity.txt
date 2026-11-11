@@ -1,0 +1,114 @@
+
+== QB: 62 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌─────────────────┬───────┬───────┬─────────┐
+│ full_name       ┆ pm    ┆ share ┆ seasons │
+│ ---             ┆ ---   ┆ ---   ┆ ---     │
+│ str             ┆ f64   ┆ f64   ┆ u32     │
+╞═════════════════╪═══════╪═══════╪═════════╡
+│ Justin Fields   ┆ -20.5 ┆ 0.83  ┆ 4       │
+│ Jeff Driskel    ┆ -16.9 ┆ 0.51  ┆ 5       │
+│ Jacoby Brissett ┆ -13.8 ┆ 0.61  ┆ 9       │
+│ Lamar Jackson   ┆ -13.3 ┆ 0.82  ┆ 7       │
+│ Cam Newton      ┆ -11.0 ┆ 0.87  ┆ 6       │
+│ Nick Mullens    ┆ 1.1   ┆ 0.67  ┆ 7       │
+│ Derek Carr      ┆ 2.0   ┆ 0.91  ┆ 9       │
+│ Brian Hoyer     ┆ 2.4   ┆ 0.44  ┆ 8       │
+│ Cody Kessler    ┆ 3.5   ┆ 0.54  ┆ 3       │
+│ Andy Dalton     ┆ 3.5   ┆ 0.85  ┆ 9       │
+└─────────────────┴───────┴───────┴─────────┘
+
+== RB: 248 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌───────────────────┬───────┬───────┬─────────┐
+│ full_name         ┆ pm    ┆ share ┆ seasons │
+│ ---               ┆ ---   ┆ ---   ┆ ---     │
+│ str               ┆ f64   ┆ f64   ┆ u32     │
+╞═══════════════════╪═══════╪═══════╪═════════╡
+│ Jerome Felton     ┆ -26.0 ┆ 0.3   ┆ 1       │
+│ Roosevelt Nix     ┆ -24.3 ┆ 0.13  ┆ 4       │
+│ Jalston Fowler    ┆ -20.0 ┆ 0.16  ┆ 2       │
+│ James Develin     ┆ -18.2 ┆ 0.3   ┆ 4       │
+│ Derek Watt        ┆ -17.3 ┆ 0.09  ┆ 7       │
+│ Andre Ellington   ┆ 10.3  ┆ 0.22  ┆ 2       │
+│ Shaun Draughn     ┆ 10.3  ┆ 0.33  ┆ 1       │
+│ Dontrell Hilliard ┆ 12.6  ┆ 0.2   ┆ 5       │
+│ James White       ┆ 16.1  ┆ 0.4   ┆ 6       │
+│ Travaris Cadet    ┆ 16.8  ┆ 0.22  ┆ 3       │
+└───────────────────┴───────┴───────┴─────────┘
+
+== WR: 390 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌─────────────────────┬───────┬───────┬─────────┐
+│ full_name           ┆ pm    ┆ share ┆ seasons │
+│ ---                 ┆ ---   ┆ ---   ┆ ---     │
+│ str                 ┆ f64   ┆ f64   ┆ u32     │
+╞═════════════════════╪═══════╪═══════╪═════════╡
+│ Tanner McEvoy       ┆ -17.6 ┆ 0.17  ┆ 2       │
+│ Lynn Bowden         ┆ -15.0 ┆ 0.39  ┆ 2       │
+│ Cody Hollister      ┆ -14.6 ┆ 0.28  ┆ 4       │
+│ Stanley Morgan      ┆ -14.3 ┆ 0.13  ┆ 5       │
+│ Skyy Moore          ┆ -11.7 ┆ 0.35  ┆ 3       │
+│ Marvin Harrison Jr. ┆ 13.2  ┆ 0.75  ┆ 1       │
+│ Kendall Wright      ┆ 13.4  ┆ 0.49  ┆ 2       │
+│ Julian Edelman      ┆ 14.6  ┆ 0.79  ┆ 4       │
+│ Rashid Shaheed      ┆ 14.6  ┆ 0.55  ┆ 3       │
+│ Chris Olave         ┆ 18.1  ┆ 0.67  ┆ 3       │
+└─────────────────────┴───────┴───────┴─────────┘
+
+== TE: 247 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌──────────────────┬───────┬───────┬─────────┐
+│ full_name        ┆ pm    ┆ share ┆ seasons │
+│ ---              ┆ ---   ┆ ---   ┆ ---     │
+│ str              ┆ f64   ┆ f64   ┆ u32     │
+╞══════════════════╪═══════╪═══════╪═════════╡
+│ Orson Charles    ┆ -21.8 ┆ 0.18  ┆ 2       │
+│ Dominique Dafney ┆ -17.6 ┆ 0.22  ┆ 2       │
+│ Colin Thompson   ┆ -16.8 ┆ 0.17  ┆ 2       │
+│ Michael Roberts  ┆ -16.7 ┆ 0.23  ┆ 2       │
+│ Trevon Wesco     ┆ -16.3 ┆ 0.25  ┆ 5       │
+│ Dennis Pitta     ┆ 13.7  ┆ 0.67  ┆ 1       │
+│ Kyle Pitts       ┆ 14.2  ┆ 0.64  ┆ 4       │
+│ Coby Fleener     ┆ 14.7  ┆ 0.47  ┆ 2       │
+│ Lucas Krull      ┆ 15.3  ┆ 0.33  ┆ 3       │
+│ Delanie Walker   ┆ 16.1  ┆ 0.63  ┆ 4       │
+└──────────────────┴───────┴───────┴─────────┘
+
+== DB: 553 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌──────────────────┬───────┬───────┬─────────┐
+│ full_name        ┆ pm    ┆ share ┆ seasons │
+│ ---              ┆ ---   ┆ ---   ┆ ---     │
+│ str              ┆ f64   ┆ f64   ┆ u32     │
+╞══════════════════╪═══════╪═══════╪═════════╡
+│ T.J. McDonald    ┆ -14.6 ┆ 0.93  ┆ 3       │
+│ Glover Quin      ┆ -12.2 ┆ 0.89  ┆ 3       │
+│ Jaycee Horn      ┆ -11.6 ┆ 0.87  ┆ 4       │
+│ Deshazor Everett ┆ -11.3 ┆ 0.34  ┆ 6       │
+│ Malcolm Jenkins  ┆ -11.2 ┆ 0.94  ┆ 6       │
+│ Tony McRae       ┆ 6.3   ┆ 0.21  ┆ 4       │
+│ Josiah Scott     ┆ 6.5   ┆ 0.38  ┆ 4       │
+│ Marcus Jones     ┆ 6.8   ┆ 0.53  ┆ 3       │
+│ C.J. Moore       ┆ 7.1   ┆ 0.17  ┆ 4       │
+│ Garrett Williams ┆ 7.3   ┆ 0.69  ┆ 2       │
+└──────────────────┴───────┴───────┴─────────┘
+
+== LB: 428 players; the 5 lowest and 5 highest (points of PROE)
+shape: (10, 4)
+┌─────────────────┬───────┬───────┬─────────┐
+│ full_name       ┆ pm    ┆ share ┆ seasons │
+│ ---             ┆ ---   ┆ ---   ┆ ---     │
+│ str             ┆ f64   ┆ f64   ┆ u32     │
+╞═════════════════╪═══════╪═══════╪═════════╡
+│ Telvin Smith    ┆ -11.8 ┆ 0.92  ┆ 3       │
+│ Nick Bellore    ┆ -11.4 ┆ 0.05  ┆ 6       │
+│ Ben Gedeon      ┆ -11.1 ┆ 0.26  ┆ 3       │
+│ Jamien Sherwood ┆ -10.2 ┆ 0.47  ┆ 4       │
+│ Paul Posluszny  ┆ -10.2 ┆ 0.68  ┆ 2       │
+│ Jihad Ward      ┆ 3.9   ┆ 0.4   ┆ 2       │
+│ Akeem Ayers     ┆ 4.0   ┆ 0.27  ┆ 2       │
+│ Jaylen Harrell  ┆ 4.3   ┆ 0.26  ┆ 1       │
+│ Myjai Sanders   ┆ 4.4   ┆ 0.29  ┆ 2       │
+│ Lamarr Houston  ┆ 7.3   ┆ 0.49  ┆ 2       │
+└─────────────────┴───────┴───────┴─────────┘

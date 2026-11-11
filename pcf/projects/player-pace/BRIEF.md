@@ -1,6 +1,6 @@
 # Brief: Player pace and play-calling (`player-pace`)
 
-**Status:** draft (kickoff 2026-11-11, the CEO: "Start player pace"; hunches H26–H31 recorded 2026-11-11; the CEO's call on timing 2026-11-11: both; exploring) · **Layer:** expert · **Cadence:** two experts, `player-pace` (in_season) and `player-pace-retro` (retrospective), one brief and one exploration (rule m)
+**Status:** draft (kickoff 2026-11-11, the CEO: "Start player pace"; hunches H26–H31 recorded 2026-11-11; the CEO's call on timing 2026-11-11: both; exploration GO 2026-11-11, [EXPLORATION.md](EXPLORATION.md); waiting for the CEO's direction) · **Layer:** expert · **Cadence:** two experts, `player-pace` (in_season) and `player-pace-retro` (retrospective), one brief and one exploration (rule m)
 
 ## The usual way
 *Claude, 2026-11-11, before any research.* Analysts mostly treat pace and pass rate as the play caller's, and move them for players only at the edges:
