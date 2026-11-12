@@ -27,7 +27,7 @@ What it gets right:
 
 | Check (docs/VALIDATION.md) | Result |
 |---|---|
-| Signal / no noise | Yes. The late edition beats the morning-after map in both seasons and on both sides (log loss −0.38% / −0.30% offense, −0.16% / −0.21% defense). With FTN's counts shuffled across plays, the same model scores SHUFFLED_RESULT (R6). By position group, log loss improves in 7 of 8 groups; the offensive line is 0.1% worse (R7) |
+| Signal / no noise | Yes. The late edition beats the morning-after map in both seasons and on both sides (log loss −0.38% / −0.30% offense, −0.16% / −0.21% defense). With FTN's counts shuffled across plays, the same model scores like the morning-after map (within 0.0001 in every season and side), so the gain is FTN's, not the extra inputs' (R6). By position group, log loss improves in 7 of 8 groups; the offensive line is 0.1% worse (R7) |
 | Calibration | Inside the 3-point bar: 1.06 points (slope 1.06) on offense, 0.76 (slope 1.05) on defense, against 1.05 and 0.77 for the morning-after map |
 | Uncertainty | The chances are the uncertainty (each cell's chance of being on). Each play's `certainty` is honest within 1 point: 88.0% expected against 89.0% right on offense, 82.5% against 83.2% on defense (R4) |
 | Leakage | Point-in-time gap 0.0 on sample games rebuilt from a view at their late `as_of`; 0 FTN rows visible at the morning after; every `as_of` is at least 14 days after kickoff and every `train_end` before kickoff (R5) |
@@ -72,7 +72,7 @@ By season: offense −0.38% (2023) and −0.30% (2024), defense −0.16% and −
 
 **R5. Point in time is clean.** Four sample games of 2024 rebuilt from a view at each one's late `as_of` match the season run exactly (gap 0.0). A view at each game's morning after holds none of its FTN rows (0). Every saved row's `as_of` is 14 days or more after kickoff (median 15), and every `train_end` is before kickoff. The three last games of each season (the conference championships and the Super Bowl) wait for the next season's first run, about 7 months, because the weekly runs stop after the season (Pitfalls).
 
-**R6. The gain is FTN's, not the extra inputs'.** With FTN's counts shuffled across plays within each season, the same model scores SHUFFLED_DETAIL ([build/shuffled.txt](build/shuffled.txt)).
+**R6. The gain is FTN's, not the extra inputs'.** With FTN's counts shuffled across plays within each season, the same model scores exactly like the morning-after map: offense 0.4112 and 0.4046 (2023, 2024) against 0.4111 and 0.4045 without FTN and 0.4096 and 0.4033 with the real counts; defense 0.4680 and 0.4695 against 0.4681 and 0.4696, and 0.4673 and 0.4685 with the real counts ([build/shuffled.txt](build/shuffled.txt)). Eight more inputs with no signal cost and gain nothing; the real counts gain in every season and side.
 
 **R7. By position group, 7 of 8 get better log loss.**
 - Gains: tight ends (0.4844 → 0.4821), backs (0.3557 → 0.3541), receivers (0.4491 → 0.4476), quarterbacks (0.1407 → 0.1392), defensive backs (0.3690 → 0.3669), linebackers and the defensive line by a hair.
