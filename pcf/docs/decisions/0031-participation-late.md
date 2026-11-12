@@ -1,6 +1,6 @@
 # 0031: participation-late, the second edition of the participation map
 
-**Date:** 2026-11-12 · **Project:** `participation-late` · **Status:** Claude's technical calls, listed for veto at merge
+**Date:** 2026-11-12 · **Project:** `participation-late` · **Status:** accepted 2026-11-12 (the CEO: "Merge, no vetoes")
 
 The CEO asked for "a second interval, 1 to 2 weeks after each game … some sort of recalculation that goes back", and left the build to Claude ("take the lead on this and probably just go for it").
 

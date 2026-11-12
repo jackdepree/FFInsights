@@ -1,6 +1,6 @@
 # Results: Participation inference, second edition (`participation-late`)
 
-**Date:** 2026-11-12 · **Status:** validating; the CEO's spot-check done (the leakage check), waiting on vetoes and merge approval · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-late` · **Technical calls:** [decision 0031](../../docs/decisions/0031-participation-late.md) · **Code:** `pcf.experts.participation_late` (reuses `pcf.experts.participation_live`)
+**Date:** 2026-11-12 · **Status:** done, merged 2026-11-12 (the CEO: "Merge, no vetoes") · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-late` · **Technical calls:** [decision 0031](../../docs/decisions/0031-participation-late.md) · **Code:** `pcf.experts.participation_late` (reuses `pcf.experts.participation_live`)
 
 ## In short
 **A second edition of the map, made once FTN's charting is out.** Every game of 2023–2024 is rebuilt about two weeks after kickoff, each season trained on the three before. It uses the morning-after map's model plus FTN's counts per play: the backfield, the box, pass rushers, blitzers, motion, play action and screens. It is saved as its own output (`participation-late`), so the morning-after map is never rewritten.
@@ -185,6 +185,7 @@ Also in this project's `interface` block in `registry.yaml`.
 | **Feeds** | the same as participation-live, for uses that can wait two weeks: season plus-minus and value, the retrospective models, fantasy usage trends |
 
 ## Open questions for the CEO
-1. **The spot-check:** the CEO picked "The leakage check" (2026-11-12): done above, no leak found.
-2. **Vetoes on the technical calls?** Decision 0031, calls 1–6.
-3. **Merge?**
+Answered 2026-11-12 (the CEO, word for word in [BRIEF.md](BRIEF.md)):
+1. **The spot-check:** "The leakage check": done above, no leak found.
+2. **Vetoes on the technical calls?** "no vetoes" (decision 0031, calls 1–6).
+3. **Merge?** "Merge".

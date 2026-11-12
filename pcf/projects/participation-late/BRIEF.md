@@ -54,3 +54,8 @@ The CEO's other points: the late edition is "basically the exact same" expert, a
 - **Calibration:** within 3 points, slope 0.9–1.1; its certainty honest within 3 points.
 - **Point in time:** sample games rebuilt from a view at their late `as_of` match the season run (gap 0), and a view at their morning after holds none of their FTN rows.
 
+## The CEO's review of the results (2026-11-12, word for word)
+- The spot-check: "The leakage check" (done: RESULTS.md, "The CEO's spot-check"; no leak found).
+- Vetoes and merge: "Merge, no vetoes".
+
+Against the tests above: signal, calibration and point in time pass. "No noise" holds for 7 of 8 position groups: the offensive line's log loss is 0.1% worse (its open spots right go up). That was in the case against when the CEO approved (RESULTS.md, point 3).
