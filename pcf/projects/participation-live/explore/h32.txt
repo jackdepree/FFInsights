@@ -1,0 +1,69 @@
+grid 2019-2024: 7,480,086 player-plays; open (not pinned) 73.9%; truth on among open 43.6%
+share of true on-field players who are candidates (have snaps): 99.92%
+fitted DB: 462,263 training cells
+fitted DL: 638,512 training cells
+fitted LB: 406,095 training cells
+fitted OL: 196,451 training cells
+fitted OTHER: 5,914 training cells
+fitted QB: 32,426 training cells
+fitted RB: 267,068 training cells
+fitted TE: 266,415 training cells
+fitted WR: 435,106 training cells
+
+Test 2022-2024: 3,821,872 player-plays, 202,218 play-sides; open cells 2,817,197
+Best guess and on-field chances (open cells = not named, not on every snap):
+shape: (6, 9)
+┌──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┬──────────┐
+│ method   ┆ offense_ ┆ offense_ ┆ offense_ ┆ defense_ ┆ defense_ ┆ defense_ ┆ open_log ┆ open_ll_ │
+│ ---      ┆ of_11    ┆ open_rig ┆ all11_ri ┆ of_11    ┆ open_rig ┆ all11_ri ┆ _loss    ┆ raw_prio │
+│ str      ┆ ---      ┆ ht       ┆ ght      ┆ ---      ┆ ht       ┆ ght      ┆ ---      ┆ r        │
+│          ┆ f64      ┆ ---      ┆ ---      ┆ f64      ┆ ---      ┆ ---      ┆ f64      ┆ ---      │
+│          ┆          ┆ f64      ┆ f64      ┆          ┆ f64      ┆ f64      ┆          ┆ f64      │
+╞══════════╪══════════╪══════════╪══════════╪══════════╪══════════╪══════════╪══════════╪══════════╡
+│ share    ┆ 0.8765   ┆ 0.7284   ┆ 0.1845   ┆ 0.8198   ┆ 0.7216   ┆ 0.0936   ┆ 0.4782   ┆ 0.4838   │
+│ league   ┆ 0.8820   ┆ 0.7406   ┆ 0.2031   ┆ 0.8226   ┆ 0.7260   ┆ 0.0949   ┆ 0.4692   ┆ 0.4726   │
+│ history  ┆ 0.8846   ┆ 0.7463   ┆ 0.2116   ┆ 0.8273   ┆ 0.7333   ┆ 0.0996   ┆ 0.4604   ┆ 0.4653   │
+│ shuffled ┆ 0.8820   ┆ 0.7406   ┆ 0.2032   ┆ 0.8226   ┆ 0.7260   ┆ 0.0948   ┆ 0.4692   ┆ 0.4726   │
+│ oracle   ┆ 0.9045   ┆ 0.7903   ┆ 0.2953   ┆ 0.8804   ┆ 0.8155   ┆ 0.3123   ┆ 0.3824   ┆ 0.3872   │
+│ depth    ┆ 0.8370   ┆ 0.6406   ┆ 0.0892   ┆ 0.7783   ┆ 0.6574   ┆ 0.0458   ┆ null     ┆ null     │
+└──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┴──────────┘
+
+Open-slot accuracy by position group (share of the true open on-field players the best guess gets):
+shape: (8, 8)
+┌───────┬──────────────┬───────┬────────┬─────────┬──────────┬────────┬───────┐
+│ group ┆ true_open_on ┆ share ┆ league ┆ history ┆ shuffled ┆ oracle ┆ depth │
+│ ---   ┆ ---          ┆ ---   ┆ ---    ┆ ---     ┆ ---      ┆ ---    ┆ ---   │
+│ str   ┆ i64          ┆ f64   ┆ f64    ┆ f64     ┆ f64      ┆ f64    ┆ f64   │
+╞═══════╪══════════════╪═══════╪════════╪═════════╪══════════╪════════╪═══════╡
+│ DB    ┆ 231287       ┆ 0.821 ┆ 0.827  ┆ 0.829   ┆ 0.827    ┆ 0.877  ┆ 0.650 │
+│ DL    ┆ 293627       ┆ 0.631 ┆ 0.636  ┆ 0.649   ┆ 0.636    ┆ 0.765  ┆ 0.634 │
+│ LB    ┆ 193345       ┆ 0.741 ┆ 0.742  ┆ 0.747   ┆ 0.741    ┆ 0.819  ┆ 0.702 │
+│ OL    ┆ 86905        ┆ 0.808 ┆ 0.808  ┆ 0.808   ┆ 0.808    ┆ 0.947  ┆ 0.692 │
+│ QB    ┆ 9658         ┆ 0.761 ┆ 0.818  ┆ 0.835   ┆ 0.818    ┆ 0.935  ┆ 0.736 │
+│ RB    ┆ 65234        ┆ 0.439 ┆ 0.486  ┆ 0.515   ┆ 0.486    ┆ 0.624  ┆ 0.568 │
+│ TE    ┆ 118145       ┆ 0.659 ┆ 0.684  ┆ 0.693   ┆ 0.684    ┆ 0.710  ┆ 0.536 │
+│ WR    ┆ 221461       ┆ 0.818 ┆ 0.816  ┆ 0.815   ┆ 0.816    ┆ 0.815  ┆ 0.693 │
+└───────┴──────────────┴───────┴────────┴─────────┴──────────┴────────┴───────┘
+
+Calibration of the history method's balanced chances (open cells):
+shape: (10, 4)
+┌─────┬──────────┬──────────┬────────┐
+│ bin ┆ mean_p   ┆ on_rate  ┆ n      │
+│ --- ┆ ---      ┆ ---      ┆ ---    │
+│ f64 ┆ f64      ┆ f64      ┆ u32    │
+╞═════╪══════════╪══════════╪════════╡
+│ 0.0 ┆ 0.044668 ┆ 0.042623 ┆ 497334 │
+│ 1.0 ┆ 0.14874  ┆ 0.140733 ┆ 345158 │
+│ 2.0 ┆ 0.248942 ┆ 0.241205 ┆ 303775 │
+│ 3.0 ┆ 0.349136 ┆ 0.344761 ┆ 271829 │
+│ 4.0 ┆ 0.449531 ┆ 0.451553 ┆ 247227 │
+│ 5.0 ┆ 0.549765 ┆ 0.554882 ┆ 236317 │
+│ 6.0 ┆ 0.649916 ┆ 0.655138 ┆ 230872 │
+│ 7.0 ┆ 0.7495   ┆ 0.757637 ┆ 224048 │
+│ 8.0 ┆ 0.849722 ┆ 0.858712 ┆ 214279 │
+│ 9.0 ┆ 0.952019 ┆ 0.954452 ┆ 246358 │
+└─────┴──────────┴──────────┴────────┘
+
+sanity: mean |sum of chances - 11| per play 0.000; best guess with 11: 100.0%
+players: mean |chances total - snap target| 0.04 plays; |best-guess total - true| 7.82; |chances total - true| 0.57
+no-huddle offensive snaps: best guess equals the previous snap's for the player 87.5% (not yet a constraint); truth unchanged from the previous snap 97.1%

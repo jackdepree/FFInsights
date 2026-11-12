@@ -114,4 +114,8 @@ PCF's live play-by-play models and each player's in-season value need to know wh
 Live play-by-play models, in-season player plus-minus and value, context and value over expected in season, routes and roles per play, fantasy usage, and the game simulator.
 
 ## Open for the CEO
-None yet. The exploration's verdicts come back to you before the brief is agreed.
+**The exploration is back (2026-11-11, [EXPLORATION.md](EXPLORATION.md)): GO.** Verdicts: H33 held, H32 held (small), H34 and H35 held in part. Proposed changes to this brief, for the CEO to agree or change:
+- **The model becomes a sequence model over each drive** (two snaps of memory at least), because the snap before is the big lever (participation-live#F6, F8). The CEO's patterns are its inputs: snap share, the league's situational habits, his own and his team's history, the drive and his streak, and his own stay and return rates.
+- **The best guess keeps each player's snap total** across the game. Each play's top picks are off by 7.8 plays a player (F7).
+- **No-huddle is a feature, not a constraint** (F2).
+- **The bar to beat** is the history model without sequence (74.6% offense and 73.3% defense of open-slot players right, log loss 0.460). The snap share (72.8%, 72.2%, 0.478) and the depth chart (about 65%) are the baselines. The oracle (79.0%, 81.6%, 0.382) is the ceiling.

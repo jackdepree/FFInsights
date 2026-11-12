@@ -1,0 +1,132 @@
+pairs of consecutive snaps in a drive: 238,223 per side
+
+Average players changed between snaps, by the second snap's situation (league, 2016-2024):
+shape: (18, 5)
+┌─────────┬──────────────────┬──────────┬──────────────────┬────────┐
+│ side    ┆ situation        ┆ changes  ┆ share_any_change ┆ pairs  │
+│ ---     ┆ ---              ┆ ---      ┆ ---              ┆ ---    │
+│ str     ┆ str              ┆ f64      ┆ f64              ┆ i64    │
+╞═════════╪══════════════════╪══════════╪══════════════════╪════════╡
+│ offense ┆ all              ┆ 1.268085 ┆ 0.695416         ┆ 238223 │
+│ offense ┆ third            ┆ 1.366342 ┆ 0.753538         ┆ 58792  │
+│ offense ┆ fourth_q         ┆ 1.064294 ┆ 0.606411         ┆ 65200  │
+│ offense ┆ red_zone         ┆ 1.342148 ┆ 0.718672         ┆ 42239  │
+│ offense ┆ two_minute       ┆ 0.66988  ┆ 0.426842         ┆ 28835  │
+│ offense ┆ blowout          ┆ 1.046606 ┆ 0.593603         ┆ 29481  │
+│ offense ┆ after_first_down ┆ 1.296162 ┆ 0.688038         ┆ 77471  │
+│ offense ┆ no_huddle        ┆ 0.345223 ┆ 0.227698         ┆ 27475  │
+│ offense ┆ after_big_play   ┆ 1.308559 ┆ 0.688485         ┆ 14208  │
+│ defense ┆ all              ┆ 1.291953 ┆ 0.61387          ┆ 238223 │
+│ defense ┆ third            ┆ 1.791094 ┆ 0.770955         ┆ 58792  │
+│ defense ┆ fourth_q         ┆ 1.152546 ┆ 0.563896         ┆ 65200  │
+│ defense ┆ red_zone         ┆ 1.399725 ┆ 0.650986         ┆ 42239  │
+│ defense ┆ two_minute       ┆ 0.835478 ┆ 0.442726         ┆ 28835  │
+│ defense ┆ blowout          ┆ 1.1291   ┆ 0.545199         ┆ 29481  │
+│ defense ┆ after_first_down ┆ 1.424585 ┆ 0.640859         ┆ 77471  │
+│ defense ┆ no_huddle        ┆ 0.615141 ┆ 0.331247         ┆ 27475  │
+│ defense ┆ after_big_play   ┆ 1.509079 ┆ 0.662514         ┆ 14208  │
+└─────────┴──────────────────┴──────────┴──────────────────┴────────┘
+
+Consistency of each team's excess changes (players changed per snap, over the league's in the same situation):
+shape: (18, 9)
+┌────────────────┬────────┬─────────┬──────────┬───┬───────────┬──────────────┬──────────┬─────────┐
+│ measure        ┆ week_r ┆ week_lo ┆ season_r ┆ … ┆ season_hi ┆ unit_seasons ┆ mean_abs ┆ verdict │
+│ ---            ┆ ---    ┆ ---     ┆ ---      ┆   ┆ ---       ┆ ---          ┆ ---      ┆ ---     │
+│ str            ┆ f64    ┆ f64     ┆ f64      ┆   ┆ f64       ┆ i64          ┆ f64      ┆ str     │
+╞════════════════╪════════╪═════════╪══════════╪═══╪═══════════╪══════════════╪══════════╪═════════╡
+│ offense_all    ┆ 0.85   ┆ 0.82    ┆ 0.62     ┆ … ┆ 0.68      ┆ 288          ┆ 0.33     ┆ trait   │
+│ offense_third  ┆ 0.85   ┆ 0.82    ┆ 0.53     ┆ … ┆ 0.60      ┆ 288          ┆ 0.38     ┆ trait   │
+│ offense_fourth ┆ 0.73   ┆ 0.68    ┆ 0.61     ┆ … ┆ 0.67      ┆ 288          ┆ 0.43     ┆ trait   │
+│ _q             ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_red_zo ┆ 0.65   ┆ 0.59    ┆ 0.57     ┆ … ┆ 0.64      ┆ 288          ┆ 0.47     ┆ trait   │
+│ ne             ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_two_mi ┆ 0.42   ┆ 0.34    ┆ 0.47     ┆ … ┆ 0.54      ┆ 288          ┆ 0.45     ┆ trait   │
+│ nute           ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_blowou ┆ 0.31   ┆ 0.22    ┆ 0.40     ┆ … ┆ 0.49      ┆ 280          ┆ 0.47     ┆ trait   │
+│ t              ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_after_ ┆ 0.75   ┆ 0.71    ┆ 0.59     ┆ … ┆ 0.65      ┆ 288          ┆ 0.41     ┆ trait   │
+│ first_down     ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_no_hud ┆ 0.73   ┆ 0.68    ┆ 0.32     ┆ … ┆ 0.41      ┆ 286          ┆ 0.31     ┆ trait   │
+│ dle            ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ offense_after_ ┆ 0.54   ┆ 0.47    ┆ 0.48     ┆ … ┆ 0.56      ┆ 288          ┆ 0.66     ┆ trait   │
+│ big_play       ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_all    ┆ 0.79   ┆ 0.75    ┆ 0.44     ┆ … ┆ 0.52      ┆ 288          ┆ 0.28     ┆ trait   │
+│ defense_third  ┆ 0.81   ┆ 0.77    ┆ 0.47     ┆ … ┆ 0.55      ┆ 288          ┆ 0.48     ┆ trait   │
+│ defense_fourth ┆ 0.59   ┆ 0.53    ┆ 0.37     ┆ … ┆ 0.46      ┆ 288          ┆ 0.37     ┆ trait   │
+│ _q             ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_red_zo ┆ 0.52   ┆ 0.45    ┆ 0.33     ┆ … ┆ 0.42      ┆ 287          ┆ 0.47     ┆ trait   │
+│ ne             ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_two_mi ┆ 0.21   ┆ 0.12    ┆ 0.26     ┆ … ┆ 0.35      ┆ 288          ┆ 0.47     ┆ trait   │
+│ nute           ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_blowou ┆ 0.27   ┆ 0.17    ┆ 0.15     ┆ … ┆ 0.25      ┆ 281          ┆ 0.40     ┆ trait   │
+│ t              ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_after_ ┆ 0.68   ┆ 0.62    ┆ 0.43     ┆ … ┆ 0.51      ┆ 288          ┆ 0.39     ┆ trait   │
+│ first_down     ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_no_hud ┆ 0.12   ┆ 0.02    ┆ 0.22     ┆ … ┆ 0.31      ┆ 286          ┆ 0.44     ┆ trait   │
+│ dle            ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+│ defense_after_ ┆ 0.38   ┆ 0.29    ┆ 0.25     ┆ … ┆ 0.34      ┆ 287          ┆ 0.78     ┆ trait   │
+│ big_play       ┆        ┆         ┆          ┆   ┆           ┆              ┆          ┆         │
+└────────────────┴────────┴─────────┴──────────┴───┴───────────┴──────────────┴──────────┴─────────┘
+
+How big: sd of team-season excess (players changed per snap), and the most and least:
+shape: (18, 5)
+┌─────────┬──────────────────┬──────────┬───────────┬──────────┐
+│ side    ┆ sit              ┆ sd       ┆ lo        ┆ hi       │
+│ ---     ┆ ---              ┆ ---      ┆ ---       ┆ ---      │
+│ str     ┆ str              ┆ f64      ┆ f64       ┆ f64      │
+╞═════════╪══════════════════╪══════════╪═══════════╪══════════╡
+│ defense ┆ after_big_play   ┆ 0.340699 ┆ -0.82808  ┆ 1.213249 │
+│ defense ┆ after_first_down ┆ 0.25955  ┆ -0.69777  ┆ 0.884996 │
+│ defense ┆ all              ┆ 0.224544 ┆ -0.686402 ┆ 0.719715 │
+│ defense ┆ blowout          ┆ 0.254445 ┆ -0.644367 ┆ 0.935104 │
+│ defense ┆ fourth_q         ┆ 0.218996 ┆ -0.616937 ┆ 0.644028 │
+│ …       ┆ …                ┆ …        ┆ …         ┆ …        │
+│ offense ┆ fourth_q         ┆ 0.2887   ┆ -0.653107 ┆ 0.987087 │
+│ offense ┆ no_huddle        ┆ 0.233299 ┆ -0.467491 ┆ 0.847887 │
+│ offense ┆ red_zone         ┆ 0.322173 ┆ -0.918741 ┆ 0.930668 │
+│ offense ┆ third            ┆ 0.314178 ┆ -0.940936 ┆ 0.806415 │
+│ offense ┆ two_minute       ┆ 0.226109 ┆ -0.547073 ┆ 0.824152 │
+└─────────┴──────────────────┴──────────┴───────────┴──────────┘
+offense  all       same team+coach n,r=(195, 0.74)  same team, new coach n,r=(61, 0.23)  coach moved n,r=(3, -0.55)
+offense  third     same team+coach n,r=(195, 0.63)  same team, new coach n,r=(61, 0.21)  coach moved n,r=(3, -0.9)
+offense  fourth_q  same team+coach n,r=(195, 0.7)  same team, new coach n,r=(61, 0.27)  coach moved n,r=(3, -0.74)
+defense  all       same team+coach n,r=(195, 0.49)  same team, new coach n,r=(61, 0.37)  coach moved n,r=(3, 0.1)
+defense  third     same team+coach n,r=(195, 0.5)  same team, new coach n,r=(61, 0.46)  coach moved n,r=(3, 0.28)
+defense  fourth_q  same team+coach n,r=(195, 0.44)  same team, new coach n,r=(61, 0.23)  coach moved n,r=(3, 0.08)
+
+Most and least third-down changes, offense (team-seasons, players per snap over the league):
+shape: (10, 4)
+┌──────┬────────┬─────────────────┬────────┐
+│ team ┆ season ┆ coach           ┆ excess │
+│ ---  ┆ ---    ┆ ---             ┆ ---    │
+│ str  ┆ i32    ┆ str             ┆ f64    │
+╞══════╪════════╪═════════════════╪════════╡
+│ LA   ┆ 2021   ┆ Sean McVay      ┆ -0.94  │
+│ LA   ┆ 2023   ┆ Sean McVay      ┆ -0.91  │
+│ ATL  ┆ 2024   ┆ Raheem Morris   ┆ -0.85  │
+│ NYG  ┆ 2016   ┆ Ben McAdoo      ┆ -0.84  │
+│ MIN  ┆ 2022   ┆ Kevin O'Connell ┆ -0.77  │
+│ BAL  ┆ 2019   ┆ John Harbaugh   ┆ 0.73   │
+│ KC   ┆ 2023   ┆ Andy Reid       ┆ 0.73   │
+│ DEN  ┆ 2023   ┆ Sean Payton     ┆ 0.74   │
+│ NO   ┆ 2022   ┆ Dennis Allen    ┆ 0.81   │
+│ TEN  ┆ 2021   ┆ Mike Vrabel     ┆ 0.81   │
+└──────┴────────┴─────────────────┴────────┘
+defense:
+shape: (10, 4)
+┌──────┬────────┬────────────────┬────────┐
+│ team ┆ season ┆ coach          ┆ excess │
+│ ---  ┆ ---    ┆ ---            ┆ ---    │
+│ str  ┆ i32    ┆ str            ┆ f64    │
+╞══════╪════════╪════════════════╪════════╡
+│ PIT  ┆ 2016   ┆ Mike Tomlin    ┆ -1.07  │
+│ BUF  ┆ 2022   ┆ Sean McDermott ┆ -0.93  │
+│ ARI  ┆ 2018   ┆ Steve Wilks    ┆ -0.92  │
+│ WAS  ┆ 2020   ┆ Ron Rivera     ┆ -0.83  │
+│ CLE  ┆ 2018   ┆ Hue Jackson    ┆ -0.79  │
+│ GB   ┆ 2016   ┆ Mike McCarthy  ┆ 0.91   │
+│ DET  ┆ 2016   ┆ Jim Caldwell   ┆ 0.93   │
+│ CIN  ┆ 2020   ┆ Zac Taylor     ┆ 0.94   │
+│ NE   ┆ 2020   ┆ Bill Belichick ┆ 1.12   │
+│ IND  ┆ 2019   ┆ Frank Reich    ┆ 1.25   │
+└──────┴────────┴────────────────┴────────┘

@@ -87,6 +87,21 @@
 
 Player rows measured 2026-11-11 with [`projects/player-pace/explore/h26_h28_h29_h31.py`](player-pace/explore/h26_h28_h29_h31.py) and [`personnel.py`](player-pace/explore/personnel.py), 2016–2024.
 
+**Participation measures** (participation-live exploration, 2026-11-11): substitution per **team** per game, and on-and-off rhythm per **player** per game, from the true participation 2016–2024. Team measures are each team-game's players changed per snap above the league's in the same situation and season.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Substitution, offense: all snaps / third down / fourth quarter | participation-live (H33) | Players changed between consecutive snaps of a drive, above the league | 0.85 (0.82–) / 0.85 (0.82–) / 0.73 (0.68–) | 0.62 / 0.53 / 0.61 | trait | As team history in the reconstruction: with the player's, 1.9% better log loss than the league's habits (F7) | Follows the coach: 0.74 season to season with the same head coach, 0.23 with a new one (F3) |
+| Substitution, offense: red zone / two-minute / blowout / no-huddle / after a 20+ play | participation-live (H33) | The same | 0.65 / 0.42 / 0.31 / 0.73 / 0.54 | 0.57 / 0.47 / 0.40 / 0.32 / 0.48 | trait | As above | |
+| Substitution, defense: all snaps / third down / fourth quarter | participation-live (H33) | The same, the defense's 11 | 0.79 (0.75–) / 0.81 (0.77–) / 0.59 (0.53–) | 0.44 / 0.47 / 0.37 | trait | As above | Same coach 0.49, new coach 0.37 |
+| Substitution, defense: red zone / two-minute / blowout / no-huddle / after a 20+ play | participation-live (H33) | The same | 0.52 / 0.21 / 0.27 / 0.12 (0.02–) / 0.38 | 0.33 / 0.26 / 0.15 / 0.22 / 0.25 | trait (no-huddle barely) | As above | |
+| Stay rate beyond snap share, RB / TE / WR / DL / LB / DB | participation-live (H35) | On next snap given on now (same drive), minus his group's average at the same snap share | 0.65 / 0.45 / 0.43 / 0.56 / 0.57 / 0.54 | 0.55 / 0.31 / 0.19 / 0.34 / 0.21 / 0.21 | trait | Not tested yet: an input for the sequence model (F6) | Player-games with 5+ snaps on and 5+ off |
+| Return rate beyond snap share, RB / TE / WR / DL / LB / DB | participation-live (H35) | On next snap given off now (same drive), the same way | 0.68 / 0.67 / 0.50 / 0.65 / 0.61 / 0.69 | 0.46 / 0.43 / 0.32 / 0.38 / 0.42 / 0.44 | trait | Not tested yet (F6) | |
+| Staying on after a reception, RB / TE / WR | participation-live (H35) | Still on two snaps later after a catch, minus his other snaps that game | 0.02 / 0.12 (0.06–) / 0.01 | 0.01 / 0.02 / 0.14 | noise / state / noise | Not tested | On average −4.0 / −2.4 / −6.3 points: players come off after a catch (F5) |
+| Staying on after a 20+ yard play allowed, DL / LB | participation-live (H35) | The same, the defense's front | 0.17 / 0.21 | 0.16 / 0.17 | trait, weak | Not tested | +3.9 / +3.6 points: likely the offense hurrying |
+
+Participation rows measured 2026-11-11 with [`projects/participation-live/explore/h33.py`](participation-live/explore/h33.py), [`h34_35.py`](participation-live/explore/h34_35.py) and [`h34b.py`](participation-live/explore/h34b.py), 2016–2024.
+
 Built pace rows measured 2026-11-11 with [`projects/pace/build/consistency_built.py`](pace/build/consistency_built.py), each measure centred on its season's league level (pace B2).
 
 Pace rows measured 2026-11-10 with [`projects/pace/explore/h22_h23_pace.py`](pace/explore/h22_h23_pace.py): 608 team-seasons, regular seasons 2006–2024 (2020–2024 the same shape).
