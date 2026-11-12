@@ -355,6 +355,14 @@ projects:
       how_to_use: "The lineup to use is likeliest, each play's likeliest 11 (the CEO, 2026-11-12). Use mean (the chance) wherever a measure can take weights; best only when lineups must keep the snap counts. Never treat a lineup as observed: carry the chance or draw lineups, and compare plus-minus within a position group (participation-live#R6). Train only on the walk-forward history (rule e)."
       feeds: in-season player plus-minus and value, context-live and voe-live, routes and roles per play, fantasy usage, the game simulator; later, causal effects per player and play
 
+  - id: participation-late
+    name: Participation inference, second edition (1-2 weeks after each game)
+    phase: 1
+    status: idea
+    horizon: now
+    cadence: [in_season]
+    depends_on: [participation-live, grain-tables, validation-harness]
+    summary: "A second edition of participation-live's map of who was on the field on every play, run again once FTN's free charting for the game is out (about 1-2 weeks later): the same chances, lineups and per-play certainty, revised with FTN's counts per play (backfield, box, pass rushers). Kept as a later vintage beside the morning-after map. The CEO, 2026-11-12: 'some sort of recalculation that goes back'. Kickoff in projects/participation-late/BRIEF.md."
   - id: environment
     name: Environment
     phase: 1
