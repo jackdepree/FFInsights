@@ -76,6 +76,29 @@ def per_play(test: pl.DataFrame, kind: str, best: str | None = None) -> dict[str
     return out
 
 
+def certainty(test: pl.DataFrame, kind: str, lineup: str | None = None) -> pl.DataFrame:
+    """Is each play's `certainty` (the lineup's expected share right, `chain.lineup_certainty`)
+    honest? Per side and tenth of plays by certainty: plays, mean certainty, mean share right."""
+    from pcf.experts.participation_live.chain import lineup_certainty
+
+    lineup = lineup or f"top_{kind}"
+    t = lineup_certainty(scored(test).with_columns(p=c(f"p_{kind}")), lineup)
+    per = t.group_by("game_id", "play_id", "side").agg(
+        certainty=c("certainty").first(), right=(c(lineup) & (c("on") == 1)).sum() / 11
+    )
+    per = per.with_columns(
+        tenth=(c("certainty").rank("ordinal").over("side") * 10 / pl.len().over("side"))
+        .ceil()
+        .clip(1, 10)
+        .cast(pl.Int8)
+    )
+    return (
+        per.group_by("side", "tenth")
+        .agg(plays=pl.len(), certainty=c("certainty").mean(), right=c("right").mean())
+        .sort("side", "tenth")
+    )
+
+
 def by_group(test: pl.DataFrame, kind: str, best: str | None = None) -> pl.DataFrame:
     """Open-spot accuracy and log loss per position group."""
     t = scored(test).filter(~c("pinned"))

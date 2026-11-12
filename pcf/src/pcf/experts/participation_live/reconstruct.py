@@ -67,18 +67,25 @@ def season_truth(key_view, season: int) -> pl.DataFrame:
     return grid.truth(key_view.table("player_play", seasons=[season]))
 
 
-def featured(
-    g: pl.DataFrame, sums: dict[int, tuple[pl.DataFrame, pl.DataFrame]], coaches: pl.DataFrame
-) -> pl.DataFrame:
+Sums = dict[int, tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]]
+
+
+def season_sums(gt: pl.DataFrame) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
+    """A season's player, team and pair sums (`history`)."""
+    return (*history.season_sums(gt), history.pair_sums(gt))
+
+
+def featured(g: pl.DataFrame, sums: Sums, coaches: pl.DataFrame) -> pl.DataFrame:
     """The grid with history (from the sums of earlier seasons) and the model's cell columns."""
     season = g["season"].max()
     earlier = [s for s in sums if s < season]
     if earlier:
         ps = pl.concat([sums[s][0] for s in earlier])
         ts = pl.concat([sums[s][1] for s in earlier])
+        pairs = pl.concat([sums[s][2] for s in earlier])
     else:
-        ps, ts = _empty_sums()
-    out = model.cell_columns(history.features(g, ps, ts, coaches))
+        (ps, ts), pairs = _empty_sums(), None
+    out = model.cell_columns(history.features(g, ps, ts, coaches, pairs))
     floats = [x for x in out.columns if out.schema[x] == pl.Float64 and x not in ("share",)]
     return out.select([x for x in KEEP if x in out.columns]).with_columns(
         [c(x).cast(pl.Float32) for x in floats if x in KEEP]
@@ -100,7 +107,7 @@ def prepare(seasons: Sequence[int], gateway: Gateway | None = None, rebuild: boo
     """Each season's featured grid with its answer key, cached (`cache_dir`). A season's
     features use only earlier seasons' answer keys, so they're the same for every test season."""
     cache_dir().mkdir(parents=True, exist_ok=True)
-    sums: dict[int, tuple[pl.DataFrame, pl.DataFrame]] = {}
+    sums: Sums = {}
     for s in range(FIRST_KEY, max(seasons) + 1):
         path = cache_dir() / f"grid_{s}.parquet"
         if path.exists() and not rebuild:
@@ -115,7 +122,7 @@ def prepare(seasons: Sequence[int], gateway: Gateway | None = None, rebuild: boo
                 featured(g, sums, _coaches(view, [s - 1, s])), season_truth(key_view, s)
             )
             gt.write_parquet(path)
-        sums[s] = history.season_sums(gt)
+        sums[s] = season_sums(gt)
 
 
 def load(season: int) -> pl.DataFrame:
@@ -189,7 +196,7 @@ def check_point_in_time(
     as_of, _ = moments(gw)
     full = load(season)
     ids = full["game_id"].unique().sort().sample(n_games, seed=seed).to_list()
-    sums = {s: history.season_sums(load(s)) for s in range(FIRST_KEY, season)}
+    sums = {s: season_sums(load(s)) for s in range(FIRST_KEY, season)}
     worst = 0.0
     for gid in ids:
         at = as_of.filter(c("game_id") == gid)["as_of"].item()
@@ -210,13 +217,16 @@ def check_point_in_time(
 def output_rows(
     test: pl.DataFrame, kind: str, as_of: pl.DataFrame, train_end: datetime, run_id: str
 ) -> pl.DataFrame:
-    """The standard schema: per cell its chance (`quantity` on_field_chance), the best guess,
-    the side and team. Probabilities: q10-q90 are the chance itself (no range on a chance)."""
+    """The standard schema: per cell its chance (`quantity` on_field_chance), the two lineups,
+    the play's `certainty` (the likeliest lineup's expected share right), the side and team.
+    Probabilities: q10-q90 are the chance itself (no range on a chance)."""
     p = c(f"p_{kind}")
+    test = chain.lineup_certainty(test.with_columns(p=p), f"top_{kind}")
     out = test.join(as_of, on="game_id", how="left").select(
         "game_id", "play_id", "gsis_id", "side", "team", "season", "week", "n",
         best=c(f"best_{kind}"),
         likeliest=c(f"top_{kind}"),
+        certainty=c("certainty").cast(pl.Float64),
         as_of="as_of",
         quantity=pl.lit("on_field_chance"),
         mean=p.cast(pl.Float64),

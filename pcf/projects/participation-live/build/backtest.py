@@ -5,13 +5,14 @@ the champion's walk-forward history to outputs/, and one MLflow attempt.
     python projects/participation-live/build/backtest.py
 """
 
+# ruff: noqa: E501
 import json
 import time
 from pathlib import Path
 
 import polars as pl
 
-from pcf.experts.participation_live import reconstruct
+from pcf.experts.participation_live import reconstruct, score
 
 HERE = Path(__file__).parent
 
@@ -28,6 +29,8 @@ with pl.Config(tbl_cols=40, tbl_rows=40, float_precision=4, tbl_width_chars=400)
         lines += ["", f"Season {s}:", str(df.transpose(include_header=True, column_names="rung"))]
     for k, df in out["by_group"].items():
         lines += ["", f"By group, {k}:", str(df)]
+    lines += ["", "Per-play certainty of the likeliest lineup (tenths of plays by certainty):"]
+    lines.append(str(score.certainty(out["scored"], "sequence")))
     lines += ["", "Champion's weights (last season's fit):"]
     for g, w in out["models"][max(out["models"])].explain().items():
         lines.append(f"{g}: " + ", ".join(f"{a} {b:+.3f}" for a, b in w.items() if abs(b) > 1e-9))

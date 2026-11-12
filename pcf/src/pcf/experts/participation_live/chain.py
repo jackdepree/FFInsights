@@ -263,10 +263,10 @@ def best_guess(g: pl.DataFrame, totals: bool = True, mix: bool = True) -> pl.Dat
     - `totals`: each player's total within a play of his snap target (the snap-matched guess);
       without it, each play's likeliest players (participation-live#R3).
     - `mix`: each play's count of each position group fixed at its expected count (what the
-      group's chances on the play add to), rounded by largest remainders so they add to 11.
-      Without it, plays come out with no back or no tight end far more often than they really
-      do, and the personnel is right on 35% of plays instead of 63% (participation-live#R4).
-      Bounds of a step either side (floor and ceiling) reached only 44%."""
+      group's chances on the play add to), rounded over the whole game (`_apportion`) so each
+      play's counts add to its open spots. Without it, plays come out with no back or no tight
+      end far more often than they really do, and the personnel is right on 35% of plays instead
+      of 60% (participation-live#R4). Bounds of a step either side reached only 44%."""
     g = g.sort(*SIDE_KEYS, "gsis_id", "n")
     out = []
     for _, d in g.group_by(SIDE_KEYS, maintain_order=True):
@@ -315,6 +315,18 @@ def best_guess(g: pl.DataFrame, totals: bool = True, mix: bool = True) -> pl.Dat
 
 def likeliest(g: pl.DataFrame, mix: bool = True) -> pl.DataFrame:
     """The inferred grid (`p`) plus `likeliest`: each play's likeliest 11 (the pinned players
-    and the open ones with the highest chances, within the play's position mix). The most right
-    per play on average, but each player's total drifts from his snaps (participation-live#R3)."""
-    return best_guess(g, totals=False, mix=mix).rename({"best": "likeliest"})
+    and the open ones with the highest chances, within the play's position mix), the CEO's
+    headline lineup (2026-11-12). The most right per play on average, but each player's total
+    drifts from his snaps (participation-live#R3). Also `certainty` (`lineup_certainty`)."""
+    return lineup_certainty(best_guess(g, totals=False, mix=mix).rename({"best": "likeliest"}))
+
+
+def lineup_certainty(g: pl.DataFrame, lineup: str = "likeliest") -> pl.DataFrame:
+    """`certainty` per play-side, on each of its rows: the expected share of the lineup's 11 that
+    are truly on, the sum of the chances of the players it picks (a pinned player counts 1) over
+    11. By linearity it needs no independence between players: if the chances are calibrated, so
+    is the expected count."""
+    p = pl.when(c("pinned")).then(1.0).otherwise(c("p").clip(0.0, 1.0))
+    return g.with_columns(
+        certainty=(p * c(lineup).cast(pl.Float64)).sum().over("game_id", "play_id", "side") / 11
+    )

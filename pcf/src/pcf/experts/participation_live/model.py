@@ -3,9 +3,11 @@ known, and (the sequence rung) whether he was on the two snaps before.
 
     logit P(on_t | on_{t-1} = v, on_{t-2} = u) = base_t + memory_t(u, v)
 
-- **base** (no memory): his snap share, the situation flags, the snap number in the drive, his
-  own situational habits from earlier seasons (H32) and his team's from last season under the same
-  head coach (H33).
+- **base** (no memory): his snap share, the situation flags, the snap number in the drive, the
+  competition in his position group on the snap (`gn`: his group's teammates named on it; `gfull`:
+  his group's every-snap players in the game), his own situational habits from earlier seasons
+  (H32), his team's from last season under the same head coach (H33) and his pair habits with the
+  teammates named on the snap (`pn`, H36, H37).
 - **memory** (the sequence rung, participation-live#F6, F8): the snap before and the one before
   that, whether they were in the same drive, no-huddle (F2), his own stay and return rates beyond
   his snap share (H35) and the snap number in the drive (fatigue, H34).
@@ -32,8 +34,8 @@ from pcf.experts.participation_live.grid import FLAG_COLUMNS, FLAGS
 c = pl.col
 KINDS = ("share", "league", "history", "sequence", "shuffled")
 MIN_ROWS = 2000  # a group with fewer training cells keeps the snap share
-LEAGUE = ["ls", "ls2", *FLAG_COLUMNS, "dn"]
-HISTORY = [*(f"ph_{k}_x" for k in FLAGS), *(f"th_{k}_x" for k in FLAGS), "phn"]
+LEAGUE = ["ls", "ls2", *FLAG_COLUMNS, "dn", "gn", "gfull"]
+HISTORY = [*(f"ph_{k}_x" for k in FLAGS), *(f"th_{k}_x" for k in FLAGS), "phn", "pn"]
 MEMORY = [
     "v_sd", "v_newdrive", "u_sd2", "uv_sd2", "v_nh", "start", "start2", "v_stay", "nv_ret",
     "v_dn", "v_ls",
@@ -42,11 +44,17 @@ MEMORY = [
 
 def cell_columns(g: pl.DataFrame) -> pl.DataFrame:
     """The base columns of every cell (and what memory needs): `ls` (the share's log-odds),
-    `ls2`, `dn` (snap in the drive / 5, capped at 3), the history terms (each habit times its
-    flag) and `phn` (his history's size)."""
+    `ls2`, `dn` (snap in the drive / 5, capped at 3), `gn` and `gfull` (the competition in his
+    group: teammates named on the snap; every-snap players in the game, himself left out), the
+    history terms (each habit times its flag) and `phn` (his history's size). `g` holds every
+    candidate of the game, full-timers too."""
     s = c("share").clip(0.01, 0.99)
     ls = (s / (1 - s)).log()
+    named = c("named").cast(pl.Float64)
+    full = c("full").cast(pl.Float64)
     return g.with_columns(
+        gn=named.sum().over("game_id", "side", "team", "n", "group") - named,
+        gfull=full.sum().over("game_id", "side", "team", "n", "group") - full,
         ls=ls,
         ls2=ls**2,
         dn=c("drive_n").clip(0, 15) / 5,

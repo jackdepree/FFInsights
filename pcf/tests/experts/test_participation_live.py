@@ -219,6 +219,27 @@ def test_likeliest_takes_each_plays_top_chances():
     assert (j["p"] >= j["q"] - 1e-9).all()
 
 
+def test_certainty_is_the_lineups_expected_share_right():
+    test, _ = _featured(seed=5)
+    m = model.fit(test.filter(~c("full")), "share")
+    g = chain.likeliest(chain.infer(test, m))
+    per = g.group_by("play_id", "side").agg(
+        cert=c("certainty").first(),
+        k=c("certainty").n_unique(),
+        want=(pl.when(c("pinned")).then(1.0).otherwise(c("p")) * c("likeliest")).sum() / 11,
+        pins=(c("pinned") & c("likeliest")).sum() / 11,
+    )
+    assert (per["k"] == 1).all()  # one value per play-side
+    assert np.allclose(per["cert"], per["want"])
+    assert (per["cert"] <= 1 + 1e-9).all() and (per["cert"] >= per["pins"] - 1e-9).all()
+    # a perfect chance (1 on, 0 off) makes a lineup of only sure players: certainty 1
+    sure = chain.lineup_certainty(
+        test.with_columns(p=c("on").cast(pl.Float64), likeliest=c("on") == 1)
+    )
+    full = sure.join(sure.group_by("play_id", "side").agg(n=c("on").sum()), on=["play_id", "side"])
+    assert np.allclose(full.filter(c("n") == 11)["certainty"], 1.0)
+
+
 def test_position_mix_keeps_each_plays_expected_count():
     """With the mix, each play's count of each group is its chances' sum, rounded; every play
     still has 11."""
@@ -241,3 +262,49 @@ def test_apportion_adds_to_the_rows_and_stays_near():
     k = chain._apportion(e, np.array([5.0, 3.0]), np.full((2, 3), 3.0))
     assert k.sum(1).tolist() == [5, 3]
     assert (np.abs(k - e) < 1).all()
+
+
+def _pair_world(season: int, named_at: dict[int, str] | None = None) -> pl.DataFrame:
+    """A and B swap (one of them on each snap); C is on exactly with A; F is on every snap."""
+    rows = []
+    for n in range(40):
+        a = n % 2 == 0
+        on = {"A": a, "B": not a, "C": a, "F": True}
+        for p, o in on.items():
+            rows.append({
+                "game_id": f"{season}_01_KC_BUF", "side": "offense", "team": "KC", "n": n,
+                "gsis_id": p, "season": season, "on": int(o), "share": 0.5 if p != "F" else 1.0,
+                "full": p == "F", "named": (named_at or {}).get(n) == p, "group": "WR",
+            })  # fmt: skip
+    return pl.DataFrame(rows).with_columns(c("season").cast(pl.Int32))
+
+
+def test_pair_habits_push_swaps_off_and_pull_partners_on():
+    pairs = history.pair_sums(_pair_world(2020))
+    g = _pair_world(2021, named_at={0: "A", 1: "B"})
+    out = history.partner(g, pairs).sort("n", "gsis_id")
+    pn = {(r["n"], r["gsis_id"]): r["pn"] for r in out.iter_rows(named=True)}
+    # 20 snaps of evidence against a prior of 50: shrunk, but the right way
+    assert pn[(0, "B")] < -0.3 and pn[(0, "C")] > 0.3  # A named: his swap off, his partner on
+    assert pn[(1, "A")] < -0.3 and pn[(1, "C")] < -0.3  # B named: A and C off
+    assert pn[(2, "B")] == 0  # nobody named: no evidence
+    assert pn[(0, "F")] == 0  # a full-timer isn't a partner
+
+
+def test_competition_counts_named_and_every_snap_teammates_of_his_group():
+    g = _pair_world(2021, named_at={0: "A"}).with_columns(
+        drive_n=pl.lit(0), ph_n=pl.lit(0.0), **{f: pl.lit(False) for f in grid.FLAG_COLUMNS},
+        **{f"ph_{k}": pl.lit(0.0) for k in grid.FLAGS},
+        **{f"th_{k}": pl.lit(0.0) for k in grid.FLAGS},
+    )  # fmt: skip
+    out = model.cell_columns(g).filter(c("n") == 0)
+    v = {r["gsis_id"]: (r["gn"], r["gfull"]) for r in out.iter_rows(named=True)}
+    assert v["B"] == (1.0, 1.0) and v["A"] == (0.0, 1.0) and v["F"] == (1.0, 0.0)
+
+
+def test_certainty_score_finds_a_perfect_lineup_certain():
+    test, _ = _featured(seed=7)
+    t = test.with_columns(p_x=c("on").cast(pl.Float64), top_x=c("on") == 1)
+    out = score.certainty(t, "x")
+    assert out["plays"].sum() == t.filter(c("full_truth"))["play_id"].n_unique()
+    assert (out["certainty"] - 1).abs().max() < 1e-9 and (out["right"] - 1).abs().max() < 1e-9

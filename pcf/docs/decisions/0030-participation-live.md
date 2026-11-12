@@ -1,6 +1,6 @@
 # 0030: Participation inference rebuilds each completed game play by play, outside the forecast harness
 
-**Date:** 2026-11-11 · **Decided by:** the CEO agreed the brief ("Yes we can start the build as long as our goal is to map every play's participation", 2026-11-11). The calls below are Claude's technical calls, listed for veto at merge. · **Project:** `participation-live`
+**Date:** 2026-11-11 · **Decided by:** the CEO agreed the brief ("Yes we can start the build as long as our goal is to map every play's participation", 2026-11-11). The calls below are Claude's technical calls, listed for veto at merge; the CEO: "no vetos" (2026-11-12). · **Project:** `participation-live`
 
 **Decision:** `pcf.experts.participation_live` estimates, for every scrimmage play of every completed game, each possible player's chance of being on the field (both sides) and one best-guess lineup, from what's known by the morning after. It has its own walk-forward runner (`reconstruct.backtest`), not `pcf.validation.backtest`.
 
@@ -34,7 +34,7 @@
 7. **Two lineups are output, from the same chances:**
    - **`best`, snap-matched:** the program above. Every player's total matches his snaps, and the substitutions per snap match the truth's.
    - **`likeliest`:** the same program without the totals, so each play gets its own likeliest 11 within its position mix. More players right per play (about 4 points), but totals drift by about 7.5 plays a player and it substitutes half as often as the truth.
-   - Which is the headline is the CEO's call (a taste call: what the map should be faithful to).
+   - **The headline is `likeliest`** (the CEO's taste call, 2026-11-12: "higher layers should use the likeliest 11 players on each play"). `best` stays in the output for uses that need the snap counts kept.
 8. **History is shrunk toward 0** with these prior counts:
 
    | History | Prior count |
@@ -48,8 +48,13 @@
 10. **The output** is one row per candidate and snap, `quantity` = `on_field_chance`:
    - `mean` is the chance, and `q10`–`q90` equal it (a chance has no range);
    - `best` marks the snap-matched best guess and `likeliest` the likeliest lineup;
+   - `certainty` is the play-side's expected share of the likeliest 11 right: the known spots plus the chances of the open players picked, over 11 (the CEO, 2026-11-12: "an estimate of certainty for each play"). It needs no independence between players (an expected count adds up whatever the correlations);
    - `side`, `team` and `n` (the team's snap number) come with each row;
    - `train_end` is the end of the season before.
+11. **Two inputs added after the CEO's spot-check of the inputs** (2026-11-12, RESULTS "The CEO's spot-check: the inputs"):
+   - **the competition in his group on the snap:** `gn`, his group's teammates named on the snap, and `gfull`, his group's every-snap players. The balancing knew 11 a play, but a player's own chance didn't know that a second back named on the snap pushes the first one off;
+   - **his pair habits with the teammates named on the snap** (`pn`, H36 and H37): the sum, over his part-time teammates named on it, of how much more or less often he was on with each of them than his share says, from every earlier season (log-odds, shrunk by 50 snaps).
+   Both are known by the morning after (the play-by-play and earlier seasons' answer key). The team's habits (H33) and the stay and return rates (H35) add nothing measurable on top of the rest (0.01–0.03%), but removing them is slightly worse in both seasons, so they stay. The offense's personnel as a defense input was tried and left out (0.00%). The choice used 2023–2024, also test seasons; 2019–2022 and the vault are the clean check.
 
 **Alternatives:**
 - **A full hidden Markov model over lineups** (the state is the whole 11). Exact, but there are thousands of possible lineups per side, and the snap totals couple every snap. The per-player chains with offsets keep the totals exactly and stay small.
