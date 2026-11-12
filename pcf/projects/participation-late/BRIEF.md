@@ -1,6 +1,6 @@
 # Brief: Participation inference, second edition (`participation-late`)
 
-**Status:** kickoff 2026-11-12. The CEO, closing `participation-live`: "Yes, I think it should have the mapping should have a second interval, 1 to 2 weeks after each game. So I don't know if how you really want to build that out, but that's definitely smart. We should definitely have some sort of reiteration, some sort of recalculation that goes back. Maybe we can add that into the certainty somehow, if that's easier or if that's simpler or more cost effective, or if you just want to build out a whole new system that does the same thing every 2 weeks out. That's good with me." · **Layer:** expert · **Cadence:** in_season (each completed game, again once FTN's charting for it is out, about 1–2 weeks later)
+**Status:** agreed 2026-11-12 after the exploration (GO, small), on the CEO's "take the lead on this and probably just go for it"; kickoff 2026-11-12. The CEO, closing `participation-live`: "Yes, I think it should have the mapping should have a second interval, 1 to 2 weeks after each game. So I don't know if how you really want to build that out, but that's definitely smart. We should definitely have some sort of reiteration, some sort of recalculation that goes back. Maybe we can add that into the certainty somehow, if that's easier or if that's simpler or more cost effective, or if you just want to build out a whole new system that does the same thing every 2 weeks out. That's good with me." · **Layer:** expert · **Cadence:** in_season (each completed game, again once FTN's charting for it is out, about 1–2 weeks later)
 
 ## The usual way
 *Claude, 2026-11-12, before any research.*
@@ -29,4 +29,28 @@
 - **A simpler alternative:** no new model, only a correction of the position mix (a play's count of backs and defensive backs) from FTN's counts, then the same lineups.
 
 ## CEO hunches
-*To come: the CEO's hunches, word for word.*
+*The CEO, 2026-11-12, word for word:*
+
+"I think this retro participation analysis expert is going to be basically the exact same with one caveat, is just instead of training exclusively on data like within a game and before a game, like the snap counts and whatever, now all we're going to do really is just add the snap counts for the next game, and then we just predict the past game. So it's really just almost the same exact stuff. I think this expert should be pretty easy to build and verify, because it's as long as we're not leaking too much, because we really shouldn't leak at all, because it's a retroactive, so we're like necessarily saying we're from the future. I don't know what else to add at this. I don't really have any hunches. I don't really have anything else to add. I think you can really take the lead on this and probably just go for it. But obviously, if you have more questions, let me know, because I always want to answer questions. Thank you."
+
+| # | Hunch | How it will be tested |
+|---|---|---|
+| H39 | The games after a game help reconstruct it: "add the snap counts for the next game, and then we just predict the past game" | The next game's snap share (each player's, the same team) as an input to the same model, held out 2023–2024; the previous game's alongside, for comparison |
+
+The CEO's other points: the late edition is "basically the exact same" expert, and it must not leak at all ("we're like necessarily saying we're from the future"). The CEO asked Claude to take the lead.
+
+### Claude's assumptions and expectations (written before the tests)
+- **H39: helps a little, less than FTN.** This game's own snap count already fixes how many snaps a player played; the next game's can only say *which* ones, through his role's direction (a back whose snaps jump next week was probably getting more of this game's late or high-leverage snaps). I expect under 0.5% log loss, most for backs and the defensive line. The previous game's snaps, known by the morning after, should help about as much, which would make it an input for the morning-after map too.
+- **FTN's counts: helps more,** because they are clues about this very play: most for backs (the backfield count) and defensive backs (the box count), 1–3% of log loss on those groups, little elsewhere.
+- **Not leaking:** the late edition's `as_of` is when the last input it uses is known: the next game's snap counts (the morning after that game) and FTN for this game (kickoff + 14 days in history). The morning-after edition stays as it is.
+- **Thin FTN history:** 2022 on. The FTN tests train on FTN seasons only (2023 on 2022, 2024 on 2022–2023), against the same model trained on the same seasons without FTN.
+
+## After the exploration (2026-11-12)
+[EXPLORATION.md](EXPLORATION.md): H39 failed (the next game's snap counts add 0.00%); FTN's counts add 0.41% (offense) and 0.26% (defense) log loss in both held-out seasons. The build: the morning-after model plus FTN's counts, as a later vintage (decision 0031).
+
+## Tests
+- **Signal:** the late edition beats the morning-after map on the same plays (log loss on open spots, open spots right in the likeliest lineup), in both 2023 and 2024.
+- **No noise:** it doesn't do worse for any position group.
+- **Calibration:** within 3 points, slope 0.9–1.1; its certainty honest within 3 points.
+- **Point in time:** sample games rebuilt from a view at their late `as_of` match the season run (gap 0), and a view at their morning after holds none of their FTN rows.
+

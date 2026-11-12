@@ -23,6 +23,7 @@ sequence rung fitted with its history and memory columns shuffled across rows: r
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -169,13 +170,15 @@ def base_columns(kind: str) -> list[str]:
     return [] if kind == "share" else LEAGUE if kind == "league" else [*LEAGUE, *HISTORY]
 
 
-def fit(train: pl.DataFrame, kind: str, seed: int = 0) -> OnFieldModel:
+def fit(train: pl.DataFrame, kind: str, seed: int = 0, extra: Sequence[str] = ()) -> OnFieldModel:
     """One rung from training cells (part-timers of completed seasons, with `on` and the cell
-    columns), per position group. `shuffled` permutes the history and memory columns across rows
-    (together, so their relations to each other survive and their link to `on` doesn't)."""
+    columns), per position group. `extra`: more base columns, after the rung's own (a later
+    edition's inputs, `participation-late`). `shuffled` permutes the history and memory columns
+    across rows (together, so their relations to each other survive and their link to `on`
+    doesn't)."""
     if kind not in KINDS:
         raise ValueError(f"kind {kind!r} isn't one of {KINDS}")
-    cols = base_columns(kind)
+    cols = [*base_columns(kind), *extra] if kind != "share" else []
     seasons = sorted(train["season"].unique().to_list())
     model = OnFieldModel(kind, cols, {}, seasons)
     if kind == "share":
