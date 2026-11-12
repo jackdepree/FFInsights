@@ -1,6 +1,6 @@
 # Results: Participation inference, second edition (`participation-late`)
 
-**Date:** 2026-11-12 · **Status:** validating, waiting on the CEO's spot-check and merge approval · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-late` · **Technical calls:** [decision 0031](../../docs/decisions/0031-participation-late.md) · **Code:** `pcf.experts.participation_late` (reuses `pcf.experts.participation_live`)
+**Date:** 2026-11-12 · **Status:** validating; the CEO's spot-check done (the leakage check), waiting on vetoes and merge approval · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-late` · **Technical calls:** [decision 0031](../../docs/decisions/0031-participation-late.md) · **Code:** `pcf.experts.participation_late` (reuses `pcf.experts.participation_live`)
 
 ## In short
 **A second edition of the map, made once FTN's charting is out.** Every game of 2023–2024 is rebuilt about two weeks after kickoff, each season trained on the three before. It uses the morning-after map's model plus FTN's counts per play: the backfield, the box, pass rushers, blitzers, motion, play action and screens. It is saved as its own output (`participation-late`), so the morning-after map is never rewritten.
@@ -32,7 +32,7 @@ What it gets right:
 | Uncertainty | The chances are the uncertainty (each cell's chance of being on). Each play's `certainty` is honest within 1 point: 88.0% expected against 89.0% right on offense, 82.5% against 83.2% on defense (R4) |
 | Leakage | Point-in-time gap 0.0 on sample games rebuilt from a view at their late `as_of`; 0 FTN rows visible at the morning after; every `as_of` is at least 14 days after kickoff and every `train_end` before kickoff (R5) |
 | Football sanity | Every play has 11 a side in both lineups. The snap-matched lineup keeps 99.2% of players within one play of their snap count. The FTN weights point the football way (R3). The CEO's review: pending |
-| CEO spot-check | Pending: the CEO picks one decision or finding |
+| CEO spot-check | Done (2026-11-12): the leakage check, five doors and a control; no leak found (The CEO's spot-check: the leakage check) |
 
 ## Hunch verdicts
 From the exploration ([explore/late_inputs.py](explore/late_inputs.py) → [late_inputs.txt](explore/late_inputs.txt)). Copied into [`HUNCHES.md`](../HUNCHES.md).
@@ -80,6 +80,52 @@ By season: offense −0.38% (2023) and −0.30% (2024), defense −0.16% and −
 - The likeliest lineup's open spots right go up in 6 of 8 groups; receivers (77.86% → 77.79%) and defensive backs (83.03% → 83.01%) dip by a hair while their log loss improves.
 
 **Training on three seasons ties training on FTN's seasons only** (0.4065 against 0.4067 on offense, 0.4679 against 0.4678 on defense). The exploration's 0.15% cost of FTN's seasons alone is recovered by adding FTN. Decision 0031's call 4 (three seasons, FTN marked missing) stays: as FTN's history grows, the two converge anyway.
+
+## The CEO's spot-check: the leakage check (2026-11-12)
+The CEO picked the leakage check. Script: [build/spot_leakage.py](build/spot_leakage.py) → [spot_leakage.txt](build/spot_leakage.txt).
+
+**The question.** Could the late edition, or anything built on it, use something it couldn't have known at its moment? A leak could come in through five doors:
+1. FTN's charting reaching the backtest early.
+2. The backtest computing a game from end-of-time data while dating it earlier.
+3. A higher layer reading the late edition before it existed.
+4. Training on the test season or on anything after it.
+5. The answer key (the true participation) reaching the inputs.
+
+**1. One game through time.** Dolphins at Rams, week 10 of 2024 (Monday night, kickoff 01:15 UTC on Tuesday, November 12). What a view holds at each moment:
+
+| Moment | FTN plays visible | Morning-after rows a higher layer sees | Late rows a higher layer sees |
+|---|---|---|---|
+| Kickoff | 0 | 0 | 0 |
+| The morning-after edition's `as_of` (Thursday, November 14) | 0 | 4,570 | 0 |
+| Kickoff + 7 days | 0 | 4,570 | 0 |
+| Kickoff + 14 days − 1 second | 0 | 4,570 | 0 |
+| Kickoff + 14 days | 159 (all of them) | 4,570 | 0 |
+| The late edition's `as_of` (Tuesday, November 26) | 159 | 4,570 | 4,570 |
+
+FTN's rows appear at exactly 14 days, and the late edition only once it's made. A higher layer reading the game before November 26 sees the morning-after map and nothing else.
+
+**2. The 14-day line, every game.** At 139 moments (every weekly run of 2023–2024, plus each game's late `as_of`), for all 570 games:
+- **Early:** 0 times did a game's FTN rows show before kickoff + 14 days.
+- **Complete:** 0 games were missing any FTN rows at their own late `as_of`. So the backtest, which reads FTN once at the end of time, used exactly what was known then.
+- **The gap:** from FTN's known-at to the late `as_of` is 13 hours at least, 45 hours typically, and 205 days at most (the Super Bowl, which waits for next September's first run). It's never negative.
+- Every game has FTN charting.
+
+**3. Rebuilds, with a control.** 12 games (5 random games and the Super Bowl in each season) rebuilt from a view at their late `as_of`, then again from a view one second before FTN's known-at:
+- **At the late `as_of`:** the largest gap to the season run's chances is 0.000000 in all 12, over 4,462–6,436 FTN-charted cells a game, with no cell unmatched.
+- **One second early (the control):** no charted cells, and the chances differ from the season run's by 12–19 points at most (1–2 points on average across open cells). The check would catch FTN arriving early or missing.
+
+**4. Training.** Each season's late model is fitted on the three seasons before it, never its own:
+- **2023:** trained on 2020–2022 (FTN charts 0%, 0% and 99.7% of rows: marked missing before 2022). The last training game's FTN was known on 2023-02-26, before the first 2023 kickoff (2023-09-08).
+- **2024:** trained on 2021–2023 (0%, 99.7%, 96.7% charted). The last training game's FTN was known on 2024-02-25, before the first 2024 kickoff (2024-09-06).
+
+**5. The answer key.** The late edition's inputs view refuses `player_play` (the true participation): `UndeclaredInput`. The morning-after map's inputs don't declare FTN, so the first edition can't read it whatever the dates say.
+
+**What would change the answer:**
+- **FTN's real timing in history.** The 14 days is a rule, not a record: FTN's `date_pulled` shows later re-pulls, not first release (DATA_SOURCES.md). DATA_SOURCES.md puts FTN about 1–2 weeks behind the games, so 14 days sits at the cautious end. If FTN had been later than 14 days in some past week, the backtest would have used it a few days early. That's a timing optimism, not a leak of results. Live, the known-at is our own fetch time, so it can't be early.
+- **A higher layer reading the files directly.** The gateway is what hides the late edition before its `as_of`. Code that opened `history.parquet` itself would skip that. Rule c already forbids it; every model reads through the gateway.
+- **The rebuild covers 12 games of 570.** Door 2 for FTN is checked on all 570 (part 2). The other inputs are participation-live's, already checked (participation-live#R8).
+
+**Verdict: no leak found.** Each door is closed, and the control shows the checks can fail.
 
 ## The ladder
 | Rung | Method | Result vs the rung below | Takeaway carried forward |
@@ -139,6 +185,6 @@ Also in this project's `interface` block in `registry.yaml`.
 | **Feeds** | the same as participation-live, for uses that can wait two weeks: season plus-minus and value, the retrospective models, fantasy usage trends |
 
 ## Open questions for the CEO
-1. **The spot-check:** which one decision or finding should Claude walk through in depth? Candidates: the leakage check (R5), the FTN weights (R3), the offensive line's dip (R7), or the choice to keep two editions instead of rewriting one (decision 0031, call 1).
+1. **The spot-check:** the CEO picked "The leakage check" (2026-11-12): done above, no leak found.
 2. **Vetoes on the technical calls?** Decision 0031, calls 1–6.
 3. **Merge?**

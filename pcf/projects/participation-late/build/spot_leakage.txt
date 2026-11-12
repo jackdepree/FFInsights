@@ -1,0 +1,38 @@
+1. One game through time: 2024_10_MIA_LA, kickoff Tue 2024-11-12 01:15 UTC
+   morning-after edition as_of Thu 2024-11-14 17:00; late edition as_of Tue 2024-11-26 15:00 (14 days after kickoff); late model train_end 2024-02-12
+   moment                              FTN plays visible   morning-after rows   late rows   (a higher layer's view)
+   kickoff                                    0                    0                0
+   morning-after as_of                        0                4,570                0
+   kickoff + 7 days                           0                4,570                0
+   kickoff + 14 days - 1 second               0                4,570                0
+   kickoff + 14 days                        159                4,570                0
+   late as_of                               159                4,570            4,570
+   all of the game's FTN plays, end of time: 159
+
+2. The 14-day line, every game of 2023-2024, at every weekly run:
+   moments checked: 139; game-moments where FTN showed before kickoff + 14 days: 0 (0 = none)
+   games checked at their own late as_of: 570; with FTN rows missing there (the backtest would have used rows not yet known): 0 (0 = none)
+   hours from FTN's known-at to the late as_of: min 13, median 45.0, max 4914 (never negative = never early)
+   games with no FTN rows at all: 0
+
+3. Rebuilds from a view at the late as_of (must be 0) and from a view one second before FTN's known-at (the control: must not be 0):
+   2023_16_CLE_HOU    at late as_of: gap 0.000000, charted cells 6,436, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.141 (mean 0.0111 on open cells)
+   2023_15_CHI_CLE    at late as_of: gap 0.000000, charted cells 5,733, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.129 (mean 0.0133 on open cells)
+   2023_02_NYJ_DAL    at late as_of: gap 0.000000, charted cells 5,638, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.156 (mean 0.0153 on open cells)
+   2023_15_DAL_BUF    at late as_of: gap 0.000000, charted cells 5,304, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.141 (mean 0.0135 on open cells)
+   2023_04_DEN_CHI    at late as_of: gap 0.000000, charted cells 4,462, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.121 (mean 0.0143 on open cells)
+   2023_22_SF_KC      at late as_of: gap 0.000000, charted cells 6,042, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.138 (mean 0.0094 on open cells)
+   2024_16_HOU_KC     at late as_of: gap 0.000000, charted cells 5,278, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.126 (mean 0.0116 on open cells)
+   2024_15_BUF_DET    at late as_of: gap 0.000000, charted cells 5,882, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.190 (mean 0.0165 on open cells)
+   2024_02_PIT_DEN    at late as_of: gap 0.000000, charted cells 4,973, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.145 (mean 0.0127 on open cells)
+   2024_15_CHI_MIN    at late as_of: gap 0.000000, charted cells 6,417, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.130 (mean 0.0131 on open cells)
+   2024_04_DEN_NYJ    at late as_of: gap 0.000000, charted cells 5,183, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.137 (mean 0.0114 on open cells)
+   2024_22_KC_PHI     at late as_of: gap 0.000000, charted cells 5,208, unmatched cells 0  |  1 s before known-at: charted cells 0, gap 0.158 (mean 0.0111 on open cells)
+
+4. Training: each season's late model sees only earlier seasons, all known before its first game:
+   2023: train seasons [2020, 2021, 2022], share of rows charted by FTN [0.0, 0.0, 0.997]; last training game's FTN known 2023-02-26, before the first test kickoff 2023-09-08: True
+   2024: train seasons [2021, 2022, 2023], share of rows charted by FTN [0.0, 0.997, 0.967]; last training game's FTN known 2024-02-25, before the first test kickoff 2024-09-06: True
+
+5. The answer key:
+   the late edition's inputs view refuses player_play: UndeclaredInput
+   the morning-after map's inputs declare FTN: False (False = it can't read FTN)
