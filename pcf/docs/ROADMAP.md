@@ -85,6 +85,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-12:** `participation-live` reaches validating: a map of who was on the field on every play of 2019–2024, held out season by season. 87% of each offensive play's 11 right and 81% on defense, matched to every snap count, with the right personnel on 60% of plays; it beats the snap share and its shuffled self in every season. A player's plus-minus from it is still noisy (r 0.35–0.49). Waiting on the CEO's lineup call, vetoes and spot-check.
 - **2026-11-11:** `player-pace-retro` is **done** and merged (the CEO: "Merge now"), after the CEO's spot-check of R1 held: a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average, 12.7% beyond playing time.
 - **2026-11-11:** The CEO discarded the in-season `player-pace` model and kept its results and findings (dead end); `player-pace-retro` goes on to the spot-check.
 - **2026-11-11:** `player-pace` and `player-pace-retro` reach validating. New tables `player_game.on_field_pace` and `player_season.on_field_pace` (2016 on). Between seasons, a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average (player-pace#R1). In season, the expected starting QB improves team PROE a little (0.3%; 4% in expected changes) but not volume, so the brief's main test failed (R3).

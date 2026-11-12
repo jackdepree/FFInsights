@@ -1,6 +1,6 @@
 # Brief: Participation inference (`participation-live`)
 
-**Status:** draft (kickoff 2026-11-11, the CEO: "the next expert we build is the participation inference expert"; the CEO's answers and hunches H32–H35 recorded 2026-11-11) · **Layer:** expert · **Cadence:** in_season (each completed game, by the morning after)
+**Status:** agreed 2026-11-11 (the CEO: "Yes we can start the build as long as our goal is to map every play’s participation"), with the exploration's changes below; kickoff 2026-11-11 (the CEO: "the next expert we build is the participation inference expert") · **Layer:** expert · **Cadence:** in_season (each completed game, by the morning after)
 
 ## The usual way
 *Claude, 2026-11-11, before any research.*
@@ -68,6 +68,8 @@
 ## The question
 On each play of a completed game this season, who was on the field for each side, and how sure are we, from free data known by the morning after?
 
+**The goal is the map of every play** (the CEO, 2026-11-11): for each play in order, each side's 11. Game totals are not the target: each player's snap count is known the next morning and is used only as a fact the play-by-play map must add up to.
+
 ## Why it matters
 PCF's live play-by-play models and each player's in-season value need to know who was on the field on every play. That's only available after the season (free) or with a paid licence (on hold). With it, PCF can measure in-season plus-minus (which the in-season player pace expert needed), live context and value over expected, routes and roles per play, and how a team's play changes with a player in or out. Those feed forecasts and bets.
 
@@ -86,7 +88,7 @@ PCF's live play-by-play models and each player's in-season value need to know wh
 
 ## Goals
 1. **The patterns:** a verdict for each hunch (H32–H35), with numbers, and each new measure through the two tests (CONSISTENCY.md).
-2. **The two outputs:** each possible player's on-field chance per play, both sides, and a best-guess lineup per play, for every completed game.
+2. **The two outputs:** each possible player's on-field chance per play, both sides, and a best-guess lineup per play, for every scrimmage play of every completed game.
 3. **Fit for use:** the measures built from the estimates match the ones built from the true participation (plus-minus, personnel rates, routes per play).
 
 ## Success and failure, as tests
@@ -113,9 +115,12 @@ PCF's live play-by-play models and each player's in-season value need to know wh
 ## How it will be used
 Live play-by-play models, in-season player plus-minus and value, context and value over expected in season, routes and roles per play, fantasy usage, and the game simulator.
 
-## Open for the CEO
-**The exploration is back (2026-11-11, [EXPLORATION.md](EXPLORATION.md)): GO.** Verdicts: H33 held, H32 held (small), H34 and H35 held in part. Proposed changes to this brief, for the CEO to agree or change:
-- **The model becomes a sequence model over each drive** (two snaps of memory at least), because the snap before is the big lever (participation-live#F6, F8). The CEO's patterns are its inputs: snap share, the league's situational habits, his own and his team's history, the drive and his streak, and his own stay and return rates.
+**The long-run aim** (the CEO, 2026-11-11): each player's causal effect on each play and its outcome. That needs the map play by play, not totals. The on-field chances let such a model carry the uncertainty (a player 60% likely on counts as 60%, or many possible lineups are drawn and the effect must hold across them); the best guess alone would make effects look more certain than they are.
+
+## Agreed changes (2026-11-11)
+The exploration ([EXPLORATION.md](EXPLORATION.md): GO) changed the brief, and the CEO agreed it: "Yes we can start the build as long as our goal is to map every play’s participation".
+- **The model is a sequence model over the team's snaps** (two snaps of memory at least), because the snap before is the big lever (participation-live#F6, F8). The CEO's patterns are its inputs: snap share, the league's situational habits, his own and his team's history, the drive and his streak, and his own stay and return rates.
 - **The best guess keeps each player's snap total** across the game. Each play's top picks are off by 7.8 plays a player (F7).
 - **No-huddle is a feature, not a constraint** (F2).
-- **The bar to beat** is the history model without sequence (74.6% offense and 73.3% defense of open-slot players right, log loss 0.460). The snap share (72.8%, 72.2%, 0.478) and the depth chart (about 65%) are the baselines. The oracle (79.0%, 81.6%, 0.382) is the ceiling.
+- **The bar to beat** is the history model without sequence (74.6% offense and 73.3% defense of open-slot players right, log loss 0.460, 2022–2024). The snap share (72.8%, 72.2%, 0.478) and the depth chart (about 65%) are the baselines. The oracle (79.0%, 81.6%, 0.382) is the ceiling.
+- **Terms in plain words:** *known spots* on a play are the players certain to be on it (on every snap by his snap count, or named by the play-by-play); *open spots* are the rest of the 11, which the model fills.

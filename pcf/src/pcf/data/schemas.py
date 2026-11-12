@@ -116,7 +116,15 @@ TABLES: dict[str, Table] = {
                 "ecr",
                 "on_field_pace",
             ),
-            after=("stats", "snaps", "ff_opportunity", "ngs", "pfr", "tags_result", "on_field_pace"),
+            after=(
+                "stats",
+                "snaps",
+                "ff_opportunity",
+                "ngs",
+                "pfr",
+                "tags_result",
+                "on_field_pace",
+            ),
             post_season=("on_field_pace",),
         ),
     ]

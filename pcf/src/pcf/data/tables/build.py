@@ -252,9 +252,11 @@ def build_player_season(season: int, cal: Calendar, root: Path | None) -> None:
     """`player_season.on_field_pace` from the saved `player_game` parts (built first)."""
     try:
         games = read_part("player_game", "on_field_pace", [season], root).collect()
-        roster = read_part("player_game", "roster", [season], root).select(
-            "gsis_id", "game_id", "team", "position"
-        ).collect()
+        roster = (
+            read_part("player_game", "roster", [season], root)
+            .select("gsis_id", "game_id", "team", "position")
+            .collect()
+        )
     except FileNotFoundError:
         return
     if games.is_empty():
