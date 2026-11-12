@@ -1,0 +1,6 @@
+Shuffled FTN (counts permuted across plays within each season), log loss on open spots:
+season side      live    late(real FTN)  late(shuffled FTN)
+2023   offense  0.4111  0.4096          0.4112
+2023   defense  0.4681  0.4673          0.4680
+2024   offense  0.4045  0.4033          0.4046
+2024   defense  0.4696  0.4685          0.4695
