@@ -1,6 +1,6 @@
 # Results: Participation inference (`participation-live`)
 
-**Date:** 2026-11-12 · **Status:** validating (not merged; the CEO's calls below) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-live` · **Technical calls:** [decision 0030](../../docs/decisions/0030-participation-live.md) · **Code:** `pcf.experts.participation_live`
+**Date:** 2026-11-12 · **Status:** done, merged 2026-11-12 (the CEO: "I can merge it now") · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `participation-live` · **Technical calls:** [decision 0030](../../docs/decisions/0030-participation-live.md) · **Code:** `pcf.experts.participation_live`
 
 ## In short
 **It maps every play.** For each scrimmage play of 2019–2024, with each season held out and trained on the three before, it gives:
@@ -313,7 +313,9 @@ Answered 2026-11-12 (the CEO, word for word in [BRIEF.md](BRIEF.md)):
 3. **The spot-check:** "the meta logic of the inputs into the model", plus "an estimate of certainty for each play": done above (The CEO's spot-check: the inputs; R9–R12).
 4. **Merge?** "do not merge now, but very soon."
 
-Still open:
+Answered last (2026-11-12, word for word in [BRIEF.md](BRIEF.md)): a second edition, yes ("some sort of recalculation that goes back"); it becomes its own project, `participation-late`. No vetoes, call 11 included. Merge approved.
+
+As asked:
 1. **A second edition of the map, 1–2 weeks after each game?** (a product call)
    - **Why it matters:** each play's personnel would be worth 4–6 points of open spots (R11). FTN's free charting arrives 1–2 weeks after a game with the backfield, box and pass-rusher counts. It has no personnel, but those counts would pin some of it.
    - **Options:** (a) keep the morning-after map only; (b) add a second, later edition that re-runs each game once FTN arrives, for uses that can wait (season plus-minus, value, the retrospective models). FTN is already a listed free source, so no new data.

@@ -139,3 +139,11 @@ The exploration ([EXPLORATION.md](EXPLORATION.md): GO) changed the brief, and th
 - **H37:** *Expect the league-wide swap (TE2 for WR3) to be strong and the team's own version to repeat modestly and follow the coach,* like H33.
 - **H38:** *Expect weak to moderate:* heavy-personnel offenses and nickel-and-dime defenses substitute more, but most of that is already the team's own habit (H33).
 - **Personnel by the morning after:** *it isn't there.* The per-play personnel ("1 back, 1 tight end, 3 receivers") is only in nflverse's participation file, published after the season (DATA_SOURCES.md). FTN's charting gives partial clues (backs in the backfield, men in the box, pass rushers) 1–2 weeks later. The chances are conditioned on what is known: the named players, the snap counts and the 11 a play. The lineups' position mix comes from the chances themselves (R4). An oracle with the true personnel measures what it would be worth.
+
+## The CEO's answers to the last open questions (2026-11-12, word for word)
+"Yes, I think it should have the mapping should have a second interval, 1 to 2 weeks after each game. So I don't know if how you really want to build that out, but that's definitely smart. We should definitely have some sort of reiteration, some sort of recalculation that goes back. Maybe we can add that into the certainty somehow, if that's easier or if that's simpler or more cost effective, or if you just want to build out a whole new system that does the same thing every 2 weeks out. That's good with me. And then, yeah, I think we can merge it now. Everything is good. I don't veto anything. I really like where this is going so far. So, yeah, I can merge it now and you can continue to build."
+
+- **A second edition of the map, 1–2 weeks after each game:** yes. How to build it is Claude's call; it becomes its own project (`participation-late`).
+- **Vetoes:** none, call 11 included.
+- **Merge:** approved.
+

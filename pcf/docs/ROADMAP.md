@@ -85,6 +85,7 @@ Good ideas not scheduled yet, listed in the registry with `horizon: parking`:
 
 One dated line each time something reaches Done, or the roadmap changes shape.
 
+- **2026-11-12:** `participation-live` is **done** and merged (the CEO: "I can merge it now", no vetoes), after the CEO's spot-check of the inputs added two (the competition in a player's group, his pair habits: offense 2% better in every season) and H36–H38 held. Each play carries an honest certainty. Next, at the CEO's ask: a second edition of the map 1–2 weeks after each game (`participation-late`).
 - **2026-11-12:** `participation-live` reaches validating: a map of who was on the field on every play of 2019–2024, held out season by season. Its likeliest lineup (the CEO's headline) gets 89% of each offensive play's 11 right and 83% on defense, with the right personnel on 63% of plays and an honest certainty per play; it beats the snap share and its shuffled self in every season. A player's plus-minus from it is still noisy (r 0.42–0.50). The CEO's review: likeliest lineup, no vetoes, the inputs spot-checked (two added, tandems and paired swaps held).
 - **2026-11-11:** `player-pace-retro` is **done** and merged (the CEO: "Merge now"), after the CEO's spot-check of R1 held: a skill player's pass-rate plus-minus forecasts his next season's 15% better than his position's average, 12.7% beyond playing time.
 - **2026-11-11:** The CEO discarded the in-season `player-pace` model and kept its results and findings (dead end); `player-pace-retro` goes on to the spot-check.
