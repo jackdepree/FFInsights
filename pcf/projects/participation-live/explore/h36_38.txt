@@ -1,0 +1,209 @@
+season 2019: 93641 pair-games so far
+season 2020: 194532 pair-games so far
+season 2021: 303185 pair-games so far
+season 2022: 405399 pair-games so far
+season 2023: 510990 pair-games so far
+season 2024: 618959 pair-games so far
+
+== H36 tandems: players' changes between snaps, per pair-game (2019-2024) ==
+pair-games 618959; share with change correlation above +0.5: 0.099 (null 0.003); below -0.5: 0.028 (null 0.002)
+shape: (20, 8)
+┌─────────┬──────────┬───────┬────────┬────────┬──────────┬───────┬───────────┐
+│ side    ┆ grp_pair ┆ pairs ┆ dcorr  ┆ null   ┆ together ┆ swap  ┆ miss_corr │
+│ ---     ┆ ---      ┆ ---   ┆ ---    ┆ ---    ┆ ---      ┆ ---   ┆ ---       │
+│ str     ┆ str      ┆ u32   ┆ f64    ┆ f64    ┆ f64      ┆ f64   ┆ f64       │
+╞═════════╪══════════╪═══════╪════════╪════════╪══════════╪═══════╪═══════════╡
+│ defense ┆ DL-DL    ┆ 68651 ┆ 0.033  ┆ 0.000  ┆ 0.084    ┆ 0.055 ┆ -0.027    │
+│ defense ┆ LB-LB    ┆ 27564 ┆ 0.068  ┆ -0.000 ┆ 0.103    ┆ 0.059 ┆ -0.007    │
+│ defense ┆ DL-LB    ┆ 87228 ┆ 0.134  ┆ -0.000 ┆ 0.086    ┆ 0.013 ┆ 0.075     │
+│ defense ┆ DB-DL    ┆ 99034 ┆ 0.159  ┆ 0.001  ┆ 0.098    ┆ 0.011 ┆ 0.097     │
+│ defense ┆ DB-LB    ┆ 62439 ┆ 0.170  ┆ 0.000  ┆ 0.164    ┆ 0.037 ┆ 0.103     │
+│ defense ┆ DB-DB    ┆ 30151 ┆ 0.243  ┆ -0.000 ┆ 0.234    ┆ 0.020 ┆ 0.112     │
+│ offense ┆ RB-RB    ┆ 10712 ┆ -0.230 ┆ -0.001 ┆ 0.007    ┆ 0.212 ┆ -0.186    │
+│ offense ┆ TE-TE    ┆ 9387  ┆ -0.083 ┆ -0.001 ┆ 0.024    ┆ 0.078 ┆ -0.099    │
+│ offense ┆ TE-WR    ┆ 44345 ┆ 0.014  ┆ -0.001 ┆ 0.038    ┆ 0.027 ┆ 0.026     │
+│ offense ┆ WR-WR    ┆ 29759 ┆ 0.042  ┆ 0.001  ┆ 0.094    ┆ 0.054 ┆ 0.019     │
+│ offense ┆ RB-TE    ┆ 27786 ┆ 0.075  ┆ -0.000 ┆ 0.037    ┆ 0.008 ┆ 0.044     │
+│ offense ┆ RB-WR    ┆ 46077 ┆ 0.079  ┆ -0.000 ┆ 0.034    ┆ 0.009 ┆ 0.052     │
+│ offense ┆ OL-RB    ┆ 15313 ┆ 0.172  ┆ -0.001 ┆ 0.084    ┆ 0.001 ┆ 0.091     │
+│ offense ┆ OL-WR    ┆ 24028 ┆ 0.189  ┆ 0.000  ┆ 0.151    ┆ 0.009 ┆ 0.114     │
+│ offense ┆ OL-TE    ┆ 14311 ┆ 0.189  ┆ 0.001  ┆ 0.093    ┆ 0.003 ┆ 0.123     │
+│ offense ┆ QB-RB    ┆ 3572  ┆ 0.193  ┆ -0.004 ┆ 0.104    ┆ 0.003 ┆ 0.122     │
+│ offense ┆ QB-TE    ┆ 3287  ┆ 0.206  ┆ 0.003  ┆ 0.111    ┆ 0.002 ┆ 0.185     │
+│ offense ┆ QB-WR    ┆ 5565  ┆ 0.256  ┆ -0.003 ┆ 0.195    ┆ 0.003 ┆ 0.223     │
+│ offense ┆ OL-OL    ┆ 4781  ┆ 0.293  ┆ -0.004 ┆ 0.325    ┆ 0.009 ┆ 0.002     │
+│ offense ┆ OL-QB    ┆ 2584  ┆ 0.485  ┆ 0.001  ┆ 0.507    ┆ 0.001 ┆ 0.328     │
+└─────────┴──────────┴───────┴────────┴────────┴──────────┴───────┴───────────┘
+
+Does a pair's habit repeat? Odd weeks against even weeks, pairs with 3+ games in each half:
+  offense: change correlation r 0.83 (13347 pairs), the model's misses r 0.82, null r -0.02
+    OL-OL: changes r 0.86, misses r 0.94 (25 pairs)
+    OL-RB: changes r 0.65, misses r 0.59 (399 pairs)
+    OL-TE: changes r 0.69, misses r 0.65 (360 pairs)
+    OL-WR: changes r 0.79, misses r 0.73 (596 pairs)
+    QB-RB: changes r 0.78, misses r 0.81 (60 pairs)
+    QB-TE: changes r 0.85, misses r 0.86 (66 pairs)
+    QB-WR: changes r 0.74, misses r 0.82 (97 pairs)
+    RB-RB: changes r 0.90, misses r 0.88 (718 pairs)
+    RB-TE: changes r 0.77, misses r 0.74 (1916 pairs)
+    RB-WR: changes r 0.74, misses r 0.71 (3192 pairs)
+    TE-TE: changes r 0.84, misses r 0.85 (656 pairs)
+    TE-WR: changes r 0.78, misses r 0.77 (3109 pairs)
+    WR-WR: changes r 0.85, misses r 0.86 (2048 pairs)
+  defense: change correlation r 0.81 (22383 pairs), the model's misses r 0.80, null r -0.00
+    DB-DB: changes r 0.76, misses r 0.74 (1188 pairs)
+    DB-DL: changes r 0.76, misses r 0.68 (5857 pairs)
+    DB-LB: changes r 0.80, misses r 0.75 (3206 pairs)
+    DL-DL: changes r 0.83, misses r 0.84 (4676 pairs)
+    DL-LB: changes r 0.77, misses r 0.75 (5581 pairs)
+    LB-LB: changes r 0.84, misses r 0.85 (1633 pairs)
+
+Season to season, the same pair on the same team (mean change correlation):
+  offense: changes r 0.69, misses r 0.66 (4424 pairs)
+  defense: changes r 0.56, misses r 0.53 (7534 pairs)
+
+== H37 a coach's paired swaps: role pairs per team-season, beyond the league's ==
+  offense: odd/even weeks r 0.62 (5375 team-role-pairs), misses r 0.62; next season same coach r 0.45 (3388), new coach r 0.13 (1092); misses next season same coach r 0.43; teams' spread (SD) 0.106
+shape: (8, 3)
+┌───────────┬──────┬────────┐
+│ role_pair ┆ k    ┆ league │
+│ ---       ┆ ---  ┆ ---    │
+│ str       ┆ u32  ┆ f64    │
+╞═══════════╪══════╪════════╡
+│ RB1-RB2   ┆ 3284 ┆ -0.434 │
+│ TE1-TE2   ┆ 3236 ┆ -0.192 │
+│ TE2-WR3   ┆ 3309 ┆ -0.181 │
+│ WR3-WR4   ┆ 3214 ┆ -0.153 │
+│ WR2-WR4   ┆ 3207 ┆ -0.126 │
+│ TE2-WR2   ┆ 3296 ┆ -0.050 │
+│ WR1-WR4   ┆ 3067 ┆ -0.028 │
+│ TE2-WR4   ┆ 3178 ┆ -0.005 │
+└───────────┴──────┴────────┘
+shape: (5, 3)
+┌───────────┬──────┬────────┐
+│ role_pair ┆ k    ┆ league │
+│ ---       ┆ ---  ┆ ---    │
+│ str       ┆ u32  ┆ f64    │
+╞═══════════╪══════╪════════╡
+│ WR1-WR3   ┆ 3174 ┆ 0.272  │
+│ RB1-WR1   ┆ 3150 ┆ 0.293  │
+│ TE1-WR1   ┆ 3105 ┆ 0.302  │
+│ WR1-WR2   ┆ 3173 ┆ 0.448  │
+│ DL1-DL2   ┆ 1    ┆ 1.000  │
+└───────────┴──────┴────────┘
+  defense: odd/even weeks r 0.65 (4019 team-role-pairs), misses r 0.66; next season same coach r 0.50 (2541), new coach r 0.20 (819); misses next season same coach r 0.50; teams' spread (SD) 0.135
+shape: (8, 3)
+┌───────────┬──────┬────────┐
+│ role_pair ┆ k    ┆ league │
+│ ---       ┆ ---  ┆ ---    │
+│ str       ┆ u32  ┆ f64    │
+╞═══════════╪══════╪════════╡
+│ DL2-DL5   ┆ 3210 ┆ -0.033 │
+│ DL3-DL5   ┆ 3209 ┆ -0.026 │
+│ DL1-DL5   ┆ 3173 ┆ -0.017 │
+│ DL4-DL5   ┆ 3207 ┆ 0.010  │
+│ DL2-DL4   ┆ 3340 ┆ 0.038  │
+│ DB5-DL5   ┆ 3124 ┆ 0.056  │
+│ DL5-LB3   ┆ 3056 ┆ 0.063  │
+│ DB5-LB3   ┆ 3132 ┆ 0.066  │
+└───────────┴──────┴────────┘
+shape: (5, 3)
+┌───────────┬──────┬────────┐
+│ role_pair ┆ k    ┆ league │
+│ ---       ┆ ---  ┆ ---    │
+│ str       ┆ u32  ┆ f64    │
+╞═══════════╪══════╪════════╡
+│ DL1-DL3   ┆ 3306 ┆ 0.209  │
+│ DB5-DL2   ┆ 3260 ┆ 0.230  │
+│ DL1-LB3   ┆ 3158 ┆ 0.240  │
+│ DB5-DL1   ┆ 3218 ┆ 0.306  │
+│ DL1-DL2   ┆ 3307 ┆ 0.363  │
+└───────────┴──────┴────────┘
+
+The CEO's example, offense TE with WR2-4, league mean change correlation and team spread:
+shape: (4, 4)
+┌───────────┬──────┬────────┬─────────┐
+│ role_pair ┆ k    ┆ league ┆ team_sd │
+│ ---       ┆ ---  ┆ ---    ┆ ---     │
+│ str       ┆ u32  ┆ f64    ┆ f64     │
+╞═══════════╪══════╪════════╪═════════╡
+│ TE2-WR3   ┆ 3309 ┆ -0.181 ┆ 0.122   │
+│ TE1-WR3   ┆ 3264 ┆ 0.126  ┆ 0.129   │
+│ TE2-WR4   ┆ 3178 ┆ -0.005 ┆ 0.078   │
+│ TE2-WR2   ┆ 3296 ┆ -0.050 ┆ 0.109   │
+└───────────┴──────┴────────┴─────────┘
+
+== H38 schemes and substitution, per team-season ==
+Same season, r with players changed per snap (team-seasons):
+  offense ~ shotgun: r -0.02
+  offense ~ no_huddle: r -0.23
+  offense ~ pass_rate: r -0.13
+  offense ~ off_11_rate: r -0.38
+  offense ~ off_12_rate: r 0.11
+  offense ~ off_21_rate: r 0.17
+  offense ~ off_heavy_rate: r 0.33
+  offense ~ off_pistol_rate: r 0.11
+  defense ~ def_nickel_rate: r -0.28
+  defense ~ def_dime_rate: r 0.36
+  defense ~ def_man_rate: r 0.31
+  defense ~ def_two_high_rate: r -0.28
+  defense ~ def_blitz_rate: r 0.12
+  defense ~ def_rushers: r 0.17
+  defense ~ def_box: r -0.01
+  offense: this season's subs on last season's r 0.59 (same coach 0.72, new coach 0.22); what's left against the change in scheme:
+    change in shotgun: r -0.27
+    change in off_11_rate: r -0.32
+    change in off_12_rate: r 0.11
+    change in off_heavy_rate: r 0.24
+  defense: this season's subs on last season's r 0.47 (same coach 0.47, new coach 0.47); what's left against the change in scheme:
+    change in def_nickel_rate: r -0.28
+    change in def_dime_rate: r 0.21
+    change in def_man_rate: r 0.05
+    change in def_blitz_rate: r -0.04
+
+== Personnel's worth (oracle) and per-play certainty, likeliest lineup ==
+shape: (2, 3)
+┌─────────┬───────────┬─────────────────────┐
+│ side    ┆ likeliest ┆ with_true_personnel │
+│ ---     ┆ ---       ┆ ---                 │
+│ str     ┆ f64       ┆ f64                 │
+╞═════════╪═══════════╪═════════════════════╡
+│ defense ┆ 0.7484    ┆ 0.7846              │
+│ offense ┆ 0.7529    ┆ 0.8152              │
+└─────────┴───────────┴─────────────────────┘
+offense: certainty mean 0.878, right 0.888; r(certainty, right) per play 0.46; open spots: certainty 0.725, right 0.749, r 0.43
+shape: (10, 6)
+┌───────┬───────┬───────────┬───────┬────────────────┬────────────┐
+│ dec   ┆ plays ┆ certainty ┆ right ┆ open_certainty ┆ open_right │
+│ ---   ┆ ---   ┆ ---       ┆ ---   ┆ ---            ┆ ---        │
+│ f64   ┆ u32   ┆ f64       ┆ f64   ┆ f64            ┆ f64        │
+╞═══════╪═══════╪═══════════╪═══════╪════════════════╪════════════╡
+│ 0.000 ┆ 20881 ┆ 0.807     ┆ 0.809 ┆ 0.658          ┆ 0.662      │
+│ 1.000 ┆ 20881 ┆ 0.839     ┆ 0.847 ┆ 0.671          ┆ 0.687      │
+│ 2.000 ┆ 20881 ┆ 0.854     ┆ 0.863 ┆ 0.683          ┆ 0.700      │
+│ 3.000 ┆ 20881 ┆ 0.865     ┆ 0.876 ┆ 0.694          ┆ 0.717      │
+│ 4.000 ┆ 20880 ┆ 0.875     ┆ 0.884 ┆ 0.707          ┆ 0.728      │
+│ 5.000 ┆ 20882 ┆ 0.884     ┆ 0.895 ┆ 0.722          ┆ 0.748      │
+│ 6.000 ┆ 20881 ┆ 0.893     ┆ 0.905 ┆ 0.739          ┆ 0.767      │
+│ 7.000 ┆ 20881 ┆ 0.903     ┆ 0.916 ┆ 0.758          ┆ 0.788      │
+│ 8.000 ┆ 20880 ┆ 0.916     ┆ 0.930 ┆ 0.783          ┆ 0.819      │
+│ 9.000 ┆ 20882 ┆ 0.940     ┆ 0.954 ┆ 0.835          ┆ 0.874      │
+└───────┴───────┴───────────┴───────┴────────────────┴────────────┘
+defense: certainty mean 0.827, right 0.835; r(certainty, right) per play 0.40; open spots: certainty 0.731, right 0.744, r 0.38
+shape: (10, 6)
+┌───────┬───────┬───────────┬───────┬────────────────┬────────────┐
+│ dec   ┆ plays ┆ certainty ┆ right ┆ open_certainty ┆ open_right │
+│ ---   ┆ ---   ┆ ---       ┆ ---   ┆ ---            ┆ ---        │
+│ f64   ┆ u32   ┆ f64       ┆ f64   ┆ f64            ┆ f64        │
+╞═══════╪═══════╪═══════════╪═══════╪════════════════╪════════════╡
+│ 0.000 ┆ 20858 ┆ 0.748     ┆ 0.750 ┆ 0.670          ┆ 0.679      │
+│ 1.000 ┆ 20858 ┆ 0.786     ┆ 0.793 ┆ 0.696          ┆ 0.708      │
+│ 2.000 ┆ 20858 ┆ 0.802     ┆ 0.810 ┆ 0.707          ┆ 0.719      │
+│ 3.000 ┆ 20858 ┆ 0.814     ┆ 0.820 ┆ 0.716          ┆ 0.725      │
+│ 4.000 ┆ 20858 ┆ 0.825     ┆ 0.833 ┆ 0.725          ┆ 0.738      │
+│ 5.000 ┆ 20858 ┆ 0.835     ┆ 0.842 ┆ 0.733          ┆ 0.745      │
+│ 6.000 ┆ 20858 ┆ 0.845     ┆ 0.852 ┆ 0.742          ┆ 0.755      │
+│ 7.000 ┆ 20858 ┆ 0.856     ┆ 0.864 ┆ 0.753          ┆ 0.767      │
+│ 8.000 ┆ 20858 ┆ 0.869     ┆ 0.878 ┆ 0.768          ┆ 0.783      │
+│ 9.000 ┆ 20859 ┆ 0.894     ┆ 0.905 ┆ 0.801          ┆ 0.822      │
+└───────┴───────┴───────────┴───────┴────────────────┴────────────┘
