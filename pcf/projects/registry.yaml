@@ -336,6 +336,15 @@ projects:
       how_to_use: "A prior for skill players' role (the pass tell, player-pace#R1); not for QBs (no weight) or pace (R7)"
       feeds: player opportunity, fantasy projections, roles
 
+  - id: participation-live
+    name: Participation inference (who was on the field, in season)
+    phase: 1
+    status: idea
+    horizon: now
+    cadence: [in_season]
+    depends_on: [grain-tables, validation-harness]
+    summary: "Estimates who was on the field on every play of each completed game in the season, offense and defense, from free data known by the morning after (players named in the play-by-play, next-morning snap counts, depth charts, past seasons' participation as the answer key). Two outputs: each possible player's chance of being on each play, and one best-guess lineup per play. For live play-by-play models and each player's in-season importance and value (the CEO, 2026-11-11). Free data only: the paid FTN licence is on hold unless paid data proves necessary to beat the lines. Kickoff 2026-11-11 in projects/participation-live/BRIEF.md; the CEO's hunches H32-H35 (past tendencies, the team's situational substitution, fatigue and consecutive touches, play-to-play sequences)."
+
   - id: environment
     name: Environment
     phase: 1

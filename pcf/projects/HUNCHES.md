@@ -42,6 +42,10 @@
 | H29 | 2026-11-11 | CEO | player-pace | Plus-minus needs years of data to settle | That plus or minus repeats game to game and season to season | H28's plus-minus through the consistency test, odd against even weeks and season to season | **held for pass rate** | PROE plus-minus week 0.42–0.62, season 0.38–0.56 (RB, WR, TE); pace week 0.06–0.20, season 0.02–0.08; in season, QBs' with-or-without season to season PROE 0.14, pace 0.26 (F3, F5); Build: next season's skill-player plus-minus is forecast 15% better from it (player-pace#R1) |
 | H30 | 2026-11-11 | CEO | player-pace | Aging curves are for efficiency and playing time; lore says rookie QBs are protected with the run | Pace or pass rate is associated with the age of players at different positions | Team-game pace over expected and PROE against snap-weighted age per position, beyond the coach's history | **held, small, for pass rate** | Within a coach's stint: rookie QB season −2.5 points of PROE (90% −3.4 to −1.7); receivers, linemen, tight ends +0.3 to +0.5 points per year of age; pace nothing clear (F7) |
 | H31 | 2026-11-11 | CEO | player-pace | Defenses barely set the other team's pace; what a defense allows barely repeats (pace#B1) | Defensive players carry the same features and consistencies as offensive ones | H26, H28 and H29 for defenders, on the opponent's plays they were on the field for | **failed** | Defensive backs' PROE plus-minus 0.15 week, 0.12 season (receivers 0.42, 0.41); linebackers and line about 0 season to season; defenders' pace noise (F8); Build: defenders' plus-minus forecasts 0.8% better than their group, skill players' 15% (player-pace#R8) |
+| H32 | 2026-11-11 | CEO | participation-live | Who plays is the depth chart and the season's snap share | A player's past participation tendencies predict whether he's on the field on each play | His earlier on-field rates by situation (down, distance, quarter, score, field position, personnel) against a depth-chart and snap-share baseline, on held-out games | open | |
+| H33 | 2026-11-11 | CEO | participation-live | Packages follow league-wide down and distance norms | Each team or coach has its own substitution habits in certain situations ("switching out a bunch of players on third down or maybe in the fourth quarter") | Per team and per coach, how many players change between plays by situation, against the league's rate in the same situations; through the consistency test | open | |
+| H34 | 2026-11-11 | CEO | participation-live | Fatigue matters for defensive line rotation, little else | Fatigue on a drive and consecutive touches predict who comes off the field | The chance a player is off on the next play by plays in the drive so far, his consecutive snaps and his consecutive touches, by position, against the same situation without them | open | |
+| H35 | 2026-11-11 | CEO | participation-live | Substitutions happen between series and with personnel calls, not after a player's own plays | Players have their own patterns across consecutive plays ("one player often will play two more snaps after they make a reception") | Each player's on-and-off sequences: his chance of staying on for 1, 2, 3 more plays after an event (a reception, a carry, a long play) against his usual rate, and whether it repeats season to season | open | |
 
 ## Tally
 
@@ -49,5 +53,5 @@ Updated with each verdict.
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 11 | 5 | 4 | 10 |
+| CEO | 11 | 5 | 4 | 14 |
 | Claude | 0 | 0 | 0 | 0 |
