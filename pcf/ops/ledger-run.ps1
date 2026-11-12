@@ -52,7 +52,9 @@ try {
     Step "sync the environment" { uv sync --frozen --project $pcf --quiet }
     $env:PCF_DATA_DIR = $DataDir
     $env:PYTHONUTF8 = "1"
-    Step "pcf ledger run" { & (Join-Path $pcf ".venv\Scripts\pcf.exe") ledger run }
+    # python.exe -m, not the pcf.exe launcher: Smart App Control blocked pcf.exe on 2026-11-12.
+    # The collectors already run this way.
+    Step "pcf ledger run" { & (Join-Path $pcf ".venv\Scripts\python.exe") -m pcf.cli ledger run }
     Add-Content $log ("{0:s} done" -f (Get-Date))
 } catch {
     Add-Content $log ("{0:s} FAILED: {1}" -f (Get-Date), $_)
