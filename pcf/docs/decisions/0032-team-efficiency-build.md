@@ -44,9 +44,11 @@
    - **The sd** is the ridge's own posterior sd under its prior, treating plays as independent. It leaves out the prior's own error, so it's a floor, not a calibrated interval. The forecast ranges are the validated uncertainty.
 10. **The Saturday run.** Thursday games are predicted at the Thursday run, as pace does.
 11. **`usual` and `league` are scored as baselines, not validated on their own.** Their histories come from the `ridge`, `dml` and `combo` runs' baselines, which reuse the same features on the same rows (`validate.baseline_history`), so the ladder reads the same. What's skipped is their own shuffled-signal, leakage and calibration checks: nothing ships from the floor or the yardstick. It saves about two hours of the four.
-12. **Not built yet:** P3, the weaker pull after a new QB or head coach (team-efficiency#F16).
-    - **Why:** it needs the week-1 depth chart and roster through the gateway, and their known-at rules need checking first. It's worth +0.3–0.4% on offense only.
-    - **When:** it comes after the core's results, which the CEO asked to see first (2026-11-13).
+12. **P3, the weaker pull after a new QB or head coach, is built as the offense-only rung `change`** (the CEO chose it as the first early-season work, 2026-11-13; it had been deferred for the core's results).
+    - **The flags** (`team_efficiency.changes`): new QB = the week-1 depth chart's QB1 isn't last season's most-started QB (`team_game.pregame.qb_id`, rather than round two's main passer by dropbacks from play-by-play: the same answer on 98% of team-seasons, from a team-game part). New coach = the opening coach isn't the coach of last season's final regular-season game. Known when both this season's facts are (the start of week 1); before that, no change.
+    - **The settings** are round two's, tuned on 2007–2015: a = b = 0.25 on offense, none on defense, so there are no `def_*_change` variants.
+    - **Inputs grow** by `team_game.pregame`, `team_game.opening_coach`, `player_game.roster` and `player_game.depth` for every variant, since the features are shared.
+    - **Kept in the expert, not the shared package,** until a second user (I37's in-season QB changes) needs it.
 
 **Alternatives:**
 - **Reading play-by-play in the expert:** about 2.7 GB in memory, once per moment. The part is 13,000 rows.

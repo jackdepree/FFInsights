@@ -6,6 +6,7 @@ season) and rung of the ladder (brief, "What this changes in the brief"; decisio
 | 0 | `league` | none: the league's level (the training rows' mean) |
 | - | `usual` | the usual way: ridge on plays inside the garbage-time rule (F1's yardstick) |
 | 1 | `ridge` | ridge on every play, counted equally (the bar every hunch had to beat) |
+| 1b | `change` | `ridge` with a weaker pull after a new QB or head coach (P3; offense only; F16) |
 | 2 | `dml` | DML with the game state: the situation propensity (H42, F7) |
 | 3 | `combo` | DML on plays counted by the gap-aware representativeness weights (H41, H44; F8) |
 
@@ -28,8 +29,9 @@ from pcf.core.contract import Expert
 from pcf.experts.team_efficiency import features as F
 
 c = pl.col
-LADDER = ("league", "usual", "ridge", "dml", "combo")
-BELOW = {"usual": ("league",), "ridge": ("usual", "league"), "dml": ("ridge", "league"),
+LADDER = ("league", "usual", "ridge", "change", "dml", "combo")
+BELOW = {"usual": ("league",), "ridge": ("usual", "league"), "change": ("ridge", "league"),
+         "dml": ("ridge", "league"),
          "combo": ("dml", "ridge", "league")}  # fmt: skip
 # The champion (the CEO, 2026-11-13: every play, counted equally), which carries the published
 # ratings for higher layers
@@ -109,6 +111,8 @@ for _side in F.SIDES:
     for _h in F.HORIZONS:
         _made: dict[str, type[Expert]] = {}
         for _r in LADDER:
+            if _r == "change" and _side == "def":
+                continue  # P3 changes only the offense's pull (round two tuned none on defense)
             _made[_r] = _make(_side, _h, _r, [_made[b] for b in BELOW.get(_r, ())])
             VARIANTS[_made[_r].variant] = _made[_r]
             globals()[_made[_r].__name__] = _made[_r]

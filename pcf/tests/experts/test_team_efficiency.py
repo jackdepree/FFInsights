@@ -12,6 +12,7 @@ from polars.testing import assert_frame_equal
 from pcf.core.contract import check_expert, find_all
 from pcf.data.gateway import END_OF_TIME, FrameSource, Gateway
 from pcf.data.tables.efficiency import BINS, COLUMNS
+from pcf.experts.team_efficiency import changes as X
 from pcf.experts.team_efficiency import features as F
 from pcf.experts.team_efficiency import ratings as R
 from pcf.experts.team_efficiency.model import LADDER, VARIANTS
@@ -89,6 +90,55 @@ def _frames(seed: int = 3, noise_only: bool = False) -> dict:
         ("game", "schedule"): sched,
         ("team_game", "schedule"): sides,
         ("team_game", "efficiency"): eff,
+        **_people(sides),
+    }
+
+
+NEW_QB = ("AAA", 2023)  # AAA starts 2023 with a new quarterback
+NEW_COACH = ("BBB", 2022)  # BBB hires a new head coach for 2022
+
+
+def _people(sides: pl.DataFrame) -> dict:
+    """Each team's QB and head coach per game (P3's inputs): the same every season but for
+    `NEW_QB` and `NEW_COACH`. The pregame QB and coach are known at kickoff; the opening coach and
+    the week-1 depth chart at the start of the season's first week."""
+    reg = sides.filter(c("game_type") == "REG")
+    qb = pl.when((c("team") == NEW_QB[0]) & (c("season") >= NEW_QB[1]))
+    coach = pl.when((c("team") == NEW_COACH[0]) & (c("season") >= NEW_COACH[1]))
+    start = reg.group_by("season").agg(start=(c("kickoff").min() - pl.duration(days=3)))
+    people = reg.join(start, on="season").with_columns(
+        qb_id=qb.then(pl.lit("QB_") + c("team") + "2").otherwise(pl.lit("QB_") + c("team")),
+        coach=coach.then(pl.lit("HC_") + c("team") + "2").otherwise(pl.lit("HC_") + c("team")),
+        start=c("start").cast(UTC_T),
+    )
+    first = people.join(
+        people.group_by("season", "team").agg(c("week").min()), on=["season", "team", "week"]
+    )
+    return {
+        ("team_game", "pregame"): people.select(
+            "game_id", "team", "season", "qb_id", "coach", known_at=c("kickoff").cast(UTC_T)
+        ),
+        ("team_game", "opening_coach"): first.select(
+            "game_id", "team", "season", known_at="start", opening_coach="coach"
+        ),
+        ("player_game", "roster"): people.select(
+            "game_id",
+            "season",
+            "week",
+            "team",
+            gsis_id="qb_id",
+            position=pl.lit("QB"),
+            known_at="start",
+        ),  # fmt: skip
+        ("player_game", "depth"): people.select(
+            "game_id",
+            "season",
+            gsis_id="qb_id",
+            depth=pl.lit(1, pl.Int32),
+            depth_mean=pl.lit(1.0),
+            depth_position=pl.lit("QB"),
+            known_at="start",
+        ),  # fmt: skip
     }
 
 
@@ -103,6 +153,7 @@ def test_the_walk_reads_the_part_s_bins():
 def test_every_variant_meets_the_contract():
     assert {x.variant for x in find_all("team-efficiency")} == set(VARIANTS)
     expected = {f"{s}_{h}_{r}" for s in F.SIDES for h in F.HORIZONS for r in LADDER}
+    expected -= {f"def_{h}_change" for h in F.HORIZONS}  # P3 is offense only
     assert set(VARIANTS) == expected
     for cls in VARIANTS.values():
         check_expert(cls)
@@ -237,3 +288,41 @@ def test_no_signal_when_teams_are_alike():
     combo = backtest.run(VARIANTS["off_next3_ridge"](), gateway=gw, seasons=SEASONS)
     league = backtest.run(VARIANTS["off_next3_league"](), gateway=gw, seasons=SEASONS)
     assert _mse(combo) > 0.9 * _mse(league)
+
+
+def _season_changes() -> pl.DataFrame:
+    gw = _gateway()
+    view = gw.view(END_OF_TIME, "in_season", F.INPUTS)
+    return X.season_changes(view.table("team_game"), view.table("player_game"))
+
+
+def test_season_changes_flag_a_new_qb_and_a_new_coach():
+    ch = _season_changes()
+    flagged = ch.filter((c("new_qb") > 0) | (c("new_coach") > 0)).select(
+        "team", "season", "new_qb", "new_coach"
+    )
+    assert flagged.rows() == [("BBB", 2022, 0.0, 1.0), ("AAA", 2023, 1.0, 0.0)]
+    assert ch["known_at"].null_count() == 0
+
+
+def test_the_weaker_pull_cuts_the_prior_only_once_the_change_is_known():
+    tg = _gateway().view(END_OF_TIME, "in_season", F.INPUTS).table("team_game")
+    names = R.teams(tg)
+    x = R.prepare(tg, names)
+    ch = _season_changes()
+    known = ch.filter((c("team") == NEW_QB[0]) & (c("season") == NEW_QB[1]))["known_at"].item()
+    before, after = known - timedelta(hours=1), known + timedelta(hours=1)
+    req = pl.DataFrame({"season": [2023, 2023], "week": [1, 1], "moment": [before, after]}).cast(
+        {"season": pl.Int32, "week": pl.Int32, "moment": UTC_T}
+    )
+    rat = R.ratings(x, req, ["ridge", "change"], names, R.change_arrays(ch, names))
+    i = names.index(NEW_QB[0])
+    early, late = (rat.filter(c("moment") == m) for m in req["moment"].cast(UTC_T))
+    # week 1 has no games yet, so the rating is the prior. Once AAA's new QB is known its prior
+    # keeps 75% (a = 0.25); before, nothing changes. (BBB's 2022 coach already moved 2022's fit,
+    # so `change` and `ridge` differ a little for everyone.)
+    assert late["change_o"][i] == pytest.approx(0.75 * early["change_o"][i])
+    assert early["change_o"][i] != pytest.approx(late["change_o"][i])
+    other = names.index("CCC")
+    assert late["change_o"][other] == pytest.approx(early["change_o"][other])
+    assert np.allclose(late["change_d"], late["ridge_d"])  # defense keeps its pull

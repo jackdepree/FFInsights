@@ -5,6 +5,8 @@ projects/team-efficiency/BRIEF.md).
 
 **Features**, for every rung at once (so a variant's baselines reuse its features, and every
 comparison is on identical rows):
+- `<side>_change` is `ridge` with P3's weaker pull after a new QB or coach (`changes`,
+  `ratings`); on defense it equals `ridge`;
 - `<side>_<rung>`: the team's rating before this game's week, from `ratings.ratings`, for each rung
   in `RUNGS` and side (`off`: EPA per play it gains above the league; `def`: what it allows);
 - `opp_<h>_<side>_<rung>`: its opponents' mean rating on the other side over the horizon's games
@@ -26,13 +28,17 @@ from __future__ import annotations
 
 import polars as pl
 
+from pcf.experts.team_efficiency import changes as X
 from pcf.experts.team_efficiency import ratings as R
 
 c = pl.col
-INPUTS = {"team_game": ("schedule", "efficiency")}
+INPUTS = {
+    "team_game": ("schedule", "efficiency", *X.INPUTS["team_game"][1:]),
+    "player_game": X.INPUTS["player_game"],
+}
 KEYS = ["game_id", "team"]
 MOMENT = pl.Datetime("us", "UTC")
-RUNGS = ("usual", "ridge", "dml", "combo")
+RUNGS = ("usual", "ridge", "change", "dml", "combo")
 SIDES = ("off", "def")
 HORIZONS = {"next3": 3, "rest": None}
 EXTRA = ("pass", "run", "ssr")  # published only
@@ -80,14 +86,15 @@ def _windows(sched: pl.DataFrame, targets: pl.DataFrame, horizon: int | None) ->
     return x
 
 
-def _rows(tg: pl.DataFrame, targets: pl.DataFrame) -> pl.DataFrame:
+def _rows(tg: pl.DataFrame, targets: pl.DataFrame, pg: pl.DataFrame) -> pl.DataFrame:
     if targets.is_empty():
         return pl.DataFrame()
     sched = _schedule(tg)
     names = R.teams(sched)
     x = R.prepare(tg, names)
     requests = targets.select("season", "week", "moment").unique()
-    rat = R.ratings(x, requests, [*RUNGS, *EXTRA], names)
+    ch = R.change_arrays(X.season_changes(tg, pg), names)
+    rat = R.ratings(x, requests, [*RUNGS, *EXTRA], names, ch)
     at = ["season", "week", "moment"]
     own = rat.select(
         *at,
@@ -122,14 +129,14 @@ def at_moment(view, games: pl.DataFrame) -> pl.DataFrame:
     """The moment's `games` (game_id, season, week, kickoff), from a view at `view.at`."""
     tg = view.table("team_game")
     moment = games.with_columns(moment=pl.lit(view.at).cast(MOMENT))
-    return _rows(tg, _targets(tg, moment))
+    return _rows(tg, _targets(tg, moment), view.table("player_game"))
 
 
 def history(view, moments: pl.DataFrame) -> pl.DataFrame:
     """Every game in `moments` (game_id, …, moment) at its own moment, in one pass, from a view
     that sees everything (each moment's ratings use only rows known by it)."""
     tg = view.table("team_game")
-    return _rows(tg, _targets(tg, moments))
+    return _rows(tg, _targets(tg, moments), view.table("player_game"))
 
 
 def targets(tg: pl.DataFrame, side: str, horizon: str) -> pl.DataFrame:

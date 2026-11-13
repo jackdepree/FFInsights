@@ -18,6 +18,11 @@ Ratings are in EPA per play (or series success) above the league: offense `o` (h
 defense `d` (what it allows; lower is better). `sd` is the ridge's own posterior sd under its prior,
 with plays as independent (it leaves out the prior's own error, so it's a floor).
 
+**P3, the weaker pull** (`change`; team-efficiency#F16, the CEO's pick 2026-11-13): on offense,
+a team's prior is pull x (1 - a x new QB - b x new coach) x last season's final, with the flags of
+`changes.season_changes` counted only once known. a = b = 0.25 on offense, none on defense, as
+round two tuned them on 2007-2015.
+
 Settings are the exploration's, tuned on 2007-2015 (team-efficiency#F8, explore/*.txt). Final
 ratings are cached by the content of the rows they're fit on, so a perturbed world (leakage checks
 3 and 4) recomputes them.
@@ -56,6 +61,7 @@ class Measure:
     scale: float  # mean W per team-game, 2006-2015: lam is in these units
     off: Settings
     defn: Settings
+    change: tuple[float, float] = (0.0, 0.0)  # offense's pull cut for a new QB, a new coach (P3)
 
 
 _EQUAL = Settings(16.0, 5.0, 0.7)  # all plays, equal (exploration rung 1; also DML)
@@ -72,6 +78,7 @@ MEASURES: dict[str, Measure] = {
             Settings(16.0, 10.0, 0.5),
         ),
         Measure("ridge", "ridge", "eff_plays", "eff_epa", 62.6, _EQUAL, _EQUAL),
+        Measure("change", "ridge", "eff_plays", "eff_epa", 62.6, _EQUAL, _EQUAL, (0.25, 0.25)),
         Measure("dml", "dml", "eff_n", "eff_r", 62.6, _EQUAL, _EQUAL),
         Measure("combo", "dml", "eff_n", "eff_rwo", 62.6, _EQUAL, Settings(1000.0, 10.0, 0.5)),
         Measure("pass", "ridge", "eff_pass_plays", "eff_pass_epa", 36.1, _EQUAL, _EQUAL),
@@ -254,9 +261,12 @@ class Walk:
     """One measure's ratings for one side's settings, from prepared rows (`prepare`) as known at
     each request's moment."""
 
-    def __init__(self, x: pl.DataFrame, m: Measure, side: str, nt: int):
+    def __init__(self, x: pl.DataFrame, m: Measure, side: str, nt: int, changes: Changes = None):
         self.m, self.side, self.nt = m, side, nt
         self.s = m.off if side == "off" else m.defn
+        cut = m.change if side == "off" else (0.0, 0.0)
+        self.changes = changes if any(cut) else None
+        self.cut = cut
         self.seasons = sorted(x["season"].unique().to_list())
         self.by_season = {
             k[0]: (g["known_at"].to_numpy(), _rows(g, m, side) if g.height else np.zeros((0, 8)),
@@ -288,7 +298,21 @@ class Walk:
                     _FINALS.clear()
                 _FINALS[chain] = hit
             po, pd_ = hit
+            f = self._factor(s + 1, moment)
+            if f is not None:
+                po = po * f
+                chain = (*chain, "change", f.tobytes())
         return po, pd_
+
+    def _factor(self, season: int, moment) -> np.ndarray | None:
+        """Each team's share of the pull kept for `season` (P3), from the flags known at `moment`;
+        None when this measure has no change."""
+        if self.changes is None or season not in self.changes:
+            return None
+        known, qb, coach = self.changes[season]
+        ok = known <= np.datetime64(moment.replace(tzinfo=None), "us")
+        a, b = self.cut
+        return np.where(ok, np.clip(1 - a * qb - b * coach, 0.0, 1.0), 1.0)
 
     def at(self, season: int, week: int, moment) -> tuple[np.ndarray, ...]:
         """Ratings (o, d, o_sd, d_sd) before `week` of `season` from the rows known at `moment`:
@@ -300,6 +324,28 @@ class Walk:
         rows = self._season_rows(season, moment)
         rows = rows[rows[:, 0] <= week]
         return _fit(self.m, rows, float(week), po, pd_, self.s)
+
+
+# P3's flags per season: (known_at, new QB, new coach), each an array over the team index
+Changes = dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]] | None
+
+
+def change_arrays(ch: pl.DataFrame, team_names: list[str]) -> dict:
+    """`changes.season_changes` rows → `Changes` over `team_names` (no row: no change, known)."""
+    out = {}
+    tix = {t: i for i, t in enumerate(team_names)}
+    for (season,), g in ch.partition_by("season", as_dict=True).items():
+        known = np.full(len(team_names), np.datetime64("1900-01-01", "us"))
+        qb, coach = np.zeros(len(team_names)), np.zeros(len(team_names))
+        for r in g.iter_rows(named=True):
+            i = tix.get(r["team"])
+            if i is None:
+                continue
+            k = r["known_at"]
+            known[i] = np.datetime64(k.replace(tzinfo=None), "us") if k else np.datetime64("NaT")
+            qb[i], coach[i] = r["new_qb"], r["new_coach"]
+        out[int(season)] = (known, qb, coach)
+    return out
 
 
 def _centred(r: np.ndarray, rows: np.ndarray, pull: float) -> np.ndarray:
@@ -324,14 +370,20 @@ def _rows_known(g: pl.DataFrame, m: Measure) -> np.ndarray:
 
 
 def ratings(
-    x: pl.DataFrame, requests: pl.DataFrame, names: list[str], team_names: list[str]
+    x: pl.DataFrame,
+    requests: pl.DataFrame,
+    names: list[str],
+    team_names: list[str],
+    changes: Changes = None,
 ) -> pl.DataFrame:
     """Every team's ratings for each request (season, week, moment): one row per request and
     team, with `<name>_o`, `<name>_d`, `<name>_o_sd`, `<name>_d_sd` for each measure in `names`
     (offense from the offense's settings, defense from the defense's). `x` is `prepare`d with
     the same `team_names`."""
     nt = len(team_names)
-    walks = {(n, side): Walk(x, MEASURES[n], side, nt) for n in names for side in ("off", "def")}
+    walks = {
+        (n, side): Walk(x, MEASURES[n], side, nt, changes) for n in names for side in ("off", "def")
+    }
     out = []
     for req in requests.unique().sort("moment", "season", "week").iter_rows(named=True):
         cols: dict[str, object] = {"team": team_names}

@@ -30,6 +30,7 @@ Skill = the share of the reference's squared error removed, 2016–2024 (4,734 t
 | 0 `league` | the league's level | — | — | — | — | The floor |
 | – `usual` | ridge on the usual garbage-time rule's plays (F1's yardstick) | +15.7% vs league | +10.3% | +19.8% | +13.0% | The usual way works, but drops plays that count |
 | 1 `ridge` | ridge on every play, counted equally | **+4.9%** vs usual (+4.0 to +5.6) | **+3.9%** (+3.0 to +4.7) | **+7.5%** (+6.3 to +8.6) | **+5.2%** (+4.0 to +6.2) | Every play counts (F1 confirmed, larger) |
+| 1b `change` | `ridge` with a weaker pull after a new QB or head coach (P3; offense only) | **+0.3%** vs ridge (+0.1 to +0.6) | — (offense only) | **+0.5%** (+0.3 to +0.8) | — | A team's past says less after a change, most of all after a new coach (R11, R12) |
 | 2 `dml` | DML with the game state (situation propensity) | −0.2% vs ridge (−0.3 to +0.0) | −0.1% | +0.0% | +0.2% | Ties: EPA already carries the game state |
 | 3 `combo` | DML on representativeness-weighted plays | +0.3% vs dml (−0.0 to +0.5) | −0.2% | **+0.4%** (+0.1 to +0.8) | +0.4% (−0.1 to +0.9) | A small gain over the rest of the season only |
 
@@ -64,6 +65,27 @@ By rule k the ladder stops at `ridge` for the next-3 forecast: `dml` doesn't bea
 | R9 | **A frozen yardstick beats a moving one.** The gap and outcome models and the weights fit once on 2006–2015 and kept beat the same models refit each season on the 10 before, by +0.3 / +0.4 points. A likely reason: when the models change every season, this season's ratings aren't on the same scale as last season's prior or the forecast map's training rows | diagnose.txt | suggestive: one comparison, cause not tested |
 | R10 | **The build's CRC-32 split isn't random.** CRC-32 is linear, so its last bit is a parity of the game id's bits (team codes, week digits): every "salted" version gave the same split. A proper hash (blake2b) gives the same result (−0.0% / +0.5%), so it didn't cause the shrink, but it's the wrong tool | diagnose.txt | strong |
 
+## The first early-season gain: P3, a weaker pull after a new QB or coach (the CEO's pick, 2026-11-13)
+Last season's rating carries into this one through the prior: pull × last season's final. P3 keeps less of it on offense when the team starts the season with a new QB (the week-1 depth chart's QB1 isn't last season's most-started QB) or a new head coach (the opening coach isn't the one who finished last season): pull × (1 − 0.25 × new QB − 0.25 × new coach), the settings round two tuned on 2007–2015. The flags count only once known (the start of week 1). 31% of team-seasons have a new QB, 21% a new coach; the flags agree with round two's on 98% and 100% of team-seasons ([summary.txt](build/summary.txt), `pcf.experts.team_efficiency.changes`).
+
+| Offense, against the champion (`ridge`) | All weeks | Weeks 1–4 | Weeks 5–9 | Rows |
+|---|---|---|---|---|
+| Next 3 games, every team | **+0.3%** (+0.1 to +0.6) | +0.2% (−0.6 to +1.0) | | 4,734 |
+| Rest of season, every team | **+0.5%** (+0.3 to +0.8) | **+1.7%** (+0.8 to +2.6) | | 4,734 |
+| Rest of season, new coach | +3.7% (+2.7 to +4.9) | **+11.1%** (+7.5 to +14.4) | +7.6% (+5.5 to +10.0) | 1,005 |
+| Rest of season, new QB | +0.9% (+0.4 to +1.5) | +3.7% (+1.1 to +6.3) | +2.0% (+0.8 to +3.2) | 1,617 |
+| Next 3 games, new coach | +1.9% (+1.0 to +2.8) | +2.1% (−0.4 to +5.3) | +4.2% (+2.9 to +5.7) | 1,005 |
+| Next 3 games, new QB | +0.8% (+0.3 to +1.4) | +0.9% (−0.9 to +2.8) | +2.5% (+1.6 to +3.6) | 1,617 |
+| Rest of season, neither | −0.1% (−0.3 to +0.0) | −0.8% (−1.1 to −0.5) | −0.6% (−1.0 to −0.2) | 2,525 |
+
+Both variants pass every check: 9 of 9 leakage checks, 100 of 100 shuffled refits beaten, ranges holding 79.7%; the range score calls both "better" than `ridge` with the whole interval below zero.
+
+| # | Finding | Evidence | Confidence |
+|---|---|---|---|
+| R11 | **A weaker pull after a new QB or coach beats the champion** on both offense forecasts: +0.3% (+0.1 to +0.6) next 3 games and +0.5% (+0.3 to +0.8) rest of season; 2020–2024 +0.4% and +0.6%. Round two found +0.3% and +0.4%: it held | summary.txt, scorecards | strong (small) |
+| R12 | **The gain sits where it should: after a change, early in the season.** Rest-of-season forecasts for teams with a new head coach improve 11.1% in weeks 1–4 and 7.6% in weeks 5–9; with a new QB, 3.7% and 2.0%. The new coach matters more than the new QB | summary.txt | strong for the coach, suggestive for the QB |
+| R13 | **Teams with neither change lose a little** (−0.8% in weeks 1–4 of the rest-of-season forecast). Their own prior is unchanged, so the loss comes through the forecast map and the joint fit: the map's slope on the rating is now fit on a mix of full and cut priors. A stronger pull for unchanged teams may win it back (IDEAS I40) | summary.txt | suggestive |
+
 ## Hunches: what the build adds (verdicts are the CEO's to call)
 | # | Exploration verdict | What the build found |
 |---|---|---|
@@ -76,6 +98,7 @@ By rule k the ladder stops at `ridge` for the next-3 forecast: `dml` doesn't bea
 Not run yet. The miss lenses run on the champion, once it's chosen.
 
 ## The case against
+- **P3's new-coach effect may be partly regression to the mean.** Teams that fire their coach often had an extreme season, which regresses anyway, so the flag may stand in for "last season was extreme". That doesn't hurt the forecast, but it changes what the flag means. Its settings came from round two's tuning on 2007–2015 and were scored here once.
 - **The combination's edge is small and partly luck.** The check (R8–R10) explains the shrink: the exploration's split was lucky, and the build's per-season model refits cost it. Honestly measured it's about +0.3% / +0.9%, and the split alone moves it by about ±0.2 points. R9 (freeze the models) comes from one comparison, chosen after seeing the result, so it's a hypothesis until a rerun confirms it on the harness.
 - **The settings were tuned on 2007–2015 in the exploration, with the forecast map fit on those seasons.** The scored seasons are clean, but every rung's settings came from the same tuning, so the rungs' differences are fair to each other, not to a fresh method.
 - **R7's yardstick is weak.** Beating the league's mean on points is easy; the fair test is against Vegas's team total, or against the same map on `ridge`'s ratings. Not run.
@@ -87,14 +110,14 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 - The experts may not import `pcf.data.tables`: the number of situation bins is repeated in `ratings.py`, with a test that the two agree.
 
 ## Not looked at
-- P3 (a weaker pull after a new QB or coach, +0.3–0.4% on offense in round two): deferred (decision 0032, call 12).
+- P3 on defense (round two tuned none), and a new defensive coordinator, which the flags don't see.
 - The vault, the miss lenses, a consistency score for the published ratings themselves.
 - Points against Vegas's team totals.
 
 ## Could be improved
 1. **The play weights without DML** (IDEAS I39): what gain the combination has comes from the representativeness weights, not DML. A weighted ridge needs no outcome model, no bins and no split, so no split luck. Worth a test only if the rest-of-season forecast matters (futures).
 2. **If the combination ever returns:** freeze its season models (R9), split with a real hash (R10), and average over several splits (repeated cross-fitting).
-3. **The season's first weeks** (IDEAS I38, the CEO's ask): `ridge`'s early-week skill is the lowest (+3.1% to +5.9% over usual), and F13 put the room there. P3 first, then the preseason market as a prior (a new data source, needs sign-off).
+3. **The season's first weeks** (IDEAS I38, the CEO's ask): P3 is the first gain there (R11, R12). Next: a stronger pull for teams with no change (I40), then roster turnover, mid-season QB changes (I37), or the preseason market as a prior (a new data source, needs sign-off).
 4. Test R7 against Vegas's team total.
 
 ## Don't redo
@@ -117,7 +140,8 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 ## Open questions for the CEO
 1. ~~Which rating ships as the champion?~~ **Answered 2026-11-13:** `ridge`, every play counted equally.
 2. **The hunch verdicts for H41, H42 and H44** in light of the build (table above).
-3. **The early-season work** (I38): which first, P3 or the preseason market?
+3. ~~The early-season work: which first?~~ **Answered 2026-11-13:** the QB or coach change (P3), built (R11–R13).
+4. **Should P3 join the champion?** Offense would forecast from `change` (`ridge` plus the weaker pull); defense stays `ridge`.
 
 ## Technical calls for veto
 Decision 0032's 12 calls (the part, earlier-season models, fixed settings, the CRC-32 halves, same-week games, the team index, the per-window forecast map, rungs as variants, the target, the published ratings, the Saturday run, `usual` and `league` as baselines only), plus P3 deferred.

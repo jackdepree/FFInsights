@@ -19,15 +19,16 @@ import polars as pl
 
 from pcf.config import get_config
 from pcf.data.tables.store import load, read_part
+from pcf.experts.team_efficiency import changes as X
 from pcf.experts.team_efficiency import features as F
 
 c = pl.col
 HERE = Path(__file__).parent
 SIDES = ("off", "def")
 HORIZONS = ("next3", "rest")
-LADDER = ("league", "usual", "ridge", "dml", "combo")
+LADDER = ("league", "usual", "ridge", "change", "dml", "combo")
 COLS = ("game_id", "team", "season", "week", "y", "mean", "q10", "q90")
-BELOW = {"usual": "league", "ridge": "usual", "dml": "ridge", "combo": "dml"}
+BELOW = {"usual": "league", "ridge": "usual", "change": "ridge", "dml": "ridge", "combo": "dml"}
 
 
 def latest(variant: str) -> pl.DataFrame | None:
@@ -95,7 +96,8 @@ def main() -> None:
             for r in LADDER:
                 a = hist.get((s, h, r))
                 if a is None:
-                    say(f"  {r:7s} not run yet")
+                    if not (r == "change" and s == "def"):  # P3 is offense only
+                        say(f"  {r:7s} not run yet")
                     continue
                 lg = hist.get((s, h, "league"))
                 below = hist.get((s, h, BELOW.get(r, "")))
@@ -124,6 +126,24 @@ def main() -> None:
             say(f"  {h:5s} {fmt(skill(pa, pb))} | weeks 1-4 "
                 f"{fmt(skill(pa.filter(c('week') <= 4), pb))} | 2020-24 "
                 f"{fmt(skill(pa.filter(c('season') >= 2020), pb))}")  # fmt: skip
+    say("")
+    say("P3 (the weaker pull after a new QB or coach) against the champion (ridge), offense,")
+    say("by the team's change that season | all weeks | weeks 1-4 | weeks 5-9:")
+    flags = X.season_changes(
+        load("team_game", parts=["schedule", "pregame", "opening_coach"]),
+        load("player_game", parts=["roster", "depth"]),
+    ).select("season", "team", "new_qb", "new_coach")
+    for h in HORIZONS:
+        a, b = hist.get(("off", h, "change")), hist.get(("off", h, "ridge"))
+        if a is None or b is None:
+            continue
+        a = a.join(flags, on=["season", "team"], how="left").fill_null(0.0)
+        for nm, keep in (("new QB", c("new_qb") > 0), ("new coach", c("new_coach") > 0),
+                         ("either", (c("new_qb") > 0) | (c("new_coach") > 0)),
+                         ("neither", (c("new_qb") == 0) & (c("new_coach") == 0))):  # fmt: skip
+            x = a.filter(keep)
+            say(f"  {h:5s} {nm:9s} {fmt(skill(x, b))} | {fmt(skill(x.filter(c('week') <= 4), b))}"
+                f" | {fmt(skill(x.filter(c('week').is_between(5, 9)), b))} | {x.height:,} rows")  # fmt: skip
     (HERE / "summary.txt").write_text("\n".join(lines), encoding="utf-8")
 
 
