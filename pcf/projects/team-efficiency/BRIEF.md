@@ -1,6 +1,6 @@
 # Brief: Opponent-adjusted efficiency (`team-efficiency`)
 
-**Status:** draft (kickoff 2026-11-12); exploration done (GO) plus round two (2026-11-13), to agree with what they changed ([EXPLORATION.md](EXPLORATION.md), "What this changes in the brief" and "What round two changes in the brief") · **Layer:** expert · **Cadence:** in_season
+**Status:** agreed 2026-11-13 (the CEO: "I think we can agree on the brief and start the build"), with what the exploration (GO) and round two changed; building (decision 0032). Early-season gains wait for the build's first results (IDEAS I38). Kickoff 2026-11-12 ([EXPLORATION.md](EXPLORATION.md), "What this changes in the brief" and "What round two changes in the brief") · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-12, before any research.*

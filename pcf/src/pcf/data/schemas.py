@@ -63,8 +63,17 @@ TABLES: dict[str, Table] = {
                 "tags",
                 "tags_result",
                 "pace",
+                "efficiency",
             ),
-            after=("result", "stats", "tendencies", "charted", "tags_result", "pace"),
+            after=(
+                "result",
+                "stats",
+                "tendencies",
+                "charted",
+                "tags_result",
+                "pace",
+                "efficiency",
+            ),  # fmt: skip
             post_season=("charted",),
         ),
         # One row per team and season; retrospective (decision 0026)

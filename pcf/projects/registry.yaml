@@ -283,11 +283,11 @@ projects:
   - id: team-efficiency
     name: Opponent-adjusted efficiency
     phase: 1
-    status: brief
+    status: building
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). The CEO: 1d (its own future is the main test), 2c (both propensities). Exploration 2026-11-12, GO: every play counts (the usual garbage-time rule loses 4.6% / 7.1%); DML with game state plus gap-aware representativeness weights adds +0.6% / +1.4% over all plays equal; series success rate is the most consistent team measure (0.69). H40 unclear, H41 held, H42 held (small), H43 failed, H44 held (small). Round two 2026-11-13 (Claude's I33-I36, the CEO's pick): at the noise ceiling late in the season, the room is early and in who a team is before its plays show it; luck-stripped EPA and a gated stack of measures tie; a weaker pull after a new QB or coach helps offense +0.3-0.4%. Brief to agree."
+    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). The CEO: 1d (its own future is the main test), 2c (both propensities). Exploration 2026-11-12, GO: every play counts (the usual garbage-time rule loses 4.6% / 7.1%); DML with game state plus gap-aware representativeness weights adds +0.6% / +1.4% over all plays equal; series success rate is the most consistent team measure (0.69). H40 unclear, H41 held, H42 held (small), H43 failed, H44 held (small). Round two 2026-11-13 (Claude's I33-I36, the CEO's pick): at the noise ceiling late in the season, the room is early and in who a team is before its plays show it; luck-stripped EPA and a gated stack of measures tie; a weaker pull after a new QB or coach helps offense +0.3-0.4%. Brief agreed 2026-11-13; first build 2026-11-13 (decision 0032, RESULTS.md): every play counted equally beats the usual garbage-time rule by 3.9-7.5% in all four forecasts (R2); DML ties it (R3); the combination ties it over the next 3 games and gains +0.5% over the rest of the season (R4, the exploration found +0.6% / +1.4%); no gain to Elo (R6). Champion, hunch verdicts and early-season work (I38) wait for the CEO."
 
   - id: pace
     name: Pace and play-calling
