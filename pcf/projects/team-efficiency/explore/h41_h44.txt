@@ -1,0 +1,69 @@
+all plays, equal: settings Params(half_life=16.0, lam=5.0, pull=0.7) (8s)
+
+H41 kinds of play: weight per play by kind, shrunk toward equal (1 = the average play's weight; share of 2006-2015 plays)
+  shrinkage picked by leaving one season out: offense 10.0 (CV error -0.04% against equal), defense 1.0 (-1.05%)
+  last2min|pass          share   7.9%  offense  1.00  defense  1.21
+  last2min|run           share   2.7%  offense  0.99  defense  1.10
+  wp.10-.25|pass         share   6.1%  offense  0.97  defense  0.95
+  wp.10-.25|run          share   3.7%  offense  1.00  defense  1.15
+  wp.25-.40|pass         share   6.9%  offense  0.97  defense  1.07
+  wp.25-.40|run          share   4.9%  offense  0.98  defense  1.00
+  wp.40-.60|pass         share  11.9%  offense  1.03  defense  0.85
+  wp.40-.60|run          share   9.7%  offense  0.99  defense  1.56
+  wp.60-.75|pass         share   7.4%  offense  0.99  defense  0.64
+  wp.60-.75|run          share   6.8%  offense  1.01  defense  0.83
+  wp.75-.90|pass         share   5.6%  offense  1.06  defense  0.69
+  wp.75-.90|run          share   5.5%  offense  1.02  defense  1.71
+  wp<.10|pass            share   7.7%  offense  0.98  defense  0.68
+  wp<.10|run             share   2.5%  offense  1.00  defense  0.97
+  wp>.90|pass            share   4.1%  offense  1.00  defense  0.37
+  wp>.90|run             share   6.5%  offense  0.97  defense  1.07
+  settings offense Params(half_life=16.0, lam=5.0, pull=0.7), defense Params(half_life=16.0, lam=10.0, pull=0.5) (23s)
+
+H41+H44a kinds + gap extremes: weight per play by kind, shrunk toward equal (1 = the average play's weight; share of 2006-2015 plays)
+  shrinkage picked by leaving one season out: offense 3.0 (CV error -0.11% against equal), defense 1.0 (-0.62%)
+  gap-high|pass          share   3.1%  offense  0.92  defense  0.62
+  gap-high|run           share   1.9%  offense  0.97  defense  1.04
+  gap-low|pass           share   3.3%  offense  0.90  defense  0.60
+  gap-low|run            share   1.7%  offense  0.86  defense  1.30
+  last2min|pass          share   6.3%  offense  1.02  defense  1.42
+  last2min|run           share   2.2%  offense  1.00  defense  1.08
+  wp.10-.25|pass         share   5.4%  offense  0.95  defense  1.13
+  wp.10-.25|run          share   3.4%  offense  1.04  defense  1.06
+  wp.25-.40|pass         share   6.0%  offense  0.97  defense  1.09
+  wp.25-.40|run          share   4.4%  offense  0.93  defense  0.99
+  wp.40-.60|pass         share  10.4%  offense  1.12  defense  0.67
+  wp.40-.60|run          share   8.8%  offense  1.04  defense  1.48
+  wp.60-.75|pass         share   6.5%  offense  1.01  defense  0.66
+  wp.60-.75|run          share   6.1%  offense  1.04  defense  1.22
+  wp.75-.90|pass         share   5.1%  offense  1.15  defense  0.80
+  wp.75-.90|run          share   5.1%  offense  1.06  defense  1.55
+  wp<.10|pass            share   7.5%  offense  0.92  defense  0.75
+  wp<.10|run             share   2.5%  offense  0.99  defense  0.87
+  wp>.90|pass            share   4.0%  offense  0.99  defense  0.41
+  wp>.90|run             share   6.4%  offense  0.85  defense  1.09
+  settings offense Params(half_life=16.0, lam=5.0, pull=0.7), defense Params(half_life=16.0, lam=10.0, pull=0.5) (38s)
+
+WPA per play: settings Params(half_life=16.0, lam=20.0, pull=0.5) (45s)
+
+The main test, 2016-2024: skill against the bar (usual garbage-time rule) and against all plays equal
+  next3 all plays, equal               vs bar +4.6% (90% +3.8 to +5.3) | vs equal +0.0% (90% +0.0 to +0.0) | off +0.0% (90% +0.0 to +0.0) def +0.0% (90% +0.0 to +0.0)
+  next3 H41 kinds of play              vs bar +4.6% (90% +3.7 to +5.4) | vs equal +0.0% (90% -0.2 to +0.2) | off +0.2% (90% -0.0 to +0.4) def -0.2% (90% -0.6 to +0.2)
+  next3 H41+H44a kinds + gap extremes  vs bar +4.9% (90% +4.0 to +5.8) | vs equal +0.3% (90% -0.0 to +0.6) | off +0.4% (90% +0.2 to +0.7) def +0.1% (90% -0.3 to +0.5)
+  next3 H44b WPA per play              vs bar +0.1% (90% -0.7 to +0.9) | vs equal -4.7% (90% -5.8 to -3.8) | off -6.0% (90% -7.2 to -4.8) def -3.5% (90% -4.5 to -2.5)
+  next3 H44b EPA and WPA together      vs bar +4.6% (90% +3.9 to +5.3) | vs equal +0.0% (90% -0.1 to +0.2) | off -0.0% (90% -0.2 to +0.1) def +0.1% (90% -0.1 to +0.3)
+  rest  all plays, equal               vs bar +7.1% (90% +6.1 to +8.1) | vs equal +0.0% (90% +0.0 to +0.0) | off +0.0% (90% +0.0 to +0.0) def +0.0% (90% +0.0 to +0.0)
+  rest  H41 kinds of play              vs bar +6.9% (90% +5.8 to +8.1) | vs equal -0.2% (90% -0.5 to +0.1) | off -0.3% (90% -0.6 to +0.0) def -0.1% (90% -0.5 to +0.3)
+  rest  H41+H44a kinds + gap extremes  vs bar +7.6% (90% +6.5 to +8.9) | vs equal +0.6% (90% +0.2 to +1.1) | off +0.3% (90% -0.1 to +0.7) def +1.0% (90% +0.5 to +1.5)
+  rest  H44b WPA per play              vs bar +0.8% (90% -0.3 to +2.0) | vs equal -6.7% (90% -7.9 to -5.6) | off -9.8% (90% -11.5 to -8.4) def -3.1% (90% -4.3 to -1.8)
+  rest  H44b EPA and WPA together      vs bar +7.0% (90% +6.0 to +8.1) | vs equal -0.0% (90% -0.4 to +0.3) | off -0.0% (90% -0.3 to +0.2) def -0.0% (90% -0.4 to +0.3)
+
+2020-2024 only, against all plays equal:
+  next3 H41 kinds of play              +0.2% (90% -0.1 to +0.5)
+  next3 H41+H44a kinds + gap extremes  +0.3% (90% -0.2 to +0.7)
+  next3 H44b WPA per play              -3.5% (90% -4.9 to -2.2)
+  next3 H44b EPA and WPA together      +0.1% (90% -0.2 to +0.3)
+  rest  H41 kinds of play              +0.1% (90% -0.3 to +0.5)
+  rest  H41+H44a kinds + gap extremes  +0.5% (90% -0.2 to +1.1)
+  rest  H44b WPA per play              -6.1% (90% -7.8 to -4.4)
+  rest  H44b EPA and WPA together      -0.3% (90% -0.7 to +0.2)

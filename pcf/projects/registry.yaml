@@ -283,11 +283,11 @@ projects:
   - id: team-efficiency
     name: Opponent-adjusted efficiency
     phase: 1
-    status: idea
+    status: brief
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). Draft brief; two open questions (the targets, which propensity)."
+    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). The CEO: 1d (its own future is the main test), 2c (both propensities). Exploration 2026-11-12, GO: every play counts (the usual garbage-time rule loses 4.6% / 7.1%); DML with game state plus gap-aware representativeness weights adds +0.6% / +1.4% over all plays equal; series success rate is the most consistent team measure (0.69). H40 unclear, H41 held, H42 held (small), H43 failed, H44 held (small). Brief to agree."
 
   - id: pace
     name: Pace and play-calling

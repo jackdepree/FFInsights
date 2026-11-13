@@ -1,6 +1,6 @@
 # Brief: Opponent-adjusted efficiency (`team-efficiency`)
 
-**Status:** draft (kickoff 2026-11-12) · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (kickoff 2026-11-12); exploration done (GO), to agree with what it changed ([EXPLORATION.md](EXPLORATION.md), "What this changes in the brief") · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-12, before any research.*
@@ -78,7 +78,10 @@ Efficiency is the main input that game script (who leads, and so who passes) and
   - is more consistent than raw EPA per play;
   - predicts the targets below better than the simple alternative.
 - **Failure looks like:** no hunch variant beats the simple alternative (that alternative then ships as the measure), or the measures don't repeat.
-- **No-noise target:** *to set with the CEO* (question 1 below). **CEO approves.**
+- **No-noise target (the CEO, 2026-11-12: "its own future is the main test"):**
+  - **Target:** each team's EPA per play on offense and defense in its next 3 games and the rest of the season, all plays, with those games' opponents taken into account.
+  - **Baseline:** the simple alternative, and its shuffled version.
+  - **Beside it:** next game's points scored and allowed, the play mix (dropbacks, runs), and the team's fantasy points.
 - **Seasons:**
   - the situation model and weights are fitted on earlier seasons;
   - choices are tuned on 2006–2015 and scored on 2016–2024;
@@ -103,5 +106,8 @@ Efficiency is the main input that game script (who leads, and so who passes) and
 - **The ladder:** ridge (rung 1) → DML partially linear (rung 2) → learned weights (rung 3) → grains (rung 4).
 
 ## Open questions for the CEO
-1. **What should it predict?** "Predictive of other success factors": which targets judge it?
-2. **Which "propensity"?** A play's chance of being representative (a learned weight), the classic chance of being in that situation (to rebalance), or both?
+Answered 2026-11-12, word for word: "1d, its own future is the main test. 2c, as long as we appropriately separate their semantics we can build powerful insights from both!"
+1. **What should it predict?** All of them, with its own future as the main test: each team's efficiency over its next 3 games and the rest of the season, with those games' opponents taken into account. The other targets (next game's points scored and allowed, the play mix, the team's fantasy points) are reported beside it.
+2. **Which "propensity"?** Both, kept apart by name:
+   - **Representativeness weight** (H41's learned weight): how much a play counts, from how well plays like it predict the team's future.
+   - **Situation propensity** (the classic causal sense): the chance a team is in a situation (for example, leading by 14), used to compare teams on equal footing, as DML does (H42).
