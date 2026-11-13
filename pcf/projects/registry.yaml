@@ -287,7 +287,7 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA).
+    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). Draft brief; two open questions (the targets, which propensity)."
 
   - id: pace
     name: Pace and play-calling
