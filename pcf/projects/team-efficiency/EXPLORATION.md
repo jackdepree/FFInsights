@@ -1,6 +1,6 @@
 # Exploration: Opponent-adjusted efficiency (`team-efficiency`)
 
-**Date:** 2026-11-12 · **Verdict:** GO · **Brief:** [BRIEF.md](BRIEF.md) · **Scripts:** [explore/](explore/) (each writes a `.txt` beside it)
+**Date:** 2026-11-12, round two 2026-11-13 · **Verdict:** GO · **Brief:** [BRIEF.md](BRIEF.md) · **Scripts:** [explore/](explore/) (each writes a `.txt` beside it)
 
 **The question.** Which way of measuring a team's efficiency, once the opponents and the situation are taken out, best predicts that team's own future? The CEO's main test (2026-11-12, "its own future is the main test") is each team's EPA per play over its next 3 games and over the rest of the season, for its offense and its defense, all plays, with those games' opponents taken into account. The CEO's hunches H40–H44 were each set against it.
 
@@ -94,7 +94,86 @@ Every measure here is a trait. Over a whole season the adjustment is small, beca
 - **Dropbacks and runs:** efficiency ratings alone don't forecast them (dropbacks −1.2% against the league average, runs +0.1%). The play mix needs pace's inputs (pace#R3), with efficiency as one feature.
 - **Not looked at:** the team's fantasy points, and Elo's margin with efficiency added. Both are for the build.
 
-## Hunch verdicts
+## Round two (2026-11-13): four more ideas
+*Claude's ideas I33–I36, chosen by the CEO on 2026-11-13 ("Yes please start with those ideas"), with the tempting but bad ones left out (the pregame spread or the score as confounders, more causal machinery, a sequence neural net). Same pipeline, settings and seasons as round one. Each idea was set against F8's combination (DML with game state + gap-aware weights), the best so far.*
+
+**F13. How much is left to find: late in the season, almost nothing; early in the season and over the rest of the season, a lot, but not from the plays** ([r2_ceiling.txt](explore/r2_ceiling.txt)). The target is itself noisy (about 180 plays over three games), so no rating can remove all of the league average's error. Three ceilings, from generous to strict:
+
+| Skill against the league average, 2016–2024 | Now (F8's combination) | Hindsight oracle | Play-noise bound | Split-half reliability |
+|---|---|---|---|---|
+| Next 3 games | 17.5% | 22.8% | 35.1% | not possible (3 games) |
+| Next 3, weeks 1–4 / 5–9 / 10+ | 12.3% / 15.5% / 20.3% | 22.7% / 26.7% / 21.1% | 36% / 36% / 34% | |
+| Rest of season | 23.5% | not a ceiling there | 47.9% | 50.9% |
+| Rest, weeks 1–4 / 5–9 / 10+ | 18.1% / 25.7% / 23.9% | | 68% / 61% / 41% | 65% / 54% / 43% |
+
+- **What the ceilings are:**
+  - **The hindsight oracle** rates every team on the whole season except the target team's next 3 games: its earlier *and later* games. It's a realistic ceiling for any rating that treats a team's season as one ability.
+  - **The play-noise bound** removes only the plays' own scatter. It's generous, because whole games swing too: weather, game plans, injuries.
+  - **Split-half reliability** steps the agreement between the odd and even games of the rest of the season up to its full length. It's strict, because it counts the opponents as noise.
+- **Late in the season we're at the ceiling.** From week 10 on, F8's combination reaches 20.3% against the oracle's 21.1%. Overall it takes 76% of the oracle's skill over the next 3 games.
+- **The room is early in the season** (12.3% against 22.7% in weeks 1–4) **and over the rest of the season** (23.5% against about 50%). That's room for knowing who a team is *before* its plays show it: priors, and changes such as injuries. It isn't room for squeezing more from the plays, which is what F14 and F15 confirm.
+
+**F14. Stripping luck out of EPA makes it a little more consistent, but it doesn't forecast better** ([r2_luck.txt](explore/r2_luck.txt)). This is baseball's FIP idea, applied to the rating's input only; the target stays every play's real EPA.
+- **What was changed:**
+  - **Fumbles:** a fumble play's EPA was replaced by the average over who recovers. Fumbles are 1.6% of plays and 12% of EPA's squared spread.
+  - **Interceptions:** a pick's EPA was blended with what an incompletion would have cost there. They're 1.3% of plays and 16% of the spread.
+  - **Huge plays:** EPA was capped at ±k. Plays beyond ±3 are 4% of plays and 48% of the spread.
+- **What the tuning on 2007–2015 chose:** keep 75% of an interception's EPA, and cap only at ±6, which barely touches anything. Picks are mostly the quarterback's doing, and the big plays are signal.
+- **On the main test,** all three together: −0.0% and −0.0% against all plays equal. Run through F8's combination: −0.0% (−0.3 to +0.3) and +0.0% (−0.4 to +0.4) against the combination. Fumbles alone: −0.1% and −0.1%.
+- **More consistent:** 0.66 against 0.63 week to week on offense, and 0.39 against 0.38 on defense (opponent-adjusted). A trait, kept in CONSISTENCY.md. But the future being forecast has its own fumble bounces, and the ridge already averages most of this luck away.
+
+**F15. Combining the steady measures, with a gate by week: no gain that holds up; efficiency is mostly one trait** ([r2_stack.txt](explore/r2_stack.txt), [r2_gate.txt](explore/r2_gate.txt)).
+- **What was stacked:** EPA (F8's combination), series success rate, success rate, passing and rushing EPA, this season alone and the prior alone. Each measure's own rating and its opponents' mean went into a ridge regression, its strength picked by leaving one season out within 2007–2015.
+- **The gate:** every coefficient may differ by part of the season (weeks 1–4, 5–9, 10+).
+- **2016–2024:**
+  - the stack with the gate ties F8's combination (+0.1% and −0.2%);
+  - it's better in weeks 1–4 (+1.1%, +0.2 to +2.0, on both horizons) and worse later;
+  - without the gate, the rest of season is −0.6%.
+- **That early gain doesn't hold on 2007–2015's left-out seasons.** A hard gate that picks, per part of the season and side, whichever was better on 2007–2015 picked "EPA alone" in all 12 cells. So it's +0.0%: the weeks 1–4 gain on 2016–2024 is luck or a change of era, not a gate to trust.
+- **Compression:** one principal component carries 77% of the measures' spread on offense and 70% on defense, loading almost equally on all of them (runs least). One component alone forecasts 0.4–0.9% worse, and two or three components get closer. So **team efficiency is basically one trait**, which the EPA rating already holds. The others are small pieces that don't pay their way in the forecast.
+- Series success rate still earns its place as a published trait of its own (F9), just not as a booster for EPA.
+
+**F16. Season-start priors: a new quarterback or coach should weaken last season's carryover on offense. It's small, and series success makes a worse prior** ([r2_prior.txt](explore/r2_prior.txt), [r2_prior_pull.txt](explore/r2_prior_pull.txt)).
+- **The flags, both known before week 1:**
+  - **A new starting QB:** the week-1 depth chart's QB1 isn't last season's main passer. That's 31% of team-seasons.
+  - **A new head coach:** 21% of team-seasons.
+- **A side model (fitted on 2007–2015) of this season's final rating from last season's:**
+  - **Offense:** carryover from last season's EPA is 0.42. With a new QB it falls to 0.17, and with a new coach to 0.23.
+  - **Defense:** last season's EPA carries almost nothing (0.03) once last season's series success rate is known (0.63).
+  - Football-sensible, but it's fitted on 288 team-seasons.
+- **As priors in the rating:**
+  - **P1** (last season's EPA + series success): −0.3% and −0.3%.
+  - **P2** (P1 + new QB + new coach): +0.1% and −0.0%. Offense +0.4%, defense −0.3% to −0.4%; 2020–2024 +0.7% and +1.1%.
+  - **Picked per side on 2007–2015** (that picked the usual prior for offense and P2 for defense): −0.1% and −0.1%.
+- **P3, the direct version.** The usual prior, but a team's pull is weakened by a × new QB and b × new coach. a and b were tuned on the main test on 2007–2015 (768 versions); it chose a 0.25 and b 0.25 on offense, and no change on defense.
+  - Offense +0.3% (+0.0 to +0.5) and +0.4% (+0.2 to +0.6). Defense −0.1% and −0.3%; overall +0.1% and +0.1%; 2020–2024 +0.1%.
+  - Offenses with a new QB, weeks 1–4: +0.8% (−1.2 to +2.8).
+- **Week 1 on its own,** where the rating is only the prior: every richer prior is worse than pull × last season's EPA (−2.0% to −3.3%).
+
+**Round two in one line:** F8's combination stands. None of the four ideas adds a gain that holds on both the tuning and the scored seasons. The ceiling (F13) says why: the plays are nearly used up, and the room left is in what a team is before its plays show it.
+
+**Versions tried in round two:**
+- **Scored on 2016–2024:** 24 (luck 7, priors 4, stacks 12, gate 1).
+- **Tuned only on 2007–2015:** about 830 settings (mostly P3's 768).
+- **Both rounds together:** about 49 scored versions.
+
+### Round two verdicts
+These were Claude's ideas, chosen by the CEO, so they're logged in IDEAS.md (I33–I36), not HUNCHES.md.
+
+| # | Idea | Verdict | Evidence | Claude expected |
+|---|---|---|---|---|
+| I33 | Estimate the noise ceiling first | **done** | At the ceiling late in the season; the room is early in the season and in the rest-of-season target (F13) | Near the ceiling for next 3: right late in the season, wrong early |
+| I34 | Strip luck out of EPA (fumbles, interceptions, huge plays) | **failed** (more consistent, no better forecast) | −0.0% / +0.0% through F8's combination; week r 0.66 vs 0.63 (F14) | **The biggest new gain: wrong.** Picks are mostly skill, big plays are signal, and the ridge already averages the fumble bounce |
+| I35 | Stack the steady measures with a week gate (mixture of experts; compression) | **failed** | Ties overall; the weeks 1–4 gain on 2016–2024 doesn't hold on 2007–2015, so the hard gate picks EPA alone everywhere. One trait carries 70–77% (F15) | A gain from series success beside EPA: wrong for the EPA target |
+| I36 | Better season-start priors (QB and coach changes, steadier measures) | **unclear** (small, offense only) | P3 offense +0.3% / +0.4%, overall +0.1%; series success as a prior hurts (F16) | A gain in weeks 1–4: mostly wrong, though the QB and coach effects are real in the carryover |
+
+### What round two changes in the brief
+- **The ladder stays as round one left it** (F8's combination).
+- **One optional rung on offense:** P3's weaker pull after a new QB or a new head coach. It's small (+0.3–0.4% on offense); the vault decides.
+- **Report the ceiling in the results** (F13), so later work knows where the room is: early in the season, and in who a team is before its plays show it.
+- **Not to build:** luck-stripped EPA as the forecast input (it's kept only as a consistent trait), the measure stack, and series success as a prior.
+
+## Hunch verdicts (round one)
 | # | Hunch | Verdict | Evidence | Claude expected |
 |---|---|---|---|---|
 | H40 | Efficiency is "EPA and Winning Percent Added per series" | **unclear** | EPA per series ties EPA per play (−0.0%, −0.1%; also in its own unit). WPA per series loses (−4.7%, −6.8%). Series success rate loses on EPA (−2.4%, −4.3%) but is the most consistent measure (0.69 / 0.47), forecasts its own future 0.8% better, and adds 1.4% beside EPA (F9) | A tie for EPA per series; WPA repeating less. Both right |
@@ -120,7 +199,8 @@ The CEO's two meanings of "propensity" (2c) both earned a place, kept apart by n
 - **Dropped:** grains past plays (H43) and WPA as a measure of its own (H44's mesh). The gap stays, as a weight feature.
 
 ## The case against (so far)
-- **The gains past F1 are small.** 0.6% and 1.4% clear zero on 2016–2024 and 2020–2024, but about 25 versions were tried, and the combination (F8) was picked after seeing its parts. The vault is the real test.
+- **The gains past F1 are small.** 0.6% and 1.4% clear zero on 2016–2024 and 2020–2024, but about 49 versions have now been scored over two rounds, and the combination (F8) was picked after seeing its parts. The vault is the real test.
+- **The ceiling (F13) depends on how it's built.** The hindsight oracle uses no recency weight and a fixed light pull, so a better-tuned oracle could sit a little higher. "At the ceiling late in the season" is about this oracle.
 - **Not every setting was tuned on the earlier seasons.** The kinds of plays and the propensity bins were chosen by Claude, not tuned. A different binning could do better or worse.
 - **The defense weights (runs over passes)** could partly be the spread of pass outcomes rather than representativeness. Either way, the weight is the right one for forecasting, but the football reading should be held loosely.
 - **EPA and win chance come from nflverse's models**, fitted on the seasons before 2020. The scored results hold in 2020–2024, though.
@@ -129,3 +209,4 @@ The CEO's two meanings of "propensity" (2c) both earned a place, kept apart by n
 - **A per-play gradient-boosted weight (F3):** it fits noise. Learn weights across teams.
 - **The usual garbage-time rule as a bar (F1).**
 - **WPA as a measure of its own (F6), and grains past plays stacked beside EPA (F10).**
+- **Luck-stripped EPA as the forecast input (F14), stacking the steady measures onto EPA (F15), and series success as a season-start prior (F16).**

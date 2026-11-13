@@ -1,6 +1,6 @@
 # Brief: Opponent-adjusted efficiency (`team-efficiency`)
 
-**Status:** draft (kickoff 2026-11-12); exploration done (GO), to agree with what it changed ([EXPLORATION.md](EXPLORATION.md), "What this changes in the brief") · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (kickoff 2026-11-12); exploration done (GO) plus round two (2026-11-13), to agree with what they changed ([EXPLORATION.md](EXPLORATION.md), "What this changes in the brief" and "What round two changes in the brief") · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, 2026-11-12, before any research.*
