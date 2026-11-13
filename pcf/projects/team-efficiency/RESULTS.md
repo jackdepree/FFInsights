@@ -84,7 +84,8 @@ Both variants pass every check: 9 of 9 leakage checks, 100 of 100 shuffled refit
 |---|---|---|---|
 | R11 | **A weaker pull after a new QB or coach beats the champion** on both offense forecasts: +0.3% (+0.1 to +0.6) next 3 games and +0.5% (+0.3 to +0.8) rest of season; 2020–2024 +0.4% and +0.6%. Round two found +0.3% and +0.4%: it held | summary.txt, scorecards | strong (small) |
 | R12 | **The gain sits where it should: after a change, early in the season.** Rest-of-season forecasts for teams with a new head coach improve 11.1% in weeks 1–4 and 7.6% in weeks 5–9; with a new QB, 3.7% and 2.0%. The new coach matters more than the new QB | summary.txt | strong for the coach, suggestive for the QB |
-| R13 | **Teams with neither change lose a little** (−0.8% in weeks 1–4 of the rest-of-season forecast). Their own prior is unchanged, so the loss comes through the forecast map and the joint fit: the map's slope on the rating is now fit on a mix of full and cut priors. A stronger pull for unchanged teams may win it back (IDEAS I40) | summary.txt | suggestive |
+| R13 | **Teams with neither change lose a little** (−0.8% in weeks 1–4 of the rest-of-season forecast). Their own prior is unchanged, so the loss comes through the forecast map and the joint fit: the map's slope on the rating is now fit on a mix of full and cut priors. A stronger pull for unchanged teams may win it back (IDEAS I40). **Tested (R14): it doesn't** | summary.txt | suggestive |
+| R14 | **R13's loss can't be won back cheaply** (round three, IDEAS I40, the CEO's pick, 2026-11-13). A stronger pull for teams with neither change, tuned on 2007–2015 with the cuts (keep 1.10 × the pull, a = b = 0.25, the same cuts as P3), ties P3 on 2016–2024: +0.0% (−0.1 to +0.1) next 3 games, −0.1% (−0.1 to −0.0) rest of season. Letting the forecast map's slope differ for unchanged teams ties too: −0.0% and −0.2% (−0.4 to −0.1). Unchanged teams lose a little either way. The tuning surface is flat (2007–2015 error moves in the fourth digit). The loss is P3's small price, and P3 stays as built | [r3_keep_pull.txt](explore/r3_keep_pull.txt) (exploration harness) | strong (a tie) |
 
 ## Hunches: what the build adds (verdicts are the CEO's to call)
 | # | Exploration verdict | What the build found |
@@ -117,13 +118,14 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 ## Could be improved
 1. **The play weights without DML** (IDEAS I39): what gain the combination has comes from the representativeness weights, not DML. A weighted ridge needs no outcome model, no bins and no split, so no split luck. Worth a test only if the rest-of-season forecast matters (futures).
 2. **If the combination ever returns:** freeze its season models (R9), split with a real hash (R10), and average over several splits (repeated cross-fitting).
-3. **The season's first weeks** (IDEAS I38, the CEO's ask): P3 is the first gain there (R11, R12). Next: a stronger pull for teams with no change (I40), then roster turnover, mid-season QB changes (I37), or the preseason market as a prior (a new data source, needs sign-off).
+3. **The season's first weeks** (IDEAS I38, the CEO's ask): P3 is the first gain there (R11, R12); a stronger pull for teams with no change ties (R14). Next: roster turnover, mid-season QB changes (I37), or the preseason market as a prior (a new data source, needs sign-off).
 4. Test R7 against Vegas's team total.
 
 ## Don't redo
 - The combination as the champion: it was weighed and set aside for its size against its cost (R8; the CEO, 2026-11-13).
 - DML with the game state on EPA (R3, and the exploration's F7): EPA already holds the game state.
 - The usual garbage-time rule: every play counts (R2).
+- A stronger pull, or a separate forecast slope, for teams that kept their QB and coach (R14): both tie P3.
 
 ## Interface card
 | | |

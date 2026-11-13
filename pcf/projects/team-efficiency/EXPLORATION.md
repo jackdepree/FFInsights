@@ -173,6 +173,13 @@ These were Claude's ideas, chosen by the CEO, so they're logged in IDEAS.md (I33
 - **Report the ceiling in the results** (F13), so later work knows where the room is: early in the season, and in who a team is before its plays show it.
 - **Not to build:** luck-stripped EPA as the forecast input (it's kept only as a consistent trait), the measure stack, and series success as a prior.
 
+## Round three (2026-11-13): a stronger pull for teams with no change (IDEAS I40, the CEO's pick)
+**F17. Teams that kept their QB and coach don't deserve a stronger pull** ([r3_keep_pull.txt](explore/r3_keep_pull.txt)). P3 in the build cost teams with neither change 0.8% early in the rest-of-season forecast (RESULTS R13). This tried two fixes, each tuned on 2007–2015 and scored on 2016–2024 against P3:
+- **A keep factor:** the offense pull for unchanged teams = K × 0.7 (capped at 1), tuned with the two cuts. The next-3 error picks K = 1.10 with a = b = 0.25 (P3's cuts). Against P3: +0.0% (−0.1 to +0.1) next 3 games, −0.1% (−0.1 to −0.0) rest of season. Unchanged teams, weeks 1–4 of the rest of season: −0.2% (−0.7 to +0.3).
+- **A separate forecast slope** for unchanged teams (own rating × neither, in the map): −0.0% next 3, −0.2% (−0.4 to −0.1) rest of season; unchanged teams −0.4% early.
+
+The error surface is flat: across all 45 versions, the 2007–2015 next-3 error moves only in the fourth digit. Verdict: **failed** (a tie). R13's loss is P3's price, not a gap in it.
+
 ## Hunch verdicts (round one)
 | # | Hunch | Verdict | Evidence | Claude expected |
 |---|---|---|---|---|
@@ -209,4 +216,4 @@ The CEO's two meanings of "propensity" (2c) both earned a place, kept apart by n
 - **A per-play gradient-boosted weight (F3):** it fits noise. Learn weights across teams.
 - **The usual garbage-time rule as a bar (F1).**
 - **WPA as a measure of its own (F6), and grains past plays stacked beside EPA (F10).**
-- **Luck-stripped EPA as the forecast input (F14), stacking the steady measures onto EPA (F15), and series success as a season-start prior (F16).**
+- **Luck-stripped EPA as the forecast input (F14), stacking the steady measures onto EPA (F15), and series success as a season-start prior (F16). A stronger pull or a separate slope for teams with no change (F17).**
