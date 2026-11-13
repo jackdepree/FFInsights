@@ -5,7 +5,7 @@
 ## In short
 PCF now rates every team's offense and defense after every game, opponent-adjusted, from a new table part (`team_game.efficiency`), and forecasts each side's EPA per play over its next 3 games and the rest of the season.
 - **The big win is counting every play.** Ratings on every play, counted equally (`ridge`), beat the usual garbage-time rule (`usual`) in all four forecasts, by 3.9–7.5% of its squared error, and in weeks 1–4 too (R2). Against the league's level they remove 14–26% of the error (R1), as the exploration found.
-- **The extras the exploration found mostly didn't survive the build.** DML with the game state ties all plays equal everywhere (R3). The combination (DML on plays counted by the representativeness weights) ties over the next 3 games and gains a little over the rest of the season: +0.5% pooled, against the exploration's +0.6% and +1.4% (R4). In weeks 1–4 of the next-3 forecast it's slightly worse (−0.7%).
+- **The extras the exploration found mostly didn't survive the build.** DML with the game state ties all plays equal everywhere (R3). The combination (DML on plays counted by the representativeness weights) ties over the next 3 games and gains a little over the rest of the season: +0.5% pooled, against the exploration's +0.6% and +1.4% (R4). In weeks 1–4 of the next-3 forecast it's slightly worse (−0.7%). **The check:** the exploration's split was lucky, and refitting the season models every season costs the combination. Measured honestly, with the models frozen, it gains about +0.3% and +0.9% (R8–R10).
 - **Elo:** the ratings still add nothing to Elo's margin (R6). They do forecast points and team fantasy points well above the league's mean (R7).
 
 **Scorecards:** `data/outputs/team-efficiency/<variant>/<run_id>/scorecard.html`. **Numbers:** [build/summary.txt](build/summary.txt), [build/downstream.txt](build/downstream.txt).
@@ -44,6 +44,24 @@ By rule k the ladder stops at `ridge` for the next-3 forecast: `dml` doesn't bea
 | R6 | Elo's margin, refit with the offense and defense gaps (from `combo`), misses by −0.02 points a game against Elo refit alone (−0.07 to +0.02; −0.2%): no gain | downstream.txt, 2017–2024, 2,111 games | strong (no gain) | game margin |
 | R7 | The ratings forecast next game's points (−8.4% squared miss, r 0.29) and the team's PPR fantasy points (next game −9.3%, r 0.30; per game over the next 3, −13.8%, r 0.36) against the league's mean | downstream.txt, 2017–2024 | strong against a weak yardstick | side targets |
 
+## Why the combination's gain shrank (the CEO asked for the check first, 2026-11-13)
+[build/diagnose.py](build/diagnose.py), [build/diagnose.txt](build/diagnose.txt). The build's ratings were run through the exploration's own scoring, switching one difference at a time. The numbers are the combination against all plays equal, 2016–2024, next 3 games / rest of season.
+
+| What was switched | Next 3 | Rest | Reading |
+|---|---|---|---|
+| The exploration's own ratings | +0.6% | +1.4% | Reproduces the exploration |
+| The build's ratings | −0.2% | +0.5% | Reproduces the build: the scoring isn't the cause, the combination's ratings are (all plays equal agrees with the exploration's to r 1.000) |
+| The forecast map refit each season (the harness's way) | −0.1% | +0.5% | No effect |
+| The prior's scale from 2006–2024 | −0.2% | +0.5% | No effect |
+| Five other random cross-fitting splits | −0.1% to +0.2% | +0.5% to +0.9% | **Split luck of about ±0.2 points.** The exploration's split (+0.2% / +0.7% on the build's ratings) was on the lucky side |
+| The season models fit once on 2006–2015, used for 2017–2024 (out of sample) | **+0.3%** (+0.0 to +0.6) | **+0.9%** (+0.6 to +1.3) | **The biggest piece, about +0.3 / +0.4 points:** refitting the models every season costs the combination |
+
+| # | Finding | Evidence | Confidence |
+|---|---|---|---|
+| R8 | The exploration's +0.6% / +1.4% was about a third too high. Honestly measured (models out of sample, a random split), the combination gains about +0.3% over the next 3 games and +0.9% over the rest of the season, give or take about 0.2 points of split luck | diagnose.txt | suggestive |
+| R9 | **A frozen yardstick beats a moving one.** The gap and outcome models and the weights fit once on 2006–2015 and kept beat the same models refit each season on the 10 before, by +0.3 / +0.4 points. A likely reason: when the models change every season, this season's ratings aren't on the same scale as last season's prior or the forecast map's training rows | diagnose.txt | suggestive: one comparison, cause not tested |
+| R10 | **The build's CRC-32 split isn't random.** CRC-32 is linear, so its last bit is a parity of the game id's bits (team codes, week digits): every "salted" version gave the same split. A proper hash (blake2b) gives the same result (−0.0% / +0.5%), so it didn't cause the shrink, but it's the wrong tool | diagnose.txt | strong |
+
 ## Hunches: what the build adds (verdicts are the CEO's to call)
 | # | Exploration verdict | What the build found |
 |---|---|---|
@@ -56,7 +74,7 @@ By rule k the ladder stops at `ridge` for the next-3 forecast: `dml` doesn't bea
 Not run yet. The miss lenses run on the champion, once it's chosen.
 
 ## The case against
-- **The exploration's gains shrank, and the build doesn't yet say why.** The combination was the reason for the build's design; it went from +0.6% / +1.4% to −0.1% / +0.5%. Five things changed between the two, each a decision 0032 call: the season models are refit every season on the 10 before (not once on 2006–2015); the forecast map is refit every window (not once on 2007–2015); same-week games are used; the cross-fitting halves differ; the prior's scale no longer looks at later seasons. Any could account for it. Until one check separates them, "the combination helps a little" is the honest reading, and even the +0.5% could be noise with the right luck.
+- **The combination's edge is small and partly luck.** The check (R8–R10) explains the shrink: the exploration's split was lucky, and the build's per-season model refits cost it. Honestly measured it's about +0.3% / +0.9%, and the split alone moves it by about ±0.2 points. R9 (freeze the models) comes from one comparison, chosen after seeing the result, so it's a hypothesis until a rerun confirms it on the harness.
 - **The settings were tuned on 2007–2015 in the exploration, with the forecast map fit on those seasons.** The scored seasons are clean, but every rung's settings came from the same tuning, so the rungs' differences are fair to each other, not to a fresh method.
 - **R7's yardstick is weak.** Beating the league's mean on points is easy; the fair test is against Vegas's team total, or against the same map on `ridge`'s ratings. Not run.
 - **R6 used `combo`'s ratings only.** `ridge`'s might differ, though they correlate highly.
@@ -73,9 +91,10 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 - Points against Vegas's team totals.
 
 ## Could be improved
-1. **Find why the combination's gain shrank** (one check per changed call, `combo` against `ridge` only). If one call explains it, keep the better choice.
-2. **The season's first weeks** (IDEAS I38, the CEO's ask): `ridge`'s early-week skill is the lowest (+3.1% to +5.9% over usual), and F13 put the room there. P3 first, then the preseason market as a prior (a new data source, needs sign-off).
-3. Test R7 against Vegas's team total.
+1. **Apply the check's two fixes and rerun `dml` and `combo`** (about 2 hours): freeze the season models (fit once on 2006–2015, used for every season from 2016, including the vault and 2026), and split with blake2b instead of CRC-32. Then pick the champion on the harness.
+2. **Repeated cross-fitting:** average DML over several random splits, the textbook remedy for split luck (R8's ±0.2). It costs about one DML fit per split.
+3. **The season's first weeks** (IDEAS I38, the CEO's ask): `ridge`'s early-week skill is the lowest (+3.1% to +5.9% over usual), and F13 put the room there. P3 first, then the preseason market as a prior (a new data source, needs sign-off).
+4. Test R7 against Vegas's team total.
 
 ## Don't redo
 - DML with the game state on EPA (R3, and the exploration's F7): EPA already holds the game state.
@@ -94,7 +113,7 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 | **Feeds** | game script, team-strength composite, player opportunity and fantasy, pace |
 
 ## Open questions for the CEO
-1. **Which rating ships as the champion?** `ridge` (every play, equal: simplest, ties next 3, better early) or `combo` (as the brief planned: +0.5% over the rest of the season). Claude's recommendation: `ridge`, after the one check in "Could be improved" 1, which could change it.
+1. **Which rating ships as the champion?** `ridge` (every play, equal: simplest) or `combo` (as the brief planned). The check (R8) puts `combo`'s honest edge at about +0.3% / +0.9%, if the models are frozen. Claude's recommendation: rerun with the two fixes ("Could be improved" 1), then ship `combo` if its gain holds on the harness, else `ridge`.
 2. **The hunch verdicts for H41, H42 and H44** in light of the build (table above).
 3. **The early-season work** (I38): which first, P3 or the preseason market?
 

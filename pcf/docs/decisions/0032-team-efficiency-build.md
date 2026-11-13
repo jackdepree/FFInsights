@@ -52,3 +52,7 @@
 - **Reading play-by-play in the expert:** about 2.7 GB in memory, once per moment. The part is 13,000 rows.
 - **Tuning the settings inside each training window:** the honest nested version. It costs 48 walks per window, and the exploration found the settings flat across seasons.
 - **One variant per side and horizon with the rung as a setting:** fewer scorecards, but the ladder couldn't be read off the baselines.
+
+**Proposed revisions after the check (2026-11-13, team-efficiency RESULTS R8–R10; not applied yet, waiting for the CEO's go on the rerun):**
+- **Call 1:** freeze the season models. Fit them once on 2006–2015 and use them for every season from 2016 on, including the vault and 2026; 2002–2015 keep models fit on earlier seasons only, for the priors. Refit only on purpose, as a new `MODEL_VERSION`. Why: refitting each season cost the combination about +0.3 / +0.4 points (R9), probably because a moving yardstick puts each season's ratings on a different scale from last season's prior.
+- **Call 3:** split with blake2b, not CRC-32. CRC-32 is linear, so its last bit is a parity of the game id's bits, not a random half (R10). It didn't change the result.
