@@ -3,7 +3,7 @@ better-measured efficiency finally adds to the margin"; the team's fantasy point
 test).
 
 Inputs are walk-forward outputs only (rule e): Elo's margin history and the ratings that
-`off_next3_combo` published with its history, each made before the game.
+`off_next3_ridge` published with its history, each made before the game.
 
 1. **No noise (VALIDATION.md §5): Elo's margin, with and without efficiency.** The baseline is
    Elo's own margin forecast. The challenger refits margin = a x Elo + b x (home offense - away
@@ -80,8 +80,8 @@ def main() -> None:
         print(t, flush=True)
         lines.append(t)
 
-    rat = latest("team-efficiency", "off_next3_combo").select(
-        "game_id", "team", "off_combo", "def_combo"
+    rat = latest("team-efficiency", "off_next3_ridge").select(
+        "game_id", "team", "off_ridge", "def_ridge"
     )
     sched = (
         read_part("team_game", "schedule", seasons=SEASONS)
@@ -97,9 +97,9 @@ def main() -> None:
     # 1. Elo's margin, with and without efficiency
     elo = latest("elo", "margin").select("game_id", elo="mean")
     home = rat.join(games, left_on=["game_id", "team"], right_on=["game_id", "home_team"])
-    home = home.select("game_id", h_off="off_combo", h_def="def_combo")
+    home = home.select("game_id", h_off="off_ridge", h_def="def_ridge")
     away = rat.join(games, on="game_id").filter(c("team") != c("home_team"))
-    away = away.select("game_id", a_off="off_combo", a_def="def_combo")
+    away = away.select("game_id", a_off="off_ridge", a_def="def_ridge")
     g = (
         elo.join(home, on="game_id")
         .join(away, on="game_id")
@@ -139,7 +139,7 @@ def main() -> None:
     t = (
         sched.join(rat, on=["game_id", "team"])
         .join(
-            rat.select("game_id", opponent="team", opp_def="def_combo"),
+            rat.select("game_id", opponent="team", opp_def="def_ridge"),
             on=["game_id", "opponent"],
         )
         .join(pts, on=["game_id", "team"], how="left")
@@ -157,9 +157,9 @@ def main() -> None:
     )
     for y, nm in (("points_for", "next game's points"), ("fp", "next game's fantasy points"),
                   ("fp3", "fantasy points per game, next 3 games")):  # fmt: skip
-        d = t.drop_nulls([y, "off_combo", "opp_def"])
+        d = t.drop_nulls([y, "off_ridge", "opp_def"])
         d = d.with_columns(
-            eff=pl.Series(walk(d, y, ["off_combo", "opp_def", "home"])),
+            eff=pl.Series(walk(d, y, ["off_ridge", "opp_def", "home"])),
             league=pl.Series(walk(d, y, [])),
         )
         say("")

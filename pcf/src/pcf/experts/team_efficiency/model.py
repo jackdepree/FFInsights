@@ -31,8 +31,9 @@ c = pl.col
 LADDER = ("league", "usual", "ridge", "dml", "combo")
 BELOW = {"usual": ("league",), "ridge": ("usual", "league"), "dml": ("ridge", "league"),
          "combo": ("dml", "ridge", "league")}  # fmt: skip
-# The champion candidate that carries the published ratings for higher layers
-PUBLISHER = ("off", "next3", "combo")
+# The champion (the CEO, 2026-11-13: every play, counted equally), which carries the published
+# ratings for higher layers
+PUBLISHER = ("off", "next3", "ridge")
 
 
 class _Efficiency(Expert):

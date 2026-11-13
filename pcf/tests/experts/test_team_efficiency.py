@@ -109,8 +109,9 @@ def test_every_variant_meets_the_contract():
     assert [b.variant for b in VARIANTS["def_rest_combo"].baselines()] == [
         "def_rest_dml", "def_rest_ridge", "def_rest_league",
     ]  # fmt: skip
-    assert VARIANTS["off_next3_combo"].publishes == F.PUBLISHED
-    assert not VARIANTS["off_rest_combo"].publishes
+    assert VARIANTS["off_next3_ridge"].publishes == F.PUBLISHED
+    assert not VARIANTS["off_next3_combo"].publishes
+    assert not VARIANTS["off_rest_ridge"].publishes
 
 
 def test_per_moment_features_equal_the_bulk_ones():
