@@ -40,7 +40,8 @@ EASTERN = ZoneInfo(ET)  # `ET` is the zone's name, for polars; datetimes need th
 # so on a tight Thanksgiving it's the one most likely to make kickoff. Then the live-experts brief
 # (decision 1A, 2026-11-10): Elo's five finals (scored against the closing line, which needs no
 # rows of its own) and schemes-v2's four trait finals, each with its season-to-date average as a
-# yardstick. Then pace's 12 finals (2026-11-11), the same way. A new model joins with one line.
+# yardstick. Then pace's 12 finals (2026-11-11), the same way. Then team-efficiency's four
+# (2026-11-14), plus offense `ridge` as P3's yardstick. A new model joins with one line.
 MODELS: list[tuple[str, str]] = [
     ("participation", "trees_week"),
     ("participation", "active"),
@@ -83,6 +84,14 @@ MODELS: list[tuple[str, str]] = [
     ("pace", "proe_2nd_season"),
     ("pace", "proe_3rd_season"),
     ("pace", "no_huddle_season"),
+    # team-efficiency (the CEO, 2026-11-14: "2 yes"): the champion's four, then offense `ridge`
+    # as P3's yardstick (P3 lost on the 2025 vault, so 2026 live settles it; RESULTS R16)
+    ("team-efficiency", "off_next3_change"),
+    ("team-efficiency", "off_rest_change"),
+    ("team-efficiency", "def_next3_ridge"),
+    ("team-efficiency", "def_rest_ridge"),
+    ("team-efficiency", "off_next3_ridge"),
+    ("team-efficiency", "off_rest_ridge"),
 ]
 # Bookkeeping columns `feature_history` adds: not inputs.
 STEP_COLUMNS = ("step", "step_season", "step_week", "as_of")

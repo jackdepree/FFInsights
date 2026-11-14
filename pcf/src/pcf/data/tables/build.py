@@ -21,7 +21,7 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import pace
+from pcf.data.tables import efficiency, pace
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
@@ -125,7 +125,58 @@ def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | N
             rows = known_at("pbp", pl.concat(paced), cal)  # known when play-by-play is
             spine = parts["schedule"]
             parts["pace"] = on_spine(rows, spine, ["game_id", "team"], "team_game.pace")
+        rated = efficiency_part(seasons, cal, parts["schedule"])
+        if rated is not None:
+            parts["efficiency"] = rated
     write_parts(parts, name, seasons, root)
+
+
+@cache
+def _efficiency_plays(season: int) -> pl.DataFrame:
+    """A season's rated plays (`efficiency.plays`), kept for the process."""
+    return efficiency.plays(scan("pbp", [season]).select(efficiency.PBP_COLUMNS).collect())
+
+
+def efficiency_season(season: int) -> pl.DataFrame | None:
+    """A season's `team_game.efficiency` rows (no known_at yet), from models fit only on earlier
+    seasons (cached in the interim zone), or None without play-by-play or enough earlier
+    seasons."""
+    have = local_seasons("pbp")
+    if season not in have:
+        return None
+    cache_dir = get_config().zone("interim") / "team-efficiency" / "models"
+    t = time.time()
+    models = efficiency.models_for(season, have, _efficiency_plays, cache_dir)
+    if models is None:
+        return None
+    rated = efficiency.apply_models(_efficiency_plays(season), models)
+    out = efficiency.efficiency_rows(rated)
+    log.info("efficiency %d: %d team-games in %.0fs", season, out.height, time.time() - t)
+    return out
+
+
+def efficiency_part(
+    seasons: Sequence[int], cal: Calendar, spine: pl.DataFrame
+) -> pl.DataFrame | None:
+    """The `team_game.efficiency` part for `seasons`, known when play-by-play is."""
+    rows = [efficiency_season(s) for s in seasons]
+    rows = [r for r in rows if r is not None]
+    if not rows:
+        return None
+    out = known_at("pbp", pl.concat(rows), cal)
+    return on_spine(out, spine, ["game_id", "team"], "team_game.efficiency")
+
+
+def build_efficiency(seasons: Sequence[int] | None = None, root: Path | None = None) -> None:
+    """Only the `team_game.efficiency` part, for `seasons` (default: every season with
+    play-by-play), without rebuilding the rest of team_game."""
+    schedules = _schedules()
+    cal = calendar(schedules)
+    chosen = sorted(s for s in local_seasons("pbp") if seasons is None or s in seasons)
+    spine = read_part("team_game", "schedule", chosen, root).collect()
+    part = efficiency_part(chosen, cal, spine)
+    if part is not None:
+        write_parts({"efficiency": part}, "team_game", chosen, root)
 
 
 @cache

@@ -1,0 +1,25 @@
+The combination against all plays equal, on the exploration's scoring (2016-2024):
+A  the exploration's ratings                 | next3 +0.6% (90% +0.3 to +0.9) (off +0.7%, def +0.4%) | rest +1.4% (90% +1.0 to +1.8) (off +1.0%, def +1.9%)
+B  the build's ratings                       | next3 -0.2% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.2 to +0.9) (off +0.5%, def +0.6%)
+   ridge: r with the exploration's, offense 1.000, defense 1.000
+   combo: r with the exploration's, offense 0.995, defense 0.974
+B, scored the harness's way (map per season) | next3 -0.1% (90% -0.4 to +0.2) (off +0.1%, def -0.3%) | rest +0.5% (90% +0.1 to +0.8) (off +0.4%, def +0.5%)
+B + the polars fold                          | next3 +0.2% (90% -0.2 to +0.5) (off +0.5%, def -0.2%) | rest +0.7% (90% +0.4 to +1.1) (off +0.7%, def +0.7%)
+   scale: 2006-2015 62.6, 2006-2024 62.5
+B + the 2006-2024 scale                      | next3 -0.2% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +1.0) (off +0.5%, def +0.6%)
+B + models fit once on 2006-2015             | next3 +0.1% (90% -0.2 to +0.4) (off +0.3%, def -0.0%) | rest +0.9% (90% +0.5 to +1.3) (off +0.6%, def +1.2%)
+B + fixed models + the polars fold           | next3 +0.4% (90% +0.1 to +0.7) (off +0.6%, def +0.2%) | rest +1.0% (90% +0.6 to +1.4) (off +0.8%, def +1.3%)
+B, cross-fitting halves #1                   | next3 -0.1% (90% -0.4 to +0.3) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +0.8) (off +0.3%, def +0.6%)
+B, cross-fitting halves #2                   | next3 -0.1% (90% -0.4 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +0.9) (off +0.3%, def +0.6%)
+B, cross-fitting halves #3                   | next3 -0.1% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.0 to +0.9) (off +0.3%, def +0.6%)
+B, cross-fitting halves #4                   | next3 -0.1% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.0 to +0.9) (off +0.3%, def +0.6%)
+B, cross-fitting halves #5                   | next3 -0.1% (90% -0.5 to +0.3) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +0.8) (off +0.3%, def +0.6%)
+B, cross-fitting halves #6                   | next3 -0.1% (90% -0.5 to +0.3) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.0 to +0.9) (off +0.3%, def +0.6%)
+B, cross-fitting halves #7                   | next3 -0.1% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +0.8) (off +0.3%, def +0.6%)
+B, cross-fitting halves #8                   | next3 -0.1% (90% -0.5 to +0.2) (off +0.1%, def -0.4%) | rest +0.5% (90% +0.1 to +0.9) (off +0.3%, def +0.6%)
+B, polars hash(7) halves                     | next3 +0.2% (90% -0.2 to +0.5) | rest +0.7% (90% +0.4 to +1.1)
+B, polars hash(1) halves                     | next3 +0.1% (90% -0.2 to +0.4) | rest +0.9% (90% +0.5 to +1.3)
+B, polars hash(2) halves                     | next3 +0.1% (90% -0.3 to +0.4) | rest +0.7% (90% +0.3 to +1.1)
+B, polars hash(3) halves                     | next3 -0.0% (90% -0.4 to +0.3) | rest +0.6% (90% +0.2 to +1.0)
+B, blake2b halves (the proposed fix)         | next3 -0.0% (90% -0.4 to +0.3) (off +0.3%, def -0.3%) | rest +0.5% (90% +0.1 to +0.9) (off +0.4%, def +0.7%)
+B, blake2b + 2006-2015 models for 2017-2024  | next3 +0.3% (90% +0.0 to +0.6) (off +0.4%, def +0.1%) | rest +0.9% (90% +0.6 to +1.3) (off +0.5%, def +1.4%)

@@ -1,0 +1,15 @@
+1. No noise: Elo's home margin (points), 2017-2024, absolute miss
+  Elo + efficiency against Elo refit alike: -0.027 (90% -0.076 to +0.020) on a baseline of 10.178; -0.27%; neutral; 2,111 rows
+  Elo + efficiency against Elo as published: -0.015 (90% -0.061 to +0.036) on a baseline of 10.166; -0.14%; neutral; 2,111 rows
+
+2. next game's points, 2017-2024, squared miss:
+  efficiency against the league's mean: -8.683 (90% -10.310 to -7.055) on a baseline of 101.159; -8.58%; adds value; 4,222 rows
+  r of the forecast with the result: 0.289
+
+3. next game's fantasy points, 2017-2024, squared miss:
+  efficiency against the league's mean: -55.395 (90% -64.476 to -46.118) on a baseline of 585.482; -9.46%; adds value; 4,222 rows
+  r of the forecast with the result: 0.302
+
+3. fantasy points per game, next 3 games, 2017-2024, squared miss:
+  efficiency against the league's mean: -42.527 (90% -48.050 to -37.262) on a baseline of 305.519; -13.92%; adds value; 4,222 rows
+  r of the forecast with the result: 0.362

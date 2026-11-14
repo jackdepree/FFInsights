@@ -1,0 +1,44 @@
+H40 EPA per series: settings Params(half_life=16.0, lam=5.0, pull=0.7) (8s)
+H40 WPA per series: settings Params(half_life=16.0, lam=20.0, pull=0.5) (16s)
+H40 series success rate: settings Params(half_life=16.0, lam=5.0, pull=0.7) (23s)
+H43 EPA per drive: settings Params(half_life=16.0, lam=5.0, pull=0.7) (31s)
+H43 points per drive: settings Params(half_life=16.0, lam=5.0, pull=0.7) (38s)
+H43 EPA per quarter: settings Params(half_life=16.0, lam=5.0, pull=0.7) (46s)
+H43 weights by kind of drive: shrinkage offense 3.0 (CV -0.09% against equal), defense 3.0 (-0.32%)
+   drive wp0 .10-.25 half0 (6%) 1.04/0.97; drive wp0 .10-.25 half1 (7%) 0.90/1.16; drive wp0 .25-.40 half0 (9%) 0.93/0.99; drive wp0 .25-.40 half1 (5%) 1.08/0.94; drive wp0 .40-.60 half0 (18%) 0.98/1.23; drive wp0 .40-.60 half1 (7%) 1.07/0.99; drive wp0 .60-.75 half0 (9%) 1.03/0.67; drive wp0 .60-.75 half1 (5%) 1.08/1.03; drive wp0 .75-.90 half0 (5%) 1.02/0.94; drive wp0 .75-.90 half1 (6%) 1.13/1.08; drive wp0 <.10 half0 (1%) 1.06/0.89; drive wp0 <.10 half1 (12%) 0.94/1.01; drive wp0 >.90 half0 (1%) 0.97/0.94; drive wp0 >.90 half1 (9%) 0.98/0.77
+   settings offense Params(half_life=16.0, lam=5.0, pull=0.7), defense Params(half_life=16.0, lam=10.0, pull=0.5) (62s)
+H43 weights by kind of quarter: shrinkage offense 10000.0 (CV +0.00% against equal), defense 10.0 (-0.06%)
+   q1.0 down1-7 (3%) 1.00/0.90; q1.0 down8-14 (0%) 1.00/1.01; q1.0 tied (20%) 1.00/0.92; q1.0 up1-7 (0%) 1.00/0.99; q2.0 down1-7 (9%) 1.00/1.10; q2.0 down15+ (1%) 1.00/0.95; q2.0 down8-14 (3%) 1.00/1.02; q2.0 tied (5%) 1.00/1.14; q2.0 up1-7 (7%) 1.00/0.98; q2.0 up15+ (0%) 1.00/0.98; q2.0 up8-14 (2%) 1.00/0.94; q3.0 down1-7 (5%) 1.00/1.01; q3.0 down15+ (3%) 1.00/0.94; q3.0 down8-14 (3%) 1.00/1.02; q3.0 tied (2%) 1.00/0.96; q3.0 up1-7 (5%) 1.00/1.00; q3.0 up15+ (2%) 1.00/0.92; q3.0 up8-14 (3%) 1.00/1.05; q4.0 down1-7 (6%) 1.00/1.00; q4.0 down15+ (5%) 1.00/1.08; q4.0 down8-14 (4%) 1.00/0.99; q4.0 tied (2%) 1.00/1.06; q4.0 up1-7 (5%) 1.00/1.10; q4.0 up15+ (3%) 1.00/0.95; q4.0 up8-14 (3%) 1.00/0.97; q5.0 down1-7 (0%) 1.00/1.00; q5.0 tied (1%) 1.00/1.02
+   settings offense Params(half_life=16.0, lam=5.0, pull=0.7), defense Params(half_life=16.0, lam=10.0, pull=0.5) (78s)
+
+The main test (EPA per play, all plays), 2016-2024, skill against EPA per play (all plays equal):
+  next3 H40 EPA per series               -0.0% (90% -0.1 to +0.1) | off -0.0% (90% -0.1 to +0.0) def +0.0% (90% -0.1 to +0.1)
+  next3 H40 WPA per series               -4.7% (90% -5.8 to -3.7) | off -6.0% (90% -7.1 to -4.9) def -3.4% (90% -4.4 to -2.5)
+  next3 H40 series success rate          -2.4% (90% -3.2 to -1.6) | off -2.6% (90% -3.5 to -1.5) def -2.3% (90% -3.1 to -1.4)
+  next3 H43 EPA per drive                -0.1% (90% -0.2 to +0.1) | off -0.0% (90% -0.2 to +0.2) def -0.1% (90% -0.3 to +0.1)
+  next3 H43 points per drive             -2.5% (90% -3.1 to -1.9) | off -2.2% (90% -2.9 to -1.5) def -2.8% (90% -3.5 to -2.1)
+  next3 H43 EPA per quarter              +0.1% (90% +0.0 to +0.2) | off +0.1% (90% -0.0 to +0.2) def +0.1% (90% +0.1 to +0.2)
+  next3 H43 weights by kind of drive     -0.1% (90% -0.3 to +0.2) | off -0.0% (90% -0.2 to +0.2) def -0.1% (90% -0.4 to +0.1)
+  next3 H43 weights by kind of quarter   +0.1% (90% -0.0 to +0.2) | off +0.1% (90% -0.0 to +0.2) def +0.1% (90% -0.1 to +0.3)
+  rest  H40 EPA per series               -0.1% (90% -0.2 to -0.1) | off -0.2% (90% -0.3 to -0.1) def -0.0% (90% -0.1 to +0.0)
+  rest  H40 WPA per series               -6.8% (90% -8.1 to -5.5) | off -9.8% (90% -11.5 to -8.3) def -3.1% (90% -4.4 to -1.9)
+  rest  H40 series success rate          -4.3% (90% -5.3 to -3.2) | off -5.1% (90% -6.5 to -3.9) def -3.2% (90% -4.4 to -2.1)
+  rest  H43 EPA per drive                +0.1% (90% -0.1 to +0.3) | off +0.1% (90% -0.1 to +0.4) def -0.0% (90% -0.2 to +0.2)
+  rest  H43 points per drive             -3.2% (90% -3.9 to -2.5) | off -2.8% (90% -3.6 to -2.0) def -3.6% (90% -4.5 to -2.7)
+  rest  H43 EPA per quarter              +0.1% (90% +0.0 to +0.2) | off +0.1% (90% -0.1 to +0.2) def +0.2% (90% +0.0 to +0.3)
+  rest  H43 weights by kind of drive     -0.2% (90% -0.5 to +0.1) | off -0.2% (90% -0.5 to +0.1) def -0.3% (90% -0.7 to +0.1)
+  rest  H43 weights by kind of quarter   +0.2% (90% +0.1 to +0.4) | off +0.1% (90% -0.0 to +0.3) def +0.3% (90% +0.1 to +0.6)
+
+H40 in its own unit: the future counted per series (EPA per series over the horizon), 2016-2024:
+  next3 EPA per series against EPA per play, both predicting future EPA per series: -0.0% (90% -0.1 to +0.1)
+  rest  EPA per series against EPA per play, both predicting future EPA per series: -0.1% (90% -0.2 to -0.0)
+
+Stacking: EPA per play plus each measure in the same prediction, against EPA per play alone (2016-2024):
+  H40 EPA per series               next3 -0.1% (90% -0.2 to +0.1); rest +0.1% (90% -0.1 to +0.3)
+  H40 WPA per series               next3 +0.0% (90% -0.1 to +0.2); rest -0.0% (90% -0.3 to +0.2)
+  H40 series success rate          next3 +0.0% (90% -0.1 to +0.1); rest -0.4% (90% -0.6 to -0.2)
+  H43 EPA per drive                next3 -0.4% (90% -0.6 to -0.1); rest -0.7% (90% -1.1 to -0.3)
+  H43 points per drive             next3 -0.4% (90% -0.7 to -0.2); rest -0.5% (90% -0.8 to -0.3)
+  H43 EPA per quarter              next3 -0.4% (90% -0.6 to -0.2); rest -0.5% (90% -0.8 to -0.2)
+  H43 weights by kind of drive     next3 -0.0% (90% -0.2 to +0.1); rest -0.2% (90% -0.6 to +0.1)
+  H43 weights by kind of quarter   next3 -0.1% (90% -0.2 to -0.0); rest -0.6% (90% -0.8 to -0.3)

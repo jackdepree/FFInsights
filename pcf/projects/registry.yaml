@@ -283,11 +283,21 @@ projects:
   - id: team-efficiency
     name: Opponent-adjusted efficiency
     phase: 1
-    status: idea
+    status: done
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA).
+    summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). The CEO: 1d (its own future is the main test), 2c (both propensities). Exploration 2026-11-12, GO: every play counts (the usual garbage-time rule loses 4.6% / 7.1%); DML with game state plus gap-aware representativeness weights adds +0.6% / +1.4% over all plays equal; series success rate is the most consistent team measure (0.69). H40 unclear, H41 held, H42 held (small), H43 failed, H44 held (small). Round two 2026-11-13 (Claude's I33-I36, the CEO's pick): at the noise ceiling late in the season, the room is early and in who a team is before its plays show it; luck-stripped EPA and a gated stack of measures tie; a weaker pull after a new QB or coach helps offense +0.3-0.4%. Brief agreed 2026-11-13; first build 2026-11-13 (decision 0032, RESULTS.md): every play counted equally beats the usual garbage-time rule by 3.9-7.5% in all four forecasts (R2); DML ties it (R3); the combination ties it over the next 3 games and gains +0.5% over the rest of the season (R4, the exploration found +0.6% / +1.4%); no gain to Elo (R6). Check (R8-R10): the exploration's split was lucky and per-season model refits cost the combination; its honest edge is about +0.3% / +0.9%. Champion: ridge, every play counted equally (the CEO, 2026-11-13). First early-season gain: P3, a weaker pull after a new QB or coach (the CEO's pick), offense +0.3% / +0.5% over the champion, +11.1% for new-coach teams in weeks 1-4 of the rest of season (R11-R13); Rounds three and four (the CEO's picks, I40 and I37): a stronger carryover for unchanged teams and mid-season QB changes both tie (R14, R15). 2026-11-14: P3 joins the champion on offense (the CEO); the vault (2025) opened once (twice, the second after a leakage fix made blind to its scores, R17): every forecast beats the league by more than the backtest (+18.8% to +28.3%), P3 loses a little (-0.4% / -0.7%, within its spread), the defense's rest-of-season ranges ran narrow (64.7%) (R16). Spot-checks R6 and R8 held (R18, R19). The CEO called H41 held, H42 failed, H44 mixed; no technical vetoes. Merged and done 2026-11-14 (the CEO approved); the champion's four forecasts and offense ridge (P3's yardstick) are in the weekly ledger."
+    interface:
+      inputs: team_game (schedule, efficiency, pregame, opening_coach), player_game (roster, depth); no model outputs
+      outputs: "Per team-game, mean q10 q50 q90: each side's EPA per play relative to the league over the next 3 games and the rest of the season (<side>_<horizon>_<rung>; champion off_<horizon>_change, def_<horizon>_ridge). Published with off_next3_change: off_rating, def_rating (the champion's opponent-adjusted EPA per play; offense with P3's weaker pull after a new QB or coach) with sds (a floor), off/def_pass, off/def_run, off/def_ssr (series success). Table team_game.efficiency (2002 on)"
+      grain: team_game
+      interval: weekly, Saturday run (Thursday games Thursday), from week 1 (week 1 is last season's rating pulled toward the league)
+      cadence: in_season
+      known_at: forecasts at the Saturday run; the table part the day after each game
+      model: none registered
+      how_to_use: "Features for team strength, game script, points and fantasy environment, through the offense/defense split (R7). Not an Elo add-on or a margin input: Elo holds 81% of it and the lines hold both (R6, R18). Weakest in weeks 1-4 (F13). The defense's rest-of-season ranges ran narrow in 2025 (R16)"
+      feeds: game script, team-strength composite, player opportunity and fantasy, pace
 
   - id: pace
     name: Pace and play-calling

@@ -1,0 +1,72 @@
+1. Consistency, 2006-2024 regular season (week to week: odd against even weeks; season to season), per team
+  offense:
+    epa_play                 week 0.61 (0.56-0.65)  season 0.42 (0.36-0.47)  trait
+    epa_usual                week 0.52 (0.46-0.56)  season 0.40 (0.34-0.45)  trait
+    epa_weighted_off         week 0.62 (0.57-0.66)  season 0.44 (0.38-0.49)  trait
+    wpa_play                 week 0.50 (0.44-0.54)  season 0.41 (0.35-0.46)  trait
+    epa_pass                 week 0.54 (0.49-0.59)  season 0.42 (0.37-0.48)  trait
+    epa_run                  week 0.37 (0.31-0.43)  season 0.29 (0.22-0.35)  trait
+    success                  week 0.62 (0.58-0.66)  season 0.44 (0.39-0.50)  trait
+    epa_series               week 0.60 (0.56-0.65)  season 0.41 (0.36-0.47)  trait
+    wpa_series               week 0.49 (0.44-0.54)  season 0.41 (0.35-0.46)  trait
+    series_success           week 0.67 (0.63-0.70)  season 0.53 (0.48-0.58)  trait
+    points_drive             week 0.62 (0.58-0.66)  season 0.47 (0.42-0.52)  trait
+    epa_play_adj             week 0.63 (0.59-0.67)  season 0.44 (0.38-0.49)  trait
+    epa_usual_adj            week 0.54 (0.49-0.58)  season 0.41 (0.35-0.47)  trait
+    epa_weighted_off_adj     week 0.65 (0.60-0.68)  season 0.46 (0.40-0.51)  trait
+    wpa_play_adj             week 0.51 (0.46-0.56)  season 0.41 (0.36-0.47)  trait
+    epa_pass_adj             week 0.57 (0.52-0.61)  season 0.45 (0.39-0.50)  trait
+    epa_run_adj              week 0.39 (0.33-0.44)  season 0.28 (0.22-0.34)  trait
+    success_adj              week 0.64 (0.60-0.68)  season 0.44 (0.38-0.50)  trait
+    epa_series_adj           week 0.63 (0.59-0.67)  season 0.43 (0.37-0.49)  trait
+    wpa_series_adj           week 0.51 (0.46-0.56)  season 0.41 (0.35-0.47)  trait
+    series_success_adj       week 0.69 (0.65-0.72)  season 0.52 (0.47-0.57)  trait
+    points_drive_adj         week 0.64 (0.60-0.68)  season 0.48 (0.43-0.53)  trait
+  defense:
+    epa_play                 week 0.33 (0.27-0.39)  season 0.27 (0.21-0.33)  trait
+    epa_usual                week 0.22 (0.16-0.29)  season 0.24 (0.18-0.30)  trait
+    epa_weighted_def         week 0.37 (0.31-0.43)  season 0.29 (0.23-0.35)  trait
+    wpa_play                 week 0.32 (0.26-0.38)  season 0.28 (0.21-0.34)  trait
+    epa_pass                 week 0.22 (0.16-0.29)  season 0.27 (0.20-0.33)  trait
+    epa_run                  week 0.28 (0.22-0.34)  season 0.25 (0.18-0.31)  trait
+    success                  week 0.39 (0.33-0.45)  season 0.34 (0.28-0.40)  trait
+    epa_series               week 0.33 (0.27-0.39)  season 0.27 (0.20-0.33)  trait
+    wpa_series               week 0.32 (0.25-0.37)  season 0.27 (0.21-0.34)  trait
+    series_success           week 0.42 (0.36-0.47)  season 0.41 (0.36-0.47)  trait
+    points_drive             week 0.33 (0.27-0.39)  season 0.37 (0.31-0.42)  trait
+    epa_play_adj             week 0.38 (0.32-0.43)  season 0.29 (0.22-0.35)  trait
+    epa_usual_adj            week 0.26 (0.20-0.32)  season 0.26 (0.20-0.32)  trait
+    epa_weighted_def_adj     week 0.42 (0.36-0.47)  season 0.31 (0.24-0.37)  trait
+    wpa_play_adj             week 0.35 (0.28-0.40)  season 0.28 (0.22-0.34)  trait
+    epa_pass_adj             week 0.26 (0.20-0.32)  season 0.28 (0.22-0.34)  trait
+    epa_run_adj              week 0.30 (0.23-0.35)  season 0.26 (0.19-0.32)  trait
+    success_adj              week 0.45 (0.40-0.50)  season 0.36 (0.30-0.42)  trait
+    epa_series_adj           week 0.37 (0.31-0.43)  season 0.28 (0.22-0.34)  trait
+    wpa_series_adj           week 0.34 (0.28-0.39)  season 0.28 (0.21-0.34)  trait
+    series_success_adj       week 0.47 (0.41-0.52)  season 0.42 (0.36-0.48)  trait
+    points_drive_adj         week 0.37 (0.31-0.43)  season 0.38 (0.32-0.43)  trait
+
+2. The main test with the future counted on the usual rule's plays only (2016-2024):
+  next3 all plays, equal     against the bar +2.4% (90% +1.8 to +3.1)
+  next3 H41+H44a weights     against the bar +2.6% (90% +2.0 to +3.3)
+  next3 dml, state           against the bar +2.4% (90% +1.7 to +3.1)
+  rest  all plays, equal     against the bar +3.6% (90% +2.9 to +4.7)
+  rest  H41+H44a weights     against the bar +4.1% (90% +3.1 to +5.1)
+  rest  dml, state           against the bar +3.7% (90% +2.7 to +4.7)
+
+3. The side targets, next game (2016-2024): skill against the league average, then against the bar
+  points scored (offense) / allowed (defense):
+    bar (usual rule)     vs league average +7.1% (90% +5.6 to +8.6); vs bar +0.0% (90% +0.0 to +0.0)
+    all plays, equal     vs league average +9.0% (90% +7.6 to +10.6); vs bar +2.0% (90% +1.5 to +2.6)
+    H41+H44a weights     vs league average +8.9% (90% +7.4 to +10.5); vs bar +2.0% (90% +1.5 to +2.5)
+    dml, state           vs league average +8.9% (90% +7.5 to +10.4); vs bar +2.0% (90% +1.4 to +2.6)
+  dropbacks (offense) / faced (defense):
+    bar (usual rule)     vs league average -0.7% (90% -1.2 to -0.2); vs bar +0.0% (90% +0.0 to +0.0)
+    all plays, equal     vs league average -1.2% (90% -1.9 to -0.6); vs bar -0.6% (90% -0.8 to -0.3)
+    H41+H44a weights     vs league average -1.2% (90% -2.0 to -0.6); vs bar -0.6% (90% -0.8 to -0.3)
+    dml, state           vs league average -1.2% (90% -1.9 to -0.7); vs bar -0.6% (90% -0.8 to -0.3)
+  runs (offense) / faced (defense):
+    bar (usual rule)     vs league average +0.2% (90% -0.5 to +0.9); vs bar +0.0% (90% +0.0 to +0.0)
+    all plays, equal     vs league average +0.1% (90% -0.6 to +0.8); vs bar -0.0% (90% -0.3 to +0.2)
+    H41+H44a weights     vs league average +0.1% (90% -0.6 to +0.8); vs bar -0.1% (90% -0.4 to +0.2)
+    dml, state           vs league average +0.1% (90% -0.6 to +0.7); vs bar -0.1% (90% -0.4 to +0.2)

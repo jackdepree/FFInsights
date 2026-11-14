@@ -1,0 +1,26 @@
+The vault (2025), opened once on the champion, against 2016-2024. Skill = share of
+squared error removed against the baseline; 90% interval from resampling weeks.
+
+off_next3_change: baseline | 2025 | 2016-2024 | 2025 weeks 1-4
+  off_next3_ridge     -0.4% (-0.8 to -0.0) |  +0.3% (+0.1 to +0.6) |  -0.7% (-1.5 to +0.3)
+  off_next3_league   +21.4% (+17.0 to +24.9) | +20.1% (+18.3 to +21.9) | +11.4% (+2.1 to +19.0)
+  q10-q90 holds, 2025: 79.2% of 544 rows
+  q10-q90 holds, 2016-2024: 79.7% of 4,734 rows
+
+off_rest_change: baseline | 2025 | 2016-2024 | 2025 weeks 1-4
+  off_rest_ridge      -0.7% (-1.4 to -0.2) |  +0.5% (+0.3 to +0.8) |  -2.2% (-3.5 to -0.2)
+  off_rest_league    +28.3% (+24.7 to +31.5) | +26.2% (+23.8 to +28.5) | +13.8% (+6.1 to +22.6)
+  q10-q90 holds, 2025: 78.3% of 544 rows
+  q10-q90 holds, 2016-2024: 79.7% of 4,734 rows
+
+def_next3_ridge: baseline | 2025 | 2016-2024 | 2025 weeks 1-4
+  def_next3_usual     +0.8% (-1.4 to +2.3) |  +3.9% (+3.1 to +4.7) |  -1.8% (-4.8 to +0.9)
+  def_next3_league   +18.8% (+14.3 to +22.7) | +13.8% (+11.9 to +15.7) |  +0.4% (-3.4 to +4.6)
+  q10-q90 holds, 2025: 75.4% of 544 rows
+  q10-q90 holds, 2016-2024: 79.7% of 4,734 rows
+
+def_rest_ridge: baseline | 2025 | 2016-2024 | 2025 weeks 1-4
+  def_rest_usual      +1.9% (+0.3 to +3.4) |  +5.2% (+4.0 to +6.3) |  +3.3% (+2.6 to +4.2)
+  def_rest_league    +22.4% (+19.6 to +24.5) | +17.5% (+15.2 to +19.9) |  +9.5% (+4.1 to +14.4)
+  q10-q90 holds, 2025: 64.7% of 544 rows
+  q10-q90 holds, 2016-2024: 80.0% of 4,734 rows

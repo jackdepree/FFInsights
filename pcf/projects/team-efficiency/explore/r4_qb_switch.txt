@@ -1,0 +1,29 @@
+Offense error on 2007-2015 (mean squared error), d = weight cut for another QB's games, a = prior cut for a QB who isn't last season's:
+  P3 (week-1 flag, a = 0.25, d = 0): next 3 0.01490  rest 0.00987
+  d=0.00 a=0.00: next 3 0.01493  rest 0.00990
+  d=0.00 a=0.25: next 3 0.01489  rest 0.00986
+  d=0.00 a=0.50: next 3 0.01488  rest 0.00985
+  d=0.25 a=0.00: next 3 0.01496  rest 0.00994
+  d=0.25 a=0.25: next 3 0.01492  rest 0.00990
+  d=0.25 a=0.50: next 3 0.01491  rest 0.00989
+  d=0.50 a=0.00: next 3 0.01502  rest 0.01001
+  d=0.50 a=0.25: next 3 0.01498  rest 0.00997
+  d=0.50 a=0.50: next 3 0.01497  rest 0.00996
+  d=0.75 a=0.00: next 3 0.01514  rest 0.01014
+  d=0.75 a=0.25: next 3 0.01510  rest 0.01010
+  d=0.75 a=0.50: next 3 0.01509  rest 0.01009
+  d=1.00 a=0.00: next 3 0.01539  rest 0.01040
+  d=1.00 a=0.25: next 3 0.01535  rest 0.01036
+  d=1.00 a=0.50: next 3 0.01536  rest 0.01037
+
+Tuned on 2007-2015 (15 versions, 4s): d = 0.0, a = 0.5
+
+Offense, 2016-2024, against P3 (skill: 1 - squared error / P3's; 90% interval by season-weeks):
+  next3 all -0.1% (90% -0.3 to +0.1) | weeks 1-4 -0.7% (90% -1.3 to -0.1) | 2020-24 -0.0% (90% -0.3 to +0.2)
+        after a switch (31% of team-weeks) +0.4% (90% -0.0 to +0.8) | no switch -0.4% (90% -0.6 to -0.1)
+  rest  all -0.1% (90% -0.3 to +0.1) | weeks 1-4 -0.7% (90% -1.4 to +0.0) | 2020-24 -0.1% (90% -0.4 to +0.2)
+        after a switch (31% of team-weeks) +0.5% (90% +0.1 to +0.9) | no switch -0.5% (90% -0.7 to -0.3)
+
+Each change alone, 2016-2024, against P3:
+  weight cut only (a = 0.25, weekly flag): next 3 +0.0% (90% -0.1 to +0.1) | rest +0.1% (90% +0.1 to +0.2)
+  weekly flag only (d = 0): next 3 -0.1% (90% -0.3 to +0.1) | rest -0.1% (90% -0.3 to +0.2)

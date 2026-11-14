@@ -1,0 +1,9 @@
+Tuned on 2007-2015 (768 versions, 122s): offense (Params(half_life=16.0, lam=5.0, pull=0.7), 0.25, 0.25); defense (Params(half_life=16.0, lam=5.0, pull=0.7), 0.5, 0.0) (a = new QB, b = new coach)
+
+P3 against the usual prior (all plays equal), 2016-2024:
+  next3 all weeks +0.1% (90% -0.1 to +0.3) | weeks 1-4 -0.1% (90% -0.7 to +0.5) | weeks 5-9 +0.6% (90% +0.3 to +0.8) | off +0.3% (90% +0.0 to +0.5) def -0.1% (90% -0.2 to +0.1) | 2020-24 +0.1% (90% -0.1 to +0.3)
+  rest  all weeks +0.1% (90% -0.1 to +0.3) | weeks 1-4 +0.5% (90% +0.1 to +1.1) | weeks 5-9 +0.1% (90% -0.2 to +0.4) | off +0.4% (90% +0.2 to +0.6) def -0.3% (90% -0.4 to -0.2) | 2020-24 +0.1% (90% -0.1 to +0.2)
+
+Offense, by whether the team had a new QB that season (next 3 games, weeks 1-4), against the usual prior:
+  new QB   +0.8% (90% -1.2 to +2.8)
+  same QB  -0.2% (90% -0.7 to +0.4)

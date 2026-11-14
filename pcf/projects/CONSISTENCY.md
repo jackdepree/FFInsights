@@ -119,6 +119,20 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 
 **Caveat for state-like measures:** odd and even weeks sit next to each other, so a measure that lasts for weeks (an injury) looks consistent week to week. The season r tells a trait from a state.
 
+**Efficiency measures** (team-efficiency exploration, 2026-11-12): per **team** per regular-season game, 2006–2024, offense (what it gained) and defense (what its opponents gained against it). "Adjusted" is less the opponent's mean in its other games that season. Measured with [`projects/team-efficiency/explore/checks.py`](team-efficiency/explore/checks.py).
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| EPA per play, all plays, adjusted | team-efficiency | Every pass and run | off 0.63 (0.59–), def 0.38 (0.32–) | 0.44 / 0.29 | trait | The reference: removes 20% / 13.5% of the league average's error over the next 3 games (F2) | Raw: 0.61 / 0.33 |
+| EPA per play, the usual rule's plays only | team-efficiency | Win chance 10–90%, not the last two minutes of a half | off 0.54, def 0.26 (adjusted) | 0.41 / 0.26 | trait | Worse than all plays: −4.6% / −7.1% (F1) | The garbage-time rule throws away signal |
+| EPA per play, representativeness-weighted | team-efficiency (H41, H44) | Plays counted by kind (win chance, pass or run, the EPA–WPA gap's extremes), weights learned across teams | off 0.65 (0.60–), def 0.42 (0.36–) | 0.46 / 0.31 | trait | +0.3% / +0.6% over equal (F5) | The most consistent EPA measure |
+| EPA per play, luck-stripped, adjusted | team-efficiency (round two, I34) | Fumble plays at the average over who recovers, interceptions 75% their EPA and 25% an incompletion's, capped at ±6 | off 0.66 (0.62–), def 0.39 (0.33–) | 0.45 / 0.30 | trait | No: ±0.0% on the main test, also through F8's combination (F14) | Slightly more consistent than plain EPA (0.63 / 0.38); kept as a trait, not as the forecast input |
+| Series success rate, adjusted | team-efficiency (H40) | Share of series with a first down or a touchdown | off 0.69 (0.65–), def 0.47 (0.41–) | 0.52 / 0.42 | trait | Not for EPA (−2.4% / −4.3%); +0.8% on its own future, +1.4% beside EPA (F9) | **The most consistent team measure so far.** Steadiness at moving the chains: a feature candidate for game script, pace and drives |
+| Success rate (per play), adjusted | team-efficiency | Share of plays with positive EPA | off 0.64, def 0.45 | 0.44 / 0.36 | trait | Not tested | |
+| Points per drive, adjusted | team-efficiency (H43) | Touchdown 7, field goal 3 | off 0.64, def 0.37 | 0.48 / 0.38 | trait | Not for EPA (−2.5% / −3.2%) | Defense's repeats more across seasons than week to week |
+| WPA per play / per series, adjusted | team-efficiency (H40, H44) | Win probability added | off 0.51, def 0.35 / 0.34 | 0.41 / 0.28 | trait | No: −4.7% / −6.7% against EPA, +0.0% beside it (F6) | Late close plays carry most of it |
+| EPA per pass / per run, adjusted | team-efficiency | | off 0.57 / 0.39, def 0.26 / 0.30 | 0.45 / 0.28, 0.28 / 0.26 | trait | Not tested apart | Run defense repeats more than pass defense, as in elo (H7) |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).

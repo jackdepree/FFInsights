@@ -1,0 +1,38 @@
+Ratings walked (37s). EPA input: ratings_combo
+
+The main test, 2016-2024: skill against the EPA rating alone (ratings_combo), then against all plays equal
+  next3 gate only (EPA alone, by week)               +0.0% (90% -0.2 to +0.2) | vs all plays +0.6% (90% +0.2 to +0.9) | weeks 1-4 -0.3% (90% -0.6 to +0.1) | off -0.0% (90% -0.2 to +0.2) def +0.0% (90% -0.1 to +0.2) | lambda off 10 def 10
+  next3 stack, no gate                               +0.1% (90% -0.2 to +0.4) | vs all plays +0.7% (90% +0.4 to +1.0) | weeks 1-4 +0.7% (90% -0.0 to +1.6) | off +0.2% (90% -0.1 to +0.6) def +0.0% (90% -0.3 to +0.3) | lambda off 1000 def 1000
+  next3 stack + gate                                 +0.1% (90% -0.3 to +0.5) | vs all plays +0.7% (90% +0.3 to +1.1) | weeks 1-4 +1.1% (90% +0.2 to +2.0) | off +0.3% (90% -0.2 to +0.8) def -0.1% (90% -0.5 to +0.3) | lambda off 300 def 1000
+  next3 1 principal component(s) per block + gate    -0.4% (90% -0.8 to +0.0) | vs all plays +0.2% (90% -0.2 to +0.6) | weeks 1-4 +1.4% (90% +0.7 to +2.2) | off -0.5% (90% -1.0 to +0.0) def -0.3% (90% -0.7 to +0.1) | lambda off 100 def 300
+  next3 2 principal component(s) per block + gate    -0.3% (90% -0.7 to +0.1) | vs all plays +0.3% (90% -0.1 to +0.7) | weeks 1-4 +1.1% (90% +0.3 to +1.9) | off -0.4% (90% -0.9 to +0.1) def -0.2% (90% -0.6 to +0.2) | lambda off 300 def 300
+  next3 3 principal component(s) per block + gate    -0.1% (90% -0.5 to +0.3) | vs all plays +0.5% (90% +0.1 to +1.0) | weeks 1-4 +1.1% (90% +0.4 to +2.0) | off +0.0% (90% -0.5 to +0.6) def -0.2% (90% -0.7 to +0.2) | lambda off 300 def 300
+  rest  gate only (EPA alone, by week)               +0.1% (90% -0.0 to +0.2) | vs all plays +1.5% (90% +1.1 to +1.8) | weeks 1-4 -0.6% (90% -1.2 to -0.0) | off +0.0% (90% -0.1 to +0.2) def +0.1% (90% -0.1 to +0.3) | lambda off 10 def 10
+  rest  stack, no gate                               -0.6% (90% -0.9 to -0.2) | vs all plays +0.8% (90% +0.4 to +1.3) | weeks 1-4 +0.8% (90% +0.0 to +1.7) | off -0.3% (90% -0.7 to +0.2) def -1.0% (90% -1.5 to -0.5) | lambda off 1000 def 3000
+  rest  stack + gate                                 -0.2% (90% -0.6 to +0.2) | vs all plays +1.2% (90% +0.7 to +1.7) | weeks 1-4 +1.1% (90% +0.2 to +2.1) | off +0.0% (90% -0.5 to +0.6) def -0.5% (90% -1.0 to -0.1) | lambda off 300 def 1000
+  rest  1 principal component(s) per block + gate    -0.9% (90% -1.4 to -0.5) | vs all plays +0.5% (90% +0.0 to +0.9) | weeks 1-4 +0.9% (90% -0.2 to +1.9) | off -1.0% (90% -1.6 to -0.3) def -0.9% (90% -1.4 to -0.4) | lambda off 300 def 10
+  rest  2 principal component(s) per block + gate    -0.5% (90% -1.0 to -0.1) | vs all plays +0.9% (90% +0.5 to +1.4) | weeks 1-4 +1.4% (90% +0.4 to +2.3) | off -0.5% (90% -1.1 to +0.0) def -0.5% (90% -1.0 to -0.0) | lambda off 300 def 300
+  rest  3 principal component(s) per block + gate    -0.4% (90% -0.9 to +0.1) | vs all plays +1.0% (90% +0.5 to +1.5) | weeks 1-4 +1.2% (90% +0.1 to +2.2) | off -0.1% (90% -0.7 to +0.4) def -0.7% (90% -1.3 to -0.2) | lambda off 300 def 1000
+
+2020-2024 only, against the EPA rating alone:
+  next3 gate only (EPA alone, by week)               +0.4% (90% +0.2 to +0.7)
+  next3 stack, no gate                               -0.1% (90% -0.5 to +0.3)
+  next3 stack + gate                                 +0.5% (90% -0.1 to +1.0)
+  next3 1 principal component(s) per block + gate    -0.3% (90% -0.9 to +0.2)
+  next3 2 principal component(s) per block + gate    -0.2% (90% -0.8 to +0.3)
+  next3 3 principal component(s) per block + gate    +0.1% (90% -0.4 to +0.7)
+  rest  gate only (EPA alone, by week)               +0.2% (90% +0.0 to +0.3)
+  rest  stack, no gate                               -1.0% (90% -1.4 to -0.5)
+  rest  stack + gate                                 -0.2% (90% -0.6 to +0.2)
+  rest  1 principal component(s) per block + gate    -1.6% (90% -2.3 to -1.1)
+  rest  2 principal component(s) per block + gate    -1.0% (90% -1.6 to -0.4)
+  rest  3 principal component(s) per block + gate    -0.5% (90% -1.0 to -0.1)
+
+Compression: share of the measures' spread per principal component (own block), and the first component's loadings (2007-2015):
+  off: variance [0.77, 0.1, 0.08, 0.03]; first component {'own': np.float64(-0.42), 'own_ssr': np.float64(-0.41), 'own_sr': np.float64(-0.4), 'own_pass': np.float64(-0.4), 'own_run': np.float64(-0.27), 'own_season': np.float64(-0.38), 'own_prior': np.float64(-0.34)}
+  def: variance [0.7, 0.13, 0.09, 0.06]; first component {'own': np.float64(-0.43), 'own_ssr': np.float64(-0.42), 'own_sr': np.float64(-0.39), 'own_pass': np.float64(-0.38), 'own_run': np.float64(-0.33), 'own_season': np.float64(-0.39), 'own_prior': np.float64(-0.28)}
+
+Correlation of the measures' ratings with the EPA rating, offense, 2016-2024 end of week 9:
+  ssr 0.92; sr 0.87; pass 0.95; run 0.57; season 0.94; prior 0.68
+
+Versions tried in this step: 6 stacks x 2 horizons

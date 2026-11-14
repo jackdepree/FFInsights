@@ -1,0 +1,19 @@
+Gate picks (2007-2015 squared error, stack leave-one-season-out against the EPA rating alone):
+  next3 off weeks 1-4: stack 0.013719 vs EPA alone 0.013555 -> EPA alone
+  next3 off weeks 5-9: stack 0.013021 vs EPA alone 0.012932 -> EPA alone
+  next3 off weeks 10-+: stack 0.017146 vs EPA alone 0.016866 -> EPA alone
+  next3 def weeks 1-4: stack 0.013000 vs EPA alone 0.012902 -> EPA alone
+  next3 def weeks 5-9: stack 0.011693 vs EPA alone 0.011522 -> EPA alone
+  next3 def weeks 10-+: stack 0.016296 vs EPA alone 0.015976 -> EPA alone
+  rest  off weeks 1-4: stack 0.006413 vs EPA alone 0.006252 -> EPA alone
+  rest  off weeks 5-9: stack 0.006377 vs EPA alone 0.006329 -> EPA alone
+  rest  off weeks 10-+: stack 0.014392 vs EPA alone 0.013989 -> EPA alone
+  rest  def weeks 1-4: stack 0.004332 vs EPA alone 0.004210 -> EPA alone
+  rest  def weeks 5-9: stack 0.004937 vs EPA alone 0.004705 -> EPA alone
+  rest  def weeks 10-+: stack 0.013682 vs EPA alone 0.013270 -> EPA alone
+
+The hard gate on 2016-2024, against the EPA rating alone (F8's combination), then against all plays equal:
+  next3 +0.0% (90% +0.0 to +0.0) | weeks 1-4 +0.0% (90% +0.0 to +0.0) | off +0.0% (90% +0.0 to +0.0) def +0.0% (90% +0.0 to +0.0) | 2020-24 +0.0% (90% +0.0 to +0.0) | vs all plays +0.6% (90% +0.3 to +0.9)
+  rest  +0.0% (90% +0.0 to +0.0) | weeks 1-4 +0.0% (90% +0.0 to +0.0) | off +0.0% (90% +0.0 to +0.0) def +0.0% (90% +0.0 to +0.0) | 2020-24 +0.0% (90% +0.0 to +0.0) | vs all plays +1.4% (90% +1.1 to +1.8)
+
+Versions tried in this step: 1 (the gate's choices are made on 2007-2015)
