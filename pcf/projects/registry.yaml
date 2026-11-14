@@ -495,6 +495,15 @@ projects:
     depends_on: [participation]
     summary: Expected fantasy points from where targets and carries happen.
 
+  - id: snap-leverage
+    name: Snap leverage
+    phase: 1
+    status: idea
+    horizon: now
+    cadence: [in_season]
+    depends_on: [grain-tables, tag-tables, validation-harness, participation, participation-live, schemes-v2]
+    summary: "The CEO's pick and sign-off, 2026-11-14: weight every snap each player was on by its leverage (how much the win chance can swing on it, from the situation before the snap: the CEO's 'variance of winning percent added per play based on conditions/situations'), to show which players a team relies on in high-stakes situations, for every position. Main test future playing time; secondary tests next contracts and plus-minus (the CEO). Hunches H45-H49. Draft brief 2026-11-14; the cadence (live from participation-live's map, or retrospective) is settled in the brief."
+
   - id: vacated-opportunity
     name: Vacated opportunity
     phase: 1
