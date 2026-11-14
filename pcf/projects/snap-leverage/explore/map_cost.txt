@@ -1,0 +1,19 @@
+2019: 19,111 true player-games; the map has 18,917
+2020: 19,531 true player-games; the map has 19,416
+2021: 20,816 true player-games; the map has 20,631
+2022: 20,578 true player-games; the map has 20,347
+2023: 20,766 true player-games; the map has 20,616
+2024: 20,748 true player-games; the map has 20,608
+
+Map against truth, player-games he was truly on the field for (n, correlation, mean |gap|):
+  snap_share   121,550  r 0.998  |gap| 0.0098
+  lev_share    121,550  r 0.991  |gap| 0.0286
+  hs_share     117,139  r 0.909  |gap| 0.1042
+  role_gap     117,139  r 0.527  |gap| 0.1032
+  trust_oe     117,139  r 0.399  |gap| 0.0736
+
+Week-to-week repeat (odd vs even weeks), player-seasons with 8+ games at 10-90% snap share:
+  role_gap        3,912 player-seasons  odd-even r 0.77
+  role_gap_map    3,918 player-seasons  odd-even r 0.83
+  trust_oe        3,912 player-seasons  odd-even r 0.25
+  trust_oe_map    3,918 player-seasons  odd-even r 0.33
