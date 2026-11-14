@@ -1,6 +1,6 @@
 # Brief: Snap leverage (`snap-leverage`)
 
-**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"); explored 2026-11-14 (the CEO's go; [EXPLORATION.md](EXPLORATION.md): GO, small; the CEO's direction, 2026-11-14: "A; a small expert"). Agreed after the CEO answers the open questions · **Layer:** expert · **Cadence:** in_season (from the morning-after map: "What the exploration changes in the brief")
+**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"); explored 2026-11-14 (the CEO's go; [EXPLORATION.md](EXPLORATION.md): GO, small; the CEO's direction, 2026-11-14: "A; a small expert"). **agreed 2026-11-14** (the CEO: "1c, 2 yes, if it fails the no noise target then we will downscale this project from an expert to simply an investigation and feature engineering"); building ([decision 0033](../../docs/decisions/0033-snap-leverage-build.md)) · **Layer:** expert · **Cadence:** in_season (from the morning-after map: "What the exploration changes in the brief")
 
 ## The usual way
 *Claude, 2026-11-14, before any research.*
@@ -41,18 +41,20 @@ Second message: "I think that it is true that starters will offer no signal, bec
   - leverage share;
   - the passing-down role gap (the raw trust gap, renamed for what it is: F4, F10);
   - trust over expected (F5).
-- **The ladder:**
-  - rung 0: plain snap share (the yardstick);
-  - rung 1: ridge with leverage share;
-  - rung 2: trees with the role gap and trust over expected.
-- **To settle with the CEO:** what the expert forecasts (a taste call; Open questions 1).
+- **The ladder** (as built: every rung the same trees, so a comparison changes only the features; decision 0033):
+  - rung 0 (`plain`): plain snap share (the yardstick);
+  - rung 1 (`lev`): plus leverage share;
+  - rung 2 (`full`): plus the role gap and trust over expected.
+- **What it forecasts (the CEO: 1c, both):** leverage share over the next 3 games and the rest of the season, and snap share over the next 3 games.
+- **The no-noise target (the CEO: 2, yes):** next 3 games' snap share, `lev` and `full` against `plain`.
+- **If it fails the no-noise target** (the CEO): the project is downscaled from an expert to an investigation and feature engineering. `play.leverage` and the usage measures stay as features; nothing is published as an expert.
 
-### Open questions for the CEO
-1. **What does the expert forecast?** Rule d asks every model to ship with a backtest, a calibration check and ranges, so the published measures need a forecast to stand on.
+### Open questions for the CEO (answered 2026-11-14: "1c, 2 yes")
+1. **What does the expert forecast?** *The CEO: (c), both.* Rule d asks every model to ship with a backtest, a calibration check and ranges, so the published measures need a forecast to stand on.
    - (a) Each player's **leverage share over the next 3 games and the rest of the season**: who will be on the field when it matters.
    - (b) Each player's **snap share over the next 3 games**, at every position, with the leverage measures as inputs. That's the main test's own target; participation already forecasts it, but for QB, RB, WR and TE only.
    - (c) Both.
-2. **The no-noise target** (the CEO approves): next 3 games' snap share, against plain snap share (as drafted under Tests).
+2. **The no-noise target** (the CEO approves): next 3 games' snap share, against plain snap share (as drafted under Tests). *The CEO: yes; if it fails, the project becomes an investigation and feature engineering.*
 
 ## The question
 Which players does each team put on the field when the game hangs on the snap, beyond how much they play overall, and does that show who the team relies on?
