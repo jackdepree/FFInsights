@@ -140,6 +140,15 @@ class Gateway:
         return View(self, at, cadence, inputs)
 
 
+def for_expert(expert) -> Gateway:
+    """The default gateway for a model: the built tables, only from its `first_read` season on
+    when it declares one (the play-by-play is ~2.7 GB whole; decision 0033)."""
+    first = getattr(expert, "first_read", None)
+    if first is None:
+        return Gateway()
+    return Gateway(TableSource(seasons=range(first, get_config().seasons.live + 1)))
+
+
 class View:
     """The world as known at one moment, limited to a model's declared inputs."""
 

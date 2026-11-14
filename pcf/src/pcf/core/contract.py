@@ -91,6 +91,9 @@ class Expert(ABC):
       the season; e.g. position, rookie, starter.
     - `spike`: an amount whose results pile up at exactly 0. `predict` also returns `SPIKE_PARTS`,
       they're saved with the history, and the harness judges the two parts (decision 0014).
+    - `first_read`: the earliest season its features and targets read, if it reads a table too
+      big to hold whole (the play-by-play): the harness's default gateway then holds only the
+      seasons from it on (`pcf.data.gateway.for_expert`; decision 0033).
     - `publishes`: feature columns saved with the walk-forward history for higher layers (rule e;
       decision 0021): numbers the expert computes at the row's moment from data known by then,
       with no fitting (Elo's ratings). Higher layers read them with the forecasts.
@@ -108,6 +111,7 @@ class Expert(ABC):
     benchmark: ClassVar[bool] = False
     variant: ClassVar[str] = ""
     first_train: ClassVar[int | None] = None
+    first_read: ClassVar[int | None] = None
     spike: ClassVar[bool] = False
     publishes: ClassVar[tuple[str, ...]] = ()
 

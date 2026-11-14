@@ -5,7 +5,14 @@ from datetime import UTC, datetime
 import polars as pl
 import pytest
 
-from pcf.data.gateway import FrameSource, Gateway, UndeclaredInput, VintageError
+from pcf.data.gateway import (
+    FrameSource,
+    Gateway,
+    TableSource,
+    UndeclaredInput,
+    VintageError,
+    for_expert,
+)
 
 from ..validation import world
 
@@ -134,3 +141,16 @@ def test_a_version_with_no_mlflow_model_reads_the_run_the_registry_pins(tmp_path
         history_run("other", 1, reg)
     monkeypatch.setattr(tracking, "version_run", lambda p, v: "from-mlflow")
     assert history_run("mapper", 1, reg) == "from-mlflow"  # a registered version wins
+
+
+def test_a_model_that_declares_its_first_season_gets_a_gateway_holding_only_seasons_from_it():
+    class Reads:
+        first_read = 2018
+
+    class ReadsAll:
+        pass
+
+    held = for_expert(Reads()).source
+    assert isinstance(held, TableSource) and held.seasons[0] == 2018
+    assert held.seasons[-1] >= 2025
+    assert for_expert(ReadsAll()).source.seasons is None

@@ -25,7 +25,7 @@ import polars as pl
 from pcf.config import get_config
 from pcf.core.contract import OUTPUT_SCHEMA, SPIKE_PARTS, Expert, check_output
 from pcf.core.log import get_logger
-from pcf.data.gateway import END_OF_TIME, HISTORY, Gateway
+from pcf.data.gateway import END_OF_TIME, HISTORY, Gateway, for_expert
 from pcf.validation import scores
 from pcf.validation.splits import Step, assert_walk_forward, step_table, steps
 
@@ -229,7 +229,7 @@ def run(
     first = max(get_config().seasons.first_train, expert.first_train or 0)
     seasons = list(seasons or [s for s in test_seasons(open_vault) if s > first])
     check_seasons(seasons, open_vault)
-    gateway = gateway or Gateway()
+    gateway = gateway or for_expert(expert)
     every = steps(
         gateway.calendar,
         expert.cadence,
