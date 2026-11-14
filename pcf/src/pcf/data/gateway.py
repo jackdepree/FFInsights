@@ -76,12 +76,27 @@ class FrameSource:
         return self.frames[(name, part)]
 
 
-def stored_outputs(project_id: str, version: int) -> pl.DataFrame:
-    """A registered model version's walk-forward history: `outputs/<id>/<run_id>/history.parquet`,
-    with the run found from the version in MLflow."""
-    from pcf.core import tracking
+def history_run(project_id: str, version: int, path: Path | None = None) -> str:
+    """The run whose history a pinned version reads: the registered version's run in MLflow, or,
+    for a project with no registered versions, the run `registry.yaml` pins it to
+    (`history_runs: {version: run_id}`, reviewed and merged like code; decision 0033)."""
+    from mlflow.exceptions import MlflowException
 
-    run_id = tracking.version_run(project_id, version)
+    from pcf.core import registry, tracking
+
+    try:
+        return tracking.version_run(project_id, version)
+    except MlflowException:
+        runs = (registry.projects(path).get(project_id) or {}).get("history_runs") or {}
+        if version in runs:
+            return str(runs[version])
+        raise
+
+
+def stored_outputs(project_id: str, version: int) -> pl.DataFrame:
+    """A pinned model version's walk-forward history: `outputs/<id>/<run_id>/history.parquet`,
+    with the run from `history_run`."""
+    run_id = history_run(project_id, version)
     return pl.read_parquet(get_config().zone("outputs") / project_id / run_id / HISTORY)
 
 

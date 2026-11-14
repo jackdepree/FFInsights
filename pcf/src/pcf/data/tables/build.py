@@ -21,7 +21,7 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import efficiency, pace
+from pcf.data.tables import efficiency, leverage, pace
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
@@ -202,6 +202,25 @@ def pace_snaps(season: int) -> pl.DataFrame | None:
     return out
 
 
+@cache
+def _leverage_snaps(season: int) -> pl.DataFrame:
+    """A season's snaps for the leverage model (`leverage.snap_rows`), kept for the process."""
+    return leverage.snap_rows(scan("pbp", [season]).select(leverage.PBP_COLUMNS).collect())
+
+
+def leverage_rows(season: int) -> pl.DataFrame | None:
+    """A season's `play.leverage` rows from a fit on earlier seasons only (cached in the interim
+    zone), or None without play-by-play or enough earlier seasons."""
+    have = local_seasons("pbp")
+    if season not in have:
+        return None
+    cache_dir = get_config().zone("interim") / "leverage"
+    fitted = leverage.fitted_for(season, have, _leverage_snaps, cache_dir)
+    if fitted is None:
+        return None
+    return leverage.apply(_leverage_snaps(season), fitted)
+
+
 def build_play(season: int, cal: Calendar, root: Path | None) -> None:
     parts = play_parts(
         _season("pbp", season),
@@ -213,6 +232,9 @@ def build_play(season: int, cal: Calendar, root: Path | None) -> None:
     if paced is not None:
         rows = pace.play_rows(paced).with_columns(pl.col("play_id").cast(pl.Int64))
         parts["pace"] = known_at("pbp", rows, cal)  # every snap is a play on the spine
+    levered = leverage_rows(season)
+    if levered is not None:
+        parts["leverage"] = known_at("pbp", levered, cal)
     write_parts(parts, "play", [season], root)
 
 
