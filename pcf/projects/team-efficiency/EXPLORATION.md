@@ -180,6 +180,15 @@ These were Claude's ideas, chosen by the CEO, so they're logged in IDEAS.md (I33
 
 The error surface is flat: across all 45 versions, the 2007–2015 next-3 error moves only in the fourth digit. Verdict: **failed** (a tie). R13's loss is P3's price, not a gap in it.
 
+## Round four (2026-11-13): mid-season QB changes (IDEAS I37, the CEO's go)
+**F18. A mid-season QB change doesn't make the old QB's games worth less** ([r4_qb_switch.txt](explore/r4_qb_switch.txt), [r4_qb_switch_check.txt](explore/r4_qb_switch_check.txt)).
+- **This week's QB**, known at the Saturday run: last game's starter, or, when the injury report lists him Out or Doubtful, the top depth-chart QB not so listed. It names the starter 92.5% of the time (2009–2024; last starter alone 90.4%, depth chart QB1 alone 89.9%). It catches 23% of starter changes in the week they happen; the rest show up a week later.
+- **Two uses, tuned on 2007–2015 with P3's coach cut:** a game started by another QB counts (1 − d); the prior is cut by a when this week's QB isn't last season's (P3's QB flag, updated weekly).
+- **Every weight cut makes the 2007–2015 error worse**, more so the bigger it is: d = 0 is picked, with a = 0.5. Against P3 on 2016–2024: −0.1% (−0.3 to +0.1) next 3 games, −0.1% (−0.3 to +0.1) rest of season. Team-weeks after a switch gain +0.4% / +0.5%; the rest lose −0.4% / −0.5%.
+- **On real changes** (this week's QB started under half the games so far), d = 0.25 gains +0.3% / +0.4% with intervals across zero; dropping the old QB's games (d = 1) costs 7.6% / 10.4%.
+
+Verdict: **failed** (a tie). The old QB's games still say a lot about the offense (the line, the receivers, the scheme), and a few games with the new QB are mostly noise. What a QB change brings is *how good* the new QB is, which a "new or not" flag can't see: that's the QB-talent expert's job.
+
 ## Hunch verdicts (round one)
 | # | Hunch | Verdict | Evidence | Claude expected |
 |---|---|---|---|---|
@@ -216,4 +225,4 @@ The CEO's two meanings of "propensity" (2c) both earned a place, kept apart by n
 - **A per-play gradient-boosted weight (F3):** it fits noise. Learn weights across teams.
 - **The usual garbage-time rule as a bar (F1).**
 - **WPA as a measure of its own (F6), and grains past plays stacked beside EPA (F10).**
-- **Luck-stripped EPA as the forecast input (F14), stacking the steady measures onto EPA (F15), and series success as a season-start prior (F16). A stronger pull or a separate slope for teams with no change (F17).**
+- **Luck-stripped EPA as the forecast input (F14), stacking the steady measures onto EPA (F15), and series success as a season-start prior (F16). A stronger pull or a separate slope for teams with no change (F17). Counting another QB's games for less (F18).**
