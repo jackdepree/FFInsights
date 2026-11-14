@@ -255,3 +255,35 @@ def test_a_variant_fits_and_predicts_shares_with_ranges(world):
     assert out.select(inside).to_series().all()
     # snap_prev is empty in this world: left out of the fit, not a crash
     assert "snap_prev" not in e.explain(e.fit(big))["features"]
+
+
+def test_usage_is_the_same_to_the_last_digit_whatever_the_row_order():
+    """Sums in another order differ in the last digit, enough to flip a tree's split (check 8)."""
+    rng = np.random.default_rng(1)
+    n = 5000
+    on = pl.DataFrame(
+        {
+            "game_id": rng.choice(["g1", "g2"], n),
+            "play_id": rng.integers(1, 200, n),
+            "gsis_id": rng.choice([f"P{i}" for i in range(40)], n),
+            "side": "offense",
+            "team": "A",
+            "p": rng.random(n),
+        }
+    ).unique(["game_id", "play_id", "gsis_id"])
+    snaps = U.plays(
+        pl.DataFrame(
+            {
+                "game_id": ["g1"] * 199 + ["g2"] * 199,
+                "play_id": list(range(1, 200)) * 2,
+                "leverage": rng.random(398) * 3,
+                "high_stakes": rng.random(398) > 0.8,
+                "pcf_xpass": rng.random(398),
+            }
+        )
+    )
+    first = U.usage(on, snaps)
+    for seed in range(3):
+        again = U.usage(on.sample(fraction=1.0, shuffle=True, seed=seed), snaps.sample(
+            fraction=1.0, shuffle=True, seed=seed))  # fmt: skip
+        assert again.equals(first)

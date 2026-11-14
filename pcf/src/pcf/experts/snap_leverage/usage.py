@@ -43,21 +43,32 @@ def plays(play: pl.DataFrame) -> pl.DataFrame:
 def usage(on: pl.DataFrame, snaps: pl.DataFrame) -> pl.DataFrame:
     """`on` (game_id, play_id, gsis_id, side, team, p) and `snaps` (from `plays`) → game_id,
     gsis_id, side, team and `MEASURES`, one row per player, game and side."""
-    x = on.join(snaps, on=["game_id", "play_id"], how="inner")
+    # In a fixed order, and every group summed in it: a parallel join's row order varies, and sums
+    # in another order differ in the last digit, enough to flip a tree's split (leakage check 8)
+    x = on.join(snaps, on=["game_id", "play_id"], how="inner").sort(
+        "game_id", "play_id", "side", "gsis_id"
+    )
     side = ["game_id", "team", "side"]
     # each side's snaps: every play the side was on the field for, counted once
-    team_plays = x.select(*side, "play_id", "li", "hs", "cell").unique([*side, "play_id"])
-    totals = team_plays.group_by(side).agg(t_n=pl.len(), t_li=c("li").sum(), t_hs=c("hs").sum())
-    cells = team_plays.group_by(*side, "cell").agg(c_n=pl.len(), c_hs=c("hs").sum())
+    team_plays = x.select(*side, "play_id", "li", "hs", "cell").unique(
+        [*side, "play_id"], keep="first", maintain_order=True
+    )
+    totals = team_plays.group_by(side, maintain_order=True).agg(
+        t_n=pl.len(), t_li=c("li").sum(), t_hs=c("hs").sum()
+    )
+    cells = team_plays.group_by(*side, "cell", maintain_order=True).agg(
+        c_n=pl.len(), c_hs=c("hs").sum()
+    )
     # his on-field rate in each kind of situation, and the high-stakes snaps it predicts
     expected = (
-        x.group_by(*side, "gsis_id", "cell")
+        x.group_by(*side, "gsis_id", "cell", maintain_order=True)
         .agg(p_n=c("p").sum())
-        .join(cells, on=[*side, "cell"])
-        .group_by(*side, "gsis_id")
+        .join(cells, on=[*side, "cell"], maintain_order="left")
+        .sort(*side, "gsis_id", "cell")
+        .group_by(*side, "gsis_id", maintain_order=True)
         .agg(exp_hs=(c("p_n") / c("c_n") * c("c_hs")).sum())
     )
-    player = x.group_by(*side, "gsis_id").agg(
+    player = x.group_by(*side, "gsis_id", maintain_order=True).agg(
         snaps=c("p").sum(), lev=(c("p") * c("li")).sum(), hs_snaps=(c("p") * c("hs")).sum()
     )
     has_hs = c("t_hs") > 0
