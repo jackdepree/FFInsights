@@ -1,6 +1,6 @@
 # Brief: Snap leverage (`snap-leverage`)
 
-**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"); explored 2026-11-14 (the CEO's go; [EXPLORATION.md](EXPLORATION.md): GO, small; the direction is the CEO's call). Agreed after the exploration · **Layer:** expert · **Cadence:** in_season (to be settled: see Assumptions 4)
+**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"); explored 2026-11-14 (the CEO's go; [EXPLORATION.md](EXPLORATION.md): GO, small; the CEO's direction, 2026-11-14: "A; a small expert"). Agreed after the CEO answers the open questions · **Layer:** expert · **Cadence:** in_season (from the morning-after map: "What the exploration changes in the brief")
 
 ## The usual way
 *Claude, 2026-11-14, before any research.*
@@ -27,6 +27,32 @@ Second message: "I think that it is true that starters will offer no signal, bec
 | H47 | "The situation trap will not cause too much trouble", because "there will be other plays of winning teams that need to run the ball to drain the clock and win a close game"; situation "could skew the interpretation" | Adjust for situation and personnel: third-down backs and nickel corners play the passing downs because of their role | The measure raw and adjusted for situation type (down, distance, score, clock): how far the player rankings move, which version predicts future playing time better, and how much of the high-stakes snaps are clock-draining runs | Partly held. Little difference for everyday players; real differences for passing-down specialists, because a leading team's late runs swing the win chance less than a trailing team's passes |
 | H48 | "Some positions carry larger variance in leveraged (high stakes) plays, like wide receiver and cornerback" | QBs carry most of a play's win-probability swing; position value as the salary market prices it (QB, edge, tackle, WR, CB) | By position: how much a play's WPA spread depends on the player in that spot, on high-stakes against ordinary plays (involvement: who was targeted, covering, carrying; and on-field plus-minus), against a shuffled-player null | QB first by far; WR and CB above the other positions on passing plays, since deep passes swing the win chance most |
 | H49 | "Schemes that a team deploys" interact "with which players or positions have the highest variance in leveraged plays" | Position value is the same for every team | H48's position spreads split by schemes-v2's traits (pass rate over expected, shotgun, depth of target, tempo), against a shuffled-team null | Unclear. A pass-heavy team moves leverage toward WRs and CBs, but that is a main effect; schemes-v2's interaction hunches mostly failed (H13, H14, H16) |
+
+## What the exploration changes in the brief
+*Draft, 2026-11-14, after the exploration ([EXPLORATION.md](EXPLORATION.md)) and the CEO's direction: "A; a small expert".*
+
+- **The direction (the CEO):** a small expert. Leverage per play and leveraged usage per player-game, published as features for player opportunity, roles and contract value.
+- **Leverage becomes a shared table part, `play.leverage`** (li, the spread, high stakes). It's refit each season on the seasons before, as `play.pace` is, and known at the snap. Any project can use it (F1).
+- **Usage comes from participation-live's morning-after map, not nflverse's participation**, so the expert can run in season (rule m).
+  - Each snap counts by the map's on-field chance, not the best guess, so the map's doubt carries into the measure.
+  - The map's walk-forward history covers 2019–2024. So the build fits from 2019 and scores 2021–2024, and the vault is 2025.
+  - True participation (2016–2024) is kept only as a check of how much the map costs. It never trains the model (rule e).
+- **The published measures:**
+  - leverage share;
+  - the passing-down role gap (the raw trust gap, renamed for what it is: F4, F10);
+  - trust over expected (F5).
+- **The ladder:**
+  - rung 0: plain snap share (the yardstick);
+  - rung 1: ridge with leverage share;
+  - rung 2: trees with the role gap and trust over expected.
+- **To settle with the CEO:** what the expert forecasts (a taste call; Open questions 1).
+
+### Open questions for the CEO
+1. **What does the expert forecast?** Rule d asks every model to ship with a backtest, a calibration check and ranges, so the published measures need a forecast to stand on.
+   - (a) Each player's **leverage share over the next 3 games and the rest of the season**: who will be on the field when it matters.
+   - (b) Each player's **snap share over the next 3 games**, at every position, with the leverage measures as inputs. That's the main test's own target; participation already forecasts it, but for QB, RB, WR and TE only.
+   - (c) Both.
+2. **The no-noise target** (the CEO approves): next 3 games' snap share, against plain snap share (as drafted under Tests).
 
 ## The question
 Which players does each team put on the field when the game hangs on the snap, beyond how much they play overall, and does that show who the team relies on?
