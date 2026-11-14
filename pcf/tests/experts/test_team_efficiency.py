@@ -305,7 +305,47 @@ def test_season_changes_flag_a_new_qb_and_a_new_coach():
         "team", "season", "new_qb", "new_coach"
     )
     assert flagged.rows() == [("BBB", 2022, 0.0, 1.0), ("AAA", 2023, 1.0, 0.0)]
-    assert ch["known_at"].null_count() == 0
+    assert ch["qb_known_at"].null_count() == 0
+    assert ch["coach_known_at"].null_count() == 0
+
+
+def test_each_flag_waits_for_its_own_facts():
+    """From 2025 the week-1 depth chart is known only at kickoff. Before then the new coach counts
+    and the new QB waits; per-moment and bulk features agree (2025's leakage checks 3 and 4)."""
+    frames = _frames()
+    dep = frames[("player_game", "depth")]
+    kick = frames[("team_game", "pregame")].select("game_id", "team", kick="known_at")
+    late = (c("season") == NEW_QB[1]) & c("gsis_id").str.starts_with("QB_" + NEW_QB[0])
+    frames[("player_game", "depth")] = (
+        dep.join(kick.unique("game_id"), on="game_id", how="left")
+        .with_columns(known_at=pl.when(late).then(c("kick")).otherwise(c("known_at")))
+        .drop("kick", "team")
+    )
+    gw = Gateway(FrameSource(frames), world.cal())
+    start = (
+        frames[("team_game", "opening_coach")].filter(c("season") == NEW_QB[1])["known_at"].min()
+    )
+    view = gw.view(start, "in_season", F.INPUTS)
+    ch = X.season_changes(view.table("team_game"), view.table("player_game"))
+    row = ch.filter((c("team") == NEW_QB[0]) & (c("season") == NEW_QB[1]))
+    assert row["qb_known_at"].item() is None and row["coach_known_at"].item() is not None
+    names = R.teams(view.table("team_game"))
+    arr = R.change_arrays(ch, names)[NEW_QB[1]]
+    i = names.index(NEW_QB[0])
+    assert np.isnat(arr[0][i]) and not np.isnat(arr[1][i])
+    ex = VARIANTS["off_next3_change"]()
+    every = steps(gw.calendar, ex.cadence, world.SEASONS, ex.run)
+    bulk = ex.features_history(
+        gw.view(END_OF_TIME, ex.cadence, ex.inputs), pl.concat([s.games for s in every])
+    )
+    for s in every:
+        for (moment,), frame in s.games.group_by("moment", maintain_order=True):
+            one = ex.features(gw.view(moment, ex.cadence, ex.inputs), frame.drop("moment"))
+            if one.is_empty():
+                continue
+            other = bulk.join(one.select(F.KEYS), on=F.KEYS)
+            assert_frame_equal(one.sort(F.KEYS), other.select(one.columns).sort(F.KEYS),
+                               rel_tol=1e-9)  # fmt: skip
 
 
 def test_the_weaker_pull_cuts_the_prior_only_once_the_change_is_known():
@@ -313,7 +353,7 @@ def test_the_weaker_pull_cuts_the_prior_only_once_the_change_is_known():
     names = R.teams(tg)
     x = R.prepare(tg, names)
     ch = _season_changes()
-    known = ch.filter((c("team") == NEW_QB[0]) & (c("season") == NEW_QB[1]))["known_at"].item()
+    known = ch.filter((c("team") == NEW_QB[0]) & (c("season") == NEW_QB[1]))["qb_known_at"].item()
     before, after = known - timedelta(hours=1), known + timedelta(hours=1)
     req = pl.DataFrame({"season": [2023, 2023], "week": [1, 1], "moment": [before, after]}).cast(
         {"season": pl.Int32, "week": pl.Int32, "moment": UTC_T}

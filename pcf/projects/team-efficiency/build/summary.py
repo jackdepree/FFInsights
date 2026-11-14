@@ -79,7 +79,9 @@ def main() -> None:
                     x = x.join(y, on=["game_id", "team"], how="inner")
                     x = x.join(weeks, on=["game_id", "team"], how="left")
                     # a season's games run into the next January: the season is the schedule's
-                    x = x.with_columns(season=c("game_id").str.slice(0, 4).cast(pl.Int32))
+                    x = x.with_columns(season=c("game_id").str.slice(0, 4).cast(pl.Int32)).filter(
+                        c("season") <= 2024
+                    )  # the vault (2025) is scored apart, in vault.py
                     hist[(s, h, r)] = x
     lines = []
 

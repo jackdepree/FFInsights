@@ -19,9 +19,9 @@ defense `d` (what it allows; lower is better). `sd` is the ridge's own posterior
 with plays as independent (it leaves out the prior's own error, so it's a floor).
 
 **P3, the weaker pull** (`change`; team-efficiency#F16, the CEO's pick 2026-11-13): on offense,
-a team's prior is pull x (1 - a x new QB - b x new coach) x last season's final, with the flags of
-`changes.season_changes` counted only once known. a = b = 0.25 on offense, none on defense, as
-round two tuned them on 2007-2015.
+a team's prior is pull x (1 - a x new QB - b x new coach) x last season's final, with each flag
+of `changes.season_changes` counted only once it is known (each has its own known-at).
+a = b = 0.25 on offense, none on defense, as round two tuned them on 2007-2015.
 
 Settings are the exploration's, tuned on 2007-2015 (team-efficiency#F8, explore/*.txt). Final
 ratings are cached by the content of the rows they're fit on, so a perturbed world (leakage checks
@@ -309,10 +309,12 @@ class Walk:
         None when this measure has no change."""
         if self.changes is None or season not in self.changes:
             return None
-        known, qb, coach = self.changes[season]
-        ok = known <= np.datetime64(moment.replace(tzinfo=None), "us")
+        known_qb, known_coach, qb, coach = self.changes[season]
+        at = np.datetime64(moment.replace(tzinfo=None), "us")
         a, b = self.cut
-        return np.where(ok, np.clip(1 - a * qb - b * coach, 0.0, 1.0), 1.0)
+        q = np.where(known_qb <= at, qb, 0.0)  # NaT (never known) compares False
+        k = np.where(known_coach <= at, coach, 0.0)
+        return np.clip(1 - a * q - b * k, 0.0, 1.0)
 
     def at(self, season: int, week: int, moment) -> tuple[np.ndarray, ...]:
         """Ratings (o, d, o_sd, d_sd) before `week` of `season` from the rows known at `moment`:
@@ -326,25 +328,31 @@ class Walk:
         return _fit(self.m, rows, float(week), po, pd_, self.s)
 
 
-# P3's flags per season: (known_at, new QB, new coach), each an array over the team index
-Changes = dict[int, tuple[np.ndarray, np.ndarray, np.ndarray]] | None
+# P3's flags per season: (QB known at, coach known at, new QB, new coach), arrays over the teams
+Changes = dict[int, tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]] | None
 
 
 def change_arrays(ch: pl.DataFrame, team_names: list[str]) -> dict:
-    """`changes.season_changes` rows → `Changes` over `team_names` (no row: no change, known)."""
+    """`changes.season_changes` rows → `Changes` over `team_names` (no row: no change; a null
+    known-at: that flag is never counted)."""
     out = {}
     tix = {t: i for i, t in enumerate(team_names)}
+
+    def at(k) -> np.datetime64:
+        return np.datetime64(k.replace(tzinfo=None), "us") if k else np.datetime64("NaT", "us")
+
     for (season,), g in ch.partition_by("season", as_dict=True).items():
-        known = np.full(len(team_names), np.datetime64("1900-01-01", "us"))
-        qb, coach = np.zeros(len(team_names)), np.zeros(len(team_names))
+        n = len(team_names)
+        known_qb = np.full(n, np.datetime64("1900-01-01", "us"))
+        known_coach = known_qb.copy()
+        qb, coach = np.zeros(n), np.zeros(n)
         for r in g.iter_rows(named=True):
             i = tix.get(r["team"])
             if i is None:
                 continue
-            k = r["known_at"]
-            known[i] = np.datetime64(k.replace(tzinfo=None), "us") if k else np.datetime64("NaT")
+            known_qb[i], known_coach[i] = at(r["qb_known_at"]), at(r["coach_known_at"])
             qb[i], coach[i] = r["new_qb"], r["new_coach"]
-        out[int(season)] = (known, qb, coach)
+        out[int(season)] = (known_qb, known_coach, qb, coach)
     return out
 
 
