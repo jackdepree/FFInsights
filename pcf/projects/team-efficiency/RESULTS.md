@@ -19,7 +19,7 @@ PCF now rates every team's offense and defense after every game, opponent-adjust
 | Signal / no noise | The champion's publisher (`off_next3_ridge`, rerun 2026-11-13 to publish its ratings) and all 12 validated variants (`combo`, `dml`, `ridge` × side × horizon) beat 100 of 100 shuffled refits, and each beats the league's level with the whole 90% interval below zero. `ridge` beats `usual` in all four |
 | Calibration and range coverage | The 80% ranges hold 79.3–80.3% for every variant. Every season and every games-left group inside the bar |
 | Leakage | 9 of 9 blocking checks pass for all 12: identical at 25 cutoffs when future data is changed or deleted. No feature above \|r\| 0.9 |
-| Football sanity | Best forecast offenses: 2018 Chiefs, 2018 Saints, 2023 49ers, 2024 Bills. Worst: the 2020 and 2023 Jets, 2018 Cardinals. The CEO's review is pending |
+| Football sanity | Best forecast offenses: 2018 Chiefs, 2018 Saints, 2023 49ers, 2024 Bills. Worst: the 2020 and 2023 Jets, 2018 Cardinals. The CEO saw nothing wrong (2026-11-14) |
 | CEO spot-check | pending |
 
 ## The ladder
@@ -88,13 +88,13 @@ Both variants pass every check: 9 of 9 leakage checks, 100 of 100 shuffled refit
 | R14 | **R13's loss can't be won back cheaply** (round three, IDEAS I40, the CEO's pick, 2026-11-13). A stronger pull for teams with neither change, tuned on 2007–2015 with the cuts (keep 1.10 × the pull, a = b = 0.25, the same cuts as P3), ties P3 on 2016–2024: +0.0% (−0.1 to +0.1) next 3 games, −0.1% (−0.1 to −0.0) rest of season. Letting the forecast map's slope differ for unchanged teams ties too: −0.0% and −0.2% (−0.4 to −0.1). Unchanged teams lose a little either way. The tuning surface is flat (2007–2015 error moves in the fourth digit). The loss is P3's small price, and P3 stays as built | [r3_keep_pull.txt](explore/r3_keep_pull.txt) (exploration harness) | strong (a tie) |
 | R15 | **Mid-season QB changes don't help either** (round four, IDEAS I37, the CEO's go, 2026-11-13). This week's QB (last starter, or the top healthy depth-chart QB when the injury report rules him out: right 92.5% of the time) was used two ways, tuned on 2007–2015: counting other QBs' games for less, and P3's QB cut updated every week. The tuning picks no weight cut: every cut makes the 2007–2015 error worse. The weekly cut (a = 0.5) against P3, 2016–2024: −0.1% (−0.3 to +0.1) next 3 games, −0.1% (−0.3 to +0.1) rest of season. Even on team-weeks whose QB had started under half the games so far, a 0.25 cut gains only +0.3% / +0.4% (intervals across zero), and dropping the old QB's games costs 7.6% / 10.4%. A few games with a new QB say less than the old QB's games still say about the line, receivers and scheme. What could still help is *how good* the new QB is, which is the QB-talent expert's job, not this one | [r4_qb_switch.txt](explore/r4_qb_switch.txt), [r4_qb_switch_check.txt](explore/r4_qb_switch_check.txt) | strong (a tie) |
 
-## Hunches: what the build adds (verdicts are the CEO's to call)
-| # | Exploration verdict | What the build found |
-|---|---|---|
-| H41 (representativeness weights) | held | Smaller: +0.5% over the rest of the season, a tie over the next 3 games (R4) |
-| H42 (DML) | held (small) | No gain over all plays equal (R3) |
-| H44 (the EPA–WPA gap in the weights) | held (small) | Inside the combination, so it rises or falls with R4 |
-| H40, H43 | unclear, failed | Not rebuilt |
+## Hunches: what the build adds (the CEO called them, 2026-11-14)
+| # | Exploration verdict | What the build found | The CEO's verdict |
+|---|---|---|---|
+| H41 (representativeness weights) | held | Smaller: +0.5% over the rest of the season, a tie over the next 3 games (R4) | **held** |
+| H42 (DML) | held (small) | No gain over all plays equal (R3) | **failed** |
+| H44 (the EPA–WPA gap in the weights) | held (small) | Inside the combination, so it rises or falls with R4 | **mixed** |
+| H40, H43 | unclear, failed | Not rebuilt | unchanged |
 
 ## Where it misses
 Not run yet. The miss lenses run on the champion, once it's chosen.
@@ -143,9 +143,9 @@ Not run yet. The miss lenses run on the champion, once it's chosen.
 
 ## Open questions for the CEO
 1. ~~Which rating ships as the champion?~~ **Answered 2026-11-13:** `ridge`, every play counted equally.
-2. **The hunch verdicts for H41, H42 and H44** in light of the build (table above).
+2. ~~The hunch verdicts for H41, H42 and H44~~ **Answered 2026-11-14:** H41 held, H42 failed, H44 mixed.
 3. ~~The early-season work: which first?~~ **Answered 2026-11-13:** the QB or coach change (P3), built (R11–R13).
-4. **Should P3 join the champion?** Offense would forecast from `change` (`ridge` plus the weaker pull); defense stays `ridge`.
+4. ~~Should P3 join the champion?~~ **Answered 2026-11-14:** yes. Offense forecasts from `change`, defense from `ridge`.
 
 ## Technical calls for veto
 Decision 0032's 12 calls (the part, earlier-season models, fixed settings, the CRC-32 halves, same-week games, the team index, the per-window forecast map, rungs as variants, the target, the published ratings, the Saturday run, `usual` and `league` as baselines only), plus P3 deferred.

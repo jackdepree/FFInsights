@@ -1,0 +1,38 @@
+R6 spot-check: efficiency and Elo's margin, 2017-2024 regular season, walk-forward.
+Games: 2,111. Mean absolute miss in points (lower is better).
+
+1. Efficiency's margin and Elo's correlate at r = 0.90: Elo holds 81% of
+   efficiency's spread between games.
+
+2. Each alone and together:
+   Elo refit         10.178
+   efficiency alone  10.259
+   both              10.152
+   both against Elo: -0.026 (90% -0.074 to +0.022) on a baseline of 10.178; -0.26%; neutral; 2,111 rows
+   efficiency against Elo: +0.081 (90% -0.004 to +0.160) on a baseline of 10.178; +0.79%; neutral; 2,111 rows
+
+3. Where they disagree (efficiency's margin minus Elo's, fifths of games):
+   fifth | mean gap | games | Elo miss | efficiency miss | both miss | both vs Elo
+   1     |  -3.18   |  422  | 10.189   | 10.299          | 10.153     | -0.035 (90% -0.156 to +0.090) on a baseline of 10.189
+   2     |  -0.82   |  422  | 10.090   | 10.092          | 10.082     | -0.008 (90% -0.101 to +0.084) on a baseline of 10.090
+   3     |  +0.44   |  423  | 9.891   | 9.884          | 9.880     | -0.011 (90% -0.073 to +0.049) on a baseline of 9.891
+   4     |  +1.74   |  422  | 10.548   | 10.640          | 10.581     | +0.033 (90% -0.055 to +0.120) on a baseline of 10.548
+   5     |  +3.92   |  422  | 10.173   | 10.380          | 10.062     | -0.111 (90% -0.230 to +0.003) on a baseline of 10.173
+   Games where they differ by 3+ points: 506; the result moved toward
+   efficiency's side in 55.5% of them (50% = no information).
+
+4. By the week of the season (both against Elo):
+   weeks 1-4  -0.007 (90% -0.077 to +0.070) on a baseline of 10.238; -0.07%; neutral; 508 rows
+   weeks 5-9  -0.070 (90% -0.154 to +0.011) on a baseline of 10.170; -0.69%; neutral; 572 rows
+   weeks 10+  -0.012 (90% -0.080 to +0.062) on a baseline of 10.153; -0.11%; neutral; 1,031 rows
+
+5. A stronger yardstick, the closing spread (known at kickoff):
+   the line alone misses by 9.905; Elo alone 10.178
+   line + efficiency against the line: +0.002 (90% -0.022 to +0.032) on a baseline of 9.905; +0.02%; neutral; 2,111 rows
+   line + Elo against the line: +0.004 (90% -0.005 to +0.013) on a baseline of 9.905; +0.04%; neutral; 2,111 rows
+   efficiency's margin and the line correlate at r = 0.85; fit on every season,
+   margin = -0.15 + 0.99 x line + +0.04 x efficiency's margin
+
+6. Game totals (where offense and defense apart could matter; Elo has no split):
+   efficiency against the league's mean: -0.144 (90% -0.236 to -0.049) on a baseline of 11.082; -1.30%; adds value; 2,111 rows
+   line + efficiency against the total line: +0.024 (90% -0.016 to +0.064) on a baseline of 10.500; +0.23%; neutral; 2,111 rows
