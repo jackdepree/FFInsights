@@ -15,8 +15,10 @@ comparison is on identical rows):
 - `home_<h>`: the share of the horizon's games at home; `left_<h>`: how many games it holds.
   Horizons (`HORIZONS`): the next 3 games and the rest of the regular season, from this game on.
 - **Published** (`PUBLISHED`, for higher layers; decision 0021's mechanism): the champion's
-  ratings (`ridge`: every play, counted equally; the CEO, 2026-11-13) with their sds, and pass,
-  run and series-success ratings.
+  ratings under names that don't change with the champion, `off_rating` and `def_rating` with
+  their sds (offense: `change`, every play counted equally with P3's weaker pull after a new QB
+  or coach; defense: `ridge`; the CEO, 2026-11-13 and 2026-11-14), and pass, run and
+  series-success ratings.
 
 **Targets** (`targets`): the team's EPA per play over the horizon's games, relative to the
 league's mean in each game's week: on offense what it gained, on defense what it allowed. Known
@@ -43,7 +45,7 @@ SIDES = ("off", "def")
 HORIZONS = {"next3": 3, "rest": None}
 EXTRA = ("pass", "run", "ssr")  # published only
 PUBLISHED = (
-    "off_ridge", "def_ridge", "off_ridge_sd", "def_ridge_sd", "off_pass", "def_pass", "off_run",
+    "off_rating", "def_rating", "off_rating_sd", "def_rating_sd", "off_pass", "def_pass", "off_run",
     "def_run", "off_ssr", "def_ssr",
 )  # fmt: skip
 
@@ -101,8 +103,11 @@ def _rows(tg: pl.DataFrame, targets: pl.DataFrame, pg: pl.DataFrame) -> pl.DataF
         "team",
         *[c(f"{r}_o").alias(f"off_{r}") for r in (*RUNGS, *EXTRA)],
         *[c(f"{r}_d").alias(f"def_{r}") for r in (*RUNGS, *EXTRA)],
-        off_ridge_sd="ridge_o_sd",
-        def_ridge_sd="ridge_d_sd",
+        # the champion (decision 0032): offense P3's `change`, defense `ridge`
+        off_rating="change_o",
+        def_rating="ridge_d",
+        off_rating_sd="change_o_sd",
+        def_rating_sd="ridge_d_sd",
     )
     out = targets.join(own, on=[*at, "team"], how="left")
     for h, n in HORIZONS.items():

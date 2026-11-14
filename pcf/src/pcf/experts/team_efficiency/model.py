@@ -33,9 +33,9 @@ LADDER = ("league", "usual", "ridge", "change", "dml", "combo")
 BELOW = {"usual": ("league",), "ridge": ("usual", "league"), "change": ("ridge", "league"),
          "dml": ("ridge", "league"),
          "combo": ("dml", "ridge", "league")}  # fmt: skip
-# The champion (the CEO, 2026-11-13: every play, counted equally), which carries the published
-# ratings for higher layers
-PUBLISHER = ("off", "next3", "ridge")
+# The champion carries the published ratings for higher layers: every play, counted equally (the
+# CEO, 2026-11-13), with P3's weaker pull on offense (the CEO, 2026-11-14); defense is `ridge`
+PUBLISHER = ("off", "next3", "change")
 
 
 class _Efficiency(Expert):

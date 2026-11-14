@@ -160,7 +160,8 @@ def test_every_variant_meets_the_contract():
     assert [b.variant for b in VARIANTS["def_rest_combo"].baselines()] == [
         "def_rest_dml", "def_rest_ridge", "def_rest_league",
     ]  # fmt: skip
-    assert VARIANTS["off_next3_ridge"].publishes == F.PUBLISHED
+    assert VARIANTS["off_next3_change"].publishes == F.PUBLISHED
+    assert not VARIANTS["off_next3_ridge"].publishes
     assert not VARIANTS["off_next3_combo"].publishes
     assert not VARIANTS["off_rest_ridge"].publishes
 
@@ -281,6 +282,8 @@ def test_the_ratings_beat_the_league_level(side):
     assert _mse(combo) < 0.9 * _mse(league)
     assert (combo.scored["q10"] <= combo.scored["q90"]).all()
     assert set(F.PUBLISHED) <= set(combo.features.columns)
+    f = combo.features  # the champion: offense from `change`, defense from `ridge`
+    assert f["off_rating"].equals(f["off_change"]) and f["def_rating"].equals(f["def_ridge"])
 
 
 def test_no_signal_when_teams_are_alike():

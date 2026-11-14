@@ -80,8 +80,8 @@ def main() -> None:
         print(t, flush=True)
         lines.append(t)
 
-    rat = latest("team-efficiency", "off_next3_ridge").select(
-        "game_id", "team", "off_ridge", "def_ridge"
+    rat = latest("team-efficiency", "off_next3_change").select(
+        "game_id", "team", off_ridge="off_rating", def_ridge="def_rating"
     )
     sched = (
         read_part("team_game", "schedule", seasons=SEASONS)
