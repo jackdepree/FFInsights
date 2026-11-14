@@ -1,6 +1,6 @@
 # Brief: Snap leverage (`snap-leverage`)
 
-**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"). Agreed after the exploration · **Layer:** expert · **Cadence:** in_season (to be settled: see Assumptions 4)
+**Status:** draft (kickoff 2026-11-14; the CEO signed off on the new expert and its name: "I sign off on this new expert, but can we rename it to snap leverage"); explored 2026-11-14 (the CEO's go; [EXPLORATION.md](EXPLORATION.md): GO, small; the direction is the CEO's call). Agreed after the exploration · **Layer:** expert · **Cadence:** in_season (to be settled: see Assumptions 4)
 
 ## The usual way
 *Claude, 2026-11-14, before any research.*
@@ -76,7 +76,7 @@ A per player-game measure of leveraged snaps, leverage share and trust over expe
   - **Main (the CEO):** leveraged snaps or trust over expected improve the next 3 games' and next season's snap-share forecasts over plain snap share, with the 90% interval above zero, on held-out seasons.
   - **Secondary (the CEO):** a lighter bar, any signal with its interval clear of zero:
     - **Contracts:** the next veteran contract's pay as a share of the cap, within position, beyond age, draft slot and plain snaps.
-    - **Plus-minus:** when a trusted player misses a game, the team plays worse than when a player with the same plain snap share misses one. Taken as the CEO's "plus minus"; to confirm.
+    - **Plus-minus:** when a trusted player misses a game, the team plays worse than when a player with the same plain snap share misses one. The CEO's "plus minus" (2026-11-14: "yes that is exactly what I mean").
   - **Consistency:** trust over expected repeats week to week and season to season, with intervals clear of zero.
 - **Failure looks like:** no gain over plain snap share, and no consistency. Then leverage-weighted snaps are a description, not a signal.
 - **No-noise target** (CEO approves): next 3 games' snap share; the baseline is plain snap share from the same model.

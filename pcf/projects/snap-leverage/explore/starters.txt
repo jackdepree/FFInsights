@@ -1,0 +1,23 @@
+H46: starters against non-starters with a similar snap share. Mean trust gap (high-stakes share
+minus snap share) and trust over expected, starters minus non-starters, 90% interval (weeks).
+band | starters | non-starters | starters' gap | non-starters' gap | difference in gap | difference in trust over expected
+  0.1-0.3 | 3,605 | 18,193 | -0.0391 | -0.0114 | -0.0277 (-0.0337 to -0.0214) | +0.0076 (+0.0038 to +0.0117)
+  0.3-0.5 | 6,243 | 13,101 | -0.0603 | -0.0036 | -0.0568 (-0.0636 to -0.0500) | -0.0011 (-0.0052 to +0.0031)
+  0.5-0.7 | 11,283 | 8,115 | -0.0219 | +0.0352 | -0.0571 (-0.0642 to -0.0500) | -0.0023 (-0.0058 to +0.0016)
+  0.7-0.9 | 14,366 | 4,570 | +0.0235 | +0.0300 | -0.0065 (-0.0116 to -0.0016) | +0.0125 (+0.0091 to +0.0160)
+  0.9-1.0 | 35,300 | 5,462 | -0.0048 | -0.0060 | +0.0012 (+0.0002 to +0.0023) | +0.0021 (+0.0012 to +0.0029)
+
+By position group, snap share 30-90% (where both kinds are common): difference in gap | in trust over expected
+  QB (207 / 201) +0.0299 (-0.0154 to +0.0727) | +0.0922 (+0.0492 to +0.1335)
+  RB (3,155 / 2,503) -0.1210 (-0.1318 to -0.1108) | -0.0182 (-0.0252 to -0.0111)
+  WR (5,146 / 4,143) -0.0061 (-0.0117 to -0.0004) | +0.0016 (-0.0031 to +0.0062)
+  TE (3,028 / 3,073) +0.0699 (+0.0600 to +0.0798) | +0.0048 (-0.0004 to +0.0107)
+  OL (1,173 / 1,134) -0.0272 (-0.0454 to -0.0081) | +0.0123 (-0.0056 to +0.0319)
+  DL (10,535 / 6,480) +0.0131 (+0.0063 to +0.0200) | +0.0158 (+0.0116 to +0.0195)
+  LB (5,659 / 3,399) -0.0173 (-0.0261 to -0.0079) | +0.0136 (+0.0075 to +0.0189)
+  CB (1,880 / 3,141) -0.0519 (-0.0624 to -0.0415) | +0.0082 (-0.0005 to +0.0183)
+  S  (1,239 / 1,739) -0.0721 (-0.0864 to -0.0566) | +0.0002 (-0.0104 to +0.0110)
+
+All player-games: starters' and non-starters' share of the high-stakes snaps against their snap share
+  starters: snap share 0.780, high-stakes share 0.772, trust over expected -0.0026
+  non-starters: snap share 0.363, high-stakes share 0.368, trust over expected -0.0037

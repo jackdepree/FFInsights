@@ -1,0 +1,32 @@
+Leverage: the spread of WPA a play's situation allows, before the snap, walk-forward.
+Held-out season | train | corr(leverage, |WPA|) | corr(rung 0, |WPA|) | WPA^2 explained: leverage, rung 0
+  2016 | 2006-2015 | 0.555 | 0.243 | 0.132, 0.021
+  2017 | 2006-2016 | 0.540 | 0.234 | 0.143, 0.028
+  2018 | 2006-2017 | 0.549 | 0.259 | 0.085, 0.018
+  2019 | 2006-2018 | 0.549 | 0.216 | 0.153, 0.020
+  2020 | 2006-2019 | 0.553 | 0.232 | 0.155, 0.028
+  2021 | 2006-2020 | 0.573 | 0.245 | 0.175, 0.031
+  2022 | 2006-2021 | 0.553 | 0.240 | 0.135, 0.026
+  2023 | 2006-2022 | 0.577 | 0.238 | 0.210, 0.034
+  2024 | 2006-2023 | 0.558 | 0.238 | 0.160, 0.028
+
+Calibration, 2016-2024: by leverage decile, the predicted spread of WPA against the realised one
+decile | mean li | predicted sd | realised rms WPA | share 4th qtr | share one-score | pass share
+   1 | 0.32 | 0.0116 | 0.0095 | 0.71 | 0.01 | 0.59
+   2 | 0.45 | 0.0161 | 0.0128 | 0.40 | 0.06 | 0.57
+   3 | 0.65 | 0.0233 | 0.0226 | 0.23 | 0.24 | 0.59
+   4 | 0.81 | 0.0293 | 0.0263 | 0.12 | 0.68 | 0.54
+   5 | 0.91 | 0.0327 | 0.0303 | 0.06 | 0.89 | 0.51
+   6 | 0.98 | 0.0353 | 0.0338 | 0.09 | 0.90 | 0.53
+   7 | 1.07 | 0.0384 | 0.0372 | 0.10 | 0.91 | 0.60
+   8 | 1.20 | 0.0432 | 0.0437 | 0.16 | 0.93 | 0.64
+   9 | 1.45 | 0.0523 | 0.0528 | 0.28 | 0.95 | 0.74
+  10 | 2.31 | 0.0832 | 0.0887 | 0.60 | 0.97 | 0.78
+
+High stakes = the top fifth of each season's plays by leverage (li >= 1.23).
+  They hold 61.1% of all WPA^2 (the swing), and are
+  43.9% 4th-quarter, 95.9% one-score, 76.2% passes; rung 0 agrees on 42.4% of them.
+  Leading offenses run 22.7% of their high-stakes plays; trailing ones 23.7%; tied 22.7%.
+  Share of high-stakes plays that are a leading team's runs (H47's clock-draining runs): 3.9%
+  Expected pass chance (pace's pcf_xpass) known on 99.8% of plays.
+Plays written: 295,949 (2016-2024).

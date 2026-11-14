@@ -1,0 +1,32 @@
+H48 (a): where the ball goes. Spread (sd) of WPA, points of win chance, per play
+kind | high-stakes sd (plays) | ordinary sd (plays) | ratio
+  pass, by the passer (QB)   | 7.74 (42,774) | 3.32 (129,692) | 2.33
+  target WR                  | 8.12 (23,824) | 3.41 (68,407) | 2.38
+  target TE                  | 7.24 (7,709) | 3.21 (25,611) | 2.25
+  target RB                  | 6.07 (6,496) | 2.77 (24,145) | 2.20
+  run by RB                  | 5.62 (11,443) | 2.19 (92,226) | 2.56
+  run by QB                  | 7.43 (1,794) | 3.61 (5,154) | 2.06
+  every high-stakes play: sd 7.30; every ordinary play: 2.92
+
+H48 (b): how much a play's WPA depends on which player holds each position (sd of player
+effects, points of win chance per snap; split-half covariance less a shuffled null; ridge alpha 200, 150+ snaps per half)
+group | high-stakes: sd (players) | null sd | ordinary: sd (players) | null sd
+  QB | +0.097 (53) | 0.079 | -0.034 (56) | 0.016
+  RB | +0.109 (67) | 0.034 | -0.027 (65) | -0.014
+  WR | +0.034 (168) | 0.042 | +0.015 (154) | 0.017
+  TE | -0.043 (68) | 0.075 | -0.014 (87) | 0.027
+  OL | -0.042 (320) | 0.057 | +0.011 (330) | 0.018
+  DL | -0.059 (193) | 0.026 | -0.014 (224) | -0.006
+  LB | +0.058 (182) | 0.040 | -0.017 (198) | -0.011
+  CB | -0.065 (170) | -0.025 | -0.036 (160) | 0.015
+  S  | -0.013 (148) | -0.047 | +0.029 (143) | 0.006
+  (a negative value means the players' two halves agree less than the null's: no player signal)
+
+H49: high-stakes plays, offense positions, by the offense's pass rate over expected (team-season)
+group | pass-heavy sd | run-heavy sd | difference | random splits: 90% range of the difference
+  QB | +0.102 | +0.081 | +0.020 | -0.023 to +0.024
+  RB | -0.071 | +0.145 | -0.216 | -0.204 to -0.122
+  WR | -0.030 | +0.044 | -0.074 | -0.052 to +0.097
+  TE | +0.089 | -0.012 | +0.100 | -0.123 to +0.137
+  OL | +0.022 | -0.039 | +0.061 | -0.068 to +0.069
+  (raw split-half spreads, no shuffled-WPA null subtracted; the random splits are the null)
