@@ -5,7 +5,14 @@ from datetime import UTC, datetime
 import polars as pl
 import pytest
 
-from pcf.data.gateway import FrameSource, Gateway, UndeclaredInput, VintageError
+from pcf.data.gateway import (
+    FrameSource,
+    Gateway,
+    TableSource,
+    UndeclaredInput,
+    VintageError,
+    for_expert,
+)
 
 from ..validation import world
 
@@ -109,3 +116,41 @@ def test_retrospective_outputs_reach_in_season_views_only_for_finished_seasons()
     gw = Gateway(FrameSource(world.frames()), world.cal(), _outputs(rows))
     assert gw.view(MOMENT, "in_season", {"elo": 1}).output("elo")["season"].to_list() == [2021]
     assert gw.view(MOMENT, "retrospective", {"elo": 1}).output("elo").height == 2
+
+
+def test_a_version_with_no_mlflow_model_reads_the_run_the_registry_pins(tmp_path, monkeypatch):
+    """decision 0033: a project with no registered versions pins its history by run id."""
+    from mlflow.exceptions import MlflowException
+
+    from pcf.core import tracking
+    from pcf.data.gateway import history_run
+
+    def missing(project_id: str, version: int) -> str:
+        raise MlflowException(f"no {project_id} v{version}")
+
+    monkeypatch.setattr(tracking, "version_run", missing)
+    reg = tmp_path / "registry.yaml"
+    reg.write_text(
+        "projects:\n  - id: mapper\n    history_runs: {1: abc123}\n  - id: other\n",
+        encoding="utf-8",
+    )
+    assert history_run("mapper", 1, reg) == "abc123"
+    with pytest.raises(MlflowException):
+        history_run("mapper", 2, reg)  # only the pinned version
+    with pytest.raises(MlflowException):
+        history_run("other", 1, reg)
+    monkeypatch.setattr(tracking, "version_run", lambda p, v: "from-mlflow")
+    assert history_run("mapper", 1, reg) == "from-mlflow"  # a registered version wins
+
+
+def test_a_model_that_declares_its_first_season_gets_a_gateway_holding_only_seasons_from_it():
+    class Reads:
+        first_read = 2018
+
+    class ReadsAll:
+        pass
+
+    held = for_expert(Reads()).source
+    assert isinstance(held, TableSource) and held.seasons[0] == 2018
+    assert held.seasons[-1] >= 2025
+    assert for_expert(ReadsAll()).source.seasons is None

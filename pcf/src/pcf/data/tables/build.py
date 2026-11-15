@@ -13,6 +13,7 @@ import polars as pl
 
 from pcf.config import get_config
 from pcf.core.log import get_logger
+from pcf.data import usage
 from pcf.data.clean import standard
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
@@ -21,7 +22,7 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import efficiency, pace
+from pcf.data.tables import efficiency, leverage, pace
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
@@ -202,6 +203,25 @@ def pace_snaps(season: int) -> pl.DataFrame | None:
     return out
 
 
+@cache
+def _leverage_snaps(season: int) -> pl.DataFrame:
+    """A season's snaps for the leverage model (`leverage.snap_rows`), kept for the process."""
+    return leverage.snap_rows(scan("pbp", [season]).select(leverage.PBP_COLUMNS).collect())
+
+
+def leverage_rows(season: int) -> pl.DataFrame | None:
+    """A season's `play.leverage` rows from a fit on earlier seasons only (cached in the interim
+    zone), or None without play-by-play or enough earlier seasons."""
+    have = local_seasons("pbp")
+    if season not in have:
+        return None
+    cache_dir = get_config().zone("interim") / "leverage"
+    fitted = leverage.fitted_for(season, have, _leverage_snaps, cache_dir)
+    if fitted is None:
+        return None
+    return leverage.apply(_leverage_snaps(season), fitted)
+
+
 def build_play(season: int, cal: Calendar, root: Path | None) -> None:
     parts = play_parts(
         _season("pbp", season),
@@ -213,6 +233,9 @@ def build_play(season: int, cal: Calendar, root: Path | None) -> None:
     if paced is not None:
         rows = pace.play_rows(paced).with_columns(pl.col("play_id").cast(pl.Int64))
         parts["pace"] = known_at("pbp", rows, cal)  # every snap is a play on the spine
+    levered = leverage_rows(season)
+    if levered is not None:
+        parts["leverage"] = known_at("pbp", levered, cal)
     write_parts(parts, "play", [season], root)
 
 
@@ -270,7 +293,33 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
         parts["on_field_pace"] = on_spine(
             on_field, parts["roster"], ["gsis_id", "game_id"], "player_game.on_field_pace"
         )
+    usage_rows = leverage_usage(season, root)
+    if usage_rows is not None:
+        parts["leverage_usage"] = on_spine(
+            usage_rows, parts["roster"], ["gsis_id", "game_id"], "player_game.leverage_usage"
+        )
     write_parts(parts, "player_game", [season], root)
+
+
+def leverage_usage(season: int, root: Path | None) -> pl.DataFrame | None:
+    """Each player-game's usage weighted by the stakes (`pcf.data.usage`), from the saved `play`
+    and `player_play` parts (built first: TABLE_ORDER). None without them (participation starts
+    in 2016 and comes after the season)."""
+    try:
+        on = read_part("player_play", "on_field", [season], root).select(
+            "game_id", "play_id", "season", "side", "team", "gsis_id", "known_at"
+        )
+        lev = read_part("play", "leverage", [season], root).select(
+            "game_id", "play_id", "leverage", "high_stakes"
+        )
+        paced = read_part("play", "pace", [season], root).select("game_id", "play_id", "pcf_xpass")
+        plays = lev.join(paced, on=["game_id", "play_id"], how="left").collect()
+        on = on.collect()
+    except (FileNotFoundError, pl.exceptions.ComputeError):
+        return None
+    if plays.is_empty() or on.is_empty():
+        return None
+    return usage.part_rows(on, usage.plays(plays))
 
 
 def on_field_pace(season: int, root: Path | None) -> pl.DataFrame | None:

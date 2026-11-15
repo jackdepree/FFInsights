@@ -1,0 +1,38 @@
+Player-games 2016-2024: 178,565; players 4,985; team-games with a high-stakes play: 2,359 games
+High-stakes plays per team side per game: mean 12.5
+
+By position group: player-games | mean snap share | mean trust gap | sd trust gap | sd trust over expected (part-timers 10-90%)
+  QB |   5,741 | 0.828 | -0.0075 | 0.2078 | 0.2361
+  RB |  15,108 | 0.347 | -0.0204 | 0.2060 | 0.1228
+  WR |  22,766 | 0.529 | +0.0399 | 0.1520 | 0.1162
+  TE |  13,872 | 0.443 | -0.0458 | 0.1800 | 0.1090
+  OL |  28,867 | 0.823 | -0.0088 | 0.2016 | 0.1980
+  DL |  31,820 | 0.475 | -0.0369 | 0.1942 | 0.1163
+  LB |  25,922 | 0.539 | -0.0167 | 0.2109 | 0.1284
+  CB |  18,378 | 0.662 | +0.0487 | 0.1971 | 0.1494
+  S  |  16,091 | 0.666 | +0.0340 | 0.2152 | 0.1486
+
+Consistency (pcf.validation.consistency: odd against even weeks; season to next season)
+  all player-games with a snap (135,845 rows, games with 5+ high-stakes plays on his side)
+    snap_share week_r=0.878 week_lo=0.875 week_hi=0.881 season_r=0.690 season_lo=0.682 season_hi=0.698 unit_seasons=14697 season_pairs=11250 mean_abs=0.585 verdict=trait
+    lev_share  week_r=0.878 week_lo=0.875 week_hi=0.881 season_r=0.692 season_lo=0.684 season_hi=0.700 unit_seasons=14697 season_pairs=11250 mean_abs=0.584 verdict=trait
+    hi_share   week_r=0.859 week_lo=0.855 week_hi=0.862 season_r=0.687 season_lo=0.679 season_hi=0.696 unit_seasons=14697 season_pairs=11250 mean_abs=0.583 verdict=trait
+    trust_gap  week_r=0.607 week_lo=0.598 week_hi=0.616 season_r=0.474 season_lo=0.462 season_hi=0.486 unit_seasons=14697 season_pairs=11250 mean_abs=0.103 verdict=trait
+    trust_oe   week_r=0.120 week_lo=0.107 week_hi=0.134 season_r=0.098 season_lo=0.082 season_hi=0.113 unit_seasons=14697 season_pairs=11250 mean_abs=0.064 verdict=trait
+  part-timers, snap share 10-90% (79,633 rows, games with 5+ high-stakes plays on his side)
+    snap_share week_r=0.749 week_lo=0.742 week_hi=0.756 season_r=0.508 season_lo=0.494 season_hi=0.521 unit_seasons=9954 season_pairs=8279 mean_abs=0.488 verdict=trait
+    lev_share  week_r=0.748 week_lo=0.741 week_hi=0.756 season_r=0.517 season_lo=0.504 season_hi=0.530 unit_seasons=9954 season_pairs=8279 mean_abs=0.486 verdict=trait
+    hi_share   week_r=0.721 week_lo=0.713 week_hi=0.729 season_r=0.515 season_lo=0.502 season_hi=0.529 unit_seasons=9954 season_pairs=8279 mean_abs=0.484 verdict=trait
+    trust_gap  week_r=0.555 week_lo=0.544 week_hi=0.567 season_r=0.377 season_lo=0.361 season_hi=0.392 unit_seasons=9954 season_pairs=8279 mean_abs=0.156 verdict=trait
+    trust_oe   week_r=0.112 week_lo=0.096 week_hi=0.128 season_r=0.064 season_lo=0.046 season_hi=0.082 unit_seasons=9954 season_pairs=8279 mean_abs=0.093 verdict=trait
+
+By position group, part-timers: trust over expected, week to week and season to season
+  QB trust_oe: week_r=0.08, week_lo=-0.09, week_hi=0.25, season_r=-0.07, season_lo=-0.21, season_hi=0.07 | trust_gap: week_r=0.06, week_lo=-0.12, week_hi=0.23, season_r=-0.02, season_lo=-0.16, season_hi=0.12
+  RB trust_oe: week_r=0.14, week_lo=0.09, week_hi=0.19, season_r=0.14, season_lo=0.08, season_hi=0.19 | trust_gap: week_r=0.70, week_lo=0.67, week_hi=0.72, season_r=0.58, season_lo=0.54, season_hi=0.62
+  WR trust_oe: week_r=0.07, week_lo=0.03, week_hi=0.11, season_r=0.03, season_lo=-0.02, season_hi=0.07 | trust_gap: week_r=0.33, week_lo=0.29, week_hi=0.36, season_r=0.19, season_lo=0.15, season_hi=0.24
+  TE trust_oe: week_r=0.08, week_lo=0.03, week_hi=0.13, season_r=0.00, season_lo=-0.06, season_hi=0.06 | trust_gap: week_r=0.64, week_lo=0.61, week_hi=0.67, season_r=0.47, season_lo=0.42, season_hi=0.52
+  OL trust_oe: week_r=0.03, week_lo=-0.04, week_hi=0.09, season_r=0.03, season_lo=-0.03, season_hi=0.09 | trust_gap: week_r=0.04, week_lo=-0.03, week_hi=0.10, season_r=0.02, season_lo=-0.04, season_hi=0.08
+  DL trust_oe: week_r=0.22, week_lo=0.19, week_hi=0.25, season_r=0.22, season_lo=0.18, season_hi=0.26 | trust_gap: week_r=0.72, week_lo=0.71, week_hi=0.74, season_r=0.59, season_lo=0.57, season_hi=0.62
+  LB trust_oe: week_r=0.17, week_lo=0.12, week_hi=0.21, season_r=0.15, season_lo=0.11, season_hi=0.20 | trust_gap: week_r=0.61, week_lo=0.59, week_hi=0.64, season_r=0.43, season_lo=0.39, season_hi=0.47
+  CB trust_oe: week_r=0.10, week_lo=0.05, week_hi=0.15, season_r=0.05, season_lo=-0.01, season_hi=0.10 | trust_gap: week_r=0.25, week_lo=0.20, week_hi=0.30, season_r=0.11, season_lo=0.06, season_hi=0.17
+  S  trust_oe: week_r=0.09, week_lo=0.02, week_hi=0.15, season_r=0.06, season_lo=-0.00, season_hi=0.13 | trust_gap: week_r=0.37, week_lo=0.32, week_hi=0.43, season_r=0.12, season_lo=0.06, season_hi=0.18

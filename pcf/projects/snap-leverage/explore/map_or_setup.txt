@@ -1,0 +1,12 @@
+Next 3 games' snap share, the exploration's rows and trees, scored 2021-2024 (+ = better than plain)
+  trained from 2016 (102,485 rows):
+    + true leverage share    everyone +0.10% (-0.01% to +0.19%) | first-year +0.12% (-0.13% to +0.34%)
+  trained from 2019 (102,485 rows):
+    + true leverage share    everyone +0.07% (-0.05% to +0.18%) | first-year +0.37% (+0.07% to +0.64%)
+    + map leverage share     everyone -0.02% (-0.09% to +0.06%) | first-year +0.05% (-0.25% to +0.37%)
+
+The first run of this same script (2026-11-14, nothing changed but the row order):
+  trained from 2016: + true leverage share +0.15% (+0.04% to +0.27%); first-year +0.22%
+  trained from 2019: + true leverage share +0.26% (+0.15% to +0.38%); first-year +0.57%
+                     + map leverage share  +0.15% (+0.07% to +0.25%); first-year +0.20%
+The trees stop early on a random tenth that depends on the row order: one run is one draw (RESULTS R5).

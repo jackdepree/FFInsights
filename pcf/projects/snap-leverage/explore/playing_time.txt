@@ -1,0 +1,91 @@
+Rostered player-games, 2016-2024 regular season: 240,749; played 73.2%
+
+1. Next 3 games' snap share. Share of the plain model's squared error removed (+ = better), 2018-2024, 90% interval
+  trees: plain model's mean squared miss 0.0432 (173,595 rows)
+    everyone (173,595):
+      + leverage share         +0.14% (+0.06% to +0.23%)
+      + high-stakes share      -0.04% (-0.12% to +0.04%)
+      + trust gap (raw)        -0.08% (-0.16% to +0.01%)
+      + trust over expected    -0.23% (-0.31% to -0.13%)
+      + all four               -0.07% (-0.22% to +0.06%)
+    part-timers (last 3 at 10-90%) (92,121):
+      + leverage share         +0.17% (+0.05% to +0.30%)
+      + high-stakes share      -0.03% (-0.12% to +0.08%)
+      + trust gap (raw)        -0.06% (-0.19% to +0.06%)
+      + trust over expected    -0.29% (-0.43% to -0.16%)
+      + all four               -0.08% (-0.26% to +0.11%)
+    first-year players (28,183):
+      + leverage share         +0.29% (+0.12% to +0.45%)
+      + high-stakes share      +0.02% (-0.16% to +0.20%)
+      + trust gap (raw)        -0.05% (-0.26% to +0.17%)
+      + trust over expected    -0.12% (-0.34% to +0.11%)
+      + all four               +0.12% (-0.12% to +0.38%)
+    weeks 1-4 of his season (53,543):
+      + leverage share         +0.31% (+0.17% to +0.45%)
+      + high-stakes share      +0.02% (-0.06% to +0.13%)
+      + trust gap (raw)        -0.13% (-0.22% to -0.05%)
+      + trust over expected    -0.32% (-0.44% to -0.20%)
+      + all four               -0.05% (-0.19% to +0.10%)
+    by position group (trees, + all four):
+      QB everyone +0.37% (-0.20% to +1.01%) | part-timers -0.04% (-1.16% to +1.24%)
+      RB everyone -0.09% (-0.53% to +0.31%) | part-timers +0.10% (-0.32% to +0.58%)
+      WR everyone +0.18% (-0.10% to +0.47%) | part-timers +0.17% (-0.20% to +0.49%)
+      TE everyone -0.12% (-0.64% to +0.38%) | part-timers +0.03% (-0.57% to +0.62%)
+      OL everyone -0.09% (-0.33% to +0.17%) | part-timers -0.00% (-0.52% to +0.49%)
+      DL everyone -0.37% (-0.67% to -0.06%) | part-timers -0.23% (-0.51% to +0.13%)
+      LB everyone -0.11% (-0.42% to +0.16%) | part-timers -0.07% (-0.51% to +0.36%)
+      DB everyone -0.16% (-0.35% to +0.05%) | part-timers -0.28% (-0.61% to +0.04%)
+  linear: plain model's mean squared miss 0.0442 (173,595 rows)
+    everyone (173,595):
+      + leverage share         +0.14% (+0.09% to +0.19%)
+      + high-stakes share      +0.07% (+0.05% to +0.10%)
+      + trust gap (raw)        +0.08% (+0.05% to +0.12%)
+      + trust over expected    +0.01% (-0.01% to +0.02%)
+      + all four               +0.17% (+0.10% to +0.23%)
+    part-timers (last 3 at 10-90%) (92,121):
+      + leverage share         +0.23% (+0.15% to +0.32%)
+      + high-stakes share      +0.14% (+0.09% to +0.18%)
+      + trust gap (raw)        +0.14% (+0.08% to +0.20%)
+      + trust over expected    +0.02% (-0.00% to +0.04%)
+      + all four               +0.25% (+0.15% to +0.35%)
+    first-year players (28,183):
+      + leverage share         +0.21% (+0.12% to +0.30%)
+      + high-stakes share      +0.11% (+0.05% to +0.17%)
+      + trust gap (raw)        +0.15% (+0.08% to +0.22%)
+      + trust over expected    -0.03% (-0.06% to +0.01%)
+      + all four               +0.30% (+0.19% to +0.41%)
+    weeks 1-4 of his season (53,543):
+      + leverage share         +0.29% (+0.19% to +0.39%)
+      + high-stakes share      +0.11% (+0.05% to +0.16%)
+      + trust gap (raw)        +0.12% (+0.05% to +0.20%)
+      + trust over expected    +0.03% (-0.00% to +0.07%)
+      + all four               +0.27% (+0.17% to +0.36%)
+
+2. Next season's snap share, from the season so far (last game's row). Same comparisons, trees, resampling teams
+  rows 12,861 (players rostered in both seasons; a player who leaves the league drops out)
+    everyone (11,301):
+      + leverage share         -0.15% (-0.49% to +0.24%)
+      + high-stakes share      -0.79% (-1.24% to -0.31%)
+      + trust gap (raw)        -0.73% (-1.56% to +0.13%)
+      + trust over expected    -0.57% (-1.38% to +0.30%)
+      + all four               -0.54% (-1.40% to +0.26%)
+    part-timers (6,865):
+      + leverage share         -0.57% (-1.20% to +0.02%)
+      + high-stakes share      -0.85% (-1.53% to -0.25%)
+      + trust gap (raw)        -0.65% (-1.80% to +0.42%)
+      + trust over expected    -1.03% (-2.12% to -0.04%)
+      + all four               -1.10% (-2.29% to -0.08%)
+    first-year players (2,006):
+      + leverage share         +0.31% (-0.89% to +1.50%)
+      + high-stakes share      +0.37% (-1.06% to +2.03%)
+      + trust gap (raw)        -0.68% (-2.31% to +1.01%)
+      + trust over expected    -0.19% (-1.78% to +1.41%)
+      + all four               +0.30% (-1.46% to +2.49%)
+
+H47. Raw trust gap against trust over expected, player-seasons with 8+ games at 10-90% snap share:
+  RB   771 player-seasons: rank correlation 0.68
+  WR 1,091 player-seasons: rank correlation 0.72
+  TE   737 player-seasons: rank correlation 0.62
+  DL 1,934 player-seasons: rank correlation 0.77
+  LB   978 player-seasons: rank correlation 0.73
+  DB   698 player-seasons: rank correlation 0.68

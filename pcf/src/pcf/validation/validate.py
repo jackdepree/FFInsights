@@ -20,7 +20,7 @@ import polars as pl
 from pcf.config import get_config
 from pcf.core.contract import Expert
 from pcf.core.log import get_logger
-from pcf.data.gateway import Gateway
+from pcf.data.gateway import Gateway, for_expert
 from pcf.validation import backtest, calibration, leakage, nulls, sanity, scores
 from pcf.validation.compare import Comparison, compare
 from pcf.validation.misses import Misses, lens_frame
@@ -96,7 +96,7 @@ def validate(
     seed: int | None = None,
 ) -> Validation:
     seed = get_config().seed if seed is None else seed
-    gateway = gateway or Gateway()
+    gateway = gateway or for_expert(expert)
     bt = backtest.run(expert, gateway, seasons, open_vault=open_vault, refit=refit)
     tested = sorted({s.season for s in bt.steps if s.index in bt.test})
     keys = expert.keys()

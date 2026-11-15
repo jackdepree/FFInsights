@@ -95,8 +95,8 @@ TABLES: dict[str, Table] = {
         Table(
             "play",
             (_GAME, _PLAY),
-            ("pbp", "participation", "ftn", "tags", "pace"),
-            after=("pbp", "participation", "ftn", "tags", "pace"),
+            ("pbp", "participation", "ftn", "tags", "pace", "leverage"),
+            after=("pbp", "participation", "ftn", "tags", "pace", "leverage"),
             post_season=("participation",),
         ),
         Table("drive", (_GAME, _DRIVE), ("summary", "tags"), after=("summary", "tags")),
@@ -124,6 +124,7 @@ TABLES: dict[str, Table] = {
                 "tags_result",
                 "ecr",
                 "on_field_pace",
+                "leverage_usage",
             ),
             after=(
                 "stats",
@@ -133,8 +134,9 @@ TABLES: dict[str, Table] = {
                 "pfr",
                 "tags_result",
                 "on_field_pace",
+                "leverage_usage",
             ),
-            post_season=("on_field_pace",),
+            post_season=("on_field_pace", "leverage_usage"),
         ),
     ]
 }

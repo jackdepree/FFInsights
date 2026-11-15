@@ -1,0 +1,34 @@
+1. Contracts: 6,613 veteran contracts signed 2019-2024 with the season before in our rows; mean 1.43% of the cap
+  scored 2021-2024: 4,718 contracts; the plain model's r with pay 0.76
+    + leverage share         -0.76% (-2.43% to +0.91%)
+    + high-stakes share      -2.78% (-5.78% to +0.16%)
+    + trust gap (raw)        +1.72% (+0.04% to +3.16%)
+    + trust over expected    -0.72% (-2.44% to +0.85%)
+    + all four               -3.70% (-6.75% to -0.89%)
+  contracts at 1%+ of the cap (1,382):
+    + leverage share         -0.76% (-2.67% to +1.19%)
+    + high-stakes share      -4.95% (-8.45% to -1.85%)
+    + trust gap (raw)        +2.13% (+0.37% to +4.11%)
+    + trust over expected    -0.62% (-2.41% to +1.16%)
+    + all four               -4.57% (-7.73% to -1.48%)
+  correlation of each measure with what the plain model leaves over (pay - plain), by group:
+    QB (236) lev +0.26, hi +0.25, trust_gap +0.01, trust_oe -0.00
+    RB (386) lev -0.06, hi -0.13, trust_gap -0.16, trust_oe -0.11
+    WR (620) lev +0.10, hi +0.08, trust_gap +0.03, trust_oe +0.04
+    TE (322) lev -0.24, hi -0.23, trust_gap -0.06, trust_oe -0.04
+    OL (766) lev -0.16, hi -0.16, trust_gap +0.05, trust_oe +0.05
+    DL (759) lev +0.11, hi +0.17, trust_gap +0.21, trust_oe +0.15
+    LB (648) lev -0.27, hi -0.20, trust_gap +0.21, trust_oe +0.14
+    DB (981) lev -0.25, hi -0.25, trust_gap +0.04, trust_oe +0.00
+
+2. Plus-minus: 8,444 team-game sides, 2017-2024; 4,072 with a newly missing player (5,899 absences)
+   'worse' = how much worse than team-efficiency's forecast the side played, EPA per play (+ = worse)
+   mean worse with nobody newly out -0.0074; with someone out +0.0082
+   offense snap share only              out_snap +0.0213 (+0.0147 to +0.0274)
+   defense snap share only              out_snap +0.0141 (+0.0056 to +0.0225)
+   offense snap + trust over expected   out_snap +0.0218 (+0.0149 to +0.0280); out_oe +0.0401 (-0.0005 to +0.0788)
+   defense snap + trust over expected   out_snap +0.0141 (+0.0055 to +0.0226); out_oe +0.0031 (-0.0431 to +0.0608)
+   offense snap + trust gap             out_snap +0.0214 (+0.0143 to +0.0274); out_gap +0.0226 (-0.0174 to +0.0621)
+   defense snap + trust gap             out_snap +0.0141 (+0.0056 to +0.0226); out_gap +0.0043 (-0.0313 to +0.0480)
+   offense snap + leverage share        out_snap -0.1336 (-0.3266 to +0.0232); out_lev +0.1541 (-0.0064 to +0.3497)
+   defense snap + leverage share        out_snap +0.0880 (-0.1258 to +0.2860); out_lev -0.0734 (-0.2738 to +0.1349)
