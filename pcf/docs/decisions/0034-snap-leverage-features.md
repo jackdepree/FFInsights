@@ -25,4 +25,6 @@
 6. **The harness keeps `first_read`** (decision 0033, call 10). It's general, tested and harmless, and any future model that reads the play-by-play can use it.
 7. **No consistency rerun.** The measures are the exploration's, from true participation, and already have rows in `CONSISTENCY.md` (F3–F5). The map's versions got their own row (R9).
 
+**Confirmed after the spot-check** (the CEO, 2026-11-14: "(a) It stands"). With the seed's luck counted, leverage share alone reads neutral (+0.12% range score, −0.02 to +0.26), not clearly noise; it never helps, and the full rung fails every check (RESULTS, the spot-check).
+
 **Why:** the CEO's rule and pick. The contract signal (+1.7% from the role gap, F10) came from true participation, and contract work runs between seasons, where post-season data is allowed.

@@ -1,6 +1,6 @@
 # Results: Snap leverage (`snap-leverage`)
 
-**Date:** 2026-11-14 · **Status:** the build failed the no-noise target, so by the CEO's rule the project is downscaled from an expert to an investigation and feature engineering (the CEO, 2026-11-14: "if it fails the no noise target then we will downscale this project from an expert to simply an investigation and feature engineering"). **The CEO's pick (2026-11-14): "(a) Part + usage part"**. `play.leverage` stays, a new post-season part `player_game.leverage_usage` is built from true participation, and the nine forecast variants left the package ([decision 0034](../../docs/decisions/0034-snap-leverage-features.md)). · **Brief:** [BRIEF.md](BRIEF.md) · **Decisions:** [0033](../../docs/decisions/0033-snap-leverage-build.md), [0034](../../docs/decisions/0034-snap-leverage-features.md) · **MLflow experiment:** `snap-leverage` · **Champion:** none
+**Date:** 2026-11-14 · **Status:** the build failed the no-noise target, so by the CEO's rule the project is downscaled from an expert to an investigation and feature engineering (the CEO, 2026-11-14: "if it fails the no noise target then we will downscale this project from an expert to simply an investigation and feature engineering"). **The CEO's pick (2026-11-14): "(a) Part + usage part"**. `play.leverage` stays, a new post-season part `player_game.leverage_usage` is built from true participation, and the nine forecast variants left the package ([decision 0034](../../docs/decisions/0034-snap-leverage-features.md)). After the spot-check found leverage share alone borderline neutral once the seed is counted, **the CEO (2026-11-14): "(a) It stands"**. · **Brief:** [BRIEF.md](BRIEF.md) · **Decisions:** [0033](../../docs/decisions/0033-snap-leverage-build.md), [0034](../../docs/decisions/0034-snap-leverage-features.md) · **MLflow experiment:** `snap-leverage` · **Champion:** none
 
 ## In short
 **Leverage before the snap works as a measure, but weighting a player's snaps by it doesn't forecast his playing time better than plain snap share.**
@@ -21,7 +21,7 @@
 | Signal / no noise | **Signal: pass.** All nine beat 20 of 20 shuffled refits (range score 0.048–0.050 against 0.081–0.087 shuffled). **No noise: fail.** The leverage rungs are worse than plain snap share on the CEO's target (R1, R2) |
 | Calibration and range coverage | Pass. 80% ranges hold 79.0–79.5%, 49.6–50.4% land above q50; every position group and season inside the bar |
 | Leakage | 9 of 9 blocking checks pass for all nine variants (after R8's fix); no feature above \|r\| 0.9 |
-| Football sanity | The top forecasts are full-time QBs, linemen and safeties; the lowest are deep backups. The CEO's review is pending |
+| Football sanity | The retired forecasts: the top are full-time QBs, linemen and safeties, the lowest deep backups. **What ships, 2024** ([explore/sanity_part.txt](explore/sanity_part.txt)): `play.leverage` is 2.0 in the last 5 minutes within 8 points, 0.3 in blowouts, and rises by down (0.87 to 2.06); the top plays are 4th downs late, down 1-5. The largest passing-down role gaps are third-down backs (Ty Johnson, Justice Hill, Jaylen Warren) and pass rushers (Autry, Campbell, Von Miller, Bosa); the smallest are early-down backs (Henry, Cook), blocking tight ends (Oliver, Washington) and nose tackles (Jenkins, Godchaux). WRs and DBs lean positive, RBs, TEs and LBs negative. Nothing flagged. The CEO's review is pending |
 | CEO spot-check | Done: R2, the seeds (below). Leverage share is worse with every seed, but with the seed's luck in the interval it just reaches zero: **borderline neutral**. The full rung fails either way |
 
 ## The ladder
@@ -88,7 +88,7 @@ The squared error tells the same story (`ladder.txt`). **The ladder stops at run
 - **Toward noise:** take the harness's single seed as the rule is written today, or the seed-free fit (+0.14%, though it has no interval of its own).
 - **Toward helping:** nothing here. The best seed is still worse (+0.03%). Only more map seasons might (the case against, 2).
 
-**Claude's reading:** the downscale still fits. A neutral expert passes the rule but forecasts nothing plain snap share doesn't. It would hand higher layers a second copy of snap share. And `player_game.leverage_usage` already keeps the measure available for downstream feature selection. It's the CEO's call (open question 3). Numbers: [explore/spot_check_seeds.txt](explore/spot_check_seeds.txt), [explore/spot_check_seeds_range.txt](explore/spot_check_seeds_range.txt).
+**Claude's reading:** the downscale still fits. A neutral expert passes the rule but forecasts nothing plain snap share doesn't. It would hand higher layers a second copy of snap share. And `player_game.leverage_usage` already keeps the measure available for downstream feature selection. **The CEO, 2026-11-14: "(a) It stands"** (open question 3). Numbers: [explore/spot_check_seeds.txt](explore/spot_check_seeds.txt), [explore/spot_check_seeds_range.txt](explore/spot_check_seeds_range.txt).
 
 ## Hunches: what the build adds
 | # | Hunch | Exploration | The build |
@@ -160,7 +160,7 @@ The strongest argument that this verdict is wrong:
    - **(b) Only the leverage part.** The usage measures stay as a function in the package; nothing new is built.
    - **(c) Tempting but bad: ship the leverage-share forecast anyway**, because it passes the signal test. It beats shuffled outcomes, but it adds noise against plain snap share. Higher layers would get a noisier copy of snap share labeled "trust".
 2. **Your spot-check:** *the CEO, 2026-11-14: "R2: the seeds" (done, above).*
-3. **Does the downscale stand, now that leverage share alone reads neutral once the seed is counted?**
+3. **Does the downscale stand, now that leverage share alone reads neutral once the seed is counted?** *The CEO, 2026-11-14: "(a) It stands".*
    - **(a) It stands** (Claude's recommendation). Neutral means it adds nothing over plain snap share, and the part keeps the measure for downstream models.
    - **(b) Bring back the leverage-share forecast as a small neutral expert** (`snap_next3_lev`, from commit 892d39c). It passes the written rule, but higher layers get a second copy of snap share.
    - **(c) Tempting but bad: change the rule to count the seed for this project only.** A rule bent to fit one result stops being a rule. If the seed should count, it should count for every expert (IDEAS I45, for VALIDATION).
