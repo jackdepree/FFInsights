@@ -14,9 +14,17 @@
 ## CEO hunches
 *The CEO's words, recorded as said, before Claude's research.* Each hunch gets an id (H1, H2, ...), is tested in the exploration, and gets a verdict in [`projects/HUNCHES.md`](../HUNCHES.md).
 
-| # | Hunch | What the usual way says | How the exploration will test it |
-|---|---|---|---|
-| H1 | | | |
+State the football claim on its own, apart from any method for testing it. Before the test, the CEO gives each hunch a confidence (low, medium, high: roughly 60%, 75%, 90%) and an expected size in the target's units, and Claude writes its own expectation beside it.
+
+| # | Hunch | CEO's confidence and expected size | Claude expects | What the usual way says | How the exploration will test it |
+|---|---|---|---|---|---|
+| H1 | | | | | |
+
+## Methods
+*Claude, after the hunches.* Two or three ways to test or build this, one of them exploratory (from outside the usual toolbox), each with what it assumes and what it costs. The CEO takes part in the choice.
+
+## The noise ceiling
+*Filled in by the exploration, before the hunches are tested.* How much of the target's error anything could remove (hindsight oracle, split-half repeatability), and how large the model's own fitting noise is (seeds, row order). Every gain below is read against these.
 
 ## The question
 One or two sentences, in plain football language.

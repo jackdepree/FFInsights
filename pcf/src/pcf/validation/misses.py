@@ -28,10 +28,12 @@ from pcf.data.gateway import Source
 from pcf.data.tags.catalog import BEFORE, TAGS
 
 c = pl.col
-LENS_LIST = "2026-11-03"  # the dated lens list in use (miss-lenses D1, D5)
+LENS_LIST = "2026-11-15"  # the dated lens list in use (miss-lenses D1, D5; 2026-11-15 adds the
+# two change lenses, IDEAS I47, the CEO's go)
 METHOD = "2026-11-03"  # the dated way lenses are scored (D2)
 MIN_ROWS = 200  # the smallest group a top group or a flagged tag may be
 MIN_FIT = 30  # the smallest group whose correction is learned for the bias share
+CHANGE_GAMES = 4  # "just after a change" is the first 4 games (the change lenses, I47)
 MAX_FLAGGED = 5
 DRAWS = 1000
 LEVEL = 0.90  # the top group's interval
@@ -58,7 +60,39 @@ def _bands(x: pl.Expr, cuts: Sequence[float], labels: Sequence[str]) -> pl.Expr:
     return out.otherwise(pl.lit(labels[-1]))
 
 
-# The fixed lenses for player-game models (miss-lenses D1, list of 2026-11-03)
+def _player_change(d: pl.DataFrame) -> pl.Expr:
+    """The latest thing that changed for the player, most recent first."""
+    rookie, new = c("tag_rookie").fill_null(False), c("tag_new_team").fill_null(False)
+    early = c("weeks_on_team") <= CHANGE_GAMES
+    return (
+        pl.when(c("since_back") == 1).then(pl.lit("first game back from injury"))
+        .when(c("since_back") <= CHANGE_GAMES).then(pl.lit("games 2-4 back from injury"))
+        .when(rookie & early).then(pl.lit("rookie, weeks 1-4"))
+        .when(rookie).then(pl.lit("rookie, weeks 5+"))
+        .when(new & early).then(pl.lit("new to the team, weeks 1-4"))
+        .when(new).then(pl.lit("new to the team, weeks 5+"))
+        .otherwise(pl.lit("none"))
+    )  # fmt: skip
+
+
+def _team_change(d: pl.DataFrame) -> pl.Expr:
+    """The latest thing that changed for the player's team, the first games after it first."""
+    early = c("team_game_no") <= CHANGE_GAMES
+    coach, qb = c("new_coach").fill_null(False), c("new_qb").fill_null(False)
+    return (
+        pl.when(c("since_qb_change") <= CHANGE_GAMES)
+        .then(pl.lit("QB changed in season, games 1-4"))
+        .when(coach & early).then(pl.lit("new head coach, games 1-4"))
+        .when(qb & early).then(pl.lit("new QB at season start, games 1-4"))
+        .when(c("since_qb_change") > CHANGE_GAMES).then(pl.lit("QB changed in season, games 5+"))
+        .when(coach).then(pl.lit("new head coach, games 5+"))
+        .when(c("tag_off_bye").fill_null(False)).then(pl.lit("first game after a bye"))
+        .otherwise(pl.lit("none"))
+    )  # fmt: skip
+
+
+# The fixed lenses for player-game models (miss-lenses D1; list of 2026-11-15: the 2026-11-03
+# list plus the two change lenses)
 LENSES: list[Lens] = [
     Lens("position", "before", "the player's position", lambda d: c("position"), ("position",)),
     Lens(
@@ -91,6 +125,15 @@ LENSES: list[Lens] = [
         "qb_efficiency", "after", "completed more than expected (QBs)",
         lambda d: c("tag_positive_cpoe_game").cast(pl.String),
         ("tag_positive_cpoe_game",), positions=("QB",),
+    ),
+    Lens(
+        "player_change", "before", "games since something changed for the player",
+        _player_change, ("weeks_on_team", "since_back", "tag_rookie", "tag_new_team"),
+    ),
+    Lens(
+        "team_change", "before", "games since something changed for his team",
+        _team_change,
+        ("team_game_no", "new_coach", "new_qb", "since_qb_change", "tag_off_bye"),
     ),
 ]  # fmt: skip
 FIXED = {lens.name for lens in LENSES}
@@ -126,6 +169,66 @@ def _part(source: Source, table: str, part: str) -> pl.DataFrame | None:
         return source.part(table, part)
     except FileNotFoundError:
         return None
+
+
+def _since(flag: pl.Expr, order: str, over: Sequence[str]) -> pl.Expr:
+    """Games since `flag` was last true within `over`, counting that game as 1; null before the
+    first one."""
+    spell = flag.cast(pl.Int32).cum_sum().over(*over, order_by=order)
+    return pl.when(spell > 0).then(c(order).rank("ordinal").over(*over, spell))
+
+
+def team_changes(source: Source) -> pl.DataFrame | None:
+    """Per team-game: its number in the team's season, whether the team opened the season with a
+    new head coach or a new starting QB (against last season's final coach and most-started QB),
+    and games since the starting QB last changed within the season. From who actually started
+    and coached, so it is a lens for diagnosis; the point-in-time version of the season-start
+    flags, for models, is `pcf.experts.team_efficiency.changes` (a known duplication, I47)."""
+    sched, pre = _part(source, "team_game", "schedule"), _part(source, "team_game", "pregame")
+    if sched is None or pre is None or not {"qb_id", "coach"} <= set(pre.columns):
+        return None
+    x = (
+        sched.select("game_id", "team", "season", "week", "game_type")
+        .join(pre.select("game_id", "team", "qb_id", "coach"), on=["game_id", "team"], how="left")
+        .sort("team", "season", "week")
+        .with_columns(team_game_no=c("week").rank("ordinal").over("team", "season"))
+    )
+    reg = x.filter(c("game_type") == "REG")
+    last_qb = (
+        reg.drop_nulls("qb_id")
+        .group_by("season", "team", "qb_id")
+        .agg(n=pl.len(), last=c("week").max())
+        .sort("season", "team", "n", "last", descending=[False, False, True, True])
+        .group_by("season", "team", maintain_order=True)
+        .first()
+        .select(c("season") + 1, "team", last_qb="qb_id")
+    )
+    last_coach = (
+        reg.drop_nulls("coach")
+        .sort("season", "team", "week")
+        .group_by("season", "team", maintain_order=True)
+        .last()
+        .select(c("season") + 1, "team", last_coach="coach")
+    )
+    opening = (
+        x.filter(c("team_game_no") == 1)
+        .select("season", "team", open_qb="qb_id", open_coach="coach")
+        .join(last_qb, on=["season", "team"], how="left")
+        .join(last_coach, on=["season", "team"], how="left")
+        .select(
+            "season", "team",
+            new_qb=c("open_qb") != c("last_qb"),  # null when last season isn't in the data
+            new_coach=c("open_coach") != c("last_coach"),
+        )
+    )  # fmt: skip
+    changed = (c("qb_id") != c("qb_id").shift(1).over("team", "season", order_by="week")).fill_null(
+        False
+    )
+    return (
+        x.join(opening, on=["season", "team"], how="left")
+        .with_columns(since_qb_change=_since(changed, "week", ("team", "season")))
+        .select("game_id", "team", "team_game_no", "new_coach", "new_qb", "since_qb_change")
+    )
 
 
 def lens_frame(source: Source, seasons: Sequence[int] | None = None) -> pl.DataFrame:
@@ -168,6 +271,14 @@ def lens_frame(source: Source, seasons: Sequence[int] | None = None) -> pl.DataF
             )
             .drop("reported")
         )
+    # the change lenses (list of 2026-11-15): games since something changed, player and team
+    df = df.with_columns(weeks_on_team=c("week").rank("ordinal").over("gsis_id", "season", "team"))
+    if "tag_first_game_back" in df.columns:
+        back = c("tag_first_game_back").fill_null(False)
+        df = df.with_columns(since_back=_since(back, "week", ("gsis_id", "season")))
+    changes = team_changes(source)
+    if changes is not None:
+        df = df.join(changes, on=["game_id", "team"], how="left")
     sched = source.part("game", "schedule")
     if "home_team" in sched.columns:
         df = df.join(sched.select("game_id", "home_team"), on="game_id", how="left")
