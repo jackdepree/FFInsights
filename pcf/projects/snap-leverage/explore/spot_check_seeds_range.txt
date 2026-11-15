@@ -1,0 +1,13 @@
+Snap share, next 3 games, scored 2020-2024; range score, % of plain's (+ = worse)
+
+1. No early stopping (all 250 trees; no seed in the fit at all):
+   lev  vs plain: +0.143%
+   full vs plain: +0.171%
+
+2. Per seed (a check against seeds.txt, which these should repeat):
+   lev : +0.231%, +0.051%, +0.034%, +0.130%, +0.111%
+   full: +0.311%, +0.261%, +0.275%, +0.307%, +0.376%
+
+3. 90% interval resampling weeks and the seed together (4,000 draws):
+   lev  vs plain: +0.115% (90% -0.016 to +0.259); helps in 7.7% of draws
+   full vs plain: +0.307% (90% +0.194 to +0.434); helps in 0.0% of draws

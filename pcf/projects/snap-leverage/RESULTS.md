@@ -7,12 +7,13 @@
 - **The no-noise target fails** (R1). Leverage share added to plain snap share makes the next 3 games' snap-share forecast worse:
   - range score +0.23% (90% interval +0.17% to +0.29%);
   - the role gap and trust over expected on top: +0.31% (+0.21% to +0.42%);
-  - worse with every one of five random seeds (R2), and in every season but 2024 (R3).
+  - worse with every one of five random seeds (R2), and in every season but 2024 (R3);
+  - **but borderline once the seed's luck is counted** (the CEO's spot-check, below). An interval that resamples weeks *and* the seed gives leverage share +0.12% (90% −0.02% to +0.26%). That includes zero, which VALIDATION §5 calls neutral (a pass). The full rung stays entirely worse (+0.19% to +0.43%).
 - **Even forecasting leverage share itself, plain snap share does as well** (R4). Leverage share is 0.997 alike with snap share as an outcome, so there is little left for the leverage features to explain.
 - **The forecasts themselves are honest.** Every variant beats 20 of 20 shuffled refits, its 80% ranges hold 79.0–79.5%, and all 9 blocking leakage checks pass (R6). They just don't beat plain.
 - **What lasts:** the shared `play.leverage` part, which correlates 0.555–0.559 with a play's actual swing (R7). Also the usage measures: the passing-down role gap, which repeats and which the contract market pays for (snap-leverage#F10). And the finding that the exploration's +0.14% was about the size of the fitting noise (R5).
 
-**Scorecards:** `data/outputs/snap-leverage/<variant>/<run_id>/scorecard.html`. **Numbers:** [explore/ladder.txt](explore/ladder.txt), [explore/seeds.txt](explore/seeds.txt), [explore/map_cost.txt](explore/map_cost.txt), [explore/map_or_setup.txt](explore/map_or_setup.txt).
+**Scorecards:** `data/outputs/snap-leverage/<variant>/<run_id>/scorecard.html`. **Numbers:** [explore/ladder.txt](explore/ladder.txt), [explore/seeds.txt](explore/seeds.txt), [explore/map_cost.txt](explore/map_cost.txt), [explore/map_or_setup.txt](explore/map_or_setup.txt), [explore/spot_check_seeds.txt](explore/spot_check_seeds.txt), [explore/spot_check_seeds_range.txt](explore/spot_check_seeds_range.txt).
 **Vault (2025):** closed, not spent. Nothing ships, so there's nothing to confirm. **Versions tried:** 11 attempts in MLflow (one per variant; `snap_next3_plain` and `snap_next3_lev` twice, before and after R8's fix).
 
 | Check (docs/VALIDATION.md) | Result |
@@ -21,7 +22,7 @@
 | Calibration and range coverage | Pass. 80% ranges hold 79.0–79.5%, 49.6–50.4% land above q50; every position group and season inside the bar |
 | Leakage | 9 of 9 blocking checks pass for all nine variants (after R8's fix); no feature above \|r\| 0.9 |
 | Football sanity | The top forecasts are full-time QBs, linemen and safeties; the lowest are deep backups. The CEO's review is pending |
-| CEO spot-check | Pending (the CEO picks after these results) |
+| CEO spot-check | Done: R2, the seeds (below). Leverage share is worse with every seed, but with the seed's luck in the interval it just reaches zero: **borderline neutral**. The full rung fails either way |
 
 ## The ladder
 Each rung against the one below on the same rows, 2020–2024, as % of the lower rung's score (+ = worse; 90% interval resampling weeks). Every rung is the same trees, so a comparison changes only the features (decision 0033, call 6).
@@ -38,7 +39,7 @@ The squared error tells the same story (`ladder.txt`). **The ladder stops at run
 | # | Finding | Evidence | Confidence |
 |---|---|---|---|
 | R1 | **Leverage share, from the morning-after map, adds noise to plain snap share** on the next 3 games' snap share: range score +0.23%, squared error +0.45%. With the role gap and trust over expected: +0.31%, +0.54% | `ladder.txt` | strong |
-| R2 | **Not a lucky seed.** The trees stop early on a random tenth of each training window. Over five seeds, leverage share is worse every time (+0.03% to +0.23%; mean +0.11%), and so is the full rung (+0.26% to +0.38%) | `seeds.txt` | strong |
+| R2 | **Not a lucky seed.** The trees stop early on a random tenth of each training window. Over five seeds, leverage share is worse every time (+0.03% to +0.23%; mean +0.11%), and so is the full rung (+0.26% to +0.38%). **But the verdict for leverage share alone depends on the seed** (the spot-check): with the seed's luck in the interval it is +0.12% (−0.02% to +0.26%), neutral by VALIDATION §5. Without early stopping (no seed at all) it is +0.14% | `seeds.txt`, `spot_check_seeds*.txt` | strong that it never helps; the noise verdict for leverage share alone: borderline |
 | R3 | **No season and no position where it helps.** By season: 2020 +0.40%, 2021 +0.14%, 2022 +0.42%, 2023 +0.19%, 2024 +0.01% (even). Worst at QB (+0.91%) and RB (+0.38%). First-year players: even (−0.01%), where the exploration's gain was largest. The full rung is better only in 2024 (−0.17%, −0.31 to −0.02), the season with the most map seasons behind it | `ladder.txt` | strong (2024: suggestive) |
 | R4 | **As outcomes, leverage share and snap share are nearly the same thing** (0.997 correlated per player and window). Forecasting leverage share itself, plain snap share ties the leverage rung over the next 3 games and beats it over the rest of the season (+0.39%) | smoke test; `ladder.txt` | strong |
 | R5 | **The exploration's +0.14% was about the size of the fitting noise.** Rerunning the exploration's own test with nothing changed but the row order moved true leverage share's gain from +0.15% to +0.10%, and the map's from +0.15% to −0.02%. A gain that small needs several seeds before it counts | `map_or_setup.txt` (two runs) | strong |
@@ -46,6 +47,48 @@ The squared error tells the same story (`ladder.txt`). **The ladder stops at run
 | R7 | **`play.leverage`**, leverage before the snap, fit each season on up to 10 earlier seasons, correlates 0.555 (2016) to 0.559 (2024) with a play's actual swing, like the exploration's (F1: 0.54–0.58) | decision 0033 | strong |
 | R8 | **Sums in a varying order broke a leakage check.** A parallel join's row order varied, so the leverage measures differed between runs in the 16th digit. That was enough to flip a tree's split, and check 8 (test labels) failed on 3–21 rows at 4 of 5 steps. Fixed by summing in a fixed order; a test shuffles the input | `usage.py`; tests | strong |
 | R9 | **The map measures snap share and leverage share almost exactly** (0.998 and 0.991 against true participation, 2019–2024). **The role gap and trust over expected only roughly:** 0.53 and 0.40 per player-game. Yet the map's versions repeat more week to week (0.83 against 0.77; 0.33 against 0.25), so part of their steadiness is the map's own prior (it leans on each player's past habits) | `map_cost.txt` | strong |
+
+## Spot-check: R2, the seeds (the CEO's pick, 2026-11-14)
+**The question:** is "leverage share adds noise" real, or a property of the one random seed the harness used?
+
+**What the seed does.** The trees stop adding trees once a random tenth of the training window stops improving. The seed picks that tenth, so it decides how many of the 250 trees each fit keeps:
+- plain snap share keeps 109–250, depending on seed and season;
+- the leverage rung keeps all 250 in 2022–2024 with every seed, and 122–250 in 2020–2021.
+
+**The rows: leverage share against plain, squared error, % of plain's (+ = worse).**
+
+| Seed | All | 2020 | 2021 | 2022 | 2023 | 2024 |
+|---|---|---|---|---|---|---|
+| 0 (the harness's) | +0.45% | +0.88% | +0.14% | +0.92% | +0.27% | +0.05% |
+| 1 | +0.14% | −1.36% | +1.09% | +0.73% | +0.19% | −0.02% |
+| 2 | +0.01% | −1.25% | +0.31% | +0.61% | +0.19% | +0.16% |
+| 3 | +0.25% | −0.03% | +0.82% | +0.17% | +0.12% | +0.15% |
+| 4 | +0.23% | +0.05% | −0.05% | +0.59% | +0.34% | +0.22% |
+
+- **2020** swings from −1.36% to +0.88% with the seed: it is fit on 2019 alone.
+- **2022 and 2023** are worse with every seed.
+
+**The alternatives** (range score, the verdict's score, unless marked):
+
+| Check | Leverage share | Full rung |
+|---|---|---|
+| The harness (seed 0) | +0.23% (+0.17 to +0.29) | +0.31% (+0.21 to +0.42) |
+| Five seeds, each | +0.03% to +0.23% | +0.26% to +0.38% |
+| No early stopping (no seed in the fit) | +0.14% | +0.17% |
+| The five seeds' forecasts averaged (squared error) | +0.18% | +0.37% |
+| **Weeks and the seed resampled together** | **+0.12% (90% −0.02 to +0.26); helps in 8% of draws** | **+0.31% (+0.19 to +0.43); helps in 0%** |
+
+**What it means.**
+- **Leverage share never helps.** No seed, no seed-free fit and no average makes it better than plain.
+- **But "adds noise" is borderline for leverage share alone.** The harness's interval counts only the luck of which weeks were played, with one seed. Counting the seed's luck too, the interval just reaches zero. VALIDATION §5 calls an interval that includes zero **neutral, a pass**.
+- **The full rung** (with the role gap and trust over expected) **fails with every check.**
+
+**What would change the answer.**
+- **Toward neutral:** count the seed's luck as part of the rule, as above. Leverage share then passes as neutral: it adds nothing, but not provably noise.
+- **Toward noise:** take the harness's single seed as the rule is written today, or the seed-free fit (+0.14%, though it has no interval of its own).
+- **Toward helping:** nothing here. The best seed is still worse (+0.03%). Only more map seasons might (the case against, 2).
+
+**Claude's reading:** the downscale still fits. A neutral expert passes the rule but forecasts nothing plain snap share doesn't. It would hand higher layers a second copy of snap share. And `player_game.leverage_usage` already keeps the measure available for downstream feature selection. It's the CEO's call (open question 3). Numbers: [explore/spot_check_seeds.txt](explore/spot_check_seeds.txt), [explore/spot_check_seeds_range.txt](explore/spot_check_seeds_range.txt).
 
 ## Hunches: what the build adds
 | # | Hunch | Exploration | The build |
@@ -70,6 +113,10 @@ The strongest argument that this verdict is wrong:
 4. **Trees and near-duplicates.**
    - **The concern:** leverage share is 0.99 alike with snap share, and trees split on whichever copy is noisier by chance.
    - **What it would take to check:** a linear rung, or the leverage measure minus snap share (a cleaner new feature). The exploration's linear check agreed with the trees.
+5. **The noise verdict for leverage share alone is borderline** (the spot-check).
+   - **The concern:** with the seed's luck in the interval, leverage share is +0.12% (−0.02% to +0.26%): neutral, which passes.
+   - **Why it matters:** the downscale came from the CEO's rule, "if it fails the no noise target". Read with the seed counted, leverage share alone doesn't fail it; only the full rung does.
+   - **Against it:** it never helps with any seed, and it helps in only 8% of the combined draws.
 
 ## Pitfalls
 - **Sums in a varying order** fail check 8 for tree models (R8). Sort before summing, and sum within each group in that order.
@@ -112,10 +159,15 @@ The strongest argument that this verdict is wrong:
      - **Why:** the contract signal (+1.7%) came from true participation, and contract work runs between seasons, where post-season data is allowed.
    - **(b) Only the leverage part.** The usage measures stay as a function in the package; nothing new is built.
    - **(c) Tempting but bad: ship the leverage-share forecast anyway**, because it passes the signal test. It beats shuffled outcomes, but it adds noise against plain snap share. Higher layers would get a noisier copy of snap share labeled "trust".
-2. **Your spot-check:** one finding or call for me to walk through in depth.
+2. **Your spot-check:** *the CEO, 2026-11-14: "R2: the seeds" (done, above).*
+3. **Does the downscale stand, now that leverage share alone reads neutral once the seed is counted?**
+   - **(a) It stands** (Claude's recommendation). Neutral means it adds nothing over plain snap share, and the part keeps the measure for downstream models.
+   - **(b) Bring back the leverage-share forecast as a small neutral expert** (`snap_next3_lev`, from commit 892d39c). It passes the written rule, but higher layers get a second copy of snap share.
+   - **(c) Tempting but bad: change the rule to count the seed for this project only.** A rule bent to fit one result stops being a rule. If the seed should count, it should count for every expert (IDEAS I45, for VALIDATION).
 
 ## Technical calls for veto
-Decision 0033's eleven calls, decision 0034's seven, plus three made in this round:
+Decision 0033's eleven calls, decision 0034's seven, plus four made in this round:
 - usage sums in a fixed order (R8);
 - the detached runner for long backtests;
-- the five-seed check (R2) as the deciding evidence beside the harness's single seed.
+- the five-seed check (R2) as the deciding evidence beside the harness's single seed;
+- the spot-check's combined interval (weeks and seed resampled together, 4,000 draws, seed picked at random per draw).
