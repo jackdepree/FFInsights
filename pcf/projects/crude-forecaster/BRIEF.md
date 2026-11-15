@@ -2,7 +2,7 @@
 
 > The yardstick for incremental gains (CLAUDE.md, "One yardstick for incremental gains"). Opened in the strategy chat, 2026-11-15: this file gets the kickoff, the exploration and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (kickoff, 2026-11-15: the usual way and analogies written; waiting for the CEO's hunches) · **Layer:** foundation (phase 0: a measuring tool, never shipped as a product) · **Cadence:** in_season
+**Status:** draft (2026-11-15: kickoff, hunches, methods and exploration done; waiting for the CEO to agree the brief and make the calls under "Open for the CEO") · **Layer:** foundation (phase 0: a measuring tool, never shipped as a product) · **Cadence:** in_season
 
 ## The usual way
 *Claude, before any research.*
@@ -33,7 +33,9 @@ Forecasting shops judge a new signal by **ablation against a fixed reference mod
 - **The model:** "an ensemble model mixing lasso and xgboost." (A method the CEO brings; it is compared with the plain versions like any other, rule k.)
 - **Team measures:** "Every time we have a team measure like Elo, we will just predict the team level of yards gained or allowed."
 - **Worth it** (the CEO, later the same day: "Sorry I meant the literal shap test but I mistyped as sharp"; so read "a SHAP test"): "if we can prove that a sharp test shows predictive power then we can say it is worth it. If it adds nothing or hurts the model then it failed. A model being worth it can mostly be a vision and taste call from me, depending on the complexity."
-- **Horizons:** "I think the crude forecaster should be both short horizon like maybe even within a game and then also long horizon outcomes." (Open: live in-game prediction is a non-goal in VISION.md, so what "within a game" means here is the CEO's to say.)
+- **Horizons:** "I think the crude forecaster should be both short horizon like maybe even within a game and then also long horizon outcomes." Asked what "within a game" means (live in-game prediction is a non-goal in VISION.md), the CEO: "I mean that we could bring the granularity down to the play level like we can predict play by play." So the short end is a level of detail (one play's yards), not a live forecast; the long end is the next 3 games and the rest of the season, beside the next game (the CEO: "yes").
+- **Targets, five** (the CEO: "yes it should be five"): players' passing, rushing and receiving yards; a team's yards gained; a team's yards allowed.
+- **How an expert's worth is read** (the CEO: "1ac"): methods A and C below, with SHAP plots as the explanation, not the test.
 - "I do not have any strong/confident hunches." The CEO asked Claude for questions to draw more out; they were put in the chat the same day and the answers are recorded below as they come.
 
 **Claude's first read of the design (assumptions first; not a recommendation):**
@@ -54,10 +56,21 @@ The crude model itself is the CEO's: simple, visible inputs into a lasso and boo
 | **C** | **Shapley across experts, on held-out error** (exploratory). Fit the crude model with every combination of experts; an expert's worth is its average held-out gain over every order it could have been added in | "What is each expert's fair share of the total gain?" It has no order problem, and the shares add up to the total | Combinations can be fitted cheaply (7 experts is 128 fits per target; orders can be sampled when there are more) | The most fits. Shares still move when a new expert joins, so each table is dated, like the lens list |
 | *(tempting, and wrong as the test)* | **SHAP values from one fitted model** | "What is this model leaning on?" | That leaning on an input means the input helps | Nothing extra. But SHAP describes the fitted model, not the truth: an input of pure noise that the trees over-fit gets a share, and two inputs that carry the same thing split theirs arbitrarily. It can't fail an expert that hurts held-out forecasts |
 
-**Claude's recommendation (the CEO decides):** A and C from the same held-out runs, reported side by side (alone, and its fair share), with SHAP plots on the held-out rows as the explanation of *where* an expert helps (which positions, which situations). C is the CEO's SHAP idea moved from "what the model uses" to "what improves forecasts nobody has seen": the same Shapley arithmetic, applied to experts and to held-out error. Pass or fail stays VALIDATION.md's held-out rule (adds value, neutral, adds noise).
+**Decided (the CEO, 2026-11-15: "1ac"):** A and C, as recommended. **Claude's recommendation was:** A and C from the same held-out runs, reported side by side (alone, and its fair share), with SHAP plots on the held-out rows as the explanation of *where* an expert helps (which positions, which situations). C is the CEO's SHAP idea moved from "what the model uses" to "what improves forecasts nobody has seen": the same Shapley arithmetic, applied to experts and to held-out error. Pass or fail stays VALIDATION.md's held-out rule (adds value, neutral, adds noise).
 
 ## The noise ceiling
 *Filled in by the exploration, before the hunches are tested.*
+
+From [`EXPLORATION.md`](EXPLORATION.md), forecasts for 2019-2024, share of squared error removed:
+
+| Target | Crude model | Hindsight average | With every expert added |
+|---|---|---|---|
+| Passing yards | 61.2% | 60.3% | 71.1% |
+| Rushing yards | 42.3% | 44.9% | 48.8% |
+| Receiving yards | 40.3% | 41.6% | 45.3% |
+| Team yards gained | 7.5% | 5.5% | 9.3% |
+
+The crude model already knows each player as well as his season average does; the room left is what changes week to week. The hindsight average is not a true ceiling (the experts pass it), and **fitting noise wasn't measured** (the trees had no randomness as set up). The build measures both before reading any gain under 0.5%.
 
 ## Builds on
 | Project | What we use | Why |
@@ -69,4 +82,52 @@ The crude model itself is the CEO's: simple, visible inputs into a lasso and boo
 
 **Already tried:** Elo adds nothing to the closing line (elo#F4); team efficiency adds nothing to Elo's margin and helps points and team fantasy points through the offense and defense split (team-efficiency#R6, R18). Pre-game conditions explain under 0.6% of player misses; what happens in the game (snap share, team points, margin) explains the most (miss-lenses#F1, F2).
 
-*The remaining sections (the question, terms, assumptions, goals, tests, inputs and outputs, how it will be used, plan) are written after the hunches and the exploration.*
+## The question
+What is each expert, hunch or idea worth, in one unit that can be compared across all of them: how much better does a deliberately simple forecast of yards get when it is added?
+
+## Why it matters
+Until now each expert was scored on its own target in its own units (participation on fantasy points, Elo against the closing line), so nobody could say which was worth more. One yardstick lets the CEO rank experts, decide what to build next, and see when a new expert only repeats an old one. A user never sees it: it's a measuring tool.
+
+## Terms
+- **Standard terms used:** walk-forward history, held-out seasons, the vault, range score, the no-noise test (`docs/GLOSSARY.md`, `docs/VALIDATION.md`).
+- **New terms this project introduces:**
+  - **Crude forecast:** the simple forecast of yards from visible inputs (averages, running totals, trends and spread of past yards, attempts, first downs, touchdowns), from a lasso and boosted trees.
+  - **Added alone** (method A): the share of the crude forecast's held-out error an expert removes when it is the only expert added.
+  - **Fair share** (method C): the expert's average held-out gain over every order in which the experts could have been added (a Shapley share). The shares add up to the gain from all experts together. Each table is dated: shares move when a new expert joins.
+  - **Yardstick table:** one row per expert and target with both numbers and their intervals.
+
+## Assumptions
+- What an expert is worth for yards says something about what it is worth for the products (fantasy points, props, margins). **Flagged, not tested**: yards leave out touchdowns and turnovers.
+- The experts' saved walk-forward histories are honest (made only from earlier data). Checked by the leakage checks at build time.
+- Every input can be lined up to one forecast moment. **Not true in the exploration** (Tuesday and Saturday outputs were mixed); the build fixes it.
+- The 2019-2024 seasons have been looked at once here. Every version tried from now on is counted.
+
+## Goals
+- A yardstick table for every finished expert (participation, Elo, team efficiency, pace, schemes-v2; then each new one), on every target, next game first.
+- The same for the longer horizons the CEO asked for: the next 3 games and the rest of the season.
+- A one-call way to score a new expert, a hunch's input or an idea's input, so it takes minutes.
+- SHAP plots on held-out rows as the explanation of where an expert helps (not the test).
+
+## Tests
+- **Success looks like:** the crude forecast beats the season-so-far average on every player target on held-out seasons; the table reproduces the exploration's order (participation first on player yards; Elo first on team yards); a shuffled copy of an expert gets a share whose interval covers zero; the shares add up to the all-experts gain.
+- **Failure looks like:** shares that change order between seeds or between halves of the seasons (the yardstick is noisier than the things it measures), or a shuffled expert that gets a clear share.
+- **No-noise target:** none of its own; it is the tool the other experts' "what is it worth downstream" number comes from. An expert's own no-noise target still decides whether it ships (rule k).
+- **Baselines:** the season-so-far average; the lasso alone; the trees alone; the mix. The ladder stops where a rung doesn't beat the one below (for team yards the exploration says the lasso).
+- **Seasons:** fit from 2016, scored 2019-2024, vault 2025.
+
+## Inputs and outputs
+- **Inputs:** `player_game.stats`, `team_game.stats`, rosters and the schedule through the `as_of` gateway (known after each game); each expert's saved walk-forward history (known at that expert's forecast moment, lined up to one Saturday moment).
+- **Outputs:** the crude forecast (player-game and team-game, with a range), and the yardstick table (expert by target by horizon: added alone, fair share, intervals, date).
+
+## How it will be used
+Every RESULTS.md gets a yardstick row beside the expert's own tests. The retro reads the table to rank what has been built and to score predictions. It helps the CEO decide what to build next and what to drop.
+
+## Open for the CEO
+*Taste calls the exploration raised. The CEO's instinct first; Claude's view is in the chat, not here, until asked.*
+1. **Team yards.** Only 7.5% of a team's yards is predictable from its past, and experts add 2% of what's left. Keep team yards as a target as it is, change the team target (for example points), or drop the team level from the yardstick?
+2. **Play level.** About 2% of one play's yards is explainable before the snap. Build the play-level yardstick in the first version, later, or not at all?
+3. **Which rows count.** All rostered players (easy zeros included), only players expected to play, or both side by side?
+4. **Yards only, or also fantasy points?** The charter's wording is "the crude forecast of fantasy points and of game results"; the CEO's design here is yards.
+
+## Plan
+One build session, from this file and EXPLORATION.md. Rungs: season-so-far average, lasso, trees (xgboost, to be installed), the mix. Order: (1) crude inputs as a package feature set through the gateway; (2) the crude forecast through the harness, next game; (3) fitting noise (seeds, resampled seasons); (4) the yardstick table with methods A and C for the five finished experts; (5) the longer horizons; (6) the one-call scorer and the SHAP plots. Time box: one session for 1-4, a second for 5-6.

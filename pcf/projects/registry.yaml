@@ -263,10 +263,10 @@ projects:
   - id: crude-forecaster
     name: Crude forecaster (the yardstick for incremental gains)
     phase: 0
-    status: idea
+    status: brief
     horizon: next
-    depends_on: [baselines, validation-harness, elo]
-    summary: "The CEO's idea, 2026-11-15: \"draft a crude and simple forecaster to measure incremental gains\", so ideas, hunches and experts are all scored the same way until the real products exist (CLAUDE.md, \"One yardstick for incremental gains\"). A deliberately simple forecast of player fantasy points and of game results (margin, total) that takes any expert's saved walk-forward output as an extra input and reports what it adds, with an interval. Starts from what exists: baselines' lasso (participation#F15 already scored the participation expert this way) and Elo. Not a product and never shipped as one. Kickoff opened 2026-11-15 in the strategy chat (projects/crude-forecaster/BRIEF.md: the usual way and analogies; the CEO's hunches next)."
+    depends_on: [baselines, validation-harness, elo, team-efficiency, participation, pace, schemes-v2]
+    summary: "The CEO's idea, 2026-11-15: \"draft a crude and simple forecaster to measure incremental gains\", so ideas, hunches and experts are all scored the same way until the real products exist (CLAUDE.md, \"One yardstick for incremental gains\"). A deliberately simple forecast of player fantasy points and of game results (margin, total) that takes any expert's saved walk-forward output as an extra input and reports what it adds, with an interval. Starts from what exists: baselines' lasso (participation#F15 already scored the participation expert this way) and Elo. Not a product and never shipped as one. The CEO's design (2026-11-15): forecasts of yards (players' passing, rushing and receiving; a team's gained and allowed) from simple visible inputs, a lasso and boosted trees mixed; an expert's worth read two ways, added alone and its Shapley share of held-out error. Exploration 2026-11-15: GO. Crude inputs remove 61/42/40% of squared error on passing/rushing/receiving yards and 7.5% on team yards; participation is worth 8-25% of what's left on player yards, Elo and team efficiency 0.1-1.1%, schemes nothing clear (projects/crude-forecaster/EXPLORATION.md). Brief drafted, waiting for the CEO's agreement and four open calls; the build runs in its own session."
 
   # ---------------------------------------------------------------- Phase 1: experts
   - id: elo
