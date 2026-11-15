@@ -9,6 +9,7 @@ Writes map_cost.txt. Run from pcf/:
 PYTHONUTF8=1 .venv/Scripts/python.exe projects/snap-leverage/explore/map_cost.py
 """
 
+# ruff: noqa: E501
 from __future__ import annotations
 
 from pathlib import Path
