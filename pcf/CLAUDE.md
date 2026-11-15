@@ -83,6 +83,19 @@ Both kinds go in [`projects/CONSISTENCY.md`](projects/CONSISTENCY.md):
 
 **The hunch scoreboard.** Every unconventional bet goes in [`projects/HUNCHES.md`](projects/HUNCHES.md): what the usual approach says, what we bet instead, how we tested it, and whether it held. It holds the CEO's hunches only: a hunch Claude proposes becomes one only if the CEO edits it significantly, and otherwise goes in `IDEAS.md` as Claude's idea (CEO, 2026-11-08). Claude is encouraged to propose them. Over time it shows where the CEO's instinct beats the average and where to lean on the data.
 
+**Every bet states its odds first** (CEO, 2026-11-15). Before a hunch or an idea is tested, its author writes a **confidence** (low, medium or high: roughly 60%, 75% or 90% sure it holds) and an **expected size** in the target's units ("about 0.5% of the range score", "1 to 2 points of share"). The CEO does this for hunches; Claude does it for its ideas, and also writes its own expectation beside every CEO hunch. They go in `HUNCHES.md` and `IDEAS.md` before the result does, so the retro can score how well each of us is calibrated. Old rows aren't filled in afterwards.
+
+**Football claims first, methods together** (CEO, 2026-11-15). The CEO leads with the football claim: what is true about football, and who or what it belongs to. Claude then lays out two or three ways to test or build it, and **one of them must be exploratory**: a method from outside the usual toolbox, with what it assumes and what it costs. The CEO stays involved in the method choice and may bring a method of their own; it's tested like any other. The record so far says football claims pay more often than method choices do (`projects/RETRO.md`), so the claim is stated on its own, apart from the method.
+
+**The retro** (CEO, 2026-11-15). After every second finished project, and before the next one starts, Claude runs a retro and writes it into [`projects/RETRO.md`](projects/RETRO.md):
+1. **Score the predictions** made at the last retro and since (verdicts against confidences, sizes against expected sizes), for the CEO and for Claude.
+2. **Batch-check the backlog:** the open ideas in `IDEAS.md` that cost under an hour each, highest-confidence first.
+3. **Update the patterns:** which kinds of bets hold, which fail, and where the gains were. A pattern is a hypothesis until it predicts verdicts in advance.
+4. **Generate new ideas** from the patterns (into `IDEAS.md`, as Claude's) and write a prediction for every open idea and hunch.
+5. **Propose workflow changes**, which the CEO accepts, edits or rejects.
+
+**One yardstick for incremental gains** (CEO, 2026-11-15; planned as `crude-forecaster` in the registry). PCF is many models feeding several products: general forecasts and diagnostics, summarized betting advice, a dashboard, a website. Until those exist, a crude and simple forecaster stands in for them, so every idea, hunch and expert can be scored the same way: what does it add to the crude forecast of fantasy points and of game results? An expert's own no-noise target still decides whether it ships (rule k); the yardstick says how much it's worth downstream.
+
 **Assumptions first.** For any idea the CEO brings, Claude first states its assumptions, limitations and advantages, plus a simpler alternative if there is one. Then Claude recommends, and builds on the CEO's go. Claude pushes back when an idea won't work as stated.
 
 **Brainstorm, then build.** For design decisions, Claude lays out options: the strong choices, plus a tempting but bad one that shows what separates good from bad. On taste calls, the CEO's instinct comes first. The CEO picks, then Claude writes or builds.
@@ -116,11 +129,12 @@ Every new mini-project, sub-problem, feature, model or domain gets an entry in [
 
 1. **Idea:** Claude opens with the usual way and 1–2 analogies, the CEO gives their hunches, and together we draft the brief ("Starting a project" above). It goes in the registry. A hypothesis smaller than a project goes in [`projects/IDEAS.md`](projects/IDEAS.md) instead, and graduates to the registry if a cheap check finds something.
 2. **Exploring:** a time-boxed first look. Is the data there? Is there any signal at all? What does it assume? It tests each of the CEO's hunches and gives each a verdict. Claude writes a short exploration note ending in go / no-go. **It's a go unless there's literally zero signal.** The production version will be more thorough.
+   - **The noise ceiling comes first** (CEO, 2026-11-15). Before any hunch is tested, the exploration measures how much room there is: what a hindsight oracle would remove from the target's error, how much the target repeats with itself (split halves), and how large the model's own fitting noise is (seeds, row order). Every gain is then read against that room and that noise. A project whose whole room is smaller than the fitting noise is an investigation, not a build (as `snap-leverage` turned out to be).
    - **Infrastructure projects** (scaffold, tracking, tooling) have no signal to find, so they get a **light exploration** instead: a quick descriptive profile of the data they touch (rows, columns, date ranges, level of detail, size). Small, but not skipped.
 3. **Brief:** a one-pager the CEO helps write ([template](projects/_templates/BRIEF.md)), drafted at the idea stage and agreed after the exploration. It opens with the usual way, the analogies and the CEO's hunches, then covers the question, why it matters, **the terms** (standard ones linked to the glossary, new ones defined), assumptions, goals, what success and failure look like as tests, inputs and outputs, how it will be used, and **what it builds on**: earlier projects' findings, outputs and models, and what was already tried. Read [`projects/KNOWLEDGE.md`](projects/KNOWLEDGE.md) first.
 4. **Building:** production-level code in the package, climbing the ladder (rule k), with every run tracked in MLflow.
 5. **Validating:** check the results against the brief's tests (rules c, d, k).
-6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, hunch verdicts into `HUNCHES.md`, new measures into `CONSISTENCY.md`, and the roadmap and registry are updated.
+6. **Done:** Claude writes the technical results one-pager ([template](projects/_templates/RESULTS.md)) so no later project redoes the work. It covers numbered findings, where the model misses (a short fixed list of lenses), the case against the result, pitfalls, what could be improved, what we didn't look at, what not to redo, and the **interface card** (inputs, outputs, level of detail, interval, cadence, known-at, how to use it, where it feeds). It lists open questions for the CEO to answer. Then the findings go into `KNOWLEDGE.md`, new hypotheses into `IDEAS.md`, hunch verdicts into `HUNCHES.md`, new measures into `CONSISTENCY.md`, and the roadmap and registry are updated. Every second finished project triggers the retro ("The retro" above).
 
 Each project's notes live in `projects/<id>/`: `EXPLORATION.md`, `BRIEF.md`, `RESULTS.md`.
 
@@ -136,6 +150,7 @@ A mini-project is done when:
 - [ ] Results pass the football sanity check.
 - [ ] The technical results one-pager is written, its findings are in `KNOWLEDGE.md`, its new terms are in `GLOSSARY.md`, its interface card is in the registry, and the CEO's open questions are answered.
 - [ ] The case against is written, and the CEO's spot-check is done.
+- [ ] The exploration reported the noise ceiling, and every hunch and idea had a confidence and an expected size written before its test.
 - [ ] Every hunch in the brief has a verdict in `HUNCHES.md`, and the CEO has seen the branch's technical calls.
 - [ ] The registry and roadmap are updated, and the CEO approved the merge.
 
@@ -153,6 +168,7 @@ pcf/
     KNOWLEDGE.md      ← every finding from every finished project. Read before any brief.
     IDEAS.md          hypotheses to test: football hunches and patterns in model misses
     HUNCHES.md        the scoreboard of unconventional bets: what we tried against convention, and whether it held
+    RETRO.md          the retro: patterns across hunches and ideas, predictions for open ones, how they scored, workflow changes
     CONSISTENCY.md    every measure we've built: does it repeat week to week and season to season (signal), or not (noise)?
     _templates/       BRIEF.md and RESULTS.md templates
     <id>/             each project's EXPLORATION.md, BRIEF.md, RESULTS.md, explore/
