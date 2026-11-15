@@ -20,7 +20,22 @@ Forecasting shops judge a new signal by **ablation against a fixed reference mod
 
 | # | Hunch | CEO's confidence and expected size | Claude expects | What the usual way says | How the exploration will test it |
 |---|---|---|---|---|---|
-| H50 | | | | | |
+| H50 | "I think the experts that are accounting for opponent strength are probably going to add the most predictive value." | "probably"; no odds or size yet (asked 2026-11-15) | to be written before the test, after the CEO's odds | A new signal is judged one at a time; no prior on which kind adds most | Each finished expert added to the crude forecast alone; rank by gain, opponent-aware ones (Elo, team efficiency) against the rest |
+| H51 | "I think that past yards and first downs will account for most of the explained variance in future yards; I am fairly confident from past experience." | "fairly confident"; "most of the explained variance" | to be written before the test | Recent volume and efficiency are the standard inputs; first downs are rarely used beside yards | The share of the crude model's explained variation that past yards and first downs carry alone, against the full input list |
+
+**The CEO's design, as said (2026-11-15). These are calls, not hunches: they set what gets built.**
+- **What it forecasts:** "I think it should predict overall yards gained and allowed. Obviously it can be split up for offensive players when they complete a reception or rush, but defenders will have to be clumped together as a unit."
+- **Inputs:** "various simple inputs like rolling averages, difference in trends, cumulative sums, and variance of past yards, touchdowns, first downs, and maybe a few more easy to calculate and highly visible inputs."
+- **The model:** "an ensemble model mixing lasso and xgboost." (A method the CEO brings; it is compared with the plain versions like any other, rule k.)
+- **Team measures:** "Every time we have a team measure like Elo, we will just predict the team level of yards gained or allowed."
+- **Worth it:** "if we can prove that a sharp test shows predictive power then we can say it is worth it. If it adds nothing or hurts the model then it failed. A model being worth it can mostly be a vision and taste call from me, depending on the complexity."
+- "I do not have any strong/confident hunches." The CEO asked Claude for questions to draw more out; they were put in the chat the same day and the answers are recorded below as they come.
+
+**Claude's first read of the design (assumptions first; not a recommendation):**
+- **For it:** yards are one unit for players, offenses and defenses; a team's player yards add up to its total (grain-tables#F17); the props we collect are mostly in yards, so the yardstick sits next to the betting target.
+- **It assumes** that what an expert is worth for yards is what it is worth for the products. Yards leave out touchdowns and turnovers, which move fantasy points and margins.
+- **Limits:** an expert whose output isn't about yards (the chance a player is active, a win chance) is scored only through what it does to yards. Defensive players can't be scored one by one, only through the unit.
+- **A simpler alternative that exists today:** the baselines' lasso on fantasy points, which already scored participation (participation#F15).
 
 ## Methods
 *Claude, after the hunches: two or three ways to build it, one exploratory. The CEO takes part in the choice.*
