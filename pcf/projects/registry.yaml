@@ -497,13 +497,22 @@ projects:
     summary: Expected fantasy points from where targets and carries happen.
 
   - id: snap-leverage
-    name: Snap leverage
-    phase: 1
+    name: Snap leverage (an investigation and feature engineering)
+    phase: 0
     status: validating
     horizon: now
-    cadence: [in_season]
-    depends_on: [grain-tables, validation-harness, participation-live]
-    summary: "The CEO's pick and sign-off, 2026-11-14: weight every snap each player was on by its leverage (how much the win chance can swing on it, from the situation before the snap: the CEO's 'variance of winning percent added per play based on conditions/situations'), to show which players a team relies on in high-stakes situations, for every position. Main test future playing time; secondary tests next contracts and plus-minus (the CEO). Hunches H45-H49. Draft brief 2026-11-14. Explored 2026-11-14 (GO, small): leverage before the snap works (r 0.54-0.58 with the actual swing); leverage-weighted snap share +0.14% for the next 3 games; the raw trust gap is the passing-down role (pays in contracts, +1.7%); trust beyond the situation is weak (0.12 week to week). H45, H46, H48 unclear; H47 failed; H49 failed (leaning). The CEO's direction (2026-11-14): A, a small expert. Brief agreed 2026-11-14 (\"1c, 2 yes\"): it forecasts leverage share (next 3 games, rest of season) and snap share (next 3 games, the no-noise target); if it fails the no-noise target it becomes an investigation and feature engineering (the CEO). Built 2026-11-14: play.leverage and nine variants (decision 0033). Failed the no-noise target: leverage share makes the next 3 games' snap-share forecast worse (+0.23% range score, every seed worse; RESULTS R1-R3), so by the CEO's rule it becomes an investigation and feature engineering; what stays is the CEO's call. play.leverage (r 0.555-0.559 with the actual swing) stays."
+    depends_on: [grain-tables]
+    summary: "The CEO's pick and sign-off, 2026-11-14: weight every snap each player was on by its leverage (how much the win chance can swing on it, from the situation before the snap: the CEO's 'variance of winning percent added per play based on conditions/situations'), to show which players a team relies on in high-stakes situations, for every position. Main test future playing time; secondary tests next contracts and plus-minus (the CEO). Hunches H45-H49. Draft brief 2026-11-14. Explored 2026-11-14 (GO, small): leverage before the snap works (r 0.54-0.58 with the actual swing); leverage-weighted snap share +0.14% for the next 3 games; the raw trust gap is the passing-down role (pays in contracts, +1.7%); trust beyond the situation is weak (0.12 week to week). H45, H46, H48 unclear; H47 failed; H49 failed (leaning). The CEO's direction (2026-11-14): A, a small expert. Brief agreed 2026-11-14 (\"1c, 2 yes\"): it forecasts leverage share (next 3 games, rest of season) and snap share (next 3 games, the no-noise target); if it fails the no-noise target it becomes an investigation and feature engineering (the CEO). Built 2026-11-14: play.leverage and nine variants (decision 0033). Failed the no-noise target: leverage share makes the next 3 games' snap-share forecast worse (+0.23% range score, every seed worse; RESULTS R1-R3), so by the CEO's rule it became an investigation and feature engineering. The CEO's pick (2026-11-14, \"(a)\"): play.leverage and a post-season part player_game.leverage_usage from true participation stay; the nine forecast variants left the package (decision 0034)."
+    interface:
+      inputs: grain-tables play (pbp; pace for the expected pass chance), player_play (on_field, true participation)
+      outputs: "play.leverage (wpa_sd, leverage, high_stakes; 2002-2026, known with the play-by-play); player_game.leverage_usage (lev_side, lev_snaps, lev_snap_share, lev_share, lev_hs_share, lev_role_gap, lev_trust_oe; 2016-2025, post-season only); pcf.data.usage (plays, usage, part_rows: the same measures from any on-field chances, such as participation-live's map)"
+      grain: play; player-game
+      interval: play.leverage 2002 on; leverage_usage 2016 on (participation)
+      cadence: "play.leverage: in season (after each game); leverage_usage: retrospective (rule m: in-season models see it only for finished seasons)"
+      known_at: play.leverage with the play-by-play (after kickoff); leverage_usage with participation, the day after the Super Bowl
+      model: "none (the forecasts failed the no-noise target: RESULTS R1-R3)"
+      how_to_use: "Weight plays by their stakes, or pick high-stakes plays before the snap (not the after-the-fact high_leverage tag). The passing-down role gap is a candidate feature for contracts and roles (F10, IDEAS I43). Don't add leverage share beside snap share for playing time: 0.99 alike, and it adds noise (R1-R4)"
+      feeds: "none yet; candidates roles-archetypes, contract-motivation, dynasty-values, vacated-opportunity"
 
   - id: vacated-opportunity
     name: Vacated opportunity

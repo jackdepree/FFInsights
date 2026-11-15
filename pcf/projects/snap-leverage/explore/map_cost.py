@@ -19,7 +19,7 @@ import polars as pl
 from pcf.config import get_config
 from pcf.data.gateway import history_run
 from pcf.data.tables.store import read_part
-from pcf.experts.snap_leverage import usage as U
+from pcf.data import usage as U
 
 c = pl.col
 HERE = Path(__file__).parent

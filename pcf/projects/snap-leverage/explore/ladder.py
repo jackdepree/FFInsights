@@ -8,6 +8,8 @@ rest of season): `lev` against `plain`, `full` against `plain`, `full` against `
 by season, position group, first-year players and weeks 1-4 (where the exploration's gain was).
 Reads each variant's latest run under outputs/snap-leverage/. Writes ladder.txt. Run from pcf/:
 PYTHONUTF8=1 .venv/Scripts/python.exe projects/snap-leverage/explore/ladder.py
+It needs the retired expert package, `pcf.experts.snap_leverage` (decision 0034): check out
+commit 892d39c to rerun it.
 """
 
 # ruff: noqa: E501

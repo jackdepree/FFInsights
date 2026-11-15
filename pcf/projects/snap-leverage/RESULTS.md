@@ -1,6 +1,6 @@
 # Results: Snap leverage (`snap-leverage`)
 
-**Date:** 2026-11-14 · **Status:** the build failed the no-noise target, so by the CEO's rule the project is downscaled from an expert to an investigation and feature engineering (the CEO, 2026-11-14: "if it fails the no noise target then we will downscale this project from an expert to simply an investigation and feature engineering"). What the feature engineering keeps is the CEO's call (open question 1). · **Brief:** [BRIEF.md](BRIEF.md) · **Decisions:** [0033](../../docs/decisions/0033-snap-leverage-build.md) · **MLflow experiment:** `snap-leverage` · **Champion:** none
+**Date:** 2026-11-14 · **Status:** the build failed the no-noise target, so by the CEO's rule the project is downscaled from an expert to an investigation and feature engineering (the CEO, 2026-11-14: "if it fails the no noise target then we will downscale this project from an expert to simply an investigation and feature engineering"). **The CEO's pick (2026-11-14): "(a) Part + usage part"**. `play.leverage` stays, a new post-season part `player_game.leverage_usage` is built from true participation, and the nine forecast variants left the package ([decision 0034](../../docs/decisions/0034-snap-leverage-features.md)). · **Brief:** [BRIEF.md](BRIEF.md) · **Decisions:** [0033](../../docs/decisions/0033-snap-leverage-build.md), [0034](../../docs/decisions/0034-snap-leverage-features.md) · **MLflow experiment:** `snap-leverage` · **Champion:** none
 
 ## In short
 **Leverage before the snap works as a measure, but weighting a player's snaps by it doesn't forecast his playing time better than plain snap share.**
@@ -83,7 +83,7 @@ The strongest argument that this verdict is wrong:
 - The vault: not spent, since nothing ships.
 
 ## Could be improved
-1. **Keep the measures as features and let downstream projects test them** (open question 1).
+1. **Test the measures downstream:** `player_game.leverage_usage` in a contract or roles model (done as feature engineering: decision 0034).
 2. **Rescore when the map has more seasons** (case against 2), with five seeds.
 3. **The passing-down role gap in a contract model**, within position (IDEAS I43).
 
@@ -95,17 +95,17 @@ The strongest argument that this verdict is wrong:
 ## Interface card: what lasts
 | | |
 |---|---|
-| **Inputs** | `play.pbp` (situation, WPA), refit each season on up to 10 earlier seasons |
-| **Outputs** | `play.leverage`: `wpa_sd` (win-chance units), `leverage` (1.0 = average snap), `high_stakes` (the top fifth of the training snaps) |
-| **Level of detail** | play (runs, passes, kneels, spikes with a win chance; every season type; no two-point tries) |
-| **Interval** | 2002–2026 |
-| **Cadence** | in_season: known with the play-by-play, after the game |
-| **Known at** | the play-by-play's `known_at` (after kickoff) |
-| **How to use it** | Weight plays by stakes (a game's average leverage, late-game usage), or pick high-stakes plays without the after-the-fact `high_leverage` tag. Usage measures per player-game: `pcf.experts.snap_leverage.usage` (map chances or true participation) |
-| **Feeds** | none yet; candidates: roles-archetypes, contract value, vacated opportunity |
+| **Inputs** | `play.pbp` (situation, WPA; the leverage model is refit each season on up to 10 earlier seasons), `play.pace` (expected pass chance), `player_play.on_field` (true participation) |
+| **Outputs** | `play.leverage`: `wpa_sd` (win-chance units), `leverage` (1.0 = average snap), `high_stakes` (the top fifth of the training snaps). `player_game.leverage_usage`: `lev_side`, `lev_snaps`, `lev_snap_share`, `lev_share`, `lev_hs_share`, `lev_role_gap` (the passing-down role gap), `lev_trust_oe` (trust over expected). `pcf.data.usage`: the same measures from any on-field chances (the morning-after map, live) |
+| **Level of detail** | play (runs, passes, kneels, spikes with a win chance; every season type; no two-point tries); player-game (on the side he played most) |
+| **Interval** | `play.leverage` 2002–2026; `leverage_usage` 2016–2025 |
+| **Cadence** | `play.leverage`: in season, after each game. `leverage_usage`: retrospective (post-season only, rule m) |
+| **Known at** | `play.leverage`: with the play-by-play (after kickoff). `leverage_usage`: with participation, the day after the Super Bowl |
+| **How to use it** | Weight plays by stakes, or pick high-stakes plays before the snap (not the after-the-fact `high_leverage` tag). The passing-down role gap for contracts and roles (F10, IDEAS I43). **Not** leverage share beside snap share for playing time (R1–R4). In season, the map's role gap and trust over expected are partly the map's prior (R9) |
+| **Feeds** | none yet; candidates roles-archetypes, contract-motivation, dynasty-values, vacated-opportunity |
 
 ## Open questions for the CEO
-1. **What does the feature engineering keep?** By your rule the project is no longer an expert; the question is what stays as production features.
+1. **What does the feature engineering keep?** *The CEO, 2026-11-14: "(a) Part + usage part" (done: decision 0034).* By your rule the project is no longer an expert; the question was what stays as production features.
    - **(a) The leverage part plus a retrospective usage part** (Claude's recommendation).
      - **What stays:** `play.leverage` as it is. A new post-season part, `player_game.leverage_usage`, built from true participation: leverage share, high-stakes share, the passing-down role gap and trust over expected per player-game. The usage function moves into the shared package, so a later live model can compute the same measures from the map.
      - **What goes:** the nine forecast variants leave the package; their scorecards stay in MLflow as the investigation's record.
@@ -115,7 +115,7 @@ The strongest argument that this verdict is wrong:
 2. **Your spot-check:** one finding or call for me to walk through in depth.
 
 ## Technical calls for veto
-Decision 0033's eleven calls, plus three made in this round:
+Decision 0033's eleven calls, decision 0034's seven, plus three made in this round:
 - usage sums in a fixed order (R8);
 - the detached runner for long backtests;
 - the five-seed check (R2) as the deciding evidence beside the harness's single seed.

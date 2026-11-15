@@ -124,6 +124,7 @@ TABLES: dict[str, Table] = {
                 "tags_result",
                 "ecr",
                 "on_field_pace",
+                "leverage_usage",
             ),
             after=(
                 "stats",
@@ -133,8 +134,9 @@ TABLES: dict[str, Table] = {
                 "pfr",
                 "tags_result",
                 "on_field_pace",
+                "leverage_usage",
             ),
-            post_season=("on_field_pace",),
+            post_season=("on_field_pace", "leverage_usage"),
         ),
     ]
 }

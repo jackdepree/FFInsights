@@ -6,6 +6,8 @@ targets and `walk`, refit each season, 2020-2024) for `snap_next3_plain`, `_lev`
 five seeds; each seed's paired difference (range score and squared error, % of plain's; + = worse)
 and the spread across seeds. Writes seeds.txt. Run from pcf/:
 PYTHONUTF8=1 .venv/Scripts/python.exe projects/snap-leverage/explore/seeds.py
+It needs the retired expert package, `pcf.experts.snap_leverage` (decision 0034): check out
+commit 892d39c to rerun it.
 """
 
 # ruff: noqa: E501

@@ -13,6 +13,7 @@ import polars as pl
 
 from pcf.config import get_config
 from pcf.core.log import get_logger
+from pcf.data import usage
 from pcf.data.clean import standard
 from pcf.data.clean.depth_charts import (
     daily_depth_rows,
@@ -292,7 +293,33 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
         parts["on_field_pace"] = on_spine(
             on_field, parts["roster"], ["gsis_id", "game_id"], "player_game.on_field_pace"
         )
+    usage_rows = leverage_usage(season, root)
+    if usage_rows is not None:
+        parts["leverage_usage"] = on_spine(
+            usage_rows, parts["roster"], ["gsis_id", "game_id"], "player_game.leverage_usage"
+        )
     write_parts(parts, "player_game", [season], root)
+
+
+def leverage_usage(season: int, root: Path | None) -> pl.DataFrame | None:
+    """Each player-game's usage weighted by the stakes (`pcf.data.usage`), from the saved `play`
+    and `player_play` parts (built first: TABLE_ORDER). None without them (participation starts
+    in 2016 and comes after the season)."""
+    try:
+        on = read_part("player_play", "on_field", [season], root).select(
+            "game_id", "play_id", "season", "side", "team", "gsis_id", "known_at"
+        )
+        lev = read_part("play", "leverage", [season], root).select(
+            "game_id", "play_id", "leverage", "high_stakes"
+        )
+        paced = read_part("play", "pace", [season], root).select("game_id", "play_id", "pcf_xpass")
+        plays = lev.join(paced, on=["game_id", "play_id"], how="left").collect()
+        on = on.collect()
+    except (FileNotFoundError, pl.exceptions.ComputeError):
+        return None
+    if plays.is_empty() or on.is_empty():
+        return None
+    return usage.part_rows(on, usage.plays(plays))
 
 
 def on_field_pace(season: int, root: Path | None) -> pl.DataFrame | None:
