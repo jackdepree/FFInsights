@@ -106,6 +106,7 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 | Scheduled backlog checks and retros | "we could schedule backlog checks or retro analysis like this so that we always improve our building capabilities" | "The retro": after every second finished project |
 | A crude forecaster to score incremental gains; the vision is many models and several products | "The vision can really be multi-model. I have a vision for a dashboard, summarized betting advice, a website, and general forecasts and diagnostics"; "we can draft a crude and simple forecaster to measure incremental gains" | "One yardstick for incremental gains"; `crude-forecaster` in the registry (an idea: its kickoff and brief are still to come) |
 | Two questions beside every verdict: real? and pays? | "I think that will be useful to know, because it might suggest a discovery is significant when predicting a different outcome. So yes." | "The hunch scoreboard"; two new columns and a second tally in HUNCHES.md (rows before H50 filled in by Claude from each row's text) |
+| The change lens in every miss report | "yes please add the change lens to the miss report" | The lens list of 2026-11-15 in `pcf.validation.misses`: `player_change` and `team_change` (decision 0035) |
 
 **Rejected by the CEO (2026-11-15):**
 
@@ -115,8 +116,7 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 
 1. **The obvious-input check.** In every exploration, each new trait is tested beside the single most obvious input that might already carry it (P7), before a build is planned.
 2. **Tag each hunch as a football claim or a method** in HUNCHES.md, so the next retro can score the two kinds apart without Claude classifying them afterwards.
-3. **Add the change lens to `pcf.validation.misses`** (I47, below), so every scorecard shows it. It changes the dated lens list, which the CEO reviews.
-4. **A strategy session apart from the build sessions** (the CEO's question, 2026-11-15): one standing session for vision, hunches across projects, retros and kickoffs; one session per project for the build. Claude's view is in the conversation of that date; undecided.
+3. **A strategy session apart from the build sessions** (the CEO's question, 2026-11-15; "we can wait for now"): one standing session for vision, hunches across projects, retros and kickoffs; one session per project for the build. Claude's view is in the conversation of that date; undecided.
 
 ### Since retro 1
 
@@ -136,6 +136,7 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 - **Nothing clear** for ECR (three seasons only; its largest lean is −0.38 points for teammates of a new season-start QB in games 1–4), Elo's margin, or the scheme traits.
 - **Scored against the prediction** (Claude, high: "holds for at least two experts; each bias worth 0.3 to 1.0% of that expert's range score on the rows it touches"): **held** on the count (three experts). The size was stated in the wrong unit to check here: the gaps are 16–38% of the typical miss on the rows touched, which is more than expected there, but those rows are about 5% of all rows and no correction has been fitted, so the forecast gain is unmeasured.
 - **The case against:** the next-3-games targets overlap from week to week, so the team-efficiency intervals are too narrow (the season counts are the safer read). The first rows and the new-coach defense come from the same seasons as team-efficiency#R20, so that one is a sharper look, not a new test. "Games 5 on after a QB change" includes original starters coming back, which is part of why it runs high.
+- **In the miss report since** (decision 0035): on participation's champion the first game back from injury is the top group (+4.3 points of share); both lenses' bias share is about 0.0%, so the biases are real and fixing them would move the overall error very little.
 - **Follow-ups:** I54 (a level for each QB in the offense's rating), I55 (a games-since-return input for participation), I56 (an off-bye input for pace).
 
 ### The case against this retro

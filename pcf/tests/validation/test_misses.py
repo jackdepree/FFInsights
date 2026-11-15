@@ -80,6 +80,7 @@ def test_a_tag_that_is_off_is_flagged_and_a_noise_tag_is_not(m):
 
 def test_lenses_without_their_inputs_are_listed_not_guessed(m):
     assert {"depth", "team_points", "margin", "qb_efficiency"} <= set(m.skipped)
+    assert {"player_change", "team_change"} <= set(m.skipped)
     assert "snap_share" not in m.skipped
 
 
@@ -87,7 +88,8 @@ def test_after_game_lenses_are_labelled_diagnostic():
     fixed = {lens.name: lens.when for lens in LENSES}
     assert fixed == {"position": "before", "depth": "before", "week": "before",
                      "snap_share": "after", "team_points": "after", "margin": "after",
-                     "qb_efficiency": "after"}  # fmt: skip
+                     "qb_efficiency": "after", "player_change": "before",
+                     "team_change": "before"}  # fmt: skip
     timing = {t.column: t.timing for t in TAGS} | {x.name: "before_game" for x in misses.EXTRA}
     for lens in misses._candidates():
         assert lens.when == ("before" if timing[lens.name] in BEFORE else "after"), lens.name
@@ -121,3 +123,73 @@ def test_the_lens_frame_reads_what_the_source_has():
     # A's same-position teammate C is Out; the QB's isn't
     assert frame["teammate_out"].to_list() == [True, False, True]
     assert "depth" not in frame.columns
+
+
+def _change_source() -> FrameSource:
+    """Two seasons of one team, 6 games each. 2022: coach Old, QB Q1 all year. 2023: coach New,
+    QB Q2 opens, Q3 takes over in week 4. Player A is on the team throughout and is back from
+    injury in week 3 of 2023; B is a rookie in 2023."""
+    games = [(f"{s}_{w:02d}", s, w) for s in (2022, 2023) for w in range(1, 7)]
+    tg = pl.DataFrame(games, schema=["game_id", "season", "week"], orient="row").with_columns(
+        team=pl.lit("KC"), game_type=pl.lit("REG")
+    )
+    pre = tg.select(
+        "game_id", "team",
+        qb_id=pl.when(c("season") == 2022).then(pl.lit("Q1"))
+        .when(c("week") < 4).then(pl.lit("Q2")).otherwise(pl.lit("Q3")),
+        coach=pl.when(c("season") == 2022).then(pl.lit("Old")).otherwise(pl.lit("New")),
+    )  # fmt: skip
+    cols = ["game_id", "season", "week", "team"]
+    roster = pl.concat([
+        tg.select(pl.lit("A").alias("gsis_id"), *cols, position=pl.lit("WR")),
+        tg.filter(c("season") == 2023).select(
+            pl.lit("B").alias("gsis_id"), *cols, position=pl.lit("RB")
+        ),
+    ])  # fmt: skip
+    tags = roster.select(
+        "gsis_id", "game_id",
+        tag_rookie=c("gsis_id") == "B",
+        tag_new_team=pl.lit(False),
+        tag_first_game_back=(c("gsis_id") == "A") & (c("season") == 2023) & (c("week") == 3),
+    )  # fmt: skip
+    team_tags = tg.select("game_id", "team", tag_off_bye=(c("season") == 2023) & (c("week") == 6))
+    return FrameSource({
+        ("player_game", "roster"): roster, ("player_game", "tags"): tags,
+        ("team_game", "schedule"): tg, ("team_game", "pregame"): pre,
+        ("team_game", "tags"): team_tags, ("game", "schedule"): tg.select("game_id"),
+    })  # fmt: skip
+
+
+def test_the_change_lenses_count_games_since_each_change():
+    frame = lens_frame(_change_source())
+    by = {lens.name: lens for lens in LENSES}
+    labelled = frame.with_columns(
+        player=by["player_change"].build(frame), team=by["team_change"].build(frame)
+    ).sort("gsis_id", "season", "week")
+    a23 = labelled.filter((c("gsis_id") == "A") & (c("season") == 2023))
+    assert a23["player"].to_list() == [
+        "none", "none", "first game back from injury", "games 2-4 back from injury",
+        "games 2-4 back from injury", "games 2-4 back from injury",
+    ]  # fmt: skip
+    # a new coach and a new opening QB; the QB changes again in week 4
+    assert a23["team"].to_list() == [
+        "new head coach, games 1-4", "new head coach, games 1-4", "new head coach, games 1-4",
+        "QB changed in season, games 1-4", "QB changed in season, games 1-4",
+        "QB changed in season, games 1-4",
+    ]  # fmt: skip
+    b = labelled.filter(c("gsis_id") == "B")
+    assert b["player"].to_list() == ["rookie, weeks 1-4"] * 4 + ["rookie, weeks 5+"] * 2
+    # 2022 has no season before it in the data: nothing is called new, and no QB changed
+    a22 = labelled.filter((c("gsis_id") == "A") & (c("season") == 2022))
+    assert set(a22["team"]) == {"none"} and set(a22["player"]) == {"none"}
+
+
+def test_the_change_lenses_are_skipped_without_their_parts():
+    roster = pl.DataFrame({
+        "gsis_id": ["A"], "game_id": ["G1"], "season": [2023], "week": [1], "team": ["KC"],
+        "position": ["WR"],
+    })  # fmt: skip
+    frame = lens_frame(FrameSource({
+        ("player_game", "roster"): roster, ("game", "schedule"): pl.DataFrame({"game_id": ["G1"]}),
+    }))  # fmt: skip
+    assert "team_game_no" not in frame.columns and "since_back" not in frame.columns
