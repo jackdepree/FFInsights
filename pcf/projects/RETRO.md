@@ -71,7 +71,7 @@ Written 2026-11-15, before any of these is tested. Each idea's line is also in I
 | I53 target depth travels | high | I53: target share travels | medium that it doesn't |
 | I1 ranges and expert disagreement | low | | |
 
-The open hunches (the CEO's own confidence is theirs to add):
+The open hunches. The CEO's own odds were added on 2026-11-15, word for word in HUNCHES.md: H5, 30% for a large effect and 50% for nothing worth keeping; H6, "almost certainly true"; H18, 20% for a modest effect and 50% for nothing with our data.
 
 | Hunch | Claude expects | Confidence |
 |---|---|---|
