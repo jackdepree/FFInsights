@@ -96,6 +96,8 @@ Both kinds go in [`projects/CONSISTENCY.md`](projects/CONSISTENCY.md):
 
 **One yardstick for incremental gains** (CEO, 2026-11-15; planned as `crude-forecaster` in the registry). PCF is many models feeding several products: general forecasts and diagnostics, summarized betting advice, a dashboard, a website. Until those exist, a crude and simple forecaster stands in for them, so every idea, hunch and expert can be scored the same way: what does it add to the crude forecast of fantasy points and of game results? An expert's own no-noise target still decides whether it ships (rule k); the yardstick says how much it's worth downstream.
 
+**Two kinds of session** (CEO, 2026-11-15). The **strategy chat** holds the vision, project selection, retros, kickoffs, hunches, explorations and briefs, and stops at an agreed brief. Each **build** happens in its own session, which starts from the project's files (`BRIEF.md`, `EXPLORATION.md`, the registry) and nothing else, so every decision must be in those files before the handoff. A hunch that comes up during a build is still recorded there and then, in the same `HUNCHES.md`. The CEO's spot-check and the merge happen in the build session.
+
 **Assumptions first.** For any idea the CEO brings, Claude first states its assumptions, limitations and advantages, plus a simpler alternative if there is one. Then Claude recommends, and builds on the CEO's go. Claude pushes back when an idea won't work as stated.
 
 **Brainstorm, then build.** For design decisions, Claude lays out options: the strong choices, plus a tempting but bad one that shows what separates good from bad. On taste calls, the CEO's instinct comes first. The CEO picks, then Claude writes or builds.

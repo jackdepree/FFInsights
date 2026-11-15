@@ -266,7 +266,7 @@ projects:
     status: idea
     horizon: next
     depends_on: [baselines, validation-harness, elo]
-    summary: "The CEO's idea, 2026-11-15: \"draft a crude and simple forecaster to measure incremental gains\", so ideas, hunches and experts are all scored the same way until the real products exist (CLAUDE.md, \"One yardstick for incremental gains\"). A deliberately simple forecast of player fantasy points and of game results (margin, total) that takes any expert's saved walk-forward output as an extra input and reports what it adds, with an interval. Starts from what exists: baselines' lasso (participation#F15 already scored the participation expert this way) and Elo. Not a product and never shipped as one. Kickoff (the usual way, analogies, the CEO's hunches) and brief still to come."
+    summary: "The CEO's idea, 2026-11-15: \"draft a crude and simple forecaster to measure incremental gains\", so ideas, hunches and experts are all scored the same way until the real products exist (CLAUDE.md, \"One yardstick for incremental gains\"). A deliberately simple forecast of player fantasy points and of game results (margin, total) that takes any expert's saved walk-forward output as an extra input and reports what it adds, with an interval. Starts from what exists: baselines' lasso (participation#F15 already scored the participation expert this way) and Elo. Not a product and never shipped as one. Kickoff opened 2026-11-15 in the strategy chat (projects/crude-forecaster/BRIEF.md: the usual way and analogies; the CEO's hunches next)."
 
   # ---------------------------------------------------------------- Phase 1: experts
   - id: elo
