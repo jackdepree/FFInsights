@@ -105,13 +105,38 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 | The noise ceiling first in every exploration | "Putting noise ceiling first in exploration is very smart" | Lifecycle step 2; the brief template; definition of done |
 | Scheduled backlog checks and retros | "we could schedule backlog checks or retro analysis like this so that we always improve our building capabilities" | "The retro": after every second finished project |
 | A crude forecaster to score incremental gains; the vision is many models and several products | "The vision can really be multi-model. I have a vision for a dashboard, summarized betting advice, a website, and general forecasts and diagnostics"; "we can draft a crude and simple forecaster to measure incremental gains" | "One yardstick for incremental gains"; `crude-forecaster` in the registry (an idea: its kickoff and brief are still to come) |
+| Two questions beside every verdict: real? and pays? | "I think that will be useful to know, because it might suggest a discovery is significant when predicting a different outcome. So yes." | "The hunch scoreboard"; two new columns and a second tally in HUNCHES.md (rows before H50 filled in by Claude from each row's text) |
+
+**Rejected by the CEO (2026-11-15):**
+
+- **A build bar** (a gain under the fitting noise makes a project an investigation). The go rule stays "unless there's literally zero signal": "I think this will be more of a in the moment call on the vision of the product. Some experts can be useful for telling a coherent story rather than explicitly as a distinctive forecaster. So I think the literal zero rule can hold." The noise ceiling is still reported first, as the evidence for that call.
 
 **Proposed, not decided:**
 
-1. **Two verdicts per hunch: "is it real?" and "does it pay?"** The CEO found this confusing (2026-11-15), so it is not adopted. The plain version: H33 said each coach has his own substitution habits. That is true (it repeats at 0.85 and follows the coach), so the hunch about football was right. Added to the model, it improved nothing, because the players' own habits already carried it. Today the row reads "held", and a reader can't tell a hunch that was right about football from one that also made a forecast better. Two columns would show both. Under P7 this happens often.
-2. **A build bar.** The charter says an exploration is a go "unless there's literally zero signal". P8 says exploration gains under about 0.3% haven't survived a build. A possible rule: a gain smaller than the fitting noise makes the project an investigation (features and findings, no forecast), as the CEO ruled for `snap-leverage`. The noise ceiling step now reports the numbers; whether they set the bar is the CEO's call.
-3. **The obvious-input check.** In every exploration, each new trait is tested beside the single most obvious input that might already carry it (P7), before a build is planned.
-4. **Tag each hunch as a football claim or a method** in HUNCHES.md, so the next retro can score the two kinds apart without Claude classifying them afterwards.
+1. **The obvious-input check.** In every exploration, each new trait is tested beside the single most obvious input that might already carry it (P7), before a build is planned.
+2. **Tag each hunch as a football claim or a method** in HUNCHES.md, so the next retro can score the two kinds apart without Claude classifying them afterwards.
+3. **Add the change lens to `pcf.validation.misses`** (I47, below), so every scorecard shows it. It changes the dated lens list, which the CEO reviews.
+4. **A strategy session apart from the build sessions** (the CEO's question, 2026-11-15): one standing session for vision, hunches across projects, retros and kickoffs; one session per project for the build. Claude's view is in the conversation of that date; undecided.
+
+### Since retro 1
+
+**I47, the change lens (2026-11-15, the CEO's first pick; `retro/explore/i47_change_lens.py` and `.txt`).** Discovery only: saved walk-forward histories for 14 forecasts, 2016–2024, each expert's average miss just after a change against the same weeks' other rows, weeks resampled.
+
+| Expert | Change | Gap (result minus forecast) | Share of its typical miss | Seasons with the same sign |
+|---|---|---|---|---|
+| team-efficiency, defense | New head coach, games 1–4 | +0.034 EPA per play allowed (after: +0.010) | 35% | 8 of 9 |
+| team-efficiency, offense | Starting QB changed in season, games 1–4 after | −0.024 EPA per play | 25% | 6 of 9 |
+| team-efficiency, offense | The same, from the fifth game | +0.037 EPA per play | 38% | 8 of 9 |
+| participation | A player's first game back from injury | +3.3 points of snap share (games 2–4: −1.0) | 28% | 6 of 6 |
+| The lasso (fantasy points) | A player new to his team, his games 1–4 | −0.75 points | 16% | 9 of 9 |
+| The lasso | Rookies, from their fifth game | +0.37 points | 8% | 9 of 9 |
+| pace, runs | First game after a bye | +1.4 runs | 25% | 8 of 9 |
+
+- 119 expert-and-change pairs were looked at; 19 clear the 99% bar where about 1 would by chance, 9 clear 99.9%.
+- **Nothing clear** for ECR (three seasons only; its largest lean is −0.38 points for teammates of a new season-start QB in games 1–4), Elo's margin, or the scheme traits.
+- **Scored against the prediction** (Claude, high: "holds for at least two experts; each bias worth 0.3 to 1.0% of that expert's range score on the rows it touches"): **held** on the count (three experts). The size was stated in the wrong unit to check here: the gaps are 16–38% of the typical miss on the rows touched, which is more than expected there, but those rows are about 5% of all rows and no correction has been fitted, so the forecast gain is unmeasured.
+- **The case against:** the next-3-games targets overlap from week to week, so the team-efficiency intervals are too narrow (the season counts are the safer read). The first rows and the new-coach defense come from the same seasons as team-efficiency#R20, so that one is a sharper look, not a new test. "Games 5 on after a QB change" includes original starters coming back, which is part of why it runs high.
+- **Follow-ups:** I54 (a level for each QB in the offense's rating), I55 (a games-since-return input for participation), I56 (an off-bye input for pace).
 
 ### The case against this retro
 
