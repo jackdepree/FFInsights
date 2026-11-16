@@ -498,11 +498,11 @@ projects:
   - id: opportunity-quality
     name: Opportunity quality
     phase: 1
-    status: idea
+    status: exploring
     horizon: next
     cadence: [in_season]
     depends_on: [participation]
-    summary: "Expected fantasy points from where targets and carries happen. The CEO's pick, 2026-11-16; kickoff opened in the strategy chat (projects/opportunity-quality/BRIEF.md: the usual way and analogies; the CEO's hunches next)."
+    summary: "Expected fantasy points from where targets and carries happen. The CEO's pick, 2026-11-16; hunches H56-H62. Explored 2026-11-16 (GO): knowing a game's actual chances would remove 74% of the error in a player's points, past points 40%; expected points repeat (0.84 week to week), points over expected barely (0.14) with a small lasting part (26% kept season to season); efficiency earns opportunity (+0.94%); goal-line chances are worth the most per chance and add nothing to next game's forecast beyond plain counts; opportunity follows movers in part (0.52 against 0.67); the scheme split fails (projects/opportunity-quality/EXPLORATION.md). Brief drafted, waiting for the CEO's calls; the build runs in its own session."
 
   - id: snap-leverage
     name: Snap leverage (an investigation and feature engineering)

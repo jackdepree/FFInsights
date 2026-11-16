@@ -1,0 +1,121 @@
+opportunity-quality, first look. RB, WR and TE targets and carries, regular seasons.
+Chances with expected points: 438090 (2010-2024). Player-games with a snap: 66626 (2012-2024).
+PPR points on targets and carries only. Discovery only.
+
+  one target: average 1.69 points; the situation removes 6.9% of the squared error (2019-2024, 104095 chances)
+  one carry: average 0.63 points; the situation removes 13.5% of the squared error (2019-2024, 72437 chances)
+  against nflverse's expected points (their scoring, 53607 player-games): r 0.988
+
+== 1. The noise ceiling: next game's points (players with a snap)
+  rows scored 34920; average 6.34 points, spread 7.49
+  past points only (season, last 4, last season) removes 40.3%
+  hindsight average (his other games that season) removes 42.5%
+  knowing the game's own expected points (the chances he actually got) removes 73.6%
+  next game's expected points from past expected points: removes 52.5% of their error
+  next game's points over expected from past points over expected: removes 0.1%
+  (fitting noise not measured: these trees have no randomness as configured.)
+
+== 2. H59: which repeats, expected points or points over expected?
+shape: (5, 11)
+┌─────────┬──────────┬──────────┬──────────┬──────────┬───────────┬───────────┬──────────────┬──────────────┬──────────┬─────────┐
+│ measure ┆ week_r   ┆ week_lo  ┆ week_hi  ┆ season_r ┆ season_lo ┆ season_hi ┆ unit_seasons ┆ season_pairs ┆ mean_abs ┆ verdict │
+│ ---     ┆ ---      ┆ ---      ┆ ---      ┆ ---      ┆ ---       ┆ ---       ┆ ---          ┆ ---          ┆ ---      ┆ ---     │
+│ str     ┆ f64      ┆ f64      ┆ f64      ┆ f64      ┆ f64       ┆ f64       ┆ i64          ┆ i64          ┆ f64      ┆ str     │
+╞═════════╪══════════╪══════════╪══════════╪══════════╪═══════════╪═══════════╪══════════════╪══════════════╪══════════╪═════════╡
+│ fp      ┆ 0.759696 ┆ 0.74977  ┆ 0.769279 ┆ 0.716297 ┆ 0.703151  ┆ 0.728954  ┆ 5089         ┆ 3858         ┆ 8.132839 ┆ trait   │
+│ xfp     ┆ 0.842072 ┆ 0.835231 ┆ 0.848653 ┆ 0.751267 ┆ 0.739495  ┆ 0.762579  ┆ 5089         ┆ 3858         ┆ 8.46186  ┆ trait   │
+│ poe     ┆ 0.137146 ┆ 0.114448 ┆ 0.159702 ┆ 0.173658 ┆ 0.147852  ┆ 0.199229  ┆ 5089         ┆ 3858         ┆ 3.131352 ┆ trait   │
+│ xfp_ch  ┆ 0.752459 ┆ 0.742279 ┆ 0.762293 ┆ 0.79404  ┆ 0.784043  ┆ 0.803625  ┆ 5089         ┆ 3858         ┆ 1.495758 ┆ trait   │
+│ poe_ch  ┆ 0.025848 ┆ 0.002789 ┆ 0.04888  ┆ 0.035721 ┆ 0.009243  ┆ 0.062149  ┆ 5089         ┆ 3858         ┆ 0.724341 ┆ trait   │
+└─────────┴──────────┴──────────┴──────────┴──────────┴───────────┴───────────┴──────────────┴──────────────┴──────────┴─────────┘
+  odd against even weeks, points per game                          r +0.74 (+0.73 to +0.76, n 2210)
+  odd against even weeks, expected points per game                 r +0.83 (+0.82 to +0.84, n 2210)
+  odd against even weeks, points over expected per game            r +0.21 (+0.18 to +0.25, n 2210)
+  odd against even weeks, expected points per chance (quality)     r +0.96 (+0.96 to +0.97, n 2210)
+  odd against even weeks, points over expected per chance          r +0.20 (+0.17 to +0.24, n 2210)
+
+== 3. H56: points per chance by kind (2019-2024; actual, and the model's expected)
+  target into the end zone, from 10 or closer     3.36 points ( 3.32 expected)  touchdown 45.1%   2.0% of chances
+  carry, inside the 2                             3.18 points ( 3.02 expected)  touchdown 52.2%   1.1% of chances
+  target short of the goal line, inside the 10    2.74 points ( 2.67 expected)  touchdown 28.5%   1.4% of chances
+  target into the end zone, from further out      2.70 points ( 2.77 expected)  touchdown 29.8%   1.9% of chances
+  target 20+ yards downfield                      2.05 points ( 2.14 expected)  touchdown  5.7%   6.0% of chances
+  carry, 3 to 5 out                               1.83 points ( 1.77 expected)  touchdown 27.5%   1.0% of chances
+  target 10 to 19 downfield                       1.76 points ( 1.78 expected)  touchdown  1.8%  11.1% of chances
+  target 1 to 9 downfield                         1.46 points ( 1.46 expected)  touchdown  0.8%  24.6% of chances
+  target at or behind the line                    1.36 points ( 1.41 expected)  touchdown  0.9%  11.8% of chances
+  carry, 6 to 10 out                              0.93 points ( 0.94 expected)  touchdown 10.7%   1.5% of chances
+  carry, 11 to 20 out                             0.66 points ( 0.63 expected)  touchdown  4.5%   3.3% of chances
+  carry, outside the 20                           0.50 points ( 0.49 expected)  touchdown  0.5%  34.1% of chances
+  average: target 1.69, carry 0.63
+
+  Does it pay? Next game's points, added to past points (share of squared error removed):
+    + past targets, carries and snaps         +1.47%  (90% +1.18 to +1.77)
+    + expected points, beyond those counts    -0.19%  (90% -0.29 to -0.08)
+    + counts by kind (inside the 5, end zone, deep, air yards), beyond plain counts  -0.07%  (90% -0.17 to +0.03)
+    + only the goal-line kinds (carries inside the 5, targets inside the 10 and into the end zone)  -0.10%  (90% -0.18 to -0.02)
+    past expected points alone against past points alone   -1.20%  (90% -1.65 to -0.74)
+    past expected points beside past points                +0.73%  (90% +0.49 to +0.99)
+      RB: expected points beside past points  +0.44%  (90% +0.02 to +0.86)
+      WR: expected points beside past points  +0.73%  (90% +0.36 to +1.09)
+      TE: expected points beside past points  +1.32%  (90% +0.89 to +1.76)
+    next game's touchdowns: the goal-line kinds beside past touchdowns and points  -0.03%  (90% -0.17 to +0.10)
+
+== 4. H61: do past points over expected predict next game's expected points?
+  everyone                    +0.94%  (90% +0.74 to +1.12)
+  first two seasons           +1.37%  (90% +1.00 to +1.73)
+  third season on             +0.76%  (90% +0.54 to +0.99)
+  RB                          +1.17%  (90% +0.82 to +1.48)
+  WR                          +1.02%  (90% +0.72 to +1.33)
+  TE                          +0.23%  (90% -0.07 to +0.54)
+  change in expected points (this game minus the last-4 average), by the last 4 games' points over expected:
+    lowest   (over expected -3.11 a game, level 10.7): -0.96 points  (n 8756)
+    low      (over expected -1.06 a game, level 6.4): +0.02 points  (n 8755)
+    middle   (over expected -0.23 a game, level 3.6): +0.53 points  (n 8759)
+    high     (over expected +0.43 a game, level 5.5): +0.40 points  (n 8751)
+    highest  (over expected +2.80 a game, level 9.9): +0.17 points  (n 8755)
+
+== 5. H57: season to next season, movers against stayers (50+ chances both seasons, one team each)
+  expected points per game                 stayers r +0.67 (+0.65 to +0.70, n 1147)   movers r +0.52 (+0.43 to +0.59, n 234)
+  expected points per snap                 stayers r +0.76 (+0.74 to +0.78, n 1147)   movers r +0.68 (+0.61 to +0.73, n 234)
+  expected points per chance (quality)     stayers r +0.97 (+0.97 to +0.98, n 1147)   movers r +0.96 (+0.95 to +0.97, n 234)
+  points per game                          stayers r +0.63 (+0.60 to +0.66, n 1147)   movers r +0.47 (+0.38 to +0.55, n 234)
+  points over expected per chance          stayers r +0.25 (+0.20 to +0.29, n 1147)   movers r +0.24 (+0.13 to +0.33, n 234)
+    RB: expected points per game, stayers +0.64 (+0.59 to +0.69, n 461); movers +0.46 (+0.32 to +0.58, n 99); change for movers -1.02 a game, stayers -0.12
+    WR: expected points per game, stayers +0.69 (+0.65 to +0.72, n 532); movers +0.54 (+0.42 to +0.64, n 108); change for movers +0.03 a game, stayers -0.18
+    TE: expected points per game, stayers +0.58 (+0.48 to +0.66, n 154); movers +0.35 (+0.03 to +0.61, n 27); change for movers -0.30 a game, stayers -0.12
+  movers (234): next season's expected points per game against his own last season (r +0.52) and against what the
+    new team gave the player who held his depth-rank the season before, 'the seat' (r +0.50, hindsight: the rank is the one he ended up with);
+    together: 0.40 x his own + 0.33 x the seat
+
+== 6. H60: for movers, last season's expected points split by formation, re-weighted to the new team's mix
+  movers 234: overall rate r +0.516; re-weighted by formation r +0.489
+  movers to a team at least 10 points of shotgun rate different (127): overall r +0.503; re-weighted r +0.451
+  fit term (his shotgun share x the change in shotgun rate): +5.59, standard error 5.53
+  a player's shotgun share of his expected points, season to season: stayers +0.80 (+0.78 to +0.82, n 1147); movers +0.49 (+0.41 to +0.57, n 234)
+
+== 7. H58: yards after the catch over expected (per catch), receivers and tight ends, 30+ catches a season
+  WR: repeats season to season r +0.35 (+0.29 to +0.41, n 609); same season with points over expected per chance r +0.43; predicts next season's points over expected r +0.12 (+0.05 to +0.18, n 609) (last season's points over expected itself: r +0.24)
+      beside last season's points over expected, a yard of it adds +0.005 points per chance (se 0.010); the top quarter's next season: +0.001 points per chance over expected, 47% above zero
+  TE: repeats season to season r +0.39 (+0.28 to +0.48, n 193); same season with points over expected per chance r +0.50; predicts next season's points over expected r +0.30 (+0.19 to +0.41, n 193) (last season's points over expected itself: r +0.32)
+      beside last season's points over expected, a yard of it adds +0.042 points per chance (se 0.017); the top quarter's next season: +0.126 points per chance over expected, 67% above zero
+  RB: repeats season to season r +0.14 (+0.02 to +0.26, n 191); same season with points over expected per chance r +0.47; predicts next season's points over expected r +0.06 (-0.06 to +0.17, n 191) (last season's points over expected itself: r +0.08)
+      beside last season's points over expected, a yard of it adds +0.002 points per chance (se 0.007); the top quarter's next season: +0.038 points per chance over expected, 56% above zero
+
+== 8. H62: how much of a season's points over expected per chance is kept the next season?
+  everyone                              keeps  26% (90% 21 to 31); same sign next season 59%; n 1451
+  RB                                    keeps  21% (90% 14 to 29); same sign next season 57%; n 606
+  WR                                    keeps  23% (90% 16 to 29); same sign next season 59%; n 658
+  TE                                    keeps  37% (90% 23 to 50); same sign next season 63%; n 187
+  stayers                               keeps  25% (90% 20 to 31); same sign next season 58%; n 1147
+  movers                                keeps  22% (90% 11 to 35); same sign next season 60%; n 234
+  same side of zero two seasons running keeps  29% (90% 21 to 37); same sign next season 63%; n 540
+     of those, above zero both seasons   keeps  26% (90% 8 to 45); same sign next season 57%; n 244; their next season averages +0.040 a chance
+  opposite sides the two seasons        keeps  17% (90% 7 to 27); same sign next season 53%; n 396
+  moved, and kept the same side on the new team (the CEO's 'carried it') keeps  20% (90% 4 to 34); same sign next season 64%; n 73
+  150+ chances a season                 keeps  35% (90% 25 to 45); same sign next season 59%; n 462
+  spread of points over expected per chance across player-seasons: 0.216; the part that lasts (square root of the season-to-season covariance): 0.114
+  the chance the gap closes by half or more next season (|next| <= half of |this|, same side or crossed):
+    everyone                         57%  (n 1451)
+    gap of 0.10+ a chance            61%  (n 848)
+    two seasons same side, 0.10+     58%  (n 325)

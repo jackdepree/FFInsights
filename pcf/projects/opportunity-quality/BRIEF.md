@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-16, in the strategy chat: "let's do the opportunity quality expert brief and exploration". This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-16: kickoff, the CEO's hunches and Claude's expectations written; methods proposed; exploration next) · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (2026-11-16: kickoff, hunches, methods and exploration done (GO); waiting for the CEO's odds on H58, H61, H62, the method choice and the calls under "Open for the CEO") · **Layer:** expert · **Cadence:** in_season
 
 ## The usual way
 *Claude, before any research.*
@@ -55,6 +55,16 @@ Fantasy analysts separate **how much work a player gets** from **what he does wi
 ## The noise ceiling
 *Filled in by the exploration, before the hunches are tested.*
 
+From [`EXPLORATION.md`](EXPLORATION.md): next game's points for players with a snap, 2019-2024, share of squared error removed.
+
+| What is known | Removed |
+|---|---|
+| His past points | 40.3% |
+| Hindsight: his average over the season's other games | 42.5% |
+| The chances he actually got in that game (their expected points) | 73.6% |
+
+The room is in forecasting opportunity (33 points of error); efficiency on the day is the other 26% and nothing forecasts it (past points over expected remove 0.1%). Next game's expected points are 52.5% predictable from their own past. **Fitting noise wasn't measured**; the build measures it before reading any gain under 0.5%.
+
 ## Builds on
 | Project | What we use | Why |
 |---|---|---|
@@ -65,4 +75,54 @@ Fantasy analysts separate **how much work a player gets** from **what he does wi
 
 **Already tried:** who is on the field matters far more than any team-level trait (crude-forecaster#F6). A teammate ruled out is information box-score models lack (miss-lenses#F4). Past box-score stats add almost nothing to snap share once past snap shares are known (participation#F7). Leverage-weighted snap share is 0.99 alike with plain snap share and adds noise (snap-leverage#R1-R4).
 
-*The remaining sections are written after the hunches and the exploration.*
+## The question
+How much of a player's fantasy production is the work he's given and how much is what he does with it; how much of each lasts, for whom; and does doing well with it earn him more?
+
+## Why it matters
+Every projection and every "buy low, sell high" call rests on a guess about regression: will this player's hot or cold run last? This expert turns the guess into a number per player (the chance the gap closes), and gives the forecasts of playing time and the ball a new input (efficiency earns work). Users would see it as a line on a player card: "12.1 expected, 15.3 actual; about a quarter of that gap usually lasts."
+
+## Terms
+- **Standard terms used:** target, carry, air yards, PPR, target share (`docs/GLOSSARY.md`).
+- **New terms this project introduces:**
+  - **Chance:** one target or one carry.
+  - **Expected points (xfp):** the fantasy points an average player scores on a chance from that situation (yard line, down, distance, throw depth, side, formation), summed over a player's chances. Computed by a model fit only on earlier seasons.
+  - **Points over expected:** actual points on those chances minus expected points. The fantasy analysts' "efficiency".
+  - **Kept share:** how much of a player's points over expected per chance is expected to last, set by how many chances he's had (the regression-to-the-mean measure).
+  - **Chance the gap closes:** the probability that next season's (or the rest of this season's) points over expected per chance are less than half of the current gap.
+  - **The seat:** the work a team gave whoever held a depth rank at a position the season before.
+
+## Assumptions
+- "Expected" can be fixed from the situation alone. **Flagged:** throw depth and place are partly the receiver's doing.
+- Points over expected on separate chances are roughly independent draws around a player's true level, which moves slowly. **To test in the build** (the kept share should rise with chances the way the model says; the exploration's 26% overall and 35% at 150+ chances agree in direction).
+- Season-to-season numbers come from players with roles in both seasons. **Flagged:** the build's version must include players who lost their role.
+- Scoring: any; PPR is the default for reports.
+
+## Goals
+- Expected points and points over expected per player-game, saved as a table, any scoring.
+- The regression measure per player and week: kept share, the range for his true level, the chance the gap closes.
+- A forecast of next game's expected points (and the next 3 games, and the rest of the season) that uses efficiency as an input.
+- Consistency entries for every new measure (CONSISTENCY.md).
+
+## Tests
+- **Success looks like:** the expected-points forecast beats a shuffled copy of itself and beats the last-4-games average of expected points on held-out seasons; past points over expected improve it (the exploration: +0.94%); the regression measure is calibrated (players given a 60% chance of closing the gap close it about 60% of the time, checked in bands).
+- **Failure looks like:** the forecast doesn't beat plain counts of targets, carries and snaps on its own target; or the per-player kept share predicts next season's points over expected no better than one rate per position (then method A ships, rule k).
+- **No-noise target (the CEO approves):** next game's PPR points on targets and carries, against a baseline of past points plus past targets, carries and snaps. The exploration says expected points alone don't clear this (-0.19%); the expert's forecast of expected points, with efficiency in it, has to. *Proposed by Claude; the CEO's to approve.*
+- **Yardstick:** scored on `crude-forecaster` (yards) once it is built.
+- **Seasons:** expected-points model from 2006; player-games from 2012; scored 2019-2024; vault 2025.
+
+## Inputs and outputs
+- **Inputs:** `play.pbp` (known after each game), rosters, `player_game.snaps`, participation's saved walk-forward history (Saturday), pace's team volume forecasts.
+- **Outputs:** player-game expected points and points over expected (retrospective facts, known after the game); a pre-game forecast of expected points with a range; the regression measure (kept share, chance the gap closes) per player.
+
+## How it will be used
+Feeds `vacated-opportunity`, `td-expert`, `player-opportunity` and `fantasy-projections`; the regression measure goes on player cards and into buy-low and sell-high lists in the weekly report.
+
+## Open for the CEO
+*Taste calls the exploration raised. The CEO's instinct first; Claude's view is in the chat until asked.*
+1. **What is the main output?** The quality of chances adds nothing to next game's forecast beyond counts (EXPLORATION F4). Is this expert mainly (a) the regression measure and the story of a player's production, (b) a forecast of opportunity, or (c) both?
+2. **Rest-of-season horizon before agreeing?** Rare, valuable chances (goal-line work) might pay over a season where they don't over one game. Test it now in the strategy chat, or leave it to the build?
+3. **Tight ends after the catch** (F11): an input now, or an idea for later?
+4. **Odds** for H58, H61 and H62 were not given before the test; they stay blank unless the CEO wants them marked as given after the result.
+
+## Plan
+One build session, from this file and EXPLORATION.md. Rungs: counts (targets, carries, snaps), then expected points, then expected points with efficiency, lasso before trees. Order: (1) the chance table and the expected-points model in the package, any scoring, checked against `ff_opportunity`; (2) player-game expected points and points over expected through the gateway, with consistency entries; (3) the regression measure (method A, then B) with its calibration check; (4) the forecast of expected points through the harness with the no-noise test; (5) fitting noise; (6) the longer horizons. Time box: one session for 1-3, a second for 4-6.
