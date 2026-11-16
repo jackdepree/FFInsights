@@ -413,12 +413,12 @@ projects:
   - id: context-live
     name: Context (in-season)
     phase: 1
-    status: exploring
+    status: brief
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, tag-tables, validation-harness, schemes-v2]
     origin: Context_Model_Training.ipynb
-    summary: "The play-outcome forecaster (the CEO's design, 2026-11-16; hunches H63-H66): for every play, what the situation and both sides' calls say should happen, with nothing known about who the players are, so later experts credit players only with the difference. Explored 2026-11-16 (GO): the live call fields (play-by-play and FTN, 2022 on) add clearly to the situation for pressure (0.8% to 4.2% of squared error), time to throw (1.7% to 17.6%), depth of target (4.3% to 18.1%), completion (1.5% to 3.9%) and sack; about half a point for runs and for how a play ends; nothing explains interceptions or fumbles. The two sides' calls add up with no extra from the combination. A blitz isn't charted on runs. Players differ in context by about 1 point of success rate. The after-the-season fields changed provider in 2023 and belong to context-retro (projects/context-live/EXPLORATION.md). The CEO's calls, 2026-11-16: interceptions, fumbles and scrambles left out; screens and play action count as calls; each outcome must beat the situation-only model; schemes-v2's traits are allowed as inputs (how a team plays, not how well). Brief waiting only for the CEO to confirm the aim; the build runs in its own session."
+    summary: "The play-outcome forecaster (the CEO's design, 2026-11-16; hunches H63-H66): for every play, what the situation and both sides' calls say should happen, with nothing known about who the players are, so later experts credit players only with the difference. Explored 2026-11-16 (GO): the live call fields (play-by-play and FTN, 2022 on) add clearly to the situation for pressure (0.8% to 4.2% of squared error), time to throw (1.7% to 17.6%), depth of target (4.3% to 18.1%), completion (1.5% to 3.9%) and sack; about half a point for runs and for how a play ends; nothing explains interceptions or fumbles. The two sides' calls add up with no extra from the combination. A blitz isn't charted on runs. Players differ in context by about 1 point of success rate. The after-the-season fields changed provider in 2023 and belong to context-retro (projects/context-live/EXPLORATION.md). The CEO's calls, 2026-11-16: interceptions, fumbles and scrambles left out; screens and play action count as calls; each outcome must beat the situation-only model; schemes-v2's traits are allowed as inputs (how a team plays, not how well). Every play is covered, runs included. Brief agreed 2026-11-16; the build runs in its own session."
 
   - id: context-retro
     name: Context (retrospective)

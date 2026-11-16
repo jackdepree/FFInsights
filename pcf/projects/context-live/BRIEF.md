@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-16, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-16: kickoff, the CEO's design and hunches, methods and exploration done; the CEO's calls after the exploration recorded; one left: the CEO to confirm Claude's reading of the aim) · **Layer:** expert · **Cadence:** in_season
+**Status:** agreed (2026-11-16: the CEO's calls after the exploration are under "The CEO's calls"; the build runs in its own session, from this file and EXPLORATION.md) · **Layer:** expert · **Cadence:** in_season
 
 ## What the CEO asked for
 *Word for word, 2026-11-16.*
@@ -127,7 +127,7 @@ Feeds `voe-live` (value over expected), the attribution of plays to players, `qb
 ## The CEO's calls
 *After the exploration, 2026-11-16, word for word (spoken; kept as transcribed).*
 
-1. **The aim.** The CEO asked what the question meant, and stated the aim: "to me, the aim of the expert should be to kind of explain what the play calling and the situation and the clock and the game script or anything that we kind of intuitively know when you're watching a game. You can tell, like, oh, they blitzed on that play and they called this screen pass, so it actually worked out really well for them. So it wasn't the players doing super good, it was actually just the situation they were in for that given play was favorable for the offense. So that's kind of the aim." *Claude's reading, to be confirmed:* the expert goes ahead as designed, for every play, runs included; it is an explainer of plays first, and the small size of the player adjustment (EXPLORATION F8) doesn't change that.
+1. **The aim.** The CEO asked what the question meant, and stated the aim: "to me, the aim of the expert should be to kind of explain what the play calling and the situation and the clock and the game script or anything that we kind of intuitively know when you're watching a game. You can tell, like, oh, they blitzed on that play and they called this screen pass, so it actually worked out really well for them. So it wasn't the players doing super good, it was actually just the situation they were in for that given play was favorable for the offense. So that's kind of the aim." Claude then laid out the two options (every play as designed, or pass plays only first), and the CEO chose: "Yes, I say every play." So the expert goes ahead as designed, for every play, runs included; it is an explainer of plays first, and the small size of the player adjustment (EXPLORATION F8) doesn't change that.
 2. **Outcomes with nothing to explain: left out.** "Any outcomes with nothing to explain, like interceptions, fumbles, scrambles, we can definitely leave those out." *Claude's reading:* a dropback's EPA goes with them (0.0%); the build's test decides the final list.
 3. **Screens and play action count as calls.** "Yes, I would say the screens and play actions definitely counts as calls."
 4. **The no-noise test: approved.** "Yes, I approve. The situation only model must pass on how that plays for sure." Each outcome must beat the situation-only model on held-out plays.
