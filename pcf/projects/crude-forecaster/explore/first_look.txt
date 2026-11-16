@@ -1,0 +1,117 @@
+crude-forecaster, first look. Regular seasons; forecasts for 2019-2024 from models fit on
+2016 to the season before. 'Removed' = share of squared error removed. Discovery only.
+
+== 1. The noise ceiling (next game)
+  target                       rows     avg   crude removes   hindsight oracle   trees seed noise
+  pass yards                   8111    95.2           61.2%              60.3%             0.00 pts
+  rush yards                  13102    22.8           42.3%              44.9%             0.00 pts
+  rec yards                   42981    18.0           40.3%              41.6%             0.00 pts
+  (seed noise: the spread of 'crude removes' over three seeds of the trees.)
+  team yards gained            3198   359.1            7.5%               5.5%             0.00 pts
+
+== 1b. Gained against allowed (team yards, each side's own past only)
+  the offense's past alone removes 5.6%; the defense's past alone 1.1%; both 7.5%
+
+== 1c. Lasso, trees and the mix (crude inputs)
+  pass   lasso  60.5%   trees  60.2%   mix  61.2%
+  rush   lasso  42.5%   trees  40.5%   mix  42.3%
+  rec    lasso  39.8%   trees  39.9%   mix  40.3%
+  team   lasso   9.0%   trees   2.8%   mix   7.5%
+
+== 2. H51: the share of what the crude model explains that past yards and first downs carry
+  pass   full  61.2%   yards only  60.7% (99% of full)   yards + first downs  60.9% (99% of full)
+  rush   full  42.3%   yards only  42.2% (100% of full)   yards + first downs  42.1% (100% of full)
+  rec    full  40.3%   yards only  39.7% (98% of full)   yards + first downs  39.8% (99% of full)
+
+== 3. H52: by position (crude model). 'Typical miss' = mean absolute miss over the average.
+  QB pass  all rostered   rows   8111  removed  61.2%  typical miss 0.54 of the average (95.2 yards)
+  QB pass  played a snap  rows   3981  removed  29.0%  typical miss 0.36 of the average (194.0 yards)
+  RB rush  all rostered   rows  13102  removed  42.3%  typical miss 0.72 of the average (22.8 yards)
+  RB rush  played a snap  rows   9952  removed  41.0%  typical miss 0.60 of the average (30.1 yards)
+  WR rec   all rostered   rows  18873  removed  36.5%  typical miss 0.74 of the average (26.3 yards)
+  TE rec   all rostered   rows  11006  removed  38.7%  typical miss 0.82 of the average (14.7 yards)
+  RB rec   all rostered   rows  13102  removed  24.0%  typical miss 0.99 of the average (8.8 yards)
+  WR rec   played a snap  rows  15558  removed  34.9%  typical miss 0.65 of the average (31.9 yards)
+  TE rec   played a snap  rows   9408  removed  39.4%  typical miss 0.74 of the average (17.2 yards)
+  RB rec   played a snap  rows   9952  removed  21.5%  typical miss 0.86 of the average (11.6 yards)
+
+== 4. H50: what each finished expert adds (A: alone; C: Shapley over all orders)
+ pass yards
+  all experts together: +25.47%  (90% +22.55 to +28.41)
+  expert        added alone                                 Shapley share (of squared error removed)
+  participation +24.83%  (90% +21.95 to +27.88)             +24.47%  (90% +21.60 to +27.47)
+  elo            +1.04%  (90% +0.57 to +1.50)                +0.47%  (90% +0.24 to +0.72)
+  efficiency     +0.48%  (90% +0.14 to +0.83)                +0.20%  (90% +0.02 to +0.39)
+  pace           +0.13%  (90% -0.21 to +0.46)                +0.21%  (90% +0.08 to +0.34)
+  schemes        +0.34%  (90% +0.02 to +0.67)                +0.13%  (90% -0.02 to +0.28)
+ rush yards
+  all experts together: +11.25%  (90% +10.36 to +12.19)
+  expert        added alone                                 Shapley share (of squared error removed)
+  participation +10.16%  (90% +9.16 to +11.10)              +10.13%  (90% +9.21 to +11.02)
+  elo            +0.47%  (90% +0.17 to +0.79)                +0.39%  (90% +0.21 to +0.57)
+  efficiency     +0.60%  (90% +0.28 to +0.92)                +0.53%  (90% +0.32 to +0.75)
+  pace           +0.07%  (90% -0.26 to +0.42)                +0.17%  (90% -0.00 to +0.35)
+  schemes        -0.01%  (90% -0.24 to +0.22)                +0.03%  (90% -0.08 to +0.14)
+ rec yards
+  all experts together:  +8.38%  (90% +7.83 to +8.90)
+  expert        added alone                                 Shapley share (of squared error removed)
+  participation  +8.32%  (90% +7.78 to +8.87)                +8.30%  (90% +7.76 to +8.86)
+  elo            +0.17%  (90% +0.03 to +0.32)                +0.12%  (90% +0.04 to +0.20)
+  efficiency     +0.02%  (90% -0.11 to +0.16)                +0.04%  (90% -0.03 to +0.10)
+  pace           -0.06%  (90% -0.19 to +0.08)                -0.06%  (90% -0.12 to -0.00)
+  schemes        +0.08%  (90% -0.05 to +0.20)                -0.01%  (90% -0.06 to +0.04)
+ team yards gained (no participation: it is a player forecast)
+  all experts together:  +1.98%  (90% +1.00 to +2.97)
+  expert        added alone                                 Shapley share (of squared error removed)
+  elo            +1.70%  (90% +0.85 to +2.54)                +1.13%  (90% +0.51 to +1.75)
+  efficiency     +0.76%  (90% +0.12 to +1.39)                +0.52%  (90% +0.06 to +0.97)
+  pace           +0.40%  (90% -0.28 to +1.08)                +0.20%  (90% -0.18 to +0.56)
+  schemes        +0.30%  (90% -0.38 to +1.00)                +0.14%  (90% -0.25 to +0.51)
+
+== 5. H53: do the experts improve volume (attempts) or efficiency (yards per attempt) more?
+  pass   volume:     crude removes  61.0%; all experts add +29.04%  (90% +25.46 to +32.60)
+  pass   efficiency: crude removes   3.4%; all experts add  +2.42%  (90% +1.18 to +3.58)   (games with 15+ attempts)
+         participation  volume +28.31%  (90% +24.76 to +31.74)   efficiency  -0.24%  (90% -0.63 to +0.15)
+         elo            volume  +1.17%  (90% +0.78 to +1.55)   efficiency  +2.16%  (90% +1.24 to +3.09)
+         efficiency     volume  +0.53%  (90% +0.23 to +0.84)   efficiency  +2.37%  (90% +1.20 to +3.45)
+         pace           volume  +0.41%  (90% +0.05 to +0.80)   efficiency  +0.77%  (90% +0.04 to +1.51)
+         schemes        volume  +0.05%  (90% -0.26 to +0.40)   efficiency  -0.28%  (90% -0.94 to +0.33)
+  rush   volume:     crude removes  53.7%; all experts add +16.47%  (90% +15.34 to +17.59)
+  rush   efficiency: crude removes  -0.7%; all experts add  +2.67%  (90% +1.74 to +3.65)   (games with 8+ attempts)
+         participation  volume +15.89%  (90% +14.71 to +17.11)   efficiency  -0.22%  (90% -0.62 to +0.18)
+         elo            volume  +0.71%  (90% +0.36 to +1.04)   efficiency  +0.89%  (90% +0.27 to +1.50)
+         efficiency     volume  +0.28%  (90% -0.00 to +0.58)   efficiency  +1.70%  (90% +0.86 to +2.59)
+         pace           volume  +0.12%  (90% -0.16 to +0.41)   efficiency  +0.75%  (90% +0.08 to +1.42)
+         schemes        volume  +0.02%  (90% -0.23 to +0.29)   efficiency  +0.40%  (90% -0.16 to +0.97)
+  rec    volume:     crude removes  49.7%; all experts add +13.61%  (90% +12.84 to +14.39)
+  rec    efficiency: crude removes   5.1%; all experts add  +0.40%  (90% +0.04 to +0.77)   (games with 4+ attempts)
+         participation  volume +13.49%  (90% +12.76 to +14.28)   efficiency  -0.13%  (90% -0.29 to +0.03)
+         elo            volume  +0.06%  (90% -0.06 to +0.19)   efficiency  +0.08%  (90% -0.22 to +0.39)
+         efficiency     volume  +0.08%  (90% -0.02 to +0.19)   efficiency  +0.28%  (90% -0.05 to +0.61)
+         pace           volume  -0.09%  (90% -0.23 to +0.04)   efficiency  +0.24%  (90% -0.01 to +0.50)
+         schemes        volume  -0.11%  (90% -0.20 to -0.01)   efficiency  -0.10%  (90% -0.31 to +0.10)
+
+== 6. H54: recent games (last 4, and last 4 minus the season) beside the other inputs
+  pass   recent inputs add  +5.51%  (90% +4.18 to +6.88)
+  rush   recent inputs add  +1.82%  (90% +1.07 to +2.52)
+  rec    recent inputs add  +1.02%  (90% +0.73 to +1.31)
+  team   recent inputs add  +0.13%  (90% -0.46 to +0.74)
+
+== 7. H55: a player's game-to-game spread of yards (games he played)
+  pass   odd against even weeks: raw +0.31 (90% +0.22 to +0.40, n 272); average taken out +0.30 (90% +0.20 to +0.39, n 272)
+         season to next season:  raw +0.16 (90% +0.04 to +0.27, n 205); average taken out +0.14 (90% +0.03 to +0.25, n 205)
+         as inputs to the middle, the spread adds  +0.21%  (90% -0.16 to +0.60)
+         for the range: his spread so far against the size of the miss, the forecast held fixed: r +0.14 (90% +0.12 to +0.15, n 7869)
+  rush   odd against even weeks: raw +0.61 (90% +0.57 to +0.64, n 734); average taken out +0.23 (90% +0.17 to +0.28, n 734)
+         season to next season:  raw +0.59 (90% +0.54 to +0.64, n 548); average taken out +0.20 (90% +0.13 to +0.27, n 548)
+         as inputs to the middle, the spread adds  -0.05%  (90% -0.27 to +0.17)
+         for the range: his spread so far against the size of the miss, the forecast held fixed: r +0.08 (90% +0.07 to +0.10, n 12558)
+  rec    odd against even weeks: raw +0.58 (90% +0.56 to +0.60, n 2685); average taken out +0.16 (90% +0.13 to +0.19, n 2685)
+         season to next season:  raw +0.67 (90% +0.64 to +0.68, n 2030); average taken out +0.14 (90% +0.10 to +0.17, n 2030)
+         as inputs to the middle, the spread adds  +0.11%  (90% -0.02 to +0.25)
+         for the range: his spread so far against the size of the miss, the forecast held fixed: r +0.05 (90% +0.04 to +0.06, n 41186)
+
+== 8. Play level: a single run or pass play's yards (fit 2016-2021, scored 2022-2024)
+  the situation before the snap                        removes 2.06%  (110086 plays)
+  + both teams' yards per play so far                  removes 2.24%  (110086 plays)
+  + knowing run or pass (not known before the snap)    removes 3.24%  (110086 plays)

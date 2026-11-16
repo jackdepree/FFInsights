@@ -107,6 +107,7 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 | A crude forecaster to score incremental gains; the vision is many models and several products | "The vision can really be multi-model. I have a vision for a dashboard, summarized betting advice, a website, and general forecasts and diagnostics"; "we can draft a crude and simple forecaster to measure incremental gains" | "One yardstick for incremental gains"; `crude-forecaster` in the registry (an idea: its kickoff and brief are still to come) |
 | Two questions beside every verdict: real? and pays? | "I think that will be useful to know, because it might suggest a discovery is significant when predicting a different outcome. So yes." | "The hunch scoreboard"; two new columns and a second tally in HUNCHES.md (rows before H50 filled in by Claude from each row's text) |
 | The change lens in every miss report | "yes please add the change lens to the miss report" | The lens list of 2026-11-15 in `pcf.validation.misses`: `player_change` and `team_change` (decision 0035) |
+| A strategy chat apart from the build sessions | "This chat is just the strategy and vision chat so we will only complete briefs and exploration in this chat" (later the same day, after "we can wait for now") | "Two kinds of session" in `CLAUDE.md`; first used for `crude-forecaster` |
 
 **Rejected by the CEO (2026-11-15):**
 
@@ -116,7 +117,6 @@ I46 to I53 in [IDEAS.md](IDEAS.md), each with a test, a confidence and an expect
 
 1. **The obvious-input check.** In every exploration, each new trait is tested beside the single most obvious input that might already carry it (P7), before a build is planned.
 2. **Tag each hunch as a football claim or a method** in HUNCHES.md, so the next retro can score the two kinds apart without Claude classifying them afterwards.
-3. **A strategy session apart from the build sessions** (the CEO's question, 2026-11-15; "we can wait for now"): one standing session for vision, hunches across projects, retros and kickoffs; one session per project for the build. Claude's view is in the conversation of that date; undecided.
 
 ### Since retro 1
 
