@@ -2,7 +2,7 @@
 
 > The yardstick for incremental gains (CLAUDE.md, "One yardstick for incremental gains"). Opened in the strategy chat, 2026-11-15: this file gets the kickoff, the exploration and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-15: kickoff, hunches, methods and exploration done; waiting for the CEO to agree the brief and make the calls under "Open for the CEO") · **Layer:** foundation (phase 0: a measuring tool, never shipped as a product) · **Cadence:** in_season
+**Status:** agreed (2026-11-15: the CEO answered the four open calls after the exploration; the build runs in its own session, from this file and EXPLORATION.md) · **Layer:** foundation (phase 0: a measuring tool, never shipped as a product) · **Cadence:** in_season
 
 ## The usual way
 *Claude, before any research.*
@@ -112,6 +112,7 @@ Until now each expert was scored on its own target in its own units (participati
 - **Success looks like:** the crude forecast beats the season-so-far average on every player target on held-out seasons; the table reproduces the exploration's order (participation first on player yards; Elo first on team yards); a shuffled copy of an expert gets a share whose interval covers zero; the shares add up to the all-experts gain.
 - **Failure looks like:** shares that change order between seeds or between halves of the seasons (the yardstick is noisier than the things it measures), or a shuffled expert that gets a clear share.
 - **No-noise target:** none of its own; it is the tool the other experts' "what is it worth downstream" number comes from. An expert's own no-noise target still decides whether it ships (rule k).
+- **Rows scored:** players expected to play (rule above); every team-game.
 - **Baselines:** the season-so-far average; the lasso alone; the trees alone; the mix. The ladder stops where a rung doesn't beat the one below (for team yards the exploration says the lasso).
 - **Seasons:** fit from 2016, scored 2019-2024, vault 2025.
 
@@ -122,12 +123,14 @@ Until now each expert was scored on its own target in its own units (participati
 ## How it will be used
 Every RESULTS.md gets a yardstick row beside the expert's own tests. The retro reads the table to rank what has been built and to score predictions. It helps the CEO decide what to build next and what to drop.
 
-## Open for the CEO
-*Taste calls the exploration raised. The CEO's instinct first; Claude's view is in the chat, not here, until asked.*
-1. **Team yards.** Only 7.5% of a team's yards is predictable from its past, and experts add 2% of what's left. Keep team yards as a target as it is, change the team target (for example points), or drop the team level from the yardstick?
-2. **Play level.** About 2% of one play's yards is explainable before the snap. Build the play-level yardstick in the first version, later, or not at all?
-3. **Which rows count.** All rostered players (easy zeros included), only players expected to play, or both side by side?
-4. **Yards only, or also fantasy points?** The charter's wording is "the crude forecast of fantasy points and of game results"; the CEO's design here is yards.
+## The CEO's calls after the exploration (2026-11-15)
+*The four taste calls the exploration raised, as the CEO answered them.*
+1. **Team yards:** "keep ask target" (read: keep as target). Team yards gained and allowed stay, though only 7.5% is predictable from a team's past.
+2. **Play level:** "build it later." Not in the first version.
+3. **Which rows count:** "only those expected to play at least one snap."
+4. **Yards only:** "let us keep it to only yards, we can always add fantasy points and game results later."
+
+**Claude's technical call on 3 (the CEO can veto):** "expected to play" has to be known before kickoff, so the row rule is: the participation expert's saved walk-forward chance of playing is 50% or more. The table also reports, as a check and never as the headline, the rows where the player did take a snap (a filter on the outcome). Consequence to know: participation's own worth is then measured only among players already expected to play, so it will be far below the exploration's 8-25%, which leaned on easy zeros.
 
 ## Plan
-One build session, from this file and EXPLORATION.md. Rungs: season-so-far average, lasso, trees (xgboost, to be installed), the mix. Order: (1) crude inputs as a package feature set through the gateway; (2) the crude forecast through the harness, next game; (3) fitting noise (seeds, resampled seasons); (4) the yardstick table with methods A and C for the five finished experts; (5) the longer horizons; (6) the one-call scorer and the SHAP plots. Time box: one session for 1-4, a second for 5-6.
+One build session, from this file and EXPLORATION.md. Rungs: season-so-far average, lasso, trees (xgboost, to be installed), the mix. Order: (1) crude inputs as a package feature set through the gateway; (2) the crude forecast through the harness, next game; (3) fitting noise (seeds, resampled seasons); (4) the yardstick table with methods A and C for the five finished experts; (5) the longer horizons; (6) the one-call scorer and the SHAP plots. The play level waits for a later version (the CEO). Time box: one session for 1-4, a second for 5-6.
