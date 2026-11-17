@@ -1,0 +1,83 @@
+== S-1: NEXT GAME, A PLAYER'S RUSHING + RECEIVING TOUCHDOWNS ==
+Next game: n 20,649 scored, mean 0.288, sd 0.563
+  so far removes  +7.93%  (90% +6.98 to +8.79); refits 7.61, 7.63
+  hindsight, knowing every chance (its xtd): +35.81%  (90% +34.42 to +37.13); luck left 64.2% (pure dice on those chances 62.8%)
+    QB: so far 7.0%, hindsight 48.9%
+    RB: so far 12.0%, hindsight 37.5%
+    WR: so far 5.5%, hindsight 31.5%
+    TE: so far 3.0%, hindsight 36.7%
+  single predictors: yards 7.56%; n 7.00%; td 6.49%; xtd 6.16%; rz20 6.14%; in10 5.39%; snaps 5.34%
+
+== I-a (ahead): THE CHANCE OF 0, 1, 2+ TOUCHDOWNS NEXT GAME ==
+  Poisson around the forecast: chance of 1+ says 23.9%, actual 23.9%; 2+ says 3.89%, actual 4.34%
+  by tenth of the chance of 1+ (says, actual): 11 9; 13 13; 15 13; 18 17; 20 21; 23 23; 27 27; 31 31; 36 36; 45 48
+  log loss of 0/1/2+, 2020-2024: Poisson around the forecast 0.6233; fitted on the forecast alone 0.6235; + how concentrated his chances are 0.6242 (-0.10% against the forecast alone)
+    QB: Poisson 0.5716, forecast alone 0.5700, + concentration 0.5745; chance of 1+ says 19.2%, actual 20.1%
+    RB: Poisson 0.6808, forecast alone 0.6803, + concentration 0.6812; chance of 1+ says 28.1%, actual 27.9%
+    WR: Poisson 0.6101, forecast alone 0.6116, + concentration 0.6113; chance of 1+ says 23.4%, actual 23.1%
+    TE: Poisson 0.5745, forecast alone 0.5739, + concentration 0.5745; chance of 1+ says 19.7%, actual 20.2%
+
+== I-a (looking back): HOW MUCH OF A STRETCH'S TOUCHDOWNS WAS LUCK ==
+  Player-seasons with 2+ expected touchdowns: 2,515. Touchdowns minus expected, in units of the dice's spread: beyond 2 either way 7.0% (pure dice and a right xtd: 5%); spread 1.07 (dice: 1.00)
+    QB: n 131, beyond 2: 12.2%, spread 1.07
+    RB: n 827, beyond 2: 6.4%, spread 1.07
+    WR: n 1123, beyond 2: 6.2%, spread 1.06
+    TE: n 434, beyond 2: 8.3%, spread 1.08
+  Across player-seasons, touchdowns vary 11.38 (squared); the dice add 3.42 of it: 30% of the spread in a season's touchdowns is luck; expected touchdowns vary 6.42
+    expected 2 to 4: n 1234, luck share of the spread 78%, a 90% range around the expected: +/- 2.4 touchdowns
+    expected 4 to 7: n 857, luck share of the spread 71%, a 90% range around the expected: +/- 3.2 touchdowns
+    expected 7 to 99: n 424, luck share of the spread 46%, a 90% range around the expected: +/- 4.2 touchdowns
+  Single games with a touchdown (12,578): the chance of scoring at least that many, from that game's chances (Poisson): median 0.35; under 10% for 11% of them
+
+== I-b: HOW CLOSE A FIELD-GOAL DRIVE CAME TO A TOUCHDOWN ==
+  Drives with a chance 2012-2024: 73,699. Is 'chance of a touchdown' right? by tenth (says, a chance on it scored):
+    2 5; 14 27; 25 44; 35 50; 45 59; 55 65; 65 69; 75 70; 85 68; 93 69
+  field-goal drives: 13,134; chance of a touchdown 24.6% (quartiles 6, 16, 38); 50%+ for 16%; best single chance 15.2%
+  field-goal drives that reached the 20: 6,586; chance of a touchdown 38.5% (quartiles 18, 36, 55); 50%+ for 31%; best single chance 23.6%
+  touchdown drives: 16,211; chance of a touchdown 41.8% (quartiles 20, 41, 62); 50%+ for 40%; best single chance 29.5%
+  other drives (punts, turnovers, downs, clock): 44,354; chance of a touchdown 5.1% (quartiles 1, 1, 4); 50%+ for 2%; best single chance 3.2%
+  (the chance-based number is too high near the goal line: a drive that fails at the 1 gets four chances there, so the drive model below measures it instead)
+  Drive model, 2012-2024 (73,978 drives): chance of a touchdown at the drive's start by tenth (says, actual): 5 6; 16 18; 23 25; 34 36; 44 45; 54 55; 64 61; 75 82; 84 90; 91 100
+  field-goal drives: 13,135; the closest it came (the drive's highest chance of a touchdown before a snap) 45.1% (quartiles 38, 46, 55); 50%+ for 39%, 70%+ for 6%; at its start 22.3%
+  field-goal drives that reached the 20: 6,794; the closest it came (the drive's highest chance of a touchdown before a snap) 55.1% (quartiles 50, 55, 61); 50%+ for 73%, 70%+ for 11%; at its start 24.4%
+  touchdown drives: 16,215; the closest it came (the drive's highest chance of a touchdown before a snap) 59.9% (quartiles 48, 60, 76); 50%+ for 72%, 70%+ for 35%; at its start 24.7%
+  other drives: 44,628; the closest it came (the drive's highest chance of a touchdown before a snap) 24.1% (quartiles 17, 22, 30); 50%+ for 5%, 70%+ for 1%; at its start 18.2%
+  Consistency (team half-seasons, n 416): near misses a game repeat +0.08 (-0.00 to +0.16, n 416); near-miss chance per field-goal drive +0.06 (-0.02 to +0.14, n 416); season to season +0.03 (-0.06 to +0.11, n 384) and -0.06 (-0.14 to +0.03, n 384)
+    first-half near misses a game against the second half's touchdowns a game +0.05 (-0.03 to +0.13, n 416); beyond first-half touchdowns and expected touchdowns +0.09 (+0.01 to +0.17, n 416)
+
+== S-2: A TEAM'S TOUCHDOWNS ==
+Next game, team: n 2,814 scored, mean 2.420, sd 1.405
+  so far removes  +8.97%  (90% +7.03 to +10.94); refits 7.65, 7.36
+  hindsight, knowing every chance (its xtd): +13.58%  (90% +9.21 to +17.48); luck left 86.4% (pure dice on those chances 84.7%)
+  hindsight, knowing only where each drive started (drive model):  -6.03%  (90% -8.66 to -3.50)
+  + near misses so far:  -0.97%  (90% -1.32 to -0.61)
+  the opponent's touchdowns allowed so far add  +1.86%  (90% +1.10 to +2.66)
+Rest of season, team (touchdowns a game): n 576 scored, mean 2.427, sd 0.724
+  so far removes +23.86%  (90% +15.52 to +30.97); refits 23.99, 21.56
+  hindsight, knowing every chance (its xtd): +47.60%  (90% +39.81 to +54.92); luck left 52.4% (pure dice on those chances 38.7%)
+  hindsight, knowing only where each drive started (drive model): -13.30%  (90% -19.93 to -6.83)
+  + near misses so far:  +0.29%  (90% -1.28 to +2.01); from touchdowns and expected only 24.07%, + near misses  +0.61%  (90% -2.54 to +3.54)
+  touchdowns alone 24.17%; expected alone 15.27%; EPA alone 24.03%
+
+== S-3: A QUARTERBACK'S THROWN TOUCHDOWNS ==
+Next game, thrown touchdowns: n 2,732 scored, mean 1.418, sd 1.165
+  so far removes  +7.18%  (90% +5.09 to +9.19); refits 6.40, 6.03
+  hindsight, knowing every chance (its xtd): +26.14%  (90% +22.34 to +29.54); luck left 73.9% (pure dice on those chances 72.8%)
+  single predictors: ptd 7.53%; pxtd 5.58%; att 2.42%; pyds 5.90%; pair 2.97%
+Rest of season, thrown touchdowns: n 676 scored, mean 9.746, sd 7.517
+  so far removes +43.33%  (90% +37.36 to +48.64); refits 40.62, 40.75
+  hindsight, knowing every chance (its xtd): +84.96%  (90% +82.02 to +87.77); luck left 15.0% (pure dice on those chances 11.8%)
+  single predictors: ptd 40.14%; pxtd 38.76%; att 28.88%; pyds 37.15%
+  expected against actual  -2.32%  (90% -10.65 to +5.17); past thrown touchdowns beyond expected  +5.46%  (90% +0.51 to +10.02)
+  Split halves (QB-seasons, 100+ throws each half, n 386): thrown touchdowns +0.62 (+0.56 to +0.67, n 386); expected +0.65 (+0.60 to +0.70, n 386); over expected per throw +0.12 (+0.04 to +0.20, n 386)
+  Season to season (200+ throws, n 277): over expected per throw repeats +0.09 (-0.00 to +0.19, n 277), keeps 9%. QB-seasons beyond 2 dice spreads: 6.7% (spread 1.11); throws to trust his own rate over expected 1,279
+
+== S-4: METHOD C, DOES A PLAYER'S SHARE OF HIS TEAM'S CHANCES NEAR THE GOAL LINE REPEAT ==
+  QB (n 402): share of the team's chances inside the 10 repeats +0.57 (+0.51 to +0.62, n 402); inside the 20 +0.63 (+0.58 to +0.68, n 402); all chances +0.76 (+0.72 to +0.79, n 402); expected touchdowns +0.61 (+0.55 to +0.66, n 402)
+      second-half share inside the 10 from: first-half share inside the 10 +0.57 (+0.51 to +0.62, n 402); first-half share of all chances +0.55 (+0.49 to +0.61, n 402); beyond all chances +0.28 (+0.20 to +0.35, n 402)
+  RB (n 1113): share of the team's chances inside the 10 repeats +0.63 (+0.60 to +0.66, n 1113); inside the 20 +0.68 (+0.65 to +0.71, n 1113); all chances +0.78 (+0.76 to +0.80, n 1113); expected touchdowns +0.66 (+0.63 to +0.68, n 1113)
+      second-half share inside the 10 from: first-half share inside the 10 +0.63 (+0.60 to +0.66, n 1113); first-half share of all chances +0.66 (+0.63 to +0.69, n 1113); beyond all chances +0.12 (+0.07 to +0.17, n 1113)
+  WR (n 1739): share of the team's chances inside the 10 repeats +0.44 (+0.41 to +0.47, n 1739); inside the 20 +0.57 (+0.54 to +0.59, n 1739); all chances +0.79 (+0.77 to +0.80, n 1739); expected touchdowns +0.64 (+0.61 to +0.66, n 1739)
+      second-half share inside the 10 from: first-half share inside the 10 +0.44 (+0.41 to +0.47, n 1739); first-half share of all chances +0.54 (+0.51 to +0.57, n 1739); beyond all chances +0.09 (+0.05 to +0.13, n 1739)
+  TE (n 1083): share of the team's chances inside the 10 repeats +0.49 (+0.45 to +0.52, n 1083); inside the 20 +0.61 (+0.58 to +0.64, n 1083); all chances +0.83 (+0.81 to +0.84, n 1083); expected touchdowns +0.65 (+0.63 to +0.68, n 1083)
+      second-half share inside the 10 from: first-half share inside the 10 +0.49 (+0.45 to +0.52, n 1083); first-half share of all chances +0.57 (+0.54 to +0.61, n 1083); beyond all chances +0.13 (+0.08 to +0.17, n 1083)

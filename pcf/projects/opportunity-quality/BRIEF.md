@@ -108,7 +108,7 @@ Every projection and every "buy low, sell high" call rests on a guess about regr
 - **Failure looks like:** the forecast doesn't beat plain counts of targets, carries and snaps on its own target; or the per-player kept share predicts next season's points over expected no better than one rate per position (then method A ships, rule k).
 - **No-noise target (the CEO approves):** next game's PPR points on targets and carries, against a baseline of past points plus past targets, carries and snaps. The exploration says expected points alone don't clear this (-0.19%); the expert's forecast of expected points, with efficiency in it, has to. *Proposed by Claude; the CEO's to approve.*
 - **Yardstick:** scored on `crude-forecaster` (yards) once it is built.
-- **Seasons:** expected-points model from 2006; player-games from 2012; scored 2019-2024; vault 2025.
+- **Seasons:** expected-points model from 2006; player-games from 2012; scored 2019-2024; vault 2025. **Pitfall found 2026-11-16 (td-expert's exploration, F1):** play-by-play for 2006 to 2008 lists mostly completed targets (9,300 to 10,000 a season against 16,000+ later; "end-zone targets" score 99%), so the exploration's expected points were trained partly on biased targets. The build must start the expected-points model in 2009 and recheck F4 (the kind of chance adds nothing beyond the count).
 
 ## Inputs and outputs
 - **Inputs:** `play.pbp` (known after each game), rosters, `player_game.snaps`, participation's saved walk-forward history (Saturday), pace's team volume forecasts.
