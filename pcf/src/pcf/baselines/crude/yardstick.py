@@ -43,6 +43,7 @@ REFIT = "season"  # one fit per season, before week 1, as in the exploration (de
 # The member that must get nothing: a copy of one expert's columns shuffled within each week.
 SHUFFLED = "shuffled"
 FIRST_HALF = (2019, 2020, 2021)  # the halves of the scored seasons (the brief's failure test)
+TRAIN_ONLY = (2016, 2017, 2018)  # seasons in every fold's training: each left out once (noise)
 
 
 @dataclass
@@ -73,13 +74,17 @@ class Board:
         seed: int | None = None,
         drop_season: int | None = None,
         feats: pl.DataFrame | None = None,
+        keep: Sequence[str] | None = None,
     ) -> pl.DataFrame:
         """The walk-forward forecasts with these groups and columns added (cached): keys, step,
-        mean, q10, q50, q90 and y. `drop_season` leaves one training season out (fitting noise)."""
-        key = (tuple(sorted(added)), tuple(extra), seed, drop_season, feats is not None)
+        mean, q10, q50, q90 and y. `drop_season` leaves one training season out (fitting noise);
+        `keep` uses only these crude inputs."""
+        key = (self.base.variant, tuple(sorted(added)), tuple(extra), seed, drop_season,
+               feats is not None, tuple(keep) if keep is not None else None)  # fmt: skip
         if feats is None and key in self.preds:
             return self.preds[key]
-        expert = with_experts(self.base, tuple(sorted(added)), seed, tuple(extra))()
+        keep = tuple(keep) if keep is not None else None
+        expert = with_experts(self.base, tuple(sorted(added)), seed, tuple(extra), keep=keep)()
         transform = None
         if drop_season is not None:
             transform = _dropper(drop_season)
@@ -322,7 +327,7 @@ def noise(board: Board, members: Sequence[str] | None = None, seeds: Sequence[in
     refits: list[dict] = [{"seed": None, "drop": None}]
     if board.base.method in ("trees", "mix"):
         refits += [{"seed": s, "drop": None} for s in seeds]
-    refits += [{"seed": None, "drop": s} for s in FIRST_HALF[:0] or (2016, 2017, 2018)]
+    refits += [{"seed": None, "drop": s} for s in TRAIN_ONLY]
     out = []
     for rf in refits:
         crude = board.forecast(seed=rf["seed"], drop_season=rf["drop"])

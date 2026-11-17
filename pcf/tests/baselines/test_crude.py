@@ -362,16 +362,17 @@ def _board(members_effect: dict[str, float], seed=0, weeks=40, per=50):
             df = keys.with_columns(step=pl.Series(step), season=pl.lit(2020), y=pl.Series(y),
                                    mean=pl.Series(mean), q10=pl.Series(mean - 20),
                                    q50=pl.Series(mean), q90=pl.Series(mean + 20))  # fmt: skip
-            base.preds[(tuple(sorted(combo)), (), None, None, False)] = df
+            base.preds[(base.base.variant, tuple(sorted(combo)), (), None, None, False, None)] = df
     return base, {m: ((m,), ()) for m in names}
 
 
 def test_identical_forecasts_gain_nothing_and_a_better_one_gains():
     board, members = _board({"elo": 1.0})
-    crude = board.preds[((), (), None, None, False)]
+    v = board.base.variant
+    crude = board.preds[(v, (), (), None, None, False, None)]
     g0 = Y.gain(crude, crude, board.keys)
     assert g0.share == 0 and g0.verdict == "neutral"
-    g = Y.gain(board.preds[(("elo",), (), None, None, False)], crude, board.keys)
+    g = Y.gain(board.preds[(v, ("elo",), (), None, None, False, None)], crude, board.keys)
     assert g.lo > 0 and g.share > 0.3
 
 
@@ -397,3 +398,11 @@ def test_the_shuffled_copy_keeps_each_week_s_values():
             assert sorted(week[f"shuffled_{col}"]) == sorted(week[col])
     # the columns move together: a row's shuffled values all come from one other row
     assert out.select((c("shuffled_part_share") == c("shuffled_part_play")).all()).item()
+
+
+def test_a_missing_expert_value_gets_the_moment_s_median_and_never_drops_a_row():
+    rows = pl.DataFrame(
+        {"a": [1.0, None, 3.0], "b": [None, None, None]}, schema={"a": pl.Float64, "b": pl.Float64}
+    )
+    out = F.fill_missing(rows, ["a", "b"])
+    assert out["a"].to_list() == [1.0, 2.0, 3.0] and out["b"].to_list() == [0.0, 0.0, 0.0]

@@ -17,6 +17,9 @@ from dataclasses import dataclass
 
 import polars as pl
 
+from pcf.core.log import get_logger
+
+log = get_logger(__name__)
 c = pl.col
 
 
@@ -221,21 +224,23 @@ def player_expert_inputs(view, rows: pl.DataFrame) -> pl.DataFrame:
 
 
 # A missing expert value (a game an expert didn't forecast) gets the median of the moment's rows,
-# so a row is never dropped for it; more than this share missing on a moment is an error.
+# so a row is never dropped for it. More than this share missing on a moment is logged: an input
+# that didn't arrive. It can't raise, because the leakage checks rebuild moments in worlds with
+# the future deleted, where a later moment's outputs are gone by design; live, the input check
+# (`pcf.validation.inputs`) flags it. No backtest moment in 2016-2024 reaches the limit.
 MISSING_LIMIT = 0.02
 
 
 def fill_missing(rows: pl.DataFrame, cols: list[str]) -> pl.DataFrame:
-    """Expert columns with a missing value filled by the moment's median; raises if a column is
-    missing on more than `MISSING_LIMIT` of the rows (an input that didn't arrive)."""
+    """Expert columns with a missing value filled by the moment's median (0 if none has one);
+    a column missing on more than `MISSING_LIMIT` of the rows is logged."""
     if rows.is_empty():
         return rows
     for col in cols:
         share = rows[col].null_count() / rows.height
         if share > MISSING_LIMIT:
-            raise ValueError(
-                f"crude-forecaster: {col} is missing on {share:.1%} of a moment's rows"
-            )
+            log.warning("crude-forecaster: %s is missing on %.1f%% of a moment's rows", col,
+                        100 * share)  # fmt: skip
     return rows.with_columns(c(col).fill_null(c(col).median()).fill_null(0.0) for col in cols)
 
 

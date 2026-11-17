@@ -48,6 +48,7 @@ class Crude(Expert):
     method: ClassVar[str] = "mix"
     added: ClassVar[tuple[str, ...]] = ()
     extra: ClassVar[tuple[str, ...]] = ()  # any other columns joined onto the features (a scorer's)
+    keep: ClassVar[tuple[str, ...] | None] = None  # only these crude inputs (the hunch checks)
     seed: ClassVar[int | None] = None  # the trees' seed; config's when None
     baseline = True  # the base class isn't a model `find` returns
 
@@ -78,7 +79,8 @@ class Crude(Expert):
         if unknown:
             raise ValueError(f"{self.label()}: no expert group {sorted(unknown)}")
         added = [col for g in self.added for col in groups[g]]
-        return [*self.crude_columns(), *added, *self.extra]
+        crude = [col for col in self.crude_columns() if self.keep is None or col in self.keep]
+        return [*crude, *added, *self.extra]
 
     @property
     def by(self) -> tuple[str, ...]:
@@ -262,11 +264,13 @@ def with_experts(
     seed: int | None = None,
     extra: tuple[str, ...] = (),
     name: str = "",
+    keep: tuple[str, ...] | None = None,
 ) -> type[Crude]:
     """The same forecaster with expert groups (and any `extra` columns) added as inputs, and a
     seed for the trees: same rows and features, so one feature history serves every combination."""
     tag = name or "+".join([*added, *extra])
-    attrs = {"added": tuple(added), "extra": tuple(extra), "seed": seed,
+    tag = f"{tag}-keep{len(keep)}" if keep is not None else tag
+    attrs = {"added": tuple(added), "extra": tuple(extra), "seed": seed, "keep": keep,
              "variant": f"{cls.variant}+{tag}" if tag else cls.variant,
              "__module__": cls.__module__}  # fmt: skip
     return type(f"{cls.__name__}_{tag or 'crude'}_{seed}", (cls,), attrs)
