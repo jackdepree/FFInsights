@@ -127,7 +127,8 @@ The miss-lenses list (2026-11-15) is per player-game; this expert is per play, s
 | **Feeds** | voe-live, the attribution of plays to players, qb-talent, line-play, the game simulator's play model, the yardstick (`crude-forecaster`) |
 
 ## Open questions for the CEO
+Pressure's calibration slope on the vault (0.89) is a technical call, not a question: the champion is left as it is and pressure's calibration is rechecked after 2026 (decision 0036, call 15), since a fix made now could only be checked on plays not yet seen.
+
 1. **The football sanity review lists** (`build/sanity_backtest.txt`): the plays with the highest and lowest expected pressure, completion, rushing yards, run and dropback success and depth of target, and where the calls move them most. Anything that looks wrong to you as a football watcher? The trick plays at the top of rushing yards (R14) are the one thing that looked odd to me.
 2. **Method C as the version users see?** It is weaker everywhere (R8), but it is the one you can say out loud ("on the 300 plays most like this one, the back was stuffed 31% of the time"). Use it for display only, beside A's numbers, or not at all?
-3. **Pressure on the vault fails the calibration slope by a hair (0.89; the bar is 0.9).** Recalibrating it was worse on 2023-2024, when one season trained the next; with two seasons now it might help, but that change could only be checked on 2026's plays, not on the vault, which is spent. Leave the champion as it is and recheck pressure's calibration after 2026 (my recommendation), or recalibrate it now unvalidated?
-4. **Is a defense's steadier call pattern (R10) worth chasing as its own measure** (a defense's call-added context as a coaching trait, for game script or matchup models)?
+3. **Is a defense's steadier call pattern (R10) worth chasing as its own measure** (a defense's call-added context as a coaching trait, for game script or matchup models)?
