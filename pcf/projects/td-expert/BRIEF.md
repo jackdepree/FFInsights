@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-16, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** kickoff (2026-11-16: the usual way and analogies written; waiting for the CEO's hunches) · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (2026-11-16: explored, verdict GO; waiting for the CEO's calls under "Open for the CEO") · **Layer:** expert · **Cadence:** in_season
 
 ## What the CEO asked for
 *Word for word, 2026-11-16.*
@@ -54,6 +54,62 @@ Analysts treat touchdowns as the noisiest part of a player's line and forecast t
 | Q4 | "an estimate on the noisiness of an observed touchdown" | How likely was the average scored touchdown before the snap, and what is one observed touchdown worth as evidence about later ones, against one expected touchdown | The average touchdown came on a chance worth 20 to 30%. One observed touchdown is worth a quarter to a half of one expected touchdown as evidence |
 | Q5 | "how many chances does each player need to estimate greater than 0.5 touchdowns?" | Two readings, both measured: (a) how many chances of each kind add up to half an expected touchdown; (b) how many chances before a player's own touchdown rate is worth as much as the league's | (a) About 1 carry inside the 2, 1 to 2 end-zone targets from close, 10 to 12 ordinary targets, 15 to 20 ordinary carries. (b) Several hundred targets or carries: more than a season |
 
-## Open
-- What the expert forecasts (a player's touchdowns next game, the rest of the season, a team's touchdowns, the chance of at least one), and for whom.
-- The no-noise target.
+## What the exploration found
+*[EXPLORATION.md](EXPLORATION.md), 2026-11-16. Verdict: GO, with a narrower job than the hunches hoped.*
+
+- **H67 held in part:** a team's tendencies forecast how its touchdowns split between rushing and passing (7.5% of the error, better than the split's own history) and add 1.3% to a player's forecast (WR +2.1%, TE +2.8%), most of it shared with how good the offense is.
+- **H68 failed:** yards and chances are the strongest predictors of rest-of-season touchdowns (32% and 30%); chances inside the 20 rank 6th of 14, explosive-play rate 13th, and neither adds to volume. The exception: red-zone carries for quarterbacks (+4.7%).
+- **Q1 no:** the spread of past red-zone plays doesn't repeat (0.06) or forecast. **Q2 barely:** touchdown or field goal on a trip is 0.8% forecastable, all from the whole offense.
+- **Q3 yes:** a player keeps about a tenth of his touchdowns over expected (WRs none). But expected touchdowns forecast no better than past touchdowns; volume beats both.
+- **Q4:** the average touchdown came on a chance worth 28.5%; in one game 64% of the spread in a player's touchdowns is luck; one touchdown is worth half an expected touchdown as evidence.
+- **Q5:** half an expected touchdown is one carry inside the 2, two end-zone targets, 9 ordinary targets (WR, TE) or 17 carries (RB). To trust a player's own scoring rate takes hundreds of chances; his finishing beyond the chances' worth, thousands (for WRs and RBs).
+- **The ceiling:** a forecast from his games so far removes 32% of the error; knowing every chance he then gets, 72%; the last 28% is dice. The room is in forecasting chances, not in valuing them.
+- **Data:** targets before 2009 are unusable (EXPLORATION F1).
+
+## Methods
+*Claude. Two usual, one exploratory, and a tempting one that is wrong.*
+
+| | Method | What it assumes | Cost | For and against |
+|---|---|---|---|---|
+| A | **Chances times their worth.** Forecast each player's chances by kind (from `participation` and `opportunity-quality`), multiply by the calibrated worth of each kind, then add the small corrections the exploration found (the offense's quality, the team's tendencies, a tenth of his touchdowns over expected). The count's spread comes from the chances themselves, which gives the chance of zero, one, two | That the worth of a kind of chance is the same for everyone, bar the small corrections | Medium; leans on two experts whose builds haven't run | For: it is where the ceiling says the room is, and it explains itself. Against: until those builds exist it has to forecast chances crudely |
+| B | **A count model straight from volume.** A model built for counts (touchdowns from yards, chances, snaps, the team's offense), with the spread fitted | Nothing about why; that volume carries it | Low | For: the exploration says this is already as good as anything (32%). It is the plain version every other method must beat. Against: says nothing about regression or luck |
+| C | **Exploratory: play the red zone out.** Forecast a team's red-zone trips, then simulate each one play by play: who gets the ball at each yard line and down, and whether it scores, from the team's own calling there. Touchdowns for every player on a team come out together, so they add up to the team's, and a back's and a receiver's are tied | That calling near the goal line is stable enough to simulate, and that a team's trips can be forecast | High | For: gives joint outcomes (two players' touchdowns in the same game), which props and best ball need. Against: H67 says the tie to calling is modest, and a fifth of touchdowns come from chances worth under 10% (F7), mostly outside the red zone |
+| X | **Tempting and wrong: each player's own touchdown rate.** Treat scoring rate as a skill and project it | That finishing is a trait | Low | Wrong because touchdowns over expected repeat at 0.05 (F5, F10) |
+
+*Claude's recommendation:* B first as the plain version, then A beside it; C waits for the game simulator. The CEO's to choose.
+
+## The question
+For each player and game, how many touchdowns should we expect, how sure is that, and how much of what he has scored so far was his chances and how much was luck?
+
+## Terms
+- **Chance:** a target or a carry. **Expected touchdowns:** the share of chances like this one that score, from where it happened, known before the snap. **Touchdowns over expected:** touchdowns minus expected touchdowns.
+- **Touchdown regression:** the share of a player's touchdowns over expected that he keeps afterwards (about a tenth).
+- **Red-zone trip:** a drive with a play inside the 20.
+- **Tendencies:** how a team calls plays (pass share, pass share inside the 10, pass rate over expected), not how well it plays.
+
+## Assumptions
+- A chance's worth depends on where it happened, not on who got it (true to within a tenth; EXPLORATION F5).
+- Rushing and receiving touchdowns only, until the CEO says otherwise; passing touchdowns weren't explored.
+- Play-by-play from 2009 for targets (F1); player-games from 2012 (snap counts).
+
+## Goals
+1. **Expected touchdowns** per chance, per player-game and per team-game, calibrated, saved with walk-forward history.
+2. **A regression measure:** touchdowns over expected so far, and the share to keep by position.
+3. **A forecast** of a player's touchdowns (next game and rest of season) with the chance of none, one, two or more.
+4. **A luck measure:** for any stretch of games, how much of a player's touchdown total was chance.
+
+## Tests
+- **Signal:** expected touchdowns are calibrated by tenth on held-out seasons, and beat a shuffled version.
+- **No noise (the CEO approves):** *proposed by Claude:* the forecast must do at least as well as the plain count model from volume (method B) on held-out games; if it doesn't, B ships as the forecast and the expert ships its measures only.
+- **The regression measure** must beat both "keeps all of it" and "keeps none of it" on held-out touchdowns over expected.
+- **Ranges:** the chance of at least one touchdown is calibrated (when it says 30%, about 30% score).
+- **Consistency:** each new measure gets its entry in `CONSISTENCY.md` in the build (the exploration's repeats: expected touchdowns 0.60, touchdowns over expected 0.05, a team's red-zone touchdown rate 0.20, the spread of its red-zone plays 0.06).
+- **Yardstick:** the crude forecaster scores yards only, so touchdowns have no yardstick yet; fantasy points can be added to it later (the CEO, 2026-11-15).
+
+## Open for the CEO
+1. **What it forecasts, and for whom.** Next game, rest of season, or both? Players only, or the team's touchdowns too?
+2. **Passing touchdowns.** In this expert, or left to a quarterback expert?
+3. **The method.** A, B, C, or one of your own.
+4. **The no-noise test** above.
+5. **The team side.** The spread of red-zone plays (Q1) and touchdown-or-field-goal (Q2) found nothing: drop them, or look again another way?
+6. **Sizes for H67 and H68** weren't given before the test; they stay blank unless you want a late one recorded.

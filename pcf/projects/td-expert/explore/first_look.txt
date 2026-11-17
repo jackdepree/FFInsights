@@ -1,0 +1,235 @@
+Chances 2012-2024: 400,573 (15,986 touchdowns). Player-games 2012-2024: 74,235. Rest-of-season rows: 9,705 (4,942 scored).
+  xtd check, target: touchdowns 10275, expected 9962
+  xtd check, carry: touchdowns 5711, expected 5660
+  calibration by tenth of xtd (n, expected, actual): 360,285 0.010 0.010; 12,231 0.144 0.147; 9,908 0.251 0.264; 8,904 0.348 0.366; 5,525 0.447 0.464; 3,451 0.542 0.575; 249 0.625 0.606; 20 0.740 0.950
+
+== THE NOISE CEILING ==
+Rest-of-season touchdowns: mean 2.12, sd 2.42 a player (scored rows)
+Everything from his games so far removes +32.06%  (90% +29.38 to +34.61) of the error (against the plain mean)
+Fitting noise: the same model refit on resampled training rows: 31.69, 31.75, 32.33 (sd 0.29 points)
+Hindsight: knowing every chance he then got (its expected touchdowns) removes +72.36%  (90% +70.33 to +74.22)
+  so the luck of scoring on a chance is 27.6% of the error even then; if touchdowns were pure dice on those chances it would be 34.5%
+Hindsight: knowing only how many games he then played: 44.73% (from 32.06%)
+  QB: n 420, mean 1.60; so far 25.0%, hindsight chances 76.8%
+  RB: n 1,621, mean 2.49; so far 38.1%, hindsight chances 77.2%
+  WR: n 2,116, mean 2.06; so far 29.9%, hindsight chances 67.4%
+  TE: n 785, mean 1.80; so far 15.7%, hindsight chances 62.9%
+Split halves (odd against even weeks, player-seasons with 50+ chances): touchdowns +0.43 (+0.41 to +0.46, n 2386); expected touchdowns +0.60 (+0.57 to +0.62, n 2386); touchdowns over expected +0.05 (+0.02 to +0.08, n 2386)
+  QB: touchdowns +0.50 (+0.37 to +0.61, n 103); expected +0.50 (+0.36 to +0.61, n 103); over expected -0.02 (-0.19 to +0.14, n 103)
+  RB: touchdowns +0.52 (+0.48 to +0.56, n 900); expected +0.65 (+0.62 to +0.69, n 900); over expected +0.04 (-0.01 to +0.10, n 900)
+  WR: touchdowns +0.34 (+0.30 to +0.39, n 1051); expected +0.52 (+0.49 to +0.56, n 1051); over expected +0.06 (+0.00 to +0.11, n 1051)
+  TE: touchdowns +0.26 (+0.17 to +0.34, n 332); expected +0.36 (+0.28 to +0.44, n 332); over expected +0.08 (-0.01 to +0.17, n 332)
+
+== H68: THE STRONGEST PREDICTORS OF REST-OF-SEASON TOUCHDOWNS ==
+Position and week alone: 9.62%
+Single predictors (each a game so far and a game last season, beside position and week):
+   1. yards                         32.31%   RB  38.77  WR  30.52  TE  17.13  QB  19.28
+   2. chances                       30.21%   RB  37.95  WR  25.56  TE  14.94  QB  22.38
+   3. explosive plays (count)       27.70%   RB  34.36  WR  24.21  TE  16.09  QB  16.54
+   4. touchdowns                    27.07%   RB  31.45  WR  24.92  TE  12.03  QB  29.22
+   5. expected touchdowns           26.42%   RB  30.87  WR  24.58  TE  10.21  QB  28.18
+   6. chances inside the 20         26.34%   RB  32.67  WR  21.17  TE  12.05  QB  28.78
+   7. snaps                         24.83%   RB  31.56  WR  22.10  TE  15.94  QB   5.83
+   8. chances inside the 10         23.64%   RB  29.85  WR  17.87  TE  11.12  QB  27.29
+   9. carries                       22.50%   RB  35.41  WR   9.21  TE   8.96  QB  19.04
+  10. targets                       21.20%   RB  21.01  WR  26.79  TE  13.79  QB   6.40
+  11. carries inside the 5          17.98%   RB  25.96  WR   8.45  TE   8.93  QB  22.90
+  12. air yards                     15.17%   RB  11.14  WR  23.18  TE  13.48  QB   6.17
+  13. explosive-play rate           14.17%   RB  16.61  WR  13.02  TE  11.21  QB   7.66
+  14. end-zone targets              13.03%   RB  11.09  WR  17.42  TE  12.00  QB   6.46
+Pairs (91), the top 12:
+   1. touchdowns + yards: 33.18%
+   2. expected touchdowns + yards: 32.86%
+   3. yards + chances inside the 20: 32.59%
+   4. targets + yards: 32.36%
+   5. yards + carries inside the 5: 32.30%
+   6. yards + chances inside the 10: 32.30%
+   7. carries + yards: 32.23%
+   8. yards + explosive plays (count): 32.22%
+   9. chances + yards: 32.20%
+  10. yards + snaps: 32.19%
+  11. touchdowns + chances: 32.03%
+  12. yards + explosive-play rate: 31.90%
+  The CEO's pair, chances inside the 20 + explosive-play rate: rank 59 of 91, 27.05%; against the best pair  -9.16%  (90% -12.04 to -6.40)
+  The CEO's pair, chances inside the 10 + explosive-play rate: rank 75 of 91, 25.53%; against the best pair -11.43%  (90% -14.28 to -8.71)
+  The CEO's pair, chances inside the 20 + explosive plays (count): rank 23 of 91, 30.09%; against the best pair  -4.62%  (90% -6.84 to -2.50)
+  The CEO's pair, chances inside the 10 + explosive plays (count): rank 34 of 91, 29.45%; against the best pair  -5.57%  (90% -7.72 to -3.42)
+All 14 together: 32.06%; best pair 33.18%; best single 32.31%
+Volume (chances, targets, carries, yards, snaps): 32.24%
+  + red-zone chances (inside 20, inside 10, carries inside 5, end-zone targets):  -0.31%  (90% -1.18 to +0.59)
+  + explosive plays (count and rate):  +0.01%  (90% -0.81 to +0.80)
+  + explosive plays, beyond volume and red-zone chances:  -0.29%  (90% -1.04 to +0.43)
+    QB: red zone beyond volume  +4.73%  (90% +1.99 to +7.20); explosive beyond volume  -0.32%  (90% -1.88 to +1.34)
+    RB: red zone beyond volume  -0.83%  (90% -2.41 to +0.72); explosive beyond volume  +0.05%  (90% -1.69 to +1.72)
+    WR: red zone beyond volume  -0.62%  (90% -1.77 to +0.51); explosive beyond volume  +0.04%  (90% -0.69 to +0.76)
+    TE: red zone beyond volume  -1.09%  (90% -2.88 to +0.65); explosive beyond volume  -0.00%  (90% -1.34 to +1.23)
+    after week 4: all 14 34.52%; red zone beyond volume  -0.80%  (90% -1.93 to +0.28); explosive beyond volume  -0.12%  (90% -1.17 to +0.84)
+    after week 8: all 14 27.64%; red zone beyond volume  +0.00%  (90% -1.10 to +1.13); explosive beyond volume  -0.11%  (90% -1.08 to +0.83)
+    after week 12: all 14 31.93%; red zone beyond volume  +0.56%  (90% -0.35 to +1.48); explosive beyond volume  +0.59%  (90% -0.15 to +1.30)
+
+== Q3: TOUCHDOWN REGRESSION ==
+Rest-of-season touchdowns from past touchdowns alone 27.07%; from expected touchdowns alone 26.42%; expected against actual  -0.90%  (90% -3.91 to +1.94)
+  both 27.99%: past touchdowns beyond expected  +2.14%  (90% +0.82 to +3.41); expected beyond past touchdowns  +1.26%  (90% -0.35 to +2.85)
+  past touchdowns beyond everything else (13 measures):  +0.05%  (90% -0.72 to +0.87)
+After week 8 (n 3,315), touchdowns a game afterwards = 0.104 + 0.203 x past touchdowns a game + 0.400 x past expected touchdowns a game
+    QB (n 252): 0.065 x past touchdowns + 0.565 x past expected; over expected so far against over expected afterwards +0.08 (-0.03 to +0.18, n 252)
+    RB (n 1,098): 0.304 x past touchdowns + 0.294 x past expected; over expected so far against over expected afterwards +0.09 (+0.04 to +0.14, n 1098)
+    WR (n 1,434): 0.143 x past touchdowns + 0.466 x past expected; over expected so far against over expected afterwards +0.05 (+0.00 to +0.09, n 1434)
+    TE (n 531): 0.161 x past touchdowns + 0.276 x past expected; over expected so far against over expected afterwards +0.08 (+0.01 to +0.15, n 531)
+  Players through week 8 by touchdowns over expected a game (tenths): before: touchdowns, expected; after: touchdowns, expected
+    tenth  1 (n 331): before 0.154, 0.446 (-0.292); after 0.309, 0.311 (-0.002); kept 1%
+    tenth  2 (n 332): before 0.111, 0.268 (-0.157); after 0.245, 0.248 (-0.004); kept 2%
+    tenth  3 (n 331): before 0.125, 0.231 (-0.106); after 0.242, 0.239 (+0.003); kept -3%
+    tenth  4 (n 332): before 0.157, 0.221 (-0.064); after 0.224, 0.225 (-0.000); kept 0%
+    tenth  5 (n 331): before 0.145, 0.176 (-0.031); after 0.204, 0.199 (+0.006); kept -18%
+    tenth  6 (n 332): before 0.212, 0.214 (-0.001); after 0.225, 0.223 (+0.001); kept nan%
+    tenth  7 (n 332): before 0.292, 0.244 (+0.048); after 0.248, 0.236 (+0.013); kept 26%
+    tenth  8 (n 331): before 0.357, 0.256 (+0.101); after 0.287, 0.276 (+0.010); kept 10%
+    tenth  9 (n 332): before 0.471, 0.289 (+0.182); after 0.309, 0.282 (+0.027); kept 15%
+    tenth 10 (n 331): before 0.762, 0.392 (+0.370); after 0.407, 0.377 (+0.030); kept 8%
+Season to season (50+ chances both seasons): touchdowns a game +0.38 (+0.35 to +0.42, n 1503); expected a game +0.50 (+0.46 to +0.53, n 1503); over expected per chance +0.06 (+0.02 to +0.10, n 1503)
+  next season's touchdowns a game from: this season's touchdowns a game +0.38 (+0.35 to +0.42, n 1503); this season's expected a game +0.39 (+0.36 to +0.43, n 1503)
+    QB: over expected per chance repeats -0.08 (-0.31 to +0.16, n 51), keeps -7%; touchdowns a game +0.52 (+0.33 to +0.67, n 51); expected +0.66 (+0.51 to +0.78, n 51)
+    RB: over expected per chance repeats +0.10 (+0.04 to +0.17, n 606), keeps 11%; touchdowns a game +0.40 (+0.34 to +0.45, n 606); expected +0.45 (+0.39 to +0.50, n 606)
+    WR: over expected per chance repeats +0.00 (-0.06 to +0.07, n 658), keeps 0%; touchdowns a game +0.33 (+0.27 to +0.38, n 658); expected +0.52 (+0.48 to +0.57, n 658)
+    TE: over expected per chance repeats +0.11 (-0.01 to +0.23, n 188), keeps 11%; touchdowns a game +0.31 (+0.20 to +0.41, n 188); expected +0.34 (+0.23 to +0.45, n 188)
+
+== Q4: HOW NOISY IS ONE TOUCHDOWN ==
+The scored touchdowns (15,986): the chance was worth 0.285 on average before the snap (quartiles 0.124, 0.300, 0.428); 22% came on chances worth under 10%, 13% on chances worth 50% or more
+  targets: 10,275 touchdowns, the chance worth 0.270 on average, median 0.289; under 10%: 20%
+  carrys: 5,711 touchdowns, the chance worth 0.310 on average, median 0.335; under 10%: 26%
+  QB: 1,062 touchdowns, the chance worth 0.364 on average
+  RB: 5,655 touchdowns, the chance worth 0.282 on average
+  WR: 6,625 touchdowns, the chance worth 0.260 on average
+  TE: 2,644 touchdowns, the chance worth 0.320 on average
+One player-game (59,169 with a chance): expected touchdowns explain 35.7% of the spread in touchdowns; the rest is the luck of the chance
+    expected 0 to 0.1: n 30,582, mean expected 0.03, touchdowns 0.03, scored at least one 3%, variance over mean 1.02
+    expected 0.1 to 0.25: n 8,419, mean expected 0.16, touchdowns 0.18, scored at least one 17%, variance over mean 0.92
+    expected 0.25 to 0.5: n 10,052, mean expected 0.37, touchdowns 0.40, scored at least one 38%, variance over mean 0.73
+    expected 0.5 to 0.75: n 5,236, mean expected 0.60, touchdowns 0.66, scored at least one 57%, variance over mean 0.63
+    expected 0.75 to 1.0: n 2,454, mean expected 0.86, touchdowns 0.87, scored at least one 67%, variance over mean 0.64
+    expected 1.0 to 9: n 2,426, mean expected 1.36, touchdowns 1.18, scored at least one 78%, variance over mean 0.64
+Evidence: after week 8, one past touchdown a game is worth 0.20 later touchdowns a game and one past expected touchdown 0.40: a touchdown is worth 0.51 of an expected one
+
+== Q5: HOW MANY CHANCES FOR HALF A TOUCHDOWN ==
+  carry inside the 2                                   n   4,646  scores  53.2%   chances for half a touchdown:   0.9
+  carry from the 3 to 5                                n   3,857  scores  28.5%   chances for half a touchdown:   1.8
+  carry from the 6 to 10                               n   6,232  scores  12.6%   chances for half a touchdown:   4.0
+  carry from the 11 to 20                              n  13,693  scores   4.7%   chances for half a touchdown:  10.6
+  carry outside the 20                                 n 146,197  scores   0.5%   chances for half a touchdown: 103.1
+  target into the end zone from the 10 or closer       n   7,752  scores  43.4%   chances for half a touchdown:   1.2
+  target into the end zone from the 11 to 20           n   4,228  scores  31.0%   chances for half a touchdown:   1.6
+  target into the end zone from further                n   3,311  scores  26.4%   chances for half a touchdown:   1.9
+  target inside the 10, short of the goal line         n   5,272  scores  28.0%   chances for half a touchdown:   1.8
+  target from the 11 to 20, short of the goal line     n  11,885  scores   8.0%   chances for half a touchdown:   6.3
+  target outside the 20, short of the goal line        n 193,500  scores   1.2%   chances for half a touchdown:  42.0
+  QB carry: scores 5.42%, 9 for half a touchdown
+  RB target: scores 2.81%, 18 for half a touchdown
+  RB carry: scores 2.97%, 17 for half a touchdown
+  WR target: scores 4.77%, 10 for half a touchdown
+  WR carry: scores 3.64%, 14 for half a touchdown
+  TE target: scores 5.47%, 9 for half a touchdown
+  QB: 8.7% of games played have more than 0.5 expected touchdowns (10.2% of games with 30+ snaps); 1.0 or more: 1.45%
+  RB: 20.3% of games played have more than 0.5 expected touchdowns (42.7% of games with 30+ snaps); 1.0 or more: 7.11%
+  WR: 13.9% of games played have more than 0.5 expected touchdowns (22.1% of games with 30+ snaps); 1.0 or more: 2.56%
+  TE: 8.2% of games played have more than 0.5 expected touchdowns (15.0% of games with 30+ snaps); 1.0 or more: 1.14%
+  Player-seasons (8+ games) averaging more than 0.5 expected touchdowns a game: 356 of 4792 ([('QB', 6), ('RB', 231), ('TE', 12), ('WR', 107)]); more than 0.5 actual: 464
+  How many chances before a player's own rate is worth as much as the league's (half own record, half league):
+    RB carrys (272 players with 100+ since 2012): raw touchdown rate 1,003 carrys (true spread between players 0.54 points around 2.99%); rate over expected 4,183 carrys (true spread 0.23 points)
+    WR targets (322 players with 100+ since 2012): raw touchdown rate 486 targets (true spread between players 0.98 points around 4.90%); rate over expected 2,483 targets (true spread 0.38 points)
+    TE targets (141 players with 100+ since 2012): raw touchdown rate 320 targets (true spread between players 1.28 points around 5.50%); rate over expected 546 targets (true spread 0.80 points)
+    QB carrys (55 players with 100+ since 2012): raw touchdown rate 217 carrys (true spread between players 1.56 points around 5.61%); rate over expected 380 carrys (true spread 0.90 points)
+    RB targets (145 players with 100+ since 2012): raw touchdown rate 322 targets (true spread between players 0.95 points around 3.00%); rate over expected 290 targets (true spread 0.82 points)
+
+== Q1: RED-ZONE EFFICIENCY FROM THE SPREAD OF PAST RED-ZONE PLAYS ==
+Team half-seasons 2006-2024: 608. Red-zone trips a half 26.1; touchdown rate per trip 0.562
+  first half against the second half's red-zone touchdown rate | repeats with itself (first to second half; odd to even weeks)
+    red-zone touchdown rate              +0.20 (+0.14 to +0.27, n 608) | +0.20 (+0.14 to +0.27, n 608); +0.16 (+0.10 to +0.23, n 608)
+    red-zone yards a play                +0.16 (+0.09 to +0.22, n 608) | +0.13 (+0.07 to +0.20, n 608); +0.14 (+0.08 to +0.21, n 608)
+    spread of red-zone yards a play      +0.00 (-0.06 to +0.07, n 608) | +0.06 (-0.01 to +0.12, n 608); +0.04 (-0.03 to +0.10, n 608)
+    red-zone EPA a play                  +0.18 (+0.12 to +0.25, n 608) | +0.17 (+0.10 to +0.23, n 608); +0.11 (+0.04 to +0.17, n 608)
+    spread of red-zone EPA a play        -0.07 (-0.14 to -0.00, n 608) | -0.01 (-0.07 to +0.06, n 608); +0.01 (-0.06 to +0.08, n 608)
+    red-zone success rate                +0.21 (+0.14 to +0.27, n 608) | +0.24 (+0.18 to +0.30, n 608); +0.20 (+0.14 to +0.27, n 608)
+    EPA a play, whole field              +0.36 (+0.30 to +0.42, n 608) | +0.58 (+0.53 to +0.62, n 608); +0.61 (+0.56 to +0.65, n 608)
+    success rate, whole field            +0.33 (+0.27 to +0.39, n 608) | +0.57 (+0.53 to +0.62, n 608); +0.62 (+0.58 to +0.66, n 608)
+    explosive-play rate, whole field     +0.19 (+0.12 to +0.25, n 608) | +0.39 (+0.34 to +0.45, n 608); +0.45 (+0.39 to +0.50, n 608)
+    third-down conversion rate           +0.23 (+0.17 to +0.30, n 608) | +0.38 (+0.32 to +0.44, n 608); +0.42 (+0.36 to +0.47, n 608)
+    red-zone trips a game                +0.32 (+0.26 to +0.38, n 608) | +0.45 (+0.40 to +0.50, n 608); +0.42 (+0.36 to +0.47, n 608)
+  The spread, beyond the half's own touchdown rate and yards a play: yards -0.06 (-0.13 to +0.01, n 608); EPA -0.08 (-0.14 to -0.01, n 608)
+  ... and beyond whole-field EPA a play too: yards -0.03 (-0.09 to +0.04, n 608); EPA -0.02 (-0.09 to +0.04, n 608)
+    second-half red-zone touchdown rate, leave one season out, from past red-zone touchdown rate: 3.86%
+    second-half red-zone touchdown rate, leave one season out, from + the spread (yards and EPA): 3.83%
+    second-half red-zone touchdown rate, leave one season out, from whole-field EPA a play: 12.74%
+    second-half red-zone touchdown rate, leave one season out, from whole-field EPA + red-zone rate: 12.52%
+    second-half red-zone touchdown rate, leave one season out, from whole-field EPA + red-zone rate + the spread: 12.08%
+  season to season: red-zone touchdown rate +0.21 (+0.14 to +0.27, n 576); whole-field EPA +0.42 (+0.36 to +0.47, n 576); spread of red-zone yards +0.02 (-0.05 to +0.08, n 576)
+
+== Q2: TOUCHDOWN OR FIELD GOAL ==
+Red-zone trips from each team's 4th game on, 2006-2024: 25,201; touchdown 56.3%, field goal tried 32.6%, neither 11.1%
+  every red-zone trip (scored 2019-2024: 8,483, touchdown 58.4%):
+    the offense's red-zone history (touchdown rate, EPA, success, yards):  -0.01%  (90% -0.22 to +0.20)
+    the offense everywhere (EPA, success, explosive rate, third downs):  +0.83%  (90% +0.58 to +1.07)
+    both:  +0.71%  (90% +0.45 to +0.97)
+    the defense (EPA allowed, red-zone touchdown rate allowed, success allowed):  +0.06%  (90% -0.10 to +0.23)
+    the offense's tendencies (pass share, inside the 10, over expected, shotgun):  +0.02%  (90% -0.20 to +0.24)
+    the spread of the offense's red-zone plays:  -0.19%  (90% -0.30 to -0.07)
+    everything:  +0.57%  (90% +0.30 to +0.85)
+    red-zone history beyond the offense everywhere:  -0.11%  (90% -0.24 to +0.02)
+      o_epa_p: correlation with a touchdown +0.07 (+0.06 to +0.08, n 25201)
+      o_rz_td_rate: correlation with a touchdown +0.04 (+0.03 to +0.05, n 25201)
+      o_succ_p: correlation with a touchdown +0.07 (+0.06 to +0.08, n 25201)
+      o_t3: correlation with a touchdown +0.05 (+0.04 to +0.06, n 25201)
+      o_expl_rate: correlation with a touchdown +0.04 (+0.03 to +0.05, n 25201)
+      d_epa_p: correlation with a touchdown +0.03 (+0.02 to +0.04, n 25201)
+      d_rz_td_rate: correlation with a touchdown +0.02 (+0.01 to +0.03, n 25201)
+      o_pass10_rate: correlation with a touchdown +0.01 (-0.00 to +0.02, n 25201)
+      o_rz_y_sd: correlation with a touchdown +0.01 (+0.00 to +0.02, n 25201)
+  trips that ended in a touchdown or a field-goal try (scored 2019-2024: 7,549, touchdown 65.7%):
+    the offense's red-zone history (touchdown rate, EPA, success, yards):  +0.13%  (90% -0.09 to +0.34)
+    the offense everywhere (EPA, success, explosive rate, third downs):  +0.67%  (90% +0.40 to +0.94)
+    both:  +0.51%  (90% +0.23 to +0.78)
+    the defense (EPA allowed, red-zone touchdown rate allowed, success allowed):  -0.04%  (90% -0.20 to +0.11)
+    the offense's tendencies (pass share, inside the 10, over expected, shotgun):  -0.12%  (90% -0.35 to +0.12)
+    the spread of the offense's red-zone plays:  -0.21%  (90% -0.37 to -0.07)
+    everything:  +0.31%  (90% +0.05 to +0.58)
+    red-zone history beyond the offense everywhere:  -0.16%  (90% -0.30 to -0.02)
+      o_epa_p: correlation with a touchdown +0.07 (+0.06 to +0.08, n 22401)
+      o_rz_td_rate: correlation with a touchdown +0.04 (+0.03 to +0.05, n 22401)
+      o_succ_p: correlation with a touchdown +0.06 (+0.05 to +0.08, n 22401)
+      o_t3: correlation with a touchdown +0.05 (+0.04 to +0.06, n 22401)
+      o_expl_rate: correlation with a touchdown +0.04 (+0.03 to +0.05, n 22401)
+      d_epa_p: correlation with a touchdown +0.02 (+0.01 to +0.04, n 22401)
+      d_rz_td_rate: correlation with a touchdown +0.03 (+0.01 to +0.04, n 22401)
+      o_pass10_rate: correlation with a touchdown +0.00 (-0.01 to +0.02, n 22401)
+      o_rz_y_sd: correlation with a touchdown +0.01 (+0.00 to +0.02, n 22401)
+
+== H67: IS ALLOCATION TIED TO SCHEME AND PLAY CALLING ==
+(a) Team half-seasons: first-half tendencies against the second half's rushing share of touchdowns | each repeats (first to second half)
+    pass share inside the 10       -0.19 (-0.26 to -0.13, n 608) | +0.29 (+0.22 to +0.35, n 608)
+    pass share                     -0.25 (-0.31 to -0.19, n 608) | +0.50 (+0.44 to +0.54, n 608)
+    pass rate over expected        -0.29 (-0.35 to -0.23, n 608) | +0.62 (+0.58 to +0.66, n 608)
+    shotgun rate                   -0.05 (-0.12 to +0.02, n 608) | +0.93 (+0.92 to +0.94, n 608)
+    no-huddle rate                 -0.05 (-0.11 to +0.02, n 608) | +0.82 (+0.80 to +0.84, n 608)
+    rushing share of touchdowns    +0.21 (+0.15 to +0.27, n 608) | +0.21 (+0.15 to +0.27, n 608)
+    EPA a play, whole field        -0.05 (-0.11 to +0.02, n 608) | +0.58 (+0.53 to +0.62, n 608)
+    second-half rushing share of touchdowns, leave one season out, from the tendencies: 7.46%
+    second-half rushing share of touchdowns, leave one season out, from the past rushing share of touchdowns: 4.18%
+    second-half rushing share of touchdowns, leave one season out, from both: 7.72%
+    second-half rushing share of touchdowns, leave one season out, from both + EPA a play: 7.40%
+    (a half-season has 18.4 touchdowns, so the share is noisy: its dice-only spread is about 11 points against an actual 13)
+    Each position's share of the team's rushing + receiving touchdowns, second half (2012-2024), leave one season out:
+      QB (mean 7%): from the tendencies 8.37%; from the position's past share 19.07%; both 20.63%; the share repeats +0.44 (+0.37 to +0.50, n 416); pass share inside the 10 against it -0.23 (-0.30 to -0.15, n 416)
+      RB (mean 36%): from the tendencies -1.25%; from the position's past share 3.68%; both 2.17%; the share repeats +0.21 (+0.13 to +0.28, n 416); pass share inside the 10 against it -0.04 (-0.12 to +0.04, n 416)
+      WR (mean 41%): from the tendencies 4.72%; from the position's past share 11.28%; both 11.52%; the share repeats +0.34 (+0.27 to +0.41, n 416); pass share inside the 10 against it +0.21 (+0.13 to +0.29, n 416)
+      TE (mean 17%): from the tendencies 0.03%; from the position's past share 8.90%; both 9.33%; the share repeats +0.31 (+0.23 to +0.38, n 416); pass share inside the 10 against it -0.08 (-0.16 to +0.00, n 416)
+(b) A player's rest-of-season touchdowns:
+    his own 14 measures 32.06%
+    + his team's tendencies so far (pass share, inside the 10, over expected, shotgun, no huddle):  +1.28%  (90% +0.59 to +1.99)
+    + his team's offense so far (EPA a play, red-zone trips, touchdowns a game, red-zone touchdown rate):  +1.36%  (90% +0.56 to +2.14)
+    + tendencies beyond both:  +0.24%  (90% -0.34 to +0.74)
+      QB: tendencies  -0.77%  (90% -3.29 to +2.00); offense quality  +2.70%  (90% +0.48 to +4.62)
+      RB: tendencies  +0.59%  (90% -0.56 to +1.72); offense quality  +1.37%  (90% -0.02 to +2.76)
+      WR: tendencies  +2.08%  (90% +1.18 to +2.99); offense quality  +0.86%  (90% -0.14 to +1.83)
+      TE: tendencies  +2.80%  (90% +1.04 to +4.36); offense quality  +1.93%  (90% -0.27 to +4.06)
+    Knowing only his position, chances and snaps: 30.12%; + tendencies  +2.72%  (90% +1.68 to +3.77)
+    After week 8: an RB's carries inside the 5 a game against his team's pass share inside the 10 -0.16 (-0.21 to -0.11, n 1098); a WR or TE's end-zone targets a game against it +0.13 (+0.10 to +0.17, n 1965); their later touchdowns against it: RB -0.02 (-0.07 to +0.03, n 1098), WR and TE -0.03 (-0.06 to +0.01, n 1965)
