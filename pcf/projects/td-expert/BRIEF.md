@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-16, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-16: explored, verdict GO; waiting for the CEO's calls under "Open for the CEO") · **Layer:** expert · **Cadence:** in_season
+**Status:** draft (2026-11-16: explored, verdict GO; 2026-11-17: the CEO's calls made; second look at the added scope running) · **Layer:** expert · **Cadence:** in_season
 
 ## What the CEO asked for
 *Word for word, 2026-11-16.*
@@ -106,10 +106,28 @@ For each player and game, how many touchdowns should we expect, how sure is that
 - **Consistency:** each new measure gets its entry in `CONSISTENCY.md` in the build (the exploration's repeats: expected touchdowns 0.60, touchdowns over expected 0.05, a team's red-zone touchdown rate 0.20, the spread of its red-zone plays 0.06).
 - **Yardstick:** the crude forecaster scores yards only, so touchdowns have no yardstick yet; fantasy points can be added to it later (the CEO, 2026-11-15).
 
-## Open for the CEO
-1. **What it forecasts, and for whom.** Next game, rest of season, or both? Players only, or the team's touchdowns too?
-2. **Passing touchdowns.** In this expert, or left to a quarterback expert?
-3. **The method.** A, B, C, or one of your own.
-4. **The no-noise test** above.
-5. **The team side.** The spread of red-zone plays (Q1) and touchdown-or-field-goal (Q2) found nothing: drop them, or look again another way?
-6. **Sizes for H67 and H68** weren't given before the test; they stay blank unless you want a late one recorded.
+## The CEO's calls
+*2026-11-17, word for word.*
+
+> I think it should predict both next game and rest of season. Plus, I think it should predict players and teams. I think we can include passing touchdowns. The method should be an and b, we can explore c. Your pass-fail test is approved. I think we could add a forecasting and retroactive element that measures the noisiness of a touchdown? I think we could try and measure how close a touchdown was after a field goal. Just ideas
+
+What that settles:
+1. **Horizons:** next game and rest of season, both.
+2. **Who:** players and teams.
+3. **Passing touchdowns:** in this expert (a quarterback's thrown touchdowns, beside every player's rushing and receiving ones).
+4. **Method:** A and B are built; C is explored, not built.
+5. **The no-noise test:** approved.
+6. **The team side:** the team's touchdowns are forecast; the spread of red-zone plays (Q1) is dropped; touchdown-or-field-goal (Q2) comes back through the CEO's near-miss idea below.
+7. **Late sizes for H67 and H68:** none recorded (the scoreboard rows stay as they were).
+
+## The CEO's ideas, and the second look
+*The CEO called these "just ideas", so they are measures to build, not hunches; they aren't on the scoreboard. The added scope (next game, teams, passing touchdowns) and the ideas were explored in a second look before the brief is agreed. Claude's expectations, written before the second run:*
+
+| # | What | Claude's reading | Claude expects |
+|---|---|---|---|
+| I-a | "a forecasting and retroactive element that measures the noisiness of a touchdown" | **Looking back:** for every touchdown, player-game and stretch of games, how surprising it was (the chance before the snap; how likely that many touchdowns were from those chances). **Looking ahead:** the forecast's chance of 0, 1, 2+ touchdowns, and whether anything beyond the forecast's average tells how noisy a player's touchdowns will be (a goal-line back's few high-value chances against a receiver's many low-value ones) | 60% that a plain Poisson count around the forecast average gives a chance of at least one that is calibrated within 2 points. 70% that knowing how concentrated a player's chances are improves the chance of 0/1/2+ by under 0.5% |
+| I-b | "measure how close a touchdown was after a field goal" | For each drive that ended in a field-goal try: how likely a touchdown was from the chances it had (the chance that at least one of them scores). Summed by team, it is "touchdowns nearly scored" | The average field-goal drive that reached the red zone had about a 35 to 45% chance of a touchdown. Its rate repeats weakly for a team (about 0.1). 30% that a team's near misses so far add 0.5%+ to its later touchdowns beyond its touchdowns and expected touchdowns so far |
+| S-1 | Next game, players | The noise ceiling for one game | Games so far remove 8 to 12% of the error; knowing that game's chances, about 40%; the rest is dice |
+| S-2 | Teams | A team's touchdowns, next game and rest of season | Next game 5 to 8%; rest of season 25 to 35%; knowing that game's chances about 55% |
+| S-3 | Passing touchdowns | A quarterback's thrown touchdowns: ceiling, best predictors, regression | Rest of season about 30%, next game about 8%; thrown touchdowns over expected repeat more than receivers' (keeps 10 to 20%) |
+| S-4 | Method C, can it work | Does a player's share of his team's chances inside the 10 repeat half to half | RB about 0.55, WR and TE about 0.4 |
