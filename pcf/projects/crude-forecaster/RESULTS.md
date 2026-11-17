@@ -13,10 +13,27 @@ PCF now has one yardstick for every expert, hunch and idea: a deliberately simpl
 **Vault (2025):** not opened. Participation, Elo and pace have no 2025 histories saved (their vaults are closed or spent), and the row rule needs participation's: the CEO's call (open questions).
 **Versions tried:** one build version. 4 rungs × 12 targets and horizons on the yardstick board, then the 12 champions once through the harness (team yards next game twice: a first check run before the full board). 2019–2024 were looked at once before, by the exploration.
 
+**The champions' harness runs** (2019–2024, refit each season, 20 shuffled refits; range score in yards, lower is better; "vs season" is the champion minus the season-average rung, 90% interval):
+
+| Champion | Run | Range score | vs season | 80% range holds |
+|---|---|---|---|---|
+| `passing_next_lasso` | 4f33e228 | 23.63 | −0.59 (−0.82 to −0.38) | 80.0% |
+| `passing_next3_mix` | a271d245 | 19.47 | −0.76 (−1.07 to −0.45) | 78.8% |
+| `passing_rest_lasso` | 70e87f25 | 19.45 | −0.90 (−1.18 to −0.63) | 77.6% (2021: 91.7%) |
+| `rushing_next_lasso` | 43a6d6b7 | 5.73 | −0.13 (−0.18 to −0.09) | 80.4% |
+| `rushing_next3_lasso` | 2939a945 | 4.43 | −0.16 (−0.21 to −0.11) | 80.0% |
+| `rushing_rest_lasso` | 8f9d04a6 | 4.28 | −0.21 (−0.27 to −0.16) | 80.4% |
+| `receiving_next_mix` | 24935ada | 4.77 | −0.20 (−0.24 to −0.16) | 80.2% |
+| `receiving_next3_mix` | 53da0d93 | 3.47 | −0.25 (−0.31 to −0.19) | 79.7% |
+| `receiving_rest_lasso` | 2da887f2 | 3.10 | −0.23 (−0.28 to −0.18) | 80.5% |
+| `team_next_lasso` | ce8178b0 | 19.36 | −0.88 (−1.13 to −0.65) | 78.7% |
+| `team_next3_lasso` | 9e079f91 | 12.36 | −0.88 (−1.10 to −0.65) | 78.0% |
+| `team_rest_lasso` | c2d3747a | 10.49 | −1.10 (−1.47 to −0.77) | 77.2% (2021: 69.5%) |
+
 | Check (docs/VALIDATION.md) | Result |
 |---|---|
 | Signal / no noise, or beats baselines | Every champion beats its season-average rung with the whole 90% interval below zero, and 20 of 20 refits on shuffled outcomes. The mix champions also beat their lasso and trees rungs in the harness. No downstream no-noise target: the yardstick is the tool other experts' downstream numbers come from (the brief) |
-| Calibration and range coverage | q10–q90 holds 77.2% to 80.5% (bar 75–85%), 49.5% to 52.5% above q50 (bar 45–55%), every season inside 70–90% except passing rest of season in 2021 (91.7%: too wide), so that one scorecard reads "fail" (R12) |
+| Calibration and range coverage | q10–q90 holds 77.2% to 80.5% (bar 75–85%), 49.5% to 52.5% above q50 (bar 45–55%), every season inside 70–90% except two rest-of-season forecasts in 2021, the first 17-game season: passing 91.7% (too wide) and team yards 69.5% (too narrow), so those two scorecards read "fail" (R12) |
 | Leakage | 9 of 9 blocking checks pass for all 12 champions (identical at 25 cutoffs under the future changed and deleted; vintage sound for all 15 pinned histories). No feature above \|r\| 0.9 |
 | Football sanity (CEO review pending) | Highest passing forecasts: Brady 2021, Mahomes 2019, Prescott 2020. Lowest of those expected to play: Taysom Hill's games and 2019 Bortles (they take snaps but barely throw). Team yards: early-season 2019 Ravens, Patriots and Cowboys highest (490–476); 2019 Jets, 2024 Panthers, 2023 Steelers lowest (278–287) |
 | CEO spot-check | pending |
@@ -53,7 +70,7 @@ Numbered R so they don't collide with the exploration's F1–F12. "Share" is the
 | R9 | **H51: past yards are nearly all of the crude forecast.** Yards-only inputs keep 93% (passing), 99% (rushing), 98% (receiving), 90% (team) of its share; first downs bring them to 95, 99, 99, 95% | §4 | strong | next game |
 | R10 | **H52: QBs have the smallest typical miss, RB rushing the most explained.** Took-a-snap rows: QB passing 0.29 of the average, RB rushing 0.60, WR 0.65, TE 0.74, RB receiving 0.87. Among QBs who play, the crude forecast explains only 6% of passing yards: starters' games vary around similar averages | §4 | strong | next game |
 | R11 | **H54 and H55: recent form keeps a little beside participation for backs and receivers; spread doesn't help.** Recent inputs with participation in: rushing +0.74%, receiving +0.37%, passing +0.13% (not clear), team +0.36% (not clear). Spread: no gain for the middle (−0.32% to −0.03%) or the range with participation in. Its repeat: rushing 0.60 and receiving 0.68 season to season (`pcf.validation.consistency`), passing −0.05 | §4 | medium | next game |
-| R12 | **The ranges are honest.** Fifths of the forecast by position, from the latest 20% of each window's misses: q10–q90 holds 77.2–80.5% for the champions, 49.5–52.5% above q50; one season outside its bar (passing rest of season 2021, 91.7%) | scorecards | strong | all 12 |
+| R12 | **The ranges are honest, except rest of season in one season.** Fifths of the forecast by position, from the latest 20% of each window's misses: q10–q90 holds 77.2–80.5% for the champions, 49.5–52.5% above q50. Two seasons outside their bar, both rest of season in 2021: passing 91.7% (too wide), team yards 69.5% (too narrow). A season of rest-of-season rows is many near-copies of one outcome per player, so one season swings far | scorecards | strong for next game and next 3; medium for rest of season | all 12 |
 | R13 | **The longer the horizon, the more the crude forecast explains and the less the experts add.** Receiving 40 → 56 → 58% of the error around the average (next, next 3, rest); rushing 43 → 54 → 51%; passing 20 → 26 → 28%; team 9 → 14 → 14%. All experts together for rushing: 3.8 → 3.2 → 0.7% | §1, §2 | strong | all |
 | R14 | **SHAP isn't the test, shown on team yards.** On held-out rows the fitted model leans on schemes (mean \|SHAP\| 4.2 yards) and pace (3.5) about half as much as on Elo (7.8), yet neither improves a held-out forecast (R6). For players, participation's \|SHAP\| is 2.2 times the crude inputs' for QBs and 0.4–0.6 times for backs and receivers | §5, build/shap_*.png | strong | method |
 
