@@ -252,6 +252,20 @@ def importances(model: Fitted, rows: pl.DataFrame, seed: int = 0, top: int = 8) 
     return dict(sorted(out.items(), key=lambda kv: -kv[1])[:top])
 
 
+# What MLflow's safe format must be told to load for a ContextModel (tracking.log_model): PCF's
+# own two classes and the library types the pipelines hold.
+TRUSTED_TYPES = [
+    "pcf.experts.context_live.models.ContextModel",
+    "pcf.experts.context_live.models.Fitted",
+    "functools.partial",
+    "numpy.dtype",
+    "scipy.interpolate._bsplines.BSpline",
+    "scipy.interpolate._bsplines._BSpline",
+    "sklearn.ensemble._hist_gradient_boosting.predictor.TreePredictor",
+    "sklearn.utils.validation.check_array",
+]
+
+
 class ContextModel(BaseEstimator):
     """Every outcome's shipped rung in one object, for MLflow (`tracking.log_model`)."""
 

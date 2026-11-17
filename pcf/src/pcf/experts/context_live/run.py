@@ -17,6 +17,12 @@ the paired comparison, calibration, the vault rule).
 - **What ships per outcome** (`choose`): the live model if it beats the situation-only model
   (90% interval of the paired difference below 0, by whole weeks) by more than the fitting noise;
   else the situation-only model if it beats the base rate; else the base rate (rule k).
+
+    python -m pcf.experts.context_live.run backtest --seasons 2023,2024     # the backtest
+    python -m pcf.experts.context_live.run backtest --seasons 2025 --open-vault
+        --fixed-from backtest --tag vault --noise 0                         # the vault, once
+    python -m pcf.experts.context_live.run pit --seasons 2025               # point in time
+    python -m pcf.experts.context_live.run live --version 1 --seasons 2026  # weekly live
 """
 
 from __future__ import annotations
@@ -519,48 +525,81 @@ def personnel_check(names: Sequence[str], season: int = 2024, seed: int = 0) -> 
     return out
 
 
+def live_rows(
+    model: models.ContextModel, data: pl.DataFrame, live: int, shipped: dict[str, str],
+    run_id: str, now: datetime | None = None, names: Sequence[str] | None = None,
+) -> pl.DataFrame:  # fmt: skip
+    """The champion's forecasts for season `live`'s plays whose `as_of` has come (a game's
+    charting is known 14 days after it), in the standard schema. Every outcome is forecast, its
+    result known or not (pressure and time to throw are published after the season)."""
+    now = now or datetime.now(UTC)
+    end = datetime.fromisoformat(str(model.train_end))
+    known_now = data.filter(c("season") == live, c("as_of") <= now)
+    rows = []
+    for o in OUTCOMES:
+        if names is not None and o.name not in names:
+            continue
+        rung = shipped[o.name]
+        test = o.rows(known_now, scored=False)
+        if test.is_empty():
+            continue
+        pred = model.fitted[o.name].predict(test)
+        frame = test.select(*plays.KEYS, "season", "week", "as_of").with_columns(
+            [pred[x].alias(f"{rung}:{x}") for x in pred.columns]
+        )
+        rows.append(history_rows(frame, o, rung, {(live, rung): (None, end)}, run_id))
+    return pl.concat(rows, how="vertical") if rows else pl.DataFrame()
+
+
+def write_live(version: int, live: int, tag: str = "backtest") -> Path:
+    """The live output of a registered champion: outputs/context-live/<its run_id>/live.parquet,
+    remade from the saved model (never refitted) with the plays known now. Run each week."""
+    from pcf.core import tracking
+
+    res = json.loads((cache_dir() / tag / "results.json").read_text())
+    shipped = {o.name: res[o.name]["choice"]["shipped"] for o in OUTCOMES}
+    model = tracking.load_model(ID, version=version)
+    run_id = tracking.version_run(ID, version)
+    prepare([live])
+    out = live_rows(model, load([live]), live, shipped, run_id)
+    path = get_config().zone("outputs") / ID / run_id / "live.parquet"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    out.write_parquet(path)
+    return path
+
+
 def final(tag: str, through: int, live: int, checks: dict[str, bool]) -> dict:
     """The champion: each outcome's shipped rung (from the backtest `tag`) fitted on every season
     through `through`, logged as one model and registered if every check passed; and the live
-    output, its forecasts for season `live`'s plays known so far, saved as
+    output, its forecasts for season `live`'s plays known so far (`live_rows`), saved as
     outputs/context-live/<run_id>/live.parquet."""
     from pcf.core import tracking
 
     if through != live - 1:
         raise ValueError("the champion is trained on every season before the live one")
     res = json.loads((cache_dir() / tag / "results.json").read_text())
+    shipped = {o.name: res[o.name]["choice"]["shipped"] for o in OUTCOMES}
     prepare(range(plays.FIRST_SEASON, live + 1))
     data = load(range(plays.FIRST_SEASON, live + 1))
-    fitted, rows, ends = {}, [], []
+    fitted, ends = {}, []
     end = data.filter(c("season") <= through).select(known(data).max()).item()
-    now = datetime.now(UTC)
     with tracking.attempt(ID, train_end=end, name=f"champion through {through}",
                           params={"from": tag, "through": through}) as run:  # fmt: skip
         for o in OUTCOMES:
-            rung = BY_RUNG[res[o.name]["choice"]["shipped"]]
             # trained on every season before the live one, known before its first as_of
-            m, e = fit_rung(data, o, rung, live)
+            m, e = fit_rung(data, o, BY_RUNG[shipped[o.name]], live)
             fitted[o.name] = m
             ends.append(e)
-            # only the plays whose as_of has come: a game's charting is known 14 days after it
-            test = o.rows(data.filter(c("season") == live, c("as_of") <= now))
-            if test.height:
-                pred = m.predict(test)
-                frame = test.select(*plays.KEYS, "season", "week", "as_of", "y",
-                                    block=pl.lit("live")).with_columns(
-                    [pred[x].alias(f"{rung.name}:{x}") for x in pred.columns]
-                )  # fmt: skip
-                rows.append(history_rows(frame, o, rung.name, {(live, rung.name): (m, e)},
-                                         run.info.run_id))  # fmt: skip
         model = models.ContextModel(fitted, train_end=str(max(ends)))
-        tracking.log_model(model)
+        tracking.log_model(model, trusted_types=models.TRUSTED_TYPES)
         passed = tracking.log_checks(checks)
         version = tracking.register(ID) if passed else None
+        out = live_rows(model, data, live, shipped, run.info.run_id)
         out_dir = get_config().zone("outputs") / ID / run.info.run_id
         out_dir.mkdir(parents=True, exist_ok=True)
-        if rows:
-            pl.concat(rows).write_parquet(out_dir / "live.parquet")
-    return {"run_id": run.info.run_id, "version": version, "live_rows": sum(r.height for r in rows),
+        if out.height:
+            out.write_parquet(out_dir / "live.parquet")
+    return {"run_id": run.info.run_id, "version": version, "live_rows": out.height,
             "train_end": str(max(ends))}  # fmt: skip
 
 
@@ -568,7 +607,8 @@ def main(argv: Sequence[str] | None = None) -> None:
     import argparse
 
     ap = argparse.ArgumentParser(prog="python -m pcf.experts.context_live.run")
-    ap.add_argument("what", choices=["prepare", "backtest", "pit"])
+    ap.add_argument("what", choices=["prepare", "backtest", "pit", "live"])
+    ap.add_argument("--version", type=int, default=0, help="live: the registered version")
     ap.add_argument("--seasons", default=",".join(map(str, TEST_SEASONS)))
     ap.add_argument("--outcomes", default="")
     ap.add_argument("--nulls", type=int, default=20)
@@ -582,6 +622,10 @@ def main(argv: Sequence[str] | None = None) -> None:
         prepare(range(plays.FIRST_SEASON, max(seasons) + 1))
     elif a.what == "pit":
         print(check_point_in_time(max(seasons)))
+    elif a.what == "live":
+        if not a.version:
+            raise SystemExit("live needs --version (the registered champion)")
+        print(write_live(a.version, max(seasons)))
     else:
         names = [x for x in a.outcomes.split(",") if x] or None
         fixed = None

@@ -34,19 +34,20 @@ class Outcome:
     # calibration slope failed on 2023-2024 (decision 0036, call 17); the vault checks it.
     recalibrate: bool = False
 
-    def rows(self, plays: pl.DataFrame) -> pl.DataFrame:
-        """The play table's rows this outcome is scored on, with `y`."""
+    def rows(self, plays: pl.DataFrame, scored: bool = True) -> pl.DataFrame:
+        """The play table's rows this outcome is scored on, with `y`. `scored=False` keeps the
+        population's plays whose outcome isn't known yet (live: pressure and time to throw come
+        from participation, published after the season)."""
         member = {
             "run": c("is_run"),
             "dropback": c("is_dropback"),
             "attempt": c("is_attempt"),
             "snap": pl.lit(True),
         }[self.population]
-        return (
-            plays.filter(member, c("season") >= self.first_season)
-            .with_columns(y=c(self.column))
-            .filter(c("y").is_not_null())
+        rows = plays.filter(member, c("season") >= self.first_season).with_columns(
+            y=c(self.column) if self.column in plays.columns else pl.lit(None, pl.Float64)
         )
+        return rows.filter(c("y").is_not_null()) if scored else rows
 
 
 P, A = "probability", "amount"

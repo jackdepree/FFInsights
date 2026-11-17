@@ -200,12 +200,15 @@ def rung(name: str, params: Mapping[str, Any] | None = None) -> Iterator[Rung]:
             raise ValueError(f"rung {name!r} ended without takeaways: call .takeaways(...)")
 
 
-def log_model(model: Any, example: Any = None) -> str:
+def log_model(model: Any, example: Any = None, trusted_types: list[str] | None = None) -> str:
     """Save a fitted scikit-learn model in the active run and return its address.
 
     Other libraries (XGBoost, PyMC) get a branch here when the first project needs them.
     The package list is given, not inferred: MLflow's guess loads the model in a new process
     (7 seconds a model) and isn't exact (#F8). The attempt's `uv.lock` hash pins the rest.
+    `trusted_types`: the classes beyond plain scikit-learn that MLflow's safe format (skops)
+    must be told to load, for a model that wraps estimators in PCF's own classes (context-live,
+    decision 0036). Name only PCF's own classes and library types, never anything read from data.
     """
     run = _active()
     import sklearn
@@ -218,6 +221,7 @@ def log_model(model: Any, example: Any = None) -> str:
         name="model",
         input_example=example,
         pip_requirements=[f"scikit-learn=={sklearn.__version__}"],
+        **({"skops_trusted_types": list(trusted_types)} if trusted_types else {}),
     )
     _client().set_tag(run.info.run_id, f"{TAG}model_uri", info.model_uri)
     return info.model_uri

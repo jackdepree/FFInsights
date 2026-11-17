@@ -287,3 +287,22 @@ def test_a_players_context_weights_plays_by_his_chance_and_teams_count_each_play
     assert crew.filter(c("play_id") == 1)["n_rb_map"].item() == 1.0
     assert crew.filter(c("play_id") == 1)["n_wr_map"].item() == 0.25
     assert crew.filter(c("play_id") == 2)["n_wr_map"].item() == 0.0
+
+
+def test_the_live_output_forecasts_plays_whose_outcome_isnt_known_yet():
+    d = _world(n=1200, seasons=(2022, 2023, 2024))
+    live = d.filter(c("season") == 2024).with_columns(
+        pressure_y=pl.lit(None, pl.Float64),  # published after the season
+        as_of=pl.when(c("week") <= 2).then(pl.lit(datetime(2024, 10, 1, tzinfo=UTC)))
+        .otherwise(pl.lit(datetime(2030, 1, 1, tzinfo=UTC))),  # later weeks not known yet
+    )  # fmt: skip
+    data = pl.concat([d.filter(c("season") < 2024), live], how="vertical_relaxed")
+    o = get("pressure_prob")
+    train = data.filter(c("season") < 2024).with_columns(y=c("pressure_y"), weight=pl.lit(1.0))
+    fitted = models.fit(train, o, plays.FIELD_SETS["live"], "linear")
+    model = models.ContextModel({o.name: fitted}, train_end="2024-03-01 00:00:00+00:00")
+    out = run.live_rows(model, data, 2024, {o.name: "3-live-linear"}, "run",
+                        now=datetime(2025, 1, 1, tzinfo=UTC), names=[o.name])  # fmt: skip
+    assert out.height == live.filter(c("week") <= 2).height
+    assert out["mean"].is_between(0, 1).all() and (out["q10"] == out["mean"]).all()
+    check_output(out, plays.KEYS)
