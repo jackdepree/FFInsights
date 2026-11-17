@@ -544,8 +544,13 @@ projects:
       volume (yards, chances) forecasts rest-of-season touchdowns as well as anything (32% of the
       error; hindsight on chances 72%); a player keeps about a tenth of his touchdowns over
       expected; team tendencies add 1.3% (H67 held in part); explosive rate and red-zone chances
-      add nothing beyond volume (H68 failed). Targets before 2009 are unusable. Brief drafted,
-      waiting for the CEO's calls; the build runs in its own session.
+      add nothing beyond volume (H68 failed). Targets before 2009 are unusable. The CEO's calls
+      (2026-11-17): next game and rest of season, players and teams, thrown touchdowns in, methods
+      A and B built, C explored. Second look (2026-11-17, still GO): next game 7.9% (hindsight
+      35.8%); teams 9.0% next game, 23.9% rest of season; a Poisson count around the forecast gives
+      calibrated 0/1/2+; near misses on field-goal drives are a description, noise as an input;
+      a QB keeps about 9% of thrown touchdowns over expected. Brief waiting for the CEO's
+      agreement; the build runs in its own session.
 
   - id: aging
     name: Aging curves

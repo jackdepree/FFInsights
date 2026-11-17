@@ -2,6 +2,7 @@
 
 > A first look at the CEO's two hunches (H67: allocation is tied to scheme and play calling; H68: explosive-play rate with red-zone opportunities are the strongest predictors of rest-of-season touchdowns) and five questions (Q1 to Q5: red-zone efficiency from the spread of past plays, touchdown or field goal, touchdown regression, how noisy one touchdown is, how many chances make half a touchdown).
 > Run on 2026-11-16 with [`explore/first_look.py`](explore/first_look.py) (output: [`explore/first_look.txt`](explore/first_look.txt)). Regular seasons only; the vault (2025) wasn't read.
+> A second look on 2026-11-17 covers the scope the CEO added (next game, teams, passing touchdowns) and the CEO's two ideas: see "Second look" at the end.
 
 **How to read it.**
 - **A chance** is a target (RB, WR, TE) or a carry (QB, RB, WR, TE; scrambles included). **Touchdowns** are rushing and receiving, counted for the player who scored. Passing touchdowns for quarterbacks weren't looked at.
@@ -84,4 +85,62 @@ Retro patterns: P4 (clever versions tie the plain one) fits F2 to F4 and F6. P7 
 - **The forecast's centre should start from volume** (yards and chances), with the team's offense and tendencies as small additions (F16) and red-zone carries for quarterbacks (F4).
 - **Forecasting chances is where the room is** (the ceiling): availability and opportunity, which are `participation`'s and `opportunity-quality`'s jobs.
 - **Drop from the team side:** the spread of red-zone plays (F11) and a touchdown-or-field-goal model (F13); red-zone efficiency comes from the offense rating (F12).
-- **Open for the CEO:** what the expert forecasts and for whom, the next-game horizon, passing touchdowns, the no-noise test, and the method.
+- **Open for the CEO:** what the expert forecasts and for whom, the next-game horizon, passing touchdowns, the no-noise test, and the method. *(Settled 2026-11-17; see BRIEF.md.)*
+
+## Second look (2026-11-17): the scope the CEO added, and the CEO's two ideas
+
+> After the CEO's calls ("predict both next game and rest of season", "players and teams", "include passing touchdowns", "explore c") and the CEO's two ideas: "a forecasting and retroactive element that measures the noisiness of a touchdown" and "measure how close a touchdown was after a field goal". Claude's expectations were committed before the run (BRIEF.md, "The CEO's ideas, and the second look"). Run with [`explore/second_look.py`](explore/second_look.py) (output: [`explore/second_look.txt`](explore/second_look.txt)); same chances and expected touchdowns as the first look.
+
+**How to read it.**
+- **Next game:** every game a player (or team) played, from his season so far (2+ earlier games) and last season. Whether he plays is taken as known: availability is `participation`'s job. 20,649 player-games scored (2019 to 2024).
+- **A team's touchdowns:** rushing and receiving touchdowns by its QBs, RBs, WRs and TEs (nearly all offensive touchdowns). 2,814 team-games scored; 576 rest-of-season rows.
+- **Thrown touchdowns:** touchdowns on the targets a quarterback threw; a throw's expected touchdowns are its target's. 2,732 QB-games scored (10+ throws a game so far).
+- **The drive model:** the chance that a drive ends in a touchdown, from the situation before each snap (yard line, down, distance, clock, score), fit on earlier seasons. Calibrated within 3 points by tenth, except the top tenth (says 91%, scores 100%).
+- **A near miss:** for a drive that ended in a field-goal try, the closest it came: its highest chance of a touchdown before any snap.
+
+**Verdict: still GO.** The added scope fits the expert, but the next game has little room, a team's touchdowns can be forecast only about as well as from its own touchdowns and efficiency, and near misses are a fair description but noise as a forecast.
+
+### Findings
+
+**F17. Next game: games so far remove 7.9% of a player's touchdown error (7.0 to 8.8); knowing that game's chances would remove 35.8%; 64% is dice** (pure dice on those chances, 63%). Fitting noise is nil (refits 7.61 and 7.63). By position: RB 12.0%, QB 7.0%, WR 5.5%, TE 3.0%. The single best predictor is again yards (7.6%), then chances (7.0%), touchdowns (6.5%), expected touchdowns (6.2%), chances inside the 20 (6.1%).
+
+**F18. The chance of 0, 1, 2+ touchdowns needs nothing beyond the forecast's average.** A plain Poisson count around the next-game forecast says 23.9% score at least one; 23.9% did. By tenth it is within 2 points except the lowest (says 11%, 9% did) and the highest (45%, 48%). It says 3.9% score two or more; 4.3% did. A fitted model on the forecast does no better (log loss 0.6235 against Poisson's 0.6233), and knowing how concentrated a player's chances are (a goal-line back's few big chances against a receiver's many small ones) makes it slightly worse (−0.10%).
+
+**F19. Looking back, a player's touchdowns over expected in a season are almost exactly dice.** Measured in units of the dice's spread on his chances, the spread is 1.07 (pure dice: 1.00), and 7.0% of player-seasons land beyond 2 (dice: 5%); QBs' rushing 12.2% (131 seasons), TEs 8.3%, RBs 6.4%, WRs 6.2%. Luck is 30% of the spread in season touchdown totals across all players, but 78% among players expecting 2 to 4, 71% for 4 to 7, 46% for 7 or more. A 90% range around the expected total is ±2.4 touchdowns at 2 to 4 expected, ±3.2 at 4 to 7, ±4.2 above. In a single game, the median touchdown game had a 35% chance of scoring at least that many; 11% had under a 10% chance.
+
+**F20. How close a field-goal drive came to a touchdown: the average red-zone field goal came after the drive was more likely than not to score one.** From the drive model: field-goal drives peaked at a 45.1% chance of a touchdown (quartiles 38, 46, 55); those that reached the 20 peaked at 55.1%, 73% of them passed 50% and 11% passed 70%. Touchdown drives peaked at 59.9%, other drives at 24.1%. **But it is noise for a team:** near misses a game repeat 0.08 half to half (−0.00 to 0.16) and 0.03 season to season; the near-miss chance per field-goal drive 0.06 and −0.06. As a forecasting input it adds nothing: next game −0.97% (−1.32 to −0.61: it adds noise); rest of season +0.6% beyond touchdowns and expected touchdowns (−2.5 to +3.5). Adding up the chances on a drive is the wrong way to measure it: a drive that fails at the 1 gets four chances there, so a chance-based number says 93% for drives that score 69% (the drive model fixes this).
+
+**F21. A team's touchdowns: the next game is 9.0% forecastable (7.0 to 10.9), the rest of the season 23.9% (15.5 to 31.0).** The opponent's touchdowns allowed so far add 1.9% (1.1 to 2.7) to the next game. For the rest of the season, the team's touchdowns so far (24.2%) and its EPA (24.0%) each do as well as everything; its expected touchdowns do worse (15.3%). **The team's ceiling is unmeasured:** summing the chances' expected touchdowns isn't a fair hindsight for a team (the same goal-line trap as F20: 13.6% next game, 47.6% rest of season), and knowing only where each drive started explains about 1% (correlation 0.10): a team's touchdowns are decided after the drive starts.
+
+**F22. Thrown touchdowns: like rushing and receiving, but a quarterback keeps a little.** Next game: 7.2% from games so far (5.1 to 9.2), 26.1% knowing every throw, 74% dice. Rest of season: 43.3% (it includes how many games he starts), 85.0% knowing every throw. Past thrown touchdowns forecast as well as expected ones (40.1% against 38.8%; expected against actual −2.3%, −10.5 to +5.6) and **add to them** (+5.5%, 0.4 to 10.3), unlike receivers. Thrown touchdowns over expected per throw repeat 0.12 half to half (0.04 to 0.20) and 0.09 season to season (he keeps 9%); it takes about 1,280 throws (two and a half seasons) before a quarterback's own rate over expected is worth as much as the league's. Likely reason: a throw's expected touchdowns know the situation, not the passer or his offense.
+
+**F23. Method C can work on the allocation side: who gets the ball near the goal line is a role.** A player's share of his team's chances inside the 10 repeats half to half: RB 0.63, QB 0.57, TE 0.49, WR 0.44 (inside the 20: 0.68, 0.63, 0.61, 0.57; all chances 0.78, 0.76, 0.83, 0.79). Beyond his share of all chances, the goal-line share still carries: QB 0.28, TE 0.13, RB 0.12, WR 0.09. What C still has to show is the other half: forecasting a team's trips and its calling there.
+
+### Claude's expectations against the results
+
+| # | Claude expected | Result | |
+|---|---|---|---|
+| I-a ahead | 60%: Poisson around the forecast calibrated within 2 points; 70%: concentration adds under 0.5% | Within 2 points except the top tenth (3); concentration −0.10% | Held, both |
+| I-b | Red-zone field-goal drives 35 to 45% chance of a touchdown; repeats about 0.1; 30% that it adds 0.5%+ | 55% at their closest (38.5% by the flawed chance sum); repeats 0.08 and 0.03; adds nothing | Size wrong (higher); repeat right; didn't add, as the 70% side said |
+| S-1 | Next game 8 to 12%; hindsight about 40% | 7.9%; 35.8% | Just under both |
+| S-2 | Next game 5 to 8%; rest of season 25 to 35%; hindsight about 55% | 9.0%; 23.9%; unmeasured | Next game higher, rest just under |
+| S-3 | Rest of season about 30%, next game about 8%; keeps 10 to 20% | 43.3% (counts starts); 7.2%; keeps 9% | Rest higher, next game right, keeps just under |
+| S-4 | RB about 0.55, WR and TE about 0.4 | RB 0.63, WR 0.44, TE 0.49 | Held, a little higher |
+
+### The case against the second look
+
+- **The team's room wasn't measured.** F21's hindsight numbers are distorted, so "9% of the next game" can't be read against a ceiling. A drive-aware hindsight (each drive's chances, stopping at its first touchdown) would fix it.
+- **Thrown expected touchdowns ignore the passer and the offense**, so F22's "a quarterback keeps 9%" is part skill, part offense (idea I61).
+- **Next game assumes he plays.** Real next-game props must also price the chance he doesn't.
+- **The 0/1/2+ check covers players' rushing and receiving touchdowns only**; thrown touchdowns (1.4 a game, far more 2+) weren't checked, and Poisson may be too narrow there.
+- **The drive model knows nothing about the teams**, so a near miss is measured against the league's average offense; a good offense's near misses are less surprising.
+- **Near misses were tested on 416 half-seasons and 576 rest-of-season rows**: a weak effect (F20's +0.09 partial correlation in halves) could hide in that noise.
+
+### What this changes for the brief
+
+- **The forecast's chance of 0, 1, 2+ comes from a Poisson count around its average** (F18); no concentration term. Thrown touchdowns get their own check.
+- **The looking-back luck measure** is touchdowns minus expected, in dice spreads, with the chance of scoring at least that many (F19).
+- **Near misses are built as a description** (the drive model's closest chance on each field-goal drive, F20), marked noise in `CONSISTENCY.md`, and not used as a forecasting input.
+- **Teams:** forecast from the team's touchdowns, efficiency and the opponent (F21); the build measures the team's ceiling with a drive-aware hindsight before reading any gain.
+- **Thrown touchdowns** are in, with their own regression share (about 9%, F22).
+- **Method C** has a stable allocation side (F23); it waits for the game simulator for the trips.
