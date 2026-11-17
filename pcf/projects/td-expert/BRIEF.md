@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-16, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-16: explored, verdict GO; 2026-11-17: the CEO's calls made, second look done, still GO; waiting for the CEO to agree it) · **Layer:** expert · **Cadence:** in_season
+**Status:** agreed (2026-11-17, the CEO: "I approve the brief"; explored 2026-11-16, verdict GO; the CEO's calls and the second look are under "The CEO's calls" and "The CEO's ideas, and the second look"; the build runs in its own session, from this file and EXPLORATION.md) · **Layer:** expert · **Cadence:** in_season
 
 ## What the CEO asked for
 *Word for word, 2026-11-16.*

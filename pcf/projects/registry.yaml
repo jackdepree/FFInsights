@@ -534,7 +534,7 @@ projects:
   - id: td-expert
     name: Touchdown expert
     phase: 1
-    status: exploring
+    status: brief
     horizon: later
     cadence: [in_season]
     depends_on: [opportunity-quality, team-efficiency]
@@ -549,8 +549,9 @@ projects:
       A and B built, C explored. Second look (2026-11-17, still GO): next game 7.9% (hindsight
       35.8%); teams 9.0% next game, 23.9% rest of season; a Poisson count around the forecast gives
       calibrated 0/1/2+; near misses on field-goal drives are a description, noise as an input;
-      a QB keeps about 9% of thrown touchdowns over expected. Brief waiting for the CEO's
-      agreement; the build runs in its own session.
+      a QB keeps about 9% of thrown touchdowns over expected. Brief agreed 2026-11-17 ("I
+      approve the brief"): near misses built as a description only; the team ceiling is measured
+      first in the build; the build runs in its own session.
 
   - id: aging
     name: Aging curves
