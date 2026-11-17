@@ -1,0 +1,19 @@
+pinned by name (rough): 103,162 of 746,557 chances of 1
+
+-- map as saved: 2024, fit on 2023 --
+  depth of target (yards)    live  17.25  +personnel  19.38  loss +1.71% (-0.04162 to -0.02834)
+  completion                 live   3.61  +personnel   4.67  loss +0.85% (-0.00720 to -0.00337)
+  sack                       live   1.12  +personnel   1.69  loss +1.08% (-0.00408 to -0.00101)
+  pressure                   live   4.30  +personnel   4.84  loss +0.48% (-0.00404 to -0.00169)
+  rushing yards              live   2.36  +personnel   2.82  loss +0.67% (-0.01077 to -0.00556)
+  successful run             live   5.67  +personnel   6.03  loss +0.27% (-0.00331 to -0.00026)
+  successful dropback        live   1.95  +personnel   2.69  loss +0.56% (-0.00468 to -0.00294)
+
+-- pins undone: 2024, fit on 2023 --
+  depth of target (yards)    live  17.25  +personnel  24.07  loss +5.12% (-0.11209 to -0.09814)
+  completion                 live   3.61  +personnel   5.60  loss +1.66% (-0.01211 to -0.00847)
+  sack                       live   1.12  +personnel  15.28  loss +22.35% (-0.05718 to -0.04839)
+  pressure                   live   4.30  +personnel  10.04  loss +4.78% (-0.03266 to -0.02458)
+  rushing yards              live   2.36  +personnel   5.47  loss +1.92% (-0.02689 to -0.02053)
+  successful run             live   5.67  +personnel   8.25  loss +2.06% (-0.01568 to -0.01081)
+  successful dropback        live   1.95  +personnel   2.75  loss +0.61% (-0.00527 to -0.00298)

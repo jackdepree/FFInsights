@@ -27,6 +27,12 @@ class Outcome:
     # Penalties: the call fields are charted differently on plays wiped out by a penalty, which
     # "explained" 28% of their error by leakage (EXPLORATION F2), so the situation only.
     situation_only: bool = False
+    # Yards: how far past the goal line a value can reach (0 for yards gained, 10 for a target's
+    # depth, the back of the end zone). Forecasts are clipped to that and to the own goal line.
+    end_zone: float | None = None
+    # Platt recalibration inside the training window (models.fit), for the chances whose
+    # calibration slope failed on 2023-2024 (decision 0036, call 17); the vault checks it.
+    recalibrate: bool = False
 
     def rows(self, plays: pl.DataFrame) -> pl.DataFrame:
         """The play table's rows this outcome is scored on, with `y`."""
@@ -45,14 +51,14 @@ class Outcome:
 
 P, A = "probability", "amount"
 OUTCOMES: tuple[Outcome, ...] = (
-    Outcome("rush_yards_exp", "rushing yards", "run", "yards", A),
+    Outcome("rush_yards_exp", "rushing yards", "run", "yards", A, end_zone=0),
     Outcome("run_stuffed_prob", "run stuffed (0 or fewer)", "run", "stuffed", P),
     Outcome("run_explosive_prob", "explosive run (10+)", "run", "explosive_run", P),
     Outcome("run_success_prob", "successful run", "run", "success_y", P),
     Outcome("run_first_down_prob", "first down on a run", "run", "first_down_y", P),
     Outcome("run_td_prob", "touchdown on a run", "run", "td", P),
     Outcome("pressure_prob", "pressure", "dropback", "pressure_y", P, FIRST_PARTICIPATION),
-    Outcome("sack_prob", "sack", "dropback", "sack_y", P),
+    Outcome("sack_prob", "sack", "dropback", "sack_y", P, recalibrate=True),
     Outcome(
         "time_to_throw_exp",
         "time to throw (s)",
@@ -61,12 +67,19 @@ OUTCOMES: tuple[Outcome, ...] = (
         A,
         FIRST_PARTICIPATION,
     ),  # fmt: skip
-    Outcome("dropback_yards_exp", "dropback yards", "dropback", "yards", A),
-    Outcome("pass_explosive_prob", "explosive pass (20+)", "dropback", "explosive_pass", P),
+    Outcome("dropback_yards_exp", "dropback yards", "dropback", "yards", A, end_zone=0),
+    Outcome(
+        "pass_explosive_prob",
+        "explosive pass (20+)",
+        "dropback",
+        "explosive_pass",
+        P,
+        recalibrate=True,
+    ),  # fmt: skip,
     Outcome("dropback_success_prob", "successful dropback", "dropback", "success_y", P),
     Outcome("dropback_first_down_prob", "first down on a dropback", "dropback", "first_down_y", P),
     Outcome("dropback_td_prob", "touchdown on a dropback", "dropback", "td", P),
-    Outcome("air_yards_exp", "depth of target (yards)", "attempt", "air_yards_y", A),
+    Outcome("air_yards_exp", "depth of target (yards)", "attempt", "air_yards_y", A, end_zone=10),
     Outcome("completion_prob", "completion", "attempt", "complete_y", P),
     Outcome("penalty_prob", "penalty", "snap", "penalty_y", P, situation_only=True),
 )

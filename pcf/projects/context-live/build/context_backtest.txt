@@ -1,0 +1,30 @@
+context-live context (backtest, run 70eeeeac16d24ae1aa4445aa10f4e695): points of success rate (x100)
+
+== offense: 1117 player-seasons with 200+ expected plays
+  player_seasons 1117.000, spread 0.713, p5 -1.267, p95 1.071, lowest -2.932, highest 2.241, share_of_actual_variance 0.033, share_from_situation 0.804, spread_calls 0.316
+  consistency ctx_success: week r 0.32 (0.28 to 0.36), season r 0.17 (0.10 to 0.23), trait
+  consistency ctx_success_sit: week r 0.40 (0.36 to 0.44), season r 0.14 (0.08 to 0.21), trait
+  consistency ctx_calls: week r 0.09 (0.05 to 0.14), season r 0.08 (0.01 to 0.15), trait
+    WR    281 players: mean -0.27, spread 0.66, range -2.1 to +1.6
+    QB     93 players: mean -0.17, spread 0.82, range -2.9 to +1.4
+    OL    447 players: mean -0.12, spread 0.68, range -2.1 to +1.9
+    RB    137 players: mean -0.11, spread 0.79, range -2.4 to +2.2
+    TE    159 players: mean +0.11, spread 0.69, range -1.5 to +1.5
+
+== defense: 1185 player-seasons with 200+ expected plays
+  player_seasons 1185.000, spread 0.671, p5 -1.150, p95 0.961, lowest -3.313, highest 1.981, share_of_actual_variance 0.046, share_from_situation 0.768, spread_calls 0.324
+  consistency ctx_success: week r 0.28 (0.24 to 0.32), season r 0.21 (0.15 to 0.28), trait
+  consistency ctx_success_sit: week r 0.18 (0.14 to 0.23), season r 0.22 (0.15 to 0.28), trait
+  consistency ctx_calls: week r 0.18 (0.14 to 0.22), season r 0.13 (0.07 to 0.20), trait
+    DB    478 players: mean -0.23, spread 0.67, range -3.3 to +1.5
+    LB    294 players: mean -0.09, spread 0.59, range -2.2 to +1.8
+    DL    413 players: mean +0.04, spread 0.70, range -2.6 to +2.0
+
+  offenses ctx_success: week r 0.44 (0.25 to 0.59), season r 0.27, typical size 1.37, state
+  offenses ctx_success_sit: week r 0.41 (0.22 to 0.57), season r 0.31, typical size 1.24, trait
+  offenses ctx_calls: week r 0.18 (-0.03 to 0.37), season r 0.09, typical size 0.63, noise
+  offenses actual: week r 0.68 (0.56 to 0.78), season r 0.45, typical size 6.16, trait
+  defenses ctx_success: week r 0.33 (0.14 to 0.51), season r 0.26, typical size 1.37, state
+  defenses ctx_success_sit: week r 0.17 (-0.04 to 0.36), season r 0.09, typical size 1.24, noise
+  defenses ctx_calls: week r 0.40 (0.22 to 0.56), season r 0.27, typical size 0.63, state
+  defenses actual: week r 0.35 (0.16 to 0.52), season r 0.24, typical size 6.16, state

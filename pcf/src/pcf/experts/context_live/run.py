@@ -25,7 +25,7 @@ import json
 import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
 import numpy as np
@@ -151,7 +151,8 @@ def fit_rung(
     if transform is not None:
         train = transform(train)
     fields = plays.FIELD_SETS[rung.fields] if rung.fields else []
-    model = models.fit(with_weights(train, season), outcome, fields, rung.method, seed=seed)
+    model = models.fit(with_weights(train, season), outcome, fields, rung.method, seed=seed,
+                       calibrate=outcome.recalibrate)  # fmt: skip
     return model, train_end(train)
 
 
@@ -358,6 +359,7 @@ def progress(path: Path, text: str) -> None:
 def backtest(
     seasons: Sequence[int] = TEST_SEASONS, names: Sequence[str] | None = None,
     open_vault: bool = False, nulls: int = 20, noise_refits: int = 5, tag: str = "backtest",
+    fixed: dict[str, str] | None = None,
 ) -> dict:  # fmt: skip
     """Every outcome walk-forward over `seasons`, each rung, the choice of what ships, the nulls
     and the fitting noise. Logged as one MLflow attempt; the scored frames go to
@@ -400,6 +402,10 @@ def backtest(
                 noise = fitting_noise(data, o, seasons, live, sit, noise_refits)
             res["noise"] = noise
             choice = choose(frame, o, noise=noise["gain_sd"])
+            if fixed is not None:
+                # the vault scores the rung chosen on the development seasons; never re-chosen
+                choice["rule_on_these_seasons"] = choice["shipped"]
+                choice["shipped"] = fixed[o.name]
             res["choice"] = {k: (v.__dict__ if isinstance(v, Comparison) else v)
                              for k, v in choice.items()}  # fmt: skip
             if not o.situation_only:
@@ -435,6 +441,7 @@ def backtest(
         path.parent.mkdir(parents=True, exist_ok=True)
         history.write_parquet(path)
         (work / "results.json").write_text(json.dumps(results, indent=1, default=str))
+        (work / "run.json").write_text(json.dumps({"run_id": run.info.run_id, "path": str(path)}))
         mlflow.log_text(json.dumps(results, indent=1, default=str), "results.json")
         results["_run_id"] = run.info.run_id
         results["_history"] = str(path)
@@ -445,7 +452,7 @@ def backtest(
 def check_point_in_time(season: int, n_games: int = 4, seed: int = 0) -> dict:
     """Rebuild sample games' play rows from an inputs view at each game's own `as_of` and compare
     them with the season build (the largest difference in any field must be 0), and check that a
-    view a day before that `as_of` minus 13 days holds none of the game's FTN rows."""
+    view at the game's morning after (the play-by-play's known_at) holds none of its FTN rows."""
     gw = Gateway(TableSource(seasons=[season - 1, season]))
     full = load([season])
     ids = full["game_id"].unique().sort().sample(n_games, seed=seed).to_list()
@@ -466,10 +473,95 @@ def check_point_in_time(season: int, n_games: int = 4, seed: int = 0) -> dict:
                 continue
             d = (x.cast(pl.Float64).fill_null(-999) - y.cast(pl.Float64).fill_null(-999)).abs()
             worst = max(worst, float(d.max() or 0.0))
-        kickoff_after = full.filter(c("game_id") == gid)["known_at"].min()
-        before = gw.view(kickoff_after, "in_season", plays.INPUTS).table("play", seasons=[season])
+        # the morning after: the play-by-play's own known_at, before FTN's charting is out
+        spine = gw.view(END_OF_TIME, "in_season", {"play": ("pbp",)}).table("play", [season])
+        morning = spine.filter(c("game_id") == gid)["known_at"].max()
+        before = gw.view(morning, "in_season", plays.INPUTS).table("play", seasons=[season])
         early += before.filter(c("game_id") == gid, c("ftn_known_at").is_not_null()).height
     return {"gap": worst, "early_ftn": early, "games": ids}
+
+
+def personnel_check(names: Sequence[str], season: int = 2024, seed: int = 0) -> dict:
+    """Step 5 of the brief's plan: the in-season map's expected personnel (backs, tight ends,
+    receivers; linemen, linebackers, defensive backs) added to the live call fields. The map's
+    walk-forward history starts in 2023, so it's fit on 2023 and scored on `season` only; the
+    live trees are refit the same way for the comparison. Discovery: not in the vault.
+
+    **Leaky with the saved map:** the map pins players the play-by-play names on the play (the
+    target, the tackler, the sacker) and balances each play to 11, so its chances carry part of
+    the play's result (projects/context-live/explore/personnel_pins.py). Kept to test a map edition
+    without the play's own names (idea I63); never ship its gain as signal."""
+    from pcf.experts.context_live import context
+
+    data = load([season - 1, season])
+    crew = context.personnel(context.on_field([season - 1, season]))
+    data = data.join(crew, on=plays.KEYS, how="left")
+    fields = plays.FIELD_SETS["live"] + context.PERSONNEL
+    plays.FIELD_SETS["personnel"] = fields
+    rung = Rung("6-personnel-trees", "personnel", "trees")
+    BY_RUNG[rung.name] = rung
+    out = {}
+    for name in names:
+        o = next(x for x in OUTCOMES if x.name == name)
+        first = max(o.first_season, season - 1)
+        sub = data.filter(c("season") >= first)
+        frame, _ = walk(sub, o, [season], [BY_RUNG["0-base"], BY_RUNG["4-live-trees"], rung],
+                        seed=seed)  # fmt: skip
+        comp = paired(frame, rung.name, "4-live-trees")
+        out[name] = {
+            "rows": frame.height,
+            "coverage": float(frame.join(crew, on=plays.KEYS, how="semi").height / frame.height),
+            "live_share": share_removed(frame, "4-live-trees"),
+            "personnel_share": share_removed(frame, rung.name),
+            "loss_gain": loss_gain(frame, rung.name, "4-live-trees"),
+            "comparison": comp.__dict__,
+        }
+    return out
+
+
+def final(tag: str, through: int, live: int, checks: dict[str, bool]) -> dict:
+    """The champion: each outcome's shipped rung (from the backtest `tag`) fitted on every season
+    through `through`, logged as one model and registered if every check passed; and the live
+    output, its forecasts for season `live`'s plays known so far, saved as
+    outputs/context-live/<run_id>/live.parquet."""
+    from pcf.core import tracking
+
+    if through != live - 1:
+        raise ValueError("the champion is trained on every season before the live one")
+    res = json.loads((cache_dir() / tag / "results.json").read_text())
+    prepare(range(plays.FIRST_SEASON, live + 1))
+    data = load(range(plays.FIRST_SEASON, live + 1))
+    fitted, rows, ends = {}, [], []
+    end = data.filter(c("season") <= through).select(known(data).max()).item()
+    now = datetime.now(UTC)
+    with tracking.attempt(ID, train_end=end, name=f"champion through {through}",
+                          params={"from": tag, "through": through}) as run:  # fmt: skip
+        for o in OUTCOMES:
+            rung = BY_RUNG[res[o.name]["choice"]["shipped"]]
+            # trained on every season before the live one, known before its first as_of
+            m, e = fit_rung(data, o, rung, live)
+            fitted[o.name] = m
+            ends.append(e)
+            # only the plays whose as_of has come: a game's charting is known 14 days after it
+            test = o.rows(data.filter(c("season") == live, c("as_of") <= now))
+            if test.height:
+                pred = m.predict(test)
+                frame = test.select(*plays.KEYS, "season", "week", "as_of", "y",
+                                    block=pl.lit("live")).with_columns(
+                    [pred[x].alias(f"{rung.name}:{x}") for x in pred.columns]
+                )  # fmt: skip
+                rows.append(history_rows(frame, o, rung.name, {(live, rung.name): (m, e)},
+                                         run.info.run_id))  # fmt: skip
+        model = models.ContextModel(fitted, train_end=str(max(ends)))
+        tracking.log_model(model)
+        passed = tracking.log_checks(checks)
+        version = tracking.register(ID) if passed else None
+        out_dir = get_config().zone("outputs") / ID / run.info.run_id
+        out_dir.mkdir(parents=True, exist_ok=True)
+        if rows:
+            pl.concat(rows).write_parquet(out_dir / "live.parquet")
+    return {"run_id": run.info.run_id, "version": version, "live_rows": sum(r.height for r in rows),
+            "train_end": str(max(ends))}  # fmt: skip
 
 
 def main(argv: Sequence[str] | None = None) -> None:
@@ -483,6 +575,7 @@ def main(argv: Sequence[str] | None = None) -> None:
     ap.add_argument("--noise", type=int, default=5)
     ap.add_argument("--tag", default="backtest")
     ap.add_argument("--open-vault", action="store_true")
+    ap.add_argument("--fixed-from", default="", help="score the rungs this backtest shipped")
     a = ap.parse_args(argv)
     seasons = [int(x) for x in a.seasons.split(",")]
     if a.what == "prepare":
@@ -491,7 +584,11 @@ def main(argv: Sequence[str] | None = None) -> None:
         print(check_point_in_time(max(seasons)))
     else:
         names = [x for x in a.outcomes.split(",") if x] or None
-        res = backtest(seasons, names, a.open_vault, a.nulls, a.noise, a.tag)
+        fixed = None
+        if a.fixed_from:
+            prev = json.loads((cache_dir() / a.fixed_from / "results.json").read_text())
+            fixed = {k: v["choice"]["shipped"] for k, v in prev.items()}
+        res = backtest(seasons, names, a.open_vault, a.nulls, a.noise, a.tag, fixed)
         print(res["_run_id"], res["_history"])
 
 

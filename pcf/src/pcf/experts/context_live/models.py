@@ -110,6 +110,7 @@ class Fitted:
     method: str
     fields: list[str]
     parts: dict[str, Any] = field(default_factory=dict)
+    end_zone: float | None = None  # Outcome.end_zone: clip yards to the field
 
     def predict(self, rows: pl.DataFrame) -> pl.DataFrame:
         n = rows.height
@@ -119,6 +120,8 @@ class Fitted:
             x = matrix(rows, self.fields)
             if self.kind == "probability":
                 out = {"mean": self.parts["mean"].predict_proba(x)[:, 1]}
+                if "platt" in self.parts:
+                    out["mean"] = platt_apply(self.parts["platt"], out["mean"])
             else:
                 mean = self.parts["mean"].predict(x)
                 out = {"mean": mean}
@@ -128,6 +131,12 @@ class Fitted:
                 else:
                     for q in LEVELS:
                         out[q] = self.parts[q].predict(x)
+        if self.kind == "amount" and self.end_zone is not None:
+            # no play gains more than the distance to the end zone (or its back line, for a
+            # target's depth) or loses more than the distance to its own goal line
+            to_goal = rows["yardline_100"].to_numpy().astype(float)
+            for k in out:
+                out[k] = np.clip(out[k], to_goal - 100, to_goal + self.end_zone)
         if self.kind == "amount":
             qs = np.sort(np.column_stack([out[q] for q in LEVELS]), axis=1)
             out.update({q: qs[:, i] for i, q in enumerate(LEVELS)})
@@ -136,16 +145,57 @@ class Fitted:
         return pl.DataFrame({k: np.asarray(v, dtype=float) for k, v in out.items()})
 
 
+CALIBRATION_SHARE = 0.2  # the latest fifth of a training window fits the recalibration
+
+
+def _logit(p: np.ndarray) -> np.ndarray:
+    p = np.clip(p, 1e-6, 1 - 1e-6)
+    return np.log(p / (1 - p))
+
+
+def platt_fit(p: np.ndarray, y: np.ndarray, w: np.ndarray, steps: int = 50) -> tuple[float, float]:
+    """Platt scaling: a and b in sigmoid(a + b·logit(p)), by weighted Newton steps."""
+    x = np.column_stack([np.ones_like(p), _logit(p)])
+    beta = np.array([0.0, 1.0])
+    for _ in range(steps):
+        mu = 1 / (1 + np.exp(-(x @ beta)))
+        hess = x.T @ (x * (w * mu * (1 - mu))[:, None]) + 1e-9 * np.eye(2)
+        step = np.linalg.solve(hess, x.T @ (w * (y - mu)))
+        beta += step
+        if np.abs(step).max() < 1e-10:
+            break
+    return float(beta[0]), float(beta[1])
+
+
+def platt_apply(ab: tuple[float, float], p: np.ndarray) -> np.ndarray:
+    return 1 / (1 + np.exp(-(ab[0] + ab[1] * _logit(p))))
+
+
 def fit(
-    train: pl.DataFrame, outcome: Outcome, fields: list[str], method: str, seed: int = 0
-) -> Fitted:
-    """Fit one rung on training rows with `y` and `weight`."""
+    train: pl.DataFrame, outcome: Outcome, fields: list[str], method: str, seed: int = 0,
+    calibrate: bool = False,
+) -> Fitted:  # fmt: skip
+    """Fit one rung on training rows with `y` and `weight`. `calibrate` (chances only): the rung
+    is first fit without the latest fifth of the window (by season and week), Platt scaling is
+    fit on that fifth, and the rung is then refit on the whole window (VALIDATION.md §7:
+    recalibration inside the training folds)."""
+    if calibrate and outcome.kind == "probability" and method != "base":
+        order = train.sort("season", "week", "game_id", "play_id")
+        cut = int(order.height * (1 - CALIBRATION_SHARE))
+        early, late = order[:cut], order[cut:]
+        m = fit(early, outcome, fields, method, seed)
+        p = m.predict(late)["mean"].to_numpy()
+        lw = late["weight"].to_numpy() if "weight" in late.columns else np.ones(late.height)
+        ab = platt_fit(p, late["y"].to_numpy().astype(float), lw)
+        out = fit(train, outcome, fields, method, seed)
+        out.parts["platt"] = ab
+        return out
     if method not in METHODS:
         raise ValueError(f"method must be one of {METHODS}")
     y = train["y"].to_numpy().astype(float)
     w = train["weight"].to_numpy().astype(float) if "weight" in train.columns else np.ones(len(y))
     kind = outcome.kind
-    out = Fitted(outcome.name, kind, method, list(fields))
+    out = Fitted(outcome.name, kind, method, list(fields), end_zone=outcome.end_zone)
     if method == "base":
         out.parts["mean"] = float(np.average(y, weights=w))
         if kind == "amount":

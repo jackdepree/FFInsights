@@ -1,0 +1,8 @@
+successful run               A (4-live-trees) share   5.85 loss 0.6449 | k=100 share   3.71 loss 0.6562 | k=300 share   4.15 loss 0.6540 | k=1000 share   3.65 loss 0.6566 | corr(A, k300) 0.81
+rushing yards                A (4-live-trees) share   2.43 loss 1.2049 | k=100 share   1.24 loss 1.2207 | k=300 share   1.97 loss 1.2129 | k=1000 share   1.72 loss 1.2194 | corr(A, k300) 0.77
+pressure                     A (3-live-linear) share   4.23 loss 0.5981 | k=100 share   3.23 loss 0.6029 | k=300 share   3.49 loss 0.6017 | k=1000 share   3.06 loss 0.6041 | corr(A, k300) 0.79
+sack                         A (3-live-linear) share   1.42 loss 0.2357 | k=100 share   0.60 loss 0.2408 | k=300 share   1.14 loss 0.2378 | k=1000 share   1.12 loss 0.2387 | corr(A, k300) 0.71
+time to throw (s)            A (4-live-trees) share  17.40 loss 0.2229 | k=100 share  14.73 loss 0.2286 | k=300 share  14.23 loss 0.2293 | k=1000 share  11.86 loss 0.2332 | corr(A, k300) 0.88
+successful dropback          A (4-live-trees) share   2.40 loss 0.6761 | k=100 share   0.94 loss 0.6837 | k=300 share   1.28 loss 0.6820 | k=1000 share   1.25 loss 0.6822 | corr(A, k300) 0.65
+depth of target (yards)      A (4-live-trees) share  18.16 loss 2.0605 | k=100 share  15.66 loss 2.1316 | k=300 share  14.64 loss 2.1487 | k=1000 share  11.54 loss 2.2029 | corr(A, k300) 0.90
+completion                   A (4-live-trees) share   3.92 loss 0.6255 | k=100 share   2.80 loss 0.6314 | k=300 share   3.02 loss 0.6303 | k=1000 share   2.67 loss 0.6327 | corr(A, k300) 0.83

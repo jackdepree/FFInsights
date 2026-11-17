@@ -137,6 +137,17 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | WPA per play / per series, adjusted | team-efficiency (H40, H44) | Win probability added | off 0.51, def 0.35 / 0.34 | 0.41 / 0.28 | trait | No: −4.7% / −6.7% against EPA, +0.0% beside it (F6) | Late close plays carry most of it |
 | EPA per pass / per run, adjusted | team-efficiency | | off 0.57 / 0.39, def 0.26 / 0.30 | 0.45 / 0.28, 0.28 / 0.26 | trait | Not tested apart | Run defense repeats more than pass defense, as in elo (H7) |
 
+**Context measures** (context-live build, 2026-11-17): a play's context is its walk-forward expected success (run or dropback, the shipped model) minus the league's success rate on the training seasons. Per **player** per regular-season game (weighted by participation-late's chance he was on the field; player-seasons with 200+ expected plays, 2023-2024) and per **team** per game (offense: its own plays; defense: its opponents'). In points of success rate. Measured with `pcf.experts.context_live.context.build` (`projects/context-live/build/context_backtest.txt`).
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| A player's context, `ctx_success` | context-live (H66) | The average expected success of the plays he was on, minus the league's | off 0.32 (0.28–0.36), def 0.28 (0.24–0.32) | 0.17 / 0.21 | trait | Not a forecast; spread 0.71 / 0.67 points across player-seasons, 3% / 5% of the spread in players' actual on-field success (context-live#R9) | 80% / 77% of it is the situation alone (down and distance: who plays third downs) |
+| A player's situation-only context, `ctx_success_sit` | context-live | The same from the situation-only model | off 0.40 (0.36–0.44), def 0.18 (0.14–0.23) | 0.14 / 0.22 | trait | Not tested | An offensive player's role (third-down back, short-yardage) repeats more than his calls |
+| A player's call-added context, `ctx_calls` | context-live | `ctx_success` minus `ctx_success_sit`: what the calls added | off 0.09 (0.05–0.14), def 0.18 (0.14–0.22) | 0.08 / 0.13 | trait, faint | Not tested | Spread 0.32 points; the calls a player sees are close to the same for everyone |
+| A team's context, `ctx_success` | context-live | Its plays' average expected success, minus the league's | off 0.44 (0.25–0.59), def 0.33 (0.14–0.51) | 0.27 / 0.26 | state | Not tested | Typical size 1.4 points; only 32 season pairs (2023 to 2024), so the season r has a wide interval |
+| A team's situation-only context | context-live | The same from the situation alone | off 0.41 (0.22–0.57), def 0.17 (−0.04–0.36) | 0.31 / 0.09 | off trait, def noise | Not tested | The offense's situations repeat (it sets its own down and distance); the defense's don't |
+| A team's call-added context, `ctx_calls` | context-live (I65) | What its calls add to expected success beyond the situation | off 0.18 (−0.03–0.37), def 0.40 (0.22–0.56) | 0.09 / 0.27 | off noise, def state | Not tested | **A defense's calls are steadier than an offense's** (I65 failed as stated: neither repeats at 0.3 season to season). Typical size 0.6 points |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
