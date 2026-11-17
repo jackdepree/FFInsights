@@ -79,7 +79,8 @@ class Expert(ABC):
     """One model. Subclasses set the class attributes and the four methods.
 
     - `inputs`: a table name → the parts it reads, or a registry id → the pinned version of that
-      model's outputs. The gateway refuses anything else.
+      model's outputs (`"<id>/<variant>"` for one variant's; decision 0037). The gateway refuses
+      anything else.
     - `run` (in-season): the prediction moment, one of `pcf.data.timeline.moments.RUNS`, or
       `KICKOFF` for a benchmark.
     - `benchmark`: a yardstick from outside PCF (ECR, the closing line). Scored like a model, but
@@ -189,9 +190,10 @@ def check_expert(expert: type[Expert] | Expert, path=None) -> None:
     needs = set()
     for name, value in cls.inputs.items():
         if isinstance(value, int):
-            if name not in entries:
+            project = project_of(name)
+            if project not in entries:
                 problems.append(f"input {name!r} isn't a registry project")
-            needs.add(name)
+            needs.add(project)
             continue
         if name not in TABLES:
             problems.append(f"input {name!r} is neither a table nor a project")
@@ -211,6 +213,12 @@ def check_expert(expert: type[Expert] | Expert, path=None) -> None:
             problems.append(f"depends_on lists model {project} but inputs don't read it")
     if problems:
         raise ValueError(f"{cls.__name__} ({cls.id}): " + "; ".join(problems))
+
+
+def project_of(name: str) -> str:
+    """The registry id of a model input: `elo` for `elo` and for one of its variants, `elo/margin`
+    (decision 0037)."""
+    return name.partition("/")[0]
 
 
 def check_output(df: pl.DataFrame, keys: list[str], kind: str = "amount") -> None:

@@ -263,9 +263,10 @@ projects:
   - id: crude-forecaster
     name: Crude forecaster (the yardstick for incremental gains)
     phase: 0
-    status: brief
+    status: building
     horizon: next
     depends_on: [baselines, validation-harness, elo, team-efficiency, participation, pace, schemes-v2]
+    cadence: [in_season]
     summary: "The CEO's idea, 2026-11-15: \"draft a crude and simple forecaster to measure incremental gains\", so ideas, hunches and experts are all scored the same way until the real products exist (CLAUDE.md, \"One yardstick for incremental gains\"). A deliberately simple forecast of player fantasy points and of game results (margin, total) that takes any expert's saved walk-forward output as an extra input and reports what it adds, with an interval. Starts from what exists: baselines' lasso (participation#F15 already scored the participation expert this way) and Elo. Not a product and never shipped as one. The CEO's design (2026-11-15): forecasts of yards (players' passing, rushing and receiving; a team's gained and allowed) from simple visible inputs, a lasso and boosted trees mixed; an expert's worth read two ways, added alone and its Shapley share of held-out error. Exploration 2026-11-15: GO. Crude inputs remove 61/42/40% of squared error on passing/rushing/receiving yards and 7.5% on team yards; participation is worth 8-25% of what's left on player yards, Elo and team efficiency 0.1-1.1%, schemes nothing clear (projects/crude-forecaster/EXPLORATION.md). Brief agreed 2026-11-15 (the CEO: keep team yards; play level later; only players expected to play at least one snap; yards only for now). The build runs in its own session."
 
   # ---------------------------------------------------------------- Phase 1: experts
@@ -276,6 +277,9 @@ projects:
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
+    history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
+      margin: {1: 21082e26cec94ea1920081554197d201}
+      total: {1: 417b504c3ce84c748d0b541e4de3fcc4}
     summary: Weekly team strength rating in points (margin, offense, defense), with the usual-QB and same-team adjustments and the final-week seed lock. Forecasts margins 0.27 and totals 0.30 points behind the close, win chances 0.019 log loss behind, and wins over the next 3 games and the rest of the season.
     interface:
       inputs: game parts schedule, result; player_game parts roster, snaps, injury (gateway only)
@@ -295,6 +299,8 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
+    history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
+      off_next3_change: {1: 0d6fc9fb783b4198aafb17dc3f730bf1}
     summary: "Offense and defense EPA per play adjusted for schedule strength (a free analog of DVOA). The CEO's pick, 2026-11-12. Kickoff 2026-11-12: hunches H40-H44 (EPA and WPA per series; a propensity model for which plays are representative; double machine learning; several grains; the EPA-WPA gap). The CEO: 1d (its own future is the main test), 2c (both propensities). Exploration 2026-11-12, GO: every play counts (the usual garbage-time rule loses 4.6% / 7.1%); DML with game state plus gap-aware representativeness weights adds +0.6% / +1.4% over all plays equal; series success rate is the most consistent team measure (0.69). H40 unclear, H41 held, H42 held (small), H43 failed, H44 held (small). Round two 2026-11-13 (Claude's I33-I36, the CEO's pick): at the noise ceiling late in the season, the room is early and in who a team is before its plays show it; luck-stripped EPA and a gated stack of measures tie; a weaker pull after a new QB or coach helps offense +0.3-0.4%. Brief agreed 2026-11-13; first build 2026-11-13 (decision 0032, RESULTS.md): every play counted equally beats the usual garbage-time rule by 3.9-7.5% in all four forecasts (R2); DML ties it (R3); the combination ties it over the next 3 games and gains +0.5% over the rest of the season (R4, the exploration found +0.6% / +1.4%); no gain to Elo (R6). Check (R8-R10): the exploration's split was lucky and per-season model refits cost the combination; its honest edge is about +0.3% / +0.9%. Champion: ridge, every play counted equally (the CEO, 2026-11-13). First early-season gain: P3, a weaker pull after a new QB or coach (the CEO's pick), offense +0.3% / +0.5% over the champion, +11.1% for new-coach teams in weeks 1-4 of the rest of season (R11-R13); Rounds three and four (the CEO's picks, I40 and I37): a stronger carryover for unchanged teams and mid-season QB changes both tie (R14, R15). 2026-11-14: P3 joins the champion on offense (the CEO); the vault (2025) opened once (twice, the second after a leakage fix made blind to its scores, R17): every forecast beats the league by more than the backtest (+18.8% to +28.3%), P3 loses a little (-0.4% / -0.7%, within its spread), the defense's rest-of-season ranges ran narrow (64.7%) (R16). Spot-checks R6 and R8 held (R18, R19). The CEO called H41 held, H42 failed, H44 mixed; no technical vetoes. Merged and done 2026-11-14 (the CEO approved); the champion's four forecasts and offense ridge (P3's yardstick) are in the weekly ledger."
     interface:
       inputs: team_game (schedule, efficiency, pregame, opening_coach), player_game (roster, depth); no model outputs
@@ -314,6 +320,12 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
+    history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
+      plays_full: {1: dbdb566f93b34a97befed76c35debe2d}
+      dropbacks_full: {1: d39f53b16f874b9ba3fb67d4c38d9853}
+      runs_full: {1: 252161d4d41c4a1595be839ef139d961}
+      proe_shrunk: {1: 331e6a9ada5d4d26be2bccad4456c32b}
+      pace_oe_shrunk: {1: fdbdc0e59fc44adabd927a917a787ade}
     summary: "Neutral pace, pass rate over expected and no-huddle rate, the drivers of fantasy volume. Tests schemes-v2's trait forecasts (pass rate, tempo) and retrospective traits as features (CEO, 2026-11-10). The CEO's pick for the next expert (2026-11-10); hunches H19-H25 recorded and the brief drafted (projects/pace/BRIEF.md); the CEO chose C (habits as features, volume as the forecast). Exploration GO (2026-11-10): every habit is a trait, full-sample clock-aware pace and full-sample PROE are steadier than neutral-only, volume is noisy but forecastable and is mostly plays per drive (efficiency). Brief agreed 2026-11-10, team level only (players: player-pace). Validated and merged 2026-11-11 (CEO approved, spot-check R1 held); the 12 finals are in the weekly ledger. Done 2026-11-11: the CEO called H22 held."
     interface:
       inputs: team_game (schedule, pregame, opening_coach, tendencies, pace); no model outputs
@@ -437,6 +449,10 @@ projects:
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
+    history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
+      trees_week: {1: 2abc96bcab5047f5b7d505416f538b0f}
+      lasso_h3: {1: f0da29878af8420a9266b12159974a17}
+      lasso_rest: {1: 2de0578db3d7464db2607b0ded902481}
     summary: Each rostered QB, RB, WR and TE's offensive snap share and chance of being active, before each game, over the next 3 games and for the rest of the season. Routes are post-season only, so they aren't here.
     interface:
       inputs: player_game parts snaps, game_status, depth, injury, stats through the gateway; game schedule for the horizons; game schedule and result for trees_week's week and win rate
@@ -588,6 +604,11 @@ projects:
     horizon: now
     cadence: [in_season, retrospective]
     depends_on: [grain-tables, validation-harness]
+    history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
+      pass_oe_rung2: {1: 113ae2db33d9420e94bff28115903c70}
+      shotgun_rung2: {1: dfa8be869d8141c2804a0fd1bd8bdc30}
+      depth_rung2: {1: b3fb56d819f942b5a78148aa42864347}
+      tempo_shrunk: {1: 88ffef17f0334deeb8612daf9c3fa093}
     origin: Schemes_Model.ipynb
     summary: "A full expert (CEO call, 2026-10-28), offense and defense. Started 2026-11-08 with the CEO's hunches H9-H13 (projects/schemes-v2/BRIEF.md): a scheme is what moves with a play caller who changes teams, a role what moves with a player; tested on matchups (rock-paper-scissors), morphs against opposing schemes, game states (diagnosis) and player-scheme fit (QBs and receivers, a movers design close to double machine learning). Measured per regime (head coach and starting QB); head coaches first, coordinators later. Not v1's structure; the exploration first checks why v1 found little. Likely two experts by cadence (live fields vs post-season participation). Exploration's first round done 2026-11-09 (go, EXPLORATION.md F1-F19); CEO direction: traits and anti-traits first, scheme against scheme stays in discovery. Built 2026-11-09: trait forecasts (all four beat their averages, RESULTS R1-R4) and anti-traits (offense keeps the sign on held-out seasons, defense doesn't; R5-R9). Finished 2026-11-10: opening-coach known-at rule and rung 2 (R10, R11); the vault (R12): traits hold except throw depth (ties the league), the pass anti-trait fails. Scheme against scheme found nothing usable (F20-F28). Retrospective traits (CEO call 2026-11-10: a table, not an expert): team_season.charted, each team's charted traits per season with timing columns (R13, decision 0026). Done 2026-11-10 (CEO approved the merge): anti-traits retired; downstream users are pace, player opportunity, which players each team goes after in trades and free agency (H18) and context."
     interface:
