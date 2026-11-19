@@ -1,0 +1,232 @@
+context-live backtest: share of the base rate's squared error removed (%), held out
+rungs: base | sit-lin | sit-trees | live-lin | live-trees | traits | offense | defense
+
+== rushing yards (rush_yards_exp; amount; seasons [2023, 2024]; 27,606 plays; mean 4.242)
+  share:   0.00 |   1.00 |   0.73 |   1.22 |   1.19 |   1.19 |   1.00 |   0.96
+  main loss: 0-base 1.2167, 1-situation-linear 1.2260, 2-situation-trees 1.2134, 3-live-linear 1.2261, 4-live-trees 1.2049, 5-traits-trees 1.2065, offense-trees 1.2068, defense-trees 1.2117
+  situation model: 2-situation-trees; vs base -0.00334 (-0.00498 to -0.00158), 44 weeks
+  live model: 4-live-trees; vs situation -0.00842 (-0.01013 to -0.00686), 44 weeks; gain 0.69% of the loss; fitting noise 0.12
+  traits vs live: +0.00154 (+0.00014 to +0.00306), 44 weeks
+  H65: offense vs situation -0.00655 (-0.00798 to -0.00510), 44 weeks; defense -0.00162 (-0.00243 to -0.00082), 44 weeks; together beyond each -0.03 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 1.20493, best null 1.22105
+  null (calls): beats 20 of 20; real 1.20493, best null 1.21210
+  range: q10-q90 holds 79.7%, above q50 47.5%, width 10.22; by season 2023 79.4%, 2024 80.0%; passes
+  mean by tenth (forecast/actual; average gap 0.20): 1.70/1.68 3.45/3.71 3.97/4.00 4.24/4.39 4.44/4.49 4.60/4.51 4.74/4.76 4.90/4.95 5.18/4.74 6.09/5.20
+  top fields (permutation): yardline_100 1.474, ydstogo 0.1741, is_qb_sneak 0.1175, n_defense_box 0.104, is_trick_play 0.0453, game_seconds_remaining 0.03025
+
+== run stuffed (0 or fewer) (run_stuffed_prob; probability; seasons [2023, 2024]; 27,606 plays; mean 0.187)
+  share:   0.00 |   1.13 |   0.70 |   1.32 |   1.21 |   1.27 |   1.11 |   0.81
+  main loss: 0-base 0.4815, 1-situation-linear 0.4764, 2-situation-trees 0.4787, 3-live-linear 0.4754, 4-live-trees 0.4762, 5-traits-trees 0.4757, offense-trees 0.4767, defense-trees 0.4782
+  situation model: 1-situation-linear; vs base -0.00515 (-0.00647 to -0.00395), 44 weeks
+  live model: 3-live-linear; vs situation -0.00096 (-0.00212 to +0.00040), 44 weeks; gain 0.20% of the loss; fitting noise 0.08
+  traits vs live: +0.00032 (-0.00104 to +0.00149), 44 weeks
+  H65: offense vs situation -0.00192 (-0.00284 to -0.00097), 44 weeks; defense -0.00048 (-0.00107 to +0.00012), 44 weeks; together beyond each -0.00 points of share
+  SHIPPED: 1-situation-linear
+  null (outcomes): beats 20 of 20; real 0.47636, best null 0.48073
+  calibration: error 0.56 points (10 bins), by tenth 0.92, slope 0.93, passes
+  tenths (forecast/actual): 0.133/0.146 0.148/0.143 0.157/0.176 0.164/0.168 0.171/0.162 0.178/0.189 0.187/0.182 0.200/0.197 0.224/0.210 0.285/0.293
+  top fields (permutation): yardline_100 0.0009897, game_seconds_remaining 0.0008246, qtr 0.0007414, ydstogo 0.0007095, goal_to_go 0.000655, down 0.0003201
+
+== explosive run (10+) (run_explosive_prob; probability; seasons [2023, 2024]; 27,606 plays; mean 0.104)
+  share:   0.00 |   1.16 |   0.97 |   1.71 |   1.50 |   1.07 |   1.43 |   1.00
+  main loss: 0-base 0.3346, 1-situation-linear 0.3259, 2-situation-trees 0.3251, 3-live-linear 0.3229, 4-live-trees 0.3221, 5-traits-trees 0.3245, offense-trees 0.3223, defense-trees 0.3250
+  situation model: 1-situation-linear; vs base -0.00876 (-0.00968 to -0.00776), 44 weeks
+  live model: 3-live-linear; vs situation -0.00302 (-0.00368 to -0.00237), 44 weeks; gain 0.93% of the loss; fitting noise 0.42
+  traits vs live: +0.00167 (+0.00069 to +0.00267), 44 weeks
+  H65: offense vs situation -0.00278 (-0.00361 to -0.00205), 44 weeks; defense -0.00008 (-0.00054 to +0.00036), 44 weeks; together beyond each +0.04 points of share
+  SHIPPED: 3-live-linear
+  null (outcomes): beats 20 of 20; real 0.32286, best null 0.33432
+  null (calls): beats 20 of 20; real 0.32286, best null 0.32612
+  calibration: error 0.82 points (10 bins), by tenth 0.91, slope 0.90, passes
+  tenths (forecast/actual): 0.009/0.006 0.070/0.078 0.091/0.101 0.100/0.105 0.108/0.113 0.116/0.112 0.123/0.113 0.132/0.131 0.144/0.127 0.186/0.158
+  top fields (permutation): game_seconds_remaining 0.0008825, yardline_100 0.0006957, goal_to_go 0.0006432, is_trick_play 0.0005863, is_qb_sneak 0.0004489, ydstogo 0.00036
+
+== successful run (run_success_prob; probability; seasons [2023, 2024]; 27,606 plays; mean 0.404)
+  share:   0.00 |   4.92 |   5.64 |   5.04 |   5.90 |   5.36 |   5.74 |   5.72
+  main loss: 0-base 0.6750, 1-situation-linear 0.6504, 2-situation-trees 0.6464, 3-live-linear 0.6497, 4-live-trees 0.6449, 5-traits-trees 0.6480, offense-trees 0.6458, defense-trees 0.6460
+  situation model: 2-situation-trees; vs base -0.02862 (-0.03085 to -0.02632), 44 weeks
+  live model: 4-live-trees; vs situation -0.00145 (-0.00218 to -0.00067), 44 weeks; gain 0.22% of the loss; fitting noise 0.12
+  traits vs live: +0.00309 (+0.00215 to +0.00406), 44 weeks
+  H65: offense vs situation -0.00058 (-0.00139 to +0.00020), 44 weeks; defense -0.00044 (-0.00097 to +0.00011), 44 weeks; together beyond each +0.08 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.64495, best null 0.67610
+  null (calls): beats 20 of 20; real 0.64495, best null 0.64662
+  calibration: error 0.97 points (10 bins), by tenth 1.60, slope 0.96, passes
+  tenths (forecast/actual): 0.241/0.227 0.309/0.321 0.337/0.353 0.355/0.347 0.371/0.351 0.390/0.396 0.424/0.390 0.476/0.464 0.548/0.528 0.683/0.662
+  top fields (permutation): ydstogo 0.02476, down 0.003665, yardline_100 0.002184, game_seconds_remaining 0.001647, defteam_timeouts_remaining 0.0006137, half_seconds_remaining 0.0005902
+
+== first down on a run (run_first_down_prob; probability; seasons [2023, 2024]; 27,606 plays; mean 0.246)
+  share:   0.00 |  24.28 |  23.86 |  24.41 |  24.35 |  24.21 |  24.15 |  24.02
+  main loss: 0-base 0.5583, 1-situation-linear 0.4466, 2-situation-trees 0.4485, 3-live-linear 0.4458, 4-live-trees 0.4457, 5-traits-trees 0.4469, offense-trees 0.4468, defense-trees 0.4476
+  situation model: 1-situation-linear; vs base -0.11174 (-0.11670 to -0.10668), 44 weeks
+  live model: 3-live-linear; vs situation -0.00074 (-0.00208 to +0.00091), 44 weeks; gain 0.17% of the loss; fitting noise 0.41
+  traits vs live: +0.00110 (-0.00033 to +0.00241), 44 weeks
+  H65: offense vs situation -0.00165 (-0.00264 to -0.00072), 44 weeks; defense -0.00085 (-0.00138 to -0.00033), 44 weeks; together beyond each +0.04 points of share
+  SHIPPED: 1-situation-linear
+  null (outcomes): beats 20 of 20; real 0.44657, best null 0.55105
+  calibration: error 0.82 points (10 bins), by tenth 1.15, slope 1.00, passes
+  tenths (forecast/actual): 0.084/0.077 0.107/0.100 0.115/0.127 0.121/0.122 0.127/0.133 0.136/0.125 0.185/0.183 0.348/0.328 0.561/0.528 0.722/0.739
+  top fields (permutation): ydstogo 0.09019, game_seconds_remaining 0.001395, goal_to_go 0.0008611, half_seconds_remaining 0.0005013, yardline_100 0.0004918, posteam_timeouts_remaining 0.0001254
+
+== touchdown on a run (run_td_prob; probability; seasons [2023, 2024]; 27,606 plays; mean 0.035)
+  share:   0.00 |  28.16 |  27.91 |  28.05 |  28.49 |  27.80 |  28.79 |  27.60
+  main loss: 0-base 0.1522, 1-situation-linear 0.0910, 2-situation-trees 0.0918, 3-live-linear 0.0914, 4-live-trees 0.0911, 5-traits-trees 0.0916, offense-trees 0.0909, defense-trees 0.0920
+  situation model: 1-situation-linear; vs base -0.06119 (-0.06490 to -0.05757), 44 weeks
+  live model: 3-live-linear; vs situation +0.00036 (-0.00021 to +0.00091), 44 weeks; gain -0.39% of the loss; fitting noise 0.49
+  traits vs live: +0.00026 (-0.00092 to +0.00141), 44 weeks
+  H65: offense vs situation -0.00097 (-0.00172 to -0.00024), 44 weeks; defense +0.00018 (-0.00012 to +0.00049), 44 weeks; together beyond each +0.02 points of share
+  SHIPPED: 1-situation-linear
+  null (outcomes): beats 20 of 20; real 0.09100, best null 0.14722
+  calibration: error 0.50 points (10 bins), by tenth 0.23, slope 1.02, passes
+  tenths (forecast/actual): 0.001/0.003 0.002/0.003 0.002/0.002 0.003/0.003 0.004/0.003 0.006/0.006 0.009/0.008 0.013/0.012 0.038/0.037 0.290/0.275
+  top fields (permutation): yardline_100 0.01275, goal_to_go 0.001031, ydstogo 0.001023, qtr 0.0001564, score_differential 9.206e-05, half_seconds_remaining 9.046e-05
+
+== pressure (pressure_prob; probability; seasons [2024]; 21,030 plays; mean 0.310)
+  share:   0.00 |   1.03 |   0.65 |   4.23 |   4.30 |   4.06 |   2.82 |   2.35
+  main loss: 0-base 0.6200, 1-situation-linear 0.6151, 2-situation-trees 0.6171, 3-live-linear 0.5981, 4-live-trees 0.5975, 5-traits-trees 0.5987, offense-trees 0.6049, defense-trees 0.6085
+  situation model: 1-situation-linear; vs base -0.00495 (-0.00632 to -0.00346), 22 weeks
+  live model: 3-live-linear; vs situation -0.01703 (-0.01887 to -0.01533), 22 weeks; gain 2.77% of the loss; fitting noise 0.10
+  traits vs live: +0.00063 (-0.00088 to +0.00199), 22 weeks
+  H65: offense vs situation -0.01224 (-0.01381 to -0.01064), 22 weeks; defense -0.00858 (-0.01009 to -0.00706), 22 weeks; together beyond each -0.23 points of share
+  SHIPPED: 3-live-linear
+  null (outcomes): beats 20 of 20; real 0.59807, best null 0.62032
+  null (calls): beats 20 of 20; real 0.59807, best null 0.61526
+  calibration: error 1.34 points (10 bins), by tenth 1.21, slope 0.91, passes
+  tenths (forecast/actual): 0.139/0.155 0.202/0.220 0.229/0.243 0.253/0.269 0.278/0.291 0.306/0.320 0.334/0.337 0.365/0.372 0.411/0.414 0.498/0.482
+  top fields (permutation): down 0.007824, n_blitzers 0.006129, is_play_action 0.003915, is_screen_pass 0.002747, half_seconds_remaining 0.002509, game_seconds_remaining 0.002255
+
+== sack (sack_prob; probability; seasons [2023, 2024]; 42,770 plays; mean 0.067)
+  share:   0.00 |   0.66 |   0.59 |   1.43 |   1.49 |   1.41 |   1.25 |   0.78
+  main loss: 0-base 0.2450, 1-situation-linear 0.2419, 2-situation-trees 0.2421, 3-live-linear 0.2357, 4-live-trees 0.2356, 5-traits-trees 0.2360, offense-trees 0.2366, defense-trees 0.2412
+  situation model: 1-situation-linear; vs base -0.00309 (-0.00355 to -0.00262), 44 weeks
+  live model: 3-live-linear; vs situation -0.00613 (-0.00670 to -0.00548), 44 weeks; gain 2.53% of the loss; fitting noise 0.24
+  traits vs live: +0.00025 (-0.00042 to +0.00086), 44 weeks
+  H65: offense vs situation -0.00549 (-0.00586 to -0.00509), 44 weeks; defense -0.00094 (-0.00121 to -0.00068), 44 weeks; together beyond each +0.05 points of share
+  SHIPPED: 3-live-linear
+  null (outcomes): beats 20 of 20; real 0.23574, best null 0.24488
+  null (calls): beats 20 of 20; real 0.23574, best null 0.24187
+  calibration: error 0.38 points (10 bins), by tenth 0.56, slope 1.00, passes
+  tenths (forecast/actual): 0.007/0.003 0.041/0.049 0.049/0.054 0.054/0.059 0.059/0.054 0.063/0.064 0.070/0.079 0.078/0.087 0.090/0.097 0.124/0.121
+  top fields (permutation): down 0.001234, is_screen_pass 0.0008466, n_blitzers 0.0002338, score_differential 0.0001253, qtr 0.0001158, yardline_100 7.843e-05
+
+== time to throw (s) (time_to_throw_exp; amount; seasons [2024]; 18,484 plays; mean 2.654)
+  share:   0.00 |   0.74 |   1.27 |  16.06 |  17.40 |  17.57 |  16.10 |   3.09
+  main loss: 0-base 0.2562, 1-situation-linear 0.2549, 2-situation-trees 0.2533, 3-live-linear 0.2287, 4-live-trees 0.2229, 5-traits-trees 0.2231, offense-trees 0.2251, defense-trees 0.2501
+  situation model: 2-situation-trees; vs base -0.00295 (-0.00349 to -0.00238), 22 weeks
+  live model: 4-live-trees; vs situation -0.03037 (-0.03145 to -0.02930), 22 weeks; gain 11.99% of the loss; fitting noise 0.09
+  traits vs live: +0.00025 (-0.00030 to +0.00081), 22 weeks
+  H65: offense vs situation -0.02811 (-0.02916 to -0.02706), 22 weeks; defense -0.00319 (-0.00375 to -0.00260), 22 weeks; together beyond each -0.52 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.22289, best null 0.25585
+  null (calls): beats 20 of 20; real 0.22289, best null 0.25315
+  range: q10-q90 holds 79.6%, above q50 50.9%, width 2.05; by season 2024 79.6%; passes
+  mean by tenth (forecast/actual; average gap 0.04): 1.71/1.62 2.29/2.34 2.44/2.45 2.53/2.58 2.61/2.65 2.69/2.67 2.79/2.84 2.96/2.93 3.14/3.12 3.36/3.34
+  top fields (permutation): is_screen_pass 0.1784, is_play_action 0.0829, down 0.05326, is_rpo 0.01895, ydstogo 0.01573, n_pass_rushers 0.01318
+
+== dropback yards (dropback_yards_exp; amount; seasons [2023, 2024]; 42,770 plays; mean 6.229)
+  share:   0.00 |   1.46 |   1.14 |   1.58 |   1.60 |   1.30 |   1.55 |   1.18
+  main loss: 0-base 2.1832, 1-situation-linear 2.1900, 2-situation-trees 2.1689, 3-live-linear 2.1991, 4-live-trees 2.1581, 5-traits-trees 2.1652, offense-trees 2.1585, defense-trees 2.1684
+  situation model: 2-situation-trees; vs base -0.01426 (-0.01671 to -0.01150), 44 weeks
+  live model: 4-live-trees; vs situation -0.01080 (-0.01296 to -0.00864), 44 weeks; gain 0.50% of the loss; fitting noise 0.08
+  traits vs live: +0.00705 (+0.00490 to +0.00917), 44 weeks
+  H65: offense vs situation -0.01041 (-0.01242 to -0.00843), 44 weeks; defense -0.00052 (-0.00200 to +0.00099), 44 weeks; together beyond each +0.01 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 2.15813, best null 2.18963
+  null (calls): beats 20 of 20; real 2.15813, best null 2.16868
+  range: q10-q90 holds 81.9%, above q50 50.0%, width 17.97; by season 2023 81.7%, 2024 82.2%; passes
+  mean by tenth (forecast/actual; average gap 0.29): 2.70/2.75 4.85/5.27 5.52/5.96 5.90/6.33 6.16/6.50 6.38/6.50 6.62/6.39 6.96/6.64 7.58/7.33 8.89/8.63
+  top fields (permutation): yardline_100 3.668, is_play_action 0.3565, score_differential 0.2079, is_screen_pass 0.1794, home 0.09349, down 0.08149
+
+== explosive pass (20+) (pass_explosive_prob; probability; seasons [2023, 2024]; 42,770 plays; mean 0.083)
+  share:   0.00 |   1.40 |   1.30 |   1.98 |   2.05 |   1.97 |   2.00 |   1.39
+  main loss: 0-base 0.2851, 1-situation-linear 0.2743, 2-situation-trees 0.2739, 3-live-linear 0.2718, 4-live-trees 0.2704, 5-traits-trees 0.2709, offense-trees 0.2707, defense-trees 0.2735
+  situation model: 1-situation-linear; vs base -0.01084 (-0.01170 to -0.01001), 44 weeks
+  live model: 4-live-trees; vs situation -0.00387 (-0.00467 to -0.00312), 44 weeks; gain 1.41% of the loss; fitting noise 0.15
+  traits vs live: +0.00046 (-0.00003 to +0.00099), 44 weeks
+  H65: offense vs situation -0.00321 (-0.00376 to -0.00262), 44 weeks; defense -0.00044 (-0.00070 to -0.00018), 44 weeks; together beyond each -0.04 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.27041, best null 0.28508
+  null (calls): beats 20 of 20; real 0.27041, best null 0.27352
+  calibration: error 0.18 points (10 bins), by tenth 0.42, slope 0.94, passes
+  tenths (forecast/actual): 0.001/0.000 0.037/0.035 0.066/0.077 0.075/0.079 0.082/0.091 0.087/0.085 0.094/0.088 0.103/0.102 0.119/0.119 0.156/0.149
+  top fields (permutation): yardline_100 0.002107, is_play_action 0.0004383, is_screen_pass 0.0002352, is_trick_play 9.895e-05, score_differential 9.679e-05, down 8.877e-05
+
+== successful dropback (dropback_success_prob; probability; seasons [2023, 2024]; 42,770 plays; mean 0.452)
+  share:   0.00 |   2.21 |   2.32 |   2.15 |   2.41 |   2.06 |   2.40 |   2.32
+  main loss: 0-base 0.6885, 1-situation-linear 0.6772, 2-situation-trees 0.6766, 3-live-linear 0.6776, 4-live-trees 0.6761, 5-traits-trees 0.6780, offense-trees 0.6762, defense-trees 0.6766
+  situation model: 1-situation-linear; vs base -0.01127 (-0.01228 to -0.01028), 44 weeks
+  live model: 4-live-trees; vs situation -0.00114 (-0.00196 to -0.00032), 44 weeks; gain 0.17% of the loss; fitting noise 0.04
+  traits vs live: +0.00186 (+0.00122 to +0.00248), 44 weeks
+  H65: offense vs situation -0.00041 (-0.00078 to -0.00005), 44 weeks; defense +0.00001 (-0.00041 to +0.00040), 44 weeks; together beyond each +0.01 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.67611, best null 0.69003
+  null (calls): beats 20 of 20; real 0.67611, best null 0.67635
+  calibration: error 0.65 points (10 bins), by tenth 1.02, slope 0.92, passes
+  tenths (forecast/actual): 0.272/0.280 0.355/0.362 0.404/0.424 0.434/0.443 0.455/0.469 0.471/0.468 0.487/0.485 0.505/0.515 0.525/0.531 0.564/0.540
+  top fields (permutation): ydstogo 0.007914, down 0.006, yardline_100 0.001547, half_seconds_remaining 0.0009176, game_seconds_remaining 0.0003676, is_screen_pass 0.0002093
+
+== first down on a dropback (dropback_first_down_prob; probability; seasons [2023, 2024]; 42,770 plays; mean 0.324)
+  share:   0.00 |   6.60 |   6.38 |   6.77 |   6.98 |   6.86 |   6.97 |   6.38
+  main loss: 0-base 0.6297, 1-situation-linear 0.5956, 2-situation-trees 0.5967, 3-live-linear 0.5944, 4-live-trees 0.5933, 5-traits-trees 0.5940, offense-trees 0.5934, defense-trees 0.5967
+  situation model: 1-situation-linear; vs base -0.03408 (-0.03589 to -0.03243), 44 weeks
+  live model: 4-live-trees; vs situation -0.00228 (-0.00314 to -0.00149), 44 weeks; gain 0.38% of the loss; fitting noise 0.07
+  traits vs live: +0.00065 (+0.00007 to +0.00124), 44 weeks
+  H65: offense vs situation -0.00333 (-0.00404 to -0.00259), 44 weeks; defense -0.00004 (-0.00042 to +0.00032), 44 weeks; together beyond each +0.01 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.59333, best null 0.63037
+  null (calls): beats 20 of 20; real 0.59333, best null 0.59660
+  calibration: error 0.26 points (10 bins), by tenth 0.48, slope 0.98, passes
+  tenths (forecast/actual): 0.114/0.118 0.202/0.207 0.243/0.248 0.265/0.269 0.288/0.279 0.320/0.325 0.359/0.357 0.406/0.413 0.472/0.473 0.554/0.548
+  top fields (permutation): ydstogo 0.0272, yardline_100 0.001264, is_play_action 0.001032, is_screen_pass 0.0008131, down 0.0003045, game_seconds_remaining 0.0002542
+
+== touchdown on a dropback (dropback_td_prob; probability; seasons [2023, 2024]; 42,770 plays; mean 0.040)
+  share:   0.00 |  17.69 |  16.91 |  17.51 |  16.87 |  16.50 |  17.16 |  17.01
+  main loss: 0-base 0.1683, 1-situation-linear 0.1198, 2-situation-trees 0.1217, 3-live-linear 0.1195, 4-live-trees 0.1210, 5-traits-trees 0.1216, offense-trees 0.1211, defense-trees 0.1214
+  situation model: 1-situation-linear; vs base -0.04845 (-0.05167 to -0.04520), 44 weeks
+  live model: 3-live-linear; vs situation -0.00036 (-0.00072 to -0.00002), 44 weeks; gain 0.30% of the loss; fitting noise 0.30
+  traits vs live: +0.00213 (+0.00163 to +0.00266), 44 weeks
+  H65: offense vs situation -0.00056 (-0.00097 to -0.00012), 44 weeks; defense -0.00035 (-0.00068 to -0.00002), 44 weeks; together beyond each -0.39 points of share
+  SHIPPED: 1-situation-linear
+  null (outcomes): beats 20 of 20; real 0.11984, best null 0.16331
+  calibration: error 0.19 points (10 bins), by tenth 0.13, slope 0.99, passes
+  tenths (forecast/actual): 0.002/0.002 0.003/0.004 0.004/0.005 0.005/0.005 0.007/0.007 0.011/0.011 0.016/0.017 0.027/0.030 0.062/0.067 0.251/0.253
+  top fields (permutation): yardline_100 0.01103, ydstogo 0.0004347, goal_to_go 0.0003671, qtr 3.684e-05, home 2.118e-05, score_differential 2.016e-05
+
+== depth of target (yards) (air_yards_exp; amount; seasons [2023, 2024]; 37,689 plays; mean 7.736)
+  share:   0.00 |   3.72 |   4.26 |  16.97 |  18.16 |  17.56 |  18.10 |   4.32
+  main loss: 0-base 2.3879, 1-situation-linear 2.3724, 2-situation-trees 2.3018, 3-live-linear 2.2035, 4-live-trees 2.0605, 5-traits-trees 2.0655, offense-trees 2.0601, defense-trees 2.3019
+  situation model: 2-situation-trees; vs base -0.08608 (-0.09127 to -0.08096), 44 weeks
+  live model: 4-live-trees; vs situation -0.24131 (-0.24911 to -0.23371), 44 weeks; gain 10.48% of the loss; fitting noise 0.14
+  traits vs live: +0.00503 (+0.00313 to +0.00690), 44 weeks
+  H65: offense vs situation -0.24165 (-0.24948 to -0.23391), 44 weeks; defense +0.00012 (-0.00146 to +0.00187), 44 weeks; together beyond each +0.00 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 2.06048, best null 2.38726
+  null (calls): beats 20 of 20; real 2.06048, best null 2.30234
+  range: q10-q90 holds 78.8%, above q50 50.1%, width 19.96; by season 2023 77.8%, 2024 79.8%; passes
+  mean by tenth (forecast/actual; average gap 0.21): -2.94/-3.16 4.36/4.33 7.11/7.52 7.75/7.86 8.22/8.30 8.68/8.82 9.30/9.55 10.05/10.17 10.88/11.30 13.03/12.67
+  top fields (permutation): is_screen_pass 26.33, yardline_100 4.854, down 2.811, half_seconds_remaining 1.041, ydstogo 1.024, is_play_action 0.9546
+
+== completion (completion_prob; probability; seasons [2023, 2024]; 37,690 plays; mean 0.652)
+  share:   0.00 |   1.60 |   1.53 |   3.63 |   3.92 |   3.59 |   3.67 |   1.83
+  main loss: 0-base 0.6465, 1-situation-linear 0.6386, 2-situation-trees 0.6390, 3-live-linear 0.6270, 4-live-trees 0.6255, 5-traits-trees 0.6271, offense-trees 0.6268, defense-trees 0.6375
+  situation model: 1-situation-linear; vs base -0.00782 (-0.00895 to -0.00672), 44 weeks
+  live model: 4-live-trees; vs situation -0.01315 (-0.01467 to -0.01160), 44 weeks; gain 2.06% of the loss; fitting noise 0.19
+  traits vs live: +0.00165 (+0.00111 to +0.00217), 44 weeks
+  H65: offense vs situation -0.01216 (-0.01347 to -0.01089), 44 weeks; defense -0.00153 (-0.00197 to -0.00106), 44 weeks; together beyond each -0.04 points of share
+  SHIPPED: 4-live-trees
+  null (outcomes): beats 20 of 20; real 0.62549, best null 0.64844
+  null (calls): beats 20 of 20; real 0.62549, best null 0.63845
+  calibration: error 0.86 points (10 bins), by tenth 0.88, slope 0.99, passes
+  tenths (forecast/actual): 0.477/0.499 0.555/0.556 0.591/0.609 0.614/0.614 0.634/0.638 0.654/0.655 0.672/0.679 0.688/0.702 0.714/0.704 0.850/0.862
+  top fields (permutation): is_screen_pass 0.009282, yardline_100 0.002569, down 0.002111, half_seconds_remaining 0.001036, game_seconds_remaining 0.0007701, ydstogo 0.0007162
+
+== penalty (penalty_prob; probability; seasons [2023, 2024]; 75,518 plays; mean 0.082)
+  share:   0.00 |   1.51 |   2.71 |    -   |    -   |    -   |    -   |    -  
+  main loss: 0-base 0.2835, 1-situation-linear 0.2783, 2-situation-trees 0.2765
+  situation model: 2-situation-trees; vs base -0.00706 (-0.00806 to -0.00601), 44 weeks
+  SHIPPED: 2-situation-trees
+  null (outcomes): beats 20 of 20; real 0.27647, best null 0.28349
+  calibration: error 0.71 points (10 bins), by tenth 0.66, slope 0.91, passes
+  tenths (forecast/actual): 0.042/0.059 0.054/0.065 0.060/0.072 0.065/0.069 0.068/0.076 0.071/0.079 0.074/0.077 0.079/0.078 0.093/0.094 0.151/0.150
+  top fields (permutation): down 0.009086, ydstogo 0.00224, score_differential 0.0007741, yardline_100 0.0004128, game_seconds_remaining 0.0002994, half_seconds_remaining 4.736e-05

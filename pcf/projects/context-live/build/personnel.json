@@ -1,0 +1,146 @@
+{
+ "pressure_prob": {
+  "rows": 21030,
+  "coverage": 1.0,
+  "live_share": 4.29716819249718,
+  "personnel_share": 4.838660800712724,
+  "loss_gain": 0.4784427061127916,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.0028585473144120354,
+   "lo": -0.004042926972538311,
+   "hi": -0.001691927263443364,
+   "rows": 21030,
+   "blocks": 22
+  }
+ },
+ "sack_prob": {
+  "rows": 21030,
+  "coverage": 1.0,
+  "live_share": 1.119142605109058,
+  "personnel_share": 1.687896019357471,
+  "loss_gain": 1.0804638880148931,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.0025390397884989336,
+   "lo": -0.0040586011676270305,
+   "hi": -0.00102869990621561,
+   "rows": 21030,
+   "blocks": 22
+  }
+ },
+ "completion_prob": {
+  "rows": 18505,
+  "coverage": 1.0,
+  "live_share": 3.6089662130301403,
+  "personnel_share": 4.672164914123689,
+  "loss_gain": 0.8521354526216385,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.0053214829096133905,
+   "lo": -0.0072482272626486054,
+   "hi": -0.0034162085971171717,
+   "rows": 18505,
+   "blocks": 22
+  }
+ },
+ "air_yards_exp": {
+  "rows": 18505,
+  "coverage": 1.0,
+  "live_share": 17.250099674950402,
+  "personnel_share": 19.38343176189309,
+  "loss_gain": 1.7087313192862719,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.035079992602698444,
+   "lo": -0.04183459151971476,
+   "hi": -0.028224069435938536,
+   "rows": 18505,
+   "blocks": 22
+  }
+ },
+ "time_to_throw_exp": {
+  "rows": 18484,
+  "coverage": 1.0,
+  "live_share": 17.398337416967415,
+  "personnel_share": 17.240289136212194,
+  "loss_gain": -0.04142800161068827,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": 9.233801709064141e-05,
+   "lo": -0.00027118227784596387,
+   "hi": 0.0004420460024556875,
+   "rows": 18484,
+   "blocks": 22
+  }
+ },
+ "rush_yards_exp": {
+  "rows": 13872,
+  "coverage": 1.0,
+  "live_share": 2.3615213494039833,
+  "personnel_share": 2.823570134576958,
+  "loss_gain": 0.6715735379942411,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.008238616254840351,
+   "lo": -0.01078206134469666,
+   "hi": -0.005655214784590714,
+   "rows": 13872,
+   "blocks": 22
+  }
+ },
+ "run_success_prob": {
+  "rows": 13872,
+  "coverage": 1.0,
+  "live_share": 5.670193266841728,
+  "personnel_share": 6.03305865562449,
+  "loss_gain": 0.2702127549021216,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.0017538958388285135,
+   "lo": -0.0032458694612455333,
+   "hi": -0.00024690275098032265,
+   "rows": 13872,
+   "blocks": 22
+  }
+ },
+ "dropback_success_prob": {
+  "rows": 21030,
+  "coverage": 1.0,
+  "live_share": 1.9541293147316008,
+  "personnel_share": 2.6910810996226053,
+  "loss_gain": 0.5574053617961261,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.0037910151292452387,
+   "lo": -0.0047015297297316695,
+   "hi": -0.0029488397170286825,
+   "rows": 21030,
+   "blocks": 22
+  }
+ },
+ "dropback_yards_exp": {
+  "rows": 21030,
+  "coverage": 1.0,
+  "live_share": 2.070594010790927,
+  "personnel_share": 2.3159262717356355,
+  "loss_gain": 0.39709542746025894,
+  "comparison": {
+   "a": "6-personnel-trees",
+   "b": "4-live-trees",
+   "diff": -0.00855605799202498,
+   "lo": -0.01288293300027581,
+   "hi": -0.004320746894564763,
+   "rows": 21030,
+   "blocks": 22
+  }
+ }
+}
