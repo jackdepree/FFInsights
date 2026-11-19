@@ -406,3 +406,32 @@ def test_a_missing_expert_value_gets_the_moment_s_median_and_never_drops_a_row()
     )
     out = F.fill_missing(rows, ["a", "b"])
     assert out["a"].to_list() == [1.0, 2.0, 3.0] and out["b"].to_list() == [0.0, 0.0, 0.0]
+
+
+def test_coefficients_read_in_yards_per_unit_with_intervals_from_resampled_weeks():
+    rng = np.random.default_rng(1)
+    base = variant("receiving", method="lasso")
+    weeks, per = 60, 80
+    n = weeks * per
+    feats = pl.DataFrame(
+        {col: rng.normal(size=n) for col in base.crude_columns()}
+        | {"y_s": rng.uniform(0, 80, n)}
+    ).with_columns(
+        gsis_id=pl.Series([f"p{i % per}" for i in range(n)]),
+        game_id=pl.Series([f"g{i // per}" for i in range(n)]),
+        step=pl.Series([i // per for i in range(n)]),
+        step_season=pl.Series([2016 + (i // per) // 17 for i in range(n)]),
+        position=pl.lit("WR"),
+        as_of=pl.Series([datetime(2016, 9, 1, tzinfo=UTC) + timedelta(days=7 * (i // per))
+                         for i in range(n)]).cast(TS),
+    )  # fmt: skip
+    y = 2.0 * feats["y_s"].to_numpy() + rng.normal(0, 5, n)
+    outcomes = feats.select("gsis_id", "game_id").with_columns(y=pl.Series(y))
+    board = Y.Board(base, feats, outcomes, [], [])
+    t = Y.coefficients(board, draws=40, seed=0)
+    row = t.filter(c("input") == "y_s").row(0, named=True)
+    assert row["lo"] <= row["per_unit"] <= row["hi"]
+    assert 1.9 < row["per_unit"] < 2.05 and row["kept"] == 1.0
+    assert t["input"][0] == "y_s"  # the biggest per standard deviation comes first
+    noise = t.filter(c("input") != "y_s")
+    assert noise["per_sd"].abs().max() < 0.5  # yards per sd: pure-noise inputs stay near zero

@@ -29,6 +29,7 @@ import polars as pl
 
 from pcf.baselines.crude import features as F
 from pcf.baselines.crude.model import Crude, variant, with_experts
+from pcf.baselines.lasso import fit_lasso
 from pcf.config import get_config
 from pcf.core.log import get_logger
 from pcf.data.gateway import END_OF_TIME, Gateway
@@ -400,6 +401,57 @@ def score_input(
     }  # fmt: skip
 
 
+# ---------------------------------------------------------------- the lasso's coefficients
+def coefficients(
+    board: Board, added: Sequence[str] = (), draws: int = 200, seed: int | None = None
+) -> pl.DataFrame:
+    """The lasso's coefficients, readable: the fit a forecast after the board's last season would
+    use (every row, recency-weighted), each input's coefficient in the target's units per one
+    unit of the input, with a 90% interval from refits on whole weeks resampled (the penalty
+    held at the fit's), and the share of those refits that kept the input.
+
+    Not t-tests or p-values: the lasso picks and shrinks its inputs on the same rows, so ordinary
+    standard errors don't apply (an OLS refit on the kept inputs gives p-values that are too
+    small). The resampled interval is the honest substitute, and still approximate: shrinkage
+    pulls every coefficient toward zero (decision 0037)."""
+    if board.base.method != "lasso":
+        raise ValueError("coefficients: the board's rung must be the lasso")
+    expert = with_experts(board.base, tuple(sorted(added)))()
+    # every row, weighted as the walk weights them for the season after the board's last
+    last = int(board.features["step_season"].max())
+    train = (
+        board.features.join(board.outcomes, on=board.keys, how="inner")
+        .sort("as_of", *board.keys)
+        .with_columns(weight=0.5 ** ((last + 1 - c("step_season")) / backtest.HALF_LIFE))
+    )
+    model = expert.fit(train)
+    cols = expert.columns
+    x = train.select(cols).to_numpy().astype(float)
+    y = train["y"].to_numpy().astype(float)
+    w = train["weight"].to_numpy().astype(float)
+    alpha = model["alpha"]
+    fit = model["lasso"]
+    point = fit["coef"] / fit["sd"]
+    steps = train["step"].to_numpy()
+    blocks = [np.flatnonzero(steps == s) for s in np.unique(steps)]
+    rng = np.random.default_rng(get_config().seed if seed is None else seed)
+    boot = np.empty((draws, len(cols)))
+    for i in range(draws):
+        idx = np.concatenate([blocks[j] for j in rng.integers(0, len(blocks), len(blocks))])
+        (m,) = fit_lasso(x[idx], y[idx], w[idx], [alpha])
+        boot[i] = m["coef"] / m["sd"]
+    lo, hi = np.quantile(boot, [(1 - LEVEL) / 2, (1 + LEVEL) / 2], axis=0)
+    groups = {col: g for g, members in expert.expert_groups().items() for col in members}
+    return pl.DataFrame({
+        "input": cols,
+        "group": [groups.get(col, "crude") for col in cols],
+        "per_unit": point, "lo": lo, "hi": hi,
+        "per_sd": fit["coef"],  # in the target's units per one standard deviation of the input
+        "kept": (boot != 0).mean(axis=0),
+        "alpha": alpha, "rows": len(y), "fit_through": last,
+    }).sort(pl.col("per_sd").abs(), descending=True)  # fmt: skip
+
+
 # ---------------------------------------------------------------- SHAP, the explanation
 def shap_values(board: Board, added: Sequence[str], extra: Sequence[str] = ()) -> pl.DataFrame:
     """SHAP values on held-out rows (the explanation of where an input helps, never its test):
@@ -459,6 +511,7 @@ def allowed(history: pl.DataFrame, gateway: Gateway | None = None) -> pl.DataFra
 
 
 __all__ = [
-    "F", "Board", "Gain", "allowed", "build_board", "gain", "group_of", "history_columns",
+    "F", "Board", "Gain", "allowed", "build_board", "coefficients", "gain", "group_of",
+    "history_columns",
     "load_board", "noise", "played_rows", "removed", "score_input", "shap_values", "shapley",
 ]  # fmt: skip

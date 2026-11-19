@@ -65,14 +65,10 @@ def describe(p: pl.DataFrame) -> dict:
 
 
 def champion(gains: dict) -> str:
-    """The ladder's rule (decision 0037): the lasso must beat the season average; the trees the
-    lasso; the mix (the CEO's method) must beat both plain rungs; ties go to the simpler."""
-    if not gains["lasso>season"].range_lo > 0:
-        return "season"
-    best = "trees" if gains["trees>lasso"].range_lo > 0 else "lasso"
-    if gains["mix>lasso"].range_lo > 0 and gains["mix>trees"].range_lo > 0:
-        best = "mix"
-    return best
+    """The champion is the lasso everywhere (the CEO, 2026-11-19: "We can keep lasso everywhere";
+    decision 0037 call 12), provided it beats the season average; the trees and the mix are
+    still fitted and reported as rungs."""
+    return "lasso" if gains["lasso>season"].range_lo > 0 else "season"
 
 
 def keep_sets(board: Y.Board) -> dict[str, tuple[str, ...]]:

@@ -1,0 +1,144 @@
+crude-forecaster: the lasso's coefficients, next game, every finished expert added; fit on 2016-2024 (recency-weighted, half-life 4 seasons).
+per unit = yards per one unit of the input, other inputs held; per sd = yards per one standard deviation (comparable across inputs).
+90% interval from 200 refits on whole weeks resampled, penalty held. Not t-tests or p-values: the lasso chose and shrank these inputs on the same rows.
+
+== passing next game (penalty 1.0000, 5147 rows)
+  input               group             per sd   per unit   90% interval            kept
+  part_share          participation      39.14    209.998     146.559 to 226.350    100%
+  te_off_pass         efficiency          6.76     72.609      19.770 to 102.980     98%
+  sch_pass_oe         schemes             6.04    163.981      70.109 to 248.800    100%
+  fd_l4               crude               5.42      1.524       0.000 to 2.812       94%
+  td_ls               crude               5.15      6.755       1.186 to 11.516     100%
+  n_games             crude              -4.85     -1.100      -1.664 to 0.000       82%
+  fd_s                crude               3.90      1.080       0.000 to 2.640       91%
+  te_opp_def_pass     efficiency          3.25     45.103       0.000 to 73.995      84%
+  part_play           participation       3.18     25.896       0.000 to 108.349     78%
+  td_l4               crude               3.16      4.238       0.000 to 9.774       88%
+  td_s                crude               2.75      3.740       0.000 to 9.193       78%
+  pace_dropbacks      pace                2.36      0.868       0.000 to 1.941       62%
+  y_ls_sd             crude              -2.17     -0.060      -0.130 to 0.000       86%
+  sch_shotgun         schemes            -1.66    -12.654     -32.547 to 0.000       84%
+  elo_own_off         elo                 1.50      0.606       0.000 to 2.382       58%
+  elo_total           elo                 1.37      0.416       0.000 to 1.187       72%
+  elo_margin          elo                 1.25      0.206       0.000 to 0.724       68%
+  te_off_run          efficiency         -1.20    -21.824     -60.088 to 0.000       82%
+  pace_opp_plays      pace                0.71      0.400       0.000 to 1.527       60%
+  pace_oe             pace               -0.69     -0.808      -4.275 to 0.000       68%
+  te_opp_def          efficiency          0.61     12.325       0.000 to 108.829     55%
+  elo_opp             elo                 0.05      0.014       0.000 to 0.768       50%
+  set to zero: y_s, y_l4, y_ls, vol_s, vol_l4, vol_ls, fd_ls, y_cum, y_trend, y_sd, ypa_s, ypa_ls, has_ls, no_history, te_off, te_opp_def_run, elo_own, elo_opp_def, pace_plays, pace_runs, pace_proe, part_share_if, sch_depth, sch_tempo
+
+== rushing next game (penalty 0.0251, 15383 rows)
+  input               group             per sd   per unit   90% interval            kept
+  part_share          participation      22.49    115.287      80.289 to 147.672    100%
+  part_share_if       participation     -14.52    -77.877    -109.473 to -42.938    100%
+  y_l4                crude               5.46      0.189       0.085 to 0.261      100%
+  pace_dropbacks      pace                3.88      1.400       0.541 to 2.328      100%
+  y_s                 crude               3.70      0.134       0.049 to 0.240      100%
+  y_cum               crude               3.32      0.013       0.009 to 0.017      100%
+  pace_plays          pace               -3.22     -1.833      -2.778 to -1.105     100%
+  y_ls                crude               3.10      0.116       0.017 to 0.217       98%
+  pace_runs           pace                2.63      1.143       0.439 to 1.897      100%
+  has_ls              crude              -2.57     -6.704      -7.840 to -5.829     100%
+  vol_s               crude               1.98      0.332       0.000 to 0.690       92%
+  elo_opp             elo                -1.63     -0.454      -0.669 to -0.184     100%
+  te_opp_def_run      efficiency          1.61     35.195      26.231 to 51.709     100%
+  elo_own             elo                -1.55     -0.426      -0.688 to -0.204     100%
+  fd_ls               crude              -1.53     -1.099      -2.707 to 0.000       88%
+  vol_l4              crude               1.50      0.243       0.000 to 0.576       88%
+  n_games             crude              -1.13     -0.256      -0.357 to -0.166     100%
+  td_s                crude               1.11      3.653       0.075 to 6.066       98%
+  part_play           participation      -0.98     -7.816     -13.143 to -1.773      99%
+  elo_own_off         elo                 0.87      0.353       0.000 to 0.801       90%
+  td_ls               crude               0.80      3.239       0.000 to 7.389       96%
+  y_sd                crude               0.76      0.050       0.000 to 0.105       98%
+  ypa_ls              crude               0.74      0.352       0.126 to 0.604      100%
+  no_history          crude               0.69      6.916       3.179 to 11.146     100%
+  elo_opp_def         elo                 0.58      0.314       0.000 to 0.781       96%
+  ypa_s               crude               0.42      0.226       0.024 to 0.426       98%
+  sch_tempo           schemes            -0.42     -0.350      -0.864 to 0.000       92%
+  te_off_run          efficiency          0.31      5.679      -0.846 to 15.544      92%
+  y_ls_sd             crude              -0.27     -0.017      -0.089 to 0.029       82%
+  elo_margin          elo                 0.22      0.036      -0.050 to 0.199       85%
+  pace_opp_plays      pace                0.18      0.103      -0.094 to 0.378       92%
+  te_opp_def_pass     efficiency          0.17      2.390       0.000 to 28.324      76%
+  fd_l4               crude               0.14      0.091      -0.682 to 1.436       77%
+  sch_shotgun         schemes             0.13      1.010      -1.325 to 4.907       92%
+  te_off              efficiency         -0.08     -1.227     -16.072 to 0.000       52%
+  elo_total           elo                 0.02      0.007      -0.154 to 0.181       80%
+  set to zero: vol_ls, fd_s, td_l4, y_trend, te_off_pass, te_opp_def, pace_proe, pace_oe, sch_pass_oe, sch_depth
+
+== receiving next game (penalty 0.0025, 53355 rows)
+  input               group             per sd   per unit   90% interval            kept
+  part_share          participation      25.41    102.298      92.589 to 111.538    100%
+  part_share_if       participation     -17.79    -74.002     -82.871 to -64.191    100%
+  y_ls                crude               7.21      0.323       0.232 to 0.403      100%
+  vol_ls              crude              -4.18     -1.567      -1.913 to -1.135     100%
+  y_s                 crude               3.03      0.130       0.077 to 0.197      100%
+  te_opp_def          efficiency          2.07     41.847      12.855 to 105.918     98%
+  vol_l4              crude               1.92      0.708       0.289 to 1.068      100%
+  y_cum               crude               1.71      0.008       0.005 to 0.011      100%
+  fd_l4               crude               1.60      1.363       0.226 to 2.545       99%
+  part_play           participation      -1.54    -13.316     -15.611 to -11.095    100%
+  is_TE               crude              -1.40     -3.154      -3.655 to -2.577     100%
+  fd_ls               crude               1.35      1.231       0.090 to 2.400       99%
+  fd_s                crude               1.31      1.135       0.000 to 2.212       98%
+  is_RB               crude              -1.30     -2.878      -3.312 to -2.462     100%
+  y_l4                crude               1.12      0.047       0.000 to 0.105       89%
+  te_opp_def_pass     efficiency         -1.10    -15.383     -52.573 to 0.000       88%
+  ypa_ls              crude              -1.08     -0.286      -0.350 to -0.217     100%
+  n_games             crude              -0.83     -0.186      -0.241 to -0.133     100%
+  elo_margin          elo                 0.77      0.128       0.074 to 0.185      100%
+  te_opp_def_run      efficiency         -0.77    -16.866     -42.897 to -3.538     100%
+  pace_plays          pace               -0.72     -0.410      -0.799 to -0.145     100%
+  has_ls              crude              -0.65     -1.651      -2.013 to -1.250     100%
+  vol_s               crude               0.65      0.240      -0.165 to 0.674       96%
+  pace_dropbacks      pace                0.55      0.201      -0.034 to 0.582       96%
+  elo_total           elo                 0.44      0.135       0.037 to 0.241      100%
+  ypa_s               crude              -0.43     -0.105      -0.154 to -0.055     100%
+  y_ls_sd             crude              -0.41     -0.029      -0.071 to 0.008       98%
+  elo_opp             elo                 0.40      0.110       0.003 to 0.221       98%
+  no_history          crude               0.39      3.057       1.166 to 4.403      100%
+  sch_pass_oe         schemes             0.36      9.804       1.845 to 18.932     100%
+  pace_runs           pace                0.30      0.131      -0.106 to 0.462       94%
+  pace_opp_plays      pace                0.27      0.153       0.037 to 0.251      100%
+  td_l4               crude               0.26      1.118      -0.873 to 3.240       98%
+  sch_shotgun         schemes            -0.24     -1.830      -3.197 to -0.459     100%
+  pace_oe             pace               -0.24     -0.276      -0.686 to 0.067       98%
+  pace_proe           pace               -0.23     -6.294     -22.963 to 4.675       94%
+  td_ls               crude              -0.21     -1.238      -4.067 to 1.036       98%
+  te_off_run          efficiency         -0.15     -2.755     -10.211 to 4.314       92%
+  elo_opp_def         elo                 0.12      0.065      -0.131 to 0.298       98%
+  td_s                crude               0.09      0.425      -1.222 to 2.584       99%
+  te_off_pass         efficiency          0.09      0.975      -7.402 to 10.902      81%
+  sch_tempo           schemes             0.08      0.070      -0.144 to 0.345       97%
+  sch_depth           schemes             0.08      0.123      -0.085 to 0.344      100%
+  elo_own             elo                -0.07     -0.020      -0.156 to 0.099       96%
+  y_sd                crude               0.04      0.003      -0.028 to 0.034      100%
+  set to zero: y_trend, te_off, elo_own_off
+
+== team next game (penalty 1.0000, 4734 rows)
+  input               group             per sd   per unit   90% interval            kept
+  elo_margin          elo                11.05      1.824       1.326 to 2.354      100%
+  elo_total           elo                 4.98      1.511       0.447 to 2.184      100%
+  te_off              efficiency          4.26     68.558       0.000 to 133.044     80%
+  off_fd_s            crude               3.19      1.202       0.007 to 2.732       95%
+  def_fd_s            crude               3.14      1.263       0.000 to 2.493       80%
+  off_fd_l4           crude               3.13      1.110       0.000 to 2.591       86%
+  off_ypa_s           crude               2.79      4.548       0.000 to 8.732       91%
+  te_off_pass         efficiency          2.23     24.060       0.000 to 64.763      70%
+  def_ypa_ls          crude               2.17      6.004       0.000 to 14.643      90%
+  def_y_l4            crude               2.08      0.047       0.000 to 0.098       77%
+  pace_oe             pace               -2.05     -2.391      -4.915 to 0.000       94%
+  pace_opp_plays      pace                1.89      1.075       0.000 to 2.521       89%
+  te_opp_def_run      efficiency          1.85     40.214       0.000 to 97.216      86%
+  off_vol_l4          crude              -1.78     -0.388      -0.989 to 0.000       83%
+  off_n_games         crude              -1.75     -0.364      -0.773 to 0.000       57%
+  def_y_s             crude               1.63      0.039       0.000 to 0.135       66%
+  sch_depth           schemes             1.62      2.561       0.000 to 5.440       92%
+  sch_pass_oe         schemes             1.10     29.974       0.000 to 80.802      74%
+  def_y_ls_sd         crude              -0.55     -0.041      -0.205 to 0.000       68%
+  def_td_ls           crude              -0.53     -1.223      -6.892 to 0.000       50%
+  off_y_ls            crude               0.44      0.013       0.000 to 0.053       22%
+  elo_own_off         elo                 0.07      0.027       0.000 to 1.515       40%
+  set to zero: off_y_s, off_y_l4, off_vol_s, off_vol_ls, off_fd_ls, off_td_s, off_td_l4, off_td_ls, off_y_cum, off_y_trend, off_y_sd, off_y_ls_sd, off_ypa_ls, off_has_ls, off_no_history, def_y_ls, def_vol_s, def_vol_l4, def_vol_ls, def_fd_l4, def_fd_ls, def_td_s, def_td_l4, def_y_cum, def_y_trend, def_y_sd, def_ypa_s, def_n_games, def_has_ls, def_no_history, te_off_run, te_opp_def, te_opp_def_pass, elo_own, elo_opp, elo_opp_def, pace_plays, pace_dropbacks, pace_runs, pace_proe, sch_shotgun, sch_tempo
