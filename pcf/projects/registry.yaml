@@ -512,6 +512,16 @@ projects:
     depends_on: [elo, team-efficiency, pace]
     summary: How likely each team is to be leading or trailing during the game, which shifts the pass/run mix.
 
+  - id: voe
+    name: VOE, value over expected
+    phase: 1
+    status: idea
+    horizon: now
+    cadence: [retrospective, in_season]  # open: the brief decides which cadence comes first (voe-retro / voe-live below)
+    depends_on: [context-live, participation-late]
+    origin: VOE_Model_Training.ipynb, VOE_Model_Prod.ipynb
+    summary: "The CEO's pick, 2026-11-19 (\"I don't want to call it version 2, I just want to call it VOE\"): recreate the old VOE responsibly, map its gaps from machine learning, data science and causal angles, design sister and cousin models, and ask whether value over expected gives a reliable player value (plus-minus, wins above replacement, a causal contribution). Kickoff in projects/voe/BRIEF.md: the CEO's ask word for word, the usual way (nflWAR, plus-minus), analogies (basketball RAPM, gene knockouts), a close read of the old notebooks (ratings from a shared on-field leftover, slots from depth charts, a knockout to the slot average; defense's sign flipped; random splits), a map of eleven decisions and seven cousins, and the multiverse as the exploratory way to compare them. Waiting for the CEO's hunches."
+
   - id: voe-retro
     name: VOE (retrospective)
     phase: 1
