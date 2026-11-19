@@ -5,7 +5,7 @@
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
-- **Next retro:** after the second project finished from 2026-11-15 on.
+- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`).
 
 ---
 
