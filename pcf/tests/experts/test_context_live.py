@@ -306,3 +306,24 @@ def test_the_live_output_forecasts_plays_whose_outcome_isnt_known_yet():
     assert out.height == live.filter(c("week") <= 2).height
     assert out["mean"].is_between(0, 1).all() and (out["q10"] == out["mean"]).all()
     check_output(out, plays.KEYS)
+
+
+def test_plays_like_this_one_find_the_blitz_from_earlier_plays_only():
+    from pcf.experts.context_live import neighbours
+
+    d = _world(n=1500).with_columns(is_run=pl.lit(False), is_attempt=pl.lit(False))
+    end = datetime(2023, 9, 1, tzinfo=UTC)
+    out = neighbours.forecast(d, 2024, end, "run", names=["pressure_prob"], k=100)
+    assert out.height == d.filter(c("season") == 2024).height
+    check_output(out, plays.KEYS)
+    assert (out["model_version"] == neighbours.VERSION).all()
+    test = d.filter(c("season") == 2024).join(out.select(*plays.KEYS, "mean"), on=plays.KEYS)
+    by = test.group_by("n_blitzers").agg(c("mean").mean()).sort("n_blitzers")["mean"]
+    # two blitzers: pressure more often (diluted: plain distance weighs every noise field the same)
+    assert by[2] > by[0] + 0.05
+    late = d.with_columns(
+        known_at=pl.when(c("season") == 2023).then(pl.lit(datetime(2024, 12, 1, tzinfo=UTC)))
+        .otherwise(c("known_at"))
+    )  # fmt: skip
+    with pytest.raises(ValueError, match="weren't known"):
+        neighbours.forecast(late, 2024, end, "run", names=["pressure_prob"], k=100)
