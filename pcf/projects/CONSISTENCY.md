@@ -91,6 +91,15 @@
 
 Player rows measured 2026-11-11 with [`projects/player-pace/explore/h26_h28_h29_h31.py`](player-pace/explore/h26_h28_h29_h31.py) and [`personnel.py`](player-pace/explore/personnel.py), 2016–2024.
 
+**Yards spread measures** (crude-forecaster build, 2026-11-17, H55): per **player** per regular-season game, players expected to play with 6+ such games in the season and a positive average. Spread is the game's distance from his season average of yards, in yards; relative spread divides it by that average. Measured with `pcf.validation.consistency` in [`projects/crude-forecaster/build/yardstick_run.py`](crude-forecaster/build/yardstick_run.py), 2016–2024.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Yards spread, QB passing | crude-forecaster (H55) | \|yards − his season average\| | 0.24 (0.13–0.34) | −0.05 (−0.19 to 0.09) | state | No: −0.23% of next game's error; range score −0.19% with participation in (crude-forecaster#R11) | A QB's boom-or-bust doesn't last into next season |
+| Yards spread, RB rushing | crude-forecaster (H55) | The same | 0.73 (0.70–0.76) | 0.60 (0.54–0.65) | trait | No: −0.13%; range +0.11% (not clear) with participation in | Mostly the average again: spread grows with it |
+| Yards spread, receiving (WR, TE, RB) | crude-forecaster (H55) | The same | 0.72 (0.70–0.74) | 0.68 (0.65–0.70) | trait | No: −0.14%; range +0.04% (not clear) with participation in | The same |
+| Relative yards spread, QB / RB / receiving | crude-forecaster (H55) | Spread over his season average | 0.70 / 0.47 / 0.32 | 0.58 / 0.72 / 0.63 | trait | Not tested apart | Partly the average again, inverted: low-average players have large relative spreads. Not a clean "boom-or-bust" measure |
+
 **Participation measures** (participation-live exploration, 2026-11-11): substitution per **team** per game, and on-and-off rhythm per **player** per game, from the true participation 2016–2024. Team measures are each team-game's players changed per snap above the league's in the same situation and season.
 
 | Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |

@@ -79,11 +79,22 @@ class FrameSource:
 def history_run(project_id: str, version: int, path: Path | None = None) -> str:
     """The run whose history a pinned version reads: the registered version's run in MLflow, or,
     for a project with no registered versions, the run `registry.yaml` pins it to
-    (`history_runs: {version: run_id}`, reviewed and merged like code; decision 0033)."""
+    (`history_runs: {version: run_id}`, reviewed and merged like code; decision 0033).
+
+    One variant of a project with several (`"elo/margin"`) is pinned the same way, under its
+    variant: `history_runs: {margin: {1: run_id}}`. Variants have no MLflow models (decision
+    0037)."""
     from mlflow.exceptions import MlflowException
 
     from pcf.core import registry, tracking
 
+    project, _, variant = project_id.partition("/")
+    if variant:
+        pins = (registry.projects(path).get(project) or {}).get("history_runs") or {}
+        runs = pins.get(variant) or {}
+        if version in runs:
+            return str(runs[version])
+        raise KeyError(f"{project_id} v{version} isn't pinned in the registry's history_runs")
     try:
         return tracking.version_run(project_id, version)
     except MlflowException:
@@ -94,8 +105,8 @@ def history_run(project_id: str, version: int, path: Path | None = None) -> str:
 
 
 def stored_outputs(project_id: str, version: int) -> pl.DataFrame:
-    """A pinned model version's walk-forward history: `outputs/<id>/<run_id>/history.parquet`,
-    with the run from `history_run`."""
+    """A pinned model version's walk-forward history: `outputs/<id>/<run_id>/history.parquet`
+    (a variant's: `outputs/<id>/<variant>/<run_id>/`), with the run from `history_run`."""
     run_id = history_run(project_id, version)
     return pl.read_parquet(get_config().zone("outputs") / project_id / run_id / HISTORY)
 
