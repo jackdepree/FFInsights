@@ -1,0 +1,3 @@
+Team-seasons where the main QB missed whole games: 175; games missed 639
+Offense EPA over expected a play, missed less played, same team-season: -0.070 (90% -0.085 to -0.053)
+For scale: the spread of teams' full-season offense rate 0.086; a starter's plus-minus spread (QB, 300+ plays) about 0.004 a play at the chosen shrinkage

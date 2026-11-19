@@ -1,0 +1,57 @@
+== 1. PLAYER OR TEAM? Season to season, players who stayed against players who moved (300+ plays both seasons) ==
+  raw on-field average: stayed +0.27 (+0.25 to +0.30, n 4167); moved +0.03 (-0.02 to +0.08, n 1140)
+      QB: stayed +0.40 (+0.29 to +0.50, n 185); moved +0.01 (-0.27 to +0.28, n 36)
+      WR: stayed +0.35 (+0.29 to +0.42, n 483); moved +0.08 (-0.06 to +0.22, n 135)
+      OL: stayed +0.32 (+0.27 to +0.37, n 904); moved +0.04 (-0.07 to +0.15, n 219)
+      DL: stayed +0.17 (+0.11 to +0.23, n 692); moved +0.01 (-0.10 to +0.13, n 199)
+      DB: stayed +0.18 (+0.13 to +0.23, n 880); moved +0.01 (-0.09 to +0.11, n 271)
+  plus-minus: stayed +0.29 (+0.26 to +0.31, n 4167); moved +0.07 (+0.03 to +0.12, n 1140)
+      QB: stayed +0.40 (+0.30 to +0.50, n 185); moved -0.07 (-0.34 to +0.21, n 36)
+      WR: stayed +0.35 (+0.28 to +0.42, n 483); moved +0.12 (-0.02 to +0.26, n 135)
+      OL: stayed +0.34 (+0.30 to +0.39, n 904); moved +0.11 (-0.00 to +0.22, n 219)
+      DL: stayed +0.13 (+0.07 to +0.19, n 692); moved +0.08 (-0.04 to +0.19, n 199)
+      DB: stayed +0.22 (+0.16 to +0.27, n 880); moved +0.02 (-0.08 to +0.12, n 271)
+  The VOE model on held-out seasons (how much of a play's leftover the 22 slot ratings explain):
+    pass: 2018 -0.23%, 2019 +0.22%, 2020 +0.19%, 2021 +0.09%, 2022 +0.02%, 2023 +0.21%, 2024 +0.06%
+    run: 2018 -0.13%, 2019 -0.10%, 2020 +0.19%, 2021 -0.15%, 2022 -0.13%, 2023 +0.16%, 2024 +0.08%
+  recreation, expected VOE per snap: stayed +0.44 (+0.41 to +0.46, n 3123); moved +0.28 (+0.23 to +0.33, n 882)
+      QB: stayed +0.61 (+0.52 to +0.69, n 139); moved +0.23 (-0.09 to +0.50, n 29)
+      WR: stayed +0.47 (+0.41 to +0.54, n 370); moved +0.41 (+0.26 to +0.54, n 98)
+      OL: stayed +0.19 (+0.13 to +0.25, n 670); moved -0.02 (-0.15 to +0.11, n 161)
+      DL: stayed +0.34 (+0.27 to +0.40, n 515); moved +0.21 (+0.08 to +0.33, n 158)
+      DB: stayed +0.14 (+0.07 to +0.20, n 657); moved +0.23 (+0.11 to +0.33, n 210)
+
+== 2. THE ROSTER-CHANGE TEST FOR OFFENSE, SPLIT ==
+    plus-minus with prior, QBs only, offense: adds +13.94% to last season's rate (90% +7.95 to +19.13); roster sum against the season +0.48 (+0.40 to +0.56, n 256); plays by players with a value 86%
+    plus-minus with prior, QBs only, defense: adds -4.68% to last season's rate (90% -11.38 to +1.65); roster sum against the season +0.27 (+0.18 to +0.37, n 256); plays by players with a value 87%
+    plus-minus with prior, everyone but QBs, offense: adds +2.20% to last season's rate (90% -2.31 to +7.14); roster sum against the season +0.43 (+0.34 to +0.51, n 256); plays by players with a value 85%
+    plus-minus with prior, everyone but QBs, defense: adds -4.68% to last season's rate (90% -11.28 to +1.65); roster sum against the season +0.27 (+0.18 to +0.37, n 256); plays by players with a value 87%
+
+== 3. THE INJURY DESIGN ==
+  events 1342
+  QB events, largest weight first (before, after, change less control, plays before/after):
+    Jimmy Garoppolo, 2016_02_MIA_NE: +0.206 -> +0.115, -0.051 (38/35)
+    Daniel Jones, 2020_12_NYG_CIN: +0.161 -> -0.193, -0.249 (48/29)
+    Deshaun Watson, 2024_07_CIN_CLE: -0.185 -> -0.189, -0.030 (30/45)
+    Teddy Bridgewater, 2021_15_CIN_DEN: -0.243 -> -0.013, +0.261 (42/28)
+    Dwayne Haskins, 2019_16_NYG_WAS: +0.283 -> +0.104, -0.148 (33/33)
+    Kyler Murray, 2019_16_ARI_SEA: +0.211 -> +0.138, -0.115 (36/30)
+    Justin Herbert, 2023_14_DEN_LAC: -0.598 -> -0.274, +0.438 (30/36)
+    Taysom Hill, 2021_18_NO_ATL: +0.451 -> -0.054, -0.594 (25/44)
+    Teddy Bridgewater, 2022_17_MIA_NE: +0.131 -> -0.103, +0.111 (43/25)
+    Justin Fields, 2023_06_MIN_CHI: -0.167 -> -0.520, -0.185 (33/30)
+    Jimmy Garoppolo, 2020_08_SF_SEA: -0.096 -> +0.756, +0.850 (38/26)
+    Daniel Jones, 2021_05_NYG_DAL: +0.001 -> -0.153, -0.036 (27/36)
+    Nathan Peterman, 2017_14_IND_BUF: -0.194 -> -0.100, +0.185 (37/26)
+    Kenny Pickett, 2023_08_JAX_PIT: -0.313 -> -0.142, +0.171 (26/36)
+    Cody Kessler, 2016_11_PIT_CLE: -0.143 -> -0.193, +0.121 (27/34)
+  came back (placebo) (n 1736): after less before -0.002 (90% -0.016 to +0.013); before +0.005, the 5 plays before the injury -0.013, after +0.003
+      QB (n 75): -0.008 (90% -0.083 to +0.067)
+      WR (n 182): +0.032 (90% -0.010 to +0.077)
+      OL (n 328): -0.008 (90% -0.040 to +0.026)
+      DB (n 608): -0.016 (90% -0.043 to +0.012)
+  left (n 1342): after less before +0.011 (90% -0.007 to +0.029); before -0.021, the 5 plays before the injury -0.058, after -0.010
+      QB (n 76): +0.033 (90% -0.041 to +0.108)
+      WR (n 120): +0.080 (90% +0.017 to +0.141)
+      OL (n 388): +0.012 (90% -0.019 to +0.044)
+      DB (n 390): -0.017 (90% -0.050 to +0.013)

@@ -1,0 +1,135 @@
+== DATA ==
+Plays with participation, 2016-2024: 295,319 of 295,328 run and pass snaps; player-plays 6,494,301; players 4,986
+The leftover (EPA less the situation's expectation): mean -0.001, sd 1.378 a play; the situation model's expectation has sd 0.134
+Players a season by group: QB 51, RB 101, WR 165, TE 99, OL 252, DL 239, LB 186, DB 274 (100+ plays)
+
+== NOISE CEILING ==
+  A team's offense EPA over expected a play: halves of a season +0.57 (+0.50 to +0.63, n 288) (a full season's reliability 0.73); season to season +0.35 (+0.26 to +0.44, n 256)
+  A team's defense EPA over expected a play: halves of a season +0.29 (+0.20 to +0.38, n 288) (a full season's reliability 0.45); season to season +0.24 (+0.14 to +0.34, n 256)
+  A player's raw on-field average (his team's leftover while he was on; no split from teammates):
+  raw on-field average, 150+ plays each half, 300+ each season
+    all: halves +0.35 (+0.34 to +0.37, n 7950); season to season +0.23 (+0.20 to +0.25, n 5307)
+     QB: halves +0.51 (+0.44 to +0.58, n 324); season to season +0.39 (+0.29 to +0.48, n 221)
+     RB: halves +0.47 (+0.41 to +0.54, n 392); season to season +0.24 (+0.14 to +0.34, n 251)
+     WR: halves +0.45 (+0.41 to +0.49, n 953); season to season +0.30 (+0.23 to +0.35, n 618)
+     TE: halves +0.44 (+0.38 to +0.50, n 497); season to season +0.24 (+0.15 to +0.32, n 342)
+     OL: halves +0.49 (+0.46 to +0.52, n 1666); season to season +0.26 (+0.22 to +0.31, n 1123)
+     DL: halves +0.23 (+0.19 to +0.27, n 1325); season to season +0.14 (+0.08 to +0.19, n 891)
+     LB: halves +0.22 (+0.17 to +0.27, n 1083); season to season +0.20 (+0.14 to +0.25, n 710)
+     DB: halves +0.22 (+0.18 to +0.26, n 1710); season to season +0.15 (+0.11 to +0.20, n 1151)
+  Pure dice on a player-season of 300+ plays: the leftover's sd 1.378 / sqrt(n) = 0.055 at the median (633 plays); teams' spread of the full-season rate 0.078
+
+== H69: PLUS-MINUS WITH SHRINKAGE ==
+  The shrinkage, chosen on 2017 (fit on odd weeks, scored on even weeks' plays):
+    alpha    100: the 22 players explain -1.833% of a held-out play's leftover
+    alpha    300: the 22 players explain -0.630% of a held-out play's leftover
+    alpha   1000: the 22 players explain -0.161% of a held-out play's leftover
+    alpha   3000: the 22 players explain +0.023% of a held-out play's leftover
+    alpha  10000: the 22 players explain +0.077% of a held-out play's leftover
+    alpha  30000: the 22 players explain +0.048% of a held-out play's leftover
+  chosen alpha 10000
+  plain ridge, a season at a time (150+ plays each half, 300+ each season)
+    all: halves +0.35 (+0.33 to +0.36, n 7950); season to season +0.25 (+0.23 to +0.27, n 5307)
+     QB: halves +0.51 (+0.44 to +0.58, n 324); season to season +0.40 (+0.30 to +0.49, n 221)
+     RB: halves +0.41 (+0.34 to +0.48, n 392); season to season +0.26 (+0.16 to +0.35, n 251)
+     WR: halves +0.43 (+0.39 to +0.48, n 953); season to season +0.31 (+0.25 to +0.37, n 618)
+     TE: halves +0.39 (+0.33 to +0.46, n 497); season to season +0.23 (+0.14 to +0.31, n 342)
+     OL: halves +0.51 (+0.48 to +0.54, n 1666); season to season +0.30 (+0.26 to +0.35, n 1123)
+     DL: halves +0.20 (+0.15 to +0.24, n 1325); season to season +0.12 (+0.06 to +0.17, n 891)
+     LB: halves +0.18 (+0.13 to +0.23, n 1083); season to season +0.22 (+0.16 to +0.28, n 710)
+     DB: halves +0.20 (+0.16 to +0.24, n 1710); season to season +0.19 (+0.14 to +0.23, n 1151)
+  fitting noise: alpha 3333 against 10000 (2020-2021, 300+ plays): values agree +0.96 (+0.96 to +0.97, n 1925)
+  fitting noise: alpha 30000 against 10000 (2020-2021, 300+ plays): values agree +0.99 (+0.99 to +0.99, n 1925)
+  with last season's value as the prior (half of it): the halves share the prior, so only the roster-change test reads it fairly
+    top QB seasons: Lamar Jackson 2024 +0.013; Patrick Mahomes 2018 +0.012; Lamar Jackson 2019 +0.012; Patrick Mahomes 2022 +0.011; Brock Purdy 2023 +0.010
+    top OL seasons: Patrick Mekari 2024 +0.013; Orlando Brown 2019 +0.013; Bradley Bozeman 2019 +0.013; Daniel Faalele 2024 +0.013; Ronnie Stanley 2024 +0.012
+    top DL seasons: Aaron Donald 2020 +0.011; Leonard Floyd 2020 +0.010; Yannick Ngakoue 2017 +0.010; Myles Garrett 2023 +0.009; Malik Jackson 2017 +0.009
+    top DB seasons: John Johnson 2020 +0.012; Jaquiski Tartt 2019 +0.011; Troy Hill 2020 +0.011; Devin McCourty 2019 +0.010; Stephon Gilmore 2019 +0.010
+    spread of values by group (300+ plays): DB sd 0.0032; DL sd 0.0029; LB sd 0.0031; OL sd 0.0040; QB sd 0.0041; RB sd 0.0032; TE sd 0.0034; WR sd 0.0037
+
+== THE RECREATION (the old VOE, fixed: walk-forward, defense's sign, per snap) ==
+  The VOE model on held-out seasons (how much of a play's leftover the 22 slot ratings explain):
+    pass: 2018 -0.38%, 2019 +0.20%, 2020 +0.22%, 2021 +0.06%, 2022 +0.04%, 2023 +0.19%, 2024 +0.09%
+    run: 2018 -0.19%, 2019 -0.14%, 2020 +0.18%, 2021 -0.10%, 2022 -0.10%, 2023 +0.22%, 2024 +0.02%
+  expected VOE per snap (the play's result not used)
+    all: halves +0.92 (+0.91 to +0.92, n 6210); season to season +0.36 (+0.34 to +0.39, n 4005)
+     QB: halves +0.93 (+0.91 to +0.94, n 258); season to season +0.60 (+0.51 to +0.67, n 168)
+     RB: halves +0.97 (+0.97 to +0.98, n 309); season to season +0.71 (+0.64 to +0.76, n 195)
+     WR: halves +0.92 (+0.91 to +0.93, n 751); season to season +0.44 (+0.38 to +0.50, n 468)
+     TE: halves +0.94 (+0.93 to +0.95, n 392); season to season +0.66 (+0.60 to +0.72, n 261)
+     OL: halves +0.89 (+0.89 to +0.90, n 1297); season to season +0.09 (+0.04 to +0.15, n 831)
+     DL: halves +0.88 (+0.87 to +0.89, n 1033); season to season +0.28 (+0.22 to +0.34, n 673)
+     LB: halves +0.91 (+0.90 to +0.92, n 836); season to season +0.22 (+0.15 to +0.29, n 542)
+     DB: halves +0.91 (+0.90 to +0.92, n 1334); season to season +0.06 (+0.01 to +0.12, n 867)
+  realized VOE per snap (the play's leftover less the prediction without him)
+    all: halves +0.33 (+0.31 to +0.35, n 6210); season to season +0.10 (+0.08 to +0.13, n 4005)
+     QB: halves +0.45 (+0.37 to +0.53, n 258); season to season +0.23 (+0.11 to +0.35, n 168)
+     RB: halves +0.40 (+0.32 to +0.47, n 309); season to season +0.12 (+0.00 to +0.24, n 195)
+     WR: halves +0.36 (+0.31 to +0.41, n 751); season to season +0.13 (+0.06 to +0.21, n 468)
+     TE: halves +0.39 (+0.32 to +0.46, n 392); season to season +0.12 (+0.02 to +0.22, n 261)
+     OL: halves +0.39 (+0.35 to +0.43, n 1297); season to season +0.08 (+0.02 to +0.14, n 831)
+     DL: halves +0.28 (+0.24 to +0.33, n 1033); season to season +0.07 (+0.01 to +0.14, n 673)
+     LB: halves +0.28 (+0.22 to +0.33, n 836); season to season +0.12 (+0.05 to +0.19, n 542)
+     DB: halves +0.27 (+0.23 to +0.31, n 1334); season to season +0.09 (+0.04 to +0.15, n 867)
+  expected VOE summed per game, week to the next week (the old measure): +0.64 (+0.64 to +0.64, n 125359)
+
+== H70: A PLAYER AGAINST WHOEVER ELSE PLAYS HIS SPOT (same team-game) ==
+  on minus off at his group, shrunk (100+ plays each half, 200+ each season)
+    all: halves +0.05 (+0.03 to +0.07, n 6777); season to season +0.07 (+0.04 to +0.09, n 4488)
+     QB: halves -0.03 (-0.31 to +0.26, n 35); season to season +0.10 (-0.27 to +0.44, n 22)
+     RB: halves +0.13 (+0.06 to +0.19, n 570); season to season +0.15 (+0.07 to +0.23, n 372)
+     WR: halves +0.03 (-0.02 to +0.07, n 1157); season to season -0.02 (-0.08 to +0.04, n 771)
+     TE: halves +0.07 (+0.01 to +0.14, n 651); season to season +0.05 (-0.03 to +0.13, n 433)
+     OL: halves +0.00 (-0.14 to +0.15, n 135); season to season +0.11 (-0.12 to +0.33, n 52)
+     DL: halves +0.04 (-0.00 to +0.08, n 1697); season to season +0.07 (+0.02 to +0.12, n 1169)
+     LB: halves +0.05 (+0.00 to +0.10, n 1097); season to season +0.12 (+0.06 to +0.18, n 714)
+     DB: halves +0.00 (-0.04 to +0.05, n 1435); season to season +0.02 (-0.03 to +0.08, n 955)
+  how many plays without him at his spot (weight on x off / team, a season, 300+ plays): DB 58; DL 206; LB 134; OL 20; QB 19; RB 198; TE 183; WR 138
+
+== AGREEMENT (player-seasons with 300+ plays) ==
+  all: plus-minus vs recreation +0.22 (+0.20 to +0.23, n 6722); vs spot +0.45 (+0.44 to +0.47, n 8273); vs raw on-field +0.92 (+0.92 to +0.92, n 8585)
+   QB: plus-minus vs recreation +0.43 (+0.34 to +0.50, n 275); vs spot +0.40 (+0.31 to +0.47, n 318); vs raw on-field +0.94 (+0.93 to +0.95, n 347)
+   RB: plus-minus vs recreation +0.47 (+0.40 to +0.53, n 352); vs spot +0.61 (+0.56 to +0.66, n 447); vs raw on-field +0.93 (+0.92 to +0.94, n 447)
+   WR: plus-minus vs recreation +0.43 (+0.38 to +0.48, n 802); vs spot +0.54 (+0.50 to +0.57, n 1016); vs raw on-field +0.93 (+0.93 to +0.94, n 1016)
+   TE: plus-minus vs recreation +0.50 (+0.44 to +0.55, n 444); vs spot +0.58 (+0.53 to +0.62, n 564); vs raw on-field +0.92 (+0.91 to +0.93, n 564)
+   OL: plus-minus vs recreation -0.04 (-0.09 to -0.00, n 1381); vs spot +0.27 (+0.23 to +0.31, n 1497); vs raw on-field +0.93 (+0.92 to +0.93, n 1769)
+   DL: plus-minus vs recreation +0.20 (+0.15 to +0.25, n 1113); vs spot +0.64 (+0.61 to +0.66, n 1429); vs raw on-field +0.91 (+0.91 to +0.92, n 1429)
+   LB: plus-minus vs recreation +0.22 (+0.17 to +0.27, n 908); vs spot +0.48 (+0.44 to +0.51, n 1166); vs raw on-field +0.91 (+0.90 to +0.92, n 1168)
+   DB: plus-minus vs recreation +0.13 (+0.09 to +0.18, n 1447); vs spot +0.40 (+0.37 to +0.43, n 1836); vs raw on-field +0.92 (+0.91 to +0.92, n 1845)
+
+== DOES IT TRAVEL? (the roster-change test, 2019-2024) ==
+    raw on-field average, offense: adds -0.55% to last season's rate (90% -3.77 to +2.54); roster sum against the season +0.37 (+0.28 to +0.46, n 256); plays by players with a value 85%
+    raw on-field average, defense: adds -0.60% to last season's rate (90% -1.95 to +0.54); roster sum against the season +0.19 (+0.08 to +0.28, n 256); plays by players with a value 87%
+    plus-minus, offense: adds +1.31% to last season's rate (90% -3.17 to +5.94); roster sum against the season +0.42 (+0.33 to +0.50, n 256); plays by players with a value 85%
+    plus-minus, defense: adds -3.52% to last season's rate (90% -11.55 to +3.91); roster sum against the season +0.28 (+0.18 to +0.37, n 256); plays by players with a value 87%
+    plus-minus with last season's prior, offense: adds +6.87% to last season's rate (90% +1.94 to +12.08); roster sum against the season +0.45 (+0.37 to +0.53, n 256); plays by players with a value 85%
+    plus-minus with last season's prior, defense: adds -4.68% to last season's rate (90% -11.78 to +1.54); roster sum against the season +0.27 (+0.18 to +0.37, n 256); plays by players with a value 87%
+    recreation (expected VOE per snap), offense: adds +1.06% to last season's rate (90% -1.18 to +3.10); roster sum against the season +0.26 (+0.16 to +0.35, n 256); plays by players with a value 64%
+    recreation (expected VOE per snap), defense: adds -0.28% to last season's rate (90% -1.68 to +1.25); roster sum against the season +0.12 (+0.02 to +0.22, n 256); plays by players with a value 65%
+    spot plus-minus, offense: adds -1.58% to last season's rate (90% -5.34 to +2.27); roster sum against the season +0.25 (+0.15 to +0.35, n 256); plays by players with a value 78%
+    spot plus-minus, defense: adds -0.25% to last season's rate (90% -2.36 to +1.85); roster sum against the season +0.10 (-0.00 to +0.20, n 256); plays by players with a value 86%
+
+== H72: IN-GAME INJURIES ==
+  Injury notes matched to a regular who left (on 60%+ of his side's plays before, 2 or fewer after, 10+ plays each side of it): 1,342
+    all (n 1342): after less before, less the same team's other games at that point: +0.013 EPA a play (90% -0.005 to +0.031); raw change +0.011
+     QB (n 76): after less before, less the same team's other games at that point: +0.043 EPA a play (90% -0.033 to +0.115); raw change +0.033
+     RB (n 50): after less before, less the same team's other games at that point: +0.010 EPA a play (90% -0.082 to +0.105); raw change +0.004
+     WR (n 120): after less before, less the same team's other games at that point: +0.100 EPA a play (90% +0.034 to +0.169); raw change +0.080
+     TE (n 57): after less before, less the same team's other games at that point: +0.024 EPA a play (90% -0.070 to +0.122); raw change +0.024
+     OL (n 388): after less before, less the same team's other games at that point: +0.033 EPA a play (90% -0.003 to +0.067); raw change +0.012
+     DL (n 96): after less before, less the same team's other games at that point: +0.031 EPA a play (90% -0.032 to +0.093); raw change +0.044
+     LB (n 165): after less before, less the same team's other games at that point: -0.043 EPA a play (90% -0.097 to +0.008); raw change -0.007
+     DB (n 390): after less before, less the same team's other games at that point: -0.022 EPA a play (90% -0.056 to +0.011); raw change -0.017
+  Credited to him? The change against his value last season (plus-minus with prior, 200+ plays):
+    all: with his value -0.03 (-0.08 to +0.02, n 907); with his value less his backup's +0.00 (-0.06 to +0.06, n 697)
+     QB: with his value +0.11 (-0.15 to +0.35, n 44); with his value less his backup's +0.09 (-0.19 to +0.36, n 36)
+     RB: with his value -0.12 (-0.41 to +0.18, n 32); with his value less his backup's +0.24 (-0.10 to +0.54, n 25)
+     WR: with his value -0.09 (-0.26 to +0.09, n 89); with his value less his backup's -0.04 (-0.23 to +0.16, n 69)
+     TE: with his value +0.06 (-0.21 to +0.32, n 39); with his value less his backup's +0.21 (-0.13 to +0.51, n 26)
+     OL: with his value -0.03 (-0.13 to +0.07, n 268); with his value less his backup's +0.05 (-0.07 to +0.16, n 210)
+     DL: with his value -0.08 (-0.27 to +0.12, n 73); with his value less his backup's -0.13 (-0.35 to +0.11, n 50)
+     LB: with his value -0.02 (-0.18 to +0.15, n 100); with his value less his backup's -0.05 (-0.23 to +0.13, n 84)
+     DB: with his value -0.03 (-0.13 to +0.07, n 262); with his value less his backup's -0.03 (-0.15 to +0.09, n 197)
+
+== H73: EXTENDING THE INJURY MEASUREMENT FROM WHAT WAS KNOWN BEFORE ==
+  held-out events 2019-2024 (n 937): against predicting the average change, the group's average +0.13%; the model (group, his value, his backup's, his plays) +0.23%

@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** exploring (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; Claude's expectations written before the first run) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -214,20 +214,37 @@ Most public football player value gives credit only to the players who touch the
   - Season to season it is mostly the team: 70% that it repeats less than plus-minus once teammates are taken out.
   - 70% that plus-minus beats it on the roster-change test.
 
-## Open
-*For the CEO, simple to detailed.*
+## What the exploration found
+*2026-11-19; details, numbers and the case against in [EXPLORATION.md](EXPLORATION.md).*
 
-1. **Your hunches, with odds.** The four claims in your ask could each be one hunch, for example:
-   - "the recreated VOE repeats season to season";
-   - "it predicts a team's next season when players move";
-   - "a latent-space or propensity cousin catches signal the recreation doesn't";
-   - "it can be turned into wins above replacement".
-   For each, the football claim, a confidence and an expected size, in your own words.
+- **Most of any on-field value is the team.** A player's number repeats 0.27 season to season if he stays and 0.03 if he moves. Plus-minus pulls out a little more of the player: 0.07 for movers, and OL and WR about 0.11.
+- **Quarterbacks are the exception.** Their values carry a team's next offense (+13.9%). A whole game without the main QB costs 0.070 EPA a play.
+- **The old design repeats mostly by construction.** Its slot model explains 0.0–0.2% of a held-out play. The old notebook's 0.80 was a leak or a bug.
+- **Hunches:**
+  - H69 held in part.
+  - H70 failed.
+  - H72 failed within a game, though the whole-game version finds the QB.
+  - H73 failed in this first look.
+- **New ideas** (Claude's, with odds):
+  - I73: whole games missed as the natural experiment.
+  - I74: plus-minus with a prior from the player's own stats.
+
+## Open after the exploration
+*For the CEO, simple to detailed. Taste calls: the CEO's instinct first, Claude's view after.*
+
+1. **Which direction should VOE take from here?**
+   - **Why it matters:** the first look shows the problem is separating a player from his team, not the choice of model. The next step should give each player information his teammates don't share.
+   - **Options:**
+     - **(a) Plus-minus with a prior from his own stats (I74).** The standard fix, cheap, all 22 positions.
+     - **(b) Skill VOE.** Value over expected on the context expert's per-skill outcomes (pressure, completion, run yards), where a player's own actions are measured. It needs expected values for 2016–2022, which context-live hasn't scored yet.
+     - **(c) Whole games missed (I73)** as the natural experiment, then your H73 extension from it.
+     - **(d) QBs first:** a QB VOE now, since that's where the signal is clearest; the rest later.
+     - These can be combined.
 2. **Cadence: after the season, during it, or both.**
-   - **Why it matters:** the old VOE needed true participation, which arrives after the Super Bowl (2016–2025). In-season VOE would read the in-season map, which agrees with true plus-minus only about 0.45.
+   - **Why it matters:** this exploration used true participation, which arrives after the Super Bowl (2016–2025). In-season VOE would read the in-season map, which agrees with true plus-minus only about 0.45.
    - **Options:**
      - **After the season (`voe-retro`):** the cleanest, a player-value stat and a prior for next season.
      - **In season (`voe-live`):** weekly, blurrier.
      - **Both:** the same design run on two maps.
-3. **Which players first.** All 22, as the old VOE did, or the ball's touchers first and the rest after the recreation shows it can split teammates.
-4. **Which cousins the exploration looks at beside the recreation.** At most two or three, so each gets a real test.
+3. **The no-noise target.** The draft is the roster-change test (a team's next season, players weighted by who actually plays), read on movers.
+4. **Odds for H71 (the latent space) and H74 (other experts as confounders)** before their cousins are explored.
