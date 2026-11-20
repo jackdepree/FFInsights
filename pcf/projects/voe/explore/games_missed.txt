@@ -1,0 +1,149 @@
+== DATA ==
+Team-games (each side), 2016-2024, final weeks dropped: 8,892; regulars (typical share 50%+, 4+ games): 7,444 player-team-seasons
+  absences of half a game or more, by group: QB 1,054; RB 574; WR 2,170; TE 807; OL 5,448; DL 1,612; LB 2,277; DB 5,470
+  whole games missed (share 0): QB 878; RB 426; WR 1,547; TE 642; OL 4,104; DL 1,290; LB 1,629; DB 3,778
+  noise: a team-game's rate less its season's mean has sd 0.179 EPA a play (a game is about 62 plays: dice alone 0.175)
+
+#################### [pre-registered: partial games count as partial absences] ####################
+
+== 1. WHAT AN ABSENCE COSTS (per full game missed by one regular; EPA over expected a play for his side; 90% by resampling team-seasons) ==
+  offense (288 team-seasons, 4,446 team-games):
+    QB: -0.0513 (-0.0713 to -0.0332); shuffled null 90% -0.0173 to +0.0136; placebo, a non-regular (typical share 10-50%) +0.0226 (-0.0221 to +0.0645)
+    RB: -0.0175 (-0.0339 to +0.0002); shuffled null 90% -0.0186 to +0.0163; placebo, a non-regular (typical share 10-50%) -0.0151 (-0.0239 to -0.0066)
+    WR: +0.0100 (-0.0000 to +0.0189); shuffled null 90% -0.0103 to +0.0105; placebo, a non-regular (typical share 10-50%) +0.0045 (-0.0044 to +0.0133)
+    TE: -0.0205 (-0.0361 to -0.0052); shuffled null 90% -0.0159 to +0.0133; placebo, a non-regular (typical share 10-50%) -0.0299 (-0.0403 to -0.0200)
+    OL: -0.0039 (-0.0102 to +0.0020); shuffled null 90% -0.0058 to +0.0064; placebo, a non-regular (typical share 10-50%) -0.0007 (-0.0147 to +0.0132)
+  defense (288 team-seasons, 4,446 team-games):
+    DL: +0.0125 (+0.0025 to +0.0228); shuffled null 90% -0.0104 to +0.0095; placebo, a non-regular (typical share 10-50%) +0.0056 (-0.0004 to +0.0123)
+    LB: -0.0036 (-0.0141 to +0.0063); shuffled null 90% -0.0091 to +0.0092; placebo, a non-regular (typical share 10-50%) +0.0072 (-0.0006 to +0.0153)
+    DB: -0.0207 (-0.0275 to -0.0147); shuffled null 90% -0.0055 to +0.0068; placebo, a non-regular (typical share 10-50%) -0.0138 (-0.0224 to -0.0064)
+
+== 2. SIZING THE RATINGS (k: how many times the rating must be scaled to match real absences; 2018-2024) ==
+  absences with a replacement found among group-mates whose plays rose: 99% (the rest use the group's new-player level)
+  his rating less his replacement's, mean over absences of half a game or more (QB | others): ra +0.0009 | +0.0003; rs +0.0006 | +0.0001; rp +0.0005 | +0.0004
+  plus-minus from his own stats (a): k for QBs 2.7 (90% -0.6 to 5.9); for everyone else -0.2 (-1.1 to 0.7)
+  own-stats rating (b): k for QBs 9.4 (90% 4.1 to 15.4); for everyone else 5.2 (-0.3 to 11.4)
+  plus-minus with last season's prior (first look): k for QBs 2.5 (90% -1.2 to 5.8); for everyone else 0.1 (-0.8 to 0.8)
+  with each group's average absence cost in the same fit (k then says only whether a bigger rating gap means a bigger drop):
+    plus-minus from his own stats (a): k for QBs 1.4 (90% -1.9 to 4.8); for everyone else -0.5 (-1.4 to 0.4)
+    own-stats rating (b): k for QBs 6.4 (90% 1.6 to 12.3); for everyone else 2.1 (-4.1 to 7.9)
+    plus-minus with last season's prior (first look): k for QBs 1.5 (90% -2.2 to 4.5); for everyone else -0.2 (-1.0 to 0.6)
+
+== 3. THE EXTENSION: FIT ON 2018-2021 (group averages 2016-2021), SCORE HELD-OUT TEAM-GAMES 2022-2024 ==
+  share of the within-season error in a team-game's rate removed (plays-weighted), against predicting no change; 90% by resampling team-seasons
+    group averages (each group's absence cost)                     +0.141% (-0.612 to +0.903)
+    group averages, fit on 2018-2021 only                          -0.112% (-0.939 to +0.643)
+    sized plus-minus from his own stats (a)                        +0.034% (-0.182 to +0.300)
+    sized own-stats rating (b)                                     -0.123% (-0.652 to +0.456)
+    sized plus-minus with last season's prior (first look)         +0.039% (-0.133 to +0.246)
+    group averages + sized plus-minus from his own stats (a)       -0.186% (-1.056 to +0.685)
+    group averages + sized own-stats rating (b)                    -0.183% (-0.990 to +0.719)
+    sized ra less group averages (same fit seasons): +0.146 points (-0.654 to +1.016)
+    sized rs less group averages (same fit seasons): -0.011 points (-0.928 to +0.911)
+
+== 4. THE ROSTER-CHANGE TEST WITH SIZED RATINGS (2022-2024; k from 2018-2021; the new-player share in the baseline) ==
+  k fit on 2018-2021: ra QB 1.7, others -0.8; rp QB 1.4, others -0.4
+    plus-minus with prior (first look), unsized                offense: +4.22% (90% -3.55 to +11.99)
+    plus-minus with prior (first look), unsized                defense: -1.68% (90% -4.89 to +1.17)
+    plus-minus with prior, sized (QB and others)               offense: -0.05% (90% -1.50 to +1.41)
+    plus-minus with prior, sized (QB and others)               defense: -1.68% (90% -4.90 to +1.36)
+    plus-minus from his own stats (a), unsized                 offense: +3.71% (90% -3.92 to +10.70)
+    plus-minus from his own stats (a), unsized                 defense: -3.11% (90% -7.28 to +0.42)
+    plus-minus from his own stats (a), sized                   offense: -2.38% (90% -4.21 to -0.33)
+    plus-minus from his own stats (a), sized                   defense: -3.11% (90% -7.43 to +0.53)
+
+#################### [check: whole games missed only (no snaps); partial games count as played] ####################
+
+== 1. WHAT AN ABSENCE COSTS (per full game missed by one regular; EPA over expected a play for his side; 90% by resampling team-seasons) ==
+  offense (288 team-seasons, 4,446 team-games):
+    QB: -0.0192 (-0.0382 to -0.0015); shuffled null 90% -0.0125 to +0.0149; placebo, a non-regular (typical share 10-50%) +0.0209 (-0.0192 to +0.0568)
+    RB: -0.0168 (-0.0342 to +0.0009); shuffled null 90% -0.0156 to +0.0178; placebo, a non-regular (typical share 10-50%) -0.0006 (-0.0102 to +0.0094)
+    WR: -0.0101 (-0.0193 to -0.0012); shuffled null 90% -0.0092 to +0.0094; placebo, a non-regular (typical share 10-50%) +0.0019 (-0.0083 to +0.0122)
+    TE: -0.0102 (-0.0231 to +0.0034); shuffled null 90% -0.0142 to +0.0151; placebo, a non-regular (typical share 10-50%) +0.0027 (-0.0101 to +0.0146)
+    OL: -0.0059 (-0.0122 to -0.0002); shuffled null 90% -0.0080 to +0.0074; placebo, a non-regular (typical share 10-50%) -0.0086 (-0.0228 to +0.0038)
+  defense (288 team-seasons, 4,446 team-games):
+    DL: -0.0090 (-0.0186 to +0.0007); shuffled null 90% -0.0109 to +0.0114; placebo, a non-regular (typical share 10-50%) -0.0021 (-0.0093 to +0.0051)
+    LB: -0.0128 (-0.0211 to -0.0051); shuffled null 90% -0.0090 to +0.0082; placebo, a non-regular (typical share 10-50%) +0.0138 (+0.0056 to +0.0223)
+    DB: -0.0072 (-0.0123 to -0.0011); shuffled null 90% -0.0056 to +0.0060; placebo, a non-regular (typical share 10-50%) -0.0115 (-0.0199 to -0.0037)
+
+== 2. SIZING THE RATINGS (k: how many times the rating must be scaled to match real absences; 2018-2024) ==
+  absences with a replacement found among group-mates whose plays rose: 100% (the rest use the group's new-player level)
+  his rating less his replacement's, mean over absences of half a game or more (QB | others): ra +0.0011 | +0.0005; rs +0.0008 | +0.0001; rp +0.0006 | +0.0006
+  plus-minus from his own stats (a): k for QBs 2.4 (90% -0.5 to 5.7); for everyone else 0.0 (-1.0 to 1.2)
+  own-stats rating (b): k for QBs 8.8 (90% 3.0 to 14.6); for everyone else 7.3 (1.2 to 13.8)
+  plus-minus with last season's prior (first look): k for QBs 2.1 (90% -1.8 to 5.7); for everyone else 0.4 (-0.6 to 1.3)
+  with each group's average absence cost in the same fit (k then says only whether a bigger rating gap means a bigger drop):
+    plus-minus from his own stats (a): k for QBs 1.5 (90% -2.0 to 5.2); for everyone else -0.5 (-1.5 to 0.6)
+    own-stats rating (b): k for QBs 7.1 (90% 1.8 to 13.7); for everyone else 2.3 (-3.7 to 8.5)
+    plus-minus with last season's prior (first look): k for QBs 1.3 (90% -3.0 to 4.9); for everyone else -0.1 (-1.1 to 0.9)
+
+== 3. THE EXTENSION: FIT ON 2018-2021 (group averages 2016-2021), SCORE HELD-OUT TEAM-GAMES 2022-2024 ==
+  share of the within-season error in a team-game's rate removed (plays-weighted), against predicting no change; 90% by resampling team-seasons
+    group averages (each group's absence cost)                     -0.055% (-0.600 to +0.493)
+    group averages, fit on 2018-2021 only                          -0.182% (-0.798 to +0.470)
+    sized plus-minus from his own stats (a)                        -0.062% (-0.161 to +0.027)
+    sized own-stats rating (b)                                     +0.084% (-0.345 to +0.522)
+    sized plus-minus with last season's prior (first look)         -0.045% (-0.109 to +0.005)
+    group averages + sized plus-minus from his own stats (a)       -0.392% (-1.084 to +0.289)
+    group averages + sized own-stats rating (b)                    -0.150% (-0.840 to +0.488)
+    sized ra less group averages (same fit seasons): +0.120 points (-0.582 to +0.843)
+    sized rs less group averages (same fit seasons): +0.267 points (-0.454 to +0.965)
+
+== 4. THE ROSTER-CHANGE TEST WITH SIZED RATINGS (2022-2024; k from 2018-2021; the new-player share in the baseline) ==
+  k fit on 2018-2021: ra QB 0.2, others -0.7; rp QB -0.4, others -0.1
+    plus-minus with prior (first look), unsized                offense: +4.22% (90% -4.10 to +12.34)
+    plus-minus with prior (first look), unsized                defense: -1.68% (90% -4.69 to +1.23)
+    plus-minus with prior, sized (QB and others)               offense: +8.08% (90% -1.81 to +16.80)
+    plus-minus with prior, sized (QB and others)               defense: -1.68% (90% -5.02 to +1.28)
+    plus-minus from his own stats (a), unsized                 offense: +3.71% (90% -4.13 to +10.67)
+    plus-minus from his own stats (a), unsized                 defense: -3.11% (90% -7.19 to +0.43)
+    plus-minus from his own stats (a), sized                   offense: -0.61% (90% -7.08 to +5.79)
+    plus-minus from his own stats (a), sized                   defense: -3.11% (90% -6.79 to +0.86)
+
+#################### [check: each team-season's main starters by plays (QB1, RB1, WR1-3, TE1, OL1-5, DL1-4, LB1-2, DB1-5), whole games missed only] ####################
+
+== 1. WHAT AN ABSENCE COSTS (per full game missed by one regular; EPA over expected a play for his side; 90% by resampling team-seasons) ==
+  offense (288 team-seasons, 4,446 team-games):
+    QB: -0.0492 (-0.0677 to -0.0301); shuffled null 90% -0.0156 to +0.0183; placebo, a non-regular (typical share 10-50%) +0.0209 (-0.0210 to +0.0567)
+    RB: -0.0096 (-0.0264 to +0.0088); shuffled null 90% -0.0184 to +0.0148; placebo, a non-regular (typical share 10-50%) -0.0006 (-0.0084 to +0.0079)
+    WR: -0.0137 (-0.0234 to -0.0030); shuffled null 90% -0.0106 to +0.0087; placebo, a non-regular (typical share 10-50%) +0.0019 (-0.0077 to +0.0113)
+    TE: -0.0139 (-0.0343 to +0.0089); shuffled null 90% -0.0216 to +0.0180; placebo, a non-regular (typical share 10-50%) +0.0027 (-0.0090 to +0.0141)
+    OL: -0.0133 (-0.0208 to -0.0058); shuffled null 90% -0.0073 to +0.0073; placebo, a non-regular (typical share 10-50%) -0.0086 (-0.0220 to +0.0044)
+  defense (288 team-seasons, 4,446 team-games):
+    DL: -0.0107 (-0.0202 to -0.0006); shuffled null 90% -0.0094 to +0.0099; placebo, a non-regular (typical share 10-50%) -0.0021 (-0.0109 to +0.0054)
+    LB: -0.0206 (-0.0340 to -0.0073); shuffled null 90% -0.0132 to +0.0155; placebo, a non-regular (typical share 10-50%) +0.0138 (+0.0053 to +0.0225)
+    DB: -0.0156 (-0.0221 to -0.0092); shuffled null 90% -0.0076 to +0.0075; placebo, a non-regular (typical share 10-50%) -0.0115 (-0.0204 to -0.0031)
+
+== 2. SIZING THE RATINGS (k: how many times the rating must be scaled to match real absences; 2018-2024) ==
+  absences with a replacement found among group-mates whose plays rose: 100% (the rest use the group's new-player level)
+  his rating less his replacement's, mean over absences of half a game or more (QB | others): ra +0.0015 | +0.0006; rs +0.0012 | +0.0001; rp +0.0012 | +0.0007
+  plus-minus from his own stats (a): k for QBs 5.2 (90% 0.7 to 9.5); for everyone else -0.2 (-1.9 to 1.4)
+  own-stats rating (b): k for QBs 19.7 (90% 11.5 to 29.6); for everyone else 12.0 (2.5 to 20.8)
+  plus-minus with last season's prior (first look): k for QBs 4.1 (90% -0.7 to 8.8); for everyone else 0.5 (-1.1 to 1.8)
+  with each group's average absence cost in the same fit (k then says only whether a bigger rating gap means a bigger drop):
+    plus-minus from his own stats (a): k for QBs 2.2 (90% -2.5 to 6.8); for everyone else -1.2 (-2.8 to 0.3)
+    own-stats rating (b): k for QBs 12.7 (90% 3.9 to 22.1); for everyone else 2.9 (-6.1 to 13.6)
+    plus-minus with last season's prior (first look): k for QBs 1.2 (90% -4.0 to 6.1); for everyone else -0.4 (-1.8 to 0.9)
+
+== 3. THE EXTENSION: FIT ON 2018-2021 (group averages 2016-2021), SCORE HELD-OUT TEAM-GAMES 2022-2024 ==
+  share of the within-season error in a team-game's rate removed (plays-weighted), against predicting no change; 90% by resampling team-seasons
+    group averages (each group's absence cost)                     +0.869% (+0.256 to +1.496)
+    group averages, fit on 2018-2021 only                          +0.760% (+0.105 to +1.433)
+    sized plus-minus from his own stats (a)                        +0.005% (-0.187 to +0.200)
+    sized own-stats rating (b)                                     +0.250% (-0.383 to +0.853)
+    sized plus-minus with last season's prior (first look)         -0.003% (-0.052 to +0.051)
+    group averages + sized plus-minus from his own stats (a)       +0.478% (-0.292 to +1.180)
+    group averages + sized own-stats rating (b)                    +0.827% (+0.088 to +1.552)
+    sized ra less group averages (same fit seasons): -0.755 points (-1.400 to -0.082)
+    sized rs less group averages (same fit seasons): -0.511 points (-1.243 to +0.248)
+
+== 4. THE ROSTER-CHANGE TEST WITH SIZED RATINGS (2022-2024; k from 2018-2021; the new-player share in the baseline) ==
+  k fit on 2018-2021: ra QB 2.1, others -1.4; rp QB 0.6, others -0.3
+    plus-minus with prior (first look), unsized                offense: +4.22% (90% -3.89 to +11.61)
+    plus-minus with prior (first look), unsized                defense: -1.68% (90% -4.97 to +1.52)
+    plus-minus with prior, sized (QB and others)               offense: -1.86% (90% -6.03 to +2.34)
+    plus-minus with prior, sized (QB and others)               defense: -1.68% (90% -5.00 to +1.21)
+    plus-minus from his own stats (a), unsized                 offense: +3.71% (90% -4.26 to +10.62)
+    plus-minus from his own stats (a), unsized                 defense: -3.11% (90% -7.04 to +0.60)
+    plus-minus from his own stats (a), sized                   offense: -2.99% (90% -6.45 to +0.78)
+    plus-minus from his own stats (a), sized                   defense: -3.11% (90% -6.92 to +0.89)

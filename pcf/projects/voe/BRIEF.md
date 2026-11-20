@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; the CEO picked (c), games missed; third look running) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; the CEO picked (c), games missed; third look done 2026-11-20: absences measurable by position, the ratings can't be sized from them; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -370,3 +370,33 @@ Before that, the CEO asked: "What if we experimented with different ratings for 
   - 60% that sized ratings remove error over predicting no change.
   - 35% (I73's odds) that they beat each group's average cost.
   - 25% that adding them to the group averages helps by more than their intervals.
+
+## What the third look found
+*2026-11-20; details, numbers and the case against in [EXPLORATION.md](EXPLORATION.md), "Third look" (F19–F24).*
+
+- **Absences are measurable by position** (each team-season's main starters, whole games missed). Cost per full game, in EPA over expected a play:
+  - QB −0.049.
+  - WR −0.014; OL −0.013 per lineman.
+  - LB −0.021; DB −0.016; DL −0.011.
+  - RB and TE unclear.
+- **These positional averages predict held-out games** (+0.76% of the error inside a season, about a sixth of the room there is).
+- **The ratings can't be sized from absences.**
+  - Plus-minus doesn't tell which absences hurt more.
+  - The own-stats rating does, but for QBs only.
+  - Sized ratings never beat the positional averages, and sizing makes the roster-change test worse.
+- **The pre-registered definition had two flaws, so two labelled checks were added** (F21):
+  - Partial games pick up game script.
+  - A midseason replacement counted as a regular cancels the starter's absences.
+- **I73 held in part:** QBs and five other groups clear 0, but the player-level version failed.
+
+## Open after the third look
+*For the CEO, simple to detailed. Taste calls: the CEO's instinct first, Claude's view after.*
+
+1. **What should VOE's first version be?**
+   - **Why it matters:** three looks agree. Value can be measured by position, and for QBs by player. For everyone else, a player's number is mostly his team's.
+   - **Options:**
+     - **Positional value plus a QB value:** each position's measured replacement cost, with QBs sized by the own-stats rating. The ratings rank players within a position. This goes into a brief and a build.
+     - **Skill VOE first:** context-live scores 2016–2022, then per-skill value (pressure, completion, run yards), where a player's own actions are measured.
+     - **Pause VOE and explore the next cousin:** who did what, or the latent space (H71).
+2. **The no-noise target:** the roster-change test with the new-player share in the baseline (question 2 after the second look).
+3. **Still open:** cadence, and odds for H71 and H74.

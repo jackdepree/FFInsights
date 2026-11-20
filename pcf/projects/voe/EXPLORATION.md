@@ -181,3 +181,89 @@
 2. **The no-noise target needs the new-player share in its baseline.** Otherwise, any rating that marks new players below average looks like it travels. The share is also a team feature in its own right (I75).
 3. **Sizing a player is the open problem, not ranking him.** The only number that sizes a QB is the whole-game absence (F5). That points to direction (c), games missed (I73), as the way to calibrate the size of every rating.
 4. **Use linear models for the VOE expert.** The MLP's lesson goes in KNOWLEDGE at the end of the project: at a signal of about 0.1% of a play, a network fits noise first.
+
+---
+
+# Third look: games missed, to size the ratings (direction c, I73)
+
+> Run 2026-11-20, after the CEO's pick: "C, use missed games to size ratings". The design, the pass rules and Claude's expectations were committed before the run (BRIEF.md, "The CEO's direction after the second look").
+> - [`explore/games_missed.py`](explore/games_missed.py) ([`games_missed.txt`](explore/games_missed.txt)).
+> - Team-games 2016–2024, with each season's final week dropped. The sizing uses 2018–2024, where the ratings exist. The vault wasn't read.
+
+**How to read it:**
+- **An absence cost** is how much a team's EPA over expected a play (for the side the player is on) changes in a game he missed. It is measured against the same team's other games that season, and adjusted for the opponent.
+- **k** is how many times a rating must be multiplied to match the real drops. k = 1 means the rating is already the right size.
+- **Three versions were run.** Two problems with the pre-registered definition showed up in the results, so two checks were added, each labelled as a check:
+
+| Version | Who counts as a regular | What counts as missing |
+|---|---|---|
+| **Pre-registered** | Typical share of his side's plays 50%+, 4+ such games | Any fall below his typical share, as a fraction (partial games count) |
+| **Check 1** | The same | Whole games only (no snaps); partial games count as played |
+| **Check 2 (the cleanest)** | Each team-season's main starters by plays: QB1, RB1, WR1–3, TE1, OL1–5, DL1–4, LB1–2, DB1–5 | Whole games only |
+
+**Verdict: absences can be measured; the ratings can't be sized from them.**
+- **Real positional costs:**
+  - A team that loses its main starter for a game loses about 0.05 EPA a play at QB.
+  - It loses 0.01 to 0.02 at WR, OL, DL, LB and DB, per player missing.
+  - These costs predict held-out games: +0.76% of the error inside a season, about a sixth of the room there is.
+- **The ratings don't add to them.**
+  - Plus-minus doesn't tell which absences hurt more, at any position.
+  - Only the own-stats rating (b) does, and only for QBs.
+  - Sized ratings never beat the plain positional averages on held-out games.
+
+## Findings
+
+| # | Finding | Numbers |
+|---|---|---|
+| F19 | **A single game is almost all dice.** | <ul><li>A team-game's rate, less its season's mean, has sd 0.179 EPA a play.</li><li>Dice alone over a game's 62 plays: 0.175.</li><li>So everything real that moves a team from game to game, absences included, is about 4% of a game's variance.</li></ul> |
+| F20 | **What a main starter's absence costs, per full game** (check 2; interval, then the shuffled null). | <ul><li>QB −0.049 (−0.068 to −0.030; null ±0.017).</li><li>OL −0.013 per lineman (−0.021 to −0.006; null ±0.007).</li><li>WR −0.014 (−0.023 to −0.003; null ±0.010).</li><li>LB −0.021 (−0.034 to −0.007; null ±0.014).</li><li>DB −0.016 (−0.022 to −0.009; null ±0.008).</li><li>DL −0.011 (−0.020 to −0.001; null ±0.010).</li><li>RB −0.010 and TE −0.014, both spanning 0.</li><li>Two starting linemen out cost about half a QB.</li></ul> |
+| F21 | **How an absence is defined changes the answer.** | <ul><li>**Counting partial games picks up game script.** Starters sit in blowouts. Rotational players' "absences" show costs (TE −0.030, DB −0.014), and DL (+0.013) and WR (+0.010) get the wrong sign.</li><li>**Counting a midseason replacement as a regular cancels absences.** He and the starter are each "missing" when the other plays. The QB cost falls to −0.019 (check 1), against −0.049 with main starters only (check 2) and −0.067 for the main QB alone (F5).</li></ul> |
+| F22 | **Plus-minus doesn't size absences; the own-stats rating does, for QBs only.** | **With each group's average cost in the same fit, k says only whether a bigger rating gap means a bigger drop** (check 2):<ul><li>Plus-minus from own stats (a): QB 2.2 (−2.5 to 6.8), others −1.2.</li><li>The first look's plus-minus: QB 1.2 (−4.0 to 6.1).</li><li>The own-stats rating (b): QB 12.7 (3.9 to 22.1), others 2.9 (−6.1 to 13.6).</li></ul>**Without the averages, k must also carry the average drop:** (a) QB 5.2; (b) QB 19.7 and others 12.0; plus-minus QB 4.1.<ul><li>A starter and his replacement differ by only about 0.001 a play on these ratings, against a real gap of about 0.05 at QB.</li></ul> |
+| F23 | **The positional averages extend to new seasons; the ratings add nothing.** | Held-out team-games 2022–2024 (check 2; the share of within-season error removed):<ul><li>Group averages +0.76% (0.11 to 1.43); fit on 2016–2021, +0.87%.</li><li>Sized (a) +0.005%; sized (b) +0.25% (−0.38 to 0.85).</li><li>Averages plus sized (b) +0.83%, which is +0.07 points over the averages alone.</li><li>Sized (a) alone is worse than the averages by 0.76 points (−1.40 to −0.08).</li><li>In the pre-registered version and check 1, nothing clears 0.</li></ul> |
+| F24 | **Sizing makes the roster-change test worse.** | <ul><li>2022–2024, with the new-player share in the baseline.</li><li>The first look's plus-minus unsized +4.2% (−3.9 to 11.6); sized −1.9%.</li><li>Plus-minus from own stats unsized +3.7%; sized −3.0%.</li><li>k for non-QBs, fit on 2018–2021, comes out negative, which flips their sign.</li></ul> |
+
+## Against the pass rules and the expectations written before the run
+
+**The pass rules:**
+- **Absence costs are measurable at QB in every version.**
+  - Pre-registered: QB, TE and DB clear 0, but the placebo flags TE and DB (F21).
+  - Check 2: QB, WR, OL, DL, LB and DB clear 0.
+- **Sizing works? No, in every version.** Sized ratings never beat the group averages on held-out games (F23).
+
+| Expectation | Result |
+|---|---|
+| QBs show a clear drop of 0.05 to 0.09, 95% | yes: −0.051 pre-registered, −0.049 in check 2 (the bottom of the range) |
+| At least one other group clears 0, at 0.005 to 0.02 (I73), 70% | yes: TE and DB pre-registered; five groups in check 2, at 0.011 to 0.021 |
+| Two or more other groups, 40% | yes |
+| k for QBs above 3 for every rating, 85% | no as registered: (a) 2.7, first look's plus-minus 2.5. In check 2: 5.2, 19.7 and 4.1 |
+| The own-stats rating needs a smaller k than plus-minus, 50% | no: it needs a larger one (its values are smaller) |
+| Sized ratings beat predicting no change on held-out games, 60% | no: (a) +0.005%, (b) +0.25% spanning 0 |
+| They beat each group's average (I73), 35% | no |
+| Adding them to the averages helps by more than the interval, 25% | no: +0.07 points |
+
+## The case against the third look
+
+- **The definition was fixed after the first results.**
+  - The pre-registered version had two flaws, game script and replacement starters (F21), so two checks were added after seeing them.
+  - Check 2 is what Claude would choose now, and the problems it fixes are visible in the numbers. But it is a second try, so its intervals are worth less than a pre-registered one's.
+- **The placebo isn't a pure null.** Rotational players (10–50% of plays) do play. The LB placebo's +0.014 and the DB placebo's −0.012 may be real effects, scheme choices, or game script that the whole-game rule doesn't fully remove.
+- **Little power to size players.**
+  - One game is 96% dice (F19).
+  - A starter and his replacement differ by tiny amounts on shrunk ratings.
+  - "The ratings don't explain which absences hurt more" might partly mean "a few hundred absences can't show it".
+- **Absences aren't random.**
+  - Teams rest, bench and manage players, and some absences follow bad stretches (F11).
+  - Benching a bad starter makes his absence look like a gain.
+  - "Games after his last appearance" can include releases inside the season.
+- **The opponent adjustment is a season rate,** not a strength at the time of the game.
+- **Not tried:**
+  - inactive lists (the game-day `INA` status) as a cleaner absence;
+  - a shrinkage chosen on this sizing test;
+  - more than two classes (QB and others) for k.
+
+## What this means for the brief
+
+1. **Value over replacement is measurable by position, not yet by player.** The data says what a starting QB, lineman or DB is worth over his replacement on average. It can't yet tell one lineman from another.
+2. **QBs are the one place a player-level size exists:** the own-stats rating's QB gap tracks the size of the drop (F22).
+3. **The ratings stay what they are:** they rank players within a position, mostly by team for non-QBs (F1, F16). Sizing them from absences failed. Making them bigger only adds noise (F24).
+4. **For the CEO:** the direction from here (BRIEF.md, "Open after the third look").
