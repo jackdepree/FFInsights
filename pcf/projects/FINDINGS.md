@@ -10,14 +10,16 @@ This page is the top level. Below it: each project's `BRIEF.md` and `EXPLORATION
 
 ## Use and ignore, by level
 
-So far from retro 2's batch only; the first full fill adds the rest.
+So far from retro 2's batch and skill-over-expected's first look; the first full fill adds the rest.
 
 | Level | Use | Ignore |
 |---|---|---|
-| **Receivers and tight ends** | Target share and target depth: they are the player's, and travel when he moves (F1) | High-stakes ("clutch") performance as a separate skill (F3) |
-| **Running backs** | For a back who moves, his new backfield's split, not his own old carry share (F2) | His past carry share as his own trait when he changes teams (F2); clutch (F3) |
+| **Receivers and tight ends** | Target share and target depth: they are the player's, and travel when he moves (F1). For wide receivers, catches over expected (modest, F14) | High-stakes ("clutch") performance as a separate skill (F3); tight ends' catches over expected until more movers (F14) |
+| **Running backs** | For a back who moves, his new backfield's split, not his own old carry share (F2). Yards after contact, and yards over expected with tracking (F11, F12) | His past carry share as his own trait when he changes teams (F2); clutch (F3); yards before contact as his (F11: his line's); EPA per carry (F12); his catching over expected (F14) |
 | **Running backs and tight ends** | Their script tendency (more or fewer snaps by game margin) as a trait that repeats (F4); not yet shown to help a forecast | |
-| **Quarterbacks** | | Clutch (F3) |
+| **Quarterbacks** | Completion over expected and EPA per dropback, as traits that are partly the team's (F13) | Clutch (F3) |
+| **Pass rushers** (DE, DT, NT, OLB) | Pressures per dropback (F9) | Sacks as a skill (F9: pressures plus luck at the finish) |
+| **Offensive linemen** | The line's pressure over expected, as the line's trait (F10) | Any one lineman's on-field pressure number as his own (F10) |
 | **Teams** | An in-season change of starting QB as a signal that the team will do worse than its rating in the next 4 games (F5); a seed lock in the final week, carried into the first playoff game's playing time (F6) | Betting against the line on change games alone (F7); extra snaps for young players on eliminated teams (F8) |
 
 ## The table
@@ -34,3 +36,10 @@ One row per finding. Discovery means a look at past seasons that isn't a forecas
 | F6 | **Rested starters come back in the playoffs.** On a team that was seed-locked in the final week, regulars play 9.2 points of share more than participation forecast in the first playoff game, and fill-ins 9.7 less | Player, on teams with a lock | 7 of 9 seasons (regulars), 9 of 9 (fill-ins) | 9 to 10 points of snap share, both ways | 2016-2024; 102 regular and 192 fill-in rows; a fix is untested | Held (discovery) | I17, retro 2 (`retro/explore/retro2_incentives.py`) |
 | F7 | **The closing spread can't be beaten on change games alone.** Against a new head coach in games 1-4: 51.1%; against a team after an in-season QB change, games 1-4: 50.9%; on it from game 5: 50.0% | Team-game, betting | Both halves near 50% (2006-2015, 2016-2024) | No edge against 52.4% | 2006-2024, regular season; directions fixed from I47 before the run. The line's 1-point miss (F5) is in the average margin, not the cover | Held (no edge) | I83, retro 2 |
 | F8 | **Young players on eliminated teams don't get extra snaps in the final week** beyond what participation forecasts | Player, final week | | +0.3 points of share (-1.3 to +2.1) | 2016-2024; the final week only (the last three weeks are untested) | Held (no effect) | I46, retro 2 |
+| F9 | **Pass rushers' pressures are the player's skill.** Pressures per dropback on the field repeat and go with him when he moves; sacks repeat much less | Player (DE, DT, NT, OLB) | Defensive linemen 0.63, outside linebackers 0.72 season to season; movers keep 81% and 97% | Not tested as a forecast yet | 2018-2024 (PFR's charting); 150+ dropbacks on the field in both seasons. Inside linebackers repeat 0.57 but keep 36% (their role) | Held (discovery) | H77, skill-over-expected's first look (`skill-over-expected/explore/first_look.py`) |
+| F10 | **An offensive lineman's on-field pressure number is his line's, not his** | Line (team) | Stayers 0.28, movers 0.00 (133) | | 2016-2024; pressure over a situation expectation and the defense's habit | Held (discovery) | skill-over-expected's first look (`skill-over-expected/explore/first_look.py`); voe's L2 |
+| F11 | **A runner owns his yards after contact; his line owns his yards before contact** | Player (RB) and line | After contact 0.37, kept 78%; before contact 0.23, kept 54%, and steadier within a season (0.49) than across | Not tested as a forecast yet | 2018-2024; 80+ carries in both seasons; the difference in repeats +0.14 (-0.03 to +0.30) | Held in direction (discovery) | skill-over-expected's first look (`skill-over-expected/explore/first_look.py`); the CEO's reading of I53 |
+| F12 | **Rushing yards over expected repeat only when the expectation sees the blocking.** Next Gen Stats' (tracking at the handoff) 0.28, kept 73%; over context-live's situation-only expectation 0.11; EPA per carry 0.14 | Player (RB) | As stated | | 2016-2024 (NGS); 2023-2024 (context-live, 37 backs) | Held (discovery) | skill-over-expected's first look (`skill-over-expected/explore/first_look.py`) |
+| F13 | **A QB's completion over expected is a trait, no better than his EPA per dropback, and partly his team's** | Player (QB) | 0.41 against EPA's 0.46; movers keep 35% (41 movers) | | 2016-2024; 150+ passes in both seasons | Held (discovery); the owner of the rest is open (I76) | skill-over-expected's first look (`skill-over-expected/explore/first_look.py`) |
+| F14 | **Wide receivers' catches over expected per target are a modest skill that travels;** running backs' catching over expected is noise | Player (WR; RB) | WR 0.26, kept 78%; RB -0.02 | | 2016-2024; 40+ targets. Tight ends 0.28 but movers keep almost none (30 movers, unclear) | Held (discovery) | skill-over-expected's first look (`skill-over-expected/explore/first_look.py`) |
+

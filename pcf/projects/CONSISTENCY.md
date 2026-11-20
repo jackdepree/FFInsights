@@ -172,6 +172,22 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Absence cost by position (whole games missed by main starters) | voe (third look, I73) | A team-game's EPA over expected a play for the side, against its same season's other games, per full game a main starter missed; opponent-adjusted; all absences at once | — | (held-out seasons) the 2016–2021 averages predict 2022–2024 team-games +0.76% (0.11 to 1.43) | trait of the **position** (QB −0.049; WR, OL, DL, LB, DB −0.011 to −0.021; RB, TE unclear) | Team-games: +0.76% of within-season error (about a sixth of the room) | One game is 96% dice (voe#F19); counting partial games or midseason replacements biases it (F21) |
 | In-game injury change | voe (H72) | His team's leftover a play after he left injured, less before, less its other games at the same point | (events, not seasons) | — | not a repeating measure | Not credited to him (r 0.00 with his value less his backup's) | Placebo (hurt but came back) −0.002; QBs leaving +0.03 (−0.04 to +0.11), while whole games without the main QB cost −0.070 (−0.085 to −0.053) |
 
+**Skill measures over expected** (skill-over-expected's first look, 2026-11-20): per **player-season**, 2016-2024 (PFR's from 2018), regular season, with a volume floor in both seasons. Week r here is odd against even weeks stepped up to a season (reliability); season r the next season, with the share movers keep. Detail in `skill-over-expected/EXPLORATION.md`.
+
+| Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Pressures per dropback, defensive linemen | skill-over-expected (H77) | PFR's pressures over the dropbacks he was on the field for | 0.65 | 0.63 (0.57-0.67); movers keep 81% | **trait of the player** | Not tested yet | Sacks 0.40: ignore sacks as a skill |
+| Pressures per dropback, outside linebackers | skill-over-expected | As above | 0.76 | 0.72 (0.65-0.77); kept 97% | **trait of the player** | Not tested yet | The most portable skill found in PCF |
+| Pressures per dropback, inside linebackers | skill-over-expected | As above | 0.68 | 0.57; kept 36% | trait, more the role than the player | Not tested | How often a defense sends him |
+| Team pressure over expected on a lineman's dropbacks | skill-over-expected | Pressure less a situation expectation and the defense's habit, on plays he blocked | 0.72 | 0.28; **kept 0%** | trait of the **line**, not the lineman | Not tested | I81 for linemen one by one |
+| Completion over expected per pass, QBs | skill-over-expected | nflfastR's `cpoe` | 0.57 | 0.41 (0.30-0.51); kept 35% | trait, partly the team's | Not tested | EPA per dropback repeats 0.46 |
+| Catches over expected per target, WRs | skill-over-expected | Caught minus nflfastR's `cp` | 0.32 | 0.26; kept 78% | trait of the player, modest | Not tested | EPA per target 0.19 |
+| Catches over expected per target, TEs | skill-over-expected | As above | 0.36 | 0.28; kept 3% (30 movers) | trait, owner unclear | Not tested | |
+| Rushing yards over expected per carry, RBs | skill-over-expected | Next Gen Stats (expectation from tracking at the handoff) | 0.34 | 0.28 (0.13-0.40); kept 73% | trait of the player, partly | Not tested | Over context-live's situation-only expectation 0.11 (2023-2024) |
+| Yards after contact per carry, RBs | skill-over-expected | PFR | 0.39 | 0.37; kept 78% | **trait of the runner** | Not tested | The CEO's reading of I53 |
+| Yards before contact per carry, RBs | skill-over-expected | PFR | 0.49 | 0.23; kept 54% | steady within a season, less across: the **line's** that season | Not tested | |
+| Catches over expected per target, RBs | skill-over-expected | As for receivers | 0.06 | -0.02 | **noise** | | |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
