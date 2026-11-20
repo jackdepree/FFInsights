@@ -5,7 +5,137 @@
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
-- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`).
+- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects.
+
+---
+
+## Retro 2 (2026-11-20)
+
+Read: hunches H50 to H77, ideas I46 to I79, and the five projects since retro 1: `crude-forecaster` (done), `opportunity-quality` (explored), `context-live` (done), `td-expert` (explored), `voe` (paused). Scoring: `retro/explore/retro2_calibration.py` and `.txt` (each bet as a row, its odds and whether it came true).
+
+### 1. How the predictions scored
+
+**Retro 1's predictions:** about 45 were written; **one has a result** (I47, high, held). Every other idea in retro 1's table is still open. The backlog check stopped after I47, and the open list grew from 32 to 60 ideas. That is a finding about the workflow (W4 below), not about football.
+
+**The CEO's odds.** 16 hunches had odds written before their test. Left out: six whose odds came after the result (H58, H61, H62, H64, H65, H66), two unclear verdicts (H53, H63), H76 (odds not asked, Claude's slip), and the open ones (H71, H74, H77). "Held in part" counts as held.
+
+| The CEO's confidence | Bets | Held | Which |
+|---|---|---|---|
+| 25 to 30% | 2 | 1 (50%) | H57 held, H60 failed |
+| 40 to 50% | 3 | 2 (67%) | H54, H67 held; H68 failed |
+| 60 to 70% | 5 | 2 (40%) | H50, H55 held; H52, H70, H73 failed |
+| 75 to 80% | 4 | 4 (100%) | H51, H56, H59, H69 |
+| 90% | 2 | 1 (50%) | H75 held in part; H72 failed |
+| **All** | **16** | **10 (62%)**, at an average confidence of 62% | |
+
+**The same 16 bets, the CEO's odds against Claude's** (Claude's number for the CEO's own claim, from the "Claude expected" column). A Brier score is the average squared gap between the odds and what happened: 0 is perfect, 0.25 is a coin flip.
+
+| | Bets | Held | The CEO's average confidence | Claude's | The CEO's Brier score | Claude's |
+|---|---|---|---|---|---|---|
+| **Football claims** (what is true) | 10 | **8 (80%)** | 58% | 60% | 0.229 | 0.101 |
+| **Methods** (how to measure it) | 6 | **2 (33%)** | 68% | 49% | 0.282 | 0.215 |
+| All | 16 | 10 | 62% | 56% | 0.249 | 0.143 |
+
+Claims: H50, H51, H52, H54, H55, H56, H57, H59, H67, H68. Methods: H60, H69, H70, H72, H73, H75 (Claude's sort; W2 would make it the CEO's).
+
+- **In plain words: your football claims are better than your odds say** (8 of 10 held at 58%), **and your odds on methods run too high** (2 of 6 at 68%). Both of your 90% bets were methods (H72 in-game injuries, H75 the VOE model with sums). Retro 1 said claims pay more often than methods; this is the first time it shows in the odds themselves.
+- Your 75 to 80% band went 4 for 4, and all four were "this is consistent" claims (H51, H56, H59, H69). That's P1 again.
+- Claude's number was closer on 12 of 16. **That is partly position, not skill:** Claude writes after hearing the hunch, after seeing the data's shape, and designs the test that settles both bets.
+
+**Claude's own 47 bets** (every probability in the "Claude expected" columns of H50 to H75 and the ideas I47 to I74 that have results): Brier 0.169, against 0.244 for always saying the base rate.
+
+| Claude's confidence | Bets | Came true |
+|---|---|---|
+| 5 to 30% | 14 | 1 (7%) |
+| 35 to 50% | 10 | 2 (20%) |
+| 60 to 70% | 12 | 9 (75%) |
+| 80 to 85% | 7 | 4 (57%): over-confident (H66a players repeat 0.5+, H68a red-zone chances in the top three, H72a a QB leaving mid-game shows a drop) |
+| 90 to 97% | 4 | 4 (100%) |
+
+Claude's low bets came true less often than stated, and the 80 to 85% band is the weak spot. Most of Claude's bets are "the usual way wins", which is usually right and is also the cheap bet to make.
+
+**Sizes.** The CEO gave few. They ran small for volume (H51: "about 50%" of the explained variance from yards; it was 90 to 99%) and about ten times too large for situational and player effects (H63: 10% of rushing yards' error, it was 0.8%; H66: 10 points of success rate, it was 0.84). Claude's ran large for player effects too (H66: 1 to 2 points), and stated I47's size in a unit that couldn't be checked.
+
+### 2. The backlog check (proposed; the CEO picks, as at retro 1)
+
+Open ideas that cost under an hour, highest confidence first, with how each bears on the next cousin:
+
+| Idea | Claude's odds (retro 1) | Cost | Why now |
+|---|---|---|---|
+| I53 which usage rates travel with a mover | high (target depth) | under an hour | The first rows of the per-position map (I79) |
+| I44 clutch as a trait | high that it fails | under an hour | A "repeats or not" test, the map's kind of question |
+| I21 stayers for coaches | high | about an hour | A difference in differences: the causal kind the CEO asked about |
+| I17 a final-week share in playoff forecasts | high | under an hour | No link to the cousin; cheap and high-confidence |
+| I14 ranges widen with swing | high | under an hour | No link; cheap |
+
+Not under an hour: I4 and I55 (they need the harness). I26 and I27 need the 2025 vault, which is spent once.
+
+### 3. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P1 | "This habit is real, and it belongs to X" | H55 (boom-or-bust repeats for backs and receivers), H59 (expected points 0.84 week to week), H57 (a mover keeps most of his role), H67 (touchdown tendencies are the team's) | **Narrowed:** it holds for what a player *does* (usage, habits, role), not for how well his team does while he plays (P10). H62 failed |
+| P2 | "A matters only against B" | H65 (both sides' calls add up, nothing extra from the combination, on single plays too), H60 (scheme fit) | None. It now holds at play level as well, which retro 1 had as its exception |
+| P3 | Don't throw plays away | No new test | |
+| P4 | Cleverer methods tie the simple version | The small MLP did worse than the lasso; VOE's slots added nothing over the plus-minus sum; I74's prior barely moved values; H76 gave identical values; H60 | None |
+| P5 | The gains are where history is stale or blind | I47 held (three experts biased after a change); I75 (the share of plays by new players: +4.6% offense, +6.6% defense); whole games missed (QB −0.049 EPA a play); participation first on all 9 player tables (H50) | H72: absence within a game showed nothing |
+| P6 | Fatigue shows in who is on the field | No new test | |
+| P7 | Real is not the same as useful | The strongest gain of any pattern: H55, H56 (goal-line chances worth 3+ points, nothing beyond counts), H58 (tight ends only), H66 (real, a tenth of the size), H68 | H61: efficiency did add +0.94% |
+| P8 | Small exploration gains shrink in the build | context-live: rushing 2.5% became 1.2%, the box count 0.8% became 0.23 points, H66 0.84 became 0.7 | H50 held in the build |
+| **P9 (new)** | **Volume carries player forecasts.** Who plays and how often explains nearly all of what can be forecast about a player's yards and points; efficiency adds under 1% | H51 (yards-only inputs keep 90 to 99%), H50 (participation first on all 9 player tables), H53 (attempts +13.6 to 29%, yards per attempt +0.4 to 2.7%), H56, H68 | H61 (+0.94%: efficiency earns opportunity), H54 (recent form, small). The limit: tested on totals (yards, fantasy points), not on rates, which some props bet on |
+| **P10 (new)** | **On-field value belongs to the team, except at QB** | H69 (a mover's plus-minus repeats 0.07, a QB's 0.40, QBs carry +13.9% of a team's next offense), H70, H72, H75, I74, H76; earlier H27, H31; a whole game without the main QB costs 3 to 4 times what any other starter does | Usage travels (H36, H57). Untested: outcomes with less luck than EPA, which is exactly H77 |
+
+**What the patterns say about the next cousin, before it starts:**
+- **P10:** it works where one player owns the outcome (a pass rusher's pressure, a QB's completion) and struggles where a unit shares it (a lineman's pressure allowed, a runner's yards, which belong partly to his blockers).
+- **P9:** even where it's real, it will forecast fantasy points mostly through volume. Its worth is rankings, the per-position map (I79) and rate-based props, more than the fantasy middle.
+- **P4:** the causal methods (I76 to I78) will tie the plain version as forecasts. They are worth running for the questions they answer (how much is the player, how much the team), not for accuracy.
+
+### 4. New ideas and predictions
+
+New, as Claude's, each with its odds in [IDEAS.md](IDEAS.md): **I76** (the movers model, from labor economics: the player's part and the team's part), **I77** (double machine learning for rotating players), **I78** (synthetic control for long absences), **I79** (the per-position map of what to use and what to ignore: the CEO's idea, logged as an idea because it is a view to build, not a football bet).
+
+The open hunches:
+
+| Hunch | Claude expects | Confidence |
+|---|---|---|
+| H77 lower-noise outcomes show player value | Holds for pass rushers and QBs, fails for runners and for linemen credited one by one (P10) | 80% pass rushers, 70% QBs, 30% runners (the row's numbers) |
+| H71 the latent space of 22 | Ties the plus-minus sums on EPA; more use as an input to other experts | 25% it adds 0.2%+ of a play |
+| H74 other experts as confounders | Ties context-live on outcomes; helps as a control in I77 | 35%, 60% |
+| H5, H6, H18 | Retro 1's predictions stand | |
+
+Retro 1's predictions for the older ideas stand. One moves: **I59** (a pass-heavy team's receivers score more than their numbers say) from 45% to 35%, by P9.
+
+### 5. Workflow changes, proposed (the CEO accepts, edits or rejects)
+
+**How retro 1's accepted changes worked:**
+
+| Change | How it went |
+|---|---|
+| Odds before every test | Mostly kept: 16 of 27 hunches since were scorable. It slipped when a hunch came in the same message that asked for a run (six odds given after the result; H76 with none) |
+| The noise ceiling first | Worked: VOE's room (about 0.4% of a play) was known before anything was built on it |
+| The crude forecaster | Built; it scored H50 to H55 on one yardstick |
+| Strategy chat apart from builds | Working: context-live and crude-forecaster were built in their own sessions |
+| The change lens | In the miss report (decision 0035) |
+| Real? and pays? | Used on every row; it is what made P7 and P10 visible |
+
+**Proposed now:**
+
+| # | Change | Why |
+|---|---|---|
+| W1 | **The obvious-input check** (from retro 1, still undecided): every new trait is tested beside the one input most likely to carry it already, before a build is planned | H56 and H68 were volume in disguise; VOE's roster gain was partly the share of plays by new players, found only in the second look (I75) |
+| W2 | **Tag each hunch as a claim or a method** (from retro 1, still undecided), by the CEO when it's made | It is this retro's biggest finding, and Claude had to sort the rows by hand after the fact |
+| W3 | **Odds in the same reply that records a hunch, and no test in that reply** | H76's slip, the six after-the-fact odds, and H71 and H74 never asked |
+| W4 | **One backlog idea per exploration:** every exploration also checks one open idea that touches its data | The open list doubled (32 to 60) while one idea was checked |
+| W5 | **The per-position map as a standing view** in CONSISTENCY.md (I79), updated at every project's done step | The CEO's direction: "tell them exactly what they need to look at" |
+| W6 | **Claude states its number for the CEO's exact claim first,** then any side bets | So the scoreboard compares us on the same event without anyone picking the closest number later |
+
+### The case against this retro
+
+- The same reader sorted the patterns, scored both of us, and wrote half the bets. Nothing here is held out.
+- Claude's better Brier score is partly position (it bets second, after seeing the data and designing the test). A fair head-to-head needs W6 and odds written before Claude sees the data.
+- 16 scored CEO bets is few. One verdict changes a band by 20 to 50 points.
+- P9 leans on `crude-forecaster` and P10 on `voe`: each pattern is mostly one project.
+- "Held in part" counted as held is generous to both of us. Counting it as half (and H50, H54, H55, which held for one part only) moves the CEO's claims from 8 to 6 of 10 and methods from 2 to 1 of 6: the gap stays.
 
 ---
 

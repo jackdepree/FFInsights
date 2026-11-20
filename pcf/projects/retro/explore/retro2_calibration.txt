@@ -1,0 +1,18 @@
+CEO: n 16, mean conf 62%, came true 62%, Brier 0.249 (always-the-base-rate 0.234, a coin 0.250)
+   0%-35%: 2 bets, mean conf 28%, true 1/2 = 50%  ['H57', 'H60']
+   35%-55%: 3 bets, mean conf 43%, true 2/3 = 67%  ['H54', 'H67', 'H68']
+   55%-75%: 5 bets, mean conf 62%, true 2/5 = 40%  ['H50', 'H52', 'H55', 'H70', 'H73']
+   75%-86%: 4 bets, mean conf 78%, true 4/4 = 100%  ['H51', 'H56', 'H59', 'H69']
+   86%-101%: 2 bets, mean conf 90%, true 1/2 = 50%  ['H72', 'H75']
+Claude: n 47, mean conf 52%, came true 43%, Brier 0.169 (always-the-base-rate 0.244, a coin 0.250)
+   0%-35%: 14 bets, mean conf 21%, true 1/14 = 7%  ['H50b', 'H52', 'H60', 'H62a', 'H63a', 'H64', 'H65b', 'H66b', 'H67b', 'H68b', 'H68c', 'H70b', 'H72c', 'H73']
+   35%-55%: 10 bets, mean conf 40%, true 2/10 = 20%  ['H55b', 'H56b', 'H69b', 'H70a', 'H72b', 'H75a', 'I63', 'I65b', 'I73b', 'I74b']
+   55%-75%: 12 bets, mean conf 64%, true 9/12 = 75%  ['H50a', 'H51', 'H54', 'H57', 'H61', 'H62b', 'H67a', 'H69a', 'I65a', 'I69b', 'I73a', 'I74a']
+   75%-86%: 7 bets, mean conf 84%, true 4/7 = 57%  ['H55a', 'H63b', 'H66a', 'H68a', 'H72a', 'H75b', 'I69a']
+   86%-101%: 4 bets, mean conf 94%, true 4/4 = 100%  ['H56a', 'H59', 'H65a', 'I47']
+
+Head to head on the CEO's 16 bets
+  claims: 10 bets, held 8; average odds CEO 58%, Claude 60%; Brier CEO 0.229, Claude 0.101
+  methods: 6 bets, held 2; average odds CEO 68%, Claude 49%; Brier CEO 0.282, Claude 0.215
+  all: 16 bets, held 10; average odds CEO 62%, Claude 56%; Brier CEO 0.249, Claude 0.143
+  Claude closer on 12 of 16
