@@ -172,3 +172,119 @@ The CEO, 2026-11-20: "you can run all of those together." The CEO's odds were gi
 | H82 | Sacks per pressure (participation's pressure flag, 2016 on) for QBs who move, against the same rate for linemen who move (the team's sacks per pressure on his dropbacks); and QBs' pressure rate against their sacks per pressure | Held if QB movers keep clearly more of sacks per pressure than lineman movers do (0.25+ more), and more than they keep of their pressure rate | 60% | 70% |
 | H83 | Running backs, 80+ carries in both seasons: broken tackles per carry (PFR, 2018 on); on runs he's tackled after the line, the share needing two or more tacklers (play-by-play); the same before the line | Held if broken tackles or tacklers needed repeat 0.2+ and movers keep half | 60% | 55% |
 | I89 | Time to throw (participation, 2016 on) and throw depth (air yards per attempt): QB movers' share kept against linemen's (the team's time to throw on his dropbacks); for depth, against receivers' (retro 2: receivers keep 85% of their target depth) | Time to throw is the QB's if QB movers keep 60%+ and linemen under 30% | (a question) | 70% time to throw is the QB's; 60% depth is the QB's more than the receivers' |
+
+### Third look: the results ([`explore/third_look.py`](explore/third_look.py), output [`third_look.txt`](explore/third_look.txt))
+
+**One change from the plan, made before reading any verdict:** every repeat and share kept below is computed after taking each season's league average out of both seasons. The first run showed sacks per pressure repeating 0.61 for QBs and 0.63 for linemen, and almost all of that was the league's level moving between seasons: participation's pressure flag changed source in 2023, and charting of tackles drifts too. "Raw" is the old number; the verdicts use the demeaned one. Nothing else moved by more than 0.04.
+
+| # | Measure | Pairs (movers) | Raw repeat | Repeat (90%) | Movers keep |
+|---|---|---|---|---|---|
+| H79 | WR plain catch rate | 547 (113) | 0.44 | **0.45** (0.38-0.51) | **71%** |
+| H79 | WR catches over expected (for comparison) | 547 (113) | 0.26 | 0.27 (0.18-0.35) | 47% |
+| H80 | OLB role (rush share) | 283 (80) | 0.85 | 0.86 (0.80-0.90) | **106%** |
+| H80 | ILB role (rush share) | 295 (71) | 0.76 | 0.76 (0.37-0.88) | **27%** |
+| H80 | OLB pressure rate, all (the first look's 97%) | 283 (80) | 0.72 | 0.72 (0.65-0.77) | 96% |
+| H80 | OLB pressure rate, rushers only | 164 (51) | 0.36 | **0.34** (0.21-0.44) | **14%** |
+| H81 | DB catch rate allowed | 721 (172) | 0.20 | 0.21 (0.14-0.27) | 59% |
+| H81 | DB yards per target | 721 (172) | 0.14 | 0.15 (0.07-0.21) | -22% |
+| H81 | DB passes defensed per target | 721 (172) | 0.19 | 0.19 (0.13-0.24) | 199% |
+| H81 | DB interceptions per target | 721 (172) | 0.29 | 0.29 (0.22-0.36) | 137% |
+| H81 | DB throw depth against | 721 (172) | 0.38 | 0.37 (0.30-0.44) | 64% |
+| H82 | QB sacks per pressure | 222 (41) | 0.61 | **0.20** (0.00-0.38) | **-46%** |
+| H82 | Lineman (his team's, on his dropbacks) sacks per pressure | 814 (133) | 0.63 | 0.28 (0.17-0.38) | 79% |
+| H82 | QB sacks per dropback | 222 (41) | 0.61 | 0.36 (0.22-0.59) | **149%** |
+| H82 | Lineman sacks per dropback | 814 (133) | 0.64 | 0.28 (0.17-0.39) | 42% |
+| H82 | QB pressures per dropback | 222 (41) | 0.45 | 0.47 (0.35-0.56) | 33% |
+| H82 | Lineman pressures per dropback | 814 (133) | 0.30 | 0.28 (0.22-0.35) | 8% |
+| I89 | QB time to throw | 222 (41) | 0.57 | 0.61 (0.51-0.68) | **36%** |
+| I89 | Lineman time to throw | 814 (133) | 0.38 | 0.38 (0.33-0.43) | **-10%** |
+| I89 | QB throw depth | 222 (41) | 0.45 | 0.42 (0.27-0.54) | **79%** |
+| I89 | Lineman throw depth | 814 (133) | 0.38 | 0.35 (0.27-0.41) | 16% |
+| H83 | RB broken tackles per carry (PFR) | 208 (46) | 0.22 | **0.22** (0.11-0.33) | **168%** |
+| H83 | RB tackled after the line: share needing 2+ tacklers | 271 (59) | 0.66 | **0.46** (0.37-0.54) | **65%** |
+| H83 | RB tackled at or behind the line: share needing 2+ | 271 (59) | 0.30 | 0.21 (0.10-0.31) | 107% |
+
+"Movers keep" is the movers' repeat over the stayers' repeat. It has no interval here, and with 41 to 59 movers a single number can swing a lot: 149% and -46% for QBs mean "more than stayers" and "nothing", not those exact sizes.
+
+**H78** (154 moving backs, 2019-2024; held out by season; gain = the share of the base forecast's squared error removed):
+
+| Forecast of his new carry share | Against | Gain (90%) |
+|---|---|---|
+| **Who** (the backs who stay, and their shares) | Habit (the backfield's past split) | **+6.8%** (+1.3 to +12.0) |
+| Who and how good (adds yards after contact per carry) | Habit | +6.0% (+0.8 to +11.0) |
+| Who and how good | Who (does how good add?) | **-0.8%** (-3.3 to +1.6) |
+
+**H80 (a), the roles:** 82% of outside linebackers' seasons fall outside the middle third of rush share (461 seasons; by fifths of rush share 108, 23, 55, 132, 143), so there are two groups: rushers and droppers, with few in between. Inside linebackers are one group: 98% are coverage-first (438 of 496 in the lowest fifth).
+
+### What the third look found
+
+**F10. A receiver's plain catch rate is more his than catches over expected is** (H79). It repeats 0.45 against 0.27 (the difference +0.18, +0.11 to +0.24), and movers keep 71% of it. Catches over expected takes out the throw's difficulty, and with it part of what the receiver brings (where he gets open, how deep). The plain rate keeps that.
+
+**F11. The outside linebackers' 97% was mostly role** (H80). An outside linebacker is either a rusher or a dropper, and that role goes with him when he moves (kept 106%). The pressure rate across all of them travels because the role travels. Among the rushers only, the pressure rate repeats 0.34 and movers keep 14% (51 movers): how much a rusher gets home on his new team is much more the new team's. F9 and the second look's +15.1% on next season's sacks need this caveat: much of it is knowing who rushes. Inside linebackers' role does *not* travel (27%): how often an inside linebacker blitzes is the scheme's. That is the reverse of the CEO's coordinator reading, which put the scheme on the outside linebackers.
+
+**F12. Coverage numbers repeat a little, and what repeats travels** (H81). Throw depth against (0.37), interceptions per target (0.29) and catch rate allowed (0.21, raw 0.20: right on the bar) repeat; yards per target (0.15) and passes defensed (0.19) don't reach 0.2. Movers keep half or more of all but yards per target. Depth against is likely his assignment (deep safety or press corner) more than his skill.
+
+**F13. Sacks per pressure aren't a QB trait here; sacks per dropback are** (H82). Sacks per pressure, as pre-registered, repeat only 0.20 for QBs once the league's level is out, and QB movers keep nothing. Sacks per dropback repeat 0.36 and QB movers keep more than stayers, while linemen movers keep 42%. The pressure rate itself also follows the QB more than any lineman (QB 0.47, kept 33%; a lineman's 0.28, kept 8%): the QB makes some of his own pressure, by holding the ball. The pressure flag changed source in 2023, so the per-pressure rate is the shakiest number on this page.
+
+**F14. Time to throw is partly the QB's and not the line's; depth is the QB's and the receivers'** (I89). QBs' time to throw repeats 0.61 but movers keep only 36%: the rest is the offense (the play-caller's concepts). The line's is the team's that season (a lineman who moves keeps nothing). Throw depth is a QB trait that travels (79%), close to receivers' 85% (retro 2's F1): both carry it, and the line doesn't (16%).
+
+**F15. How a runner is brought down is his** (H83). Broken tackles per carry repeat 0.22 (a weak but real repeat) and movers keep more than stayers; the share of his tackles after the line that need two or more tacklers repeats 0.46 and movers keep 65%. Before the line, it repeats 0.21: that's more where the line lets him be hit.
+
+**F16. A moving back's new share comes from who is left, not from the backfield's habit or how good anyone is** (H78). Knowing the staying backs' shares removes 6.8% more of the error than the backfield's past split. Adding how well everyone ran (yards after contact) adds nothing (-0.8%). Volume tells who gets the ball; quality doesn't, at least not in one season's yards after contact.
+
+### The hunches
+
+| # | Verdict | Why | Real? | Pays? |
+|---|---|---|---|---|
+| H78 | **Failed** as worded | Who beats habit (+6.8%), but how good adds nothing (-0.8%), and the claim needed both | Partly (who, not how good) | Partly: +6.8% on a held-out forecast of the new share, from who alone |
+| H79 | **Held** | 0.45 against 0.27; movers keep 71% | Yes | Not tested as a forecast |
+| H80 | **Held in part** | The roles exist (82% outside the middle third), and the 97% was role (within rushers, kept 14%). But the scheme sets the inside linebackers' role, not the outside ones' | Partly | Not tested |
+| H81 | **Held, at the edge** | Three of five repeat 0.2+ (catch rate allowed 0.205, interceptions, depth) and travel; catch rate allowed is 0.199 before demeaning | Partly | Not tested |
+| H82 | **Unclear** | The pre-registered sacks per pressure fails (QB kept -46%); sacks per dropback supports the CEO (QB 149% against linemen 42%); 41 QB movers and a flag that changed source | Unclear | Not tested |
+| H83 | **Held** | Broken tackles 0.22, kept 168%; tacklers needed after the line 0.46, kept 65% | Yes | Not tested |
+| I89 | Answered | Time to throw: partly the QB's (kept 36%), not the line's (-10%). Depth: the QB's (79%) and the receivers' (85%), not the line's (16%) | | |
+
+### The odds, scored
+
+| Bet | CEO | Claude | Result |
+|---|---|---|---|
+| H78 as worded | 30% | 45% | Failed |
+| H78: who beats habit | | 70% | Held |
+| H78: how good adds | | 30% | Failed |
+| H79 as worded | 40% | 60% | Held |
+| H80: the roles exist | 90% | 85% | Held |
+| H80: we find something because of them | 60% | | Held (within rushers, kept 14%) |
+| H80 as worded (with the coordinator part) | | 35% | In part |
+| H80: rushers still keep 75%+ | | 65% | Failed (14%) |
+| H80: outside roles move more than inside | | 60% | Failed (the reverse) |
+| H81 as worded | 50% | 25% | Held at the edge |
+| H81: depth against 0.3+ | | 45% | Held (0.37) |
+| H81: passes defensed 0.2+ | | 45% | Failed (0.19) |
+| H81: catch rate allowed 0.2+ | | 25% | Held at the edge (0.205) |
+| H81: interceptions 0.2+ | | 10% | Held (0.29): set too low |
+| H82 as worded | 60% | 70% | Unclear |
+| H82: QB movers keep half of sacks per pressure | | 65% | Failed |
+| H82: QBs keep less of pressure rate than of sacks per pressure | | 70% | Failed (33% against -46%) |
+| H83 as worded | 60% | 55% | Held |
+| H83: broken tackles 0.3+ | | 60% | Failed (0.22) |
+| H83: tacklers needed after the line 0.2+ | | 35% | Held (0.46) |
+| I89: time to throw is the QB's (60%+ kept, line under 30%) | | 70% | Failed (36%) |
+| I89: depth is the QB's more than the receivers' | | 60% | Failed (79% against 85%) |
+| I89: the line owns either | | 35% | Failed, as expected |
+
+The CEO's as-worded bets: 4 of 6 held, at odds of 30% to 60%, which beats those odds. Claude's: 3 held and 1 in part, at 25% to 70%. Claude's coverage odds were too low (interceptions at 10%, the claim at 25%).
+
+### The case against
+
+- **Share kept has no interval**, and the mover groups are small (41 QBs, 46 to 59 RBs, 51 rushers). The verdicts that rest on one share kept (H82, H80 (b)) could flip with a different handful of movers.
+- **Demeaning was added after the first run.** It was decided from the raw sacks numbers, before any verdict was read, and it moves only the sacks and tacklers rows; but it is a change made after seeing data.
+- **The lineman's "team on his dropbacks"** is the team's rate on plays he was on the field, so a moving lineman joins a new line and a new QB at once: a low share kept says it isn't his, not whose it is.
+- **Rush share uses coverage targets**, which depend on how often he's thrown at, not how often he drops. A dropper who is never targeted looks like a rusher.
+- **H83's tacklers count** comes from play-by-play's tackler fields, which list at most two tacklers plus assists and are charted unevenly.
+
+### Next steps (for the CEO's direction)
+
+1. **Forecast tests for the new measures** (pays?): plain catch rate for next season's catches; broken tackles and tacklers needed for next season's yards per carry and yards after contact; sacks per dropback for next season's sacks.
+2. **H82 again on one pressure source** (2023-2024 only, or 2016-2022 only) and with an interval on share kept (I90).
+3. **The rushers' forecast** (I91): redo the second look's +15.1% within rushers only, to see how much of it is role.
+4. I76 (the movers model) and drafting the brief.

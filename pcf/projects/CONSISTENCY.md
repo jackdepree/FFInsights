@@ -177,7 +177,7 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
 |---|---|---|---|---|---|---|---|
 | Pressures per dropback, defensive linemen | skill-over-expected (H77) | PFR's pressures over the dropbacks he was on the field for | 0.65 | 0.63 (0.57-0.67); movers keep 81% | **trait of the player** | **Yes:** +9.4% on next season's sacks beyond past sacks; +1.2% next game | Sacks 0.40: ignore sacks as a skill |
-| Pressures per dropback, outside linebackers | skill-over-expected | As above | 0.76 | 0.72 (0.65-0.77); kept 97% | **trait of the player** | **Yes:** +15.1% on next season's sacks; +1.4% next game | The most portable skill found in PCF |
+| Pressures per dropback, outside linebackers | skill-over-expected | As above | 0.76 | 0.72 (0.65-0.77); kept 97% (mostly the role: within rushers 14%, third look) | **trait of the player** | **Yes:** +15.1% on next season's sacks; +1.4% next game | The most portable skill found in PCF |
 | Pressures per dropback, inside linebackers | skill-over-expected | As above | 0.68 | 0.57; kept 36% | trait, more the role than the player | Not tested | How often a defense sends him |
 | Team pressure over expected on a lineman's dropbacks | skill-over-expected | Pressure less a situation expectation and the defense's habit, on plays he blocked | 0.72 | 0.28; **kept 0%** | trait of the **line**, not the lineman | Not tested | I81 for linemen one by one |
 | Completion over expected per pass, QBs | skill-over-expected | nflfastR's `cpoe` | 0.57 | 0.41 (0.30-0.51); kept 35% | trait, partly the team's | No: -1.3% on next season's completion rate beyond the rate itself | EPA per dropback repeats 0.46 |
@@ -187,6 +187,23 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Yards after contact per carry, RBs | skill-over-expected | PFR | 0.39 | 0.37; kept 78% | **trait of the runner** | Unclear: +3.2% on next season's yards per carry (-0.9 to +7.4); nothing next game | The CEO's reading of I53 |
 | Yards before contact per carry, RBs | skill-over-expected | PFR | 0.49 | 0.23; kept 54% | steady within a season, less across: the **line's** that season | Not tested | |
 | Catches over expected per target, RBs | skill-over-expected | As for receivers | 0.06 | -0.02 | **noise** | | |
+| Plain catch rate, WRs | skill-over-expected (H79) | Catches over targets, 40+ targets | | 0.45 (0.38-0.51); kept 71% | **trait of the player** | Not tested | Repeats more than catches over expected (0.27); keeps where he gets open |
+| Rush share, OLBs | skill-over-expected (H80) | Pressures over pressures plus coverage targets | | 0.86 (0.80-0.90); kept 106% | **trait of the player** (his role) | Not tested | Two groups: rushers and droppers |
+| Rush share, ILBs | skill-over-expected (H80) | As above | | 0.76 (0.37-0.88); kept 27% | trait of the **scheme** | Not tested | 98% coverage-first |
+| Pressures per dropback, OLB rushers only | skill-over-expected (H80) | As the OLB row, within rush share over 2/3 | | 0.34 (0.21-0.44); kept 14% (51) | trait, mostly the **team's** | Not tested | The 97% kept was the role |
+| Catch rate allowed, DBs | skill-over-expected (H81) | PFR's coverage charting, 30+ targets | | 0.21 (0.14-0.27); kept 59% | trait, weak | Not tested | 0.199 before demeaning |
+| Yards per target allowed, DBs | skill-over-expected (H81) | As above | | 0.15 (0.07-0.21); kept -22% | mostly noise | | |
+| Passes defensed per target, DBs | skill-over-expected (H81) | Play-by-play | | 0.19 (0.13-0.24); kept 199% | trait, weak | Not tested | |
+| Interceptions per target, DBs | skill-over-expected (H81) | Play-by-play | | 0.29 (0.22-0.36); kept 137% | trait of the player, weak | Not tested | |
+| Throw depth against, DBs | skill-over-expected (H81) | PFR | | 0.37 (0.30-0.44); kept 64% | trait (likely his assignment) | Not tested | |
+| Sacks per pressure, QBs | skill-over-expected (H82) | Participation's pressure flag | | 0.20 (0.00-0.38); kept -46% (41) | unclear | Not tested | Raw 0.61: the flag changed source in 2023 (I90) |
+| Sacks per dropback, QBs | skill-over-expected (H82) | | | 0.36 (0.22-0.59); kept 149% (41) | **trait of the QB** | Not tested | A lineman's: kept 42% |
+| Pressures per dropback on his dropbacks, QBs | skill-over-expected (H82) | | | 0.47 (0.35-0.56); kept 33% | trait, partly the QB's | Not tested | A lineman's: 0.28, kept 8% |
+| Time to throw, QBs | skill-over-expected (I89) | Participation | | 0.61 (0.51-0.68); kept 36% | trait, more the offense's | Not tested | A lineman's: 0.38, kept -10% |
+| Throw depth (air yards per attempt), QBs | skill-over-expected (I89) | | | 0.42 (0.27-0.54); kept 79% | **trait of the QB** | Not tested | Receivers keep 85% of theirs; a lineman's kept 16% |
+| Broken tackles per carry, RBs | skill-over-expected (H83) | PFR, 80+ carries | | 0.22 (0.11-0.33); kept 168% (46) | **trait of the runner**, weak | Not tested | |
+| Share of tackles after the line needing 2+ tacklers, RBs | skill-over-expected (H83) | Play-by-play's tackler fields | | 0.46 (0.37-0.54); kept 65% (59) | **trait of the runner** | Not tested | Raw 0.66 |
+| Share of tackles at or behind the line needing 2+ tacklers, RBs | skill-over-expected (H83) | As above | | 0.21 (0.10-0.31); kept 107% | trait, weak | | |
 
 ## Feature candidates
 

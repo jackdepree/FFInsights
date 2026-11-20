@@ -1,0 +1,50 @@
+Seasons 2016-2024 (PFR 2018-2024). raw_repeat = season-to-season r; repeat and the rest with each season's league average taken out (90%, players resampled); share_kept = movers_r / stayers
+
+shape: (24, 11)
+┌─────────┬───────────────────────────────────────────────────────────────────────────┬───────┬────────┬────────────┬────────┬───────┬───────┬─────────┬──────────┬────────────┐
+│ hunch   ┆ measure                                                                   ┆ pairs ┆ movers ┆ raw_repeat ┆ repeat ┆ lo90  ┆ hi90  ┆ stayers ┆ movers_r ┆ share_kept │
+│ ---     ┆ ---                                                                       ┆ ---   ┆ ---    ┆ ---        ┆ ---    ┆ ---   ┆ ---   ┆ ---     ┆ ---      ┆ ---        │
+│ str     ┆ str                                                                       ┆ i64   ┆ i64    ┆ f64        ┆ f64    ┆ f64   ┆ f64   ┆ f64     ┆ f64      ┆ f64        │
+╞═════════╪═══════════════════════════════════════════════════════════════════════════╪═══════╪════════╪════════════╪════════╪═══════╪═══════╪═════════╪══════════╪════════════╡
+│ H79     ┆ plain catch rate (catches / targets)                                      ┆ 547   ┆ 113    ┆ 0.436      ┆ 0.452  ┆ 0.379 ┆ 0.511 ┆ 0.478   ┆ 0.339    ┆ 0.710      │
+│ H79     ┆ catches over expected per target (for comparison)                         ┆ 547   ┆ 113    ┆ 0.262      ┆ 0.273  ┆ 0.183 ┆ 0.352 ┆ 0.298   ┆ 0.140    ┆ 0.471      │
+│ H80 (c) ┆ OLB role: rush share = pressures / (pressures + coverage targets)         ┆ 283   ┆ 80     ┆ 0.852      ┆ 0.856  ┆ 0.801 ┆ 0.897 ┆ 0.842   ┆ 0.892    ┆ 1.059      │
+│ H80 (b) ┆ OLB pressure rate, all (the first look's 97%)                             ┆ 283   ┆ 80     ┆ 0.716      ┆ 0.718  ┆ 0.647 ┆ 0.773 ┆ 0.726   ┆ 0.693    ┆ 0.955      │
+│ H80 (b) ┆ OLB pressure rate, rushers only (rush share over 2/3 in the first season) ┆ 164   ┆ 51     ┆ 0.362      ┆ 0.339  ┆ 0.205 ┆ 0.441 ┆ 0.423   ┆ 0.060    ┆ 0.143      │
+│ H80 (c) ┆ ILB role: rush share = pressures / (pressures + coverage targets)         ┆ 295   ┆ 71     ┆ 0.756      ┆ 0.758  ┆ 0.371 ┆ 0.881 ┆ 0.803   ┆ 0.215    ┆ 0.268      │
+│ H81     ┆ DB catch rate allowed                                                     ┆ 721   ┆ 172    ┆ 0.199      ┆ 0.205  ┆ 0.140 ┆ 0.266 ┆ 0.226   ┆ 0.133    ┆ 0.587      │
+│ H81     ┆ DB yards per target                                                       ┆ 721   ┆ 172    ┆ 0.143      ┆ 0.147  ┆ 0.071 ┆ 0.212 ┆ 0.216   ┆ -0.048   ┆ -0.220     │
+│ H81     ┆ DB passes defensed per target                                             ┆ 721   ┆ 172    ┆ 0.191      ┆ 0.192  ┆ 0.134 ┆ 0.244 ┆ 0.155   ┆ 0.309    ┆ 1.994      │
+│ H81     ┆ DB interceptions per target                                               ┆ 721   ┆ 172    ┆ 0.291      ┆ 0.292  ┆ 0.218 ┆ 0.359 ┆ 0.272   ┆ 0.372    ┆ 1.369      │
+│ H81     ┆ DB throw depth against                                                    ┆ 721   ┆ 172    ┆ 0.375      ┆ 0.371  ┆ 0.301 ┆ 0.437 ┆ 0.404   ┆ 0.257    ┆ 0.638      │
+│ H82     ┆ QB sacks per pressure                                                     ┆ 222   ┆ 41     ┆ 0.613      ┆ 0.200  ┆ 0.003 ┆ 0.381 ┆ 0.235   ┆ -0.107   ┆ -0.455     │
+│ H82     ┆ OL (team's on his dropbacks) sacks per pressure                           ┆ 814   ┆ 133    ┆ 0.625      ┆ 0.283  ┆ 0.174 ┆ 0.381 ┆ 0.297   ┆ 0.234    ┆ 0.787      │
+│ H82     ┆ QB sacks per dropback                                                     ┆ 222   ┆ 41     ┆ 0.608      ┆ 0.356  ┆ 0.217 ┆ 0.585 ┆ 0.338   ┆ 0.505    ┆ 1.494      │
+│ H82     ┆ OL (team's on his dropbacks) sacks per dropback                           ┆ 814   ┆ 133    ┆ 0.635      ┆ 0.280  ┆ 0.171 ┆ 0.390 ┆ 0.323   ┆ 0.136    ┆ 0.420      │
+│ H82     ┆ QB pressures per dropback                                                 ┆ 222   ┆ 41     ┆ 0.453      ┆ 0.470  ┆ 0.351 ┆ 0.559 ┆ 0.534   ┆ 0.177    ┆ 0.332      │
+│ H82     ┆ OL (team's on his dropbacks) pressures per dropback                       ┆ 814   ┆ 133    ┆ 0.300      ┆ 0.282  ┆ 0.219 ┆ 0.346 ┆ 0.336   ┆ 0.028    ┆ 0.084      │
+│ I89     ┆ QB time to throw                                                          ┆ 222   ┆ 41     ┆ 0.570      ┆ 0.610  ┆ 0.510 ┆ 0.684 ┆ 0.674   ┆ 0.243    ┆ 0.360      │
+│ I89     ┆ OL (team's on his dropbacks) time to throw                                ┆ 814   ┆ 133    ┆ 0.378      ┆ 0.383  ┆ 0.327 ┆ 0.432 ┆ 0.478   ┆ -0.046   ┆ -0.096     │
+│ I89     ┆ QB throw depth (air yards per attempt)                                    ┆ 222   ┆ 41     ┆ 0.451      ┆ 0.415  ┆ 0.272 ┆ 0.540 ┆ 0.427   ┆ 0.339    ┆ 0.793      │
+│ I89     ┆ OL (team's on his dropbacks) throw depth (air yards per attempt)          ┆ 814   ┆ 133    ┆ 0.375      ┆ 0.345  ┆ 0.273 ┆ 0.414 ┆ 0.394   ┆ 0.061    ┆ 0.155      │
+│ H83     ┆ RB broken tackles per carry (PFR)                                         ┆ 208   ┆ 46     ┆ 0.219      ┆ 0.222  ┆ 0.111 ┆ 0.325 ┆ 0.182   ┆ 0.305    ┆ 1.678      │
+│ H83     ┆ RB tackled after the line: share needing 2+ tacklers                      ┆ 271   ┆ 59     ┆ 0.659      ┆ 0.459  ┆ 0.373 ┆ 0.535 ┆ 0.500   ┆ 0.325    ┆ 0.650      │
+│ H83     ┆ RB tackled at or behind the line: share needing 2+ tacklers               ┆ 271   ┆ 59     ┆ 0.304      ┆ 0.214  ┆ 0.104 ┆ 0.311 ┆ 0.208   ┆ 0.222    ┆ 1.067      │
+└─────────┴───────────────────────────────────────────────────────────────────────────┴───────┴────────┴────────────┴────────┴───────┴───────┴─────────┴──────────┴────────────┘
+
+H79: plain catch rate's repeat minus catches over expected's: +0.179 (90% +0.109 to +0.238)
+H80 (a) OLB: 461 seasons; outside the middle third 82%; rush share by fifths [108, 23, 55, 132, 143]
+H80 (a) ILB: 496 seasons; outside the middle third 98%; rush share by fifths [438, 46, 4, 3, 5]
+H78: 154 moving backs (20+ carries the season before, 2018-2023 to 2019-2024); mean new share 0.205; squared error, habit 0.0342, who 0.0319, who and how good 0.0322
+
+== H78: a moving back's new share of his team's running-back carries, held out by season (gain = share of error removed)
+shape: (3, 4)
+┌───────────────────────────────────────────────┬────────┬────────┬───────┐
+│ comparison                                    ┆ gain   ┆ lo90   ┆ hi90  │
+│ ---                                           ┆ ---    ┆ ---    ┆ ---   │
+│ str                                           ┆ f64    ┆ f64    ┆ f64   │
+╞═══════════════════════════════════════════════╪════════╪════════╪═══════╡
+│ who against habit                             ┆ 0.068  ┆ 0.013  ┆ 0.120 │
+│ who and how good against habit                ┆ 0.060  ┆ 0.008  ┆ 0.110 │
+│ who and how good against who (how good adds?) ┆ -0.008 ┆ -0.033 ┆ 0.016 │
+└───────────────────────────────────────────────┴────────┴────────┴───────┘
