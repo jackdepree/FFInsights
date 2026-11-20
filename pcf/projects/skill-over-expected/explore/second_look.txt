@@ -1,0 +1,24 @@
+Held out by season. past_vs_league_avg = share of the league average's error the target's own past removes;
+gain = share of the past-only model's error removed by adding the measure (90% interval, players resampled)
+
+shape: (14, 9)
+┌────────────┬─────────────┬────────────────────────┬──────────────────────────────────────────────┬───────┬────────────────────┬─────────┬─────────┬─────────┐
+│ group      ┆ horizon     ┆ target                 ┆ added                                        ┆ rows  ┆ past_vs_league_avg ┆ gain    ┆ lo90    ┆ hi90    │
+│ ---        ┆ ---         ┆ ---                    ┆ ---                                          ┆ ---   ┆ ---                ┆ ---     ┆ ---     ┆ ---     │
+│ str        ┆ str         ┆ str                    ┆ str                                          ┆ i64   ┆ f64                ┆ f64     ┆ f64     ┆ f64     │
+╞════════════╪═════════════╪════════════════════════╪══════════════════════════════════════════════╪═══════╪════════════════════╪═════════╪═════════╪═════════╡
+│ RB         ┆ next season ┆ yards per carry        ┆ yards after contact per carry                ┆ 208   ┆ 0.0470             ┆ 0.0318  ┆ -0.0094 ┆ 0.0740  │
+│ RB         ┆ next season ┆ yards per carry        ┆ yards over expected per carry (NGS)          ┆ 208   ┆ 0.0470             ┆ -0.0129 ┆ -0.0230 ┆ -0.0037 │
+│ RB         ┆ next season ┆ yards per carry        ┆ both                                         ┆ 208   ┆ 0.0470             ┆ 0.0126  ┆ -0.0324 ┆ 0.0562  │
+│ RB         ┆ next game   ┆ yards per carry        ┆ yards after contact per carry                ┆ 4114  ┆ 0.0139             ┆ -0.0001 ┆ -0.0017 ┆ 0.0016  │
+│ RB         ┆ next game   ┆ yards per carry        ┆ yards over expected per carry (NGS)          ┆ 4114  ┆ 0.0139             ┆ -0.0001 ┆ -0.0013 ┆ 0.0010  │
+│ RB         ┆ next game   ┆ yards per carry        ┆ both                                         ┆ 4114  ┆ 0.0139             ┆ -0.0004 ┆ -0.0023 ┆ 0.0016  │
+│ QB         ┆ next season ┆ completion rate        ┆ completion over expected                     ┆ 222   ┆ 0.1659             ┆ -0.0134 ┆ -0.0325 ┆ 0.0041  │
+│ QB         ┆ next game   ┆ completion rate        ┆ completion over expected                     ┆ 3770  ┆ 0.0414             ┆ 0.0020  ┆ -0.0005 ┆ 0.0044  │
+│ DE, DT, NT ┆ next season ┆ sacks per dropback     ┆ pressure rate                                ┆ 761   ┆ 0.1839             ┆ 0.0941  ┆ 0.0615  ┆ 0.1265  │
+│ DE, DT, NT ┆ next season ┆ pressures per dropback ┆ (base: past sack rate; added: pressure rate) ┆ 761   ┆ 0.2375             ┆ 0.2160  ┆ 0.1658  ┆ 0.2605  │
+│ DE, DT, NT ┆ next game   ┆ sacks per dropback     ┆ pressure rate                                ┆ 15198 ┆ 0.0131             ┆ 0.0116  ┆ 0.0075  ┆ 0.0160  │
+│ OLB        ┆ next season ┆ sacks per dropback     ┆ pressure rate                                ┆ 283   ┆ 0.1425             ┆ 0.1511  ┆ 0.0726  ┆ 0.2190  │
+│ OLB        ┆ next season ┆ pressures per dropback ┆ (base: past sack rate; added: pressure rate) ┆ 283   ┆ 0.2735             ┆ 0.3746  ┆ 0.2996  ┆ 0.4468  │
+│ OLB        ┆ next game   ┆ sacks per dropback     ┆ pressure rate                                ┆ 5961  ┆ 0.0339             ┆ 0.0140  ┆ 0.0078  ┆ 0.0204  │
+└────────────┴─────────────┴────────────────────────┴──────────────────────────────────────────────┴───────┴────────────────────┴─────────┴─────────┴─────────┘
