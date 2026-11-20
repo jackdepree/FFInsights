@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look running) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -248,3 +248,51 @@ Most public football player value gives credit only to the players who touch the
      - **Both:** the same design run on two maps.
 3. **The no-noise target.** The draft is the roster-change test (a team's next season, players weighted by who actually plays), read on movers.
 4. **Odds for H71 (the latent space) and H74 (other experts as confounders)** before their cousins are explored.
+
+## The CEO's direction after the exploration
+*Word for word, 2026-11-19 ("vow" is the voice transcription of VOE).*
+
+"Ok let's overlap directions a and b. I give it a 90% confidence if we incorporate the plus minus sum into the vow model. Can you also fit a small mlp onto the data to compare against the lasso?"
+
+Before that, the CEO asked: "What if we experimented with different ratings for each player on the field?"
+
+**What it settles:**
+1. **Directions (a) and (b) together.** Each player gets ratings from information his teammates don't share, and the old design's slot model and knockout run on top of them. Questions 2–4 above (cadence, the no-noise target, odds for H71 and H74) stay open.
+2. **H75** (HUNCHES.md) is the CEO's bet: the VOE model holds once the plus-minus sum is inside it. 90% confidence; no size given.
+3. **A small MLP** is fit beside the lasso on the same inputs, so the ladder's linear rung and a nonlinear rung are compared directly.
+
+**Claude's technical calls for this second look** (the CEO can veto any of them):
+- **Direction (b) is approximated with free over-expected stats.** Skill VOE proper needs context-live's expected outcomes for 2016–2022, and they aren't scored yet. In their place:
+  - NGS: completion over expected, run yards over expected, separation, YAC over expected.
+  - PFR: pressures, drops, targets allowed, missed tackles.
+  - nflverse player stats: EPA a dropback, a carry or a target; sacks, hits, tackles for loss, passes defended.
+- **"The plus-minus sum" is read two ways, and both are run:**
+  - each slot carries the player's plus-minus rating;
+  - the play's offense-minus-defense sum of ratings is also an input to the same model.
+- **Ratings:**
+  - **The plus-minus rating (a):** each season's plus-minus starts from a prior, which is what his own stats and last season's plus-minus say about this season. It is fit only on pairs of earlier seasons.
+  - **The own-stats rating (b):** his season's stats mapped to next season's plain plus-minus, fit per position group only on earlier pairs of seasons. It contains no on-field team outcome.
+  - New players get their group's learned new-player rating instead of 0.
+- **Walk-forward throughout:**
+  - The play model for season T is fit on 2018 to T−1, with each play's ratings taken from the end of the season before it.
+  - Held-out plays are scored 2019–2024, and the roster-change test 2020–2024. The roster-change test needs an earlier season to fit on.
+  - The recreation and plain plus-minus are rescored on the same seasons.
+
+**How H75 is judged** (written before the run):
+- **Real?** In games the main QB missed whole, the knockout's predicted change in the offense has a 90% interval below 0, and is at least a third of the actual change measured on the same games.
+- **Pays?** On the roster-change test for offense, the VOE lasso's gain has a 90% interval above 0, and its estimate beats the recreation's on the same seasons.
+- **Held** if both pass, **held in part** if one does, **failed** if neither.
+- **Also reported:** whether the slot model adds anything over the plain sum of ratings, on held-out plays and on the roster-change test.
+
+**Claude's expectations for the second look** (before the run):
+- **H75:** 65% that it holds on both counts. Real 50% (shrunk values undersize the QB, F2). Pays 85%, at about +7% on offense (+4 to +10).
+- **The slot model against the plain sum:** 30% that the slots add 1 point or more on the roster-change test.
+- **Own stats:**
+  - 45% that they add 1 point or more over plus-minus alone on offense.
+  - 25% that any version helps defense, with its interval above 0.
+  - 55% that the own-stats rating repeats 0.2 or more season to season for players who moved. It is built from separate seasons' stats, so its repeat isn't by construction.
+- **The MLP against the lasso, on held-out plays:**
+  - 80% that the MLP is no better than the lasso by more than 0.05 points of a play's explained share.
+  - 60% that it is worse.
+  - 60% that the spread across three MLP seeds is larger than the gap between the MLP and the lasso.
+- **The ceiling:** 90% that the best model explains 0.3% of a held-out play or less (an oracle that knew each team's true quality explains about 0.4%).

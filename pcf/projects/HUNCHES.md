@@ -88,6 +88,7 @@
 | H72 | 2026-11-19 | CEO | voe | Injury effects are read from games missed, not from within a game | "a natural experiment looking at outcomes within a game when there's an injury within the game ... see if there is any change. We can attribute those changes." Tested as: when a player leaves injured, his team's results over expected change measurably, and the change can be credited to him | high (90%); no size given | 85% that a QB leaving shows a clear drop (0.1 to 0.2 EPA a play); 35% that any other position group's change clears zero; 30% that the change follows the player's earlier value | 1,342 regulars who left injured: after less before, less the same team's other games at that point (difference in differences); a placebo of 1,736 who came back; against his earlier value less his backup's | failed in this design (exploration) | Pooled +0.013 (-0.005 to +0.031), placebo -0.002; QB +0.04 (-0.03 to +0.12), WR +0.10 the wrong way; not credited to him (r 0.00). But a whole game without the main QB costs -0.070 (-0.085 to -0.053) (voe#F5, F10) | unclear: across games yes, within a game no | no |
 | H73 | 2026-11-19 | CEO | voe | A natural experiment's estimate applies only where it was measured | "take all the confounders and we're going to regress those confounders on ... that feature that we just discovered, and then we're going to apply that to everything, and then we have now a new estimate" Tested as: a measurement trusted from a natural experiment can be extended to every player by modelling it from what is known about him | low (60%); no size given | 20% in the first look (few, noisy events per player) | The injury change as the label, modelled from what was known before (group, his value, his backup's, his plays); held-out seasons 2019-2024 (937 events) | failed (exploration) | +0.23% of the held-out error against the average change (the group's average +0.13%) | unclear: the measurement to extend wasn't found | no: +0.23% |
 | H74 | 2026-11-19 | CEO | voe | Plays are matched on the situation alone | "all those models [schemes, context, participation] are almost ... like [latent space]. We can use those as confounders to say, hey, this play was actually pretty similar to this play over here." | not asked yet | not tested in the first exploration | — | open | — | — | — |
+| H75 | 2026-11-19 | CEO | voe | Player value from plus-minus alone, or from a slot model of shared ratings (the old VOE) | "Ok let's overlap directions a and b. I give it a 90% confidence if we incorporate the plus minus sum into the vow [VOE] model." Tested as: the VOE model (slots and knockout), fed each player's own ratings (plus-minus starting from his own stats, and his own-stats rating) and the play's plus-minus sum, gives a real player value that pays | high (90%); no size given | 65% that it holds on both counts. Real, 50%: the knockout predicts the drop when the main QB misses a whole game, interval below 0 and at least a third of the actual size. Pays, 85%: the roster-change test on offense clears 0 and the recreation (+5 to +9%). 30% that the slot model beats the plain plus-minus sum by 1+ point | Walk-forward per-player ratings (a, b); lasso and a small MLP from slot ratings and sums to each play's EPA over expected, pass and run apart; held-out plays 2019-2024; the roster-change test 2020-2024; games the main QB missed | open | — | — | — |
 
 ## Tally
 
@@ -95,12 +96,12 @@ Updated with each verdict. Counted by the verdict's first word: "held in part" a
 
 | Who | Held | Failed | Unclear | Open |
 |---|---|---|---|---|
-| CEO | 32 | 23 | 15 | 5 |
+| CEO | 32 | 23 | 15 | 6 |
 
-| The CEO's 75 hunches | Yes | Partly or small | No | Unclear | Not tested, or not a forecast | Open |
+| The CEO's 76 hunches | Yes | Partly or small | No | Unclear | Not tested, or not a forecast | Open |
 |---|---|---|---|---|---|---|
-| Real? | 23 | 20 | 18 | 9 | | 5 |
-| Pays? | 13 | 13 | 28 | | 16 | 5 |
+| Real? | 23 | 20 | 18 | 9 | | 6 |
+| Pays? | 13 | 13 | 28 | | 16 | 6 |
 
 **Real, and not yet paying anywhere** (candidates for a different outcome): H33 (a coach's substitution habit), H35 (stay and return rates), H40 (series success rate), H45 (the passing-down role), H15 (comparative advantage), and the untested ones: H19, H26, H30, H38.
 | Claude | 0 | 0 | 0 | 0 |
