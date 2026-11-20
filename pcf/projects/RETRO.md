@@ -129,6 +129,47 @@ Retro 1's predictions for the older ideas stand. One moves: **I59** (a pass-heav
 | W5 | **The per-position map as a standing view** in CONSISTENCY.md (I79), updated at every project's done step | The CEO's direction: "tell them exactly what they need to look at" |
 | W6 | **Claude states its number for the CEO's exact claim first,** then any side bets | So the scoreboard compares us on the same event without anyone picking the closest number later |
 
+**The CEO's answers (2026-11-20):**
+
+On the claims-versus-methods result: "I think it kind of makes sense that my methods don't always hold true. I don't have like perfect knowledge of data science or like data science techniques or methodologies. So really like a lot of my stuff is pretty aspirational when I talk about methods. But I think also when I'm talking about methods, I'm more so talking about like maybe pushing you to try different techniques instead of just a really simple and basic one, because I think a really simple basic one almost always does pretty well ... But when I'm talking about football, it's really just like I'm kind of just like describing, you know, simple patterns that I've noticed or that I've heard people talk about ... If we apply those football theories to data, what do we expect to find? And that's really all I'm doing."
+
+| # | Decision | The CEO's words | Where |
+|---|---|---|---|
+| W1 | **Accepted** | "testing each new trait beside its most obvious input, I think that's totally fine. I think that's good. We can do that." | `CLAUDE.md`, lifecycle step 2 |
+| W2 | **Rejected** | "I don't want to tag each hunch as a claim or a method. I think that's too tedious." Claude sorts them at each retro, and says so | |
+| W3 | **Edited:** odds stay with the hunch; when something said wasn't clearly a hunch, the CEO may add odds afterwards, marked and scored apart | "I think we mostly try to keep the odds with the hunches. I try to do that too, but it's not perfect. So sometimes I might say a hunch, but it didn't really like come across as a hunch, or I might be saying just my knowledge and it might come across as a hunch. So I think like I can apply retroactive odds. I'll try and be like as honest as possible." | `CLAUDE.md`, "Every bet states its odds first" |
+| W4 | **Edited:** every exploration starts with a quick read of the backlog; it checks an idea only when one fits | "I think the explorations don't need to check a backlog idea. I think it should be practiced, at least at the very minimum, look at the backlog ideas, because those can really pile up ... if it fits perfectly within this expiration, then boom, that's great, let's do it. But it doesn't have to." | `CLAUDE.md`, lifecycle step 2 |
+| W5, W6 | **Asked again, in plainer words** | "I don't know what W5 means ... Also, I don't know what W6 means" | |
+
+H77's odds came in the same message, before any test: 70% for runners and defensive linemen (HUNCHES.md). That is the opposite end from Claude's 30% for runners. The next cousin settles it.
+
+On `line-play` and `qb-talent`: "we can keep it more general than the line play and the QB talent, so this can feed into the line play and the QB talent." `skill-over-expected` stays general and feeds both (registry).
+
+### 6. The idea review, before the merge (the CEO's ask)
+
+The CEO, 2026-11-20: "before you merge Retro 2, I would like you to kind of do another review of the ideas and try and look at, like, okay, which ones held, which ones failed, and try and come up with 3 or 4 new ideas that we haven't tried that you think are, you know, that balance aspiration and integrity and validity, and, you know, give your odds."
+
+**The record of the 83 ideas:** 23 have a result; the other 60 are open, three of them with a first look.
+
+| | Ideas | What they have in common |
+|---|---|---|
+| **Held** (8) | I2, I13 (partly), I19, I33, I36, I38, I47, I73 (in part) | All but one are about **what history can't see yet** (P5): who changed, who is missing, what a team is playing for. I33 (the noise ceiling) is measurement hygiene |
+| **Failed** (10) | I3, I22, I24, I34, I35, I37, I40, I63, I65, I74 | **Cleverer methods** (I34 luck-stripping, I35 stacking, I37, I40, I74: P4), **fit and matchups** (I22, I24: P2), and **team calls as a trait** (I65) |
+| **Unclear** (5) | I1, I23, I25, I26, I69 (partly tested) | Mostly too few rows. Beside them, first looks only: I5, I9, I41 (the bias is still there) |
+
+Claude's ideas follow the same split as the CEO's hunches: claims about where history is blind pay; new ways to weigh the same data tie. The backlog's open ideas lean the wrong way: about half are method or matchup ideas (I7, I12, I15, I16, I26, I27, I32, I39, I44, ...), which the record says will mostly tie.
+
+**Four new ideas, from safe to long shot** (each in IDEAS.md with its test):
+
+| # | Idea | The bet | Claude's odds | If it works |
+|---|---|---|---|---|
+| I80 | **Where a player's chances come from, in the yardstick**: opportunity-quality's expected points per game beside participation | Safe: volume weighted by where the chances happen (P9), and it repeats 0.84 | **85%** it adds to receiving yards; size 1 to 3% | A steady gain on the player forecasts that matter most for fantasy |
+| I81 | **Linemen's absences measured on pressure, not EPA** | Middle: a lower-noise outcome on the natural experiment that already half-worked (I73) | **75%** for offensive linemen; 55% defensive; 35% that the size follows the player | The first per-lineman value with a natural experiment behind it |
+| I82 | **What the coaches see**: snaps that rise or fall more than production explains, as a read of skill | Long shot: coaches watch film and practice; their choices may carry it | **25%** | Borrowed private information on rookies and backups, where our own numbers are thinnest |
+| I83 | **Does the closing line share our blind spots after a change?** | Longest shot: I47's biases, checked against the market's spread | **15%** for an edge against the spread; 60% the line shows no bias | The first route to beating the closing line, PCF's first success test |
+
+The case against the four: I80 may be past targets in disguise (P7, now checked first by W1). I81 has two seasons of expectations, so wide intervals. I82's signal may be the same box score the coaches read. I83 tests many games for a small edge, and the market has priced coaching and QB changes for decades.
+
 ### The case against this retro
 
 - The same reader sorted the patterns, scored both of us, and wrote half the bets. Nothing here is held out.

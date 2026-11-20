@@ -10,7 +10,7 @@
 
 | | Where |
 |---|---|
-| **The football claim:** lower-noise outcomes show player value that EPA didn't | H77 in [HUNCHES.md](../HUNCHES.md), odds asked before any test |
+| **The football claim:** lower-noise outcomes show player value that EPA didn't | H77 in [HUNCHES.md](../HUNCHES.md), the CEO's odds given before any test |
 | **Uses, in the CEO's order:** player rankings; player-level features; a per-position map of what to use and what to ignore downstream ("only look at this stuff") | This page; the map is I79 in [IDEAS.md](../IDEAS.md) |
 | **Player level first, position level is fine too:** "it's just impossible to know if a running back is good or not" is an acceptable answer, and so is "the only thing that tells us ... is feature X" | This page; the brief's success tests will say so |
 | **Causal methods to try on these outcomes** | I76 (the movers model), I77 (double machine learning for rotating players), I78 (synthetic control for long absences) |
@@ -21,4 +21,6 @@
 - **context-live already makes the expectations** for every play: `pressure_prob`, `completion_prob`, `rush_yards_exp`, and 14 more (registry, context-live's interface card). Over expected is actual minus these, from the walk-forward history only (rule e).
 - **Who was on the field** comes from participation, which is post-season, so the first version is retrospective, like voe.
 - **Rushing yards were hard to forecast** from the situation (H64: 16th of 17 outcomes in the build). That is a statement about the situation, not about runners; the cousin asks the other question.
-- **Overlaps:** `line-play` (pressure over expected, as a unit) and `qb-talent` (completion over expected, shrunk) are ideas in the registry. Open for the kickoff: does this cousin absorb them, or feed them?
+- **It stays general and feeds** `line-play` (pass protection and run blocking as a unit) and `qb-talent` (completion over expected, sack avoidance, play under pressure), both still ideas. The CEO, 2026-11-20: "we can keep it more general than the line play and the QB talent, so this can feed into the line play and the QB talent."
+- **H77's odds** (the CEO, 2026-11-20, before any test): "I think I'm like 70% confident that if we look at runners, and maybe some defensive players, maybe like defensive linemen, then the less noisy outcomes will be much better for prediction." Claude's are the other way for runners (30%; P10: a runner's yards belong partly to his blockers).
+- **Ideas that fit its exploration:** I79 (the per-position map), I81 (linemen's absences on pressure), I82 (what the coaches see), I76 to I78 (the causal methods).

@@ -26,6 +26,8 @@ Phase 0, starting with the one item that can't wait:
 
 The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-calling · environment · stabilization · Context (in-season) · participation & snaps**
 
+The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
+
 ## Later
 
 - **The remaining experts:** line play, game script, Context (retrospective), VOE (in-season), VOE (retrospective), opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, QB talent, prospects, kicker & DST, market, crowd, news
@@ -144,3 +146,4 @@ One dated line each time something reaches Done, or the roadmap changes shape.
 - **2026-11-19:** `crude-forecaster` **done** (the CEO: "Merge both", after the corrected R6-R8): the yardstick is on main.
 - **2026-11-17:** `context-live` built (validating; decision 0036, [results](../projects/context-live/RESULTS.md)): 17 expected outcomes per play from the situation and both sides' calls, nothing about who played. The calls beat the situation alone for 12 (most for how a pass is thrown: time to throw, depth of target, pressure, completion); the situation alone ships for a stuffed run, first downs and touchdowns, and penalties. Players' context spreads about 0.7 points of success rate and repeats (H66). Waiting on the CEO's sanity review, spot-check and merge approval.
 - **2026-11-19:** `context-live` **done** (the CEO: "Merge both", after the spot-check of the map and the sanity flags R16-R17): champion `pcf.context-live` v1 is on main.
+- **2026-11-20:** `voe` **parked** by the CEO after three looks (most on-field value is the team's, QBs the exception; limitations L1-L8 wait for a workaround brainstorm). Retro 2 ([RETRO.md](../projects/RETRO.md)): the CEO's football claims held 8 of 10, methods 2 of 6; patterns P9 (volume carries player forecasts) and P10 (on-field value is the team's except at QB); the obvious-input check and a look at the backlog in every exploration, and odds the CEO may add afterwards, marked (`CLAUDE.md`); new ideas I76-I83. The next cousin: `skill-over-expected` (H77).
