@@ -1,0 +1,51 @@
+== 1a. WHY THE FIRST MLP FAILED (2024 pass plays, seed 1, the first configuration) ==
+  the largest standardized input on a held-out play: 183.1 units, in column o_DL_x (filled on 0.03% of training plays)
+  held-out plays with any input beyond 8 units: 30.2%
+  its predictions: 1% -0.78, median -0.05, 99% +0.80, largest 3.7 EPA (a play's leftover has sd 1.58); 0.9% of plays predicted beyond 1 EPA either way
+  the training mean is -0.008; the predictions' mean -0.045, sd 0.317
+
+== 1b. THE REFIT: out-of-time early stopping, slot inputs not restandardized ==
+  held-out plays 2019-2024, share of a play's EPA over expected explained (90% by resampling games):
+    VOE lasso, slots and sums (from ratings.txt)         +0.087% (+0.006 to +0.157)
+    plain sums (a)+(b), linear (from ratings.txt)        +0.161% (+0.119 to +0.203)
+    linear on the four side sums                         +0.151% (+0.109 to +0.195)
+    small MLP refit, the lasso's inputs (3 seeds)        +0.006% (-0.007 to +0.019)
+    small MLP, the four side sums (3 seeds)              +0.054% (+0.037 to +0.071)
+      seed: mlp_fix0     -0.066%
+      seed: mlp_fix1     -0.008%
+      seed: mlp_fix2     -0.008%
+      seed: mlp_sums0    +0.009%
+      seed: mlp_sums1    +0.005%
+      seed: mlp_sums2    +0.029%
+
+  the roster-change test (2020-2024):
+    linear on the four side sums                               offense: +5.60% (90% -0.60 to +11.51)
+    linear on the four side sums                               defense: +5.87% (90% -2.80 to +13.28)
+    small MLP refit, the lasso's inputs (3 seeds)              offense: +0.00% (90% +0.00 to +0.00)
+    small MLP refit, the lasso's inputs (3 seeds)              defense: +0.00% (90% +0.00 to +0.00)
+    small MLP, the four side sums (3 seeds)                    offense: +1.95% (90% -3.66 to +7.99)
+    small MLP, the four side sums (3 seeds)                    defense: -0.34% (90% -0.95 to +0.18)
+
+== 2. THE NEW-PLAYER QUESTION (the roster-change test, 2020-2024) ==
+    share of plays by players new that season, alone           offense: +4.59% (90% -0.45 to +9.29)
+    share of plays by players new that season, alone           defense: +6.58% (90% -1.66 to +13.62)
+    first look's plus-minus with prior, roster sum, against last season only offense: +7.23% (90% +0.90 to +13.56)
+    first look's plus-minus with prior, roster sum, against last season only defense: -1.13% (90% -2.86 to +0.73)
+    first look's plus-minus with prior, roster sum, against last season + the new-player share offense: +5.99% (90% -0.88 to +12.56)
+    first look's plus-minus with prior, roster sum, against last season + the new-player share defense: -1.58% (90% -3.16 to -0.01)
+    plain sums (a)+(b), linear (from ratings.txt), against last season only offense: +8.69% (90% +2.74 to +14.41)
+    plain sums (a)+(b), linear (from ratings.txt), against last season only defense: +6.61% (90% -2.07 to +15.15)
+    plain sums (a)+(b), linear (from ratings.txt), against last season + the new-player share offense: +4.58% (90% -1.85 to +10.48)
+    plain sums (a)+(b), linear (from ratings.txt), against last season + the new-player share defense: +2.36% (90% -1.94 to +6.21)
+    VOE lasso, slots and sums (from ratings.txt), against last season only offense: +7.84% (90% +0.23 to +15.51)
+    VOE lasso, slots and sums (from ratings.txt), against last season only defense: +6.16% (90% -2.16 to +12.95)
+    VOE lasso, slots and sums (from ratings.txt), against last season + the new-player share offense: +5.25% (90% -2.78 to +12.32)
+    VOE lasso, slots and sums (from ratings.txt), against last season + the new-player share defense: +2.66% (90% -3.99 to +8.02)
+  the own-stats rating's new-player values by group (season 2024's model; player-plays): QB new -0.0017 vs known +0.0003; RB new +0.0003 vs known +0.0001; WR new -0.0002 vs known +0.0001; TE new -0.0003 vs known +0.0001; OL new -0.0002 vs known +0.0003; DL new -0.0003 vs known +0.0003; LB new +0.0002 vs known +0.0002; DB new -0.0005 vs known +0.0003
+
+== THE MISSED-QB CHECK FOR THE REFIT MODELS (2019-2024) ==
+  Team-seasons 2019-2024 where the main QB missed whole games: 122; games missed 468
+    missed less played, actual offense EPA over expected a play      -0.0672 (90% -0.0862 to -0.0486)
+    missed less played, predicted by mlp_fix                         +0.0001 (90% -0.0015 to +0.0016)
+    missed less played, predicted by mlp_sums                        -0.0027 (90% -0.0044 to -0.0010)
+    missed less played, predicted by ols_sums4                       -0.0138 (90% -0.0191 to -0.0088)

@@ -98,3 +98,86 @@
    - who did what;
    - skill VOE.
 5. **For the CEO:** the direction from here (BRIEF.md, "Open after the exploration").
+
+---
+
+# Second look: each player's own ratings (directions a and b, H75)
+
+> Run 2026-11-19 to 2026-11-20, after the CEO chose directions (a) and (b) together and bet H75 ("90% confidence if we incorporate the plus minus sum into the vow model"). The pass rules and Claude's expectations were committed before the run (BRIEF.md, "The CEO's direction after the exploration").
+> - [`explore/ratings.py`](explore/ratings.py) (output [`ratings.txt`](explore/ratings.txt)): the ratings, the VOE models, the roster-change test, the missed-QB check.
+> - [`explore/mlp_check.py`](explore/mlp_check.py) ([`mlp_check.txt`](explore/mlp_check.txt)): why the first MLP failed, a fair refit, and the new-player check.
+>
+> Held-out plays: 2019–2024. The roster-change test: 2020–2024, because it needs an earlier season to fit on. Regular seasons only; the 2025 vault wasn't read.
+
+**What was built:**
+- **Two ratings per player and season,** each made only from seasons before the play's season:
+  - **(a) Plus-minus that starts from his own stats.** Each season's plus-minus is pulled toward what his own stats and last season's plus-minus say, instead of toward 0.
+  - **(b) The own-stats rating.** His season's own numbers mapped to next season's plus-minus, one lasso per position group. The numbers: EPA a dropback, carry and target; NGS completion and run yards over expected, separation and YAC over expected; PFR pressures, drops, targets allowed and missed tackles; sacks, hits, tackles for loss and passes defended. It contains no on-field team outcome.
+  - New players get their group's learned new-player value instead of 0.
+- **The old VOE design on top:**
+  - Each play's 101 slots carry the ratings of who played there.
+  - **The plus-minus sum** (offense minus defense, for each rating) is added as an input, as the CEO asked.
+  - The models: a lasso and a small MLP (32 units, 3 seeds), plus plain sums as the simple rung.
+  - The knockout replaces one side's players with the slot's average.
+
+**Verdict: H75 held in part.**
+- **Real? No.** In games the main QB missed, the knockout predicts only about a ninth of the drop that actually happens.
+- **Pays? Yes, by the rule written before the run:** +7.8% on a team's next offense, with the 90% interval just above 0.
+  - Two caveats come with it. It's no better than the first look's plain plus-minus sum on the same seasons (+7.2%).
+  - It shrinks to +5.3%, with the interval crossing 0, once the share of plays a team gave to new players is in the baseline.
+- **The plus-minus sum is what makes the VOE model work at all.** The same lasso with slots only explains less of a play and adds nothing to the next season (−0.3%).
+- **The slots themselves add nothing over plain sums.** The small MLP does worse than the lasso.
+
+## Findings
+
+| # | Finding | Numbers |
+|---|---|---|
+| F12 | **The sum carries the VOE model; the slots don't.** | <ul><li>Held-out plays explained: plain sums of (a) and (b) +0.161% (0.12 to 0.20).</li><li>The VOE lasso with slots and sums +0.087% (0.005 to 0.158).</li><li>The lasso with slots only +0.045% (−0.04 to +0.12).</li><li>The lasso keeps 0 to 17 of its 202 slot inputs a fit.</li><li>Every model is far under the ceiling (about 0.4%).</li></ul> |
+| F13 | **H75 pays by its rule, but not past simple plus-minus.** | The roster-change test on offense, 2020–2024, same rows:<ul><li>The VOE lasso +7.8% (0.2 to 15.5).</li><li>Plain sums (a)+(b) +8.7%.</li><li>The first look's plus-minus with prior +7.2% (0.9 to 13.6).</li><li>The recreation +1.2%.</li></ul> |
+| F14 | **Much of the gain is who had to play, not how good they are.** | <ul><li>The share of a team's plays by players who didn't play the season before (mostly rookies), alone, adds +4.6% to its next offense and +6.6% to its next defense.</li><li>With that share in the baseline: the lasso +5.3% offense (−2.8 to 12.3), +2.7% defense; plain sums +4.6% and +2.4%; the first look's plus-minus +6.0% and −1.6%.</li><li>The own-stats rating marks new players below known ones (QBs −0.0017 against +0.0003), so it counts them.</li><li>The test uses who actually played, so the share partly records injuries during the season: hindsight.</li></ul> |
+| F15 | **The knockout still can't size a QB.** | <ul><li>Games the main QB missed whole (122 team-seasons, 468 games): actual −0.067 EPA a play.</li><li>Predicted: the lasso −0.008; plain sums −0.015 (the best, a fifth of it); the first look's plus-minus sum −0.003.</li><li>The ratings rank players, but they are shrunk too far to size them (F2).</li></ul> |
+| F16 | **The own-stats rating is a steady trait of the player, but it doesn't predict his plus-minus on a new team.** | <ul><li>Season to season, from separate seasons' stats: 0.42 if he stayed, 0.14 (0.08 to 0.20) if he moved.</li><li>Predicting this season's plain plus-minus: 0.15 if he stayed, 0.03 if he moved (TE 0.22, DB 0.12, OL −0.10).</li><li>Last season's plain plus-minus does that at 0.07 for movers.</li></ul> |
+| F17 | **Starting plus-minus from his own stats changes almost nothing.** | <ul><li>Predicting next season's plain plus-minus: (a) 0.30 stayed, 0.08 moved, against plain plus-minus's 0.29 and 0.07.</li><li>At this shrinkage the prior moves values very little.</li></ul> |
+| F18 | **A small MLP is the wrong tool at this signal size.** | <ul><li>The first fit explained −47% of a held-out play. It standardized slots that are filled on 0.03% of plays, so 30% of plays had an input beyond 8 units (one 183), and it predicted swings the leftover doesn't have (sd 0.32).</li><li>The fair refit (slot ratings left in rating units, early stopping on the last training season, the average kept when no epoch beats it) beat the average on its validation season in only 6 of its 72 fits.</li><li>It explains +0.006% of a held-out play on the lasso's inputs, and +0.054% on the four side sums, against +0.151% for a linear fit on the same four.</li><li>Seeds spread 0.06 points, less than the gap to the lasso.</li></ul> |
+
+## Against the expectations written before the run
+
+| Expectation | Result |
+|---|---|
+| H75 holds on both counts, 65% | held in part (pays yes, real no) |
+| Real (the QB knockout reaches a third of the actual drop), 50% | no: a ninth (−0.0076 against −0.067) |
+| Pays, 85%, at about +7% (+4 to +10) | yes, +7.8%; within the size range |
+| The slots add 1+ point over plain sums, 30% | no: the lasso +7.8% against plain sums +8.7% |
+| Own stats add 1+ point over plus-minus alone on offense, 45% | yes as stated: +8.7% against +3.0% (model-based values). But most of it is the new-player share (F14) |
+| Any version helps defense with its interval above 0, 25% | no: the best, +6.6%, spans 0, and it is the new-player share |
+| The own-stats rating repeats 0.2+ for movers, 55% | no: 0.14 |
+| The MLP is no better than the lasso by more than 0.05 points, 80% | yes |
+| The MLP is worse than the lasso, 60% | yes |
+| Seeds spread more than the gap between the MLP and the lasso, 60% | no: 0.06 against 0.08 |
+| The best model explains 0.3% of a play or less, 90% | yes: 0.16% |
+
+## The case against the second look
+
+- **The roster-change test still uses who actually played.**
+  - F14 shows how much that matters: a count of new players scores almost as well as any rating.
+  - A forecast would use the pre-season depth chart instead. Until then, every travel number here mixes "who is good" with "who had to play".
+- **The shrinkage was kept from the first look,** chosen for predicting plays. It's the reason the ratings can't size a QB (F15), and why the prior in (a) barely moves anything (F17).
+  - A model built to size players would choose it on the sizing test instead (games missed, F5).
+  - **Rescoring with refits:** the model-based roster values come from a fit refit every season, so each season's scale moves. That adds noise the plain roster sums don't have: the first look's plus-minus scored +3.7% as a refit sum and +7.2% as a plain roster sum.
+- **The MLP was given one fair chance, not a search.**
+  - A network with a linear shortcut, much heavier penalties, or many more seeds might match the linear fit.
+  - Claude expects it can't beat a linear fit by much under a ~0.4% ceiling, but that wasn't tested.
+- **(b) is a stand-in for skill VOE.**
+  - NGS and PFR stats are noisy, and some carry the team: a receiver's EPA depends on his QB.
+  - PFR starts in 2018, so the earliest stats model had none.
+  - Skill VOE proper (context-live's expected outcomes) wasn't run.
+- **Few seasons.** Five test seasons of 32 teams each, so a 5% gain has an interval about 13 points wide.
+
+## What this means for the brief
+
+1. **The CEO's instinct about the sum was right in one way:**
+   - Without the plus-minus sum, the VOE design has nothing to work with.
+   - With it, the design reduces to the sum. The slots and the knockout add nothing a plain sum doesn't already have.
+2. **The no-noise target needs the new-player share in its baseline.** Otherwise, any rating that marks new players below average looks like it travels. The share is also a team feature in its own right (I75).
+3. **Sizing a player is the open problem, not ranking him.** The only number that sizes a QB is the whole-game absence (F5). That points to direction (c), games missed (I73), as the way to calibrate the size of every rating.
+4. **Use linear models for the VOE expert.** The MLP's lesson goes in KNOWLEDGE at the end of the project: at a signal of about 0.1% of a play, a network fits noise first.

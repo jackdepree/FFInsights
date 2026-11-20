@@ -1,0 +1,69 @@
+== DATA ==
+Plays with both ratings: seasons 2018-2024; held-out seasons 2019-2024
+  share of player-plays by a player new that season (no rating from the season before): 14.1%
+  spread of the ratings by group (player-plays): QB a 0.0043 b 0.0016; RB a 0.0027 b 0.0006; WR a 0.0036 b 0.0009; TE a 0.0031 b 0.0008; OL a 0.0037 b 0.0002; DL a 0.0027 b 0.0003; LB a 0.0029 b 0.0002; DB a 0.0030 b 0.0004
+
+== THE RATINGS ON THEIR OWN (player-seasons, 300+ plays in both seasons) ==
+  stayed:
+    this season's plain plus-minus, from last season's plain plus-minus: +0.29 (+0.26 to +0.31, n 3644)
+    ... from the own-stats rating (b, last season's stats only):        +0.15 (+0.13 to +0.18, n 3644)
+    ... from plus-minus that starts from his own stats (a):             +0.30 (+0.27 to +0.32, n 3644)
+    the own-stats rating, season to season (separate seasons' stats):   +0.42 (+0.40 to +0.45, n 2894)
+  moved:
+    this season's plain plus-minus, from last season's plain plus-minus: +0.07 (+0.02 to +0.12, n 1017)
+    ... from the own-stats rating (b, last season's stats only):        +0.03 (-0.02 to +0.08, n 1017)
+    ... from plus-minus that starts from his own stats (a):             +0.08 (+0.03 to +0.13, n 1017)
+    the own-stats rating, season to season (separate seasons' stats):   +0.14 (+0.08 to +0.20, n 742)
+  moved, by group: own-stats rating -> plain plus-minus on the new team (and last plain plus-minus -> it): QB -0.03 (-0.07, n 33); RB +0.03 (+0.08, n 41); WR +0.03 (+0.11, n 116); TE +0.22 (-0.04, n 66); OL -0.10 (+0.11, n 195); DL +0.06 (+0.09, n 179); LB -0.02 (+0.10, n 150); DB +0.12 (-0.00, n 237)
+
+== HELD-OUT PLAYS, 2019-2024 (share of a play's EPA over expected explained, against predicting the training average; 90% by resampling games) ==
+  plain sum: plus-minus with last season's prior (first look)    +0.114% (90% +0.083 to +0.148); pass +0.129%; run +0.061%
+  plain sum: plus-minus from his own stats (a)                   +0.113% (90% +0.079 to +0.144); pass +0.128%; run +0.059%
+  plain sums: (a) and the own-stats rating (b)                   +0.161% (90% +0.118 to +0.202); pass +0.183%; run +0.084%
+  VOE lasso, slot ratings only (no sums)                         +0.045% (90% -0.044 to +0.121); pass +0.098%; run -0.138%
+  VOE lasso, slot ratings and the sums (H75)                     +0.087% (90% +0.005 to +0.158); pass +0.141%; run -0.101%
+  VOE small MLP (32 units), 3 seeds averaged                     -46.656% (90% -115.643 to -10.005); pass -32.252%; run -96.737%
+  VOE lasso fit on shuffled plays (the null)                     -0.000% (90% -0.000 to +0.000); pass +0.000%; run -0.000%
+  MLP seed 0                                                     -34.498% (90% -46.238 to -23.729); pass -33.913%; run -36.535%
+  MLP seed 1                                                     -175.943% (90% -348.038 to -65.154); pass -134.513%; run -319.992%
+  MLP seed 2                                                     -116.894% (90% -272.338 to -28.504); pass -85.951%; run -224.480%
+  by season (lasso | MLP): 2019 -0.06 | -253.19; 2020 +0.20 | -13.55; 2021 +0.21 | -5.65; 2022 -0.09 | -2.88; 2023 +0.13 | -5.15; 2024 +0.12 | -1.28
+  the lasso less the MLP, per play: MLP better by -46.742 points of the explained share
+  the lasso's choices (standardized coefficients): 2019 pass: 17/202 slot inputs kept, sum (a) +0.0277, sum (b) +0.0153; 2019 run: 0/202 slot inputs kept, sum (a) +0.0000, sum (b) +0.0000; 2024 pass: 11/202 slot inputs kept, sum (a) +0.0225, sum (b) +0.0314; 2024 run: 7/202 slot inputs kept, sum (a) +0.0093, sum (b) +0.0149
+
+== DOES IT TRAVEL? (the roster-change test, a team's next season; 2020-2024, fit on earlier seasons) ==
+    plain sum: plus-minus with last season's prior (first look) offense: +3.73% (90% -2.46 to +9.47)
+    plain sum: plus-minus with last season's prior (first look) defense: -2.22% (90% -4.22 to +0.05)
+    plain sum: plus-minus from his own stats (a) offense: +2.95% (90% -2.93 to +8.44)
+    plain sum: plus-minus from his own stats (a) defense: +0.48% (90% -3.85 to +4.36)
+    plain sums: (a) and the own-stats rating (b) offense: +8.69% (90% +2.34 to +14.15)
+    plain sums: (a) and the own-stats rating (b) defense: +6.61% (90% -2.00 to +15.23)
+    VOE lasso, slot ratings only (no sums)       offense: -0.26% (90% -6.52 to +5.03)
+    VOE lasso, slot ratings only (no sums)       defense: +4.53% (90% -2.27 to +10.30)
+    VOE lasso, slot ratings and the sums (H75)   offense: +7.84% (90% +0.11 to +14.71)
+    VOE lasso, slot ratings and the sums (H75)   defense: +6.16% (90% -1.74 to +13.32)
+    VOE small MLP (32 units), 3 seeds averaged   offense: -2.31% (90% -4.19 to -0.47)
+    VOE small MLP (32 units), 3 seeds averaged   defense: +0.30% (90% -0.97 to +1.54)
+    check: first look's plus-minus with prior    offense: +8.50% (90% +2.23 to +14.34)
+    check: first look's plus-minus with prior    defense: -0.09% (90% -5.37 to +4.94)
+    plain plus-minus (first look)                offense: +4.07% (90% -0.56 to +9.07)
+    plain plus-minus (first look)                defense: -2.20% (90% -10.27 to +5.31)
+  The VOE model on held-out seasons (how much of a play's leftover the 22 slot ratings explain):
+    pass: 2018 -0.21%, 2019 +0.24%, 2020 +0.20%, 2021 -0.00%, 2022 +0.04%, 2023 +0.18%, 2024 +0.09%
+    run: 2018 -0.19%, 2019 -0.13%, 2020 +0.22%, 2021 -0.13%, 2022 -0.12%, 2023 +0.24%, 2024 -0.00%
+    the recreation (old VOE, fixed)              offense: +1.19% (90% -1.73 to +4.42)
+    the recreation (old VOE, fixed)              defense: -1.39% (90% -3.98 to +0.98)
+
+== H75 REAL? GAMES THE MAIN QB MISSED (2019-2024) ==
+  Team-seasons 2019-2024 where the main QB missed whole games: 122; games missed 468
+    missed less played, actual offense EPA over expected a play      -0.0672 (90% -0.0871 to -0.0485)
+    missed less played, predicted by sum_pm                          -0.0030 (90% -0.0048 to -0.0011)
+    missed less played, predicted by sum_a                           -0.0029 (90% -0.0047 to -0.0010)
+    missed less played, predicted by sums                            -0.0148 (90% -0.0203 to -0.0093)
+    missed less played, predicted by lasso_slots                     +0.0019 (90% -0.0027 to +0.0064)
+    missed less played, predicted by lasso                           -0.0076 (90% -0.0123 to -0.0031)
+    missed less played, predicted by mlp                             -0.0001 (90% -0.0384 to +0.0482)
+
+== H75 VERDICT CHECKS ==
+  Real? the lasso's predicted QB-miss change -0.0076 (upper -0.0031) against actual -0.0672: fail
+  Pays? the lasso's roster-change gain on offense +7.84% (lower +0.11) against the recreation +1.19%: pass

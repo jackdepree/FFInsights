@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look running) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -296,3 +296,30 @@ Before that, the CEO asked: "What if we experimented with different ratings for 
   - 60% that it is worse.
   - 60% that the spread across three MLP seeds is larger than the gap between the MLP and the lasso.
 - **The ceiling:** 90% that the best model explains 0.3% of a held-out play or less (an oracle that knew each team's true quality explains about 0.4%).
+
+## What the second look found
+*2026-11-20; details, numbers and the case against in [EXPLORATION.md](EXPLORATION.md), "Second look" (F12–F18).*
+
+- **H75 held in part:**
+  - **Pays:** by its rule, +7.8% on a team's next offense.
+  - **Real: no.** The knockout predicts a ninth of the drop when the main QB misses a game.
+- **The plus-minus sum carries the VOE model.** Without it the design adds nothing. With it, the slots add nothing over the plain sum (F12, F13).
+- **Nothing beats the first look's plain plus-minus sum on offense** (+7.2% on the same seasons).
+- **A count of new players explains much of every rating's gain** (+4.6% offense, +6.6% defense on its own), because the test uses who actually played (F14).
+- **The own-stats rating is a steady trait** (0.42 season to season), but it doesn't follow a player to a new team (F16). Starting plus-minus from it changes little (F17).
+- **The small MLP:**
+  - The first fit failed from a scaling mistake: rare slots blew up after standardizing.
+  - The fair refit barely leaves "predict the average", and it does worse than a linear fit on the same inputs (F18).
+
+## Open after the second look
+*For the CEO, simple to detailed. Taste calls: the CEO's instinct first, Claude's view after.*
+
+1. **Which way next?**
+   - **Why it matters:** the ratings can rank players but not size them. What travels is mostly quarterbacks plus "who had to play".
+   - **Options:**
+     - **(c) Games missed (I73):** size every rating against real absences, at every position.
+     - **(d) QBs first:** a QB VOE now.
+     - **Skill VOE proper:** context-live scores 2016–2022 first, which is a build of its own.
+     - **Call VOE's first version done:** the first look's plus-minus sum, plus the new-player share as a team feature (I75). Then move to the next cousin.
+2. **The no-noise target.** Draft: the roster-change test with the new-player share in the baseline, so a rating gets no credit for counting rookies and backups.
+3. **Still open from before:** cadence (question 2 above), and the odds for H71 and H74.
