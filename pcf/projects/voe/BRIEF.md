@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; the CEO picked (c), games missed; third look running) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -323,3 +323,50 @@ Before that, the CEO asked: "What if we experimented with different ratings for 
      - **Call VOE's first version done:** the first look's plus-minus sum, plus the new-player share as a team feature (I75). Then move to the next cousin.
 2. **The no-noise target.** Draft: the roster-change test with the new-player share in the baseline, so a rating gets no credit for counting rookies and backups.
 3. **Still open from before:** cadence (question 2 above), and the odds for H71 and H74.
+
+## The CEO's direction after the second look
+*Word for word, 2026-11-20.*
+
+"C, use missed games to size ratings"
+
+**What it settles:** the third look is direction (c), Claude's idea I73. Games a regular missed are the natural experiment. They're used to measure what each position's absence costs, and then to size the ratings, which rank players but are shrunk too far to size them (F15). Questions 2 and 3 above stay open.
+
+**Claude's technical calls for the third look** (the CEO can veto any of them):
+- **A regular:** a player who was on the field for at least half his side's plays in his typical game for that team that season (the median of his games), in 4 or more games.
+- **How much of a game he missed:** 1 minus his share of the side's plays in that game over his typical share, from 0 to 1. Leaving a game hurt counts as a partial absence.
+- **The games counted:**
+  - Only games between his first game for the team that season and its last game.
+  - Games after his last appearance count only if he didn't play for another team later that season, so trades and releases are left out.
+  - The final week of each regular season is dropped, because teams rest starters.
+- **The outcome:** a team-game's EPA over expected a play for that side, less its opponent's season rate for the other side (leaving out this game).
+- **The design:**
+  - Each team-season is compared only with itself (a fixed effect).
+  - All of a game's absences go in at once, so two players out together aren't double counted.
+  - Plays-weighted.
+  - Intervals come from resampling team-seasons.
+- **The checks:**
+  - **The null:** absences shuffled across the games of the same team-season.
+  - **The placebo:** absences of non-regulars.
+- **Sizing:** a team-game's change is modelled as a factor k, times the missing share, times his usual play share, times his rating less his replacement's. The replacement is the group-mates whose plays rose in that game, weighted by how much they rose. k is fit per rating, for QBs and for everyone else.
+  - **k = 1** means the rating is already the right size. **k = 9** means the rating is a ninth of the real size.
+- **The extension test (H73's idea, the CEO's):**
+  - k is fit on 2018–2021 and scored on 2022–2024.
+  - Each team-game's within-season error is predicted three ways: from each group's average absence cost; from sized ratings; and from both.
+  - 2016–2017 count for the group averages only, because the ratings start in 2018.
+
+**How the third look is judged** (written before the run):
+- **Absence costs:** a group counts as measurable if its cost per full absence has a 90% interval below 0, and the shuffled null sits near 0.
+- **Sizing works** if the sized ratings remove error from held-out team-games: more than predicting no change, and more than each group's average cost.
+
+**Claude's expectations for the third look** (before the run):
+- **Absence costs:**
+  - 95% that QBs show a clear drop, at 0.05 to 0.09 EPA a play per full game missed.
+  - 70% (I73's odds) that at least one other group is clear of 0. Most likely OL or edge rushers (DL), at 0.005 to 0.02 each.
+  - 40% that two or more other groups are.
+- **k:**
+  - 85% that k for QBs is above 3 for every rating, which is what "shrunk too far" means.
+  - 50% that the own-stats rating (b) needs a smaller k than plus-minus (a).
+- **The extension, held out:**
+  - 60% that sized ratings remove error over predicting no change.
+  - 35% (I73's odds) that they beat each group's average cost.
+  - 25% that adding them to the group averages helps by more than their intervals.
