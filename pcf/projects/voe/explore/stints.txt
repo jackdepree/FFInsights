@@ -1,0 +1,15 @@
+consecutive plays, same 22: 26,677 groups from 31,800 plays (plays with all 22 recorded); mean 1.19 plays a group; plays in groups of 2+: 28%; of 5+: 1%
+anywhere in the season, same 22: 23,401 groups from 31,800 plays (plays with all 22 recorded); mean 1.36 plays a group; plays in groups of 2+: 43%; of 5+: 7%
+
+The same plus-minus fit on plays and on group averages (weighted by plays), whole season:
+  consecutive: player values agree 1.000000; largest difference 4.22e-06 (values' spread 2.62e-03)
+  anywhere: player values agree 1.000000; largest difference 3.21e-17 (values' spread 2.62e-03)
+
+Held out (fit on odd weeks, scored on even weeks): the share of a held-out row's leftover explained
+  per a play               +0.080% (rows 15,088)
+  per a consecutive group  +0.089% (rows 12,674)
+  per a same-22 group      +0.106% (rows 11,084)
+
+  For scale: a row's leftover sd, play vs group average (luck shrinks with plays; the players' part doesn't)
+    a play: sd 1.368; the 22 players' fitted part sd 0.0369
+    a consecutive group: sd 1.293; the 22 players' fitted part sd 0.0369

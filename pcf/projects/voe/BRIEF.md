@@ -2,7 +2,7 @@
 
 > The CEO's pick, 2026-11-19, in the strategy chat. This file gets the kickoff, the hunches, the exploration's changes and the agreed brief; the build happens in its own session, from this file.
 
-**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; the CEO picked (c), games missed; third look done 2026-11-20: absences measurable by position, the ratings can't be sized from them; waiting for the CEO's direction) · **Layer:** expert · **Cadence:** open (see "Open")
+**Status:** draft (2026-11-19: kickoff written; the CEO's direction and hunches H69-H74 recorded with odds; explored the same day, verdict GO: see EXPLORATION.md; the CEO chose directions (a) and (b) together, H75 recorded; second look done 2026-11-20: H75 held in part; the CEO picked (c), games missed; third look done 2026-11-20: absences measurable by position, the ratings can't be sized from them; **paused** by the CEO 2026-11-20, limitations L1-L8 listed for a later workaround brainstorm) · **Layer:** expert · **Cadence:** open (see "Open")
 
 **The name.** The CEO, 2026-11-19: "I don't want to call it version 2, I just want to call it VOE." So the project is `voe`. The registry's two older entries, `voe-live` and `voe-retro`, stay as the two cadences VOE may come in (rule m); the brief decides which one this project builds first.
 
@@ -400,3 +400,35 @@ Before that, the CEO asked: "What if we experimented with different ratings for 
      - **Pause VOE and explore the next cousin:** who did what, or the latent space (H71).
 2. **The no-noise target:** the roster-change test with the new-player share in the baseline (question 2 after the second look).
 3. **Still open:** cadence, and odds for H71 and H74.
+
+## The CEO's decision: pause VOE
+*Word for word, 2026-11-20.*
+
+"i think we can pause voe right now. It kind of seems like the VoE that I envisioned is just isn't picking up any signal because EPA is too noisy per play, I guess. I just assumed that if you know, basically if you just took the average EPA of an offense and the average EPA of a defense, that you would be able to at least predict more variance. You'd explain more variance from play to play, but I guess that's not true. I think one way we could get around this in the future is to make it to where, like, okay, because play by play is really tough. What if we group all plays based on um, how like similar the players are within each play? So like, maybe there's first down and second down on the first drive of the game. Every single player is the same for both of those plays, for first down and second down. And then, like, well, now we can average those plays. We can just sum up the points added, and we can divide it by two because there's two plays, and now we have hopefully a more stable baseline to work with, or more stable like granularity or to work with. So I think we can do that in the future. Right now, it kind of seems like we should just pause VoE right now unless we can figure out a better way to get around these flaws. I think if we do pause it, we need to like briefly list the limitations, and later we can brainstorm like, okay, here's limitation number one. What's something we can try to get around it, or here's limitation number two. What's something we can try to work as a workaround? Here's the limitation number three. What's something we can try as a workaround? And then hopefully we can get to a spot where VoE is actually finding signal and producing something stable between seasons and between teams. Um, so that being said, what are your thoughts? What are your questions for me? Always, please ask me questions. Always, always, always ask me questions. And then, should should we start one of the other cousins? I don't know how you want to call them. Because it's like a value model or a causal model. So I'm curious if there's opportunity that you see that we can add propensity models or difference in differences, which we kind of have already done because we were doing like the plus minus. That's kind of differences and differences. But I'm hoping that you can see some opportunity for some more causal inference that we can utilize in these models to make like an expert that is really trying to pick apart value between players. So what are your thoughts?"
+
+**What it settles:**
+- VOE is paused: `parked` in the registry, with the limitations below.
+- The CEO's grouping idea is H76. A quick check ran the same day, below.
+- The workarounds get brainstormed later, one limitation at a time: the CEO's hunches first, then Claude's options.
+
+**The quick check of H76** ([`explore/stints.py`](explore/stints.py), [`stints.txt`](explore/stints.txt); 2017):
+- **The groups are tiny:** lineups change almost every play.
+  - Consecutive plays with the same 22 average 1.19 plays a group. 28% of plays share a group of 2 or more, and 1% a group of 5 or more.
+  - Same 22 anywhere in the season: 1.36 plays a group, 7% of plays in groups of 5+.
+- **Plus-minus fit on group averages gives the same player values as on plays** (they agree 1.000000). Weighting each group by its plays makes the two fits the same calculation.
+- **The share explained rises a little** (0.080% a play, 0.089% a consecutive group, 0.106% a same-22 group), but only because a group's average carries less luck. The players' part is the same 0.037 spread either way.
+- **The reading:** grouping makes each row steadier, but it doesn't add information about the players. What adds information is more plays per player, more variety in who plays with whom, or an outcome with less luck in it.
+
+## Why VOE is paused: its limitations
+*Claude, 2026-11-20, from the three looks. Each one gets a workaround brainstorm later.*
+
+| # | Limitation | The evidence | Workaround (to brainstorm) |
+|---|---|---|---|
+| L1 | **One play is almost all luck.** Knowing every team's true quality would explain about 0.4% of a play. A whole game is still 96% luck | Leftover sd 1.38 a play; plus-minus explains +0.08% (F2), the best model 0.16% (F12); a game 0.179 against luck's 0.175 (F19) | |
+| L2 | **Teammates move together.** Starters share almost every snap, so their credit can't be split; most of any value is the team | Repeats 0.27 if he stays, 0.03 to 0.08 if he moves (F1, F16, F17); QBs and linemen are almost never off while their group plays (F9) | |
+| L3 | **The shrinkage flattens players.** The amount chosen for predicting plays leaves values about a ninth of their real size at QB, and sizing them back from absences failed | QB knockout −0.008 against −0.067 actual (F15); starter-to-replacement gaps 0.001 against 0.05 (F22) | |
+| L4 | **One outcome shared by all 22.** EPA over the situation can't tell the guard from the receiver on a play | Every method so far; per-skill outcomes (context-live) exist only for 2023–2025 | |
+| L5 | **Defense is half as measurable** | Team defense halves 0.29 against offense 0.57; no method helps defense beyond the new-player share (F4, F14) | |
+| L6 | **Testing used who actually played.** The roster-change test knows the season's lineups, so counting new players scores almost as well as any rating | The new-player share alone +4.6% offense, +6.6% defense (F14) | |
+| L7 | **Natural experiments are rare and tangled.** In-game injuries follow bad stretches. Whole-game absences mix injuries, benchings, rest and releases, and depend on how an absence is defined | F10, F11, F21 | |
+| L8 | **No free per-player numbers for linemen,** and the free stats for others are noisy or lean on teammates | NGS and PFR stats; OL has none (F16) | |
