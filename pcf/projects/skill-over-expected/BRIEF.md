@@ -17,11 +17,11 @@ Analysts measure a player's skill on outcomes he controls more than EPA: actual 
 |---|---|---|---|
 | H77 | "if we go after the lower noise outcome, I think that would be really great ... So pressure rate for linemen, the completion over expected. We could do pressure rate over expected, and we can do rush yards over expected. Even though that we found that rush yards are pretty hard to model." Its odds: "I think I'm like 70% confident that if we look at runners, and maybe some defensive players, maybe like defensive linemen, then the less noisy outcomes will be much better for prediction." | 70%, for runners and defensive linemen | For the claim as worded (both groups' lower-noise measures repeat clearly more than their EPA): 35%. By group: defensive linemen 75%; runners 35%. Side bets in HUNCHES.md |
 | H78 | "a running back snap share, new snap share, is not actually what the backfield is. It's who is in the backfield and how good are those individuals in that backfield" (in full in HUNCHES.md) | 30% | 45% for the claim as worded; 70% that the remaining backs' shares alone beat the backfield's past split; 30% that how well they ran adds |
-| H79 | Wide receivers' plain catch rate ("completions divided by targets") as the stat | 50 to 60% (the whole message) | 60% |
-| H80 | Outside linebackers are two roles, pass rush and coverage, set by the defensive coordinator; the 97% kept is "slightly misleading"; inside linebackers' roles are steadier | 50 to 60% | 35% as worded; 85% the split exists |
-| H81 | Defensive backs' coverage numbers (catch rate allowed, yards, passes defensed, interceptions, throw depth against) carry over, including to a new team | 50 to 60% | 25% |
-| H82 | Sacks follow the quarterback; pressures are line against line | 50 to 60% | 70% |
-| H83 | Broken tackles and how many tacklers it takes, before and after the line, show a runner's skill | 50 to 60% | 55% |
+| H79 | Wide receivers' plain catch rate ("completions divided by targets") as the stat | 40% | 60% |
+| H80 | Outside linebackers are two roles, pass rush and coverage, set by the defensive coordinator; the 97% kept is "slightly misleading"; inside linebackers' roles are steadier | 90% the roles exist; 60% we find something because of them | 35% as worded; 85% the split exists |
+| H81 | Defensive backs' coverage numbers (catch rate allowed, yards, passes defensed, interceptions, throw depth against) carry over, including to a new team | 50% | 25% |
+| H82 | Sacks follow the quarterback; pressures are line against line | 60% | 70% |
+| H83 | Broken tackles and how many tacklers it takes, before and after the line, show a runner's skill | 60% | 55% |
 | (I89) | Who owns time to throw and throw depth: QB, receivers or line? (a question; in IDEAS.md) | 50 to 60% | 70% time to throw is the QB's |
 
 The CEO's direction for the project, from 2026-11-20, word for word (kept from the idea page):
