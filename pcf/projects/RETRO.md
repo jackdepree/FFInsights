@@ -182,12 +182,65 @@ The case against the four: I80 may be past targets in disguise (P7, now checked 
 
 **The merge:** "you have my approval to merge both. So I think it's all good to go." `pcf/voe` and `pcf/retro-2` merged into `main` the same day.
 
+### 8. The backlog, sorted and a first batch run (2026-11-20, after the merge)
+
+The CEO, 2026-11-20: "keep the findings table to just settled stuff ... I think for the ideas are mostly for you. I think it's good for you as Claude to like look for ideas and then label them, test them, and close them on your own, because it's a lot of them are pretty technical. For the hunches, you can ask me. We can keep that more my side ... You have authority with the ideas, but I still want to learn about the ideas ... I think for idea 83, the betting line idea, I think there's probably a 10% chance that holds. Well, maybe 15 ... I'd like it if you started with a backlog right now, sort the ideas, figure out which ones are pretty similar to each other, which ones are not too expensive to do, and then go ahead and figure out those ideas, log them in the findings ... Make 5 more, because now you have more data to look from." Written into CLAUDE.md ("The hunch scoreboard", "The findings table").
+
+**The sort.** The 60 open ideas, by what they need and what they cost:
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Quick, data in hand: run now** | I16 (step 1), I17, I44, I46 (final week), I53, I83 | Under an hour each | This batch (below) |
+| **B. Misses after a change, fixed inside an expert** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 | A session each, inside that expert's next build | team-efficiency, participation, pace, the lasso, crude-forecaster |
+| **C. Ranges** | I14, I42, I52, I85 | One session together (one coverage tool) | `pcf.validation`, then each expert |
+| **D. Yardstick inputs** | I48, I58, I59, I60, I61, I67, I70, I75, I80, I84 | Quick each through `score_input`; one crude-forecaster session for all | crude-forecaster |
+| **E. Player value on lower-noise outcomes** | I20, I71, I76, I77, I78, I79, I81, I82 | The cousin's exploration; I76-I78 heavier in compute | skill-over-expected |
+| **F. Fatigue** | I29, I30, I50 | A project | injury-fatigue |
+| **G. Playing time** | I15, I16 (step 2), I49, I51, and I17's fix | One session | participation's next build |
+| **H. Coaches and schemes** | I21, I28, I86, I88 | One session | schemes-v2 |
+| **I. Markets** | I87 | Under an hour | the next batch |
+| **J. Tooling, not bets** | I45, I62, I64, I66, I72 | Done when a build next touches the harness | the build that needs it |
+| **K. Wait for a live season** | I6, I8, I27 | Nothing until 2026 ends | after the season |
+| **L. Parked** | I31, I32, I39 (team-efficiency, only if futures need them), I43, I57 (roles-archetypes) | | their projects |
+| **Closed by Claude** | I7, I12, I18 | | IDEAS.md, Killed, with reasons |
+
+The groups are where the work is cheapest, not an order. Expensive in compute: I76 to I78 (the corrected movers model, double machine learning, synthetic control) and I45 (refits with several seeds).
+
+**The batch (group A), discovery only, 2016-2024** (I83 2006-2024), scripts in `retro/explore/retro2_*.py`:
+
+| Idea | Result | Claude's odds, scored |
+|---|---|---|
+| I83, the line after a change | **No edge:** 51.1%, 50.9% and 50.0% against the spread, none beats 52.4%. But the line is 1.0 point too kind after an in-season QB change (13 of 19 seasons) | 60% no bias: wrong in part. 15% an edge: right to be low. **The CEO's 10 to 15%: right to be low** |
+| I44, clutch | **No trait:** QBs 0.08 against a null of 0.09, RBs 0.00, receivers -0.01 | High, no trait: held |
+| I53, usage that travels | Target share (88% kept) and depth (85%) travel; carry share doesn't (35%); goal line in between | Depth travels: held. Target share is the room's: **failed** |
+| I16, script tendencies (step 1) | Repeat for RBs (0.25) and TEs (0.29), not WRs | Medium, they repeat: held for two of three |
+| I17, rested starters in the playoffs | Regulars on seed-locked teams +9.2 points of share in the first playoff game, fill-ins -9.7 | High, 3 to 6 points: held, larger |
+| I46, eliminated teams (final week) | Young players: nothing (+0.3 points); Elo's margin +2.3, unclear | Medium, +1 to 3 points: **failed** |
+
+Claude's batch: 4 of 6 main bets held, at a stated confidence around 70%.
+
+**A correction found on the way.** I47's two in-season rows compared each team's games after a change only with its own other games after a change, because the flag is empty before any change. Against every team-game, an in-season change of starting QB leaves the offense over-forecast for 4 games (-0.039 EPA a play, 9 of 9 seasons) with no rebound after (+0.008). Elo's margin misses by 1.8 points in those games. So I54 is restated (a level for the new starter from his first game, not a lag), and the findings table carries the corrected version (FINDINGS.md, F5). Retro 1's "held in discovery" for I47 stands; only the rebound half of the QB row is withdrawn.
+
+**Five new ideas** (IDEAS.md, I84 to I88), from what the batch found:
+
+| # | Idea | Claude's odds |
+|---|---|---|
+| I84 | Each mover's usage prior from whoever owns it: his own for receivers, the new backfield's for running backs | 80% receivers; 65% running backs |
+| I85 | Ranges after a QB change: the point-sized miss lives in a few blowouts, so the ranges there are too narrow | 60% coverage 4+ points low |
+| I86 | The backfield split is the coach's | 55% |
+| I87 | The total after a QB change: do unders win? | 45% a 1-point bias; 20% an edge |
+| I88 | A coach's aggressiveness as his own read of his team's strength | 20% |
+
+**The backlog after this:** 60 open, 7 settled or closed (I17 and I53 graduated; I44 and I83 killed; I7, I12, I18 closed), 5 new: **58 open**, each now with a group, a cost and a home. Quick ones left for the next batch: group D (one crude-forecaster session) and I87.
+
 ### The case against this retro
 
 - The same reader sorted the patterns, scored both of us, and wrote half the bets. Nothing here is held out.
 - Claude's better Brier score is partly position (it bets second, after seeing the data and designing the test). A fair head-to-head needs W6 and odds written before Claude sees the data.
 - 16 scored CEO bets is few. One verdict changes a band by 20 to 50 points.
 - P9 leans on `crude-forecaster` and P10 on `voe`: each pattern is mostly one project.
+- The batch (section 8) is discovery on seasons our experts have seen. I53's movers are few (78 to 150 per rate) and chosen by volume in both seasons, so a back who lost his job on moving is missing from F2. I17 rests on about 100 regulars. Each fix still has to win through the harness.
+- I83 tested three pre-registered sides and showed eight changes. The 1-point miss after a QB change was the one clear row, and it was predicted by I47's direction.
 - "Held in part" counted as held is generous to both of us. Counting it as half (and H50, H54, H55, which held for one part only) moves the CEO's claims from 8 to 6 of 10 and methods from 2 to 1 of 6: the gap stays.
 
 ---

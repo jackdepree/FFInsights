@@ -1,0 +1,52 @@
+team-games 2006-2024, regular season, with a closing line: 9854
+the line's average miss overall: +0.000 points; cover rate 0.500
+
+== the line's miss after each change (margin minus the line's expected margin, points),
+   flagged team-games minus the same weeks' others; 90% interval from resampling weeks
+shape: (8, 6)
+┌─────────────────────────────────────────────────┬───────┬───────────┬────────┬────────┬───────────────────┐
+│ change                                          ┆ games ┆ line_miss ┆ lo90   ┆ hi90   ┆ seasons_same_sign │
+│ ---                                             ┆ ---   ┆ ---       ┆ ---    ┆ ---    ┆ ---               │
+│ str                                             ┆ i64   ┆ f64       ┆ f64    ┆ f64    ┆ str               │
+╞═════════════════════════════════════════════════╪═══════╪═══════════╪════════╪════════╪═══════════════════╡
+│ new head coach, games 1-4                       ┆ 520   ┆ -0.222    ┆ -1.234 ┆ 0.758  ┆ 10 of 19          │
+│ new head coach, games 5 on                      ┆ 1589  ┆ -0.688    ┆ -1.288 ┆ -0.105 ┆ 12 of 19          │
+│ new starting QB at season start, games 1-4      ┆ 768   ┆ 0.828     ┆ -0.119 ┆ 1.796  ┆ 12 of 19          │
+│ new starting QB at season start, games 5 on     ┆ 2353  ┆ 0.140     ┆ -0.408 ┆ 0.718  ┆ 7 of 19           │
+│ starting QB changed in season, games 1-4 after  ┆ 2234  ┆ -1.000    ┆ -1.621 ┆ -0.397 ┆ 13 of 19          │
+│ starting QB changed in season, games 5 on after ┆ 975   ┆ -0.388    ┆ -1.118 ┆ 0.301  ┆ 12 of 19          │
+│ head coach changed in season, games 1-4 after   ┆ 115   ┆ -0.309    ┆ -2.725 ┆ 2.138  ┆ 8 of 17           │
+│ first game after a bye                          ┆ 608   ┆ 0.434     ┆ -0.519 ┆ 1.417  ┆ 10 of 19          │
+└─────────────────────────────────────────────────┴───────┴───────────┴────────┴────────┴───────────────────┘
+
+== the pre-registered bets (direction fixed from I47 before this run)
+shape: (3, 8)
+┌─────────────────────────────────────────────────┬─────────┬─────────┬───────┬───────────┬─────────────────┬─────────────────┬─────────────────┐
+│ change                                          ┆ side    ┆ decided ┆ cover ┆ beats_524 ┆ shuffles_beaten ┆ cover_2006_2015 ┆ cover_2016_2024 │
+│ ---                                             ┆ ---     ┆ ---     ┆ ---   ┆ ---       ┆ ---             ┆ ---             ┆ ---             │
+│ str                                             ┆ str     ┆ i64     ┆ f64   ┆ bool      ┆ str             ┆ f64             ┆ f64             │
+╞═════════════════════════════════════════════════╪═════════╪═════════╪═══════╪═══════════╪═════════════════╪═════════════════╪═════════════════╡
+│ new head coach, games 1-4                       ┆ against ┆ 507     ┆ 0.511 ┆ false     ┆ 68%             ┆ 0.465           ┆ 0.563           │
+│ starting QB changed in season, games 1-4 after  ┆ against ┆ 2173    ┆ 0.509 ┆ false     ┆ 85%             ┆ 0.510           ┆ 0.508           │
+│ starting QB changed in season, games 5 on after ┆ on      ┆ 948     ┆ 0.500 ┆ false     ┆ 49%             ┆ 0.507           ┆ 0.493           │
+└─────────────────────────────────────────────────┴─────────┴─────────┴───────┴───────────┴─────────────────┴─────────────────┴─────────────────┘
+
+== after the run (not pre-registered): the in-season QB change, by who starts
+shape: (2, 6)
+┌─────────────────────────────────────────────────────┬───────┬───────────┬────────┬────────┬───────────────────┐
+│ change                                              ┆ games ┆ line_miss ┆ lo90   ┆ hi90   ┆ seasons_same_sign │
+│ ---                                                 ┆ ---   ┆ ---       ┆ ---    ┆ ---    ┆ ---               │
+│ str                                                 ┆ i64   ┆ f64       ┆ f64    ┆ f64    ┆ str               │
+╞═════════════════════════════════════════════════════╪═══════╪═══════════╪════════╪════════╪═══════════════════╡
+│ QB change 1-4, a backup starting                    ┆ 1402  ┆ -0.828    ┆ -1.462 ┆ -0.186 ┆ 13 of 19          │
+│ QB change 1-4, not a backup (e.g. the starter back) ┆ 832   ┆ -0.782    ┆ -1.581 ┆ 0.029  ┆ 10 of 19          │
+└─────────────────────────────────────────────────────┴───────┴───────────┴────────┴────────┴───────────────────┘
+shape: (2, 8)
+┌─────────────────────────────────────────────────────┬─────────┬─────────┬───────┬───────────┬─────────────────┬─────────────────┬─────────────────┐
+│ change                                              ┆ side    ┆ decided ┆ cover ┆ beats_524 ┆ shuffles_beaten ┆ cover_2006_2015 ┆ cover_2016_2024 │
+│ ---                                                 ┆ ---     ┆ ---     ┆ ---   ┆ ---       ┆ ---             ┆ ---             ┆ ---             │
+│ str                                                 ┆ str     ┆ i64     ┆ f64   ┆ bool      ┆ str             ┆ f64             ┆ f64             │
+╞═════════════════════════════════════════════════════╪═════════╪═════════╪═══════╪═══════════╪═════════════════╪═════════════════╪═════════════════╡
+│ QB change 1-4, a backup starting                    ┆ against ┆ 1363    ┆ 0.503 ┆ false     ┆ 56%             ┆ 0.495           ┆ 0.512           │
+│ QB change 1-4, not a backup (e.g. the starter back) ┆ against ┆ 810     ┆ 0.520 ┆ false     ┆ 87%             ┆ 0.537           ┆ 0.502           │
+└─────────────────────────────────────────────────────┴─────────┴─────────┴───────┴───────────┴─────────────────┴─────────────────┴─────────────────┘

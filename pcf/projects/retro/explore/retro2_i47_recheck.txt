@@ -1,0 +1,23 @@
+shape: (16, 9)
+┌─────────────────────────────────┬─────────────────────────────────────────────────┬──────────────────────────────┬──────┬─────────┬─────────┬─────────┬───────────────────┬─────────┐
+│ expert                          ┆ change                                          ┆ compared with                ┆ rows ┆ gap     ┆ lo90    ┆ hi90    ┆ seasons_same_sign ┆ clear99 │
+│ ---                             ┆ ---                                             ┆ ---                          ┆ ---  ┆ ---     ┆ ---     ┆ ---     ┆ ---               ┆ ---     │
+│ str                             ┆ str                                             ┆ str                          ┆ i64  ┆ f64     ┆ f64     ┆ f64     ┆ str               ┆ bool    │
+╞═════════════════════════════════╪═════════════════════════════════════════════════╪══════════════════════════════╪══════╪═════════╪═════════╪═════════╪═══════════════════╪═════════╡
+│ team-efficiency/off_next3_ridge ┆ starting QB changed in season, games 1-4 after  ┆ I47's (teams after a change) ┆ 1098 ┆ -0.0244 ┆ -0.0395 ┆ -0.0093 ┆ 6 of 9            ┆ true    │
+│ team-efficiency/off_next3_ridge ┆ starting QB changed in season, games 1-4 after  ┆ every team-game              ┆ 1098 ┆ -0.0394 ┆ -0.0476 ┆ -0.0314 ┆ 9 of 9            ┆ true    │
+│ team-efficiency/off_next3_ridge ┆ starting QB changed in season, games 5 on after ┆ I47's (teams after a change) ┆ 483  ┆ 0.0367  ┆ 0.0216  ┆ 0.0517  ┆ 8 of 9            ┆ true    │
+│ team-efficiency/off_next3_ridge ┆ starting QB changed in season, games 5 on after ┆ every team-game              ┆ 483  ┆ 0.0079  ┆ -0.0041 ┆ 0.0192  ┆ 5 of 9            ┆ false   │
+│ team-efficiency/def_next3_ridge ┆ starting QB changed in season, games 1-4 after  ┆ I47's (teams after a change) ┆ 1098 ┆ 0.0113  ┆ -0.0006 ┆ 0.0235  ┆ 6 of 9            ┆ false   │
+│ team-efficiency/def_next3_ridge ┆ starting QB changed in season, games 1-4 after  ┆ every team-game              ┆ 1098 ┆ 0.0092  ┆ -0.0004 ┆ 0.0192  ┆ 7 of 9            ┆ false   │
+│ team-efficiency/def_next3_ridge ┆ starting QB changed in season, games 5 on after ┆ I47's (teams after a change) ┆ 483  ┆ -0.0052 ┆ -0.0179 ┆ 0.0075  ┆ 5 of 9            ┆ false   │
+│ team-efficiency/def_next3_ridge ┆ starting QB changed in season, games 5 on after ┆ every team-game              ┆ 483  ┆ 0.0017  ┆ -0.0087 ┆ 0.0123  ┆ 4 of 9            ┆ false   │
+│ elo/margin                      ┆ starting QB changed in season, games 1-4 after  ┆ I47's (teams after a change) ┆ 1174 ┆ -0.7915 ┆ -2.2181 ┆ 0.6081  ┆ 5 of 9            ┆ false   │
+│ elo/margin                      ┆ starting QB changed in season, games 1-4 after  ┆ every team-game              ┆ 1174 ┆ -1.7820 ┆ -2.6126 ┆ -0.9319 ┆ 9 of 9            ┆ true    │
+│ elo/margin                      ┆ starting QB changed in season, games 5 on after ┆ I47's (teams after a change) ┆ 519  ┆ 1.0069  ┆ -0.4052 ┆ 2.3482  ┆ 5 of 9            ┆ false   │
+│ elo/margin                      ┆ starting QB changed in season, games 5 on after ┆ every team-game              ┆ 519  ┆ -0.1166 ┆ -1.1917 ┆ 0.9624  ┆ 5 of 9            ┆ false   │
+│ pace/dropbacks_full             ┆ starting QB changed in season, games 1-4 after  ┆ I47's (teams after a change) ┆ 1174 ┆ -0.1668 ┆ -1.0511 ┆ 0.7476  ┆ 4 of 9            ┆ false   │
+│ pace/dropbacks_full             ┆ starting QB changed in season, games 1-4 after  ┆ every team-game              ┆ 1174 ┆ 0.0867  ┆ -0.4643 ┆ 0.6275  ┆ 4 of 9            ┆ false   │
+│ pace/dropbacks_full             ┆ starting QB changed in season, games 5 on after ┆ I47's (teams after a change) ┆ 519  ┆ -0.2425 ┆ -1.0756 ┆ 0.5696  ┆ 6 of 9            ┆ false   │
+│ pace/dropbacks_full             ┆ starting QB changed in season, games 5 on after ┆ every team-game              ┆ 519  ┆ 0.2087  ┆ -0.5076 ┆ 0.9431  ┆ 5 of 9            ┆ false   │
+└─────────────────────────────────┴─────────────────────────────────────────────────┴──────────────────────────────┴──────┴─────────┴─────────┴─────────┴───────────────────┴─────────┘

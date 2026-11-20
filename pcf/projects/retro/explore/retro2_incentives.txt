@@ -1,0 +1,16 @@
+Seasons 2016-2024. Teams eliminated before the final week: 138; seed-locked: 24
+miss = result minus forecast; gap = flagged rows minus the others; snap share in points of 1.0
+
+shape: (6, 6)
+┌──────────────────────────────────────────────────────────────────────────────────────────────────────┬──────┬────────┬────────┬────────┬───────────────────┐
+│ test                                                                                                 ┆ rows ┆ gap    ┆ lo90   ┆ hi90   ┆ seasons_same_sign │
+│ ---                                                                                                  ┆ ---  ┆ ---    ┆ ---    ┆ ---    ┆ ---               │
+│ str                                                                                                  ┆ i64  ┆ f64    ┆ f64    ┆ f64    ┆ str               │
+╞══════════════════════════════════════════════════════════════════════════════════════════════════════╪══════╪════════╪════════╪════════╪═══════════════════╡
+│ I46: Elo margin miss, eliminated teams, final week (points; locked teams left out)                   ┆ 138  ┆ 2.315  ┆ -0.840 ┆ 5.495  ┆ 6 of 9            │
+│ I46: participation snap-share miss, players in their first two seasons, eliminated teams, final week ┆ 844  ┆ 0.003  ┆ -0.013 ┆ 0.021  ┆ 6 of 9            │
+│ I46 (for scale): the same, veterans                                                                  ┆ 1375 ┆ 0.006  ┆ -0.004 ┆ 0.014  ┆ 8 of 9            │
+│ I17: participation snap-share miss, first playoff game, team seed-locked in the final week           ┆ 395  ┆ -0.019 ┆ -0.030 ┆ -0.010 ┆ 7 of 9            │
+│ I17: the same, regulars (0.6+ before the final week)                                                 ┆ 102  ┆ 0.092  ┆ 0.052  ┆ 0.125  ┆ 7 of 9            │
+│ I17: the same, fill-ins (under 0.3 before)                                                           ┆ 192  ┆ -0.097 ┆ -0.121 ┆ -0.077 ┆ 9 of 9            │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────┴──────┴────────┴────────┴────────┴───────────────────┘
