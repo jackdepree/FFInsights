@@ -22,10 +22,10 @@ The CEO, 2026-11-20, on why: "I know these are mostly method hunches but I am ju
 
 | # | Hunch | The CEO's odds | Claude's odds |
 |---|---|---|---|
-| H85 | "can we use a conditional diffusion model? The conditional diffusion model would be conditioned in all of the charters like personnel, play calls, schemes, score, blitz, down, and so on. Then the diffusion model will simultaneously learn and predict the multiple outcomes. ... there would be two diffusion models, one for passes and another for rushes" | asked | 15% as worded (more signal than per-outcome models on the same inputs); 50% it matches them; 60% its joint forecasts are better calibrated |
-| H86 | "What if we leak some information from past outcomes like pressures or time to throw to then condition the given play? ... 'given there is a pressure on this play, plus all of the charters, what would we expect the rest of the outcomes to be?'" | asked | 90% that it sharpens the rest a lot (it is after-the-snap information); 80% sack's share removed goes from about 1.4% to 10%+ given pressure |
-| H87 | "play action definitely counts as a conditional charter as it is called before the play and planned to happen ... we can log short and quick passes as possibly strategy"; and "time to throw and adot can be interpreted as strategy rather than pure play outcomes" | asked | 75% as worded; 60% a design label from routes lifts depth's share removed from about 18% to 30%+ |
-| H88 | "The more we improve this expert the better our downfield models become, almost on an exponential path." | asked | 10% as worded; 60% that gains are real but shrink with each extra point |
+| H85 | "can we use a conditional diffusion model? The conditional diffusion model would be conditioned in all of the charters like personnel, play calls, schemes, score, blitz, down, and so on. Then the diffusion model will simultaneously learn and predict the multiple outcomes. ... there would be two diffusion models, one for passes and another for rushes" | 25% | 15% as worded (more signal than per-outcome models on the same inputs); 50% it matches them; 60% its joint forecasts are better calibrated |
+| H86 | "What if we leak some information from past outcomes like pressures or time to throw to then condition the given play? ... 'given there is a pressure on this play, plus all of the charters, what would we expect the rest of the outcomes to be?'" | 75% | 90% that it sharpens the rest a lot (it is after-the-snap information); 80% sack's share removed goes from about 1.4% to 10%+ given pressure |
+| H87 | "play action definitely counts as a conditional charter as it is called before the play and planned to happen ... we can log short and quick passes as possibly strategy"; and "time to throw and adot can be interpreted as strategy rather than pure play outcomes" | 75% | 75% as worded; 60% a design label from routes lifts depth's share removed from about 18% to 30%+ |
+| H88 | "The more we improve this expert the better our downfield models become, almost on an exponential path." | 50% | 10% as worded; 60% that gains are real but shrink with each extra point |
 | (I93) | "Is there any room for a propensity model in this expert?" (a question; in IDEAS.md) | | 55% play action's effect on depth shrinks by a third once weighted by its propensity |
 
 **The CEO's test for the expert:** "The context model should be judged on each outcome and how well it can fit to that outcome."
@@ -40,6 +40,20 @@ The CEO, 2026-11-20, on why: "I know these are mostly method hunches but I am ju
 - **Screens and sides:** FTN's screen flag starts in 2022. Left and right exist only as where the ball went (play-by-play `pass_location`) and where it started (FTN `starting_hash`), not as a planned side.
 - **Ideas that fit** (the backlog read): I64 (weekly refits), I66 (blend trees and linear for the top tenth), I72 ("0 pass rushers" as missing), I71 (a defense's call pattern), I92 (expected yards after contact), I93 (propensities), the chain (context-live's method B), and `context-retro`.
 
-## Next: the CEO's odds, then methods together
+## The CEO's odds
 
-The CEO gives odds and sizes for H85 to H88. Claude then lays out the methods, each with what it assumes and what it costs, one of them exploratory. The CEO chooses, and the exploration starts with the noise ceiling.
+The CEO, 2026-11-20, before any test: "H85; 25%, h86; 75% h87; 75%, h88; 50%". No sizes were given.
+
+## Methods (Claude's options, for the CEO to choose from with Claude)
+
+The same exploration steps come first for every method: (1) the room (the ceiling on each outcome, with the spread of chances and the log-loss gain beside the share of squared error); (2) what each tier of information adds (pre-snap calls; then routes and coverage, after the season; then the play's own outcomes, after the snap). The seasons are 2022-2024 for FTN's tier: fit on the earlier seasons, scored on 2024 and on 2023 where possible. The 2025 vault stays closed. Every method is scored outcome by outcome (the CEO's test), with log loss or the range score and calibration.
+
+| | Method | What it assumes | What it costs | What it gives |
+|---|---|---|---|---|
+| A | **The chain, with boosted trees** (the conventional one; context-live's method B). One model per outcome in the play's order: pressure → time to throw → sack or throw → depth → completion → yards. Each uses the calls plus the outcomes before it. Before the snap, it feeds each step the expectations of the earlier ones; "given a pressure", it feeds the real one | The order of a play is right (pressure comes before the throw); each step needs only what came before it | About one session; the existing code and libraries | Every "given X" that follows the play's order; outcomes that agree; easy to read |
+| B | **One network that fills in the blanks** (masked conditioning). One model for all of a play's outcomes, trained with a random subset of them shown as inputs each time, so it can answer "given any of them, the rest" | A shared model learns the links between outcomes better than separate ones; enough plays (about 60,000 dropbacks a season) | One or two sessions; a new library (PyTorch, a technical call) | Any "given X", in any order; one model to keep |
+| C | **The CEO's conditional diffusion model** (the exploratory one). It learns the joint distribution of a play's outcomes given its calls (tabular diffusion, built for mixed yes-or-no and amount columns) and answers "given X" by filling in the rest. One model for passes, one for runs | The joint shape (which outcomes come together) carries signal the separate models miss; it can be calibrated | Two sessions or more; PyTorch; scored by drawing many samples per play, so slower and noisier to score | Whole plays drawn at once (for simulation: a game simulator later), any "given X", and a full distribution for every outcome |
+
+**The tempting bad option:** train one model on every tier, the play's own outcomes included, and score it as a before-the-snap forecast. It would explain far more than 4%, and all of it would be leak: the catchable ball says the pass was completed. What separates good from bad is which conditions are allowed for which use. Before the snap: calls only. To split blame on a play: the earlier outcomes, never the one being credited.
+
+**Claude's recommendation:** A first, as the bar every other method must beat (rule k), then C against A on the same plays, so the CEO's method gets a fair test against the cheap one. B only if C is too slow to score.
