@@ -209,3 +209,29 @@ Every interval is below zero: the diffusion model is clearly worse than the tree
 2. **Quick-pass rate over expected as an offense trait** (I95): does it forecast next week's pressure allowed and sacks?
 3. **Park diffusion as a forecaster**; keep it for later as a play simulator (I96), where its joint shape matters and its rates can be recalibrated to the trees'.
 4. **Draft the brief for a build**: the chain with T1 (in-season) and T2 (retrospective) editions, plus the given-pressure mode.
+
+## Third look: the quick-pass rate as a forecast of next game's pressure and sacks (I95; written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Test the quick-pass rate." I95 asks whether an offense's quick-pass rate over expected (F5: it repeats 0.70 within a season) forecasts its next game's pressure allowed and sacks, beyond its pressure rate to date. Claude's odds, written with the idea: 45% it adds 0.5% or more to next game's sack rate.
+
+**Rows.** One row per offense and game, 2023 and 2024 (one time-to-throw provider), every game after the offense's first of the season. **Targets:** that game's pressure rate and sack rate, per dropback.
+
+**What the forecast knows** (all from the offense's earlier games of the same season, each rate pulled towards the league's by 100 plays of its own denominator so a team's week 2 isn't read at face value):
+- **The base:** the offense's pressure rate and sack rate to date, and the opponent defense's pressure rate and sack rate to date.
+- **The obvious input** (the charter's check): the offense's mean time to throw to date. Quick passing is made of time to throw, so it's the input most likely to carry the trait already.
+- **I95:** the offense's quick-pass rate over expected to date (attempts within 2.5 s and under 5 yards, minus the first look's T2 chance: coverage included, cross-fitted by game on 2023, trained on 2023 for 2024). Beside it, the raw quick-pass rate to date, to see whether the expectation matters.
+
+**Timing.** Time to throw is participation data, known only after the season (rule m). So, like F5, this is a retrospective trait: its in-season use would be last season's rate as a prior. This look tests whether the signal is there at all.
+
+**The model and the score.** A linear regression weighted by the game's dropbacks (the simple rung; 32 teams, about 500 rows a season, too few for trees). Trained on 2023's rows, scored on 2024's. The score is the weighted squared error of next game's rate; the gain is in % of the simpler model's error, with a 90% interval from resampling weeks. **The room first:** a game has about 35 dropbacks, so most of a game's sack rate is a coin flip. The share of the rate's variance that isn't the coin flip's (its observed variance minus the average p(1-p)/n) is reported first, as the ceiling.
+
+**Pass rule for I95** (on next game's sack rate, the base plus quick-pass over expected against the base):
+- **Held** if the gain is 0.5% or more of the base's error and its interval is above zero.
+- **Failed** if the gain is under 0.5% and the interval includes zero.
+- **Unclear** otherwise.
+
+**Claude's side bets:**
+- The quick-pass rate's weight on next game's sack rate is negative (more quick passes, fewer sacks): 75%.
+- It adds 0.5% or more to next game's pressure rate beyond the base: 35%.
+- Beyond the base plus time to throw to date, it adds nothing clear to the sack rate (the interval includes zero): 60%.
+- The over-expected rate does better than the raw rate: 50%.
