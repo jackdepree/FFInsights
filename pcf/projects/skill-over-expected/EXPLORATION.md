@@ -402,3 +402,9 @@ The plain numbers differ a little from the third look's (WR catch rate: kept 85%
 1. **The shipped expectation on 2023 to 2024** (one season pair, small samples), to see whether FTN's calls change the picture where calls16 couldn't.
 2. **Forecast tests for the measures that pass** (pays?), with plain rates as the inputs, since over expected adds nothing at season level.
 3. I92 (expected yards after contact and broken tackles per game), I90 and I91, as before.
+
+## Closed (2026-11-20)
+
+The CEO, 2026-11-20, on the fourth look: "Yes it does make sense because time to throw and adot can be interpreted as strategy rather than pure play outcomes." And on the project: "I don't think we need to continue testing right now. We can close the brief and exploration for this project unless you have some more outstanding questions."
+
+**Verdict: GO** (from the first look), now closed. Four looks, eight hunches (H77 to H84) and one question (I89). What the build should make is in `BRIEF.md`'s last section. Left open for the build: I90 (sacks per pressure on one provider), I91 (the rushers' forecast) and I92 (expected yards after contact per game); the forecast tests ("pays?") of the new traits are the build's own tests.

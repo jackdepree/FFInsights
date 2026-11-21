@@ -1,6 +1,6 @@
 # Skills over expected: a VOE cousin
 
-> **Status:** exploring, 2026-11-20. Kickoff on 2026-11-20, after retro 2 (the CEO: "let's look at the skill over expected. Let's do the kickoff for that. Let's start the brief and the exploration"). This is a **draft brief**: it is agreed after the exploration (CLAUDE.md, lifecycle step 3). The first look is in [EXPLORATION.md](EXPLORATION.md).
+> **Status:** brief drafted from the exploration, 2026-11-20; the exploration is closed (the CEO, 2026-11-20). The no-noise target below needs the CEO's approval before a build. Kickoff on 2026-11-20, after retro 2. The four looks are in [EXPLORATION.md](EXPLORATION.md); the drafted brief is the last section below.
 
 ## The usual way
 
@@ -72,3 +72,38 @@ For each position, which measures of a player's skill over expected are real (th
 - **H78** is tested in the next look (CLAUDE.md: a hunch's test isn't run in the reply that records it). Its design: running backs who change teams, their new carry share from the remaining backs' old shares and rushing yards over expected, the departed backs' shares, and the incoming back's own share and over-expected yards; against the new backfield's past split (its top back's share) alone; held out by season.
 
 **The CEO's choices for the next looks (2026-11-20):** the forecast test comes next: "the next test should be the next season or maybe even the next game for runners and sacks and pressures and completion percentage". For H78, a back's "goodness" is yards after contact: "the hunch says that they cannot create yards before contact because that's dependent upon your whole team. And also, it's dependent upon the defenses you play ... if you have an explosive play and no one touched you, was that really the running back's vision and their skill, or was it more about the defense being poorly set up to make the stop and your offense blocking everyone". Everyone is in scope: "I don't want to leave out anyone. I want to try and incorporate everyone." There's no free tracking for defenders; PFR's coverage charting (2018 on) is the stand-in.
+
+## The brief, after the exploration (Claude's draft from the four looks, 2026-11-20)
+
+The CEO, 2026-11-20, closing the exploration: "I don't think we need to continue testing right now. We can close the brief and exploration for this project unless you have some more outstanding questions." Their reading of the fourth look: "time to throw and adot can be interpreted as strategy rather than pure play outcomes."
+
+**The question.** For each position, which per-play rates are real (they repeat season to season), whose they are (the player's, his team's or the scheme's: share kept when he moves), and does a lower-noise rate forecast the noisier outcome better than that outcome's own past?
+
+**Why it matters.** These are the first player-level traits PCF can trust, with an owner on each. Fantasy and props need to know which numbers move with a player who changes teams, and `line-play`, `qb-talent` and the movers model (I76) build on them. The exploration also says what not to build: measuring over context-live's expectation adds nothing at season level (H84).
+
+**What the exploration settled** (`FINDINGS.md` F9 to F24):
+
+| Use (a trait, with its owner) | Ignore, or use with care |
+|---|---|
+| Pass rushers' pressures per dropback (player); outside linebackers' role, rusher or dropper (player) | A rusher's pressure rate within the rusher role as his own (mostly the team's, kept 14%) |
+| WR plain catch rate (player; repeats more than catches over expected) | Catches over expected for running backs (noise) |
+| QB sacks per dropback, throw depth (QB); time to throw (QB and his offense: strategy, the CEO's reading) | QB sacks per pressure, until I90 |
+| RB yards after contact, broken tackles, tacklers needed after the line (runner) | RB yards per carry and yards before contact as his (the line's); how good the other backs are, for his share (H78) |
+| DB throw depth against, interceptions per target, catch rate allowed (weak, travel) | DB yards per target allowed |
+| The line's pressure over expected (the line, not one lineman) | Any lineman's on-field rate as his own |
+| Plain rates with each season's level taken out | Measures over context-live's expectation, at season level (H84) |
+
+**Assumptions.** The 2023 provider change in participation (pressure, time to throw) is handled by taking each season's level out. PFR's charting (pressures, coverage, contact) is consistent across 2018-2024. "Moved" means his main team changed. Movers are few for QBs (35 to 41), so QB shares kept are rough.
+
+**Goals for a build.** A retrospective table of player-season traits (the "use" column above), each shrunk toward its position's average by how many chances it took (baseball's stabilization points, the first analogy), with its owner label and its stabilization point. Made walk-forward: a season's row is known once that season's data is out.
+
+**Tests** (Claude's proposal; **the no-noise target needs the CEO's approval**):
+- **Success:** each shrunk trait forecasts next season's same rate better than last season's raw rate and the position's average, on held-out seasons (2016-2024 walk-forward; the 2025 vault once). Pass rushers' pressures keep their gain on next season's sacks, and for outside linebackers within the rusher role too (I91).
+- **Failure:** shrinking doesn't beat the raw rate, or a trait's gain is inside its fitting noise. Then the plain rates ship as they are.
+- **No-noise target:** next season's same rate, against last season's raw rate (and, for pass rushers, next season's sacks against past sacks).
+
+**Inputs and outputs.** Inputs: play-by-play, participation (retrospective), PFR's weekly charting, the on-field map, the main-team table. Outputs: `player_season` rows (trait, rate, shrunk rate, chances, owner label), cadence retrospective, fed to later in-season models only from completed seasons (rule m).
+
+**How it will be used.** As features for `line-play`, `qb-talent`, the movers model (I76) and the fantasy projections, and as the per-position "use and ignore" list (I79).
+
+**Plan.** The ladder: raw rate → shrunk toward the position (one stabilization constant per trait) → shrunk with the owner's part split (player against team). One build session, when the CEO schedules it. Not before then: I90 and I91 are quick and can run at the start of the build.
