@@ -135,3 +135,77 @@ The CEO, 2026-11-20: "Can we test the diffusion model against the chain on the s
   - "Given a pressure, it matches the trees" on time to throw, sack, completion and yards, within ±1% of the loss. 50%.
 
 **Amended before the run (2026-11-20, nothing has been fit or scored):** 40 passes over 2023's 21,740 dropbacks is about 1,700 training steps, too few for a diffusion model (they usually need 10,000+), which would make the test unfair to the CEO's method. So the model trains **200 passes** (about 8,500 steps). Drawing 64 plays for each of 21,030 plays through 100 steps, twice (two seeds) and in two modes, is too slow on a CPU, so it is drawn with **DDIM in 50 steps** (the same trained model, a faster deterministic sampler). The pass rules don't change.
+
+### Second look: the results ([`explore/second_look.py`](explore/second_look.py), output [`second_look.txt`](explore/second_look.txt))
+
+The same 21,740 dropbacks of 2023 (training) and 21,030 of 2024 (scored), on T2's 44 condition columns. Training took about 22 seconds a seed; the training loss fell from 0.69 to 0.216 for both seeds and had flattened by pass 150, so more passes would not have changed much.
+
+**Each outcome, 2024** (the share of squared error removed against 2023's average; for chances, the log-loss gain and the spread of chances, 10th to 90th percentile; two seeds):
+
+| Outcome | Trees, before the snap | Diffusion, before the snap | Trees, given a pressure | Diffusion, given a pressure |
+|---|---|---|---|---|
+| Pressure | **4.2%** (log loss 3.6%; 18-43%) | 1.7% and 1.5% (log loss 1.7%; 19-53%) | | |
+| Time to throw | **17.5%** | 11.8% and 12.7% | **29.2%** | 24.4% and 25.0% |
+| Sack | **1.2%** (log loss 3.6%; 2-12%) | **-8.0% and -8.2%**: worse than the average (log loss -6.3%; 3-22%) | **16.8%** (log loss 35.4%) | 15.3% and 15.1% (log loss 30.1%) |
+| Depth of target | **18.5%** | 14.9% and 15.4% | **18.7%** | 15.0% and 15.8% |
+| Completion | **4.6%** (log loss 3.8%) | 2.2% and 2.7% (log loss 1.9% and 2.1%) | **7.7%** | 5.9% and 5.5% |
+| Dropback yards | **2.2%** | -1.0% and -0.6% | **6.6%** | 4.2% and 4.3% |
+
+**The paired comparison** (diffusion seed 0 against the trees; the gain in % of the trees' loss, 90% interval from resampling weeks; negative is worse):
+
+| Outcome | Before the snap | Given a pressure |
+|---|---|---|
+| Pressure | -2.0% (-2.4 to -1.5) | |
+| Time to throw | -6.9% (-8.0 to -6.0) | -6.7% (-7.9 to -5.6) |
+| Sack | -10.2% (-11.5 to -9.0) | -8.2% (-9.0 to -7.5) |
+| Depth of target | -4.5% (-5.3 to -3.5) | -4.5% (-5.4 to -3.7) |
+| Completion | -2.0% (-2.2 to -1.7) | -1.7% (-2.1 to -1.3) |
+| Dropback yards | -3.2% (-3.6 to -2.9) | -2.5% (-3.0 to -2.1) |
+
+Every interval is below zero: the diffusion model is clearly worse than the trees on all six outcomes, in both modes. The two seeds differ by up to 0.9 points of share (time to throw 11.8% against 12.7%), several times the trees' fitting noise (0.1 to 0.3), so the diffusion model is also the noisier one.
+
+**The joint of pressure and sack, before the snap** (mean log loss of the combination that happened; lower is better):
+
+| | Log loss | No pressure, no sack | No pressure, sack | Pressure, no sack | Pressure and sack |
+|---|---|---|---|---|---|
+| What happened | | 69.0% | 0.0% | 24.4% | 6.6% |
+| Diffusion | 0.794 | 64.3% | 0.4% | 22.8% | **12.5%** |
+| Trees, two chances multiplied | 0.833 | 65.8% | **4.5%** | 27.5% | 2.3% |
+| Trees, the chain (pressure, then sack given it) | **0.755** | 70.2% | 0.0% | 23.1% | 6.7% |
+
+### What the second look found
+
+**F7. On the same plays and inputs, the diffusion model forecasts every outcome worse than the trees.** Before the snap it loses 2% (pressure, completion) to 10% (sack) of the trees' loss, all clear of the noise. Given a pressure it loses 2% to 8%. It never matches them.
+
+**F8. Its biggest miss is the sack, and it's a calibration miss.** It forecasts sacks on 12.9% of dropbacks against 6.6% that happened, so its sack chances are worse than knowing nothing (-8% of squared error). Two likely reasons, both about how a diffusion model makes a chance: a chance is the share of 64 drawn plays that came out "yes", which can't express a 3% chance finely (one draw is 1.6 points); and the -1/+1 coding of a rare yes-or-no outcome tends to drift towards the middle when sampled.
+
+**F9. It does learn the shape of a play.** Its draws almost never have a sack without a pressure (0.4%, against 4.5% for the two separate chances multiplied), which is how football works and what H85 hoped for. So its joint log loss (0.794) beats the separate chances multiplied (0.833). But the chain of trees, which conditions the sack on the pressure by design, gets the shape right and the rates right too (0.755). The joint shape comes free once the outcomes are modelled in the play's order (F3, F4); it isn't a reason to use diffusion.
+
+### The hunch
+
+| # | Verdict | Why | Real? | Pays? |
+|---|---|---|---|---|
+| H85 | **Failed** | Clearly worse than the trees on all six outcomes before the snap (by 2% to 10% of their loss), and on all five given a pressure; the pre-registered rule says failed at 3 or more clearly worse | No | No: worse than the trees on every outcome |
+
+### The odds, scored
+
+| Bet | CEO | Claude | Result |
+|---|---|---|---|
+| H85 as worded (more signal than the trees) | 25% | 15% | Failed |
+| It matches the trees on 4+ of 6 outcomes | | 50% | Failed (0 of 6) |
+| Its joint of pressure and sack beats the separate chances multiplied | | 60% | Held (0.794 against 0.833), but the chain does better still (0.755) |
+| Given a pressure, within 1% of the trees on the later outcomes | | 50% | Failed (0 of 5; 1.7% to 8.2% worse) |
+
+### The case against
+
+- **One untuned design.** A 3-layer network, 200 passes, 64 draws a play, one learning rate, on a CPU. Tabular diffusion papers tune for days. A tuned model would close some of the gap; whether it would close 2% to 10% of the loss on every outcome is the open question, and the trees are untuned too.
+- **The chances are coarse by construction.** 64 draws give chances in steps of 1.6 points, and a rare outcome like the sack suffers most. Many more draws, or reading the chance from the model's final denoising estimate instead of counting draws, would help the sack. It would not help time to throw or depth, which are amounts and lose 4% to 7% too.
+- **One training season.** 21,740 plays is small for a network; trees are known to win on small tables. With 2018-2024's coverage tier (about 130,000 dropbacks) the gap could shrink.
+- **What it wasn't asked.** Diffusion's strength is drawing whole plays (for a game simulator), not forecasting one outcome. This look scored only the forecasts, which is the CEO's test for the expert.
+
+### Next steps (for the CEO's direction)
+
+1. **The blame split** (I94): the chain's "given pressure" expectations as an output of the context expert, and a QB's sacks over them as his sack avoidance. This is where the first look's biggest gain lives (F3).
+2. **Quick-pass rate over expected as an offense trait** (I95): does it forecast next week's pressure allowed and sacks?
+3. **Park diffusion as a forecaster**; keep it for later as a play simulator (I96), where its joint shape matters and its rates can be recalibrated to the trees'.
+4. **Draft the brief for a build**: the chain with T1 (in-season) and T2 (retrospective) editions, plus the given-pressure mode.

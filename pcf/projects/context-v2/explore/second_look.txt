@@ -1,0 +1,84 @@
+Dropbacks: 21740 (2023) and 21030 (2024); 44 condition columns; outcomes present in 2024: pressure 100%, time_to_throw 88%, sack 100%, depth 88%, completion 88%, dropback_yards 100%
+C:\Users\jacka\Documents\GitHub\FFInsights\pcf\projects\context-v2\explore\second_look.py:141: UserWarning: Converting a tensor with requires_grad=True to a scalar may lead to unexpected behavior.
+Consider using tensor.detach() first. (Triggered internally at C:\actions-runner\_work\pytorch\pytorch\torch\csrc\autograd\generated\python_variable_methods.cpp:821.)
+  total += float(loss) * len(idx)
+  seed 0 pass 1: training loss 0.6933 (0s)
+  seed 0 pass 10: training loss 0.3653 (1s)
+  seed 0 pass 50: training loss 0.2461 (5s)
+  seed 0 pass 100: training loss 0.2251 (11s)
+  seed 0 pass 150: training loss 0.2252 (17s)
+  seed 0 pass 200: training loss 0.2157 (23s)
+  seed 1 pass 1: training loss 0.6910 (0s)
+  seed 1 pass 10: training loss 0.3646 (1s)
+  seed 1 pass 50: training loss 0.2412 (5s)
+  seed 1 pass 100: training loss 0.2263 (11s)
+  seed 1 pass 150: training loss 0.2199 (16s)
+  seed 1 pass 200: training loss 0.2162 (21s)
+
+== Each outcome, 2024 (share = % of squared error removed against 2023's average; logloss_gain = % of log loss removed; p10/p90 = the spread of chances)
+shape: (33, 6)
+┌────────────────┬──────────────────────────────────────┬───────┬──────────────┬──────┬──────┐
+│ outcome        ┆ model                                ┆ share ┆ logloss_gain ┆ p10  ┆ p90  │
+│ ---            ┆ ---                                  ┆ ---   ┆ ---          ┆ ---  ┆ ---  │
+│ str            ┆ str                                  ┆ f64   ┆ f64          ┆ f64  ┆ f64  │
+╞════════════════╪══════════════════════════════════════╪═══════╪══════════════╪══════╪══════╡
+│ pressure       ┆ trees, before the snap               ┆ 4.24  ┆ 3.6          ┆ 0.18 ┆ 0.43 │
+│ pressure       ┆ diffusion, before the snap (seed 0)  ┆ 1.7   ┆ 1.68         ┆ 0.19 ┆ 0.53 │
+│ pressure       ┆ diffusion, before the snap (seed 1)  ┆ 1.46  ┆ 1.6          ┆ 0.2  ┆ 0.55 │
+│ time_to_throw  ┆ trees, before the snap               ┆ 17.47 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ trees, given a pressure              ┆ 29.15 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ diffusion, before the snap (seed 0)  ┆ 11.77 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ diffusion, before the snap (seed 1)  ┆ 12.69 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ diffusion, given a pressure (seed 0) ┆ 24.38 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ diffusion, given a pressure (seed 1) ┆ 24.98 ┆ null         ┆ null ┆ null │
+│ sack           ┆ trees, before the snap               ┆ 1.2   ┆ 3.56         ┆ 0.02 ┆ 0.12 │
+│ sack           ┆ trees, given a pressure              ┆ 16.79 ┆ 35.38        ┆ 0.0  ┆ 0.25 │
+│ sack           ┆ diffusion, before the snap (seed 0)  ┆ -7.96 ┆ -6.31        ┆ 0.03 ┆ 0.22 │
+│ sack           ┆ diffusion, before the snap (seed 1)  ┆ -8.15 ┆ -6.51        ┆ 0.03 ┆ 0.22 │
+│ sack           ┆ diffusion, given a pressure (seed 0) ┆ 15.3  ┆ 30.06        ┆ 0.01 ┆ 0.25 │
+│ sack           ┆ diffusion, given a pressure (seed 1) ┆ 15.09 ┆ 29.84        ┆ 0.01 ┆ 0.25 │
+│ depth          ┆ trees, before the snap               ┆ 18.49 ┆ null         ┆ null ┆ null │
+│ depth          ┆ trees, given a pressure              ┆ 18.66 ┆ null         ┆ null ┆ null │
+│ depth          ┆ diffusion, before the snap (seed 0)  ┆ 14.85 ┆ null         ┆ null ┆ null │
+│ depth          ┆ diffusion, before the snap (seed 1)  ┆ 15.4  ┆ null         ┆ null ┆ null │
+│ depth          ┆ diffusion, given a pressure (seed 0) ┆ 15.02 ┆ null         ┆ null ┆ null │
+│ depth          ┆ diffusion, given a pressure (seed 1) ┆ 15.75 ┆ null         ┆ null ┆ null │
+│ completion     ┆ trees, before the snap               ┆ 4.6   ┆ 3.78         ┆ 0.51 ┆ 0.78 │
+│ completion     ┆ trees, given a pressure              ┆ 7.72  ┆ 6.26         ┆ 0.43 ┆ 0.79 │
+│ completion     ┆ diffusion, before the snap (seed 0)  ┆ 2.19  ┆ 1.89         ┆ 0.47 ┆ 0.8  │
+│ completion     ┆ diffusion, before the snap (seed 1)  ┆ 2.65  ┆ 2.11         ┆ 0.48 ┆ 0.83 │
+│ completion     ┆ diffusion, given a pressure (seed 0) ┆ 5.85  ┆ 4.66         ┆ 0.41 ┆ 0.83 │
+│ completion     ┆ diffusion, given a pressure (seed 1) ┆ 5.51  ┆ 4.18         ┆ 0.39 ┆ 0.86 │
+│ dropback_yards ┆ trees, before the snap               ┆ 2.15  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ trees, given a pressure              ┆ 6.61  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ diffusion, before the snap (seed 0)  ┆ -1.01 ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ diffusion, before the snap (seed 1)  ┆ -0.63 ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ diffusion, given a pressure (seed 0) ┆ 4.24  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ diffusion, given a pressure (seed 1) ┆ 4.29  ┆ null         ┆ null ┆ null │
+└────────────────┴──────────────────────────────────────┴───────┴──────────────┴──────┴──────┘
+
+== Diffusion (seed 0) against the trees (gain = % of the trees' mean loss the diffusion model removes; negative = worse; clear = the interval is above zero)
+shape: (11, 7)
+┌────────────────┬────────┬──────────┬─────────┬────────┬───────┬───────┐
+│ outcome        ┆ mode   ┆ gain_pct ┆ lo_pct  ┆ hi_pct ┆ clear ┆ worse │
+│ ---            ┆ ---    ┆ ---      ┆ ---     ┆ ---    ┆ ---   ┆ ---   │
+│ str            ┆ str    ┆ f64      ┆ f64     ┆ f64    ┆ bool  ┆ bool  │
+╞════════════════╪════════╪══════════╪═════════╪════════╪═══════╪═══════╡
+│ pressure       ┆ before ┆ -1.989   ┆ -2.439  ┆ -1.523 ┆ false ┆ true  │
+│ time_to_throw  ┆ before ┆ -6.91    ┆ -7.994  ┆ -5.959 ┆ false ┆ true  │
+│ time_to_throw  ┆ given  ┆ -6.721   ┆ -7.898  ┆ -5.601 ┆ false ┆ true  │
+│ sack           ┆ before ┆ -10.243  ┆ -11.484 ┆ -8.987 ┆ false ┆ true  │
+│ sack           ┆ given  ┆ -8.236   ┆ -9.022  ┆ -7.48  ┆ false ┆ true  │
+│ depth          ┆ before ┆ -4.467   ┆ -5.296  ┆ -3.547 ┆ false ┆ true  │
+│ depth          ┆ given  ┆ -4.474   ┆ -5.369  ┆ -3.715 ┆ false ┆ true  │
+│ completion     ┆ before ┆ -1.964   ┆ -2.247  ┆ -1.695 ┆ false ┆ true  │
+│ completion     ┆ given  ┆ -1.706   ┆ -2.059  ┆ -1.32  ┆ false ┆ true  │
+│ dropback_yards ┆ before ┆ -3.222   ┆ -3.569  ┆ -2.895 ┆ false ┆ true  │
+│ dropback_yards ┆ given  ┆ -2.535   ┆ -2.972  ┆ -2.106 ┆ false ┆ true  │
+└────────────────┴────────┴──────────┴─────────┴────────┴───────┴───────┘
+H85: before the snap, clearly better on 0 of 6, clearly worse on 6; 'matches' (interval includes zero or |gain| <= 0.5%) on 0
+Given a pressure: within 1% of the trees' loss on 0 of 5
+
+== The joint of pressure and sack, before the snap: mean log loss of the combination that happened (lower is better)
+{'diffusion': 0.7937, 'trees multiplied (independent)': 0.8327, 'trees, the chain (pressure, then sack given it)': 0.7552}
+Shares (no pressure no sack, no pressure sack, pressure no sack, pressure sack): actual [0.6897, 0.0, 0.2441, 0.0661] | diffusion [0.643, 0.0039, 0.2284, 0.1247] | independent [0.6577, 0.0447, 0.2747, 0.023] | chain [0.7023, 0.0001, 0.2306, 0.0671]
