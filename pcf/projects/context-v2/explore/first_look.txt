@@ -1,0 +1,102 @@
+Dropbacks: 21740 in 2023 (training), 21030 in 2024 (scored). Coverage charted on 100% of 2024's dropbacks; the target's route on 97% of attempts.
+
+== Each outcome by tier, 2024 (share = % of squared error removed against 2023's average; logloss_gain = % of log loss removed; p10/p90 = the spread of chances)
+shape: (42, 7)
+┌────────────────┬──────────────────────────────────────────┬───────┬───────┬──────────────┬──────┬──────┐
+│ outcome        ┆ tier                                     ┆ rows  ┆ share ┆ logloss_gain ┆ p10  ┆ p90  │
+│ ---            ┆ ---                                      ┆ ---   ┆ ---   ┆ ---          ┆ ---  ┆ ---  │
+│ str            ┆ str                                      ┆ i64   ┆ f64   ┆ f64          ┆ f64  ┆ f64  │
+╞════════════════╪══════════════════════════════════════════╪═══════╪═══════╪══════════════╪══════╪══════╡
+│ pressure       ┆ T1 calls                                 ┆ 21030 ┆ 4.26  ┆ 3.61         ┆ 0.18 ┆ 0.44 │
+│ pressure       ┆ T2 + coverage                            ┆ 21030 ┆ 4.24  ┆ 3.6          ┆ 0.18 ┆ 0.43 │
+│ pressure       ┆ chain (before the snap)                  ┆ 21030 ┆ 4.24  ┆ 3.6          ┆ 0.18 ┆ 0.43 │
+│ pressure       ┆ T2 + real pressure                       ┆ 21030 ┆ 4.24  ┆ 3.6          ┆ 0.18 ┆ 0.43 │
+│ pressure       ┆ given (all earlier, real)                ┆ 21030 ┆ 4.24  ┆ 3.6          ┆ 0.18 ┆ 0.43 │
+│ pressure       ┆ hindsight (the room)                     ┆ 21030 ┆ 29.91 ┆ 24.9         ┆ 0.08 ┆ 0.73 │
+│ pressure       ┆ T2 fitting noise (sd of share, 3 refits) ┆ 21030 ┆ 0.11  ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ T1 calls                                 ┆ 18484 ┆ 17.33 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ T2 + coverage                            ┆ 18484 ┆ 17.47 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ chain (before the snap)                  ┆ 18484 ┆ 17.51 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ T2 + real pressure                       ┆ 18484 ┆ 29.15 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ given (all earlier, real)                ┆ 18484 ┆ 29.15 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ hindsight (the room)                     ┆ 18484 ┆ 65.03 ┆ null         ┆ null ┆ null │
+│ time_to_throw  ┆ T2 fitting noise (sd of share, 3 refits) ┆ 18484 ┆ 0.27  ┆ null         ┆ null ┆ null │
+│ sack           ┆ T1 calls                                 ┆ 21030 ┆ 1.05  ┆ 3.47         ┆ 0.02 ┆ 0.12 │
+│ sack           ┆ T2 + coverage                            ┆ 21030 ┆ 1.2   ┆ 3.56         ┆ 0.02 ┆ 0.12 │
+│ sack           ┆ chain (before the snap)                  ┆ 21030 ┆ 1.15  ┆ 3.45         ┆ 0.02 ┆ 0.12 │
+│ sack           ┆ T2 + real pressure                       ┆ 21030 ┆ 16.79 ┆ 35.38        ┆ 0.0  ┆ 0.25 │
+│ sack           ┆ given (all earlier, real)                ┆ 21030 ┆ 69.16 ┆ 75.17        ┆ 0.0  ┆ 0.03 │
+│ sack           ┆ hindsight (the room)                     ┆ 21030 ┆ 82.97 ┆ 86.01        ┆ 0.0  ┆ 0.01 │
+│ sack           ┆ T2 fitting noise (sd of share, 3 refits) ┆ 21030 ┆ 0.13  ┆ null         ┆ null ┆ null │
+│ depth          ┆ T1 calls                                 ┆ 18505 ┆ 17.25 ┆ null         ┆ null ┆ null │
+│ depth          ┆ T2 + coverage                            ┆ 18505 ┆ 18.49 ┆ null         ┆ null ┆ null │
+│ depth          ┆ chain (before the snap)                  ┆ 18505 ┆ 18.05 ┆ null         ┆ null ┆ null │
+│ depth          ┆ T2 + real pressure                       ┆ 18505 ┆ 18.66 ┆ null         ┆ null ┆ null │
+│ depth          ┆ given (all earlier, real)                ┆ 18505 ┆ 27.0  ┆ null         ┆ null ┆ null │
+│ depth          ┆ hindsight (the room)                     ┆ 18505 ┆ 78.1  ┆ null         ┆ null ┆ null │
+│ depth          ┆ T2 fitting noise (sd of share, 3 refits) ┆ 18505 ┆ 0.28  ┆ null         ┆ null ┆ null │
+│ completion     ┆ T1 calls                                 ┆ 18505 ┆ 3.59  ┆ 3.01         ┆ 0.53 ┆ 0.77 │
+│ completion     ┆ T2 + coverage                            ┆ 18505 ┆ 4.6   ┆ 3.78         ┆ 0.51 ┆ 0.78 │
+│ completion     ┆ chain (before the snap)                  ┆ 18505 ┆ 4.71  ┆ 3.88         ┆ 0.5  ┆ 0.78 │
+│ completion     ┆ T2 + real pressure                       ┆ 18505 ┆ 7.72  ┆ 6.26         ┆ 0.43 ┆ 0.79 │
+│ completion     ┆ given (all earlier, real)                ┆ 18505 ┆ 16.65 ┆ 13.37        ┆ 0.35 ┆ 0.86 │
+│ completion     ┆ hindsight (the room)                     ┆ 18505 ┆ 87.41 ┆ 82.89        ┆ 0.01 ┆ 0.99 │
+│ completion     ┆ T2 fitting noise (sd of share, 3 refits) ┆ 18505 ┆ 0.16  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ T1 calls                                 ┆ 21030 ┆ 2.08  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ T2 + coverage                            ┆ 21030 ┆ 2.15  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ chain (before the snap)                  ┆ 21030 ┆ 2.11  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ T2 + real pressure                       ┆ 21030 ┆ 6.61  ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ given (all earlier, real)                ┆ 21030 ┆ 72.19 ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ hindsight (the room)                     ┆ 21030 ┆ 73.44 ┆ null         ┆ null ┆ null │
+│ dropback_yards ┆ T2 fitting noise (sd of share, 3 refits) ┆ 21030 ┆ 0.15  ┆ null         ┆ null ┆ null │
+└────────────────┴──────────────────────────────────────────┴───────┴───────┴──────────────┴──────┴──────┘
+
+== Comparisons (gain = % of b's mean loss that a removes, 90% interval from resampling weeks; clear = the interval is above zero)
+shape: (23, 7)
+┌────────────────┬───────────────────────────┬───────────────┬──────────┬────────┬────────┬───────┐
+│ outcome        ┆ a                         ┆ b             ┆ gain_pct ┆ lo_pct ┆ hi_pct ┆ clear │
+│ ---            ┆ ---                       ┆ ---           ┆ ---      ┆ ---    ┆ ---    ┆ ---   │
+│ str            ┆ str                       ┆ str           ┆ f64      ┆ f64    ┆ f64    ┆ bool  │
+╞════════════════╪═══════════════════════════╪═══════════════╪══════════╪════════╪════════╪═══════╡
+│ pressure       ┆ T2 + coverage             ┆ T1 calls      ┆ -0.017   ┆ -0.104 ┆ 0.07   ┆ false │
+│ pressure       ┆ chain (before the snap)   ┆ T2 + coverage ┆ -0.0     ┆ -0.0   ┆ -0.0   ┆ false │
+│ pressure       ┆ given (all earlier, real) ┆ T2 + coverage ┆ -0.0     ┆ -0.0   ┆ -0.0   ┆ false │
+│ time_to_throw  ┆ T2 + coverage             ┆ T1 calls      ┆ 0.165    ┆ 0.053  ┆ 0.284  ┆ true  │
+│ time_to_throw  ┆ chain (before the snap)   ┆ T2 + coverage ┆ 0.052    ┆ -0.053 ┆ 0.156  ┆ false │
+│ time_to_throw  ┆ T2 + real pressure        ┆ T2 + coverage ┆ 14.148   ┆ 12.764 ┆ 15.62  ┆ true  │
+│ time_to_throw  ┆ given (all earlier, real) ┆ T2 + coverage ┆ 14.148   ┆ 12.731 ┆ 15.639 ┆ true  │
+│ sack           ┆ T2 + coverage             ┆ T1 calls      ┆ 0.095    ┆ -0.196 ┆ 0.404  ┆ false │
+│ sack           ┆ chain (before the snap)   ┆ T2 + coverage ┆ -0.114   ┆ -0.406 ┆ 0.183  ┆ false │
+│ sack           ┆ T2 + real pressure        ┆ T2 + coverage ┆ 32.992   ┆ 31.249 ┆ 34.844 ┆ true  │
+│ sack           ┆ given (all earlier, real) ┆ T2 + coverage ┆ 74.255   ┆ 70.49  ┆ 77.77  ┆ true  │
+│ depth          ┆ T2 + coverage             ┆ T1 calls      ┆ 1.499    ┆ 1.235  ┆ 1.793  ┆ true  │
+│ depth          ┆ chain (before the snap)   ┆ T2 + coverage ┆ -0.546   ┆ -0.789 ┆ -0.325 ┆ false │
+│ depth          ┆ T2 + real pressure        ┆ T2 + coverage ┆ 0.209    ┆ 0.04   ┆ 0.367  ┆ true  │
+│ depth          ┆ given (all earlier, real) ┆ T2 + coverage ┆ 10.44    ┆ 9.506  ┆ 11.402 ┆ true  │
+│ completion     ┆ T2 + coverage             ┆ T1 calls      ┆ 0.794    ┆ 0.513  ┆ 1.109  ┆ true  │
+│ completion     ┆ chain (before the snap)   ┆ T2 + coverage ┆ 0.099    ┆ -0.038 ┆ 0.236  ┆ false │
+│ completion     ┆ T2 + real pressure        ┆ T2 + coverage ┆ 2.58     ┆ 2.266  ┆ 2.911  ┆ true  │
+│ completion     ┆ given (all earlier, real) ┆ T2 + coverage ┆ 9.964    ┆ 9.374  ┆ 10.511 ┆ true  │
+│ dropback_yards ┆ T2 + coverage             ┆ T1 calls      ┆ 0.064    ┆ -0.05  ┆ 0.19   ┆ false │
+│ dropback_yards ┆ chain (before the snap)   ┆ T2 + coverage ┆ -0.042   ┆ -0.232 ┆ 0.145  ┆ false │
+│ dropback_yards ┆ T2 + real pressure        ┆ T2 + coverage ┆ 4.563    ┆ 3.723  ┆ 5.354  ┆ true  │
+│ dropback_yards ┆ given (all earlier, real) ┆ T2 + coverage ┆ 71.585   ┆ 69.33  ┆ 74.122 ┆ true  │
+└────────────────┴───────────────────────────┴───────────────┴──────────┴────────┴────────┴───────┘
+
+== Shipped context-live (v1) on 2024, same yardstick
+shape: (6, 6)
+┌────────────────┬───────┬───────┬──────────────┬──────┬──────┐
+│ outcome        ┆ rows  ┆ share ┆ logloss_gain ┆ p10  ┆ p90  │
+│ ---            ┆ ---   ┆ ---   ┆ ---          ┆ ---  ┆ ---  │
+│ str            ┆ i64   ┆ f64   ┆ f64          ┆ f64  ┆ f64  │
+╞════════════════╪═══════╪═══════╪══════════════╪══════╪══════╡
+│ pressure       ┆ 21030 ┆ 4.23  ┆ 3.54         ┆ 0.18 ┆ 0.44 │
+│ time_to_throw  ┆ 18484 ┆ 17.4  ┆ null         ┆ null ┆ null │
+│ sack           ┆ 21030 ┆ 1.33  ┆ 3.69         ┆ 0.03 ┆ 0.11 │
+│ depth          ┆ 18505 ┆ 17.78 ┆ null         ┆ null ┆ null │
+│ completion     ┆ 18505 ┆ 4.2   ┆ 3.48         ┆ 0.53 ┆ 0.76 │
+│ dropback_yards ┆ 21030 ┆ 2.34  ┆ null         ┆ null ┆ null │
+└────────────────┴───────┴───────┴──────────────┴──────┴──────┘
+
+== H87: quick passes (thrown within 2.5 s, under 5 yards downfield) are 25.5% of 2024's attempts; T2 explains {'share': np.float64(26.4799459203088), 'logloss_gain': np.float64(21.632101393826154), 'p10': 0.08972604817386391, 'p90': 0.5974021429391929}
+An offense's quick-pass rate over expected: odd against even weeks r = {2023: 0.5666301195705769, 2024: 0.7008134967732682} (2024 90%: 0.54 to 0.82); 2023 to 2024 r = 0.68 (90%: 0.49 to 0.82); spread across offenses (sd) 0.037

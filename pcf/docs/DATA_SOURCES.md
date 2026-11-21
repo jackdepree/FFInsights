@@ -78,6 +78,8 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 | FantasyPros ECR (`load_ff_rankings`) | player-ranking | `type="all"`: archived history, Dec 2019→. `"draft"` and `"week"`: the current snapshot only. | Weekly in season | The end of `scrape_date` | Crowd expert, ECR benchmark. The weekly positional ranks are `player_game.ecr`, only for games after the snapshot (one Friday snapshot a week from 2021, weeks 2–17: baselines#F1, #F2) |
 
 > ⚠️ **Participation is post-season only. This is why Context and VOE each come as two experts** (`context-live` / `context-retro`, `voe-live` / `voe-retro`; rule m).
+> **Two traps found in context-v2's first look (2026-11-20):** `route` is one route per play, the **targeted receiver's** (empty when there's no target), not every receiver's; and `time_to_throw` is missing on 98% of sacks, so a model given time to throw learns the sack from the gap.
+>
 > Play-level fields like routes run, coverage type, pressure and time to throw arrive only after the season ends. The old Context and VOE models were built on them. A model *trained* on these fields can't be *fed* them for live, mid-season predictions. That mismatch (train/serve skew) silently breaks a model in production.
 > So every expert declares a `cadence` in the registry:
 > - **in_season:** uses only fields available live: play-by-play, FTN charting (with its lag), daily depth charts, weekly snap counts, Next Gen Stats and PFR advanced stats.
