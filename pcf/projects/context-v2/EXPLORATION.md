@@ -133,3 +133,5 @@ The CEO, 2026-11-20: "Can we test the diffusion model against the chain on the s
   - "It matches": the interval includes zero, or the gain is within ±0.5% of the loss, on 4+ of the 6 outcomes. 50%.
   - "The joint is better calibrated": for the four combinations of pressure and sack before the snap, its log loss is below the T2 trees' two chances multiplied. 60%.
   - "Given a pressure, it matches the trees" on time to throw, sack, completion and yards, within ±1% of the loss. 50%.
+
+**Amended before the run (2026-11-20, nothing has been fit or scored):** 40 passes over 2023's 21,740 dropbacks is about 1,700 training steps, too few for a diffusion model (they usually need 10,000+), which would make the test unfair to the CEO's method. So the model trains **200 passes** (about 8,500 steps). Drawing 64 plays for each of 21,030 plays through 100 steps, twice (two seeds) and in two modes, is too slow on a CPU, so it is drawn with **DDIM in 50 steps** (the same trained model, a faster deterministic sampler). The pass rules don't change.
