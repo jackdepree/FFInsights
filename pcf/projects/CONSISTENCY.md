@@ -211,7 +211,7 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 
 | Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
 |---|---|---|---|---|---|---|---|
-| Quick-pass rate over expected, offenses | context-v2 (H87) | Attempts within 2.5 s and under 5 yards, minus the calls' and situation's expected chance (coverage included) | 0.70 (odd against even weeks, 2024; 0.57 in 2023) | 0.68 (2023 to 2024) | **trait of the offense** (its plan) | Not tested (I95) | 32 offenses; spread 3.7 points |
+| Quick-pass rate over expected, offenses | context-v2 (H87) | Attempts within 2.5 s and under 5 yards, minus the calls' and situation's expected chance (coverage included) | 0.70 (odd against even weeks, 2024; 0.57 in 2023) | 0.68 (2023 to 2024) | **trait of the offense** (its plan) | No: it doesn't forecast next game's sacks or pressure (I95 failed, context-v2's third look) | 32 offenses; spread 3.7 points |
 
 ## Feature candidates
 

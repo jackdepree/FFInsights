@@ -235,3 +235,69 @@ The CEO, 2026-11-20: "Test the quick-pass rate." I95 asks whether an offense's q
 - It adds 0.5% or more to next game's pressure rate beyond the base: 35%.
 - Beyond the base plus time to throw to date, it adds nothing clear to the sack rate (the interval includes zero): 60%.
 - The over-expected rate does better than the raw rate: 50%.
+
+### Third look: the results ([`explore/third_look.py`](explore/third_look.py), output [`third_look.txt`](explore/third_look.txt))
+
+538 offense-games a season after each offense's first game; 37.5 dropbacks a game on average.
+
+**The room first.** A single game's sack rate is mostly luck: of its variance across offense-games, the coin flip's share is 76%, so **at most 23% of the error can be forecast** by anything (23.8% in 2023, 23.4% in 2024). A game's pressure rate has more room: **at most 47%**.
+
+**Next game's rates, 2024** (trained on 2023; the share of the weighted squared error removed against 2023's average):
+
+| Forecast | Sack rate | Pressure rate |
+|---|---|---|
+| The base (the offense's pressure and sacks to date, the opponent's) | **4.8%** | 3.5% |
+| Base + quick-pass rate over expected | 3.4% | 3.6% |
+| Base + quick-pass rate (raw) | 4.1% | 3.6% |
+| Base + time to throw to date (the obvious input) | 3.3% | **6.2%** |
+| Base + time to throw + quick-pass over expected | 2.7% | 6.3% |
+
+**The paired comparisons** (the gain in % of the simpler model's error, 90% interval from resampling weeks):
+
+| Comparison | Sack rate | Pressure rate |
+|---|---|---|
+| Quick over expected, beyond the base (**I95's test**) | **-1.53%** (-2.47 to -0.66): worse | +0.13% (+0.01 to +0.24) |
+| Raw quick rate, beyond the base | -0.76% (-1.57 to -0.00) | +0.14% (+0.05 to +0.23) |
+| Time to throw, beyond the base | -1.61% (-2.97 to -0.40): worse | **+2.82%** (+2.08 to +3.62) |
+| Quick over expected, beyond the base and time to throw | -0.61% (-1.03 to -0.19): worse | +0.07% (-0.52 to +0.69) |
+| Over expected against raw | -0.76% (-1.25 to -0.29): worse | -0.01% (-0.09 to +0.07) |
+
+**The reverse** (trained on 2024, scored on 2023, a check only) says the same: quick over expected costs the sack rate 1.37% (clear), adds nothing to pressure (-0.51%, not clear), and time to throw adds 2.96% to pressure (clear).
+
+**The weight flips sign.** Fitted on 2023, more quick passes than expected goes with *more* sacks next game (+0.11 per unit; 90% from resampling weeks +0.02 to +0.21). Fitted on 2024, it goes with fewer (-0.10). A trait whose effect flips between seasons isn't telling the forecast anything. It's also tied to time to throw (r = -0.60), and only weakly to the offense's pressure (-0.19) and sacks (-0.17) to date.
+
+### What the third look found
+
+**F10. An offense's quick-pass rate doesn't forecast its next game's sacks or pressure.** Raw or over expected, before or after time to throw, it adds nothing to the pressure rate (+0.1%) and makes the sack forecast worse (-0.8% to -1.5%, clear). Its weight on sacks flips sign between seasons. The trait is real (F5, it repeats 0.70) but it's the offense's style, not a protection signal.
+
+**F11. Time to throw to date forecasts next game's pressure.** An offense that has held the ball longer allows more pressure next game: +2.8% of the base's error, clear in both directions (+3.0% in the reverse). It's the best single addition in this look, and it doesn't carry over to sacks (-1.6%).
+
+**F12. A game's sack rate is three-quarters luck.** At most 23% of its error is forecastable; the base gets 4.8% of it. Every extra input above four made the sack forecast worse in both directions, so at this size of data the sack rate wants fewer inputs, not more (shrink to the offense's own sacks and pressure).
+
+### The idea
+
+| # | Verdict | Why |
+|---|---|---|
+| I95 | **Failed** (flagged: by the letter of the rule, "unclear") | The gain on next game's sack rate is -1.53% (-2.47 to -0.66): clearly worse, not better. The pre-registered rule named "held" (+0.5%, clear) and "failed" (under 0.5%, interval through zero) and left "clearly worse" to "unclear otherwise", a hole Claude didn't foresee. Clearly worse is a stronger failure than no gain, so Claude closes it as failed |
+
+### The odds, scored
+
+| Bet | Claude | Result |
+|---|---|---|
+| I95: adds 0.5%+ to next game's sack rate | 45% | Failed (-1.53%) |
+| The quick-pass weight on sacks is negative | 75% | Failed (positive on 2023, 98% of resamples; negative on 2024) |
+| It adds 0.5%+ to the pressure rate | 35% | Failed (+0.13%, clear but small) |
+| Beyond time to throw, nothing clear for sacks | 60% | Failed the other way: clearly worse (-0.61%) |
+| Over expected beats raw | 50% | Failed (worse for sacks, equal for pressure) |
+
+### The case against
+
+- **Small rows, plain regression.** 538 offense-games a season and no shrinkage on the weights. A shrunk model (ridge) might keep the quick-pass rate at a weight near zero instead of hurting. It would not turn a flipping sign into a gain.
+- **The wrong target, maybe.** Quick passing could protect a QB within a game (fewer sacks on the quick plays themselves) without changing next game's rate, because defenses and play-callers adjust. This look asked about the next game only.
+- **One provider, two seasons.** Time to throw changed provider in 2023, so earlier seasons can't be added without care.
+
+### Next steps (for the CEO's direction)
+
+1. **Time to throw to date as an input for next game's pressure** (F11): context-live already carries the offense's time to throw over expected on every play (`off_time_to_throw_oe`), so this is a check of how much it adds there, not a new build.
+2. **The blame split** (I94), still the biggest gain context-v2 has found (F3).
+3. **Draft the build brief** for the chain (T1 and T2 editions, plus the given-pressure mode).
