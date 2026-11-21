@@ -462,6 +462,15 @@ projects:
     origin: Context_Model_Training.ipynb
     summary: Schemes-v2's retrospective traits (team_season.charted) are a planned input (CEO, 2026-11-10). The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons.
 
+  - id: context-v2
+    name: Context, the next version (methods and information)
+    phase: 1
+    status: idea
+    horizon: next
+    cadence: [in_season, retrospective]  # open: the brief decides; the after-the-season fields belong to context-retro (rule m)
+    depends_on: [context-live]
+    summary: "The CEO's kickoff, 2026-11-20, after skill-over-expected's H84: \"I am just disappointed that this expert can only explain 1 to 4% of the variance for these outcomes.\" Hunches H85 to H88 (a conditional diffusion model for all outcomes at once; conditioning on a play's own outcomes; play action and quick passing as strategy; gains carried downstream) and question I93 (propensity models). The CEO's test: \"judged on each outcome and how well it can fit to that outcome\". Draft brief in projects/context-v2/BRIEF.md."
+
   - id: participation
     name: Participation and snaps
     phase: 1
