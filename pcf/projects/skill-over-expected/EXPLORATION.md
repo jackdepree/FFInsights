@@ -300,3 +300,29 @@ The CEO's as-worded bets: 4 of 6 held, at odds of 30% to 60%, which beats those 
 
 **What it needs first:** context-live's walk-forward history starts in 2023 (pressure and time to throw in 2024), and the 2025 vault is closed, so it has no season-to-season pairs for pressure at all. Context-live has expectations for pressure, sacks, completion (so catch rate and catch rate allowed), time to throw, throw depth and rushing yards, but none for yards after contact or broken tackles. The method is the CEO's choice with Claude (the charter's "football claims first, methods together").
 
+
+## Fourth look: H84, the third look's measures over context-live's expectation (written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Let's run the context model back to 2016 and then rerun the third look using over expected metrics." The CEO's odds for H84 were given before this section: very confident (about 90%). Claude's are in `HUNCHES.md` (35% as worded). The back-history is decision 0038: two editions, **situation** (the situation alone) and **calls16** (the situation plus shotgun, no-huddle, pass rushers and the box count). Both run walk-forward for 2017-2024, trained from 2016.
+
+**Design.** Each measure is computed three ways on the same player-season pairs (2017 to 2024, so seven season pairs against the third look's eight): **plain** (the third look's rate, each season's league average out), **over situation**, and **over calls16**. Over expected is a player's actual minus the expectation, summed over his plays and divided by his plays, with each season's average taken out. For a pass rusher's own pressures, the expectation is his team's pressure chance on his dropbacks scaled to his position's share of team pressures that season (λ = the position's pressures over its expected team pressures), so the scale matches his own pressures. Volume floors are the third look's. Repeat and share kept are the first look's. The measures:
+
+| Measure | Expectation |
+|---|---|
+| DE, DT, NT pressures per dropback (PFR, 2018 on) | pressure, scaled |
+| OLB pressures per dropback, all and rushers only | pressure, scaled |
+| WR catch rate | completion on his targets |
+| QB completion rate | completion |
+| QB and lineman (his team's, on his dropbacks) sacks per dropback | sack |
+| QB and lineman pressures per dropback | pressure |
+| QB and lineman time to throw | time to throw |
+| QB and lineman throw depth | depth of target |
+| RB yards per carry | rushing yards |
+
+Not tested here: defensive backs' coverage (play-by-play doesn't say who was covering the target), yards after contact, broken tackles and tacklers needed (no play-level contact data; decision 0038, call 7; idea I92).
+
+**Pass rules.**
+- **H84 as worded** (Claude's reading, in `HUNCHES.md`): **held** if more of the 15 measures clear both of the third look's bars (repeat 0.2+, movers keep half) over **calls16** than plain. **Failed** if fewer. **Unclear** if the same. calls16 is the primary test because it is the nearest to the context expert as built; the situation edition is reported beside it.
+- **The size:** the average change in repeat and in share kept, over expected against plain, across the measures.
+
+**Claude's side bet, new and written before the run:** over the situation edition, the repeat moves by less than 0.03 on most measures, because the situation alone removes under 2% of these outcomes except depth: 80%.
