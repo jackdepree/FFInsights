@@ -138,7 +138,7 @@ def walk(data: pl.DataFrame, name: str, edition: str, seasons: Sequence[int] = T
         rows = rows.with_columns([pred[x] for x in pred.columns]).with_columns(
             train_end=pl.lit(run.train_end(train)).cast(run.UTC_TIME)
         )
-        # with the season's level taken out (how a user of these rows reads them, per the module note)
+        # with the season's level taken out, as the module note says a user reads these rows
         y, e = rows["y"], rows["mean"]
         base = ((y - y.mean()) ** 2).sum()
         shares[s] = float(100 * (1 - ((y - y.mean() - (e - e.mean())) ** 2).sum() / base))
