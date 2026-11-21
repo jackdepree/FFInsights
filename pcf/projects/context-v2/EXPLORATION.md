@@ -301,3 +301,36 @@ The CEO, 2026-11-20: "Test the quick-pass rate." I95 asks whether an offense's q
 1. **Time to throw to date as an input for next game's pressure** (F11): context-live already carries the offense's time to throw over expected on every play (`off_time_to_throw_oe`), so this is a check of how much it adds there, not a new build.
 2. **The blame split** (I94), still the biggest gain context-v2 has found (F3).
 3. **Draft the build brief** for the chain (T1 and T2 editions, plus the given-pressure mode).
+
+## Fourth look: the blame split (I94; written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Can you please draft the build for the chain and explore the blame split?" The exploration comes first, so the brief can say whether the split belongs in the build.
+
+**A data fact found before the design.** Before 2023, participation's `was_pressure` is **missing on every sack** (2018: 1,321 of 1,321; 2021: 1,315 of 1,315), and on about 4% of other dropbacks. From 2023 it is set on 99.9% of sacks. So before 2023 "sacks per pressure" has the sacks missing from its denominator. Here **a sack counts as a pressure** in every season (what the new provider does), and dropbacks with the flag missing otherwise are left out.
+
+**The split.** For every dropback, two chances from the same trees and the same calls (context-live's calls16 edition: the situation plus shotgun, no huddle, participation's rushers and box; 2016 on):
+- **E0**, the sack chance before the snap;
+- **E1**, the sack chance given whether there was a pressure.
+
+So a play's sack over expected splits into two parts that add up: **the pressure part**, E1 - E0 (how much the pressure, or its absence, raised the sack chance: the line's side, mostly), and **the after-pressure part**, sack - E1 (what happened once the pressure was known: the QB's side, mostly). The same for completion on attempts: completion over E1 (given pressure) against over E0.
+
+**Fitting.** Trees (context-live's settings), cross-fitted by season inside each pressure provider: 2016-2022 leaving one season out, 2023 trained on 2024 and 2024 on 2023. Retrospective, discovery only.
+
+**The measures** (regular season, 2017-2024 season pairs, the skill-over-expected yardstick: each season's league average out, the repeat from one season to the next, and movers' repeat over stayers', "share kept"; the bar is repeat 0.2+ and movers keep half). QBs with 150+ dropbacks in both seasons; linemen with 300+ (his team's dropbacks while he's on the field):
+1. Sacks per pressure, plain (the reference; skill-over-expected's H82 found 0.20 with QB movers keeping -46%, with the old denominator).
+2. **Sacks per pressure over E1** (on pressured dropbacks): I94's measure.
+3. Sacks per dropback, plain.
+4. The after-pressure part per dropback.
+5. The pressure part per dropback.
+6. Completion over E1 against completion over E0 (QBs only).
+
+**Pass rule for I94** (Claude's odds with the idea: 55%), for QBs:
+- **Held** if sacks per pressure over E1 repeats more than plain sacks per pressure on the same pairs, and QB movers keep half or more.
+- **Failed** if it repeats no more than the plain rate and movers keep under half.
+- **Unclear** otherwise.
+
+**Claude's side bets:**
+- The QB's after-pressure part per dropback passes both bars: 50%.
+- QB movers keep more of the after-pressure part than lineman movers do (it's the QB's): 65%.
+- QB movers keep under half of the pressure part (it isn't the QB's): 60%.
+- QB completion over E1 repeats within 0.03 of completion over E0 (the pressure barely reorders QBs): 60%.
