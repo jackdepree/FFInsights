@@ -1,6 +1,6 @@
 # Skills over expected: a VOE cousin
 
-> **Status:** brief drafted from the exploration, 2026-11-20; the exploration is closed (the CEO, 2026-11-20). The no-noise target below needs the CEO's approval before a build. Kickoff on 2026-11-20, after retro 2. The four looks are in [EXPLORATION.md](EXPLORATION.md); the drafted brief is the last section below.
+> **Status:** **agreed 2026-11-20** (the CEO approved the no-noise target: "1; yes I approve"); the exploration is closed (the CEO, 2026-11-20). The build runs when the CEO schedules it. Kickoff on 2026-11-20, after retro 2. The four looks are in [EXPLORATION.md](EXPLORATION.md); the drafted brief is the last section below.
 
 ## The usual way
 
@@ -73,7 +73,7 @@ For each position, which measures of a player's skill over expected are real (th
 
 **The CEO's choices for the next looks (2026-11-20):** the forecast test comes next: "the next test should be the next season or maybe even the next game for runners and sacks and pressures and completion percentage". For H78, a back's "goodness" is yards after contact: "the hunch says that they cannot create yards before contact because that's dependent upon your whole team. And also, it's dependent upon the defenses you play ... if you have an explosive play and no one touched you, was that really the running back's vision and their skill, or was it more about the defense being poorly set up to make the stop and your offense blocking everyone". Everyone is in scope: "I don't want to leave out anyone. I want to try and incorporate everyone." There's no free tracking for defenders; PFR's coverage charting (2018 on) is the stand-in.
 
-## The brief, after the exploration (Claude's draft from the four looks, 2026-11-20)
+## The brief, after the exploration (drafted from the four looks; agreed 2026-11-20)
 
 The CEO, 2026-11-20, closing the exploration: "I don't think we need to continue testing right now. We can close the brief and exploration for this project unless you have some more outstanding questions." Their reading of the fourth look: "time to throw and adot can be interpreted as strategy rather than pure play outcomes."
 
@@ -97,7 +97,7 @@ The CEO, 2026-11-20, closing the exploration: "I don't think we need to continue
 
 **Goals for a build.** A retrospective table of player-season traits (the "use" column above), each shrunk toward its position's average by how many chances it took (baseball's stabilization points, the first analogy), with its owner label and its stabilization point. Made walk-forward: a season's row is known once that season's data is out.
 
-**Tests** (Claude's proposal; **the no-noise target needs the CEO's approval**):
+**Tests** (the no-noise target approved by the CEO, 2026-11-20: "1; yes I approve"):
 - **Success:** each shrunk trait forecasts next season's same rate better than last season's raw rate and the position's average, on held-out seasons (2016-2024 walk-forward; the 2025 vault once). Pass rushers' pressures keep their gain on next season's sacks, and for outside linebackers within the rusher role too (I91).
 - **Failure:** shrinking doesn't beat the raw rate, or a trait's gain is inside its fitting noise. Then the plain rates ship as they are.
 - **No-noise target:** next season's same rate, against last season's raw rate (and, for pass rushers, next season's sacks against past sacks).
