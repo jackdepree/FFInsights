@@ -288,3 +288,15 @@ The CEO's as-worded bets: 4 of 6 held, at odds of 30% to 60%, which beats those 
 2. **H82 again on one pressure source** (2023-2024 only, or 2016-2022 only) and with an interval on share kept (I90).
 3. **The rushers' forecast** (I91): redo the second look's +15.1% within rushers only, to see how much of it is role.
 4. I76 (the movers model) and drafting the brief.
+
+### The CEO's answers to the third look (2026-11-20)
+
+- **H82:** "H82; I meant sacks overall and I think that applies to a per drop back basis." On that reading H82 **held**: QB sacks per dropback repeat 0.36 and QB movers keep more than stayers (149%, 41 movers), while a lineman who moves keeps 42% of his team's. It is flagged in `HUNCHES.md`, because the pre-registered measure (sacks per pressure) failed and the reading came after the result. Claude's 70% on the claim as worded scores as held, with the same flag. I90 (one pressure source, an interval on share kept) still runs.
+- **H80:** "H80; yes it does fit that theory of roles and usage."
+- **The merge:** "Yes you can merge so far."
+- **H84, a new hunch** (recorded open in `HUNCHES.md`, not tested in the reply that recorded it): "I have a hunch that if you used the context expert's estimates then we could measure the stability of these same metrics but instead relative to situation rather than relative to the league average. First we measure the "over expected x" for each x metric (pressure rate, catch rate, yards after contact) and then measure the carry over from a new team or to a new season. I would be very confident that this would find more significant results than just raw rate above league averages."
+
+**Was this already done?** Only in part. The first look measured three skills over someone's situation expectation: completion over nflfastR's expected, catches over nflfastR's catch chance and rushing yards over Next Gen Stats' expected. It also ran context-live's own expectations for two of them (completion and rushing yards), but on one season pair only (2023 to 2024: 29 QBs and 37 backs). The third look's metrics (pressure rate, catch rate, sacks, time to throw, depth, coverage, broken tackles, tacklers needed) were all measured against the league's average for the season, not against the situation.
+
+**What it needs first:** context-live's walk-forward history starts in 2023 (pressure and time to throw in 2024), and the 2025 vault is closed, so it has no season-to-season pairs for pressure at all. Context-live has expectations for pressure, sacks, completion (so catch rate and catch rate allowed), time to throw, throw depth and rushing yards, but none for yards after contact or broken tackles. The method is the CEO's choice with Claude (the charter's "football claims first, methods together").
+

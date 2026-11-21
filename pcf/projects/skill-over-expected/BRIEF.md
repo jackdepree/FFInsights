@@ -22,6 +22,7 @@ Analysts measure a player's skill on outcomes he controls more than EPA: actual 
 | H81 | Defensive backs' coverage numbers (catch rate allowed, yards, passes defensed, interceptions, throw depth against) carry over, including to a new team | 50% | 25% |
 | H82 | Sacks follow the quarterback; pressures are line against line | 60% | 70% |
 | H83 | Broken tackles and how many tacklers it takes, before and after the line, show a runner's skill | 60% | 55% |
+| H84 | Each metric over context-live's situation expectation, not over the league average, then its carry-over to a new team and a new season: "I have a hunch that if you used the context expert's estimates then we could measure the stability of these same metrics but instead relative to situation rather than relative to the league average. First we measure the "over expected x" for each x metric (pressure rate, catch rate, yards after contact) and then measure the carry over from a new team or to a new season. I would be very confident that this would find more significant results than just raw rate above league averages." | very confident (about 90%) | 35% as worded; movers keep more 60%; repeat goes up 25% |
 | (I89) | Who owns time to throw and throw depth: QB, receivers or line? (a question; in IDEAS.md) | 50 to 60% | 70% time to throw is the QB's |
 
 The CEO's direction for the project, from 2026-11-20, word for word (kept from the idea page):
