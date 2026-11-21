@@ -15,6 +15,7 @@ dependencies = [
     "pyyaml>=6.0",
     "requests>=2.34.2",
     "scikit-learn>=1.9.1",
+    "torch>=2.15.0",
     "xgboost>=3.4.1",
 ]
 

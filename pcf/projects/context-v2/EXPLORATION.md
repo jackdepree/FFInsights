@@ -111,3 +111,25 @@
 1. **Method C, the CEO's diffusion model, against this chain** (H85), on the same plays and tiers.
 2. **The blame split as a product of this expert:** the chain's "given pressure" expectations (sack, time to throw, completion) as context-live outputs, so `qb-talent` and `line-play` can credit a QB for what he does after a pressure (I94).
 3. **Quick-pass rate over expected as an offense trait** (I95): does it forecast next week's pressure allowed and sacks?
+
+## Second look: the CEO's conditional diffusion model against the chain (written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Can we test the diffusion model against the chain on the same plays?" H85's odds: the CEO 25%, Claude 15% (it uncovers more signal), 50% (it matches the trees), 60% (its joint forecasts are better calibrated than separate ones multiplied).
+
+**The same plays as the first look.** Dropbacks, trained on 2023, scored on 2024. The conditions are T2's fields: the situation, FTN's calls and the coverage.
+
+**The model** (a technical call; decision 0039): a conditional denoising diffusion model (DDPM) over a play's six outcomes at once: pressure, time to throw, sack, depth, completion and dropback yards.
+- **The outcomes as numbers.** A yes-or-no outcome is coded -1 or +1 ("analog bits"). An amount is mapped to normal scores by its training quantiles. An outcome a play doesn't have (depth on a sack, time to throw on a sack) is masked out of the training loss, not filled in.
+- **The network:** a 3-layer MLP of 256 units that predicts the noise. It takes the noisy outcomes, the step (a sine embedding), the conditions (missing as 0, with a missing flag) and the outcomes given to it.
+- **The "given" mode.** In training, each present outcome is shown to the network as a condition with chance 0.3, so one model answers both before the snap (nothing given) and "given a pressure".
+- **Training and sampling:** 100 noise steps (cosine schedule), Adam, 40 passes over 2023, batch 512, CPU. 64 drawn plays per 2024 play. A chance is the share of draws above 0; an amount's mean is the mean of the draws mapped back.
+- **The fitting noise:** two training seeds.
+
+**The opponent, on the same rows:** the first look's T2 trees before the snap, and T2 plus the real pressure for "given a pressure". Scored outcome by outcome on 2024, as in the first look: the share of squared error, the log-loss gain, and paired intervals from resampling weeks.
+
+**Pass rules:**
+- **H85 as worded (more signal than the chain):** **held** if the diffusion model is clearly better than the trees (the whole interval above zero) on 3 or more of the 6 outcomes before the snap. **Failed** if it is clearly better on none, or clearly worse on 3 or more. **Unclear** otherwise.
+- **Claude's side bets:**
+  - "It matches": the interval includes zero, or the gain is within ±0.5% of the loss, on 4+ of the 6 outcomes. 50%.
+  - "The joint is better calibrated": for the four combinations of pressure and sack before the snap, its log loss is below the T2 trees' two chances multiplied. 60%.
+  - "Given a pressure, it matches the trees" on time to throw, sack, completion and yards, within ±1% of the loss. 50%.
