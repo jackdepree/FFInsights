@@ -312,3 +312,70 @@
   - Its roster-change gain is higher: 35%.
   - Its roster-change gain is 5 points or more above the EPA arm's (the CEO's size): 10%.
   - Its plain plus-minus repeats 0.05 or more higher season to season (all players; the side bet written with H89): 50%.
+
+## Fourth look: the results ([`explore/success_look.py`](explore/success_look.py), output [`success_look.txt`](explore/success_look.txt); a check after the result in [`explore/success_check.py`](explore/success_check.py), [`success_check.txt`](explore/success_check.txt))
+
+295,328 regular-season plays, 2016-2024. 43.5% are successes (EPA above 0). The first run stopped on a number-precision check inside the lasso (32-bit inputs); the inputs were made 64-bit and nothing else changed. **Sanity:** the EPA arm's simple rung reproduces the second look exactly (offense +8.69%, defense +6.61%).
+
+**The two outcomes.** The situation explains 4.0% to 4.3% of success's squared error, against 0.7% to 0.9% of EPA's. Per play, the two leftovers agree 0.70. Each arm's plain plus-minus agrees 0.85 with the other's.
+
+**Yardstick 1, the roster-change test** (the gain beyond last season, offense and defense pooled, 2020-2024; 90% by resampling teams):
+
+| Values from | EPA arm | Success arm | Success less EPA |
+|---|---|---|---|
+| The CEO's design (VOE lasso with the context, knockout) | **+5.26%** (+0.53 to +9.60) | +1.88% (-0.31 to +4.37) | **-3.38 points** (-7.25 to +0.67) |
+| The simple rung (plain sums of a and b) | **+7.85%** (+2.53 to +12.85) | +4.14% (+0.37 to +7.81) | -3.71 points (-7.37 to +0.07) |
+| **Check** (after the result): the same, forecasting next season's *success* over expected | | | |
+| The CEO's design | **+4.61%** | +2.33% | -2.28 points (-4.68 to +0.36) |
+| The simple rung | **+5.91%** | +4.21% | -1.71 points (-4.24 to +0.93) |
+
+**Yardstick 2, the movers' repeat** (plain plus-minus this season against next, 300+ plays in both, each season's mean out):
+
+| | Pairs | EPA arm | Success arm |
+|---|---|---|---|
+| All | 5,307 | 0.25 | 0.28 |
+| Stayed | 4,167 | 0.29 | **0.33** |
+| **Moved** | 1,140 | **0.08** | 0.05 |
+| Movers, success less EPA | | | -0.03 (-0.07 to +0.01) |
+
+Movers by group (EPA | success):
+- QB -0.07 | +0.12 (36 movers);
+- RB +0.07 | -0.04;
+- WR +0.12 | +0.05;
+- TE 0.00 | -0.02;
+- OL +0.11 | +0.04;
+- DL +0.08 | +0.01;
+- LB +0.09 | +0.08;
+- DB +0.02 | +0.05.
+
+## What the fourth look found
+
+**F25. Success is a worse outcome for VOE than EPA, on both yardsticks.** Its player values forecast a team's next season 3.4 points worse (the CEO's design) and 3.7 points worse (the simple rung). They travel less with players who change teams (0.05 against 0.08). Neither difference's interval is clear of zero, but every point estimate goes the same way.
+
+**F26. The target isn't why EPA wins.** Forecasting next season's success over expected instead, EPA-based values still beat success-based ones, by 2.3 and 1.7 points. The size of a play carries information about the players on it, not only noise.
+
+**F27. Success-based values are more the team's.** They repeat more for players who stay (0.33 against 0.29) and less for players who move (0.05 against 0.08). A yes-or-no outcome is steadier, but what makes it steadier stays with the team: the scheme, the line as a unit, the play-caller. It's the same pattern as F1, stronger.
+
+**F28. The context makes the VOE lasso worse, not better.** With the context expectations added and the raw outcome as the target, the EPA lasso's roster-change gain is +5.3%. The second look's lasso, on the leftover without them, got +7.8% on offense. Both are below the plain sums (+7.9%), as the second look found.
+
+## Against the pass rule and the bets
+
+**H89: failed.** By the rule written before the run, the EPA arm is better on both yardsticks.
+
+| Bet | Who | Odds | Result |
+|---|---|---|---|
+| H89 as defined (success better on both) | CEO | 75% | Failed |
+| H89 as defined | Claude | 30% | Failed |
+| The CEO's size: 5 points of error removed | CEO | | Failed: -3.4 points |
+| The success arm's movers' repeat is higher | Claude | 55% | Failed (0.05 against 0.08) |
+| Its roster-change gain is higher | Claude | 35% | Failed (-3.4 points) |
+| 5 points or more above the EPA arm | Claude | 10% | Failed |
+| Its plain plus-minus repeats 0.05 or more higher (all) | Claude | 50% | Failed (+0.03) |
+
+## The case against the fourth look
+
+- **Neither difference is clear of zero.** Each interval just touches zero (-7.25 to +0.67; -0.07 to +0.01). The verdict is by point estimates, as the rule says. "Success is no better" is solid; "success is clearly worse" isn't.
+- **The second look's caveat applies to both arms.** The new-player share isn't in the roster-change baseline, so both gains are a little high.
+- **One definition of success.** WPA above 0 wasn't tried (the CEO chose EPA).
+- **A linear model.** A logistic model of success might use the ratings differently. The plain sums, which don't depend on the model, give the same answer.
+- **The QB movers go the other way** (success +0.12 against EPA -0.07), on 36 movers. That's too few to read, but it's the one group where success travels better.

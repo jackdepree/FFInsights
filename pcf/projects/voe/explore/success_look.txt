@@ -1,0 +1,27 @@
+== THE TWO OUTCOMES, 2016-2024 regular seasons ==
+  plays 295328; success rate 0.435; EPA a play -0.003
+  2019: the situation explains 0.85% of EPA's squared error, 4.27% of success's
+  2024: the situation explains 0.73% of EPA's squared error, 3.94% of success's
+  the two leftovers agree r = 0.704 per play
+  epa: context columns present on 57% (pressure) and 39% (run yards) of the plays
+  success: context columns present on 57% (pressure) and 39% (run yards) of the plays
+
+== THE LASSO'S CHOICES (standardized coefficients on the sums of (a) and (b)) ==
+  epa: 2019 pass: 37/202 slot inputs kept, sum (a) +0.0146, sum (b) +0.0126; 2019 run: 10/202 slot inputs kept, sum (a) +0.0013, sum (b) +0.0052; 2024 pass: 21/202 slot inputs kept, sum (a) +0.0154, sum (b) +0.0157; 2024 run: 15/202 slot inputs kept, sum (a) +0.0108, sum (b) +0.0164
+  success: 2019 pass: 15/202 slot inputs kept, sum (a) +0.0071, sum (b) +0.0000; 2019 run: 35/202 slot inputs kept, sum (a) +0.0017, sum (b) +0.0082; 2024 pass: 44/202 slot inputs kept, sum (a) +0.0042, sum (b) +0.0013; 2024 run: 24/202 slot inputs kept, sum (a) +0.0086, sum (b) +0.0068
+
+== YARDSTICK 1: THE ROSTER-CHANGE TEST (a team's next-season EPA over expected a play, offense and defense pooled, 2020-2024; % of squared error removed beyond last season; 90% by resampling teams) ==
+  the CEO's design (VOE lasso, knockout)         epa: +5.26% (90% +0.53 to +9.60); offense +5.12%, defense +5.48%
+  the CEO's design (VOE lasso, knockout)     success: +1.88% (90% -0.31 to +4.37); offense +3.34%, defense -0.27%
+  the CEO's design (VOE lasso, knockout)     success less EPA: -3.38 points (90% -7.25 to +0.67)
+  the simple rung (plain sums of a and b)        epa: +7.85% (90% +2.53 to +12.85); offense +8.69%, defense +6.61%
+  the simple rung (plain sums of a and b)    success: +4.14% (90% +0.37 to +7.81); offense +5.25%, defense +2.51%
+  the simple rung (plain sums of a and b)    success less EPA: -3.71 points (90% -7.37 to +0.07)
+
+== YARDSTICK 2: THE MOVERS' REPEAT (plain plus-minus this season against next; 300+ plays in both; each season's mean out) ==
+     all (5307 pairs): EPA +0.252; success +0.278
+  stayed (4167 pairs): EPA +0.287; success +0.329
+   moved (1140 pairs): EPA +0.076; success +0.046
+  movers, success less EPA: -0.030 (90% -0.069 to +0.011)
+  movers by group (EPA | success): QB -0.07 | +0.12 (n 36); RB +0.07 | -0.04 (n 45); WR +0.12 | +0.05 (n 135); TE -0.00 | -0.02 (n 75); OL +0.11 | +0.04 (n 219); DL +0.08 | +0.01 (n 199); LB +0.09 | +0.08 (n 160); DB +0.02 | +0.05 (n 271)
+  the two arms' plus-minus agree r = 0.845 (player-seasons above)

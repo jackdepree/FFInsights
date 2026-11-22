@@ -213,6 +213,12 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 |---|---|---|---|---|---|---|---|
 | Quick-pass rate over expected, offenses | context-v2 (H87) | Attempts within 2.5 s and under 5 yards, minus the calls' and situation's expected chance (coverage included) | 0.70 (odd against even weeks, 2024; 0.57 in 2023) | 0.68 (2023 to 2024) | **trait of the offense** (its plan) | No: it doesn't forecast next game's sacks or pressure (I95 failed, context-v2's third look) | 32 offenses; spread 3.7 points |
 
+**Player values on a yes-or-no outcome** (voe's fourth look, 2026-11-21):
+
+| Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Plain plus-minus on success (EPA above 0) | voe (H89) | Ridge plus-minus of each play's success less its situation chance, one season at a time | | 0.28 (stayers 0.33, movers 0.05; EPA's: 0.25, 0.29, 0.08) | **mostly the team's** | No: worse than EPA's values on the roster-change test (-3.4 to -3.7 points) | 5,307 player-season pairs, 300+ plays in both |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
