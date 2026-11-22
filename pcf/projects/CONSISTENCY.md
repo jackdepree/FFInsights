@@ -213,6 +213,16 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 |---|---|---|---|---|---|---|---|
 | Quick-pass rate over expected, offenses | context-v2 (H87) | Attempts within 2.5 s and under 5 yards, minus the calls' and situation's expected chance (coverage included) | 0.70 (odd against even weeks, 2024; 0.57 in 2023) | 0.68 (2023 to 2024) | **trait of the offense** (its plan) | No: it doesn't forecast next game's sacks or pressure (I95 failed, context-v2's third look) | 32 offenses; spread 3.7 points |
 
+**The blame split** (context-retro's build, 2026-11-22; walk-forward chances, 2017-2024 regular seasons; season r with each season's league average out, 90% from resampling players; kept: movers' r over stayers'; `context-retro/build/split.txt`):
+
+| Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| After-pressure part per dropback, QBs | context-retro (H86) | Each sack minus its chance given the real pressure (E1), summed per dropback | | 0.42 (0.30-0.52); kept 99% (0.30-1.75; 36 movers) | **trait of the QB** on the old provider (2017-2022: 0.48, kept 96%); **noise** on the new (2023 on: 0.08) | Not tested (I112) | 2024 to 2025: −0.04; by provider in `spot_check.txt` (context-retro#R13) |
+| Pressure part per dropback, QBs | context-retro (H86) | E1 minus E0 on the sack chance, summed per dropback | | 0.46 (0.34-0.54); kept 39% (−0.08 to 0.97) | trait, partly the team's on the old provider (kept 42%); **the QB's** on the new (0.47, kept 177%, 96-352%) | Not tested | context-retro#R13 |
+| Sacks per pressure over E1, QBs | context-retro | Sacks minus E1 per pressured dropback (a sack counts as a pressure) | | 0.40 (0.28-0.50); kept 108% | **trait of the QB** | Not tested | Plain sacks per pressure 0.41, kept 104% |
+| After-pressure part per dropback, linemen | context-retro | As the QB's, per on-field lineman | | 0.29 (0.23-0.35); kept 2% | **the team's** (noise as his own) | | Every lineman sack measure keeps 0-26% |
+| Pressure part per dropback, linemen | context-retro | As the QB's, per on-field lineman | | 0.20 (0.13-0.27); kept −2% | **the team's** | | |
+
 **Player values on a yes-or-no outcome** (voe's fourth look, 2026-11-21):
 
 | Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |

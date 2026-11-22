@@ -1,0 +1,57 @@
+context-retro backtest 2017-2024 (run 7ca46aa82fe344b98e6fd1e0c534260c). share: % of squared error removed against the training mean; llg: % of log loss removed; given: % of E0's loss removed given the pressure; ladder rows: paired difference by week (loss per play) with its 90% interval; signal: 20 shuffled-within-week refits, scored on the mean.
+== pressure
+e0 shipped e0-2-trees share 4.14 llg 3.44 spread [0.205, 0.441] raw_cal {'error': 1.05, 'slope': 0.96, 'passed': 1} platt {} range None
+    e0-1-linear vs e0-0-base -0.02066 [-0.02157, -0.01979] True
+    e0-2-trees vs e0-1-linear -0.00102 [-0.00134, -0.00071] True
+   by season {'2017': 2.41, '2018': 4.07, '2019': 3.91, '2020': 4.77, '2021': 4.94, '2022': 5.11, '2023': 3.48, '2024': 4.27} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 0.6315250765612634, 'null_mean': 0.6325780656573232, 'real': 0.6090889435964585}
+== time_to_throw
+e0 shipped e0-2-trees share 10.68 llg None spread [2.386, 3.113] raw_cal {} platt {} range 0.783
+    e0-1-linear vs e0-0-base -0.01444 [-0.01543, -0.01345] True
+    e0-2-trees vs e0-1-linear -0.00410 [-0.00438, -0.00383] True
+   by season {'2017': 7.36, '2018': 7.58, '2019': 8.25, '2020': 8.88, '2021': 8.83, '2022': 8.35, '2023': 16.51, '2024': 17.52} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 1.0921834803100845, 'null_mean': 1.0946950456163251, 'real': 0.9734720694577982}
+e1 shipped e1-2-trees share 22.10 llg None spread [2.25, 3.335] raw_cal {} platt {} range 0.784
+    e1-1-linear vs e1-0-pressure -0.01341 [-0.01434, -0.01247] True
+    e1-2-trees vs e1-1-linear -0.00778 [-0.00820, -0.00740] True
+   by season {'2017': 15.27, '2018': 20.13, '2019': 19.79, '2020': 20.33, '2021': 20.48, '2022': 20.3, '2023': 28.75, '2024': 29.16} signal None
+given 7.09 {'2017': 5.12, '2018': 7.51, '2019': 6.9, '2020': 6.73, '2021': 7.04, '2022': 7.14, '2023': 8.19, '2024': 7.99}
+== sack
+e0 shipped e0-1-linear share 1.39 llg 3.05 spread [0.031, 0.101] raw_cal {'error': 0.266, 'slope': 0.92, 'passed': 1} platt {} range None
+    e0-1-linear vs e0-0-base -0.00718 [-0.00769, -0.00666] True
+    e0-2-trees vs e0-1-linear -0.00007 [-0.00037, 0.00025] False
+   by season {'2017': 1.11, '2018': 1.72, '2019': 1.01, '2020': 1.42, '2021': 1.18, '2022': 1.4, '2023': 1.79, '2024': 1.46} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 0.23508718576052387, 'null_mean': 0.23576128431593374, 'real': 0.22817936512329845}
+e1 shipped e1-1-linear share 15.39 llg 33.26 spread [0.0, 0.223] raw_cal {'error': 0.299, 'slope': 0.956, 'passed': 1} platt {} range None
+    e1-1-linear vs e1-0-pressure -0.00196 [-0.00232, -0.00158] True
+    e1-2-trees vs e1-1-linear 0.00060 [0.00029, 0.00091] False
+   by season {'2017': 16.57, '2018': 13.77, '2019': 14.32, '2020': 13.17, '2021': 14.33, '2022': 14.67, '2023': 18.43, '2024': 17.33} signal None
+given 31.12 {'2017': 33.72, '2018': 28.1, '2019': 30.11, '2020': 28.92, '2021': 30.43, '2022': 30.0, '2023': 34.16, '2024': 33.18}
+== air_yards
+e0 shipped e0-2-trees share 9.25 llg None spread [5.25, 11.035] raw_cal {} platt {} range 0.787
+    e0-1-linear vs e0-0-base -0.06775 [-0.07866, -0.05742] True
+    e0-2-trees vs e0-1-linear -0.10048 [-0.10430, -0.09658] True
+   by season {'2017': 3.92, '2018': 5.02, '2019': 6.52, '2020': 6.24, '2021': 6.14, '2022': 6.45, '2023': 19.9, '2024': 19.31} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 103.12388430061546, 'null_mean': 103.4132085515125, 'real': 93.58720451473714}
+e1 shipped e1-2-trees share 9.60 llg None spread [5.075, 11.207] raw_cal {} platt {} range 0.787
+    e1-1-linear vs e1-0-pressure -0.06164 [-0.07196, -0.05166] True
+    e1-2-trees vs e1-1-linear -0.10286 [-0.10715, -0.09883] True
+   by season {'2017': 5.01, '2018': 5.43, '2019': 6.88, '2020': 6.69, '2021': 6.71, '2022': 6.99, '2023': 19.9, '2024': 18.7} signal None
+given 0.23 {'2017': 0.55, '2018': 0.28, '2019': 0.23, '2020': 0.3, '2021': 0.24, '2022': 0.23, '2023': -0.11, '2024': 0.12}
+== completion
+e0 shipped e0-2-trees share 3.17 llg 2.49 spread [0.529, 0.738] raw_cal {'error': 0.425, 'slope': 0.99, 'passed': 1} platt {} range None
+    e0-1-linear vs e0-0-base -0.01462 [-0.01578, -0.01350] True
+    e0-2-trees vs e0-1-linear -0.00159 [-0.00199, -0.00121] True
+   by season {'2017': 1.67, '2018': 1.88, '2019': 3.22, '2020': 2.57, '2021': 2.95, '2022': 2.93, '2023': 4.97, '2024': 5.18} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 0.6510051388829811, 'null_mean': 0.6517868336706397, 'real': 0.6341239950322112}
+e1 shipped e1-2-trees share 6.11 llg 4.76 spread [0.469, 0.772] raw_cal {'error': 0.324, 'slope': 1.002, 'passed': 1} platt {} range None
+    e1-1-linear vs e1-0-pressure -0.01181 [-0.01291, -0.01076] True
+    e1-2-trees vs e1-1-linear -0.00141 [-0.00181, -0.00099] True
+   by season {'2017': 4.1, '2018': 4.84, '2019': 6.18, '2020': 6.21, '2021': 5.82, '2022': 5.81, '2023': 8.09, '2024': 7.8} signal None
+given 2.32 {'2017': 1.85, '2018': 2.29, '2019': 2.32, '2020': 2.85, '2021': 2.25, '2022': 2.27, '2023': 2.57, '2024': 2.19}
+== dropback_yards
+e0 shipped e0-2-trees share 1.57 llg None spread [4.433, 7.997] raw_cal {} platt {} range 0.824
+    e0-1-linear vs e0-0-base 0.01726 [0.01565, 0.01887] False
+    e0-2-trees vs e0-0-base -0.02516 [-0.02687, -0.02353] True
+   by season {'2017': 1.16, '2018': 1.49, '2019': 1.48, '2020': 1.41, '2021': 1.68, '2022': 1.56, '2023': 1.84, '2024': 1.94} signal {'n': 20, 'beaten': 20, 'passed': True, 'null_best': 96.77884947953716, 'null_mean': 97.00011603601433, 'real': 94.5058102197757}
+e1 shipped e1-2-trees share 5.16 llg None spread [3.042, 8.887] raw_cal {} platt {} range 0.849
+    e1-1-linear vs e1-0-pressure 0.03052 [0.02874, 0.03240] False
+    e1-2-trees vs e1-0-pressure -0.04879 [-0.05075, -0.04689] True
+   by season {'2017': 3.98, '2018': 4.63, '2019': 4.74, '2020': 5.06, '2021': 4.98, '2022': 5.19, '2023': 6.71, '2024': 5.9} signal None
+given 4.91 {'2017': 4.75, '2018': 4.46, '2019': 4.86, '2020': 4.62, '2021': 4.67, '2022': 4.94, '2023': 5.74, '2024': 5.13}
+_vintage_violations 0

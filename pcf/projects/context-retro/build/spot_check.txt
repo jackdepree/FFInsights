@@ -1,0 +1,145 @@
+context-retro spot-check: the QB's after-pressure part, 2024 to 2025 (the CEO, 2026-11-22)
+runs: backtest 7ca46aa8 (2017-2024 walk-forward), vault 86a9ba81 (2025, trained through 2024); regular season; QBs with 150+ dropbacks in both seasons unless said. Rates per 100 dropbacks.
+
+== 1. The league by season (per 100 dropbacks; e1_miss = actual sacks minus E1)
+┌────────┬───────────┬──────────┬───────┬────────────────────┬───────┬───────┬────────────────┬───────────────────┬───────────────┐
+│ season ┆ dropbacks ┆ pressure ┆ sacks ┆ sacks_per_pressure ┆ e0    ┆ e1    ┆ sack_with_both ┆ e1_miss_pressured ┆ e1_miss_clean │
+╞════════╪═══════════╪══════════╪═══════╪════════════════════╪═══════╪═══════╪════════════════╪═══════════════════╪═══════════════╡
+│ 2017   ┆ 19356     ┆ 29.375   ┆ 6.179 ┆ 21.857             ┆ 5.723 ┆ 5.966 ┆ 6.42           ┆ 1.629             ┆ -0.034        │
+│ 2018   ┆ 19669     ┆ 35.846   ┆ 6.513 ┆ 18.933             ┆ 5.807 ┆ 7.472 ┆ 6.787          ┆ -1.88             ┆ -0.017        │
+│ 2019   ┆ 19840     ┆ 34.003   ┆ 6.431 ┆ 19.697             ┆ 6.121 ┆ 6.784 ┆ 6.698          ┆ -0.222            ┆ -0.016        │
+│ 2020   ┆ 19932     ┆ 33.421   ┆ 5.694 ┆ 17.81              ┆ 6.138 ┆ 6.641 ┆ 5.952          ┆ -2.045            ┆ -0.009        │
+│ 2021   ┆ 20799     ┆ 32.998   ┆ 5.981 ┆ 18.955             ┆ 5.966 ┆ 6.387 ┆ 6.255          ┆ -0.387            ┆ -0.007        │
+│ 2022   ┆ 20210     ┆ 33.857   ┆ 6.418 ┆ 19.844             ┆ 6.065 ┆ 6.546 ┆ 6.718          ┆ 0.527             ┆ -0.009        │
+│ 2023   ┆ 20693     ┆ 29.498   ┆ 6.814 ┆ 23.1               ┆ 6.28  ┆ 5.715 ┆ 6.814          ┆ 3.748             ┆ -0.009        │
+│ 2024   ┆ 20116     ┆ 30.871   ┆ 6.532 ┆ 21.159             ┆ 6.547 ┆ 6.895 ┆ 6.532          ┆ -1.102            ┆ -0.033        │
+│ 2025   ┆ 19734     ┆ 29.771   ┆ 6.522 ┆ 21.906             ┆ 6.671 ┆ 6.414 ┆ 6.522          ┆ 0.389             ┆ -0.012        │
+└────────┴───────────┴──────────┴───────┴────────────────────┴───────┴───────┴────────────────┴───────────────────┴───────────────┘
+
+== 2-4. Each season pair: plain r with next season (sacks_db, after, press_part, sacks_press), the after part's rank r, stayers only, QBs in year 3+ only (young = in their first or second season in the first year); rel_* = within-season reliability (odd against even weeks, stepped up to a season) in the first (a) and second (b) season; after_ceiling = the most r could be given those reliabilities
+┌─────────┬─────┬────────┬───────┬──────────┬───────┬────────────┬─────────────┬────────────┬───────────────┬─────────────────┬───────────────┬─────────────┬─────────────┬─────────────┬─────────────┐
+│ pair    ┆ qbs ┆ movers ┆ young ┆ sacks_db ┆ after ┆ press_part ┆ sacks_press ┆ after_rank ┆ after_stayers ┆ after_year3plus ┆ after_ceiling ┆ rel_after_a ┆ rel_after_b ┆ rel_sacks_a ┆ rel_sacks_b │
+╞═════════╪═════╪════════╪═══════╪══════════╪═══════╪════════════╪═════════════╪════════════╪═══════════════╪═════════════════╪═══════════════╪═════════════╪═════════════╪═════════════╪═════════════╡
+│ 2017-18 ┆ 27  ┆ 4      ┆ 6     ┆ 0.34     ┆ 0.366 ┆ 0.366      ┆ 0.335       ┆ 0.449      ┆ 0.364         ┆ 0.448           ┆ 0.675         ┆ 0.669       ┆ 0.682       ┆ 0.656       ┆ 0.781       │
+│ 2018-19 ┆ 27  ┆ 4      ┆ 7     ┆ 0.458    ┆ 0.619 ┆ 0.218      ┆ 0.635       ┆ 0.526      ┆ 0.639         ┆ 0.572           ┆ 0.486         ┆ 0.682       ┆ 0.346       ┆ 0.781       ┆ 0.251       │
+│ 2019-20 ┆ 29  ┆ 4      ┆ 9     ┆ 0.458    ┆ 0.463 ┆ 0.455      ┆ 0.465       ┆ 0.474      ┆ 0.439         ┆ 0.481           ┆ 0.263         ┆ 0.346       ┆ 0.2         ┆ 0.251       ┆ 0.209       │
+│ 2020-21 ┆ 28  ┆ 7      ┆ 6     ┆ 0.263    ┆ 0.273 ┆ 0.678      ┆ 0.255       ┆ 0.349      ┆ 0.338         ┆ 0.253           ┆ 0.337         ┆ 0.2         ┆ 0.568       ┆ 0.209       ┆ 0.635       │
+│ 2021-22 ┆ 31  ┆ 6      ┆ 9     ┆ 0.651    ┆ 0.591 ┆ 0.522      ┆ 0.601       ┆ 0.488      ┆ 0.587         ┆ 0.577           ┆ 0.506         ┆ 0.568       ┆ 0.45        ┆ 0.635       ┆ 0.447       │
+│ 2022-23 ┆ 28  ┆ 5      ┆ 6     ┆ 0.623    ┆ 0.335 ┆ 0.448      ┆ 0.371       ┆ 0.431      ┆ 0.323         ┆ 0.334           ┆ 0.364         ┆ 0.45        ┆ 0.294       ┆ 0.447       ┆ 0.63        │
+│ 2023-24 ┆ 29  ┆ 6      ┆ 5     ┆ 0.519    ┆ 0.226 ┆ 0.524      ┆ 0.199       ┆ 0.115      ┆ 0.261         ┆ 0.224           ┆ 0.403         ┆ 0.294       ┆ 0.552       ┆ 0.63        ┆ 0.653       │
+│ 2024-25 ┆ 31  ┆ 8      ┆ 7     ┆ 0.141    ┆ -0.04 ┆ 0.368      ┆ -0.003      ┆ 0.064      ┆ -0.157        ┆ -0.007          ┆ 0.368         ┆ 0.552       ┆ 0.245       ┆ 0.653       ┆ 0.41        │
+└─────────┴─────┴────────┴───────┴──────────┴───────┴────────────┴─────────────┴────────────┴───────────────┴─────────────────┴───────────────┴─────────────┴─────────────┴─────────────┴─────────────┘
+
+== 2. Chance: 31 QBs drawn 5,000 times from the 2017-2023 pairs (199 pairs)
+  the after part: r 0.42 on average (90%: 0.19 to 0.62); as low as -0.04 in 0.1% of draws
+  sacks per dropback: r 0.49 on average (90%: 0.27 to 0.68); as low as 0.14 in 0.7% of draws
+  both as low at once: 0.0% of draws
+
+== 3. The 2024-25 QBs (after part and sacks per 100 dropbacks; year = his NFL season in 2024; r_without = the after part's r leaving him out; sorted by how much he pulls r down)
+┌──────────────────┬──────┬────────┬──────┬─────┬──────┬──────────┬──────────┬──────────┬──────────┬───────────┬────────┐
+│ name             ┆ team ┆ team_n ┆ year ┆ db  ┆ db_n ┆ sacks_24 ┆ sacks_25 ┆ after_24 ┆ after_25 ┆ r_without ┆ change │
+╞══════════════════╪══════╪════════╪══════╪═════╪══════╪══════════╪══════════╪══════════╪══════════╪═══════════╪════════╡
+│ Lamar Jackson    ┆ BAL  ┆ BAL    ┆ 7    ┆ 538 ┆ 366  ┆ 4.275    ┆ 9.836    ┆ -3.62    ┆ 2.373    ┆ 0.096     ┆ 0.136  │
+│ Caleb Williams   ┆ CHI  ┆ CHI    ┆ 1    ┆ 676 ┆ 633  ┆ 10.059   ┆ 3.791    ┆ 2.357    ┆ -2.342   ┆ 0.052     ┆ 0.092  │
+│ Josh Allen       ┆ BUF  ┆ BUF    ┆ 7    ┆ 539 ┆ 547  ┆ 2.597    ┆ 7.313    ┆ -3.508   ┆ 1.442    ┆ 0.04      ┆ 0.08   │
+│ Joe Flacco       ┆ IND  ┆ CIN    ┆ 17   ┆ 269 ┆ 434  ┆ 6.691    ┆ 4.147    ┆ 0.38     ┆ -2.549   ┆ -0.014    ┆ 0.026  │
+│ Kyler Murray     ┆ ARI  ┆ ARI    ┆ 6    ┆ 611 ┆ 193  ┆ 4.91     ┆ 8.29     ┆ -0.806   ┆ 2.503    ┆ -0.024    ┆ 0.016  │
+│ Jayden Daniels   ┆ WAS  ┆ WAS    ┆ 1    ┆ 597 ┆ 242  ┆ 7.873    ┆ 7.438    ┆ 1.491    ┆ -0.776   ┆ -0.024    ┆ 0.016  │
+│ Spencer Rattler  ┆ NO   ┆ NO     ┆ 1    ┆ 263 ┆ 288  ┆ 8.365    ┆ 6.25     ┆ 0.584    ┆ -1.166   ┆ -0.026    ┆ 0.014  │
+│ Kirk Cousins     ┆ ATL  ┆ ATL    ┆ 13   ┆ 480 ┆ 281  ┆ 5.833    ┆ 4.626    ┆ -0.038   ┆ -2.246   ┆ -0.03     ┆ 0.009  │
+│ Baker Mayfield   ┆ TB   ┆ TB     ┆ 7    ┆ 651 ┆ 620  ┆ 6.144    ┆ 5.806    ┆ 0.253    ┆ -0.587   ┆ -0.036    ┆ 0.004  │
+│ Sam Darnold      ┆ MIN  ┆ SEA    ┆ 7    ┆ 620 ┆ 514  ┆ 7.742    ┆ 5.253    ┆ 0.566    ┆ -0.431   ┆ -0.037    ┆ 0.003  │
+│ C.J. Stroud      ┆ HOU  ┆ HOU    ┆ 2    ┆ 620 ┆ 468  ┆ 8.387    ┆ 4.915    ┆ -0.182   ┆ -0.885   ┆ -0.038    ┆ 0.002  │
+│ Trevor Lawrence  ┆ JAX  ┆ JAX    ┆ 4    ┆ 314 ┆ 641  ┆ 5.732    ┆ 6.396    ┆ -0.497   ┆ 0.609    ┆ -0.039    ┆ 0.001  │
+│ Daniel Jones     ┆ NYG  ┆ IND    ┆ 6    ┆ 381 ┆ 426  ┆ 7.612    ┆ 5.164    ┆ 0.12     ┆ -0.348   ┆ -0.039    ┆ 0.001  │
+│ Jacoby Brissett  ┆ NE   ┆ ARI    ┆ 9    ┆ 187 ┆ 549  ┆ 9.626    ┆ 7.832    ┆ -0.331   ┆ 0.302    ┆ -0.04     ┆ -0.0   │
+│ Jared Goff       ┆ DET  ┆ DET    ┆ 9    ┆ 581 ┆ 619  ┆ 5.336    ┆ 6.139    ┆ 0.097    ┆ -0.083   ┆ -0.041    ┆ -0.001 │
+│ Mac Jones        ┆ JAX  ┆ SF     ┆ 4    ┆ 290 ┆ 310  ┆ 4.828    ┆ 5.161    ┆ -0.2     ┆ 0.476    ┆ -0.042    ┆ -0.002 │
+│ Joe Burrow       ┆ CIN  ┆ CIN    ┆ 5    ┆ 721 ┆ 284  ┆ 6.657    ┆ 5.986    ┆ -0.528   ┆ -0.928   ┆ -0.042    ┆ -0.002 │
+│ Aaron Rodgers    ┆ NYJ  ┆ PIT    ┆ 20   ┆ 640 ┆ 536  ┆ 6.25     ┆ 5.41     ┆ -0.03    ┆ 0.867    ┆ -0.046    ┆ -0.006 │
+│ Jalen Hurts      ┆ PHI  ┆ PHI    ┆ 5    ┆ 437 ┆ 524  ┆ 8.696    ┆ 6.107    ┆ 2.474    ┆ -0.103   ┆ -0.047    ┆ -0.007 │
+│ Patrick Mahomes  ┆ KC   ┆ KC     ┆ 8    ┆ 652 ┆ 586  ┆ 5.521    ┆ 5.802    ┆ -1.715   ┆ -0.531   ┆ -0.047    ┆ -0.008 │
+│ Justin Herbert   ┆ LAC  ┆ LAC    ┆ 5    ┆ 573 ┆ 615  ┆ 7.155    ┆ 8.78     ┆ 0.223    ┆ 0.661    ┆ -0.048    ┆ -0.008 │
+│ Tua Tagovailoa   ┆ MIA  ┆ MIA    ┆ 5    ┆ 425 ┆ 423  ┆ 4.941    ┆ 7.092    ┆ 0.299    ┆ 1.336    ┆ -0.056    ┆ -0.016 │
+│ Drake Maye       ┆ NE   ┆ NE     ┆ 1    ┆ 416 ┆ 601  ┆ 8.173    ┆ 7.82     ┆ 0.291    ┆ 1.503    ┆ -0.058    ┆ -0.018 │
+│ Brock Purdy      ┆ SF   ┆ SF     ┆ 3    ┆ 525 ┆ 313  ┆ 5.905    ┆ 3.514    ┆ -0.946   ┆ -2.134   ┆ -0.058    ┆ -0.018 │
+│ Bryce Young      ┆ CAR  ┆ CAR    ┆ 2    ┆ 450 ┆ 536  ┆ 6.444    ┆ 5.037    ┆ -1.271   ┆ -1.533   ┆ -0.059    ┆ -0.019 │
+│ Matthew Stafford ┆ LA   ┆ LA     ┆ 16   ┆ 547 ┆ 624  ┆ 5.119    ┆ 3.686    ┆ -1.783   ┆ -1.123   ┆ -0.061    ┆ -0.021 │
+│ Dak Prescott     ┆ DAL  ┆ DAL    ┆ 9    ┆ 311 ┆ 654  ┆ 6.752    ┆ 4.74     ┆ -1.137   ┆ -2.039   ┆ -0.063    ┆ -0.023 │
+│ Justin Fields    ┆ PIT  ┆ NYJ    ┆ 4    ┆ 195 ┆ 257  ┆ 8.205    ┆ 10.506   ┆ 0.176    ┆ 2.706    ┆ -0.067    ┆ -0.028 │
+│ Jordan Love      ┆ GB   ┆ GB     ┆ 5    ┆ 451 ┆ 483  ┆ 3.104    ┆ 4.348    ┆ -2.825   ┆ -1.677   ┆ -0.101    ┆ -0.061 │
+│ Bo Nix           ┆ DEN  ┆ DEN    ┆ 1    ┆ 640 ┆ 669  ┆ 3.75     ┆ 3.288    ┆ -2.425   ┆ -2.235   ┆ -0.109    ┆ -0.069 │
+│ Geno Smith       ┆ SEA  ┆ LV     ┆ 12   ┆ 650 ┆ 519  ┆ 7.692    ┆ 10.597   ┆ 0.953    ┆ 3.185    ┆ -0.117    ┆ -0.077 │
+└──────────────────┴──────┴────────┴──────┴─────┴──────┴──────────┴──────────┴──────────┴──────────┴───────────┴────────┘
+  without the three that pull it down most (Lamar Jackson, Caleb Williams, Josh Allen): r 0.36
+
+== 4b. QBs with 300+ dropbacks both seasons: the after part's r by pair
+  2017-18 +0.29 (22); 2018-19 +0.55 (21); 2019-20 +0.29 (23); 2020-21 +0.33 (22); 2021-22 +0.62 (26); 2022-23 +0.48 (20); 2023-24 +0.07 (21); 2024-25 +0.02 (22)
+
+== 5. The vault's scoring: within each season, how the QB's after part lines up with his plain sack numbers (r across QBs), and how spread out QBs are (sd, per 100 dropbacks). 2025 is scored by the vault model (trained through 2024), the rest walk-forward
+┌────────┬─────┬───────────────────────┬────────────────┬─────────────────────┬──────────┬─────────────┐
+│ season ┆ qbs ┆ after~sacks_per_press ┆ after~sacks_db ┆ press_part~sacks_db ┆ after_sd ┆ sacks_db_sd │
+╞════════╪═════╪═══════════════════════╪════════════════╪═════════════════════╪══════════╪═════════════╡
+│ 2017   ┆ 40  ┆ 0.982                 ┆ 0.783          ┆ 0.395               ┆ 1.896    ┆ 1.926       │
+│ 2018   ┆ 39  ┆ 0.976                 ┆ 0.903          ┆ 0.657               ┆ 1.919    ┆ 2.391       │
+│ 2019   ┆ 39  ┆ 0.979                 ┆ 0.871          ┆ 0.365               ┆ 1.981    ┆ 2.161       │
+│ 2020   ┆ 41  ┆ 0.976                 ┆ 0.819          ┆ 0.501               ┆ 1.586    ┆ 1.831       │
+│ 2021   ┆ 39  ┆ 0.983                 ┆ 0.833          ┆ 0.275               ┆ 1.7      ┆ 1.693       │
+│ 2022   ┆ 41  ┆ 0.982                 ┆ 0.862          ┆ 0.455               ┆ 1.987    ┆ 1.976       │
+│ 2023   ┆ 45  ┆ 0.976                 ┆ 0.904          ┆ 0.657               ┆ 1.838    ┆ 2.625       │
+│ 2024   ┆ 44  ┆ 0.974                 ┆ 0.796          ┆ 0.63                ┆ 1.645    ┆ 2.224       │
+│ 2025   ┆ 43  ┆ 0.977                 ┆ 0.879          ┆ 0.448               ┆ 1.767    ┆ 2.143       │
+└────────┴─────┴───────────────────────┴────────────────┴─────────────────────┴──────────┴─────────────┘
+
+== Offenses (32 teams, no model in it): sacks per dropback and pressures per dropback, r with next season
+  2017-18 sacks +0.11 pressures +0.19; 2018-19 sacks +0.47 pressures +0.06; 2019-20 sacks +0.21 pressures +0.29; 2020-21 sacks +0.35 pressures +0.50; 2021-22 sacks +0.57 pressures +0.54; 2022-23 sacks +0.52 pressures +0.46; 2023-24 sacks +0.35 pressures +0.35; 2024-25 sacks +0.15 pressures +0.09
+
+== Fairness 1: the same cherry-pick in every pair (leave out the 3 QBs whose removal raises the after part's r most)
+  2017-18 +0.37 -> +0.53; 2018-19 +0.62 -> +0.81; 2019-20 +0.46 -> +0.71; 2020-21 +0.27 -> +0.51; 2021-22 +0.59 -> +0.71; 2022-23 +0.33 -> +0.49; 2023-24 +0.23 -> +0.40; 2024-25 -0.04 -> +0.36
+
+== Fairness 2: pooled by provider (each season's mean out; 2022-23 crosses the change and is left out)
+  old provider (pairs 2017-18 to 2021-22), 142 pairs: sacks per dropback +0.45; after-pressure part +0.48; pressure part +0.44; sacks per pressure +0.46
+  new provider (pairs 2023-24, 2024-25), 60 pairs: sacks per dropback +0.36; after-pressure part +0.08; pressure part +0.47; sacks per pressure +0.09
+  2023 to 2025, skipping 2024 (24 QBs): after part r -0.00
+
+
+== The owners yardstick by provider (QBs 150+ dropbacks both seasons, linemen 300+; repeat with each season's league level out; share kept = movers' r over stayers')
+  old provider, pairs 2017-18 to 2021-22:
+    QB sacks per pressure (a sack counts): pairs 142 (movers 25), repeat +0.46 (+0.32 to +0.58), kept 102% (10% to 180%), passes True
+    QB sacks per pressure over E1: pairs 142 (movers 25), repeat +0.46 (+0.33 to +0.58), kept 101% (19% to 174%), passes True
+    QB sacks per dropback: pairs 142 (movers 25), repeat +0.45 (+0.29 to +0.56), kept 67% (-27% to 161%), passes True
+    QB sack over E0 per dropback (the whole): pairs 142 (movers 25), repeat +0.46 (+0.31 to +0.57), kept 66% (-19% to 155%), passes True
+    QB after-pressure part per dropback: pairs 142 (movers 25), repeat +0.48 (+0.33 to +0.59), kept 96% (14% to 175%), passes True
+    QB pressure part per dropback: pairs 142 (movers 25), repeat +0.44 (+0.30 to +0.55), kept 42% (-27% to 106%), passes False
+    OL sacks per pressure (a sack counts): pairs 534 (movers 91), repeat +0.34 (+0.27 to +0.41), kept -14% (-62% to 30%), passes False
+    OL sacks per pressure over E1: pairs 534 (movers 91), repeat +0.34 (+0.26 to +0.40), kept -15% (-64% to 29%), passes False
+    OL sacks per dropback: pairs 534 (movers 91), repeat +0.28 (+0.21 to +0.35), kept 17% (-33% to 69%), passes False
+    OL sack over E0 per dropback (the whole): pairs 534 (movers 91), repeat +0.28 (+0.20 to +0.35), kept 10% (-42% to 65%), passes False
+    OL after-pressure part per dropback: pairs 534 (movers 91), repeat +0.31 (+0.23 to +0.39), kept -24% (-74% to 21%), passes False
+    OL pressure part per dropback: pairs 534 (movers 91), repeat +0.20 (+0.11 to +0.28), kept 41% (-46% to 150%), passes False
+  new provider, pairs 2023-24 and 2024-25:
+    QB sacks per pressure (a sack counts): pairs 60 (movers 14), repeat +0.09 (-0.12 to +0.28), kept 109% (-1553% to 1713%), passes False
+    QB sacks per pressure over E1: pairs 60 (movers 14), repeat +0.06 (-0.15 to +0.25), kept 278% (-1444% to 1440%), passes False
+    QB sacks per dropback: pairs 60 (movers 14), repeat +0.36 (+0.17 to +0.53), kept 160% (33% to 554%), passes True
+    QB sack over E0 per dropback (the whole): pairs 60 (movers 14), repeat +0.29 (+0.08 to +0.48), kept 183% (-510% to 737%), passes True
+    QB after-pressure part per dropback: pairs 60 (movers 14), repeat +0.08 (-0.12 to +0.29), kept 180% (-1192% to 1310%), passes False
+    QB pressure part per dropback: pairs 60 (movers 14), repeat +0.47 (+0.32 to +0.60), kept 177% (96% to 352%), passes True
+    OL sacks per pressure (a sack counts): pairs 226 (movers 38), repeat +0.21 (+0.10 to +0.31), kept 67% (-69% to 237%), passes True
+    OL sacks per pressure over E1: pairs 226 (movers 38), repeat +0.20 (+0.09 to +0.29), kept 72% (-60% to 248%), passes False
+    OL sacks per dropback: pairs 226 (movers 38), repeat +0.26 (+0.16 to +0.36), kept -4% (-90% to 104%), passes False
+    OL sack over E0 per dropback (the whole): pairs 226 (movers 38), repeat +0.22 (+0.12 to +0.32), kept 7% (-99% to 141%), passes False
+    OL after-pressure part per dropback: pairs 226 (movers 38), repeat +0.20 (+0.10 to +0.30), kept 75% (-45% to 240%), passes True
+    OL pressure part per dropback: pairs 226 (movers 38), repeat +0.10 (-0.01 to +0.20), kept -179% (-488% to -53%), passes False
+  all, pairs 2017-18 to 2024-25:
+    QB sacks per pressure (a sack counts): pairs 230 (movers 44), repeat +0.36 (+0.24 to +0.46), kept 112% (36% to 211%), passes True
+    QB sacks per pressure over E1: pairs 230 (movers 44), repeat +0.35 (+0.23 to +0.45), kept 115% (39% to 223%), passes True
+    QB sacks per dropback: pairs 230 (movers 44), repeat +0.45 (+0.33 to +0.55), kept 87% (43% to 141%), passes True
+    QB sack over E0 per dropback (the whole): pairs 230 (movers 44), repeat +0.44 (+0.32 to +0.54), kept 90% (48% to 151%), passes True
+    QB after-pressure part per dropback: pairs 230 (movers 44), repeat +0.37 (+0.25 to +0.47), kept 106% (37% to 203%), passes True
+    QB pressure part per dropback: pairs 230 (movers 44), repeat +0.45 (+0.35 to +0.53), kept 65% (13% to 119%), passes True
+    OL sacks per pressure (a sack counts): pairs 870 (movers 146), repeat +0.28 (+0.23 to +0.34), kept 10% (-34% to 55%), passes False
+    OL sacks per pressure over E1: pairs 870 (movers 146), repeat +0.27 (+0.22 to +0.33), kept 12% (-34% to 59%), passes False
+    OL sacks per dropback: pairs 870 (movers 146), repeat +0.29 (+0.23 to +0.34), kept 18% (-22% to 57%), passes False
+    OL sack over E0 per dropback (the whole): pairs 870 (movers 146), repeat +0.27 (+0.21 to +0.32), kept 18% (-24% to 59%), passes False
+    OL after-pressure part per dropback: pairs 870 (movers 146), repeat +0.26 (+0.20 to +0.32), kept 3% (-43% to 49%), passes False
+    OL pressure part per dropback: pairs 870 (movers 146), repeat +0.17 (+0.11 to +0.23), kept -13% (-82% to 56%), passes False
