@@ -1,6 +1,6 @@
 # Context, the next version (`context-v2`)
 
-> **Status:** draft brief, kickoff 2026-11-20; the CEO chose method A first and put routes and coverage in scope ("Ok let's start with A. I think routes and coverage should be in scope."); first look pre-registered in [EXPLORATION.md](EXPLORATION.md) (the CEO: "Next thing I want to explore is possibly another exploration or a brainstorm on how we can improve the context expert model"). It is agreed after the exploration (CLAUDE.md, lifecycle step 3). Builds on `context-live` (RESULTS.md) and its back-history (decision 0038).
+> **Status:** draft brief, kickoff 2026-11-20; four looks done (EXPLORATION.md) and the build section drafted 2026-11-21 ("The brief, after the exploration", at the end), for the CEO to agree; the CEO chose method A first and put routes and coverage in scope ("Ok let's start with A. I think routes and coverage should be in scope."); first look pre-registered in [EXPLORATION.md](EXPLORATION.md) (the CEO: "Next thing I want to explore is possibly another exploration or a brainstorm on how we can improve the context expert model"). It is agreed after the exploration (CLAUDE.md, lifecycle step 3). Builds on `context-live` (RESULTS.md) and its back-history (decision 0038).
 
 ## The usual way
 
@@ -57,3 +57,64 @@ The same exploration steps come first for every method: (1) the room (the ceilin
 **The tempting bad option:** train one model on every tier, the play's own outcomes included, and score it as a before-the-snap forecast. It would explain far more than 4%, and all of it would be leak: the catchable ball says the pass was completed. What separates good from bad is which conditions are allowed for which use. Before the snap: calls only. To split blame on a play: the earlier outcomes, never the one being credited.
 
 **Claude's recommendation:** A first, as the bar every other method must beat (rule k), then C against A on the same plays, so the CEO's method gets a fair test against the cheap one. B only if C is too slow to score.
+
+## The brief, after the exploration (a draft for the build, 2026-11-21; for the CEO to agree)
+
+The CEO, 2026-11-20: "Can you please draft the build for the chain and explore the blame split?" This section is the handoff to the build chat (the CEO, 2026-11-20: "This chat is reserved for vision and strategy and meta analysis for pcf. Our other chat is reserved for full builds."). It's a draft until the CEO agrees it.
+
+**The question.** Build the chain of per-play expectations as `context-retro` (the registry's planned retrospective context expert): for every dropback 2016 on, each outcome's expectation in the play's order, in two modes, before the snap and given the real pressure, plus the blame split (which part of each sack is the pressure's and which is the QB's after it).
+
+**Why it matters.** Before the snap, no method gets much more out of a single play (F1, F7): the room is in information, and the information after the season is retrospective. The given-pressure mode is where context-v2 found real size (sack's share 13% to 17% in every season, against 1% to 2% before the snap), and the split gives `qb-talent` and `line-play` an owner on each part of a sack (F13, F14). The in-season `context-live` stays as it is: T1 matched it (first look), and the chain adds nothing before the snap (F4).
+
+**What the exploration settled:**
+
+| Use | Ignore |
+|---|---|
+| Boosted trees, one per outcome, in the play's order (method A) | The diffusion model as a forecaster (H85 failed; parked as a simulator, I96) |
+| Coverage and man or zone as inputs (2018 on): +1 point for completion and depth (F2) | The earlier steps' expected values as inputs before the snap (F4: nothing, depth worse) |
+| The given-pressure mode for time to throw, sack, depth, completion, yards (F3; nine seasons in the fourth look) | Time to throw as a condition for the sack: it is missing on 98% of sacks (F6) |
+| A sack counted as a pressure, in every season (the fourth look's data fact) | Participation's `route` as a play design: it's only the target's (F6) |
+| The split: pressure part (E1 - E0) and after-pressure part (sack - E1), summed by player | An offense's quick-pass rate as a forecast input (I95 failed) |
+| | Adjusting a QB's season rates for the calls: it changes nothing (F16, H84) |
+
+**The terms.**
+- **E0:** an outcome's chance (or expected value) before the snap, from the calls.
+- **E1:** the same, given whether the play had a pressure.
+- **The pressure part:** E1 - E0 for the sack: how much the pressure, or its absence, moved the sack chance.
+- **The after-pressure part:** the sack (0 or 1) minus E1: what happened once the pressure was known.
+- The two add up to the sack over expected (sack - E0).
+
+**Assumptions.** The play's order is pressure, then time to throw, then the sack or the throw, then depth, completion and yards. Participation's pressure is a consistent judgment within each provider (2016-2022, 2023 on). Retrospective data feeds in-season models only from completed seasons (rule m).
+
+**Goals for the build.**
+1. `context-retro`, retrospective cadence: walk-forward E0 and E1 for the six dropback outcomes, 2017-2024 (participation's outcomes trained within their provider, as in decision 0038), and the 2025 vault once.
+2. The split per dropback, and summed per player-game for the passer and the five linemen (player_game output).
+3. Hand the QB's after-pressure part and sacks per pressure (fixed denominator) to skill-over-expected's trait table, replacing its "sacks per pressure, until I90" row (FINDINGS F20).
+
+**Tests (proposed by Claude; what counts as success is the CEO's call):**
+- **The no-noise target** (rule k), outcome by outcome (the CEO's test): each walk-forward E0 beats a shuffled copy of itself and the training mean on held-out seasons, in log loss or squared error, with calibration by tenths.
+- **The given-pressure mode:** E1's sack log-loss gain over E0 is 25% or more in every held-out season (the first look: 33%).
+- **The split, out of sample:** with walk-forward chances, the QB's after-pressure part still repeats 0.2+ and QB movers keep half (F13 replicated).
+- **H88's test, the downstream gain:** does the crude forecaster's yards forecast improve when context-retro's season priors replace context-live's? (H88 is open: the CEO's 50%, Claude's 10% as worded.)
+- **Failure:** E0 doesn't beat the shuffled copy, or the split's owners don't hold out of sample. Then context-live alone ships, and the split stays a discovery.
+
+**Inputs and outputs.**
+- **Inputs:** play-by-play; participation (pressure, time to throw, rushers, box, coverage, man or zone; retrospective); FTN's calls where charted (2022 on); the on-field map; the main-team table.
+- **Outputs:**
+  - `outputs/context-retro/<run_id>/history.parquet`: the standard schema, keyed by game and play, with quantities `<outcome>_e0` and `<outcome>_e1`, plus `sack_pressure_part` and `sack_after_part`;
+  - `player_game.parquet`: each passer's and lineman's sums of the parts, dropbacks and pressures.
+- **Cadence:** retrospective; a season's rows are known after its participation release.
+
+**How it will be used.**
+- By `qb-talent` (sack avoidance after pressure, as the QB's) and `line-play` (the pressure part, as the line's and the scheme's, not one lineman's).
+- By skill-over-expected's trait table.
+- By later in-season models, as priors from completed seasons.
+
+**Technical calls (Claude's, for the CEO to veto before the build starts):**
+1. One model per outcome and mode, trees with context-live's settings. Seasons without a field (coverage before 2018, FTN before 2022) get it as missing, not a separate edition per era.
+2. Participation outcomes and the pressure condition trained within their provider; the sack and completion from play-by-play trained on every earlier season.
+3. A sack counts as a pressure in every season; dropbacks with the flag missing otherwise are left out of E1's training and scored with E0 only.
+4. Fix the main-team table's tie-break, so movers don't change between runs.
+5. The ladder for each outcome: the training mean, then linear, then trees, keeping a rung only if it beats the one below on held-out seasons (rule k).
+
+**Plan.** One build session in the build chat, after the CEO agrees this section. It starts from this brief, EXPLORATION.md (four looks), decisions 0038 and 0039, and the registry.

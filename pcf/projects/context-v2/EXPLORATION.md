@@ -334,3 +334,63 @@ So a play's sack over expected splits into two parts that add up: **the pressure
 - QB movers keep more of the after-pressure part than lineman movers do (it's the QB's): 65%.
 - QB movers keep under half of the pressure part (it isn't the QB's): 60%.
 - QB completion over E1 repeats within 0.03 of completion over E0 (the pressure barely reorders QBs): 60%.
+
+### Fourth look: the results ([`explore/fourth_look.py`](explore/fourth_look.py), output [`fourth_look.txt`](explore/fourth_look.txt))
+
+189,243 dropbacks, 2016-2024; 5,925 with the pressure flag missing (not sacks) left out. Season pairs 2017-2024 in the regular season: 196 QB pairs (35 movers), 739 lineman pairs (124 movers). The run was cut off once by a shutdown and once by a missing column (fixed); the saved output is the third, complete run. An earlier complete run gave the same table except a lineman's pressure part kept 9% instead of 22% (the main-team table breaks ties differently between runs); both are under half.
+
+**The two chances** (the share of the sack's squared error removed, by season): before the snap (E0) 0.4% to 2.0%; given the pressure (E1) **12.8% to 16.8%**, in both providers. Completion: 1.2% to 2.6% before the snap, 3.7% to 5.7% given the pressure. The first look's F3 holds across nine seasons.
+
+**Every measure** (each season's league average out; the repeat is the correlation with next season, 90% interval from resampling players; share kept is movers' repeat over stayers'; the bar is 0.2+ and half kept):
+
+| Who | Measure | Repeat | Stayers | Movers | Share kept | Passes |
+|---|---|---|---|---|---|---|
+| QB | Sacks per pressure, plain (a sack counted as a pressure) | 0.44 (0.32-0.53) | 0.44 | 0.47 | **107%** | yes |
+| QB | Sacks per pressure over E1 (**I94**) | 0.43 (0.31-0.53) | 0.43 | 0.47 | 109% | yes |
+| QB | Sacks per dropback, plain | 0.53 (0.41-0.62) | 0.54 | 0.44 | 81% | yes |
+| QB | Sacks over E0 per dropback (the whole) | 0.50 (0.38-0.60) | 0.51 | 0.43 | 84% | yes |
+| QB | **The after-pressure part** per dropback | 0.45 (0.32-0.54) | 0.45 | 0.45 | **101%** | yes |
+| QB | **The pressure part** per dropback | 0.45 (0.34-0.53) | 0.51 | 0.24 | **47%** | no |
+| OL | Sacks per pressure, plain | 0.31 (0.25-0.37) | 0.36 | 0.04 | 11% | no |
+| OL | Sacks per pressure over E1 | 0.29 (0.23-0.35) | 0.34 | 0.05 | 16% | no |
+| OL | Sacks per dropback, plain | 0.31 (0.25-0.37) | 0.35 | 0.10 | 29% | no |
+| OL | Sacks over E0 per dropback (the whole) | 0.28 (0.21-0.34) | 0.31 | 0.12 | 37% | no |
+| OL | **The after-pressure part** per dropback | 0.27 (0.20-0.34) | 0.32 | 0.01 | **4%** | no |
+| OL | **The pressure part** per dropback | 0.20 (0.13-0.27) | 0.24 | 0.05 | **22%** | no |
+| QB | Completion, plain | 0.47 (0.34-0.59) | 0.50 | 0.32 | 65% | yes |
+| QB | Completion over E0 | 0.47 (0.33-0.58) | 0.49 | 0.33 | 68% | yes |
+| QB | Completion over E1 (given the pressure) | 0.46 (0.33-0.56) | 0.48 | 0.35 | 73% | yes |
+
+### What the fourth look found
+
+**F13. What happens after a pressure belongs to the QB.** The after-pressure part of a play's sack (sack minus its chance given the pressure) repeats 0.45 for QBs, and QBs who change teams keep all of it (101%). Linemen who change teams keep none of theirs (4%). That is the cleanest owner split PCF has measured.
+
+**F14. The pressure itself belongs to neither alone.** The pressure part (how much the pressure, or the lack of one, raised the sack chance) repeats 0.45 on a QB's dropbacks, but a QB who moves keeps 47% of it, and a lineman who moves keeps 22%. Half goes with the QB (holding the ball: FINDINGS F32, time to throw), and the rest stays with the team: the line as a unit and its scheme, not any one lineman (as FINDINGS F10 found for pressures).
+
+**F15. Sacks per pressure is a QB trait once a sack counts as a pressure.** Before 2023, participation leaves the pressure flag empty on every sack, so the old "sacks per pressure" was sacks over pressures without sacks. Fixed, it repeats 0.44 and QB movers keep 107%. Skill-over-expected's H82 row (0.20, QB movers keeping -46%) and FINDINGS F20's caveat came from the trap, not the football.
+
+**F16. The adjustment for the calls adds nothing to the QB's numbers.** Sacks per pressure over E1 (0.43, kept 109%) and plain (0.44, 107%) are the same; completion over E1 (0.46) and over E0 (0.47) too. At season level, the calls average out (as H84 found). The split's value is the decomposition, not the adjustment: it says which part of each sack is whose, and the parts add up to the play.
+
+### The idea
+
+| # | Verdict | Why |
+|---|---|---|
+| I94 | **Unclear** | By the rule: sacks per pressure over E1 repeats 0.43, no more than the plain rate's 0.44 (so not held), but QB movers keep 109% (so not failed). The football the idea was after holds strongly (F13: the after-pressure part is the QB's, kept 101% against linemen's 4%); the adjustment for the calls is what adds nothing |
+
+### The odds, scored
+
+| Bet | Claude | Result |
+|---|---|---|
+| I94: repeats more than plain sacks per pressure, and QB movers keep half | 55% | Unclear (0.43 against 0.44; kept 109%) |
+| The QB's after-pressure part passes both bars | 50% | Held (0.45, kept 101%) |
+| QB movers keep more of the after-pressure part than lineman movers | 65% | Held (101% against 4%) |
+| QB movers keep under half of the pressure part | 60% | Held, at the edge (47%) |
+| QB completion over E1 within 0.03 of over E0 | 60% | Held (0.46 against 0.47) |
+
+### The case against
+
+- **35 QB movers.** Every QB share kept rests on them; 101% and 47% have wide intervals that weren't bootstrapped here (I90 asked for that).
+- **The tie-break wobble.** One run gave a lineman's pressure part 9% kept, another 22%. The verdicts don't move, but the main-team table's ties should be fixed before a build relies on movers.
+- **Sacks only.** The split was measured for sacks and completions; time to throw and depth after a pressure weren't split.
+- **Cross-fitted, not walk-forward.** Each season's chances came from trees trained on the other seasons of its provider, including later ones. A build must make them walk-forward (rule e).
+- **The pressure flag is the provider's judgment.** It changed in 2023 (pressure rates fell from about 34% to 30%); the parts are measured within each provider, but a third change would need the same care.
