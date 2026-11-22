@@ -41,6 +41,7 @@ These are targets, not deadlines.
 |---|---|
 | **End of the 2026 regular season** (early Jan 2027) | Lines and predictions are logged every week. Phase 0 is mostly done. The first experts are being explored or built. |
 | **Super Bowl** (Feb 2027) | The data layer covers the offseason timeline. Most "next" experts are validated. |
+| **Participation's 2026 release** (Feb 2027, the day after the Super Bowl) | **A dated check (context-retro#R13; the CEO, 2026-11-22):** score 2026 with context-retro and rerun `projects/context-retro/explore/spot_check_eras.py` with the 2025-26 pair. If the QB's after-pressure part repeats 0.2 or more from 2025 to 2026, the low numbers since 2023 were two bad season pairs, not the new charting, and R5 holds again from 2023. If not, the split is redefined for the new provider. |
 | **2027 draft (end of April 2027): the 6-month checkpoint** | "In a really good spot": most experts done, composites underway, and a first end-to-end product (weekly fantasy projections with uncertainty) working on historical data. |
 | **2027 Week 1** | Products live. The public track record starts. |
 

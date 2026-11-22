@@ -13,7 +13,7 @@ For every dropback from 2017, the expert gives two expectations made after the s
 | Calibration and range coverage | Pooled over 2017-2024 every chance passes: error 0.27 to 1.05 points, slope 0.92 to 1.00. By season the level drifts where the provider changes: pressure 6.7 points off in 2018, 4.8 in 2023 (R8). Ranges: q10-q90 hold 78.3% to 84.9% overall and 70.6% to 85.6% by season (all inside 70-90%). On the vault: sack before the snap fails its slope (0.84) and dropback yards given the pressure holds 85.5% (just past 85%); the rest pass (R10) |
 | Leakage | `check_point_in_time` (2024, 4 games rebuilt from views at their own `as_of`): largest gap 0.0 in every field; a view one second before participation's 2024 release has 0 rows with any participation field (45,905 at release). Every training row is known before the test season's first `as_of` (the runner refuses otherwise); 0 history rows have a `train_end` at or after their `as_of`, backtest and vault |
 | Football sanity (CEO review: pending) | Lists in `build/sanity.txt` (2024). After a pressure, best: Lamar Jackson, Josh Allen, Jordan Love, Bo Nix; worst: Will Levis, Jalen Hurts, Caleb Williams. The pressure part, best: Goff, Winston, Kyler Murray, Tua (quick throwers); worst: Stroud, Wilson, Mahomes. Linemen line up by team: Jacksonville's and Detroit's lines best on the pressure part, Houston's worst (R9) |
-| CEO spot-check (done, 2026-11-22) | The QB's split, 2024 to 2025: see "Spot-check" below. It changes R5's reach (old provider only) and adds R13 |
+| CEO spot-check (done, 2026-11-22) | The QB's split, 2024 to 2025: see "Spot-check" below. It changes R5's reach (old provider only) and adds R13. The split is kept as is, settled by 2025→2026 (the CEO, 2026-11-22) |
 
 ## Hunch verdicts
 Copied into [`projects/HUNCHES.md`](../HUNCHES.md). H86 and H87 were held at the exploration; the build adds held-out numbers, 2017-2024, walk-forward. The CEO closed H88 as failed (2026-11-22: "H88; failed").
@@ -137,6 +137,8 @@ Also copied into this project's `interface` block in `registry.yaml`.
 - **R11's reading changes.** It said "a low-repeat pair, not a model change". Now it reads "a low-repeat pair on top of a provider effect, not a model change".
 - **What would change this:** a third new-provider season (2026, known February 2027). If the after-pressure part repeats 0.2+ from 2025 to 2026, the new era's 0.08 was two bad pairs. If not, the split should be redefined for the new provider (for example, the whole sack over expected for QBs, with the pressure part for the line read only at team level).
 
+**The CEO's choice:** kept as is, settled by 2025→2026, the CEO 2026-11-22 ("2a": keep the split as it is and wait for 2026). The interface card's from-2023 guidance stands: downstream models read a QB's whole sack over expected from 2023. The check is dated in `docs/ROADMAP.md` (Milestones, February 2027).
+
 ## Vetoes
 No vetoes, the CEO, 2026-11-22 ("No vetoes for the context retro"). The calls stand as listed in decision 0040.
 
@@ -145,4 +147,4 @@ No vetoes, the CEO, 2026-11-22 ("No vetoes for the context retro"). The calls st
 2. **The football sanity lists** (`build/sanity.txt`, 2024): do Lamar Jackson and Josh Allen as the best after a pressure, and Levis, Hurts and Caleb Williams as the worst, match what you saw?
 3. ~~**The spot-check:** which one?~~ Answered: the QB's part, 2024 and 2025 (the CEO, 2026-11-22); written up in "Spot-check" above.
 4. ~~**Next for the split** (I110, I111, I112)?~~ Answered: "No split idea for now" (the CEO, 2026-11-22); all three stay open.
-5. **The split under the new provider (R13):** keep the split as it is and wait for 2026's season to confirm, or redefine the QB's part for 2023 on (the whole sack over expected) now?
+5. ~~**The split under the new provider (R13):** keep it and wait for 2026, or redefine the QB's part for 2023 on now?~~ Answered: kept as is, settled by 2025→2026, the CEO 2026-11-22. Merge approved (the CEO, 2026-11-22: "3 yes merge").
