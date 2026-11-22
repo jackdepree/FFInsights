@@ -34,12 +34,22 @@ def _source():
     return Gateway().source
 
 
-def player_games(scoring: str = "ppr", season_type: str = "REG") -> pl.DataFrame:
-    """Every known RB, WR and TE player-game with expected points (2012 on), with season type."""
+def player_games(
+    scoring: str = "ppr", season_type: str = "REG", opportunity: pl.DataFrame | None = None
+) -> pl.DataFrame:
+    """Every known RB, WR and TE player-game with expected points (2012 on), with season type.
+    `opportunity` replaces the part's expected sums with another set of expected models' (I100),
+    keeping the part's rows and known-at."""
     src = _source()
+    opp = src.part("player_game", "opportunity")
+    if opportunity is not None:
+        exp = [x for x in opportunity.columns if x.endswith("_exp")]
+        opp = opp.drop(exp).join(
+            opportunity.select("gsis_id", "game_id", *exp), on=["gsis_id", "game_id"], how="left"
+        )
     pg = (
         src.part("player_game", "roster")
-        .join(src.part("player_game", "opportunity"), on=["gsis_id", "game_id"], suffix="_o")
+        .join(opp, on=["gsis_id", "game_id"], suffix="_o")
         .rename({"known_at_o": "opportunity_known_at"})
         .drop("season_o")
     )
@@ -147,36 +157,43 @@ def facts(scoring: str = "ppr") -> list[str]:
 
 
 # ---------------------------------------------------------------- the regression measure
-def regression_frames(scoring: str = "ppr") -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame]:
-    """windows, player-seasons and the chance spread, regular season, 2012 on."""
-    pg = player_games(scoring)
+def regression_frames(
+    scoring: str = "ppr", variant: tuple[pl.DataFrame, pl.DataFrame] | None = None
+) -> tuple[pl.DataFrame, pl.DataFrame, pl.DataFrame, pl.DataFrame]:
+    """windows, player-seasons, the chance spread and the player-games, regular season, 2012 on.
+    `variant` is another set of expected models' (plays, player-games), e.g. I100's."""
+    pg = player_games(scoring, opportunity=None if variant is None else variant[1])
     win = R.windows(pg)
     ps = R.player_seasons(pg)
     src = _source()
-    plays = (
-        src.part("play", "xfp")
-        .join(
-            src.part("play", "pbp").select("game_id", "play_id", "season_type"),
-            on=["game_id", "play_id"],
-        )
-        .filter(c("season_type") == "REG")
-    )
-    return win, ps, R.chance_spread(plays, scoring)
+    plays = src.part("play", "xfp") if variant is None else variant[0]
+    plays = plays.join(
+        src.part("play", "pbp").select("game_id", "play_id", "season_type"),
+        on=["game_id", "play_id"],
+    ).filter(c("season_type") == "REG")
+    return win, ps, R.chance_spread(plays, scoring), pg
 
 
-def regression_history(seasons: Sequence[int], scoring: str = "ppr") -> pl.DataFrame:
+def regression_history(
+    seasons: Sequence[int],
+    scoring: str = "ppr",
+    frames: tuple | None = None,
+    game_noise: bool = False,
+) -> pl.DataFrame:
     """The measure walk forward: each test season from parameters fit on earlier seasons only.
     Every row with a window of `MIN_WINDOW` chances; `scorable` marks rows with `MIN_FUTURE`
-    chances left."""
-    win, ps, spread = regression_frames(scoring)
+    chances left. `frames` from `regression_frames` (default: the table's); `game_noise` turns
+    on I101's φ. `base_rate` is how often gaps closed in the training seasons (for Brier skill)."""
+    win, ps, spread, pg = frames if frames is not None else regression_frames(scoring)
     out = []
     for s in seasons:
-        params = R.fit(win, ps, spread, s)
+        params = R.fit(win, ps, spread, s, pg if game_noise else None)
         rows = win.filter((c("season") == s) & (c("n") >= R.MIN_WINDOW) & (c("n_t") > 0))
         m = R.measure(rows, params).with_columns(train_end_season=pl.lit(s - 1))
         # The chance the gap closes, recalibrated on the training seasons' scored rows (Platt)
         train = R.scored(win.filter(c("season").is_in(params["seasons"])))
         train = R.measure(train, params).with_columns(closed=R.closed())
+        m = m.with_columns(base_rate=pl.lit(float(train["closed"].mean())))
         for meth in ("B", "B_yac"):
             cal = R.fit_platt(train[f"p_close_{meth}"].to_numpy(), train["closed"].to_numpy())
             m = m.with_columns(
@@ -315,7 +332,7 @@ def regression_report(hist: pl.DataFrame, shuffles: int = 100, seed: int = 0) ->
 
 
 def regression_params(seasons: Sequence[int], scoring: str = "ppr") -> list[str]:
-    win, ps, spread = regression_frames(scoring)
+    win, ps, spread, _ = regression_frames(scoring)
     out = ["  Parameters per test season (μ, τ = √τ², A's k, γ for yac), points per chance:"]
     for s in seasons:
         p = R.fit(win, ps, spread, s)

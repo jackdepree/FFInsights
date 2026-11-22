@@ -13,6 +13,10 @@ Before each of a player's regular-season games:
   - **Method B with inputs** (the CEO's call 3, position and yards after the catch): B, plus his
     yards-after-the-catch points over expected per target shrunk the same way, times a weight per
     position fit on earlier seasons.
+- **Game-level noise** (I101, the CEO's spot-check, 2026-11-22): with `pg` given, `fit` also
+  estimates per position how much a player's game-to-game swings exceed what independent chances
+  would give (φ, from the same earlier seasons), and every noise term is multiplied by it. Without
+  `pg`, φ = 1 (the build's model: chances independent).
 - **The range for his true level:** B's posterior, q10-q90.
 - **The forecast of his future gap** over the chances he is expected to get in the rest of the
   season, with a range, and **the chance the gap closes by half or more** (his future gap ends on
@@ -37,6 +41,7 @@ MIN_FUTURE = 10  # chances in the rest of the season for a row to be scored
 MIN_SEASON = 30  # chances in a training player-season for τ²
 TRAIN_SEASONS = 6  # earlier seasons the parameters are fit on
 TAU2_FLOOR = 1e-4
+PHI_BOUNDS = (0.5, 3.0)
 Z90 = 1.2815515655446004  # the 90th percentile of a standard normal
 METHODS = ("luck", "same", "A", "B", "B_yac")
 
@@ -146,15 +151,43 @@ def player_seasons(pg: pl.DataFrame) -> pl.DataFrame:
     )
 
 
-def fit(win: pl.DataFrame, ps: pl.DataFrame, spread: pl.DataFrame, season: int) -> dict:
+def game_noise(pg: pl.DataFrame, ps: pl.DataFrame, sig: pl.DataFrame) -> dict[str, float]:
+    """φ per position (I101): how much bigger a player's game-to-game swings in points over
+    expected are than independent chances would make them, over player-seasons of `MIN_SEASON`+
+    chances. For independent chances with spread σ², Σ_games (poe_g − n_g·gap)² has expectation
+    σ²·(n − Σ n_g² / n); φ is the seen sum over that, pooled, within `PHI_BOUNDS`."""
+    keep = _noise(ps.filter(c("n") >= MIN_SEASON), sig).select(
+        "gsis_id", "season", "position", "gap", "s_mix", n_s="n"
+    )
+    g = pg.filter(c("chances") > 0).join(keep, on=["gsis_id", "season"], how="inner", suffix="_s")
+    per = g.group_by("gsis_id", "season", "position_s").agg(
+        num=((c("poe") - c("chances") * c("gap")) ** 2).sum(),
+        den=c("s_mix").first() * (c("n_s").first() - (c("chances") ** 2).sum() / c("n_s").first()),
+    )  # fmt: skip
+    out = per.group_by("position_s").agg(phi=c("num").sum() / c("den").sum())
+    lo, hi = PHI_BOUNDS
+    return {p: min(max(float(f), lo), hi) for p, f in out.iter_rows()}
+
+
+def fit(
+    win: pl.DataFrame,
+    ps: pl.DataFrame,
+    spread: pl.DataFrame,
+    season: int,
+    pg: pl.DataFrame | None = None,
+) -> dict:
     """Every method's parameters for `season`, from the `TRAIN_SEASONS` seasons before it only:
     per position μ and τ² (from whole player-seasons, each gap against its own noise), A's rate k
     and residual spread, and for yards after the catch μ_y, τ²_y and B with inputs' weight γ
-    (from earlier seasons' scored moments)."""
+    (from earlier seasons' scored moments). With `pg` (player-games), φ per position too."""
     seasons = list(range(season - TRAIN_SEASONS, season))
     sig = _pooled(spread, seasons)
     params: dict = {"season": season, "seasons": seasons, "sigma": sig, "pos": {}}
-    rows = _noise(ps.filter(c("season").is_in(seasons)), sig)
+    train_ps = ps.filter(c("season").is_in(seasons))
+    phi = {} if pg is None else game_noise(pg.filter(c("season").is_in(seasons)), train_ps, sig)
+    rows = _noise(train_ps, sig).with_columns(
+        c("V") * c("position").replace_strict(phi, default=1.0, return_dtype=pl.Float64)
+    )
     for pos in sorted(rows["position"].unique().to_list()):
         d = rows.filter((c("position") == pos) & (c("n") >= MIN_SEASON))
         if d.height < 30:
@@ -168,7 +201,8 @@ def fit(win: pl.DataFrame, ps: pl.DataFrame, spread: pl.DataFrame, season: int) 
         tau2_y = TAU2_FLOOR
         if len(xy):
             tau2_y = max(float(np.mean((xy - mu_y) ** 2 - dy["Vy"].to_numpy())), TAU2_FLOOR)
-        params["pos"][pos] = {"mu": mu, "tau2": tau2, "mu_y": mu_y, "tau2_y": tau2_y}
+        params["pos"][pos] = {"mu": mu, "tau2": tau2, "mu_y": mu_y, "tau2_y": tau2_y,
+                              "phi": phi.get(pos, 1.0)}  # fmt: skip
     moments = predict_b(scored(win.filter(c("season").is_in(seasons))), params)
     for pos, pp in params["pos"].items():
         d = moments.filter(c("position") == pos)
@@ -179,7 +213,7 @@ def fit(win: pl.DataFrame, ps: pl.DataFrame, spread: pl.DataFrame, season: int) 
         dx = d["gap"].to_numpy() - pp["mu"]
         dy = d["future"].to_numpy() - pp["mu"]
         kA = float(np.sum(w * dx * dy) / np.sum(w * dx * dx))
-        noise = d["s_mix"].to_numpy() / d["m"].to_numpy()
+        noise = d["s_mix"].to_numpy() / d["m"].to_numpy()  # φ already in s_mix (predict_b)
         resid_A = max(float(np.sum(w * ((dy - kA * dx) ** 2 - noise)) / np.sum(w)), TAU2_FLOOR)
         left = d["future"].to_numpy() - d["mean_B"].to_numpy()
         z = d["yac_shrunk"].to_numpy()
@@ -197,11 +231,16 @@ def predict_b(rows: pl.DataFrame, params: dict) -> pl.DataFrame:
     """Rows with B's kept share and mean (and the yac gap shrunk), before A's and γ's fit."""
     pos = pl.DataFrame(
         [
-            {"position": k, **{x: v[x] for x in ("mu", "tau2", "mu_y", "tau2_y")}}
+            {
+                "position": k,
+                **{x: v[x] for x in ("mu", "tau2", "mu_y", "tau2_y")},
+                "phi": v.get("phi", 1.0),
+            }
             for k, v in params["pos"].items()
         ]  # fmt: skip
     )
     out = _noise(rows, params["sigma"]).join(pos, on="position", how="inner")
+    out = out.with_columns(V=c("V") * c("phi"), s_mix=c("s_mix") * c("phi"))
     return out.with_columns(
         k_B=c("tau2") / (c("tau2") + c("V")),
         k_y=c("tau2_y") / (c("tau2_y") + c("Vy")),

@@ -237,6 +237,28 @@ def test_kept_share_rises_with_chances_and_the_parameters_see_only_earlier_seaso
     assert p2["pos"]["WR"] == pytest.approx(params["pos"]["WR"])
 
 
+def test_game_noise_is_one_for_independent_chances_and_more_when_games_swing():
+    """I101: φ ≈ 1 when chances are independent (`_pg`), above 1 when a whole game moves
+    together, and it lowers B's kept share."""
+    pg = _pg(n_players=120)
+    sig = R._pooled(_spread(), [2015, 2016, 2017])
+    ps = R.player_seasons(pg.filter(c("season") < 2018))
+    assert R.game_noise(pg.filter(c("season") < 2018), ps, sig)["WR"] == pytest.approx(1.0, abs=0.1)
+    rng = np.random.default_rng(1)
+    swung = pg.with_columns(
+        poe=c("poe") + pl.Series(rng.normal(0, 1.5, pg.height)) * c("chances").sqrt()
+    )
+    ps2 = R.player_seasons(swung.filter(c("season") < 2018))
+    phi = R.game_noise(swung.filter(c("season") < 2018), ps2, sig)["WR"]
+    assert phi > 2.0  # the chance-level spread is 1, the game adds 1.5² per chance
+    win, ps_all = R.windows(swung), R.player_seasons(swung)
+    plain, noisy = R.fit(win, ps_all, _spread(), 2018), R.fit(win, ps_all, _spread(), 2018, swung)
+    assert noisy["pos"]["WR"]["phi"] == pytest.approx(phi, rel=0.2)
+    assert plain["pos"]["WR"]["phi"] == 1
+    rows = R.scored(win.filter(c("season") == 2018))
+    assert R.measure(rows, noisy)["k_B"].mean() < R.measure(rows, plain)["k_B"].mean()
+
+
 def test_a_gap_closes_when_the_future_lands_on_the_near_side_of_half_of_it():
     d = pl.DataFrame(
         {"gap": [0.4, 0.4, -0.4, -0.4], "future": [0.1, 0.3, -0.1, -0.3]}

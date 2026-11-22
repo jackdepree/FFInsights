@@ -48,6 +48,13 @@ SITUATION = [
     "half_seconds_remaining", "score_differential",
 ]  # fmt: skip
 KIND_INPUTS = {"target": [*SITUATION, "air", "loc"], "carry": [*SITUATION, "loc", "gap"]}
+# I100 (the CEO's spot-check, 2026-11-22): the same models with his position as one more input, so
+# "expected" means expected for his position; built apart (`variant="position"`), never the table's
+POSITION_CODE = {"RB": 0.0, "WR": 1.0, "TE": 2.0}
+VARIANT_INPUTS = {
+    "situation": KIND_INPUTS,
+    "position": {k: [*v, "pos"] for k, v in KIND_INPUTS.items()},
+}
 # (kind, piece, classifier?): each fantasy piece a chance can earn
 PIECES = (
     ("target", "catch", True),
@@ -69,8 +76,8 @@ DEEP = 20  # a target thrown 20+ yards downfield
 
 def chance_rows(pbp: pl.DataFrame, roster: pl.DataFrame) -> pl.DataFrame:
     """Play-by-play (`PBP_COLUMNS`) and the roster part (gsis_id, game_id, position) → one row per
-    chance by a RB, WR or TE: keys, the player, kind, position, the situation inputs as floats, and
-    what the chance earned (catch, yards, td; yac_oe on completions)."""
+    chance by a RB, WR or TE: keys, the player, kind, position (and its code `pos`), the situation
+    inputs as floats, and what the chance earned (catch, yards, td; yac_oe on completions)."""
     p = pbp.filter(c("two_point_attempt").fill_null(0) == 0)
     target = p.filter(
         c("receiver_player_id").is_not_null() & (c("play_type") == "pass")
@@ -107,7 +114,10 @@ def chance_rows(pbp: pl.DataFrame, roster: pl.DataFrame) -> pl.DataFrame:
     return (
         out.filter(c("oq_position").is_in(POSITIONS))
         .with_columns(
-            c(SITUATION).cast(pl.Float64), c("play_id").cast(pl.Int64), c("season").cast(pl.Int32)
+            c(SITUATION).cast(pl.Float64),
+            c("play_id").cast(pl.Int64),
+            c("season").cast(pl.Int32),
+            pos=c("oq_position").replace_strict(POSITION_CODE, return_dtype=pl.Float64),
         )  # fmt: skip
         .sort("game_id", "play_id")
     )
@@ -121,15 +131,17 @@ def _fit_piece(x: np.ndarray, y: np.ndarray, classifier: bool):
     return HistGradientBoostingRegressor(**TREES).fit(x, y)
 
 
-def fit(chances: pl.DataFrame, seasons: list[int]) -> dict[str, Any]:
-    """One model per piece, from the training seasons' regular-season chances."""
+def fit(chances: pl.DataFrame, seasons: list[int], variant: str = "situation") -> dict[str, Any]:
+    """One model per piece, from the training seasons' regular-season chances; `variant` picks
+    the inputs (`VARIANT_INPUTS`)."""
     t = chances.filter(c("season_type") == "REG")
+    inputs = VARIANT_INPUTS[variant]
     models = {}
     for kind, piece, classifier in PIECES:
         d = t.filter(c("oq_kind") == kind)
-        x = d.select(KIND_INPUTS[kind]).to_numpy().astype(float)
+        x = d.select(inputs[kind]).to_numpy().astype(float)
         models[(kind, piece)] = _fit_piece(x, d[f"oq_{piece}"].to_numpy(), classifier)
-    return {"models": models, "seasons": list(seasons), "rows": t.height}
+    return {"models": models, "seasons": list(seasons), "rows": t.height, "variant": variant}
 
 
 def check_fit(fitted: dict[str, Any], season: int) -> None:
@@ -147,9 +159,10 @@ def apply(chances: pl.DataFrame, fitted: dict[str, Any]) -> pl.DataFrame:
     pieces (`oq_catch_exp`, `oq_yards_exp`, `oq_td_exp`; a carry's catch chance is 0) and what it
     earned."""
     out = []
+    inputs = VARIANT_INPUTS[fitted.get("variant", "situation")]
     for kind in ("target", "carry"):
         d = chances.filter(c("oq_kind") == kind)
-        x = d.select(KIND_INPUTS[kind]).to_numpy().astype(float)
+        x = d.select(inputs[kind]).to_numpy().astype(float)
         exp = {}
         for k, piece, classifier in PIECES:
             if k != kind:
@@ -180,19 +193,24 @@ def apply(chances: pl.DataFrame, fitted: dict[str, Any]) -> pl.DataFrame:
     )
 
 
-def cache_key(season: int, train: list[int]) -> str:
-    return f"v{MODEL_VERSION}:{season}:{','.join(map(str, train))}"
+def cache_key(season: int, train: list[int], variant: str = "situation") -> str:
+    tag = "" if variant == "situation" else f"-{variant}"
+    return f"v{MODEL_VERSION}{tag}:{season}:{','.join(map(str, train))}"
 
 
 def fitted_for(
-    season: int, have: list[int], chances_of: Callable[[int], pl.DataFrame], cache_dir: Path
+    season: int,
+    have: list[int],
+    chances_of: Callable[[int], pl.DataFrame],
+    cache_dir: Path,
+    variant: str = "situation",
 ) -> dict[str, Any] | None:
     """The fit for `season`, from `cache_dir/season=<season>` or fit on the training seasons'
     chances and cached. None when fewer than 3 seasons from `FIRST_FIT` come before it."""
     train = training_seasons(season, [s for s in have if s >= FIRST_FIT])
     if not train:
         return None
-    key = cache_key(season, train)
+    key = cache_key(season, train, variant)
     path = cache_dir / f"season={season}" / CACHE_FILE
     if path.exists():
         with path.open("rb") as f:
@@ -200,7 +218,7 @@ def fitted_for(
         if cached.get("key") == key:
             check_fit(cached["fitted"], season)
             return cached["fitted"]
-    fitted = fit(pl.concat([chances_of(s) for s in train], how="diagonal_relaxed"), train)
+    fitted = fit(pl.concat([chances_of(s) for s in train], how="diagonal_relaxed"), train, variant)
     check_fit(fitted, season)
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp = path.with_suffix(".tmp")

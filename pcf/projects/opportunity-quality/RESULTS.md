@@ -3,9 +3,9 @@
 **Date:** 2026-11-22 (built 2026-11-21 to 22) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `opportunity-quality` · **Champion:** `eff_trees`, run `3b5fd214e10d43559ad1fd21428202e8` (pinned in the registry; no MLflow model registered, as participation) · **Decisions:** [0041](../../docs/decisions/0041-opportunity-quality.md)
 
 ## In short
-Expected fantasy points per chance are now a table (`play.xfp`, `player_game.opportunity`, from situation models fit from 2009, r 0.99 with nflverse's), and both of the CEO's main outputs are built. **The forecast of opportunity** (next game's expected PPR points) is honest and useful: the trees rung beats its shuffled copies, the last-4 average by 19% of the range score, counts by 2.5% and the lasso by 1.8%; it passes the no-noise target even beside playing time (+3.7%), and adds 4% to the yardstick's crude forecast of yards. Past efficiency is part of why (H61 held again, +1.1%). **The regression measure** is calibrated but weak: a per-player kept share (method B) beat one rate per position (method A) in 2016-2024 and lost to it on the 2025 vault, so A's number ships, and the chance a gap closes almost never leaves 50-60%. The kind of chance (goal line, end zone, deep) adds nothing beyond counts at any horizon.
+Expected fantasy points per chance are now a table (`play.xfp`, `player_game.opportunity`, from situation models fit from 2009, r 0.99 with nflverse's), and both of the CEO's main outputs are built. **The forecast of opportunity** (next game's expected PPR points) is honest and useful: the trees rung beats its shuffled copies, the last-4 average by 19% of the range score, counts by 2.5% and the lasso by 1.8%; it passes the no-noise target even beside playing time (+3.7%), and adds 4% to the yardstick's crude forecast of yards. Past efficiency is part of why (H61 held again, +1.1%). **The regression measure** is calibrated but weak: a per-player kept share (method B) beat one rate per position (method A) in 2016-2024 and lost to it on the 2025 vault, so A's number ships until the CEO confirms B (their pick), and the chance a gap closes almost never leaves 50-60%. The CEO's spot-check tried position and game-level noise: neither fixes it, so the measure stays off the player card. The kind of chance (goal line, end zone, deep) adds nothing beyond counts at any horizon.
 
-**Scorecard:** `outputs/opportunity-quality/eff_trees/3b5fd214e10d43559ad1fd21428202e8/scorecard.html` · **Vault (2025), opened once, 2026-11-22:** the forecast held (20 of 20 shuffles, all 10 checks, beats the lasso by 1.3%, ranges 79.9%; R22); the regression measure: B lost to A by 1.0% (R17) · **Versions tried:** 13 forecast variants on one feature set (counts, xfp, eff, eff_trees, two yards variants, six horizons) plus the measure's methods A, B, B with yards after the catch
+**Scorecard:** `outputs/opportunity-quality/eff_trees/3b5fd214e10d43559ad1fd21428202e8/scorecard.html` · **Vault (2025), opened once, 2026-11-22:** the forecast held (20 of 20 shuffles, all 10 checks, beats the lasso by 1.3%, ranges 79.9%; R22); the regression measure: B lost to A by 1.0% (R17) · **Versions tried:** 13 forecast variants on one feature set (counts, xfp, eff, eff_trees, two yards variants, six horizons) plus the measure's methods A, B, B with yards after the catch; the CEO's spot-check added 3 versions of the measure (I100, I101, both), and read the 2025 vault a second time for it
 
 | Check (docs/VALIDATION.md) | Result |
 |---|---|
@@ -15,7 +15,7 @@ Expected fantasy points per chance are now a table (`play.xfp`, `player_game.opp
 | Calibration and range coverage | Chance of a chance: error 0.8 points, slope 1.00. If he gets one: ranges hold 79.4% (80% target), 50.0% above the median. Horizons' ranges 80.4% and 80.5%, every position 80-81%. The regression measure's chance the gap closes: error 0.9 points, slope 0.92 (backtest), 0.9 and 0.85 (vault), once recalibrated |
 | Leakage | All 10 checks pass for every validated variant (25 cutoffs); the measure's windows don't move when the future is deleted (test) |
 | Football sanity | The CEO's review: ⟨pending⟩. Claude's: 2024's highest forecasts (8+ games) are Kyren Williams 16.8 expected points a game (got 15.2), CeeDee Lamb 16.5 (16.9), Justin Jefferson 16.4 (16.9), Bijan Robinson 16.3 (18.1), Amon-Ra St. Brown 15.7 (15.1), Saquon Barkley 15.7 (16.9); tight ends' top tenth starts at 7.9 against 11.3 for receivers and 12.8 for backs |
-| CEO spot-check | ⟨pending⟩ |
+| CEO spot-check | R17 and the luck measure (the CEO, 2026-11-22): not better than before. Position in the expected-points model (I100) and game-level noise (I101) don't stop B losing to A on the vault (−0.60% at best); the chances stay at 50-60%. The measure stays off the player card. B lost in 3 of 10 seasons, the ones where little lasted (see "Spot-check") |
 
 ## Hunch verdicts
 Copied into [`projects/HUNCHES.md`](../HUNCHES.md). The exploration's verdicts stand where the build didn't retest.
@@ -45,7 +45,7 @@ Build findings are R1-R22; the exploration's are F1-F13.
 | R5 | **In 2016-2024, method B (a kept share per player) beat one rate per position** on the rest of the season's points over expected per chance: +1.19% of the weighted squared error (+0.95 to +1.44); RB +1.90%, WR +0.69%, TE +2.12%. A beat "all luck" by +2.71%; "it all lasts" is 38% worse than all luck. Shuffled null 100 of 100. At week 1 (next season) they tied: +0.74% (−0.39 to +1.79) | `build/regression_backtest.txt` | strong (but see R17) | 2016-2024, 20+ chances behind, 10+ ahead |
 | R6 | **Yards after the catch pay for tight ends only.** Added to B: TE +0.60% (backtest), +1.62% (vault); WR +0.09% and −0.89%; RB +0.00% and −0.80%. The receivers' weight flips sign between seasons; the tight ends' is positive every season | `build/regression_*.txt` | suggestive | TE |
 | R7 | **The kept share rises with chances, but B keeps too much at 200-400:** kept 0.12, 0.23, 0.36, 0.48, 0.60 at 20-50, 50-100, 100-200, 200-400, 400+ chances; seen 0.10, 0.16, 0.36, 0.36, 0.54 (backtest). On the vault, the seen shares are flat (0.21-0.25 below 400) | as R5 | strong | |
-| R8 | **The chance the gap closes is honest but not sharp.** Gaps close by half or more 55% of the time. Raw, B is overconfident (error 2.7 points, slope 0.63); recalibrated on earlier seasons, 0.9 and 0.92. 72% of the chances sit between 50% and 60%, under 1% above 80% | as R5 | strong | |
+| R8 | **The chance the gap closes is honest but not sharp.** Gaps close by half or more 55% of the time. Raw, B is overconfident (error 2.7 points, slope 0.63); recalibrated on earlier seasons, 0.9 and 0.92. 74% of the chances sit between 50% and 60% (85% on the 2025 vault; the build first said 72%, which was B with yards after the catch's), under 1% above 80%; Brier skill against the base rate +1.0% | as R5 | strong | |
 | R9 | **The lasso forecast of opportunity works** (`eff`): range score 0.82 (MAE 2.56 points; average 5.03; 36% of rostered player-games get no chance); beats the last-4 average by 17.6%, counts by 0.69%, expected points without efficiency by 0.60%; 100 of 100 shuffles | the `eff` scorecard | strong | RB, WR, TE, 2016-2024 |
 | R10 | **H61: efficiency earns work.** Past points over expected improve next game's expected-points forecast by +1.11% of squared error (+0.87 to +1.33), +0.60% range score; first two seasons +1.47%, veterans +0.96%; WR +1.44%, RB +0.94%, TE +0.43%. The fifth most over expected this season are forecast 0.55 expected points a game above the forecast without efficiency, and get 0.53 more; the fifth most under −0.45 and −0.56 | walks on the saved features | strong | |
 | R11 | **Past expected points add little beside counts and playing time:** +0.12% of squared error (+0.01 to +0.24), +0.09% range score, 3 times the fitting noise. The exploration's F5 (+0.73%) was beside past points with no counts | as R10 | strong | |
@@ -92,7 +92,7 @@ Lens list 2026-11-15, `eff_trees`, 2016-2024 (average miss = actual − predicte
 (The snap-share lens is after the game: players on 75%+ of snaps get 1.64 more than forecast, as any forecast made before the game would.)
 
 ## The case against
-1. **The regression measure is weak and changed its winner on the vault.** B beat A in nine backtest seasons and lost in 2025, almost all through tight ends. One season is one season, but the vault is the confirmation, so A ships. Whichever ships, the measure removes only 3% of "all luck"'s error, and 72% of its chances sit between 50% and 60%: a "buy low" list from it would be mostly coin flips.
+1. **The regression measure is weak and changed its winner on the vault.** B beat A in 7 of 9 backtest seasons (it lost 2016 and 2017; the build first said nine, corrected by the spot-check) and lost in 2025, almost all through five tight ends. Position and game-level noise don't fix it (the spot-check). Whichever ships, the measure removes only 3% of "all luck"'s error, and 74% of its chances (85% on the vault) sit between 50% and 60%: a "buy low" list from it would be mostly coin flips.
 2. **The no-noise pass is mostly playing time.** Against the brief's baseline it adds 13.6%; beside participation's inputs, 3.7%. The second is the honest number for a downstream user who already has participation.
 3. **The yardstick's 4% looks large** for an input the crude forecast nearly has (past yards). The likeliest reason is real: expected yards are past yards with the luck taken out. The rows are lined up by moment (a forecast made after its row is refused), and the forecasts pass every leakage check, but the yardstick's own shuffled-copy check wasn't run for these columns.
 4. **"Expected" isn't expected for tight ends** (R16): a model without position calls every tight end efficient by 0.09 a chance. The measure subtracts the average, but a reader of the raw table will be misled; and it may be why B fails for tight ends on the vault (idea I100).
@@ -121,7 +121,7 @@ Lens list 2026-11-15, `eff_trees`, 2016-2024 (average miss = actual − predicte
 ## Don't redo
 - The kinds of chance beyond counts: three looks (F4, R4, R19), nothing. Retry only with a new outcome (touchdowns: td-expert).
 - Past expected points beside counts: +0.12% (R11).
-- A per-player kept share from sample size alone: it lost on the vault (R17). Retry only with a better noise model or position (I100, I101).
+- A per-player kept share from sample size alone: it lost on the vault (R17). Position in the expected-points model (I100) and game-level noise (I101) were tried in the spot-check and don't fix it; retry only with a kept share that changes by season (I104).
 
 ## Interface card
 Also in this project's `interface` block in `registry.yaml`.
@@ -180,9 +180,70 @@ The CEO's words: "Please spot check r17 and the luck measure. If the luck measur
 
 ### The spot-check
 
-⟨running⟩
+Report: `build/spotcheck.txt`; script: `explore/spotcheck.py`. The scored rows are the build's (31,151 in 2016-2024, 3,489 in 2025).
+
+**A correction to the "before" numbers in the bar.** On the same rows, the published chance (B, recalibrated) has 74.0% of its chances at 50-60% in 2016-2024 and 85.2% on the vault. The 72% in R8 and in the pre-registration was B with yards after the catch's, and the 74% was also that version's, on the vault. The bar's threshold (60%) doesn't change. R8 is corrected.
+
+**What the four versions did.** Positive means B beats A. The chance is the published one, B recalibrated.
+
+| Version | φ (game noise) | B against A, 2016-2024 | B against A, 2025 | Tight ends, 2025 | Calibration, 2025 | At 50-60%, 2025 | Brier skill, 2025 |
+|---|---|---|---|---|---|---|---|
+| As built | 1 | +1.19% | −0.98% | −4.17% | 0.9 points, slope 0.85 | 85.2% | +0.46% |
+| I101 (game noise) | 1.01-1.04 | +1.23% | −0.67% | −3.13% | 1.0, 0.94 | 86.8% | +0.56% |
+| I100 (position) | 1 | +1.20% | −0.89% | −3.63% | 1.4, 0.74 | 84.4% | +0.32% |
+| Both | 1.01-1.04 | +1.22% | −0.60% | −2.68% | 1.7, 0.82 | 85.3% | +0.41% |
+
+- **The version picked on 2016-2024 is the build's.** All four are within 0.04% of each other (+1.19% to +1.23%), so by the tie rule the simplest one is judged.
+- **I101 is real but tiny.** A player's games swing only 1-5% more than independent chances would make them. Chances within a game are close to independent, so this isn't why B keeps too much.
+- **I100 is real but small.** With position in the model, tight ends' points over expected fall from +0.085 to +0.066 a target (2016-2025), and backs' targets from +0.075 to +0.046. A beats "all luck" slightly more (+2.76% against +2.71% in 2016-2024, +3.51% against +3.24% on the vault). B against A barely moves.
+- **Even the best version on the vault, both fixes together, loses to A** (−0.60%, tight ends −2.68%).
+
+**The bar: not better than before.**
+1. **B at least as good as A: fails.** On the vault −0.98%, tight ends −4.17%. It still wins 2016-2024 (+1.19%).
+2. **Calibration stays honest: passes.** On the vault 0.9 points and slope 0.85; on 2016-2024 0.9 and 0.92.
+3. **Chances separate players more: fails.** 74% (2016-2024) and 85% (vault) of chances are at 50-60%. The Brier skill against "say 55% for everyone" is +1.0% (2016-2024) and +0.46% (vault), the same as before.
+
+So **the luck measure stays off the player card.** Its chance the gap closes is honest, but it is almost no better than saying "55%" for every player, in every version tried.
+
+**R17 in depth: why B lost to A on the vault.**
+- **It's not the position's level being wrong.** Tight ends' level μ was +0.089 a chance, and 2025's rest-of-season level was +0.139. But with hindsight's level put into both methods, B still loses in 2025 (−1.12%, tight ends −4.95%).
+- **It's how much B keeps from players with many chances.** For tight ends with 100-200 chances behind them, B kept 0.47 of the gap and A 0.27, and B lost to A by 10.1% on those 197 rows. With 20-100 chances behind them, both kept about 0.27, and B lost by only 1.2%.
+- **In 2025, big samples' gaps didn't last.** In the season, players with 100+ chances kept 0.24 of their gap (tight ends −0.04: nothing lasted). B kept 0.41, as it does every season.
+- **It's a handful of players.**
+  - Mark Andrews: a gap of +0.39 a chance on 142 chances, then −0.12 for the rest of 2025. He alone is 47% of B's extra error for tight ends.
+  - Then Trey McBride (24%), Jonnu Smith (16%), Josh Oliver (15%) and Hunter Henry (10%).
+  - The top 5 add up to 111%: B did slightly better than A on the other 61 tight ends.
+- **2025 isn't the only season B lost.** B against A by season: 2016 −0.17%, 2017 −0.90%, 2018 +2.42%, 2019 +1.89%, 2020 +2.89%, 2021 +1.48%, 2022 +0.37%, 2023 +1.35%, 2024 +1.34%, 2025 −0.98%. B loses in the seasons where little lasted (players with 100+ chances kept 0.15 in 2016, 0.23 in 2017, 0.24 in 2025) and wins where much did (0.38-0.47). B's own kept share barely moves (0.38-0.46). **The build's write-up said B won "nine backtest seasons": it won 7 of 9.** That's corrected in the case against.
+
+**What would change the answer.**
+- A kept share that knows how much is lasting *this* season (idea I104). B's error is a season effect that it can't see.
+- A different outcome. The rest of a season is about 40 chances, which is mostly noise for one player. A full next season might separate players more, but it's a different target (the CEO's call).
+- Not position, and not game-level noise: both were tried here.
+
+**The published number.**
+- The CEO chose B (their 3b).
+- **B still loses on the vault after both fixes, so the output keeps A's mean until the CEO confirms B.** B's mean is already in the output (`mean_B`), so the switch is one line.
+- B would be the build's B: the fixes don't help enough to carry their extra parts.
+
+**Claude's odds, scored:**
+
+| Event | Chance given | Result |
+|---|---|---|
+| Test 1 passes | 35% | failed (expected −0.3%, got −0.98%) |
+| Tight ends pass alone | 40% | failed (−4.17%; the best version −2.68%) |
+| Test 2 passes | 85% | passed |
+| 50-60% share ≤ 60% | 15% | failed (74%, 85%) |
+| Brier skill rises | 45% | failed (no change in the picked version) |
+| All three | 8% | failed |
+| The picked version is I101 or both | 60% | failed: a tie, so the build's (I101 led by 0.04%); φ 1.01-1.05, not the 1.2-1.5 I expected |
+
+## The CEO's answers (2026-11-22)
+- **No vetoes** for the build's technical calls (decision 0041).
+- **The published number:** B (3b). B still loses on the vault after the spot-check's fixes, so A stays in the output until the CEO confirms B.
+- **The player card:** only if the spot-check comes out better than before. It didn't, so the measure stays off.
+- **I102's new data source:** skipped.
+- **Next:** nothing new now.
 
 ## Open questions for the CEO
-1. Ship method A's mean for the regression measure (the vault's verdict), or keep B because it won nine backtest seasons?
-2. Is a measure whose chances sit at 50-60% worth a line on the player card, or should the card show the kept share instead?
-3. Should I102 (a known-active flag for questionable players) go to the data-source list?
+1. B still loses to A on the vault after both fixes (−0.98% as built, −0.60% with both). It lost in 3 of 10 seasons, and won the other 7. Do you confirm B as the published number, or switch to A?
+2. Is the spot-check done, and is the merge approved?

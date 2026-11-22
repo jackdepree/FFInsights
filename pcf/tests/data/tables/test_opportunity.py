@@ -127,6 +127,24 @@ def test_the_expected_models_learn_the_situation_and_only_from_earlier_seasons(t
         O.check_fit(fitted, 2011)
 
 
+def test_the_position_variant_adds_position_and_keeps_its_own_cache(tmp_path):
+    """I100: the variant's models take his position as one more input and never share the
+    table's cached fits."""
+    have = [2009, 2010, 2011, 2012]
+
+    def chances_of(season):
+        return _fake_season(season).with_columns(pos=pl.lit(1.0))
+
+    plain = O.fitted_for(2012, have, chances_of, tmp_path)
+    pos = O.fitted_for(2012, have, chances_of, tmp_path, "position")
+    width = len(O.KIND_INPUTS["target"])
+    assert plain["models"][("target", "catch")].n_features_in_ == width
+    assert pos["models"][("target", "catch")].n_features_in_ == width + 1
+    assert O.cache_key(2012, [2009], "position") != O.cache_key(2012, [2009])
+    assert O.apply(chances_of(2012), pos)["oq_catch_exp"].is_between(0, 1).all()
+    assert O.chance_rows(_plays(), ROSTER)["pos"].is_in(list(O.POSITION_CODE.values())).all()
+
+
 def test_a_player_game_sums_his_chances_and_a_benched_player_gets_zeros():
     pbp = _plays()
     ch = O.chance_rows(pbp, ROSTER)

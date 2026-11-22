@@ -1,0 +1,62 @@
+Spot-check of R17 and the luck measure (pre-registered in RESULTS.md, 2026-11-22)
+
+== 2016-2024 (picks the version)
+  as built (31151 rows; φ RB 1.00, TE 1.00, WR 1.00)
+    B against A +1.19% (RB +1.90, WR +0.69, TE +2.12); A against all luck +2.71% (TE +3.13); B against all luck +3.87%
+    chance the gap closes (B, recalibrated): error 0.9 points, slope 0.92; 74.0% of chances in 50-60%, 2.3% outside 40-70%; Brier skill against the base rate +1.01%
+    future-gap range holds 79.5%; kept share by chances (B's / seen): 20-50 0.12/0.10, 50-100 0.23/0.16, 100-200 0.36/0.36, 200-400 0.48/0.36, 400-+ 0.60/0.54
+  I101 (game noise) (31151 rows; φ RB 1.05, TE 1.04, WR 1.02)
+    B against A +1.23% (RB +2.19, WR +0.78, TE +1.74); A against all luck +2.71% (TE +3.13); B against all luck +3.91%
+    chance the gap closes (B, recalibrated): error 1.1 points, slope 0.92; 74.0% of chances in 50-60%, 2.3% outside 40-70%; Brier skill against the base rate +1.03%
+    future-gap range holds 79.7%; kept share by chances (B's / seen): 20-50 0.11/0.10, 50-100 0.21/0.16, 100-200 0.33/0.36, 200-400 0.44/0.36, 400-+ 0.54/0.54
+  I100 (position) (31151 rows; φ RB 1.00, TE 1.00, WR 1.00)
+    B against A +1.20% (RB +1.92, WR +0.69, TE +2.16); A against all luck +2.76% (TE +3.23); B against all luck +3.93%
+    chance the gap closes (B, recalibrated): error 1.2 points, slope 0.94; 74.7% of chances in 50-60%, 2.3% outside 40-70%; Brier skill against the base rate +1.03%
+    future-gap range holds 79.5%; kept share by chances (B's / seen): 20-50 0.12/0.10, 50-100 0.23/0.16, 100-200 0.36/0.36, 200-400 0.48/0.36, 400-+ 0.60/0.55
+  both (31151 rows; φ RB 1.04, TE 1.04, WR 1.02)
+    B against A +1.22% (RB +2.19, WR +0.77, TE +1.69); A against all luck +2.76% (TE +3.23); B against all luck +3.95%
+    chance the gap closes (B, recalibrated): error 1.2 points, slope 0.95; 74.7% of chances in 50-60%, 2.4% outside 40-70%; Brier skill against the base rate +1.05%
+    future-gap range holds 79.8%; kept share by chances (B's / seen): 20-50 0.10/0.10, 50-100 0.20/0.16, 100-200 0.33/0.36, 200-400 0.44/0.36, 400-+ 0.54/0.55
+
+== the 2025 vault (judges the picked version; the others only reported)
+  as built (3489 rows; φ RB 1.00, TE 1.00, WR 1.00)
+    B against A -0.98% (RB -0.36, WR -0.17, TE -4.17); A against all luck +3.24% (TE -0.46); B against all luck +2.30%
+    chance the gap closes (B, recalibrated): error 0.9 points, slope 0.85; 85.2% of chances in 50-60%, 0.6% outside 40-70%; Brier skill against the base rate +0.46%
+    future-gap range holds 79.0%; kept share by chances (B's / seen): 20-50 0.13/0.25, 50-100 0.24/0.21, 100-200 0.36/0.21, 200-400 0.45/0.25, 400-+ 0.55/0.41
+  I101 (game noise) (3489 rows; φ RB 1.03, TE 1.04, WR 1.01)
+    B against A -0.67% (RB +0.37, WR -0.19, TE -3.13); A against all luck +3.24% (TE -0.46); B against all luck +2.60%
+    chance the gap closes (B, recalibrated): error 1.0 points, slope 0.94; 86.8% of chances in 50-60%, 0.6% outside 40-70%; Brier skill against the base rate +0.56%
+    future-gap range holds 79.3%; kept share by chances (B's / seen): 20-50 0.12/0.25, 50-100 0.22/0.21, 100-200 0.34/0.21, 200-400 0.41/0.25, 400-+ 0.50/0.41
+  I100 (position) (3489 rows; φ RB 1.00, TE 1.00, WR 1.00)
+    B against A -0.89% (RB -0.31, WR -0.20, TE -3.63); A against all luck +3.51% (TE -0.30); B against all luck +2.64%
+    chance the gap closes (B, recalibrated): error 1.4 points, slope 0.74; 84.4% of chances in 50-60%, 0.6% outside 40-70%; Brier skill against the base rate +0.32%
+    future-gap range holds 78.8%; kept share by chances (B's / seen): 20-50 0.14/0.26, 50-100 0.24/0.22, 100-200 0.37/0.22, 200-400 0.45/0.25, 400-+ 0.56/0.42
+  both (3489 rows; φ RB 1.03, TE 1.04, WR 1.01)
+    B against A -0.60% (RB +0.37, WR -0.21, TE -2.68); A against all luck +3.51% (TE -0.30); B against all luck +2.93%
+    chance the gap closes (B, recalibrated): error 1.7 points, slope 0.82; 85.3% of chances in 50-60%, 0.6% outside 40-70%; Brier skill against the base rate +0.41%
+    future-gap range holds 79.0%; kept share by chances (B's / seen): 20-50 0.12/0.26, 50-100 0.22/0.22, 100-200 0.34/0.22, 200-400 0.42/0.25, 400-+ 0.51/0.42
+
+== The picked version (best B against A on 2016-2024, ties to the simpler): as built
+  1. B at least as good as A: fails (vault -0.98% (TE -4.17), 2016-2024 +1.19%)
+  2. calibration stays honest: passes (vault 0.9 points, slope 0.85; 2016-2024 0.9, 0.92)
+  3. chances separate players more: fails (50-60% share 74.0% / 85.2% (2016-2024 / vault); vault Brier skill +0.46% against the build's +0.46%)
+  better than before (all three): no
+
+== R17 in depth (the as-built measure)
+  The position's level μ (fit on the 6 seasons before) against the rest of the season's actual average gap, per chance (weighted by chances):
+    RB: 2016 μ -0.004 seen +0.024; 2017 μ +0.001 seen +0.004; 2018 μ +0.001 seen +0.056; 2019 μ +0.012 seen +0.049; 2020 μ +0.019 seen +0.035; 2021 μ +0.024 seen +0.019; 2022 μ +0.028 seen +0.019; 2023 μ +0.028 seen -0.011; 2024 μ +0.026 seen +0.023; 2025 μ +0.022 seen +0.037
+    TE: 2016 μ +0.100 seen +0.058; 2017 μ +0.094 seen +0.011; 2018 μ +0.086 seen +0.134; 2019 μ +0.103 seen +0.112; 2020 μ +0.096 seen +0.087; 2021 μ +0.093 seen +0.037; 2022 μ +0.088 seen +0.086; 2023 μ +0.087 seen +0.098; 2024 μ +0.091 seen +0.108; 2025 μ +0.089 seen +0.139
+    WR: 2016 μ +0.025 seen -0.001; 2017 μ +0.021 seen -0.017; 2018 μ +0.013 seen +0.104; 2019 μ +0.031 seen +0.062; 2020 μ +0.043 seen +0.119; 2021 μ +0.057 seen +0.029; 2022 μ +0.059 seen +0.019; 2023 μ +0.062 seen +0.049; 2024 μ +0.073 seen +0.059; 2025 μ +0.062 seen -0.025
+  Vault tight ends: 729 rows, 66 players
+    20-100 chances behind: 511 rows, B against A -1.23%, B's kept share 0.26, A's 0.27
+    100-200 chances behind: 197 rows, B against A -10.13%, B's kept share 0.47, A's 0.27
+    200-+ chances behind: 21 rows, B against A -8.48%, B's kept share 0.61, A's 0.27
+  2016-2024, if μ had been the season's actual level (hindsight): B against A +0.81% (TE +2.19%)
+  2025, if μ had been the season's actual level (hindsight): B against A -1.12% (TE -4.95%)
+  The tight ends B lost most on (share of B's whole extra error over A for tight ends; total 102.1):
+    Mark Andrews: 47%, 15 games; last gap +0.393 on 142 chances, rest of the season -0.119; μ +0.089; kept B 0.49 / A 0.27
+    Trey McBride: 24%, 16 games; last gap +0.052 on 296 chances, rest of the season +0.190; μ +0.089; kept B 0.67 / A 0.27
+    Jonnu Smith: 16%, 16 games; last gap +0.208 on 166 chances, rest of the season -0.486; μ +0.089; kept B 0.53 / A 0.27
+    Josh Oliver: 15%, 13 games; last gap +0.691 on 37 chances, rest of the season +1.226; μ +0.089; kept B 0.20 / A 0.27
+    Hunter Henry: 10%, 15 games; last gap -0.057 on 169 chances, rest of the season +0.690; μ +0.089; kept B 0.53 / A 0.27
+    the top 5 make 111% of it

@@ -346,6 +346,47 @@ def build_opportunity(seasons: Sequence[int] | None = None, root: Path | None = 
         log.info("opportunity %d: %d chances in %.0fs", season, plays.height, time.time() - t)
 
 
+def _variant_dir(variant: str) -> Path:
+    return get_config().zone("interim") / "opportunity_quality" / f"xfp_{variant}"
+
+
+def build_opportunity_variant(variant: str, seasons: Sequence[int] | None = None) -> None:
+    """`play.xfp` and `player_game.opportunity` from another set of expected models
+    (`opportunity.VARIANT_INPUTS`, e.g. "position" for I100), fit on earlier seasons only like
+    the table's, saved in the interim zone (`read_opportunity_variant`), never as table parts."""
+    have = local_seasons("pbp")
+    chosen = sorted(s for s in have if seasons is None or s in seasons)
+    folder = _variant_dir(variant)
+    for season in chosen:
+        t = time.time()
+        try:
+            roster = read_part("player_game", "roster", [season]).collect()
+        except (FileNotFoundError, pl.exceptions.ComputeError):
+            continue
+        fitted = opportunity.fitted_for(season, have, _opportunity_chances, folder, variant)
+        if fitted is None:
+            continue
+        pbp = scan("pbp", [season]).select(opportunity.PBP_COLUMNS).collect()
+        chances = opportunity.chance_rows(pbp, roster.select("gsis_id", "game_id", "position"))
+        plays = opportunity.apply(chances, fitted)
+        pg = opportunity.player_game_rows(plays, pbp, roster, True)
+        for name, frame in (("play", plays), ("player_game", pg)):
+            path = folder / name / f"season={season}.parquet"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            frame.write_parquet(path)
+        log.info("opportunity %s %d: %d chances in %.0fs", variant, season, plays.height,
+                 time.time() - t)  # fmt: skip
+
+
+def read_opportunity_variant(variant: str) -> tuple[pl.DataFrame, pl.DataFrame]:
+    """The saved `build_opportunity_variant` rows: (plays, player-games), every season built."""
+    folder = _variant_dir(variant)
+    return tuple(
+        pl.read_parquet(sorted((folder / name).glob("season=*.parquet")))
+        for name in ("play", "player_game")
+    )  # type: ignore[return-value]
+
+
 def leverage_usage(season: int, root: Path | None) -> pl.DataFrame | None:
     """Each player-game's usage weighted by the stakes (`pcf.data.usage`), from the saved `play`
     and `player_play` parts (built first: TABLE_ORDER). None without them (participation starts
