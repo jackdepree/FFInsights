@@ -207,6 +207,12 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 
 **Over context-live's expectation** (skill-over-expected's fourth look, H84, 2026-11-20; decision 0038's back-history, 2017-2024): every measure above that has an expectation (pass rushers' pressures, WR catch rate, QB completion, QB and line sacks, pressures, time to throw and depth, RB yards per carry) repeats and travels within 0.05 of its plain rate when taken over the situation, or over the situation plus shotgun, no-huddle, pass rushers and the box. Verdicts don't change. The one gain: time to throw over expected repeats 0.70 for QBs (plain 0.64) and 0.41 for a line (0.36), with QB movers still keeping 37%. Detail in `skill-over-expected/EXPLORATION.md`, fourth look.
 
+**Offense traits from the context** (context-v2's first look, 2026-11-20):
+
+| Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Quick-pass rate over expected, offenses | context-v2 (H87) | Attempts within 2.5 s and under 5 yards, minus the calls' and situation's expected chance (coverage included) | 0.70 (odd against even weeks, 2024; 0.57 in 2023) | 0.68 (2023 to 2024) | **trait of the offense** (its plan) | No: it doesn't forecast next game's sacks or pressure (I95 failed, context-v2's third look) | 32 offenses; spread 3.7 points |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).

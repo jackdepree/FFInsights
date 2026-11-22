@@ -1,0 +1,396 @@
+# Context, the next version: exploration
+
+> **Status:** first look pre-registered 2026-11-20, before any run. The CEO, 2026-11-20: "Ok let's start with A. I think routes and coverage should be in scope." So method A (the chain, with boosted trees) comes first, and the after-the-season tier is in scope. That is the CEO's sign-off to explore it; building it as its own expert (`context-retro`, rule m) is still a build decision. The 2025 vault is untouched.
+
+## A data fact found before the design
+
+**Participation's `route` is one route per play: the targeted receiver's.** For example, "IN", "FLAT", "SWING", or empty on a play with no target. It is not each receiver's route, so it can't describe the play's design (all routes together). It says where the ball went, so it is an **after-the-snap** fact, like the pass location. The brief's draft said "routes per receiver"; that was wrong and is corrected there. Coverage (`defense_coverage_type`: Cover 0, 1, 2, 2-man, 3, 4, 6, 9, combo; and man or zone) is charted per dropback. It is the defense's call, though charted from what it showed after the snap. Its coding changed with the provider in 2023 (Cover 9 and combo appear), like pressure.
+
+## First look (written before the run, 2026-11-20)
+
+**Plays and seasons.** Dropbacks in context-live's play tables (all season types), **trained on 2023 and scored on 2024**. 2023 is the first season with one provider for pressure, time to throw and coverage (`context-live#R12`), so every tier trains on the same season and is scored on the same plays.
+
+**Outcomes:** pressure, time to throw, sack (dropbacks); depth of target and completion (attempts); dropback yards.
+
+**Tiers** (each adds to the one before):
+
+| Tier | Fields | Known |
+|---|---|---|
+| T0 | The training season's average | |
+| T1 | context-live's situation and live calls (FTN: play action, screen, RPO, motion, box, blitzers, rushers, QB location, hash, backfield, trick, sneak; shotgun, no-huddle). FTN's "0 pass rushers" with a box of 2 or fewer is set to missing (backlog idea I72) | in season, before the snap |
+| T2 | + coverage type and man or zone (participation) | after the season; chosen before the snap |
+| Given (H86) | + the play's own earlier outcomes, in the chain's order: pressure → time to throw → sack → depth → completion → yards | after the snap |
+| Hindsight (the room) | + the target's route and FTN's charting of the play (out of the pocket, throw-away, catchable, contested, drop, interception-worthy, QB-fault sack, which read was thrown) | after the play; never a forecast |
+
+**Method A, the chain, before the snap:** each step uses T2 plus the *expected* values of the steps before it. In training they are cross-fitted in 5 folds of games, so a step never sees its own training rows' fitted values. This is set against T2's independent models.
+
+**Models:** histogram boosted trees with context-live's settings (`models.TREES`), classifier for a chance, regressor for an amount's mean. No tuning.
+
+**Scores, outcome by outcome (the CEO's test), on 2024:** the share of squared error removed against T0; for chances, the log-loss gain against T0 and the spread of chances (10th to 90th percentile); a 90% interval for every comparison from resampling weeks (`pcf.validation.compare`). **Fitting noise:** T2 refit on 3 resamples of 2023's games; the spread of its share removed.
+
+**Pass rules:**
+- **H86** (the CEO 75%, Claude 90%): **held** if T2 plus the real pressure removes clearly more error than T2 (the interval clear of zero) for at least 3 of time to throw, sack, completion and dropback yards, **and** sack's share removed at least triples. Claude's size bet: sack from about 1.4% to 10%+ (80%).
+- **H87** (the CEO 75%, Claude 75%), quick and short passing as a planned strategy: a **quick pass** is an attempt thrown within 2.5 seconds and less than 5 yards downfield. Held if an offense's quick-pass rate over T2's expectation repeats 0.4+ between odd and even weeks of 2024, and 0.3+ from 2023 to 2024. That makes it the offense's plan rather than what the play gave it. Claude: 70% on the odd-even bar. Claude's earlier side bet, a design label from all receivers' routes, **can't be tested**: the route is only the target's.
+- **Claude's new bets** (written now): coverage adds 1+ point of share removed for completion and for depth beyond T1, 55%; the chain before the snap is within 0.2 points of T2's independent models on every outcome, 75%; the hindsight tier removes 30%+ of completion's error, 70%.
+- **H85 and H88** aren't tested in this look (method C comes after A; downstream gains need the yardstick).
+
+### First look: the results ([`explore/first_look.py`](explore/first_look.py), output [`first_look.txt`](explore/first_look.txt))
+
+21,740 dropbacks in 2023 (training), 21,030 in 2024 (scored). Coverage is charted on 100% of 2024's dropbacks, the target's route on 97% of attempts. **Sanity:** T1 here, trained on 2023 alone, matches the shipped context-live on the same 2024 plays: pressure 4.3% against 4.2%, time to throw 17.3% against 17.4%, depth 17.3% against 17.8%, completion 3.6% against 4.2%.
+
+**Each outcome by tier, 2024** (the share of squared error removed against 2023's average; for chances, the log-loss gain and the spread of chances, 10th to 90th percentile):
+
+| Outcome | T1 calls | T2 + coverage | Chain, before the snap | T2 + real pressure | Given, all earlier | Hindsight (the room) | Fitting noise (sd) |
+|---|---|---|---|---|---|---|---|
+| Pressure | 4.3% (18-44%) | 4.2% | 4.2% | | | 29.9% | 0.11 |
+| Time to throw | 17.3% | **17.5%** | 17.5% | **29.2%** | 29.2% | 65.0% | 0.27 |
+| Sack | 1.1% (2-12%) | 1.2% | 1.2% | **16.8%** (0-25%) | 69.2%* | 83.0% | 0.13 |
+| Depth of target | 17.3% | **18.5%** | 18.1% | 18.7% | 27.0% | 78.1% | 0.28 |
+| Completion | 3.6% (53-77%) | **4.6%** | 4.7% | **7.7%** | 16.7% | 87.4% | 0.16 |
+| Dropback yards | 2.1% | 2.2% | 2.1% | **6.6%** | 72.2%* | 73.4% | 0.15 |
+
+\* **Leak by a missing value, not a finding:** time to throw is charted on 94% of non-sack dropbacks and on 2% of sacks, so "given time to throw" tells the model it wasn't a sack. Dropback yards given the completion and the depth is close to arithmetic. The clean numbers for H86 are the "T2 + real pressure" column.
+
+**The paired comparisons** (the gain in % of the simpler model's loss, 90% interval from resampling weeks):
+
+| Outcome | Coverage beyond the calls | The chain beyond T2 | Real pressure beyond T2 |
+|---|---|---|---|
+| Pressure | -0.02% (-0.10 to +0.07) | 0.00% | |
+| Time to throw | **+0.17%** (+0.05 to +0.28) | +0.05% (-0.05 to +0.16) | **+14.1%** (+12.8 to +15.6) |
+| Sack | +0.10% (-0.20 to +0.40) | -0.11% (-0.41 to +0.18) | **+33.0%** (+31.2 to +34.8) |
+| Depth of target | **+1.50%** (+1.24 to +1.79) | **-0.55%** (-0.79 to -0.33): worse | +0.21% (+0.04 to +0.37) |
+| Completion | **+0.79%** (+0.51 to +1.11) | +0.10% (-0.04 to +0.24) | **+2.58%** (+2.27 to +2.91) |
+| Dropback yards | +0.06% (-0.05 to +0.19) | -0.04% (-0.23 to +0.15) | **+4.56%** (+3.72 to +5.35) |
+
+**H87, quick passes:** 25.5% of 2024's attempts are thrown within 2.5 seconds and under 5 yards downfield. T2 explains 26.5% of their squared error (log loss 21.6%), with chances from 9% to 60%. An offense's quick-pass rate over that expectation repeats **0.70** between odd and even weeks of 2024 (90%: 0.54 to 0.82; 2023: 0.57), and **0.68** from 2023 to 2024 (0.49 to 0.82). Offenses spread by 3.7 points of quick-pass rate (one standard deviation) beyond what their calls and situations explain.
+
+### What the first look found
+
+**F1. Before the snap, the room on a yes-or-no outcome stays small, even with coverage.** Pressure 4.2%, sack 1.2%, completion 4.6%. The amounts the calls describe are where it's large: time to throw 17.5%, depth 18.5%. The CEO's "1 to 4%" is the nature of a single play, not a weak model. Even the hindsight tier (the play's own charting) leaves pressure at 30%.
+
+**F2. Coverage helps the throw, not the rush.** Knowing the coverage adds about 1 point of share for completion (3.6% to 4.6%) and depth (17.3% to 18.5%), both clear of the noise. It adds a little to time to throw, and nothing to pressure, sack or yards. That is about the size of one extra FTN call. It is after-the-season data, so it belongs to `context-retro`.
+
+**F3. Within a play, pressure changes everything after it** (H86). Given a real pressure, the sack chance runs from about 0% to 25%, not 2% to 12%. Sack's share removed goes from 1.2% to 16.8%, 14 times more. Time to throw's goes from 17.5% to 29.2%, completion's from 4.6% to 7.7%, and dropback yards' from 2.2% to 6.6%. Every gain is far clear of zero. This is the blame-splitting tool: a sack or an incompletion measured "given the pressure" credits the QB with what he did after it and leaves the pressure itself to the line.
+
+**F4. The chain adds nothing before the snap.** Feeding each step the expected values of the steps before it changes nothing for five outcomes, and makes depth slightly worse (-0.55%). The trees already see every call the earlier steps see, so an expected pressure tells them nothing new. The chain's value is only in its "given" mode (F3).
+
+**F5. Quick passing is an offense's plan** (H87). Beyond what its calls and situations explain, an offense's quick-pass rate repeats 0.70 within a season and 0.68 from one season to the next. That is as steady as any team trait PCF has measured. It fits the CEO's reading: time to throw and depth are partly strategy.
+
+**F6. Data facts.** Participation's `route` is only the target's route (one per play), so the play's design from all routes isn't in free data. Time to throw is missing on 98% of sacks, so any model given time to throw learns the sack from the gap.
+
+### The hunches
+
+| # | Verdict | Why | Real? | Pays? |
+|---|---|---|---|---|
+| H86 | **Held** | Given the real pressure, all four later outcomes improve clearly: time to throw +14.1%, sack +33.0%, completion +2.6%, yards +4.6% of the loss. Sack's share goes from 1.2% to 16.8% (14 times) | Yes | Not a forecast (within the play); its use is splitting the blame |
+| H87 | **Held** | An offense's quick-pass rate over expected repeats 0.70 (odd against even weeks, 2024) and 0.68 (2023 to 2024); play action was already a call | Yes | Not tested |
+
+### The odds, scored
+
+| Bet | CEO | Claude | Result |
+|---|---|---|---|
+| H86 as worded | 75% | 90% | Held |
+| H86: sack's share from about 1.4% to 10%+ given pressure | | 80% | Held (1.2% to 16.8%) |
+| H87 as worded | 75% | 75% | Held |
+| H87: the odd-even repeat 0.4+ | | 70% | Held (0.70) |
+| H87: a design label from all routes | | 60% | Can't be tested (the route is only the target's) |
+| Coverage adds 1+ point for completion and for depth | | 55% | Held (1.0 and 1.2 points) |
+| The chain before the snap within 0.2 points of T2 on every outcome | | 75% | Failed: depth 0.4 points worse |
+| The hindsight tier removes 30%+ of completion's error | | 70% | Held (87%) |
+
+### The case against
+
+- **One test season.** Everything is trained on 2023 and scored on 2024. A provider that changes again would move these numbers.
+- **Coverage is charted from what the defense showed after the snap.** Some of its 1-point gain may be disguise resolved by the play, not the call itself.
+- **"Given pressure" is only as good as the pressure flag.** It changed provider in 2023 and halved, so this provider's pressure is a stricter event.
+- **Quick passes' repeat is 32 offenses.** The interval is wide (0.54 to 0.82). And the quick-pass definition uses time to throw and depth, which are partly the QB's (I89: a QB keeps 36% of his time to throw when he moves).
+- **No tuning.** Trees with fixed settings. Method C or a tuned model might do better, and that is H85's test.
+
+### Next steps (for the CEO's direction)
+
+1. **Method C, the CEO's diffusion model, against this chain** (H85), on the same plays and tiers.
+2. **The blame split as a product of this expert:** the chain's "given pressure" expectations (sack, time to throw, completion) as context-live outputs, so `qb-talent` and `line-play` can credit a QB for what he does after a pressure (I94).
+3. **Quick-pass rate over expected as an offense trait** (I95): does it forecast next week's pressure allowed and sacks?
+
+## Second look: the CEO's conditional diffusion model against the chain (written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Can we test the diffusion model against the chain on the same plays?" H85's odds: the CEO 25%, Claude 15% (it uncovers more signal), 50% (it matches the trees), 60% (its joint forecasts are better calibrated than separate ones multiplied).
+
+**The same plays as the first look.** Dropbacks, trained on 2023, scored on 2024. The conditions are T2's fields: the situation, FTN's calls and the coverage.
+
+**The model** (a technical call; decision 0039): a conditional denoising diffusion model (DDPM) over a play's six outcomes at once: pressure, time to throw, sack, depth, completion and dropback yards.
+- **The outcomes as numbers.** A yes-or-no outcome is coded -1 or +1 ("analog bits"). An amount is mapped to normal scores by its training quantiles. An outcome a play doesn't have (depth on a sack, time to throw on a sack) is masked out of the training loss, not filled in.
+- **The network:** a 3-layer MLP of 256 units that predicts the noise. It takes the noisy outcomes, the step (a sine embedding), the conditions (missing as 0, with a missing flag) and the outcomes given to it.
+- **The "given" mode.** In training, each present outcome is shown to the network as a condition with chance 0.3, so one model answers both before the snap (nothing given) and "given a pressure".
+- **Training and sampling:** 100 noise steps (cosine schedule), Adam, 40 passes over 2023, batch 512, CPU. 64 drawn plays per 2024 play. A chance is the share of draws above 0; an amount's mean is the mean of the draws mapped back.
+- **The fitting noise:** two training seeds.
+
+**The opponent, on the same rows:** the first look's T2 trees before the snap, and T2 plus the real pressure for "given a pressure". Scored outcome by outcome on 2024, as in the first look: the share of squared error, the log-loss gain, and paired intervals from resampling weeks.
+
+**Pass rules:**
+- **H85 as worded (more signal than the chain):** **held** if the diffusion model is clearly better than the trees (the whole interval above zero) on 3 or more of the 6 outcomes before the snap. **Failed** if it is clearly better on none, or clearly worse on 3 or more. **Unclear** otherwise.
+- **Claude's side bets:**
+  - "It matches": the interval includes zero, or the gain is within ±0.5% of the loss, on 4+ of the 6 outcomes. 50%.
+  - "The joint is better calibrated": for the four combinations of pressure and sack before the snap, its log loss is below the T2 trees' two chances multiplied. 60%.
+  - "Given a pressure, it matches the trees" on time to throw, sack, completion and yards, within ±1% of the loss. 50%.
+
+**Amended before the run (2026-11-20, nothing has been fit or scored):** 40 passes over 2023's 21,740 dropbacks is about 1,700 training steps, too few for a diffusion model (they usually need 10,000+), which would make the test unfair to the CEO's method. So the model trains **200 passes** (about 8,500 steps). Drawing 64 plays for each of 21,030 plays through 100 steps, twice (two seeds) and in two modes, is too slow on a CPU, so it is drawn with **DDIM in 50 steps** (the same trained model, a faster deterministic sampler). The pass rules don't change.
+
+### Second look: the results ([`explore/second_look.py`](explore/second_look.py), output [`second_look.txt`](explore/second_look.txt))
+
+The same 21,740 dropbacks of 2023 (training) and 21,030 of 2024 (scored), on T2's 44 condition columns. Training took about 22 seconds a seed; the training loss fell from 0.69 to 0.216 for both seeds and had flattened by pass 150, so more passes would not have changed much.
+
+**Each outcome, 2024** (the share of squared error removed against 2023's average; for chances, the log-loss gain and the spread of chances, 10th to 90th percentile; two seeds):
+
+| Outcome | Trees, before the snap | Diffusion, before the snap | Trees, given a pressure | Diffusion, given a pressure |
+|---|---|---|---|---|
+| Pressure | **4.2%** (log loss 3.6%; 18-43%) | 1.7% and 1.5% (log loss 1.7%; 19-53%) | | |
+| Time to throw | **17.5%** | 11.8% and 12.7% | **29.2%** | 24.4% and 25.0% |
+| Sack | **1.2%** (log loss 3.6%; 2-12%) | **-8.0% and -8.2%**: worse than the average (log loss -6.3%; 3-22%) | **16.8%** (log loss 35.4%) | 15.3% and 15.1% (log loss 30.1%) |
+| Depth of target | **18.5%** | 14.9% and 15.4% | **18.7%** | 15.0% and 15.8% |
+| Completion | **4.6%** (log loss 3.8%) | 2.2% and 2.7% (log loss 1.9% and 2.1%) | **7.7%** | 5.9% and 5.5% |
+| Dropback yards | **2.2%** | -1.0% and -0.6% | **6.6%** | 4.2% and 4.3% |
+
+**The paired comparison** (diffusion seed 0 against the trees; the gain in % of the trees' loss, 90% interval from resampling weeks; negative is worse):
+
+| Outcome | Before the snap | Given a pressure |
+|---|---|---|
+| Pressure | -2.0% (-2.4 to -1.5) | |
+| Time to throw | -6.9% (-8.0 to -6.0) | -6.7% (-7.9 to -5.6) |
+| Sack | -10.2% (-11.5 to -9.0) | -8.2% (-9.0 to -7.5) |
+| Depth of target | -4.5% (-5.3 to -3.5) | -4.5% (-5.4 to -3.7) |
+| Completion | -2.0% (-2.2 to -1.7) | -1.7% (-2.1 to -1.3) |
+| Dropback yards | -3.2% (-3.6 to -2.9) | -2.5% (-3.0 to -2.1) |
+
+Every interval is below zero: the diffusion model is clearly worse than the trees on all six outcomes, in both modes. The two seeds differ by up to 0.9 points of share (time to throw 11.8% against 12.7%), several times the trees' fitting noise (0.1 to 0.3), so the diffusion model is also the noisier one.
+
+**The joint of pressure and sack, before the snap** (mean log loss of the combination that happened; lower is better):
+
+| | Log loss | No pressure, no sack | No pressure, sack | Pressure, no sack | Pressure and sack |
+|---|---|---|---|---|---|
+| What happened | | 69.0% | 0.0% | 24.4% | 6.6% |
+| Diffusion | 0.794 | 64.3% | 0.4% | 22.8% | **12.5%** |
+| Trees, two chances multiplied | 0.833 | 65.8% | **4.5%** | 27.5% | 2.3% |
+| Trees, the chain (pressure, then sack given it) | **0.755** | 70.2% | 0.0% | 23.1% | 6.7% |
+
+### What the second look found
+
+**F7. On the same plays and inputs, the diffusion model forecasts every outcome worse than the trees.** Before the snap it loses 2% (pressure, completion) to 10% (sack) of the trees' loss, all clear of the noise. Given a pressure it loses 2% to 8%. It never matches them.
+
+**F8. Its biggest miss is the sack, and it's a calibration miss.** It forecasts sacks on 12.9% of dropbacks against 6.6% that happened, so its sack chances are worse than knowing nothing (-8% of squared error). Two likely reasons, both about how a diffusion model makes a chance: a chance is the share of 64 drawn plays that came out "yes", which can't express a 3% chance finely (one draw is 1.6 points); and the -1/+1 coding of a rare yes-or-no outcome tends to drift towards the middle when sampled.
+
+**F9. It does learn the shape of a play.** Its draws almost never have a sack without a pressure (0.4%, against 4.5% for the two separate chances multiplied), which is how football works and what H85 hoped for. So its joint log loss (0.794) beats the separate chances multiplied (0.833). But the chain of trees, which conditions the sack on the pressure by design, gets the shape right and the rates right too (0.755). The joint shape comes free once the outcomes are modelled in the play's order (F3, F4); it isn't a reason to use diffusion.
+
+### The hunch
+
+| # | Verdict | Why | Real? | Pays? |
+|---|---|---|---|---|
+| H85 | **Failed** | Clearly worse than the trees on all six outcomes before the snap (by 2% to 10% of their loss), and on all five given a pressure; the pre-registered rule says failed at 3 or more clearly worse | No | No: worse than the trees on every outcome |
+
+### The odds, scored
+
+| Bet | CEO | Claude | Result |
+|---|---|---|---|
+| H85 as worded (more signal than the trees) | 25% | 15% | Failed |
+| It matches the trees on 4+ of 6 outcomes | | 50% | Failed (0 of 6) |
+| Its joint of pressure and sack beats the separate chances multiplied | | 60% | Held (0.794 against 0.833), but the chain does better still (0.755) |
+| Given a pressure, within 1% of the trees on the later outcomes | | 50% | Failed (0 of 5; 1.7% to 8.2% worse) |
+
+### The case against
+
+- **One untuned design.** A 3-layer network, 200 passes, 64 draws a play, one learning rate, on a CPU. Tabular diffusion papers tune for days. A tuned model would close some of the gap; whether it would close 2% to 10% of the loss on every outcome is the open question, and the trees are untuned too.
+- **The chances are coarse by construction.** 64 draws give chances in steps of 1.6 points, and a rare outcome like the sack suffers most. Many more draws, or reading the chance from the model's final denoising estimate instead of counting draws, would help the sack. It would not help time to throw or depth, which are amounts and lose 4% to 7% too.
+- **One training season.** 21,740 plays is small for a network; trees are known to win on small tables. With 2018-2024's coverage tier (about 130,000 dropbacks) the gap could shrink.
+- **What it wasn't asked.** Diffusion's strength is drawing whole plays (for a game simulator), not forecasting one outcome. This look scored only the forecasts, which is the CEO's test for the expert.
+
+### Next steps (for the CEO's direction)
+
+1. **The blame split** (I94): the chain's "given pressure" expectations as an output of the context expert, and a QB's sacks over them as his sack avoidance. This is where the first look's biggest gain lives (F3).
+2. **Quick-pass rate over expected as an offense trait** (I95): does it forecast next week's pressure allowed and sacks?
+3. **Park diffusion as a forecaster**; keep it for later as a play simulator (I96), where its joint shape matters and its rates can be recalibrated to the trees'.
+4. **Draft the brief for a build**: the chain with T1 (in-season) and T2 (retrospective) editions, plus the given-pressure mode.
+
+## Third look: the quick-pass rate as a forecast of next game's pressure and sacks (I95; written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Test the quick-pass rate." I95 asks whether an offense's quick-pass rate over expected (F5: it repeats 0.70 within a season) forecasts its next game's pressure allowed and sacks, beyond its pressure rate to date. Claude's odds, written with the idea: 45% it adds 0.5% or more to next game's sack rate.
+
+**Rows.** One row per offense and game, 2023 and 2024 (one time-to-throw provider), every game after the offense's first of the season. **Targets:** that game's pressure rate and sack rate, per dropback.
+
+**What the forecast knows** (all from the offense's earlier games of the same season, each rate pulled towards the league's by 100 plays of its own denominator so a team's week 2 isn't read at face value):
+- **The base:** the offense's pressure rate and sack rate to date, and the opponent defense's pressure rate and sack rate to date.
+- **The obvious input** (the charter's check): the offense's mean time to throw to date. Quick passing is made of time to throw, so it's the input most likely to carry the trait already.
+- **I95:** the offense's quick-pass rate over expected to date (attempts within 2.5 s and under 5 yards, minus the first look's T2 chance: coverage included, cross-fitted by game on 2023, trained on 2023 for 2024). Beside it, the raw quick-pass rate to date, to see whether the expectation matters.
+
+**Timing.** Time to throw is participation data, known only after the season (rule m). So, like F5, this is a retrospective trait: its in-season use would be last season's rate as a prior. This look tests whether the signal is there at all.
+
+**The model and the score.** A linear regression weighted by the game's dropbacks (the simple rung; 32 teams, about 500 rows a season, too few for trees). Trained on 2023's rows, scored on 2024's. The score is the weighted squared error of next game's rate; the gain is in % of the simpler model's error, with a 90% interval from resampling weeks. **The room first:** a game has about 35 dropbacks, so most of a game's sack rate is a coin flip. The share of the rate's variance that isn't the coin flip's (its observed variance minus the average p(1-p)/n) is reported first, as the ceiling.
+
+**Pass rule for I95** (on next game's sack rate, the base plus quick-pass over expected against the base):
+- **Held** if the gain is 0.5% or more of the base's error and its interval is above zero.
+- **Failed** if the gain is under 0.5% and the interval includes zero.
+- **Unclear** otherwise.
+
+**Claude's side bets:**
+- The quick-pass rate's weight on next game's sack rate is negative (more quick passes, fewer sacks): 75%.
+- It adds 0.5% or more to next game's pressure rate beyond the base: 35%.
+- Beyond the base plus time to throw to date, it adds nothing clear to the sack rate (the interval includes zero): 60%.
+- The over-expected rate does better than the raw rate: 50%.
+
+### Third look: the results ([`explore/third_look.py`](explore/third_look.py), output [`third_look.txt`](explore/third_look.txt))
+
+538 offense-games a season after each offense's first game; 37.5 dropbacks a game on average.
+
+**The room first.** A single game's sack rate is mostly luck: of its variance across offense-games, the coin flip's share is 76%, so **at most 23% of the error can be forecast** by anything (23.8% in 2023, 23.4% in 2024). A game's pressure rate has more room: **at most 47%**.
+
+**Next game's rates, 2024** (trained on 2023; the share of the weighted squared error removed against 2023's average):
+
+| Forecast | Sack rate | Pressure rate |
+|---|---|---|
+| The base (the offense's pressure and sacks to date, the opponent's) | **4.8%** | 3.5% |
+| Base + quick-pass rate over expected | 3.4% | 3.6% |
+| Base + quick-pass rate (raw) | 4.1% | 3.6% |
+| Base + time to throw to date (the obvious input) | 3.3% | **6.2%** |
+| Base + time to throw + quick-pass over expected | 2.7% | 6.3% |
+
+**The paired comparisons** (the gain in % of the simpler model's error, 90% interval from resampling weeks):
+
+| Comparison | Sack rate | Pressure rate |
+|---|---|---|
+| Quick over expected, beyond the base (**I95's test**) | **-1.53%** (-2.47 to -0.66): worse | +0.13% (+0.01 to +0.24) |
+| Raw quick rate, beyond the base | -0.76% (-1.57 to -0.00) | +0.14% (+0.05 to +0.23) |
+| Time to throw, beyond the base | -1.61% (-2.97 to -0.40): worse | **+2.82%** (+2.08 to +3.62) |
+| Quick over expected, beyond the base and time to throw | -0.61% (-1.03 to -0.19): worse | +0.07% (-0.52 to +0.69) |
+| Over expected against raw | -0.76% (-1.25 to -0.29): worse | -0.01% (-0.09 to +0.07) |
+
+**The reverse** (trained on 2024, scored on 2023, a check only) says the same: quick over expected costs the sack rate 1.37% (clear), adds nothing to pressure (-0.51%, not clear), and time to throw adds 2.96% to pressure (clear).
+
+**The weight flips sign.** Fitted on 2023, more quick passes than expected goes with *more* sacks next game (+0.11 per unit; 90% from resampling weeks +0.02 to +0.21). Fitted on 2024, it goes with fewer (-0.10). A trait whose effect flips between seasons isn't telling the forecast anything. It's also tied to time to throw (r = -0.60), and only weakly to the offense's pressure (-0.19) and sacks (-0.17) to date.
+
+### What the third look found
+
+**F10. An offense's quick-pass rate doesn't forecast its next game's sacks or pressure.** Raw or over expected, before or after time to throw, it adds nothing to the pressure rate (+0.1%) and makes the sack forecast worse (-0.8% to -1.5%, clear). Its weight on sacks flips sign between seasons. The trait is real (F5, it repeats 0.70) but it's the offense's style, not a protection signal.
+
+**F11. Time to throw to date forecasts next game's pressure.** An offense that has held the ball longer allows more pressure next game: +2.8% of the base's error, clear in both directions (+3.0% in the reverse). It's the best single addition in this look, and it doesn't carry over to sacks (-1.6%).
+
+**F12. A game's sack rate is three-quarters luck.** At most 23% of its error is forecastable; the base gets 4.8% of it. Every extra input above four made the sack forecast worse in both directions, so at this size of data the sack rate wants fewer inputs, not more (shrink to the offense's own sacks and pressure).
+
+### The idea
+
+| # | Verdict | Why |
+|---|---|---|
+| I95 | **Failed** (flagged: by the letter of the rule, "unclear") | The gain on next game's sack rate is -1.53% (-2.47 to -0.66): clearly worse, not better. The pre-registered rule named "held" (+0.5%, clear) and "failed" (under 0.5%, interval through zero) and left "clearly worse" to "unclear otherwise", a hole Claude didn't foresee. Clearly worse is a stronger failure than no gain, so Claude closes it as failed |
+
+### The odds, scored
+
+| Bet | Claude | Result |
+|---|---|---|
+| I95: adds 0.5%+ to next game's sack rate | 45% | Failed (-1.53%) |
+| The quick-pass weight on sacks is negative | 75% | Failed (positive on 2023, 98% of resamples; negative on 2024) |
+| It adds 0.5%+ to the pressure rate | 35% | Failed (+0.13%, clear but small) |
+| Beyond time to throw, nothing clear for sacks | 60% | Failed the other way: clearly worse (-0.61%) |
+| Over expected beats raw | 50% | Failed (worse for sacks, equal for pressure) |
+
+### The case against
+
+- **Small rows, plain regression.** 538 offense-games a season and no shrinkage on the weights. A shrunk model (ridge) might keep the quick-pass rate at a weight near zero instead of hurting. It would not turn a flipping sign into a gain.
+- **The wrong target, maybe.** Quick passing could protect a QB within a game (fewer sacks on the quick plays themselves) without changing next game's rate, because defenses and play-callers adjust. This look asked about the next game only.
+- **One provider, two seasons.** Time to throw changed provider in 2023, so earlier seasons can't be added without care.
+
+### Next steps (for the CEO's direction)
+
+1. **Time to throw to date as an input for next game's pressure** (F11): context-live already carries the offense's time to throw over expected on every play (`off_time_to_throw_oe`), so this is a check of how much it adds there, not a new build.
+2. **The blame split** (I94), still the biggest gain context-v2 has found (F3).
+3. **Draft the build brief** for the chain (T1 and T2 editions, plus the given-pressure mode).
+
+## Fourth look: the blame split (I94; written before the run, 2026-11-20)
+
+The CEO, 2026-11-20: "Can you please draft the build for the chain and explore the blame split?" The exploration comes first, so the brief can say whether the split belongs in the build.
+
+**A data fact found before the design.** Before 2023, participation's `was_pressure` is **missing on every sack** (2018: 1,321 of 1,321; 2021: 1,315 of 1,315), and on about 4% of other dropbacks. From 2023 it is set on 99.9% of sacks. So before 2023 "sacks per pressure" has the sacks missing from its denominator. Here **a sack counts as a pressure** in every season (what the new provider does), and dropbacks with the flag missing otherwise are left out.
+
+**The split.** For every dropback, two chances from the same trees and the same calls (context-live's calls16 edition: the situation plus shotgun, no huddle, participation's rushers and box; 2016 on):
+- **E0**, the sack chance before the snap;
+- **E1**, the sack chance given whether there was a pressure.
+
+So a play's sack over expected splits into two parts that add up: **the pressure part**, E1 - E0 (how much the pressure, or its absence, raised the sack chance: the line's side, mostly), and **the after-pressure part**, sack - E1 (what happened once the pressure was known: the QB's side, mostly). The same for completion on attempts: completion over E1 (given pressure) against over E0.
+
+**Fitting.** Trees (context-live's settings), cross-fitted by season inside each pressure provider: 2016-2022 leaving one season out, 2023 trained on 2024 and 2024 on 2023. Retrospective, discovery only.
+
+**The measures** (regular season, 2017-2024 season pairs, the skill-over-expected yardstick: each season's league average out, the repeat from one season to the next, and movers' repeat over stayers', "share kept"; the bar is repeat 0.2+ and movers keep half). QBs with 150+ dropbacks in both seasons; linemen with 300+ (his team's dropbacks while he's on the field):
+1. Sacks per pressure, plain (the reference; skill-over-expected's H82 found 0.20 with QB movers keeping -46%, with the old denominator).
+2. **Sacks per pressure over E1** (on pressured dropbacks): I94's measure.
+3. Sacks per dropback, plain.
+4. The after-pressure part per dropback.
+5. The pressure part per dropback.
+6. Completion over E1 against completion over E0 (QBs only).
+
+**Pass rule for I94** (Claude's odds with the idea: 55%), for QBs:
+- **Held** if sacks per pressure over E1 repeats more than plain sacks per pressure on the same pairs, and QB movers keep half or more.
+- **Failed** if it repeats no more than the plain rate and movers keep under half.
+- **Unclear** otherwise.
+
+**Claude's side bets:**
+- The QB's after-pressure part per dropback passes both bars: 50%.
+- QB movers keep more of the after-pressure part than lineman movers do (it's the QB's): 65%.
+- QB movers keep under half of the pressure part (it isn't the QB's): 60%.
+- QB completion over E1 repeats within 0.03 of completion over E0 (the pressure barely reorders QBs): 60%.
+
+### Fourth look: the results ([`explore/fourth_look.py`](explore/fourth_look.py), output [`fourth_look.txt`](explore/fourth_look.txt))
+
+189,243 dropbacks, 2016-2024; 5,925 with the pressure flag missing (not sacks) left out. Season pairs 2017-2024 in the regular season: 196 QB pairs (35 movers), 739 lineman pairs (124 movers). The run was cut off once by a shutdown and once by a missing column (fixed); the saved output is the third, complete run. An earlier complete run gave the same table except a lineman's pressure part kept 9% instead of 22% (the main-team table breaks ties differently between runs); both are under half.
+
+**The two chances** (the share of the sack's squared error removed, by season): before the snap (E0) 0.4% to 2.0%; given the pressure (E1) **12.8% to 16.8%**, in both providers. Completion: 1.2% to 2.6% before the snap, 3.7% to 5.7% given the pressure. The first look's F3 holds across nine seasons.
+
+**Every measure** (each season's league average out; the repeat is the correlation with next season, 90% interval from resampling players; share kept is movers' repeat over stayers'; the bar is 0.2+ and half kept):
+
+| Who | Measure | Repeat | Stayers | Movers | Share kept | Passes |
+|---|---|---|---|---|---|---|
+| QB | Sacks per pressure, plain (a sack counted as a pressure) | 0.44 (0.32-0.53) | 0.44 | 0.47 | **107%** | yes |
+| QB | Sacks per pressure over E1 (**I94**) | 0.43 (0.31-0.53) | 0.43 | 0.47 | 109% | yes |
+| QB | Sacks per dropback, plain | 0.53 (0.41-0.62) | 0.54 | 0.44 | 81% | yes |
+| QB | Sacks over E0 per dropback (the whole) | 0.50 (0.38-0.60) | 0.51 | 0.43 | 84% | yes |
+| QB | **The after-pressure part** per dropback | 0.45 (0.32-0.54) | 0.45 | 0.45 | **101%** | yes |
+| QB | **The pressure part** per dropback | 0.45 (0.34-0.53) | 0.51 | 0.24 | **47%** | no |
+| OL | Sacks per pressure, plain | 0.31 (0.25-0.37) | 0.36 | 0.04 | 11% | no |
+| OL | Sacks per pressure over E1 | 0.29 (0.23-0.35) | 0.34 | 0.05 | 16% | no |
+| OL | Sacks per dropback, plain | 0.31 (0.25-0.37) | 0.35 | 0.10 | 29% | no |
+| OL | Sacks over E0 per dropback (the whole) | 0.28 (0.21-0.34) | 0.31 | 0.12 | 37% | no |
+| OL | **The after-pressure part** per dropback | 0.27 (0.20-0.34) | 0.32 | 0.01 | **4%** | no |
+| OL | **The pressure part** per dropback | 0.20 (0.13-0.27) | 0.24 | 0.05 | **22%** | no |
+| QB | Completion, plain | 0.47 (0.34-0.59) | 0.50 | 0.32 | 65% | yes |
+| QB | Completion over E0 | 0.47 (0.33-0.58) | 0.49 | 0.33 | 68% | yes |
+| QB | Completion over E1 (given the pressure) | 0.46 (0.33-0.56) | 0.48 | 0.35 | 73% | yes |
+
+### What the fourth look found
+
+**F13. What happens after a pressure belongs to the QB.** The after-pressure part of a play's sack (sack minus its chance given the pressure) repeats 0.45 for QBs, and QBs who change teams keep all of it (101%). Linemen who change teams keep none of theirs (4%). That is the cleanest owner split PCF has measured.
+
+**F14. The pressure itself belongs to neither alone.** The pressure part (how much the pressure, or the lack of one, raised the sack chance) repeats 0.45 on a QB's dropbacks, but a QB who moves keeps 47% of it, and a lineman who moves keeps 22%. Half goes with the QB (holding the ball: FINDINGS F32, time to throw), and the rest stays with the team: the line as a unit and its scheme, not any one lineman (as FINDINGS F10 found for pressures).
+
+**F15. Sacks per pressure is a QB trait once a sack counts as a pressure.** Before 2023, participation leaves the pressure flag empty on every sack, so the old "sacks per pressure" was sacks over pressures without sacks. Fixed, it repeats 0.44 and QB movers keep 107%. Skill-over-expected's H82 row (0.20, QB movers keeping -46%) and FINDINGS F20's caveat came from the trap, not the football.
+
+**F16. The adjustment for the calls adds nothing to the QB's numbers.** Sacks per pressure over E1 (0.43, kept 109%) and plain (0.44, 107%) are the same; completion over E1 (0.46) and over E0 (0.47) too. At season level, the calls average out (as H84 found). The split's value is the decomposition, not the adjustment: it says which part of each sack is whose, and the parts add up to the play.
+
+### The idea
+
+| # | Verdict | Why |
+|---|---|---|
+| I94 | **Unclear** | By the rule: sacks per pressure over E1 repeats 0.43, no more than the plain rate's 0.44 (so not held), but QB movers keep 109% (so not failed). The football the idea was after holds strongly (F13: the after-pressure part is the QB's, kept 101% against linemen's 4%); the adjustment for the calls is what adds nothing |
+
+### The odds, scored
+
+| Bet | Claude | Result |
+|---|---|---|
+| I94: repeats more than plain sacks per pressure, and QB movers keep half | 55% | Unclear (0.43 against 0.44; kept 109%) |
+| The QB's after-pressure part passes both bars | 50% | Held (0.45, kept 101%) |
+| QB movers keep more of the after-pressure part than lineman movers | 65% | Held (101% against 4%) |
+| QB movers keep under half of the pressure part | 60% | Held, at the edge (47%) |
+| QB completion over E1 within 0.03 of over E0 | 60% | Held (0.46 against 0.47) |
+
+### The case against
+
+- **35 QB movers.** Every QB share kept rests on them; 101% and 47% have wide intervals that weren't bootstrapped here (I90 asked for that).
+- **The tie-break wobble.** One run gave a lineman's pressure part 9% kept, another 22%. The verdicts don't move, but the main-team table's ties should be fixed before a build relies on movers.
+- **Sacks only.** The split was measured for sacks and completions; time to throw and depth after a pressure weren't split.
+- **Cross-fitted, not walk-forward.** Each season's chances came from trees trained on the other seasons of its provider, including later ones. A build must make them walk-forward (rule e).
+- **The pressure flag is the provider's judgment.** It changed in 2023 (pressure rates fell from about 34% to 30%); the parts are measured within each provider, but a third change would need the same care.
