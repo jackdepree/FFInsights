@@ -3,7 +3,7 @@
 **Date:** 2026-11-22 (built 2026-11-21 to 22) · **Brief:** [BRIEF.md](BRIEF.md) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `opportunity-quality` · **Champion:** `eff_trees`, run `3b5fd214e10d43559ad1fd21428202e8` (pinned in the registry; no MLflow model registered, as participation) · **Decisions:** [0041](../../docs/decisions/0041-opportunity-quality.md)
 
 ## In short
-Expected fantasy points per chance are now a table (`play.xfp`, `player_game.opportunity`, from situation models fit from 2009, r 0.99 with nflverse's), and both of the CEO's main outputs are built. **The forecast of opportunity** (next game's expected PPR points) is honest and useful: the trees rung beats its shuffled copies, the last-4 average by 19% of the range score, counts by 2.5% and the lasso by 1.8%; it passes the no-noise target even beside playing time (+3.7%), and adds 4% to the yardstick's crude forecast of yards. Past efficiency is part of why (H61 held again, +1.1%). **The regression measure** is calibrated but weak: a per-player kept share (method B) beat one rate per position (method A) in 2016-2024 and lost to it on the 2025 vault, so A's number ships until the CEO confirms B (their pick), and the chance a gap closes almost never leaves 50-60%. The CEO's spot-check tried position and game-level noise: neither fixes it, so the measure stays off the player card. The kind of chance (goal line, end zone, deep) adds nothing beyond counts at any horizon.
+Expected fantasy points per chance are now a table (`play.xfp`, `player_game.opportunity`, from situation models fit from 2009, r 0.99 with nflverse's), and both of the CEO's main outputs are built. **The forecast of opportunity** (next game's expected PPR points) is honest and useful: the trees rung beats its shuffled copies, the last-4 average by 19% of the range score, counts by 2.5% and the lasso by 1.8%; it passes the no-noise target even beside playing time (+3.7%), and adds 4% to the yardstick's crude forecast of yards. Past efficiency is part of why (H61 held again, +1.1%). **The regression measure** is calibrated but weak: a per-player kept share (method B) beat one rate per position (method A) in 2016-2024 and lost to it on the 2025 vault, so A's number ships (A, the CEO 2026-11-22, after the spot-check), and the chance a gap closes almost never leaves 50-60%. The CEO's spot-check tried position and game-level noise: neither fixes it, so the measure stays off the player card. The kind of chance (goal line, end zone, deep) adds nothing beyond counts at any horizon.
 
 **Scorecard:** `outputs/opportunity-quality/eff_trees/3b5fd214e10d43559ad1fd21428202e8/scorecard.html` · **Vault (2025), opened once, 2026-11-22:** the forecast held (20 of 20 shuffles, all 10 checks, beats the lasso by 1.3%, ranges 79.9%; R22); the regression measure: B lost to A by 1.0% (R17) · **Versions tried:** 13 forecast variants on one feature set (counts, xfp, eff, eff_trees, two yards variants, six horizons) plus the measure's methods A, B, B with yards after the catch; the CEO's spot-check added 3 versions of the measure (I100, I101, both), and read the 2025 vault a second time for it
 
@@ -222,8 +222,8 @@ So **the luck measure stays off the player card.** Its chance the gap closes is 
 
 **The published number.**
 - The CEO chose B (their 3b).
-- **B still loses on the vault after both fixes, so the output keeps A's mean until the CEO confirms B.** B's mean is already in the output (`mean_B`), so the switch is one line.
-- B would be the build's B: the fixes don't help enough to carry their extra parts.
+- **B still loses on the vault after both fixes, so the CEO switched to A** (A, the CEO 2026-11-22: "1a", switch to A, it beat B on the 2025 vault and the fixes didn't change that). The output already publishes A's mean; B's stays beside it as `mean_B`.
+- The fixes don't help enough to carry their extra parts, so neither ships.
 
 **Claude's odds, scored:**
 
@@ -239,11 +239,10 @@ So **the luck measure stays off the player card.** Its chance the gap closes is 
 
 ## The CEO's answers (2026-11-22)
 - **No vetoes** for the build's technical calls (decision 0041).
-- **The published number:** B (3b). B still loses on the vault after the spot-check's fixes, so A stays in the output until the CEO confirms B.
+- **The published number:** B first (3b), then **A, the CEO 2026-11-22** ("1a"), after B still lost on the vault with the spot-check's fixes.
 - **The player card:** only if the spot-check comes out better than before. It didn't, so the measure stays off.
 - **I102's new data source:** skipped.
 - **Next:** nothing new now.
 
 ## Open questions for the CEO
-1. B still loses to A on the vault after both fixes (−0.98% as built, −0.60% with both). It lost in 3 of 10 seasons, and won the other 7. Do you confirm B as the published number, or switch to A?
-2. Is the spot-check done, and is the merge approved?
+None. The CEO chose A and approved the merge (2026-11-22: "1a. … 3 yes merge").

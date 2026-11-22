@@ -48,5 +48,5 @@
 25. **I100's expected-points models are a variant beside the table, not in it.** `opportunity.fit(..., variant="position")` uses the same models with position as one more input, with its own cache key. `build.build_opportunity_variant` saves its plays and player-games in the interim zone, so `play.xfp` is unchanged. They didn't pass the spot-check, so nothing ships from them.
 26. **I101 is game-level noise, not a skewed distribution.** The variance of an average of many chances doesn't depend on the shape of one chance's distribution, so a skewed model couldn't change V. φ per position, fit on the same 6 earlier seasons, multiplies every noise term (`regression.game_noise`; φ = 1 without player-games). It came out 1.01-1.05, so the build keeps φ = 1.
 27. **The spot-check's pick rule:** the version with the best B against A on 2016-2024 is judged on the vault. Ties within 0.1% go to the simpler one, because the 2025 vault had already been read once for this measure.
-28. **The published mean stays A's** until the CEO confirms B. The CEO chose B (3b), on the condition that the spot-check made it better, and it didn't.
+28. **The published mean stays A's:** A, the CEO 2026-11-22 ("1a"). The CEO had chosen B (3b) on the condition that the spot-check made it better; it didn't, and the CEO switched to A. B's mean stays in the output as `mean_B`.
 
