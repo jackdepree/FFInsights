@@ -1,0 +1,9 @@
+QB repeat by season pair (passers 150+ regular-season dropbacks; plain r, no league average taken out): raw sacks per dropback and the after-pressure part per dropback. 2017-2024 from the backtest run, 2025 from the vault run. Each row: the season shown and the next one, players in both.
+2017 27 sacks/db r=0.34 after r=0.37
+2018 27 sacks/db r=0.46 after r=0.61
+2019 29 sacks/db r=0.46 after r=0.47
+2020 28 sacks/db r=0.26 after r=0.28
+2021 31 sacks/db r=0.65 after r=0.58
+2022 28 sacks/db r=0.62 after r=0.33
+2023 29 sacks/db r=0.52 after r=0.23
+2024 31 sacks/db r=0.14 after r=-0.04

@@ -2,7 +2,7 @@
 next season, and does he keep it when he changes teams ("share kept")?
 
 Moved from the explorations (skill-over-expected's first and third looks, context-v2's fourth
-look) into the package for context-retro (decision 0041), with one fix: the main team and
+look) into the package for context-retro (decision 0040), with one fix: the main team and
 position break ties the same way every run (the brief's call 4). Before, a player with as many
 games for two teams got whichever came first, and the movers changed between runs.
 

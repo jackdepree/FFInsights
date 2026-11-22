@@ -1,0 +1,21 @@
+context-retro: the blame split on the vault (2024 to 2025, one season pair; 2024 from the backtest run, 2025 from the vault run 86a9ba81aac0474787955692131ce177)
+
+shape: (12, 11)
+┌─────┬───────────────────────────────────────┬───────┬────────┬────────┬────────┬───────┬────────────┬───────────┬───────────┬────────┐
+│ who ┆ measure                               ┆ pairs ┆ movers ┆ repeat ┆ lo90   ┆ hi90  ┆ share_kept ┆ kept_lo90 ┆ kept_hi90 ┆ passes │
+│ --- ┆ ---                                   ┆ ---   ┆ ---    ┆ ---    ┆ ---    ┆ ---   ┆ ---        ┆ ---       ┆ ---       ┆ ---    │
+│ str ┆ str                                   ┆ i64   ┆ i64    ┆ f64    ┆ f64    ┆ f64   ┆ f64        ┆ f64       ┆ f64       ┆ bool   │
+╞═════╪═══════════════════════════════════════╪═══════╪════════╪════════╪════════╪═══════╪════════════╪═══════════╪═══════════╪════════╡
+│ QB  ┆ sacks per pressure (a sack counts)    ┆ 31    ┆ 8      ┆ -0.003 ┆ -0.335 ┆ 0.358 ┆ -2.683     ┆ -14.479   ┆ 15.138    ┆ false  │
+│ QB  ┆ sacks per pressure over E1            ┆ 31    ┆ 8      ┆ -0.017 ┆ -0.33  ┆ 0.341 ┆ -1.306     ┆ -12.239   ┆ 12.127    ┆ false  │
+│ QB  ┆ sacks per dropback                    ┆ 31    ┆ 8      ┆ 0.141  ┆ -0.191 ┆ 0.451 ┆ -10.639    ┆ -17.595   ┆ 20.911    ┆ false  │
+│ QB  ┆ sack over E0 per dropback (the whole) ┆ 31    ┆ 8      ┆ 0.076  ┆ -0.258 ┆ 0.4   ┆ -4.645     ┆ -15.979   ┆ 13.88     ┆ false  │
+│ QB  ┆ after-pressure part per dropback      ┆ 31    ┆ 8      ┆ -0.04  ┆ -0.349 ┆ 0.323 ┆ -1.397     ┆ -10.201   ┆ 9.893     ┆ false  │
+│ QB  ┆ pressure part per dropback            ┆ 31    ┆ 8      ┆ 0.368  ┆ 0.069  ┆ 0.597 ┆ 6.037      ┆ -24.614   ┆ 26.559    ┆ true   │
+│ OL  ┆ sacks per pressure (a sack counts)    ┆ 112   ┆ 18     ┆ 0.081  ┆ -0.088 ┆ 0.25  ┆ 0.593      ┆ -13.079   ┆ 12.155    ┆ false  │
+│ OL  ┆ sacks per pressure over E1            ┆ 112   ┆ 18     ┆ 0.056  ┆ -0.103 ┆ 0.219 ┆ -0.021     ┆ -12.901   ┆ 12.1      ┆ false  │
+│ OL  ┆ sacks per dropback                    ┆ 112   ┆ 18     ┆ 0.165  ┆ 0.017  ┆ 0.315 ┆ -0.836     ┆ -4.443    ┆ 1.582     ┆ false  │
+│ OL  ┆ sack over E0 per dropback (the whole) ┆ 112   ┆ 18     ┆ 0.114  ┆ -0.038 ┆ 0.267 ┆ -1.354     ┆ -8.842    ┆ 4.457     ┆ false  │
+│ OL  ┆ after-pressure part per dropback      ┆ 112   ┆ 18     ┆ 0.056  ┆ -0.096 ┆ 0.213 ┆ 0.708      ┆ -12.164   ┆ 11.602    ┆ false  │
+│ OL  ┆ pressure part per dropback            ┆ 112   ┆ 18     ┆ -0.087 ┆ -0.229 ┆ 0.065 ┆ 4.145      ┆ -19.649   ┆ 17.368    ┆ false  │
+└─────┴───────────────────────────────────────┴───────┴────────┴────────┴────────┴───────┴────────────┴───────────┴───────────┴────────┘

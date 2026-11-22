@@ -455,12 +455,12 @@ projects:
   - id: context-retro
     name: Context (retrospective)
     phase: 1
-    status: brief
-    horizon: later
+    status: validating
+    horizon: next
     cadence: [retrospective]
-    depends_on: [grain-tables, tag-tables, validation-harness, schemes-v2]
+    depends_on: [grain-tables, validation-harness, context-live]
     origin: Context_Model_Training.ipynb
-    summary: Schemes-v2's retrospective traits (team_season.charted) are a planned input (CEO, 2026-11-10). The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons. 2026-11-21, brief agreed in projects/context-v2/BRIEF.md (its last section), the chain of boosted trees before the snap and given the real pressure, coverage as an input, and the blame split (each sack's pressure part and after-pressure part) summed by player; for the build chat.
+    summary: Schemes-v2's retrospective traits (team_season.charted) are a planned input (CEO, 2026-11-10). The fuller context model, built on post-season participation (routes, coverage, pressure, time to throw). Refactored from the old context models. Updates between seasons. 2026-11-21, brief agreed in projects/context-v2/BRIEF.md (its last section), the chain of boosted trees before the snap and given the real pressure, coverage as an input, and the blame split (each sack's pressure part and after-pressure part) summed by player; for the build chat. Building 2026-11-21 (projects/context-retro/BUILD.md, decision 0040); the brief is linked, not copied.
 
   - id: context-v2
     name: Context, the next version (methods and information)

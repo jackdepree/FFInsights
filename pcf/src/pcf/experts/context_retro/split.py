@@ -1,5 +1,5 @@
 """The blame split summed by player, and the test of its owners (the brief's goal 2 and its "split,
-out of sample" test; decision 0041).
+out of sample" test; decision 0040).
 
 Per dropback: the pressure part (sack E1 - E0: how much the pressure, or its absence, moved the
 sack chance) and the after-pressure part (sack - E1: what happened once the pressure was known).
@@ -89,9 +89,11 @@ def player_game(parts: pl.DataFrame, linemen: pl.DataFrame) -> pl.DataFrame:
     ol = _sum(linemen.join(parts, on=KEYS, how="inner"), "gsis_id")
     out = pl.concat([qb.with_columns(role=pl.lit("passer")),
                      ol.with_columns(role=pl.lit("lineman"))])  # fmt: skip
-    return out.rename({"posteam": "team"}).with_columns(
-        model=pl.lit("context-retro"), cadence=pl.lit("retrospective")
-    ).sort("season", "week", "game_id", "role", "gsis_id")
+    return (
+        out.rename({"posteam": "team"})
+        .with_columns(model=pl.lit("context-retro"), cadence=pl.lit("retrospective"))
+        .sort("season", "week", "game_id", "role", "gsis_id")
+    )
 
 
 def lineman_plays(seasons: Sequence[int], gw: Gateway | None = None) -> pl.DataFrame:

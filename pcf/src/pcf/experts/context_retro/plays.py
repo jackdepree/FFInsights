@@ -1,5 +1,5 @@
 """context-retro's play table: every dropback from 2016 with the situation, the calls charted since
-2016, coverage (2018 on), FTN's calls (2022 on) and the six outcomes (decision 0041; the brief is
+2016, coverage (2018 on), FTN's calls (2022 on) and the six outcomes (decision 0040; the brief is
 `projects/context-v2/BRIEF.md`, "The brief, after the exploration").
 
 Retrospective (rule m): participation's coverage, pass rushers and box are after-the-season data,
@@ -43,7 +43,7 @@ COVERAGES = ["COVER_0", "COVER_1", "COVER_2", "2_MAN", "COVER_3", "COVER_4", "CO
 COVERAGE = [f"cov_{k}" for k in COVERAGES] + ["man"]
 # Before 2023 participation leaves coverage empty on every sack (as it does the pressure flag), so
 # for an outcome whose plays include sacks, a missing coverage would mark the sack: those outcomes
-# read coverage only from the provider that charts it on sacks too (decision 0041, call 7).
+# read coverage only from the provider that charts it on sacks too (decision 0040, call 7).
 NEW_PROVIDER = 2023
 DROPBACK_COVERAGE = [f"d{x}" for x in COVERAGE]
 FTN = [x for x in live_plays.CALLS if x not in ("shotgun", "no_huddle")]
@@ -114,8 +114,13 @@ def frame(play: pl.DataFrame, part: pl.DataFrame, as_of: pl.DataFrame) -> pl.Dat
     d = d.join(as_of, on="game_id", how="left")
     if d["as_of"].null_count():
         raise ValueError(f"{d['as_of'].null_count()} dropbacks have no as_of")
-    d = uncharted_rushers(with_pressure(d))
-    d = d.with_columns(
+    return retro_columns(uncharted_rushers(with_pressure(d))).select(COLUMNS)
+
+
+def retro_columns(d: pl.DataFrame) -> pl.DataFrame:
+    """The retrospective `as_of`, the rusher and box fills (call 8) and the dropback outcomes'
+    coverage, from the provider that charts it on sacks (call 7)."""
+    return d.with_columns(
         # the retrospective row is known once participation is out (rule m)
         as_of=pl.max_horizontal("as_of", "known_at_targets"),
         known_at_targets=c("known_at_targets").fill_null(c("known_at")),
@@ -124,7 +129,6 @@ def frame(play: pl.DataFrame, part: pl.DataFrame, as_of: pl.DataFrame) -> pl.Dat
         **{f"d{x}": pl.when(c("season") >= NEW_PROVIDER).then(c(x)).otherwise(None)
            for x in COVERAGE},
     )  # fmt: skip
-    return d.select(COLUMNS)
 
 
 def fields_for(population: str) -> list[str]:

@@ -1,13 +1,13 @@
 # context-retro: build notes
 
-> **The brief** is the last section of [`../context-v2/BRIEF.md`](../context-v2/BRIEF.md), "The brief, after the exploration" (agreed 2026-11-21: the CEO, "I do not veto anything in the brief. Merge approved"). The exploration is [`../context-v2/EXPLORATION.md`](../context-v2/EXPLORATION.md) (four looks). This file holds what the build decided and pre-registered as it went, in order, before each result. The technical calls are [decision 0041](../../docs/decisions/0041-context-retro.md). Results: [RESULTS.md](RESULTS.md).
+> **The brief** is the last section of [`../context-v2/BRIEF.md`](../context-v2/BRIEF.md), "The brief, after the exploration" (agreed 2026-11-21: the CEO, "I do not veto anything in the brief. Merge approved"). The exploration is [`../context-v2/EXPLORATION.md`](../context-v2/EXPLORATION.md) (four looks). This file holds what the build decided and pre-registered as it went, in order, before each result. The technical calls are [decision 0040](../../docs/decisions/0040-context-retro.md). Results: [RESULTS.md](RESULTS.md).
 
 ## 2026-11-21: a data trap found in the smoke run (before the backtest)
 
 The first smoke run (2023-2024, two outcomes) had sack's chance before the snap **worse than the plain average** (by 0.27 points of log loss per thousand plays, clear), with a calibration slope of **-0.68**: higher chances went with fewer sacks. The cause: **before 2023, participation leaves coverage empty on every sack**, as it does the pressure flag (context-v2's fourth look). From 2018 to 2022 coverage is missing on 100% of sacks and about 5% of other dropbacks; from 2023 on 1% and 0.3%. Trees trained on 2018-2022 learn "no coverage, so a sack", and the rule turns over in 2023.
 
 - **Pass attempts are clean:** coverage is missing on 285 of 94,308 attempts in 2018-2022, completed at the usual rate (65.3% against 64.7%). Depth and completion keep coverage from 2018 (the exploration's +1 point, F2).
-- **The fix** (decision 0041, call 7): outcomes whose plays include sacks (pressure, time to throw, sack, dropback yards) read coverage only from 2023 (`dcov_*`, `dman`); before that it is missing for every dropback alike.
+- **The fix** (decision 0040, call 7): outcomes whose plays include sacks (pressure, time to throw, sack, dropback yards) read coverage only from 2023 (`dcov_*`, `dman`); before that it is missing for every dropback alike.
 - **A smaller one of the same kind** (call 8): in 2016-2017 participation has no rusher count on 1,447 dropbacks, sacked 0.1% of the time against 6.1%. Filled with the usual count (4 rushers; a missing box with 6), so the gap marks nothing.
 
 After the fix the smoke numbers line up with the exploration's (2024 trained on 2023, there; here 2023-2024 walk-forward): sack before the snap 1.7% of squared error (first look 1.2%), given the pressure 17.9% (16.8%); completion 5.1% and 8.0% (4.6%, 7.7%); depth 19.6%; time to throw 17.0% and 29.0% (17.5%, 29.2%). The smoke runs count as versions tried.

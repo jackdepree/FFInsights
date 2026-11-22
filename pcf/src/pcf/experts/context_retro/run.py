@@ -1,5 +1,5 @@
 """context-retro's walk-forward backtest by season: the ladder per outcome and mode, the
-given-pressure test, the nulls, calibration, the history and the champion (decision 0041).
+given-pressure test, the nulls, calibration, the history and the champion (decision 0040).
 
 Like context-live (decision 0036) it describes plays that happened, so it has its own runner and
 reuses the harness's pieces (the paired comparison by weeks, calibration, the vault rule) and
@@ -25,6 +25,7 @@ context-live's models (`context_live.models.fit`: the base rate, linear, the tre
     python -m pcf.experts.context_retro.run backtest --seasons 2025 --open-vault --tag vault
         --fixed-from backtest                                           # the vault, once
     python -m pcf.experts.context_retro.run pit --seasons 2024          # point in time
+    python -m pcf.experts.context_retro.run final --seasons 2025 --checks checks.json  # champion
 """
 
 from __future__ import annotations
@@ -57,6 +58,14 @@ ID = "context-retro"
 TEST_SEASONS = tuple(range(2017, 2025))  # the 2025 vault stays closed until validation
 NEW_PROVIDER = 2023  # participation's pressure and time to throw (context-live#R12)
 UTC_TIME = pl.Datetime("us", "UTC")
+PARTICIPATION_FIELDS = (
+    "was_pressure",
+    "time_to_throw",
+    "number_of_pass_rushers",
+    "defenders_in_box",
+    "defense_coverage_type",
+    "defense_man_zone_type",
+)
 CADENCE = "retrospective"
 
 
@@ -267,8 +276,9 @@ def _mean_only(train: pl.DataFrame, o: Outcome, rung: Rung, seed: int):
         fields = [f for i, f in enumerate(fields) if not np.isnan(x[:, i]).all()]
         x = models.matrix(train, fields)
         cats = np.array([f in models.CATEGORIES for f in fields], dtype=bool)
-        est = HistGradientBoostingRegressor(**models.TREES, random_state=seed,
-                                            categorical_features=cats if cats.any() else None)
+        est = HistGradientBoostingRegressor(
+            **models.TREES, random_state=seed, categorical_features=cats if cats.any() else None
+        )
         est.fit(x, train["y"].to_numpy().astype(float), sample_weight=w)
         return lambda rows: est.predict(models.matrix(rows, fields))
     m = models.fit(train, o, rung.field_list(o), rung.method, seed=seed)
@@ -386,8 +396,10 @@ def scores(frame: pl.DataFrame, o: Outcome, res: dict) -> None:
         res["given_pressure"] = {
             "comparison": paired(frame, a, b).__dict__,
             "gain": loss_gain(frame, a, b),
-            "by_season": {s: loss_gain(frame.filter(c("season") == s), a, b)
-                          for s in sorted(frame["season"].unique().to_list())},  # fmt: skip
+            "by_season": {
+                s: loss_gain(frame.filter(c("season") == s), a, b)
+                for s in sorted(frame["season"].unique().to_list())
+            },  # fmt: skip
         }
 
 
@@ -494,6 +506,32 @@ def shipped(tag: str = "backtest") -> dict[str, dict[str, str]]:
             for k, v in res.items() if not k.startswith("_")}  # fmt: skip
 
 
+def final(tag: str, through: int, checks: dict[str, bool]) -> dict:
+    """The champion: each outcome's shipped rungs (E0 and E1, from the backtest `tag`) fitted as
+    for the season after `through` (so on every season through it, inside the provider rule),
+    logged as one model keyed by quantity (`sack_e0`, ...) and registered if every check passed.
+    A retrospective expert has no live output: next season's rows are scored after that season."""
+    from pcf.core import tracking
+
+    ship = shipped(tag)
+    data = plays.load(range(plays.FIRST, through + 1))
+    fitted, ends = {}, []
+    end = data.select(live_run.known(data).max()).item()
+    with tracking.attempt(ID, train_end=end, name=f"champion through {through}",
+                          params={"from": tag, "through": through}) as run:  # fmt: skip
+        for o in OUTCOMES:
+            for mode, name in ship[o.name].items():
+                m, e = fit_rung(data, o, rung_named(name), through + 1)
+                fitted[quantity(o.name, mode)] = m
+                ends.append(e)
+        model = models.ContextModel(fitted, train_end=str(max(ends)))
+        tracking.log_model(model, trusted_types=models.TRUSTED_TYPES)
+        passed = tracking.log_checks(checks)
+        version = tracking.register(ID) if passed else None
+    return {"run_id": run.info.run_id, "version": version, "train_end": str(max(ends)),
+            "quantities": sorted(fitted)}  # fmt: skip
+
+
 def check_point_in_time(season: int, n_games: int = 4, seed: int = 0) -> dict:
     """Rebuild sample games' rows from views at each game's own `as_of` and compare every field
     and outcome with the season build: the largest difference must be 0. Also: a view the day
@@ -527,14 +565,19 @@ def check_point_in_time(season: int, n_games: int = 4, seed: int = 0) -> dict:
     release = full["known_at_targets"].max()  # participation's release (filled rows are earlier)
     before = gw.view(release - timedelta(seconds=1), "retrospective",
                      plays.RETRO_INPUTS).table("play", seasons=[season])  # fmt: skip
-    return {"gap": worst, "games": ids, "participation_rows_before_release": before.height}
+    # the play table's rows are the play-by-play's; what must be empty is participation's fields
+    fields = [x for x in PARTICIPATION_FIELDS if x in before.columns]
+    filled = before.select(pl.any_horizontal(c(x).is_not_null() for x in fields).sum()).item()
+    return {"gap": worst, "games": ids, "participation_rows_before_release": int(filled or 0),
+            "fields_checked": fields}  # fmt: skip
 
 
 def main(argv: Sequence[str] | None = None) -> None:
     import argparse
 
     ap = argparse.ArgumentParser(prog="python -m pcf.experts.context_retro.run")
-    ap.add_argument("what", choices=["prepare", "backtest", "pit"])
+    ap.add_argument("what", choices=["prepare", "backtest", "pit", "final"])
+    ap.add_argument("--checks", default="", help="final: a JSON file of named checks (true/false)")
     ap.add_argument("--seasons", default=",".join(map(str, TEST_SEASONS)))
     ap.add_argument("--outcomes", default="")
     ap.add_argument("--nulls", type=int, default=20)
@@ -547,6 +590,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         plays.prepare(range(plays.FIRST, max(seasons) + 1))
     elif a.what == "pit":
         print(check_point_in_time(max(seasons)))
+    elif a.what == "final":
+        checks = json.loads(Path(a.checks).read_text()) if a.checks else {}
+        print(final(a.tag, max(seasons), checks))
     else:
         names = [x for x in a.outcomes.split(",") if x] or None
         fixed = shipped(a.fixed_from) if a.fixed_from else None

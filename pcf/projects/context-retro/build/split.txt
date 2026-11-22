@@ -1,0 +1,22 @@
+context-retro: the blame split's owners (run 7ca46aa82fe344b98e6fd1e0c534260c, seasons 2017-2024, regular season; walk-forward chances)
+repeat: r with next season, each season's league average out (90% from resampling players); share_kept: movers' r over stayers' (its 90% from resampling players); passes: repeat 0.2+ and kept half
+
+shape: (12, 13)
+┌─────┬───────────────────────────────────────┬───────┬────────┬────────┬───────┬───────┬─────────┬──────────┬────────────┬───────────┬───────────┬────────┐
+│ who ┆ measure                               ┆ pairs ┆ movers ┆ repeat ┆ lo90  ┆ hi90  ┆ stayers ┆ movers_r ┆ share_kept ┆ kept_lo90 ┆ kept_hi90 ┆ passes │
+│ --- ┆ ---                                   ┆ ---   ┆ ---    ┆ ---    ┆ ---   ┆ ---   ┆ ---     ┆ ---      ┆ ---        ┆ ---       ┆ ---       ┆ ---    │
+│ str ┆ str                                   ┆ i64   ┆ i64    ┆ f64    ┆ f64   ┆ f64   ┆ f64     ┆ f64      ┆ f64        ┆ f64       ┆ f64       ┆ bool   │
+╞═════╪═══════════════════════════════════════╪═══════╪════════╪════════╪═══════╪═══════╪═════════╪══════════╪════════════╪═══════════╪═══════════╪════════╡
+│ QB  ┆ sacks per pressure (a sack counts)    ┆ 199   ┆ 36     ┆ 0.414  ┆ 0.288 ┆ 0.511 ┆ 0.417   ┆ 0.435    ┆ 1.043      ┆ 0.262     ┆ 1.775     ┆ true   │
+│ QB  ┆ sacks per pressure over E1            ┆ 199   ┆ 36     ┆ 0.403  ┆ 0.278 ┆ 0.502 ┆ 0.402   ┆ 0.435    ┆ 1.081      ┆ 0.325     ┆ 1.886     ┆ true   │
+│ QB  ┆ sacks per dropback                    ┆ 199   ┆ 36     ┆ 0.49   ┆ 0.366 ┆ 0.587 ┆ 0.507   ┆ 0.381    ┆ 0.751      ┆ 0.24      ┆ 1.265     ┆ true   │
+│ QB  ┆ sack over E0 per dropback (the whole) ┆ 199   ┆ 36     ┆ 0.491  ┆ 0.368 ┆ 0.58  ┆ 0.507   ┆ 0.398    ┆ 0.785      ┆ 0.298     ┆ 1.302     ┆ true   │
+│ QB  ┆ after-pressure part per dropback      ┆ 199   ┆ 36     ┆ 0.421  ┆ 0.298 ┆ 0.515 ┆ 0.426   ┆ 0.423    ┆ 0.992      ┆ 0.301     ┆ 1.746     ┆ true   │
+│ QB  ┆ pressure part per dropback            ┆ 199   ┆ 36     ┆ 0.456  ┆ 0.342 ┆ 0.542 ┆ 0.521   ┆ 0.204    ┆ 0.392      ┆ -0.084    ┆ 0.969     ┆ false  │
+│ OL  ┆ sacks per pressure (a sack counts)    ┆ 758   ┆ 128    ┆ 0.32   ┆ 0.262 ┆ 0.375 ┆ 0.374   ┆ 0.028    ┆ 0.075      ┆ -0.394    ┆ 0.516     ┆ false  │
+│ OL  ┆ sacks per pressure over E1            ┆ 758   ┆ 128    ┆ 0.306  ┆ 0.246 ┆ 0.361 ┆ 0.355   ┆ 0.041    ┆ 0.114      ┆ -0.383    ┆ 0.573     ┆ false  │
+│ OL  ┆ sacks per dropback                    ┆ 758   ┆ 128    ┆ 0.306  ┆ 0.244 ┆ 0.36  ┆ 0.351   ┆ 0.091    ┆ 0.26       ┆ -0.139    ┆ 0.651     ┆ false  │
+│ OL  ┆ sack over E0 per dropback (the whole) ┆ 758   ┆ 128    ┆ 0.291  ┆ 0.225 ┆ 0.348 ┆ 0.333   ┆ 0.088    ┆ 0.265      ┆ -0.167    ┆ 0.69      ┆ false  │
+│ OL  ┆ after-pressure part per dropback      ┆ 758   ┆ 128    ┆ 0.292  ┆ 0.23  ┆ 0.35  ┆ 0.348   ┆ 0.005    ┆ 0.015      ┆ -0.483    ┆ 0.488     ┆ false  │
+│ OL  ┆ pressure part per dropback            ┆ 758   ┆ 128    ┆ 0.202  ┆ 0.132 ┆ 0.268 ┆ 0.25    ┆ -0.006   ┆ -0.022     ┆ -0.713    ┆ 0.628     ┆ false  │
+└─────┴───────────────────────────────────────┴───────┴────────┴────────┴───────┴───────┴─────────┴──────────┴────────────┴───────────┴───────────┴────────┘

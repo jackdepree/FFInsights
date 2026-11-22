@@ -1,0 +1,40 @@
+H88: context-retro's season priors against context-live's on the crude forecaster (retro run 7ca46aa82fe344b98e6fd1e0c534260c, live run b68c042b087948f8b25fbb6a7903105d; 2019-2024, lasso, walk-forward; 90% intervals from resampled weeks)
+
+== passing next (the crude forecast removes 19.9% of the squared error around the average)
+  plain      alone over crude: -0.58% (-1.05 to -0.14); range score +0.01% (-0.46 to +0.43); priors on 65% of rows
+  live       alone over crude: -0.92% (-1.57 to -0.28); range score -0.32% (-0.80 to +0.12); priors on 65% of rows
+  retro      alone over crude: -0.98% (-1.64 to -0.35); range score -0.50% (-1.04 to -0.02); priors on 65% of rows
+  retro_plus alone over crude: -0.96% (-1.62 to -0.34); range score -0.63% (-1.20 to -0.11); priors on 65% of rows
+  retro_vs_live       : -0.06% of the second's squared error (-0.13 to +0.01)
+  live_vs_plain       : -0.33% of the second's squared error (-0.57 to -0.09)
+  retro_vs_plain      : -0.39% of the second's squared error (-0.65 to -0.14)
+  retro_plus_vs_retro : +0.01% of the second's squared error (-0.03 to +0.06)
+== passing rest (the crude forecast removes 27.5% of the squared error around the average)
+  plain      alone over crude: -1.37% (-2.14 to -0.59); range score -0.78% (-1.53 to -0.02); priors on 65% of rows
+  live       alone over crude: -1.56% (-2.43 to -0.73); range score -0.23% (-1.03 to +0.57); priors on 65% of rows
+  retro      alone over crude: -1.74% (-2.56 to -0.92); range score -0.16% (-0.88 to +0.57); priors on 65% of rows
+  retro_plus alone over crude: -2.83% (-3.75 to -1.94); range score -1.28% (-2.10 to -0.46); priors on 65% of rows
+  retro_vs_live       : -0.17% of the second's squared error (-0.33 to -0.01)
+  live_vs_plain       : -0.19% of the second's squared error (-0.54 to +0.19)
+  retro_vs_plain      : -0.36% of the second's squared error (-0.66 to -0.03)
+  retro_plus_vs_retro : -1.07% of the second's squared error (-1.51 to -0.66)
+== team next (the crude forecast removes 8.8% of the squared error around the average)
+  plain      alone over crude: -0.53% (-1.11 to +0.08); range score -0.32% (-0.82 to +0.19); priors on 78% of rows
+  live       alone over crude: -0.61% (-1.16 to -0.04); range score -0.05% (-0.53 to +0.45); priors on 78% of rows
+  retro      alone over crude: -0.70% (-1.20 to -0.18); range score -0.01% (-0.52 to +0.51); priors on 78% of rows
+  retro_plus alone over crude: -0.73% (-1.23 to -0.21); range score +0.01% (-0.49 to +0.53); priors on 78% of rows
+  retro_vs_live       : -0.09% of the second's squared error (-0.25 to +0.06)
+  live_vs_plain       : -0.08% of the second's squared error (-0.39 to +0.26)
+  retro_vs_plain      : -0.16% of the second's squared error (-0.52 to +0.21)
+  retro_plus_vs_retro : -0.03% of the second's squared error (-0.09 to +0.02)
+== team rest (the crude forecast removes 13.5% of the squared error around the average)
+  plain      alone over crude: -7.22% (-9.50 to -5.06); range score -4.54% (-5.76 to -3.31); priors on 78% of rows
+  live       alone over crude: -5.78% (-7.41 to -4.24); range score -3.87% (-5.12 to -2.60); priors on 78% of rows
+  retro      alone over crude: -5.17% (-6.86 to -3.54); range score -2.66% (-3.88 to -1.39); priors on 78% of rows
+  retro_plus alone over crude: -9.22% (-11.89 to -6.70); range score -4.18% (-5.60 to -2.72); priors on 78% of rows
+  retro_vs_live       : +0.58% of the second's squared error (+0.23 to +0.94)
+  live_vs_plain       : +1.34% of the second's squared error (-0.12 to +2.81)
+  retro_vs_plain      : +1.91% of the second's squared error (+0.49 to +3.35)
+  retro_plus_vs_retro : -3.85% of the second's squared error (-5.20 to -2.53)
+
+retro beats live on 1 of 4 boards, clearly worse on 1: H88 unclear (the pre-registered rule)
