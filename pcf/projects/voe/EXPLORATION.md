@@ -267,3 +267,48 @@
 2. **QBs are the one place a player-level size exists:** the own-stats rating's QB gap tracks the size of the drop (F22).
 3. **The ratings stay what they are:** they rank players within a position, mostly by team for non-QBs (F1, F16). Sizing them from absences failed. Making them bigger only adds noise (F24).
 4. **For the CEO:** the direction from here (BRIEF.md, "Open after the third look").
+
+---
+
+# Fourth look: success as VOE's outcome (H89; written before the run, 2026-11-21)
+
+> The CEO, 2026-11-21: "Can we try binary success as an outcome for voe? Success can be defined as positive epa, or it could be defined as positive wpa. Then the delta between the binary outcome and the probability of a success would be attributed to each player on the field. We can still use an arbitrary rating system for the inputs of each player alongside the important charters and context model outputs as inputs. ... My odds are 75% that it will be better than raw epa as the outcome."
+>
+> The CEO's answers to Claude's questions, 2026-11-21: "1c, 2; we should stick to epa as success then. 3; c, the inputs are all context expert outputs plus the individual rating for each player on the field. Each play's expected outcome is measured against the counter example. The counter example systematically replaces player ratings with "average" for that position. Then the delta between the expected outcome on the full fit and the expected outcome on the counterexample fit is attributed to the left out players. 4; the expected size is most likely small, 5 pp of error removed."
+
+**Two arms, identical machinery** (the second look's `ratings.py`, run twice). Only the outcome changes:
+- **The EPA arm:** a play's EPA, as in the first three looks.
+- **The success arm:** a play's success, EPA above 0 (nflverse's definition), as 1 or 0. Its expected chance comes from the same situation trees as the EPA arm's expectation (each season fit on the six before it), as a classifier.
+
+**In each arm, everything downstream is built on that arm's outcome:**
+- **The leftover:** the outcome minus its expectation.
+- **The plain plus-minus:** each season on its own.
+- **Rating (a):** plus-minus that starts from his own stats.
+- **Rating (b):** the own-stats rating, his own stats mapped to next season's plus-minus on that outcome.
+- **The VOE model:** a lasso, pass and run apart, fit on 2018 to T-1 and scored on season T (2019-2024).
+  - Its target is the play's outcome itself (EPA, or success as 0 or 1).
+  - Its inputs are the slot ratings and the plus-minus sums, as in the second look, plus the situation expectation and context-live's back-history expectations (calls16 edition: pressure, sack, completion, time to throw, depth, run yards; decision 0038). That's the CEO's "all context expert outputs plus the individual rating for each player on the field".
+- **The counterexample** (the CEO's design, the second look's knockout): a side's players' ratings are replaced by each slot's average. The side's value on a play is the full prediction less the counterexample's.
+
+**Claude's technical calls, for the CEO to veto:**
+- The success arm's model is a linear lasso (a linear probability model), so the two arms differ only in their outcome. The knockout's delta is then directly in success-chance units.
+- Context-live's expectations are added as inputs in both arms. The second look had none.
+- The ratings are made fresh on each arm's outcome. If both arms shared EPA-based ratings, a linear model would make their player values almost the same ranking, and the outcome couldn't show.
+
+**The two yardsticks (the CEO: both must improve):**
+1. **The roster-change test.** Each arm's knockout values, averaged by team, forecast the team's next season against its last season alone. Both arms forecast the same target: a team's EPA over expected a play (offense and defense, 2020-2024, fit on earlier seasons). The score is the gain in squared error removed, pooled over offense and defense, with a 90% interval from resampling teams. The new-player share isn't in this baseline, so both arms are read the same way (the second look's caveat applies to both). Beside it, the simple rung: each arm's plain sums of (a) and (b).
+2. **The movers' repeat.** Each arm's plain plus-minus, this season against next, for players with 300+ plays in both seasons, each season's mean taken out. The first look's EPA value: moved 0.03 to 0.07. Read on movers, with stayers beside them, and a 90% interval on the difference from resampling players.
+
+**Pass rule for H89:**
+- **Held** if the success arm beats the EPA arm on both yardsticks (the roster-change gain and the movers' repeat), with at least one difference's interval above zero.
+- **Failed** if the EPA arm is better on both.
+- **Unclear** otherwise.
+
+**The bets:**
+- **The CEO:** 75% that success is better than raw EPA as the outcome. The expected size: "most likely small, 5 pp of error removed".
+- **Claude,** for the claim as defined (better on both): 30%. The roster-change target is EPA itself, which favours the EPA arm, and success throws away the size of a play, which carries real information about the players as well as noise.
+- **Side bets:**
+  - The success arm's movers' repeat is higher: 55%.
+  - Its roster-change gain is higher: 35%.
+  - Its roster-change gain is 5 points or more above the EPA arm's (the CEO's size): 10%.
+  - Its plain plus-minus repeats 0.05 or more higher season to season (all players; the side bet written with H89): 50%.
