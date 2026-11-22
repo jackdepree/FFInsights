@@ -16,6 +16,13 @@ SCORING: dict[str, pl.Expr] = {
     "half": (c("fantasy_points") + c("fantasy_points_ppr")) / 2,
     "standard": c("fantasy_points"),
 }
+# The same formats per piece of a chance (opportunity-quality, decision 0041): points per catch,
+# per receiving or rushing yard, per touchdown. Fumbles and two-point tries aren't chances.
+CHANCE_SCORING: dict[str, tuple[float, float, float]] = {
+    "ppr": (1.0, 0.1, 6.0),
+    "half": (0.5, 0.1, 6.0),
+    "standard": (0.0, 0.1, 6.0),
+}
 QUANTILE_LEVELS = (0.1, 0.5, 0.9)
 OFFSETS = ("o10", "o50", "o90")
 
