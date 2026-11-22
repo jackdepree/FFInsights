@@ -466,3 +466,140 @@ Movers by group (EPA | success):
 - **Replacement level is the backups' average** (under 300 plays), not a fixed fraction below the average, so it comes from the data and not from a choice.
 - **The movers' repeat for H91 and H92** uses each player's slot knockout, shared equally among the players in his slot.
 - **The net's size and settings are the second look's,** so it isn't tuned after the result.
+
+## Fifth look: the results ([`explore/fifth_look.py`](explore/fifth_look.py), output [`fifth_look.txt`](explore/fifth_look.txt); checks after the result in [`explore/fifth_check.py`](explore/fifth_check.py), [`fifth_check.txt`](explore/fifth_check.txt))
+
+231,048 plays, 2018-2024, with 101 slots; held-out seasons 2019-2024. The run took 8 minutes. **Sanity:** the reference reproduces the fourth look's EPA arm exactly (+5.26% on the roster-change test).
+
+**Expected variance works as a pre-snap measure.** The predictable half's real squared leftover is 0.9 to 1.0, against 2.9 for the other half. Expected and real agree 0.26 to 0.30 per play. A pass play's expected variance is 2.6, a run's 1.1.
+
+**Held-out play fit** (% of EPA's squared error removed against the training mean; each arm less the reference, with 90% from resampling games):
+
+| Arm | All held-out plays | The predictable half (before the snap) | The half closest to expectation (after the fact) |
+|---|---|---|---|
+| The reference lasso | +7.67% | +0.59% | -20.80% |
+| H90: trained on the predictable half | +3.44% (**-4.24**) | +1.23% (+0.64) | -2.63% (+18.16) |
+| H90 textbook: weighted by 1 / expected variance | +7.69% (+0.02; -0.09 to +0.15) | +0.97% (+0.38) | -13.44% (+7.36) |
+| H90 leak: trained on the half closest to expectation | +2.38% (**-5.29**) | -0.92% (-1.51) | **+17.14% (+37.93)** |
+| H92 rung 2: named interactions | +7.65% (-0.02) | +0.54% (-0.04) | -21.44% (-0.65) |
+| H92 rung 3: all pairs | +7.67% (-0.00) | +0.69% (+0.10) | -19.87% (+0.93) |
+| H92: the CEO's net | **-25.36% (-33.03)** | -49.67% | -355.09% |
+| H92 + H90: the net, weighted | -21.95% (-29.62) | -43.93% | -315.61% |
+
+**Yardstick 1, the roster-change test** (the gain beyond last season, 2020-2024, offense and defense pooled; each arm less the reference, 90% from resampling teams):
+
+| Arm | Gain | Offense, defense | Less the reference |
+|---|---|---|---|
+| The reference lasso | **+5.26%** (+0.53 to +9.60) | +5.12%, +5.48% | |
+| H90: trained on the predictable half | -36.68% | +2.83%, -94.92% | **-41.94** (-68.82 to -19.80) |
+| H90 textbook: weighted | +4.79% | +7.17%, +1.30% | -0.47 (-3.11 to +1.88) |
+| H90 leak | +1.15% | +3.70%, -2.60% | -4.11 (-9.01 to +0.44) |
+| H91: against replacement level | +2.89% | -0.56%, +7.97% | **-2.38** (-4.08 to -0.68) |
+| H92 rung 2: named interactions | +3.14% | +2.38%, +4.26% | **-2.12** (-3.33 to -0.87) |
+| H92 rung 3: all pairs | -0.45% | +1.08%, -2.72% | **-5.72** (-8.69 to -2.68) |
+| H92: the CEO's net | +2.33% | +3.35%, +0.83% | -2.93 (-7.27 to +2.12) |
+| H92 + H90: the net, weighted | +1.21% | +1.61%, +0.63% | -4.05 (-8.42 to +0.58) |
+
+**Yardstick 2, the movers' repeat** (this season against next, 300+ plays in both; each arm less the reference on movers, 90% from resampling players):
+
+| Arm | All | Stayed | Moved | Movers less the reference |
+|---|---|---|---|---|
+| **H90's arms: the plain plus-minus fit the arm's way** (2018-2024; 4,005 pairs, 882 movers) | | | | |
+| Every play the same (reference) | 0.24 | 0.27 | 0.08 | |
+| The predictable half | 0.15 | 0.17 | 0.05 | -0.02 (-0.08 to +0.04) |
+| Weighted by 1 / expected variance | 0.22 | 0.25 | 0.08 | -0.00 (-0.04 to +0.04) |
+| The leak | 0.14 | 0.18 | -0.01 | **-0.09** (-0.16 to -0.02) |
+| **H91's and H92's arms: each player's value from the model** (2019-2024; 3,349 pairs, 750 movers) | | | | |
+| The reference lasso | 0.30 | 0.29 | 0.35 | |
+| H91: against replacement level | 0.45 | 0.44 | 0.49 | **+0.14** (+0.04 to +0.23) |
+| Check, each season's and group's mean out: the reference | | 0.30 | 0.32 | |
+| Check, each season's and group's mean out: H91 | | 0.29 | 0.34 | +0.02 (-0.01 to +0.06) |
+| H92 rung 2: named interactions | 0.32 | 0.31 | 0.36 | +0.01 (-0.01 to +0.03) |
+| H92 rung 3: all pairs | 0.22 | 0.23 | 0.22 | **-0.13** (-0.20 to -0.06) |
+| H92: the CEO's net | 0.01 | 0.01 | -0.00 | **-0.35** (-0.46 to -0.24) |
+| H92 + H90: the net, weighted | 0.02 | 0.02 | -0.00 | **-0.35** (-0.46 to -0.23) |
+
+The model's player values repeat more for movers than for stayers. That's because they're built on pre-season ratings, and the own-stats rating travels with the player. This is why H90's yardstick 2 is the plus-minus.
+
+**H91's sizing** (main starters with 300+ plays, their average value per play against what a main starter's absence costs per game, F20):
+
+| Group | QB | RB | WR | TE | OL | DL | LB | DB |
+|---|---|---|---|---|---|---|---|---|
+| What an absence costs (F20) | 0.049 | 0.010 | 0.014 | 0.014 | 0.013 | 0.011 | 0.021 | 0.016 |
+| Against the average | -0.004 | +0.000 | +0.000 | -0.000 | -0.000 | +0.000 | +0.000 | +0.000 |
+| Against replacement level | +0.016 | +0.001 | +0.002 | +0.001 | +0.001 | +0.001 | +0.001 | +0.002 |
+
+The squared gap over the eight groups is 44% smaller with replacement level. Values against the average and against replacement level agree 0.73 per player.
+
+**Checks after the result** ([`fifth_check.txt`](explore/fifth_check.txt)):
+- **H91's movers' gain is mostly a position constant.** Against replacement level, each slot gets its own constant, so a QB's value always sits above a guard's, and the values repeat for that reason alone. With each season's and each position group's mean taken out, the gain falls from +0.14 to +0.02 (-0.01 to +0.06).
+- **The net breaks on a few plays, and is worse on the rest too.**
+  - In 2019, 2020 and 2023, its largest squared error on one play was 1,979, 783 and 807, against the lasso's 137 to 185. Those are the extrapolations that make its fit negative.
+  - In the three calm seasons (2021, 2022, 2024), its mean squared error is still above the lasso's: 1.80 to 1.84, against 1.75 to 1.77.
+- **The stratified arm's defense values change scale from season to season.** The spread of team values was 0.006 in 2019 (the reference's: 0.036) and 0.021 in 2020. The roster-change regression, fit on earlier seasons, then mis-scales them: defense -95%.
+
+## What the fifth look found
+
+**F29. Training VOE only on predictable plays makes it worse, however "predictable" is judged.**
+- **Judged before the snap:** it loses 4.2 points of play fit, 41.9 points on the roster-change test, and 0.02 of the movers' repeat.
+- **Judged after the fact (the leak):** it looks best on the plays it chose (+37.9 points of fit there) and loses 5.3 points on all plays, 4.1 on the roster-change test, and 0.09 of the movers' repeat (clear).
+- **Why:** a player's effect is the part of the play the situation didn't predict. The quiet plays carry the least of it, and the half closest to expectation carries none.
+
+**F30. Weighting plays by their expected variance, the textbook fix, changes nothing.** Play fit +0.02 points, the roster-change test -0.5 points, the movers' repeat -0.00. It helps on the predictable plays themselves (+0.38) and loses it elsewhere.
+
+**F31. A free net is worse for VOE than the lasso, a second time.**
+- It's worse on every yardstick: play fit -33 points, the roster-change test -2.9 points, the movers' repeat -0.35.
+- Its player values don't repeat at all (0.01).
+- It breaks on rare plays, and is slightly worse on ordinary ones.
+- Training it on predictable plays (H90's weights) doesn't fix it.
+
+**F32. Learned interactions don't travel.**
+- **Named pairs** (QB with his line and receivers, the lines against each other, each side with the context) keep 1 to 5 terms and lose 2.1 points on the roster-change test (clear).
+- **All pairs** keep 7 to 48 terms and lose 5.7 points and 0.13 of the movers' repeat (both clear).
+- **Neither improves the play fit.** Whatever interactions the lasso finds are this season's, not the players'.
+
+**F33. Replacement level moves VOE's sizes toward what absences cost, but not far, and it costs forecast.**
+- **The size:** the gap to F20's absence costs shrinks by 44%, but a starting QB is still worth 0.016 a play against a real cost of 0.049, and the other groups are 10 to 20 times too small.
+- **The forecast:** the roster-change test loses 2.4 points (clear). The constant depends on which slots a team fields, so it adds personnel noise to team values.
+- **The ranking:** within a position it barely changes (the check after the result: movers +0.02, spanning zero).
+
+## Against the pass rules and the bets
+
+**H90: failed.** Each of the CEO's two arms is worse on both yardsticks: before the snap, -41.9 points and -0.02; the leak, -4.1 points and -0.09.
+
+**H91: unclear by the rule, leaning failed.**
+- **By the rule:** it's better on the movers' repeat (+0.14, interval above zero) and worse on the roster-change test (-2.4, interval below zero).
+- **The check after the result:** the movers' gain is mostly the position constant (+0.02 within positions, spanning zero).
+
+**H92: failed.** The CEO's net is worse on both yardsticks: -2.9 points and -0.35.
+
+| Bet | Who | Odds | Result |
+|---|---|---|---|
+| H90 as worded | CEO | 40% | Failed |
+| H90, before the snap | Claude | 20% | Failed |
+| H90, the leak | Claude | about 0% | Failed |
+| Weighting by expected variance raises the held-out play fit | Claude | 60% | Failed (+0.02, -0.09 to +0.15) |
+| H91 as worded | CEO | 20% | Unclear, leaning failed |
+| H91 as worded | Claude | 5% | Unclear, leaning failed |
+| Replacement-level values match absence costs better (the gap halves) | Claude | 55% | Failed (44% smaller, short of half) |
+| H92 as worded | CEO | 50% | Failed |
+| H92 as worded | Claude | 15% | Failed |
+| The named-interaction rung beats the lasso, with the interval above zero | Claude | 20% | Failed (-2.1 points, clear) |
+
+## The case against the fifth look
+
+- **One cut and one replacement level.** Half the plays is the only cut tried, and the backups' average is the only replacement level tried. A gentler cut (dropping the noisiest tenth) or a level fit to absences might do better. Both were fixed before the run so neither could be chosen after it.
+- **The stratified arm's -42 points is mostly a scale problem.** Its team values change size from season to season, and the roster-change regression can't adjust. Read it as "unstable", not as "42 points worse in football terms". The movers' repeat and the play fit say the same thing more gently.
+- **One net, untuned.** The second look's 32-unit net, by design. A net with input clipping, heavier shrinkage or a held-out season for early stopping wouldn't blow up on rare plays. Making it match the lasso is plausible; making it beat the lasso isn't, given the calm seasons.
+- **The interactions are among group totals,** not the specific pair of players (this QB with this left tackle). Player-pair interactions have far fewer plays each, so they'd be weaker still.
+- **The model's player values lean on pre-season ratings,** which is why their movers' repeat (0.35) is above the stayers'. They measure the ratings more than the method, as the design said.
+- **The roster-change baseline lacks the new-player share,** as in the second and fourth looks. Every arm is read the same way.
+
+## What this means for VOE
+
+1. **The lasso on the plain sums stays the best VOE** (+7.9% on the roster-change test, the second and fourth looks). The CEO's design (+5.3%) stays second, and none of the three changes moved it up.
+2. **The play is the problem, not the model.** Five looks have now changed the outcome, the inputs, the reference, the weights and the model, and nothing gets past the noise of a single play. VOE's limitation L1 (BRIEF.md: "EPA is too noisy per play") stands.
+3. **What's left are the ideas that change the data:**
+   - quasi-random absences as instruments (I97);
+   - the sorting test (I98);
+   - values on each job's nearest outcome (I99): a pass rusher's pressures, a lineman's pass block, a receiver's separation, composed upward.

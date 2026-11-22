@@ -1,0 +1,20 @@
+== CHECK 1: THE MOVERS' REPEAT WITH EACH SEASON'S AND EACH POSITION GROUP'S MEAN OUT (300+ plays in both) ==
+  the reference lasso (the fourth look's EPA arm)                          stayed +0.299; moved +0.319 (750); movers less the reference +0.000 (90% +0.000 to +0.000)
+  H91: the reference, against replacement level                            stayed +0.290; moved +0.340 (750); movers less the reference +0.021 (90% -0.005 to +0.058)
+  H92 rung 2: named interactions                                           stayed +0.317; moved +0.326 (750); movers less the reference +0.008 (90% -0.011 to +0.026)
+  H92 rung 3: all pairs of group totals and context                        stayed +0.234; moved +0.182 (750); movers less the reference -0.137 (90% -0.211 to -0.064)
+  H92: the CEO's net (32 units, 3 seeds)                                   stayed +0.005; moved -0.019 (750); movers less the reference -0.338 (90% -0.435 to -0.229)
+  H92 + H90: the net, weighted by 1 / expected variance                    stayed +0.018; moved -0.022 (750); movers less the reference -0.340 (90% -0.449 to -0.225)
+  the same for H90's plus-minus arms is not needed: the plain plus-minus carries no position constant
+
+== CHECK 2: SEASON BY SEASON ==
+  held-out play fit (% of squared error removed against the training mean; only the lasso and the nets)
+    2019: mean squared error, reference 1.8295; net 3.9723; weighted net 3.8939; largest net error 1978.6 against the reference's 185.1
+    2020: mean squared error, reference 1.7785; net 3.2672; weighted net 2.9875; largest net error 782.8 against the reference's 137.2
+    2021: mean squared error, reference 1.7501; net 1.8367; weighted net 1.8360; largest net error 152.9 against the reference's 144.2
+    2022: mean squared error, reference 1.7450; net 1.7970; weighted net 1.7926; largest net error 174.2 against the reference's 169.5
+    2023: mean squared error, reference 1.7828; net 1.8959; weighted net 1.8625; largest net error 806.6 against the reference's 153.8
+    2024: mean squared error, reference 1.7667; net 1.7986; weighted net 1.7932; largest net error 169.8 against the reference's 162.2
+  the spread of team values (sd across teams of a season's mean value a play)
+    offense: 2019 reference 0.0514, stratified 0.0321; 2020 reference 0.0189, stratified 0.0154; 2021 reference 0.0361, stratified 0.0287; 2022 reference 0.0370, stratified 0.0263; 2023 reference 0.0356, stratified 0.0244; 2024 reference 0.0447, stratified 0.0322
+    defense: 2019 reference 0.0355, stratified 0.0061; 2020 reference 0.0157, stratified 0.0214; 2021 reference 0.0181, stratified 0.0150; 2022 reference 0.0161, stratified 0.0083; 2023 reference 0.0175, stratified 0.0110; 2024 reference 0.0150, stratified 0.0085

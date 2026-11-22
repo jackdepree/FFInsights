@@ -1,0 +1,121 @@
+[     8s] plays 295328
+[    14s] plain plus-minus
+[    16s] plus-minus with last season's prior
+[    16s] stats 17220
+[    17s] stats ratings
+[    18s] stats+pm priors
+[    19s] plus-minus from his own stats 2018
+[    19s] plus-minus from his own stats 2019
+[    19s] plus-minus from his own stats 2020
+[    20s] plus-minus from his own stats 2021
+[    20s] plus-minus from his own stats 2022
+[    20s] plus-minus from his own stats 2023
+[    27s] matrices 231048 plays 101 slots
+[    27s] expected variance 2018
+[    27s] expected variance 2019
+[    27s] expected variance 2020
+[    28s] expected variance 2021
+[    28s] expected variance 2022
+[    28s] expected variance 2023
+[    29s] expected variance 2024
+[    32s] fit 2019 pass ref
+[    32s] fit 2019 pass strat
+[    33s] fit 2019 pass wvar
+[    33s] fit 2019 pass leak
+[    35s] fit 2019 pass named
+[    40s] fit 2019 pass pairs
+[    43s] fit 2019 pass mlp
+[    46s] fit 2019 pass mlp_w
+[    47s] fit 2019 run ref
+[    48s] fit 2019 run strat
+[    48s] fit 2019 run wvar
+[    48s] fit 2019 run leak
+[    49s] fit 2019 run named
+[   179s] fit 2019 run pairs
+[   181s] fit 2019 run mlp
+[   183s] fit 2019 run mlp_w
+[   186s] fit 2020 pass ref
+[   186s] fit 2020 pass strat
+[   187s] fit 2020 pass wvar
+[   188s] fit 2020 pass leak
+[   190s] fit 2020 pass named
+[   196s] fit 2020 pass pairs
+[   200s] fit 2020 pass mlp
+[   205s] fit 2020 pass mlp_w
+[   206s] fit 2020 run ref
+[   207s] fit 2020 run strat
+[   207s] fit 2020 run wvar
+[   207s] fit 2020 run leak
+[   209s] fit 2020 run named
+[   212s] fit 2020 run pairs
+[   215s] fit 2020 run mlp
+[   219s] fit 2020 run mlp_w
+[   222s] fit 2021 pass ref
+[   223s] fit 2021 pass strat
+[   224s] fit 2021 pass wvar
+[   225s] fit 2021 pass leak
+[   229s] fit 2021 pass named
+[   241s] fit 2021 pass pairs
+[   246s] fit 2021 pass mlp
+[   252s] fit 2021 pass mlp_w
+[   254s] fit 2021 run ref
+[   254s] fit 2021 run strat
+[   255s] fit 2021 run wvar
+[   255s] fit 2021 run leak
+[   257s] fit 2021 run named
+[   260s] fit 2021 run pairs
+[   264s] fit 2021 run mlp
+[   269s] fit 2021 run mlp_w
+[   273s] fit 2022 pass ref
+[   273s] fit 2022 pass strat
+[   275s] fit 2022 pass wvar
+[   276s] fit 2022 pass leak
+[   279s] fit 2022 pass named
+[   292s] fit 2022 pass pairs
+[   299s] fit 2022 pass mlp
+[   306s] fit 2022 pass mlp_w
+[   308s] fit 2022 run ref
+[   308s] fit 2022 run strat
+[   309s] fit 2022 run wvar
+[   310s] fit 2022 run leak
+[   311s] fit 2022 run named
+[   315s] fit 2022 run pairs
+[   320s] fit 2022 run mlp
+[   326s] fit 2022 run mlp_w
+[   329s] fit 2023 pass ref
+[   330s] fit 2023 pass strat
+[   332s] fit 2023 pass wvar
+[   332s] fit 2023 pass leak
+[   336s] fit 2023 pass named
+[   358s] fit 2023 pass pairs
+[   366s] fit 2023 pass mlp
+[   375s] fit 2023 pass mlp_w
+[   376s] fit 2023 run ref
+[   377s] fit 2023 run strat
+[   378s] fit 2023 run wvar
+[   378s] fit 2023 run leak
+[   380s] fit 2023 run named
+[   383s] fit 2023 run pairs
+[   389s] fit 2023 run mlp
+[   397s] fit 2023 run mlp_w
+[   401s] fit 2024 pass ref
+[   402s] fit 2024 pass strat
+[   404s] fit 2024 pass wvar
+[   404s] fit 2024 pass leak
+[   408s] fit 2024 pass named
+[   423s] fit 2024 pass pairs
+[   434s] fit 2024 pass mlp
+[   443s] fit 2024 pass mlp_w
+[   445s] fit 2024 run ref
+[   446s] fit 2024 run strat
+[   447s] fit 2024 run wvar
+[   448s] fit 2024 run leak
+[   450s] fit 2024 run named
+[   453s] fit 2024 run pairs
+[   461s] fit 2024 run mlp
+[   469s] fit 2024 run mlp_w
+[   476s] plus-minus ref
+[   477s] plus-minus strat
+[   479s] plus-minus wvar
+[   480s] plus-minus leak
+[   482s] done
