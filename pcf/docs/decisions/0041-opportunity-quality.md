@@ -25,10 +25,19 @@
 
 14. **The gap** is his points over expected per chance over this season so far plus last season, measured against 0 (the average player in the same spots), weighted by chances; a row needs 20 chances behind it and 10 still to come to be scored.
 15. **Method A:** one pull-back rate per position, the weighted slope of later gaps on earlier ones. **Method B:** partial pooling, k = τ²/(τ² + V), with τ² from earlier player-seasons of 30+ chances, V from the spread of one chance's points over expected by kind. **B with yards after the catch:** B plus a per-position weight on his shrunk yards-after-catch gap. All parameters come from the 6 seasons before (never the scored one).
-16. **"The gap closes"** means his future gap (rest of the season) ends on the near side of half his current gap. The chance is a normal approximation from B's posterior and the future chances' noise, **then recalibrated with a Platt fit on earlier seasons' rows**, because the raw chance is overconfident (calibration slope 0.63). The recalibrated chance is the one published.
+16. **"The gap closes"** means his future gap (rest of the season) ends on the near side of half his current gap. The chance is a normal approximation from B's posterior and the future chances' noise, **then recalibrated with a Platt fit on earlier seasons' rows**, because the raw chance is overconfident (calibration slope 0.63). The recalibrated chance is the one published (B's, without yards after the catch: B with them adds noise for backs and receivers on the vault).
 
 ## Validation
 
 17. **The no-noise target is the brief's** (next game's PPR points on targets and carries, against past points, targets, carries, snaps and position), scored 2019-2024 with the downstream model trained from 2016, because the expert's walk-forward history starts in 2016 (rule e).
 18. **Fitting noise** is one training season left out (2016, 2017 or 2018) for the lasso rungs, and seeds for trees, before reading any gain under 0.5%.
 19. **The downstream checks walk saved feature histories** (`downstream.py`), so a new variant costs seconds, not a feature rebuild; every row is still predicted by a model fit only on earlier rows.
+
+## After the results
+
+20. **The trees rung is the champion** (`eff_trees`): it beat the lasso by 1.8% of the range score through the harness, with 20 shuffles (the 20-of-20 rule) because each tree refit is slow. The horizons and the yards variants stay lasso (idea I103).
+21. **The regression measure publishes method A's mean,** with B's range moved onto it and B's recalibrated chance the gap closes beside it, because B lost to A on the 2025 vault (−1.0%) and the brief's rule says the simpler method ships when the per-player rate isn't better. B's mean stays in the output for the CEO's call.
+22. **Saved feature histories** (`pcf.validation.backtest.save_features`, `load_features`, `latest_history`): shared, additive. An expert's package may not read files (leakage check 1), so the readers live in the harness.
+23. **The no-noise target is reported two ways:** the brief's baseline, and the same baseline with participation's playing-time inputs, since a downstream user already has those.
+24. **The histories pinned in the registry** (`history_runs`): `eff_trees`, `eff_h3`, `eff_rest`, and the yards variants' walks on the saved features (`saved-features`), which have their own 20-of-20 signal tests but no scorecard.
+

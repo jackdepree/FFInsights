@@ -1,0 +1,14 @@
+opportunity-quality/eff_rest run e060f2f391224b7db4a9b31d9fd8518a
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\opportunity-quality\eff_rest\e060f2f391224b7db4a9b31d9fd8518a\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (25,762 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (25,762 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 100 of 100 shuffled refits (needs 95)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 100 of 100 shuffled refits
+against Horizon_counts_rest: Comparison(a='opportunity-quality', b='Horizon_counts_rest', diff=-0.006210424096359631, lo=-0.0072821179611949035, hi=-0.005206873643884783, rows=63775, blocks=157)

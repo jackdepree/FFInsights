@@ -29,7 +29,7 @@ from pcf.data.gateway import END_OF_TIME, Gateway
 from pcf.experts.opportunity_quality import features as F
 from pcf.experts.opportunity_quality import model as M
 from pcf.experts.opportunity_quality.common import known_games
-from pcf.experts.opportunity_quality.horizons import _Horizon
+from pcf.experts.opportunity_quality.horizons import HORIZONS, REST, _Horizon
 from pcf.validation import backtest
 from pcf.validation.nulls import no_noise as no_noise_verdict
 from pcf.validation.scores import row_losses
@@ -280,6 +280,36 @@ def fitting_noise(feats: pl.DataFrame, nn: dict, first: int) -> list[str]:
         M.TREES.clear()
         M.TREES.update(old)
     out.append(f"  {'trees vs lasso, seeds 0/1/2':<40} " + ", ".join(f"{s:+.2f}" for s in seeds))
+    return out
+
+
+def horizon_points(horizon: int | None) -> pl.DataFrame:
+    """A window's average PPR points per game on targets and carries, as outcomes."""
+    attrs = {"variant": "downstream_points", "horizon": horizon, "outcome": "fp",
+             "columns": BASE, "__module__": __name__}  # fmt: skip
+    return backtest.targets(type("Downstream_points", (_Horizon,), attrs)(), Gateway())
+
+
+def horizons_check() -> list[str]:
+    """The kinds of chance beyond the counts at the longer horizons (the brief's plan, step 6), on
+    each horizon's saved features: on expected points per game (goal_* against eff_*) and on actual
+    points per game (counts against counts + kinds, and both beside playing time)."""
+    out = ["Kinds of chance beyond the counts at the longer horizons, 2016-2024"]
+    seasons = list(range(2016, 2025))
+    for tag, h in (("h3", 3), ("rest", REST)):
+        feats, outs = backtest.load_features(saved_dir(f"eff_{tag}"))
+        first = int(feats["step_season"].min())
+        eff = walk_saved(HORIZONS[f"eff_{tag}"](), feats, outs, seasons, first)
+        goal = walk_saved(HORIZONS[f"goal_{tag}"](), feats, outs, seasons, first)
+        out.append(gain_line(f"{tag}: expected points, goal_{tag} vs eff_{tag}", goal, eff)[0])
+        pts = horizon_points(h)
+        base = walk_saved(plain("h_counts", BASE), feats, pts, seasons, first)
+        kinds_ = walk_saved(plain("h_kinds", [*BASE, *KINDS]), feats, pts, seasons, first)
+        out.append(gain_line(f"{tag}: points, counts + kinds vs counts", kinds_, base)[0])
+        both = [*BASE, *F.PLAYING]
+        play = walk_saved(plain("h_play", both), feats, pts, seasons, first)
+        play_k = walk_saved(plain("h_play_kinds", [*both, *KINDS]), feats, pts, seasons, first)
+        out.append(gain_line(f"{tag}: points, beside playing time", play_k, play)[0])
     return out
 
 

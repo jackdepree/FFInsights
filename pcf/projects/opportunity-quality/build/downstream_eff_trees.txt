@@ -1,0 +1,35 @@
+Downstream checks on eff_trees run 3b5fd214e10d43559ad1fd21428202e8 (saved features: 86859 rows)
+
+No-noise target: next game's PPR points on targets and carries, 2019-2024 (trained from 2016)
+  + the forecast (mean, chance of a chance)      +13.55% of squared error (+12.90 to +14.23); range score +8.73% (+8.31 to +9.16): adds value; 45054 rows
+  + past expected points only (the exploration's -0.19%)  -0.05% of squared error (-0.08 to -0.02); range score -0.01% (-0.05 to +0.02): neutral; 45054 rows
+  + playing time (participation's inputs) only   +10.30% of squared error (+9.73 to +10.88); range score +6.30% (+5.95 to +6.66): adds value; 45054 rows
+  + the forecast, beside playing time             +3.69% of squared error (+3.35 to +4.04); range score +2.56% (+2.35 to +2.78): adds value; 45054 rows
+  verdict (VALIDATION §5, range score per row): adds value; Comparison(a='with', b='without', diff=-0.10024681189874092, lo=-0.10594610734153428, hi=-0.09498529663699849, rows=45054, blocks=130)
+  by position: RB +16.24% (+15.27 to +17.19); WR +13.18% (+12.38 to +14.00); TE +8.90% (+7.78 to +9.99)
+  verdict beside playing time: adds value
+
+Kinds of chance beyond the counts (goal-line carries, red-zone, end-zone and deep targets, air yards, expected TDs), 2019-2024
+  next game's points: counts + kinds vs counts    +0.08% of squared error (+0.03 to +0.13); range score +0.00% (-0.06 to +0.06): neutral; 45054 rows
+  next game's points: + forecast + kinds vs + forecast  +0.05% of squared error (-0.03 to +0.12); range score +0.02% (-0.05 to +0.08): neutral; 45054 rows
+  next game's expected points: eff + kinds vs eff  +0.04% of squared error (-0.05 to +0.14); range score -0.01% (-0.07 to +0.06): neutral; 45054 rows
+
+The ladder and the yards variants, 2016-2024 (the validated seasons)
+  trees on eff's inputs vs eff (lasso)            +2.75% of squared error (+2.24 to +3.27); range score +1.83% (+1.55 to +2.11): adds value; 66758 rows
+  eff_rec_yards    range score 3.117 expected yards; shuffled refits 5.260 to 5.360: beats 20 of 20 (needs 20); MAE 9.66 yards
+  eff_rush_yards   range score 1.270 expected yards; shuffled refits 3.120 to 3.252: beats 20 of 20 (needs 20); MAE 3.74 yards
+
+The yardstick (crude-forecaster): what each forecast adds to the crude forecast of next game's yards, alone, 2019-2024; missing (QBs, no forecast) = 0
+  receiving expected points forecast         +2.07% (+1.81 to +2.32); range +1.26%: adds value; 36125 rows
+  receiving expected receiving yards forecast +4.15% (+3.72 to +4.58); range +2.87%: adds value; 36125 rows
+  receiving both                             +4.35% (+3.92 to +4.76); range +2.85%: adds value; 36125 rows
+  rushing   expected points forecast         +3.57% (+2.83 to +4.28); range +1.80%: adds value; 10207 rows
+  rushing   expected rushing yards forecast  +4.55% (+3.68 to +5.39); range +2.58%: adds value; 10207 rows
+  rushing   both                             +4.96% (+4.09 to +5.82); range +2.83%: adds value; 10207 rows
+
+Fitting noise: each gain, 2019-2024, with one training season left out (nothing real changes)
+  eff vs xfp (H61: efficiency earns work)  all +1.30%; without 2016/17/18 +1.29, +1.31, +1.29 (spread 0.02)
+  eff vs counts                            all +1.42%; without 2016/17/18 +1.39, +1.39, +1.39 (spread 0.03)
+  xfp vs counts                            all +0.12%; without 2016/17/18 +0.10, +0.08, +0.10 (spread 0.04)
+  no-noise: with vs without the forecast   all +13.55%; without +13.56, +13.56, +13.46 (spread 0.10)
+  trees vs lasso, seeds 0/1/2              +2.85, +2.86, +2.78

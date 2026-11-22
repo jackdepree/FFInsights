@@ -1,0 +1,14 @@
+opportunity-quality/eff_trees run 1f8a71d7aa154dc1bdf16336203d137d
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\opportunity-quality\eff_trees\1f8a71d7aa154dc1bdf16336203d137d\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (15,391 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (15,391 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  22 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against Eff: Comparison(a='opportunity-quality', b='Eff', diff=-0.010218707402091569, lo=-0.013160261866437437, hi=-0.007001726223684587, rows=7675, blocks=22)

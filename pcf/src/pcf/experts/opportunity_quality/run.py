@@ -144,11 +144,16 @@ def main(argv: list[str] | None = None) -> None:
     r.add_argument("--shuffles", type=int, default=100)
     d = sub.add_parser("downstream")
     d.add_argument("--variant", default="eff")
+    sub.add_parser("horizons")
     args = p.parse_args(argv)
     if args.command == "facts":
         facts_command()
     elif args.command == "regression":
         regression_command(args.seasons, args.open_vault, args.shuffles)
+    elif args.command == "horizons":
+        from pcf.experts.opportunity_quality import downstream
+
+        _write("horizons", downstream.horizons_check())
     elif args.command == "downstream":
         downstream_command(args.variant)
     elif args.command == "forecast":

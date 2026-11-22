@@ -331,9 +331,10 @@ def regression_params(seasons: Sequence[int], scoring: str = "ppr") -> list[str]
 def regression_output(hist: pl.DataFrame, run_id: str) -> pl.DataFrame:
     """The published measure in the standard output schema: per player and regular-season game,
     made at the game's Saturday-run moment from parameters fit on earlier seasons. `mean` and
-    q10-q90 are his points over expected per chance over the rest of the season (method B with
-    yards after the catch); beside them the kept share, the range for his true level and the
-    recalibrated chance the gap closes."""
+    q10-q90 are his points over expected per chance over the rest of the season by method A (one
+    pull-back rate per position: method B lost to it on the 2025 vault, RESULTS R17), with B's
+    range moved onto A's mean; beside them B's mean and kept share, the range for his true level
+    and B's recalibrated chance the gap closes."""
     from pcf.core.contract import check_output
     from pcf.data.timeline.moments import game_moments
 
@@ -342,7 +343,7 @@ def regression_output(hist: pl.DataFrame, run_id: str) -> pl.DataFrame:
     ends = gw.calendar.games.group_by("season").agg(
         train_end=(c("kickoff").max() + pl.duration(days=1))
     )
-    shift = c("mean_B_yac") - c("mean_B")
+    shift = c("mean_A") - c("mean_B")
     out = (
         hist.join(moments, on="game_id", how="inner")
         .join(ends.with_columns(season=c("season") + 1), on="season", how="left")
@@ -352,7 +353,7 @@ def regression_output(hist: pl.DataFrame, run_id: str) -> pl.DataFrame:
             c("as_of").cast(UTC),
             "position",
             quantity=pl.lit("poe_per_chance_rest_of_season"),
-            mean=c("mean_B_yac"),
+            mean=c("mean_A"),
             q10=c("future_q10") + shift,
             q50=c("future_q50") + shift,
             q90=c("future_q90") + shift,
@@ -366,8 +367,9 @@ def regression_output(hist: pl.DataFrame, run_id: str) -> pl.DataFrame:
             kept_share="k_B",
             true_q10="true_q10",
             true_q90="true_q90",
-            p_gap_closes="p_close_B_yac_cal",
-            mean_A="mean_A",
+            p_gap_closes="p_close_B_cal",
+            mean_B="mean_B",
+            mean_B_yac="mean_B_yac",
         )  # fmt: skip
     )
     check_output(out, ["gsis_id", "game_id"])
