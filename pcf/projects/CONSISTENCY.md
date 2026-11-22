@@ -229,6 +229,19 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 |---|---|---|---|---|---|---|---|
 | Plain plus-minus on success (EPA above 0) | voe (H89) | Ridge plus-minus of each play's success less its situation chance, one season at a time | | 0.28 (stayers 0.33, movers 0.05; EPA's: 0.25, 0.29, 0.08) | **mostly the team's** | No: worse than EPA's values on the roster-change test (-3.4 to -3.7 points) | 5,307 player-season pairs, 300+ plays in both |
 
+**Opportunity measures** (opportunity-quality build, 2026-11-21, decision 0041): per **player-game** with a chance, RB, WR and TE, regular season 2012-2024 (5,488 player-seasons, 4,178 season pairs), from `player_game.opportunity` (the 2009-start expected models). Per chance means averaged over his chances.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Expected points (xfp) | opportunity-quality (H59) | The fantasy points (PPR) an average player scores on his chances from their situations | 0.84 (0.84-0.85) | 0.75 | trait | Past expected points beside counts and playing time: +0.12% (R11); the forecast built on them adds 4% to the yardstick (R14) | RB 0.85/0.70, WR 0.83/0.75, TE 0.82/0.76. Use it where volume matters |
+| Points (on targets and carries) | opportunity-quality | Actual PPR points on those chances | 0.76 (0.75-0.77) | 0.72 | trait | The no-noise target (R13) | Less consistent than its expected part |
+| Points over expected, per game | opportunity-quality (H59) | Points minus expected points | 0.13 (0.11-0.15) | 0.17 | trait (weak) | Yes: earns next game's work, +1.11% (R10) | Volume carries most of it; per chance it is noise (next row) |
+| Points over expected, per chance | opportunity-quality (H59, H62) | The same per target or carry | 0.02 (−0.00-0.04) | 0.03 | **noise** | Its lasting part, over a season or more, is the regression measure (R5) | RB 0.01, TE −0.02 week to week: noise; WR 0.04 week, −0.00 season: a state. A true level exists (spread 0.06-0.15 a chance) but shows only over hundreds of chances |
+| Expected points per chance | opportunity-quality | His chances' average worth (where they happen) | 0.75 (0.74-0.76) | 0.78 | trait | Not alone; its counts carry it (R11) | The "quality" of a role is close to a label (exploration F9) |
+| Yards after the catch over expected, per target | opportunity-quality (H58) | Yards after the catch less nflverse's expectation, per target | 0.04 (0.02-0.06) | 0.05 | trait (weak) | Tight ends only: +0.60% on the regression measure (R6) | WR 0.09/0.07 trait; RB and TE noise week to week (TE 0.05 season) |
+| Goal-line share | opportunity-quality (H56) | Share of his chances inside the 5 (carries) or 10 (targets) | 0.17 (0.13-0.20) | 0.20 | trait | No: beyond counts +0.08% on next game's points (R4) | |
+| Deep-target share | opportunity-quality | Share of his targets 20+ yards downfield | 0.42 (0.40-0.44) | 0.45 | trait | No, as above (R4) | A role trait; the schemes-v2 R3 owner is the passer as much as the receiver |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
@@ -243,3 +256,5 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Margin, total, win chance | elo | `margin`, `total`, `win` histories | Built from traits | 0.27, 0.30 and 0.019 log loss behind the close | Calibrated ranges (elo#F5) |
 | Wins next 3 games, rest of season | elo | `wins_next3`, `wins_rest` histories | Built from traits | No close to compare with; beats the record-based yardstick at every point in the season (elo#F8) | For futures and season-win markets |
 | Offensive avoidance (pass, shotgun use) and the pass-gain blend | schemes-v2 (anti-traits) | `pass_use`, `shotgun_use` features; the `pass_gain_blend` forecast (not saved as outputs yet) | Yes: built from traits (pass rate over expected, shotgun rate) | No close to compare with. Use predicts the next game's gain from the option on held-out seasons, but faintly (+0.015 to +0.018 EPA a play per sd: schemes-v2#R6) | For play-mix and efficiency models (a team forced to pass); the raw use does as well as the opponent-adjusted one (R7) |
+| Next game's expected points and expected yards (`eff_trees`, `eff_rec_yards`, `eff_rush_yards`); expected points per game over 3 games and the rest of the season (`eff_h3`, `eff_rest`) | opportunity-quality | `outputs/opportunity-quality/<variant>/<run_id>/history.parquet` (pinned in the registry) | Yes: built from expected points (0.84 week to week) and playing time | No close to compare with; adds +3.7% to next game's points beside playing time and about 4% to the crude forecast of yards (opportunity-quality R13, R14) | Opportunity features for fantasy, props and player-opportunity |
+

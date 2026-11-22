@@ -1,0 +1,79 @@
+== The regression measure, walk forward by season (2016-2024): 31151 player-games scored (window 20+ chances, 10+ left), 845 players
+  Target: points over expected per chance over the rest of the season, weighted by chances. Skill = share of the 'all luck' forecast's error removed (90%, weeks resampled).
+  everyone (31151):
+    A against all luck         +2.71% (90% +2.40 to +3.03)
+    B against all luck         +3.87% (90% +3.42 to +4.35)
+    B against A                +1.19% (90% +0.95 to +1.44)
+    B with yac against B       +0.17% (90% +0.08 to +0.26)
+    'it all lasts' against all luck -38.46% (90% -42.28 to -34.49)
+  week 1 (next season) (2005):
+    A against all luck         +2.84% (90% +1.13 to +4.58)
+    B against all luck         +3.56% (90% +1.13 to +5.91)
+    B against A                +0.74% (90% -0.39 to +1.79)
+    B with yac against B       +0.08% (90% -0.24 to +0.30)
+    'it all lasts' against all luck -70.69% (90% -83.78 to -59.90)
+  RB (11263):
+    A against all luck         +3.26% (90% +2.77 to +3.76)
+    B against all luck         +5.10% (90% +4.01 to +6.24)
+    B against A                +1.90% (90% +1.14 to +2.66)
+    B with yac against B       +0.00% (90% -0.10 to +0.09)
+    'it all lasts' against all luck -43.32% (90% -51.76 to -35.69)
+  WR (14085):
+    A against all luck         +2.41% (90% +2.04 to +2.80)
+    B against all luck         +3.08% (90% +2.57 to +3.58)
+    B against A                +0.69% (90% +0.42 to +0.96)
+    B with yac against B       +0.09% (90% -0.07 to +0.25)
+    'it all lasts' against all luck -38.82% (90% -42.99 to -35.03)
+  TE (5803):
+    A against all luck         +3.13% (90% +2.57 to +3.69)
+    B against all luck         +5.18% (90% +4.36 to +6.03)
+    B against A                +2.12% (90% +1.68 to +2.57)
+    B with yac against B       +0.60% (90% +0.40 to +0.80)
+    'it all lasts' against all luck -32.31% (90% -37.29 to -27.17)
+  Shuffled null: B beats 100 of 100 copies with its forecasts moved between players within each week and position (needs 95)
+
+  Kept share by chances in the window (the assumption test: does it rise as B says?)
+    band            rows   B's kept share   seen (weighted slope of future on gap)
+      20-50        6514   0.12             0.10
+      50-100       8292   0.23             0.16
+     100-200       9727   0.36             0.36
+     200-400       5264   0.48             0.36
+     400-+         1354   0.60             0.54
+
+  The chance the gap closes by half or more (calibration in 10 bands)
+    A: calibration error 3.1 points, slope 0.45, closed 55.4% of the time, forecast 56.4%
+    B: calibration error 2.7 points, slope 0.63, closed 55.4% of the time, forecast 53.9%
+      0.3-0.4:    118 rows, forecast  37.6%, closed  41.5%
+      0.4-0.5:  10887 rows, forecast  47.1%, closed  52.2%
+      0.5-0.6:  14532 rows, forecast  54.4%, closed  54.9%
+      0.6-0.7:   4444 rows, forecast  63.7%, closed  59.8%
+      0.7-0.8:    935 rows, forecast  73.7%, closed  74.9%
+      0.8-0.9:    187 rows, forecast  83.8%, closed  83.4%
+      0.9-1.0:     48 rows, forecast  94.7%, closed  91.7%
+    B_yac: calibration error 2.6 points, slope 0.67, closed 55.4% of the time, forecast 53.6%
+    B_cal: calibration error 0.9 points, slope 0.92, closed 55.4% of the time, forecast 56.1%
+    B_yac_cal: calibration error 0.9 points, slope 0.91, closed 55.4% of the time, forecast 56.0%
+      0.2-0.3:      1 rows, forecast  29.6%, closed 100.0%
+      0.3-0.4:     33 rows, forecast  36.3%, closed  54.5%
+      0.4-0.5:   2645 rows, forecast  47.9%, closed  45.4%
+      0.5-0.6:  22401 rows, forecast  54.7%, closed  54.4%
+      0.6-0.7:   5314 rows, forecast  63.3%, closed  61.1%
+      0.7-0.8:    642 rows, forecast  73.4%, closed  79.8%
+      0.8-0.9:     91 rows, forecast  83.5%, closed  83.5%
+      0.9-1.0:     24 rows, forecast  94.6%, closed  95.8%
+  Range for the future gap (q10-q90, over his expected chances): holds 79.5%
+    RB: 79.1% (11263)
+    WR: 78.5% (14085)
+    TE: 82.6% (5803)
+    week 1 (next season): 75.9% (2005)
+
+  Parameters per test season (μ, τ = √τ², A's k, γ for yac), points per chance:
+    2016: RB μ -0.004 τ 0.075 kA 0.12 τy 0.049 γ +0.18; TE μ +0.100 τ 0.115 kA 0.03 τy 0.054 γ +0.23; WR μ +0.025 τ 0.131 kA 0.23 τy 0.031 γ -0.24
+    2017: RB μ +0.001 τ 0.076 kA 0.13 τy 0.057 γ +0.00; TE μ +0.094 τ 0.120 kA 0.08 τy 0.056 γ +0.24; WR μ +0.021 τ 0.135 kA 0.20 τy 0.028 γ -0.51
+    2018: RB μ +0.001 τ 0.081 kA 0.12 τy 0.060 γ -0.07; TE μ +0.086 τ 0.125 kA 0.10 τy 0.056 γ +0.27; WR μ +0.013 τ 0.137 kA 0.20 τy 0.028 γ +0.03
+    2019: RB μ +0.012 τ 0.082 kA 0.13 τy 0.065 γ +0.02; TE μ +0.103 τ 0.131 kA 0.12 τy 0.062 γ +0.42; WR μ +0.031 τ 0.141 kA 0.18 τy 0.030 γ -0.32
+    2020: RB μ +0.019 τ 0.082 kA 0.18 τy 0.058 γ +0.00; TE μ +0.096 τ 0.146 kA 0.11 τy 0.058 γ +0.45; WR μ +0.043 τ 0.141 kA 0.17 τy 0.036 γ +0.13
+    2021: RB μ +0.024 τ 0.065 kA 0.19 τy 0.056 γ +0.13; TE μ +0.093 τ 0.149 kA 0.18 τy 0.055 γ +0.33; WR μ +0.057 τ 0.139 kA 0.15 τy 0.036 γ +0.14
+    2022: RB μ +0.028 τ 0.065 kA 0.20 τy 0.056 γ +0.12; TE μ +0.088 τ 0.133 kA 0.20 τy 0.053 γ +0.55; WR μ +0.059 τ 0.134 kA 0.18 τy 0.040 γ +0.81
+    2023: RB μ +0.028 τ 0.064 kA 0.20 τy 0.051 γ +0.27; TE μ +0.087 τ 0.134 kA 0.21 τy 0.050 γ +0.65; WR μ +0.062 τ 0.127 kA 0.18 τy 0.044 γ +0.82
+    2024: RB μ +0.026 τ 0.060 kA 0.23 τy 0.044 γ +0.54; TE μ +0.091 τ 0.127 kA 0.20 τy 0.049 γ +0.58; WR μ +0.073 τ 0.128 kA 0.19 τy 0.048 γ +0.87

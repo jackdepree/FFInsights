@@ -1,0 +1,7 @@
+Kinds of chance beyond the counts at the longer horizons, 2016-2024
+  h3: expected points, goal_h3 vs eff_h3          +0.07% of squared error (-0.05 to +0.18); range score -0.00% (-0.07 to +0.07): neutral; 56035 rows
+  h3: points, counts + kinds vs counts            -0.21% of squared error (-0.30 to -0.12); range score -0.15% (-0.21 to -0.08): adds noise; 56035 rows
+  h3: points, beside playing time                 -0.21% of squared error (-0.30 to -0.12); range score -0.12% (-0.18 to -0.06): adds noise; 56035 rows
+  rest: expected points, goal_rest vs eff_rest    -0.28% of squared error (-0.39 to -0.16); range score -0.07% (-0.14 to +0.00): neutral; 63775 rows
+  rest: points, counts + kinds vs counts          -0.53% of squared error (-0.61 to -0.44); range score -0.25% (-0.31 to -0.18): adds noise; 63775 rows
+  rest: points, beside playing time               -0.57% of squared error (-0.65 to -0.48); range score -0.26% (-0.32 to -0.19): adds noise; 63775 rows

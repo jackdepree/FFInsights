@@ -1,0 +1,67 @@
+== The regression measure, walk forward by season (2025-2025): 3489 player-games scored (window 20+ chances, 10+ left), 304 players
+  Target: points over expected per chance over the rest of the season, weighted by chances. Skill = share of the 'all luck' forecast's error removed (90%, weeks resampled).
+  everyone (3489):
+    A against all luck         +3.24% (90% +2.58 to +3.99)
+    B against all luck         +2.30% (90% +1.68 to +2.95)
+    B against A                -0.98% (90% -1.19 to -0.78)
+    B with yac against B       -0.37% (90% -0.54 to -0.21)
+    'it all lasts' against all luck -34.29% (90% -41.03 to -26.97)
+  week 1 (next season) (224):
+    A against all luck         +6.60% (90% +6.60 to +6.60)
+    B against all luck         +5.16% (90% +5.16 to +5.16)
+    B against A                -1.54% (90% -1.54 to -1.54)
+    B with yac against B       -0.24% (90% -0.24 to -0.24)
+    'it all lasts' against all luck -56.60% (90% -56.60 to -56.60)
+  RB (1226):
+    A against all luck         +3.57% (90% +1.39 to +6.06)
+    B against all luck         +3.22% (90% -0.40 to +7.06)
+    B against A                -0.36% (90% -1.93 to +1.32)
+    B with yac against B       -0.80% (90% -1.27 to -0.27)
+    'it all lasts' against all luck -49.17% (90% -60.23 to -39.68)
+  WR (1534):
+    A against all luck         +4.23% (90% +3.58 to +4.96)
+    B against all luck         +4.07% (90% +3.24 to +4.99)
+    B against A                -0.17% (90% -0.58 to +0.25)
+    B with yac against B       -0.89% (90% -1.18 to -0.58)
+    'it all lasts' against all luck -23.31% (90% -31.26 to -14.66)
+  TE (729):
+    A against all luck         -0.46% (90% -2.41 to +1.39)
+    B against all luck         -4.65% (90% -7.11 to -2.34)
+    B against A                -4.17% (90% -5.22 to -3.10)
+    B with yac against B       +1.62% (90% +0.97 to +2.21)
+    'it all lasts' against all luck -59.28% (90% -67.12 to -50.95)
+  Shuffled null: B beats 100 of 100 copies with its forecasts moved between players within each week and position (needs 95)
+
+  Kept share by chances in the window (the assumption test: does it rise as B says?)
+    band            rows   B's kept share   seen (weighted slope of future on gap)
+      20-50         646   0.13             0.25
+      50-100       1021   0.24             0.21
+     100-200       1091   0.36             0.21
+     200-400        521   0.45             0.25
+     400-+          210   0.55             0.41
+
+  The chance the gap closes by half or more (calibration in 10 bands)
+    A: calibration error 3.1 points, slope 0.53, closed 54.5% of the time, forecast 55.3%
+    B: calibration error 3.3 points, slope 0.43, closed 54.5% of the time, forecast 53.9%
+      0.4-0.5:   1317 rows, forecast  46.6%, closed  51.7%
+      0.5-0.6:   1512 rows, forecast  55.1%, closed  54.1%
+      0.6-0.7:    543 rows, forecast  63.8%, closed  60.0%
+      0.7-0.8:     94 rows, forecast  73.2%, closed  62.8%
+      0.8-0.9:     18 rows, forecast  83.8%, closed  77.8%
+      0.9-1.0:      5 rows, forecast  92.3%, closed  80.0%
+    B_yac: calibration error 3.4 points, slope 0.46, closed 54.5% of the time, forecast 53.0%
+    B_cal: calibration error 0.9 points, slope 0.85, closed 54.5% of the time, forecast 55.3%
+    B_yac_cal: calibration error 1.3 points, slope 0.78, closed 54.5% of the time, forecast 55.3%
+      0.4-0.5:    404 rows, forecast  48.1%, closed  50.0%
+      0.5-0.6:   2567 rows, forecast  54.7%, closed  53.8%
+      0.6-0.7:    490 rows, forecast  62.9%, closed  60.6%
+      0.7-0.8:     24 rows, forecast  74.2%, closed  79.2%
+      0.8-0.9:      4 rows, forecast  83.3%, closed  75.0%
+  Range for the future gap (q10-q90, over his expected chances): holds 79.0%
+    RB: 83.0% (1226)
+    WR: 74.8% (1534)
+    TE: 80.8% (729)
+    week 1 (next season): 78.6% (224)
+
+  Parameters per test season (μ, τ = √τ², A's k, γ for yac), points per chance:
+    2025: RB μ +0.022 τ 0.063 kA 0.24 τy 0.049 γ +0.27; TE μ +0.089 τ 0.150 kA 0.27 τy 0.045 γ +0.69; WR μ +0.062 τ 0.131 kA 0.21 τy 0.047 γ +0.90

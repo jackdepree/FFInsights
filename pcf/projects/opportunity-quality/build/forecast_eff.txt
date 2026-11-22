@@ -1,0 +1,16 @@
+opportunity-quality/eff run c95835de1df14da399a4024853e9ddd2
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\opportunity-quality\eff\c95835de1df14da399a4024853e9ddd2\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (10,553 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (10,553 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 100 of 100 shuffled refits (needs 95)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 100 of 100 shuffled refits
+against Last4: Comparison(a='opportunity-quality', b='Last4', diff=-0.17561175149979247, lo=-0.18117379688167093, hi=-0.17017124526299987, rows=66758, blocks=193)
+against Counts: Comparison(a='opportunity-quality', b='Counts', diff=-0.005707043977304772, lo=-0.006781646900228118, hi=-0.00456288652771022, rows=66758, blocks=193)
+against Xfp: Comparison(a='opportunity-quality', b='Xfp', diff=-0.004963951712899422, lo=-0.006032817632700564, hi=-0.0038716890953735157, rows=66758, blocks=193)

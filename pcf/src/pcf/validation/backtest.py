@@ -277,3 +277,29 @@ def write_history(bt: Backtest, run_id: str, root: Path | None = None) -> Path:
             *bt.expert.publishes]  # fmt: skip
     bt.history.select(cols).with_columns(run_id=pl.lit(run_id)).write_parquet(path)
     return path
+
+
+# ---------------------------------------------------------------- saved feature histories
+def save_features(bt: Backtest, folder: Path) -> Path:
+    """A run's feature history and outcomes, saved so later variants on the same features can be
+    walked (`walk`) without rebuilding them (opportunity-quality, decision 0041)."""
+    folder.mkdir(parents=True, exist_ok=True)
+    bt.features.write_parquet(folder / "features.parquet")
+    bt.targets.write_parquet(folder / "targets.parquet")
+    return folder
+
+
+def load_features(folder: Path) -> tuple[pl.DataFrame, pl.DataFrame]:
+    """A saved feature history and its outcomes (`save_features`)."""
+    return pl.read_parquet(folder / "features.parquet"), pl.read_parquet(folder / "targets.parquet")
+
+
+def latest_history(
+    expert_id: str, variant: str, root: Path | None = None
+) -> tuple[pl.DataFrame, str]:
+    """A variant's newest saved walk-forward history (`write_history`) and its run id."""
+    root = (root or get_config().zone("outputs")) / expert_id / variant
+    paths = sorted(root.glob(f"*/{HISTORY}"), key=lambda p: p.stat().st_mtime)
+    if not paths:
+        raise FileNotFoundError(f"no saved history under {root}")
+    return pl.read_parquet(paths[-1]), paths[-1].parent.name

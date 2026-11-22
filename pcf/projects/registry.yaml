@@ -573,11 +573,27 @@ projects:
   - id: opportunity-quality
     name: Opportunity quality
     phase: 1
-    status: brief
+    status: done
     horizon: next
     cadence: [in_season]
-    depends_on: [participation]
-    summary: "Expected fantasy points from where targets and carries happen. The CEO's pick, 2026-11-16; hunches H56-H62. Explored 2026-11-16 (GO): knowing a game's actual chances would remove 74% of the error in a player's points, past points 40%; expected points repeat (0.84 week to week), points over expected barely (0.14) with a small lasting part (26% kept season to season); efficiency earns opportunity (+0.94%); goal-line chances are worth the most per chance and add nothing to next game's forecast beyond plain counts; opportunity follows movers in part (0.52 against 0.67); the scheme split fails (projects/opportunity-quality/EXPLORATION.md). Brief agreed 2026-11-16: two main outputs (the regression measure and a forecast of opportunity), methods A and B, tight ends and yards after the catch as inputs, longer horizons in the build; the build runs in its own session."
+    depends_on: [grain-tables]  # reuses participation's feature code, not its saved forecasts (decision 0041)
+    history_runs:  # the walk-forward histories downstream models read, one per variant (decision 0037)
+      eff_trees: {1: 3b5fd214e10d43559ad1fd21428202e8}
+      eff_h3: {1: fecafffe234a43688393edba702c9853}
+      eff_rest: {1: e060f2f391224b7db4a9b31d9fd8518a}
+      eff_rec_yards: {1: saved-features}
+      eff_rush_yards: {1: saved-features}
+    summary: "Expected fantasy points from where targets and carries happen. The CEO's pick, 2026-11-16; hunches H56-H62. Explored 2026-11-16 (GO); brief agreed 2026-11-16 (two main outputs, methods A and B, tight ends and yards after the catch as inputs, longer horizons in the build). Built 2026-11-21 to 22 (decision 0041, RESULTS.md): play.xfp and player_game.opportunity (2009-start situation models, r 0.992 with nflverse's xFP); the forecast of next game's expected points (champion eff_trees: beats 20 of 20 shuffled refits, the last-4 average by 18% of the range score, counts by 0.7%, the lasso by 1.8%; passes the no-noise target beside playing time, +3.7%; adds 4% to the yardstick's yards); next 3 games and rest of season (lasso, beat counts); past efficiency earns work (H61 held, +1.1%); the kind of chance adds nothing beyond counts at any horizon (H56 real, doesn't pay); the regression measure (method B beat A in 2016-2024, +1.2%, lost on the 2025 vault, -1.0%, so A's mean ships with B's calibrated chance the gap closes). The CEO's answers and spot-check, 2026-11-22: no vetoes; I102 skipped. The spot-check of R17 (pre-registered) tried position in the expected-points model (I100) and game-level noise (I101): neither stops B losing on the vault (-0.60% at best), the chances stay 74-85% at 50-60%, so the luck measure stays off the player card and A is published (A, the CEO 2026-11-22). B lost in 3 of 10 seasons, those where little efficiency lasted (I104). The CEO approved the merge, 2026-11-22. Done 2026-11-22 (the CEO: \"3 yes merge\")."
+    interface:
+      inputs: play.pbp; player_game parts roster, snaps, game_status, depth, injury, stats, opportunity through the gateway; game schedule for the horizons
+      outputs: "Facts: play.xfp and player_game.opportunity (oq_ columns: chances, targets, carries, catches, yards, touchdowns and their expected values; goal-line, red-zone, end-zone and deep chances; air yards; yards after the catch over expected). Forecasts: outputs/opportunity-quality/<variant>/<run_id>/history.parquet: eff_trees (next game's expected PPR points, with p_nonzero and if_nonzero_*), eff_h3 and eff_rest (expected points per game over the next 3 games and the rest of the season), eff_rec_yards and eff_rush_yards (next game's expected yards). The regression measure: outputs/opportunity-quality/regression/<tag>/history.parquet (points over expected per chance over the rest of the season: mean by method A, q10-q90; kept_share, true_q10, true_q90, p_gap_closes, mean_B, gap, chances)"
+      grain: play; player-game; for horizons, the game the window starts on
+      interval: facts 2002 on (expected values 2012 on); forecasts weekly, 2016-2024 reported and the 2025 vault, every rostered RB, WR and TE; the measure for players with 20+ chances behind them, regular season
+      cadence: in_season
+      known_at: facts with the play-by-play (kickoff + 1 day); forecasts and the measure at the Saturday run (12:00 Eastern)
+      model: none registered yet (histories pinned above)
+      how_to_use: "Expected points per player-game as an opportunity feature (a trait: 0.84 week to week). The forecasts as features for points and yards, from saved histories only (rule e). The regression measure as a player-card number and a prior; its chance the gap closes is calibrated but rarely leaves 50-60%, so don't sort players by it (RESULTS R8). The raw table calls tight ends efficient by about 0.09 points a chance (no position in the situation model, R16)"
+      feeds: td-expert, vacated-opportunity, player-opportunity, fantasy-projections; the yardstick
 
   - id: snap-leverage
     name: Snap leverage (an investigation and feature engineering)

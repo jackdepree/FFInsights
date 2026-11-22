@@ -22,7 +22,7 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import efficiency, leverage, pace
+from pcf.data.tables import efficiency, leverage, opportunity, pace
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
@@ -299,6 +299,92 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
             usage_rows, parts["roster"], ["gsis_id", "game_id"], "player_game.leverage_usage"
         )
     write_parts(parts, "player_game", [season], root)
+    build_opportunity([season], root)
+
+
+@cache
+def _opportunity_chances(season: int) -> pl.DataFrame:
+    """A season's chances (`opportunity.chance_rows`), from the raw play-by-play and the saved
+    roster part, kept for the process."""
+    pbp = scan("pbp", [season]).select(opportunity.PBP_COLUMNS).collect()
+    roster = read_part("player_game", "roster", [season]).select("gsis_id", "game_id", "position")
+    return opportunity.chance_rows(pbp, roster.collect())
+
+
+def build_opportunity(seasons: Sequence[int] | None = None, root: Path | None = None) -> None:
+    """Only `play.xfp` and `player_game.opportunity` (decision 0041), for `seasons` (default:
+    every season with play-by-play and a roster part), without rebuilding anything else. The
+    expected models for a season are fit on earlier seasons only and cached in the interim zone."""
+    cal = calendar(_schedules())
+    have = local_seasons("pbp")
+    chosen = sorted(s for s in have if seasons is None or s in seasons)
+    cache_dir = get_config().zone("interim") / "opportunity_quality" / "xfp"
+    for season in chosen:
+        t = time.time()
+        try:
+            roster = read_part("player_game", "roster", [season], root).collect()
+        except (FileNotFoundError, pl.exceptions.ComputeError):
+            continue
+        pbp = scan("pbp", [season]).select(opportunity.PBP_COLUMNS).collect()
+        fitted = opportunity.fitted_for(season, have, _opportunity_chances, cache_dir)
+        chances = opportunity.chance_rows(pbp, roster.select("gsis_id", "game_id", "position"))
+        if fitted is None:
+            none = pl.lit(None, dtype=pl.Float64)
+            empty = [none.alias(f"oq_{p}_exp") for p in ("catch", "yards", "td")]
+            plays = chances.with_columns(empty).select(
+                "game_id", "play_id", "season", "oq_gsis_id", "oq_kind", "oq_position",
+                "oq_catch_exp", "oq_yards_exp", "oq_td_exp", "oq_catch", "oq_yards", "oq_td",
+                "oq_yac_oe",
+            )  # fmt: skip
+        else:
+            plays = opportunity.apply(chances, fitted)
+        spine = read_part("play", "pbp", [season], root).select("game_id", "play_id").collect()
+        plays = on_spine(plays, spine, ["game_id", "play_id"], "play.xfp")
+        write_parts({"xfp": known_at("pbp", plays, cal)}, "play", [season], root)
+        pg = opportunity.player_game_rows(plays, pbp, roster, fitted is not None)
+        write_parts({"opportunity": known_at("pbp", pg, cal)}, "player_game", [season], root)
+        log.info("opportunity %d: %d chances in %.0fs", season, plays.height, time.time() - t)
+
+
+def _variant_dir(variant: str) -> Path:
+    return get_config().zone("interim") / "opportunity_quality" / f"xfp_{variant}"
+
+
+def build_opportunity_variant(variant: str, seasons: Sequence[int] | None = None) -> None:
+    """`play.xfp` and `player_game.opportunity` from another set of expected models
+    (`opportunity.VARIANT_INPUTS`, e.g. "position" for I100), fit on earlier seasons only like
+    the table's, saved in the interim zone (`read_opportunity_variant`), never as table parts."""
+    have = local_seasons("pbp")
+    chosen = sorted(s for s in have if seasons is None or s in seasons)
+    folder = _variant_dir(variant)
+    for season in chosen:
+        t = time.time()
+        try:
+            roster = read_part("player_game", "roster", [season]).collect()
+        except (FileNotFoundError, pl.exceptions.ComputeError):
+            continue
+        fitted = opportunity.fitted_for(season, have, _opportunity_chances, folder, variant)
+        if fitted is None:
+            continue
+        pbp = scan("pbp", [season]).select(opportunity.PBP_COLUMNS).collect()
+        chances = opportunity.chance_rows(pbp, roster.select("gsis_id", "game_id", "position"))
+        plays = opportunity.apply(chances, fitted)
+        pg = opportunity.player_game_rows(plays, pbp, roster, True)
+        for name, frame in (("play", plays), ("player_game", pg)):
+            path = folder / name / f"season={season}.parquet"
+            path.parent.mkdir(parents=True, exist_ok=True)
+            frame.write_parquet(path)
+        log.info("opportunity %s %d: %d chances in %.0fs", variant, season, plays.height,
+                 time.time() - t)  # fmt: skip
+
+
+def read_opportunity_variant(variant: str) -> tuple[pl.DataFrame, pl.DataFrame]:
+    """The saved `build_opportunity_variant` rows: (plays, player-games), every season built."""
+    folder = _variant_dir(variant)
+    return tuple(
+        pl.read_parquet(sorted((folder / name).glob("season=*.parquet")))
+        for name in ("play", "player_game")
+    )  # type: ignore[return-value]
 
 
 def leverage_usage(season: int, root: Path | None) -> pl.DataFrame | None:

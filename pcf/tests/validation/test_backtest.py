@@ -115,6 +115,18 @@ def test_write_history_saves_the_standard_schema(tmp_path, bt):
     assert "y" not in saved.columns and "loss" not in saved.columns
 
 
+def test_a_saved_feature_history_walks_to_the_same_forecasts(tmp_path, bt):
+    folder = backtest.save_features(bt, tmp_path / "saved")
+    feats, outcomes = backtest.load_features(folder)
+    again = backtest.walk(bt.expert, feats, outcomes, bt.steps, bt.test, bt.refit, bt.half_life)
+    keys = bt.expert.keys()
+    assert again.sort(keys)["mean"].to_list() == bt.history.sort(keys)["mean"].to_list()
+    backtest.write_history(bt, "older", tmp_path / "out")
+    backtest.write_history(bt, "newer", tmp_path / "out")
+    hist, run_id = backtest.latest_history(bt.expert.id, bt.expert.variant, tmp_path / "out")
+    assert run_id == "newer" and hist.height == bt.history.height
+
+
 def test_a_season_keyed_grain_gets_one_step_per_season():
     """player_season rows have no game_id: each joins its season's retrospective step (0029)."""
     from datetime import datetime
