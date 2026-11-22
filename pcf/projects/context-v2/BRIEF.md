@@ -1,6 +1,6 @@
 # Context, the next version (`context-v2`)
 
-> **Status:** draft brief, kickoff 2026-11-20; four looks done (EXPLORATION.md) and the build section drafted 2026-11-21 ("The brief, after the exploration", at the end), for the CEO to agree; the CEO chose method A first and put routes and coverage in scope ("Ok let's start with A. I think routes and coverage should be in scope."); first look pre-registered in [EXPLORATION.md](EXPLORATION.md) (the CEO: "Next thing I want to explore is possibly another exploration or a brainstorm on how we can improve the context expert model"). It is agreed after the exploration (CLAUDE.md, lifecycle step 3). Builds on `context-live` (RESULTS.md) and its back-history (decision 0038).
+> **Status:** **agreed 2026-11-21** (the CEO: "I do not veto anything in the brief. Merge approved"); the build is `context-retro`, in the build chat, from "The brief, after the exploration" at the end. Kickoff 2026-11-20; four looks done (EXPLORATION.md); the CEO chose method A first and put routes and coverage in scope ("Ok let's start with A. I think routes and coverage should be in scope."); first look pre-registered in [EXPLORATION.md](EXPLORATION.md) (the CEO: "Next thing I want to explore is possibly another exploration or a brainstorm on how we can improve the context expert model"). It is agreed after the exploration (CLAUDE.md, lifecycle step 3). Builds on `context-live` (RESULTS.md) and its back-history (decision 0038).
 
 ## The usual way
 
@@ -58,9 +58,9 @@ The same exploration steps come first for every method: (1) the room (the ceilin
 
 **Claude's recommendation:** A first, as the bar every other method must beat (rule k), then C against A on the same plays, so the CEO's method gets a fair test against the cheap one. B only if C is too slow to score.
 
-## The brief, after the exploration (a draft for the build, 2026-11-21; for the CEO to agree)
+## The brief, after the exploration (drafted 2026-11-21; agreed 2026-11-21)
 
-The CEO, 2026-11-20: "Can you please draft the build for the chain and explore the blame split?" This section is the handoff to the build chat (the CEO, 2026-11-20: "This chat is reserved for vision and strategy and meta analysis for pcf. Our other chat is reserved for full builds."). It's a draft until the CEO agrees it.
+The CEO, 2026-11-20: "Can you please draft the build for the chain and explore the blame split?" This section is the handoff to the build chat (the CEO, 2026-11-20: "This chat is reserved for vision and strategy and meta analysis for pcf. Our other chat is reserved for full builds."). The CEO agreed it, tests and technical calls included, 2026-11-21: "I do not veto anything in the brief. Merge approved".
 
 **The question.** Build the chain of per-play expectations as `context-retro` (the registry's planned retrospective context expert): for every dropback 2016 on, each outcome's expectation in the play's order, in two modes, before the snap and given the real pressure, plus the blame split (which part of each sack is the pressure's and which is the QB's after it).
 
@@ -91,7 +91,7 @@ The CEO, 2026-11-20: "Can you please draft the build for the chain and explore t
 2. The split per dropback, and summed per player-game for the passer and the five linemen (player_game output).
 3. Hand the QB's after-pressure part and sacks per pressure (fixed denominator) to skill-over-expected's trait table, replacing its "sacks per pressure, until I90" row (FINDINGS F20).
 
-**Tests (proposed by Claude; what counts as success is the CEO's call):**
+**Tests** (proposed by Claude, agreed by the CEO with the brief, 2026-11-21):
 - **The no-noise target** (rule k), outcome by outcome (the CEO's test): each walk-forward E0 beats a shuffled copy of itself and the training mean on held-out seasons, in log loss or squared error, with calibration by tenths.
 - **The given-pressure mode:** E1's sack log-loss gain over E0 is 25% or more in every held-out season (the first look: 33%).
 - **The split, out of sample:** with walk-forward chances, the QB's after-pressure part still repeats 0.2+ and QB movers keep half (F13 replicated).
@@ -110,11 +110,11 @@ The CEO, 2026-11-20: "Can you please draft the build for the chain and explore t
 - By skill-over-expected's trait table.
 - By later in-season models, as priors from completed seasons.
 
-**Technical calls (Claude's, for the CEO to veto before the build starts):**
+**Technical calls** (Claude's; the CEO vetoed none, 2026-11-21):
 1. One model per outcome and mode, trees with context-live's settings. Seasons without a field (coverage before 2018, FTN before 2022) get it as missing, not a separate edition per era.
 2. Participation outcomes and the pressure condition trained within their provider; the sack and completion from play-by-play trained on every earlier season.
 3. A sack counts as a pressure in every season; dropbacks with the flag missing otherwise are left out of E1's training and scored with E0 only.
 4. Fix the main-team table's tie-break, so movers don't change between runs.
 5. The ladder for each outcome: the training mean, then linear, then trees, keeping a rung only if it beats the one below on held-out seasons (rule k).
 
-**Plan.** One build session in the build chat, after the CEO agrees this section. It starts from this brief, EXPLORATION.md (four looks), decisions 0038 and 0039, and the registry.
+**Plan.** One build session in the build chat. It starts from this brief, EXPLORATION.md (four looks), decisions 0038 and 0039, and the registry.
