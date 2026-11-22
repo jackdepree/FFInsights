@@ -66,8 +66,8 @@ Play-level lenses (context-live's list, plus the pressure and the top tenth); `b
 |---|---|---|---|---|---|
 | season | pressure, 2018 | 19,727 | +6.7 points | clear of zero | R8: the provider's level |
 | season | pressure, 2023 | 21,740 | −4.7 points | clear of zero | R8 |
-| screen | depth of target, screens 2022-2024 | 5,858 | −3.45 yards | clear | I97: 2022's models never saw the flag (−10.2 yards in 2022, −0.4 in 2023-2024) |
-| screen | time to throw, screens | 5,848 | −0.34 s | clear | I97 |
+| screen | depth of target, screens 2022-2024 | 5,858 | −3.45 yards | clear | I110: 2022's models never saw the flag (−10.2 yards in 2022, −0.4 in 2023-2024) |
+| screen | time to throw, screens | 5,848 | −0.34 s | clear | I110 |
 | top tenth | sack given the pressure, top tenth | 16,312 | −1.4 points | clear | the highest chances are a little high (the vault's slope) |
 
 ## The case against
@@ -86,14 +86,14 @@ Play-level lenses (context-live's list, plus the pressure and the top tenth); `b
 ## Not looked at
 - Rushing plays (context-live has them); routes (participation's route is the target's only, context-v2's first look).
 - Splitting the other outcomes (completion given the pressure, the QB's yards after a pressure). Only the sack was split, as the brief asked.
-- Defensive players' parts (the pass rushers who made the pressure): idea I98.
+- Defensive players' parts (the pass rushers who made the pressure): idea I111.
 - A per-season level adjustment for pressure inside the model (R8): left as a reading rule.
 
 ## Could be improved
-1. **Train the calls' fields only on seasons that have them** (I97): depth of target and time to throw on 2022+ for FTN's flags, so the first season with a flag isn't blind to it.
-2. **The pass rusher's side of the split** (I98): the pressure part per defender, for skill-over-expected's pass rushers.
+1. **Train the calls' fields only on seasons that have them** (I110): depth of target and time to throw on 2022+ for FTN's flags, so the first season with a flag isn't blind to it.
+2. **The pass rusher's side of the split** (I111): the pressure part per defender, for skill-over-expected's pass rushers.
 3. **Recalibrate sack before the snap on recent seasons** (its slope 0.84 in 2024 and 2025).
-4. **Use the split's QB after-pressure part as a QB trait downstream** (for qb-talent and line-play), not as a yards prior (R7). Idea I99: it forecasts next season's sacks per dropback better than the plain rate.
+4. **Use the split's QB after-pressure part as a QB trait downstream** (for qb-talent and line-play), not as a yards prior (R7). Idea I112: it forecasts next season's sacks per dropback better than the plain rate.
 
 ## Don't redo
 - Season priors of over-expected rates on the crude forecaster's yards boards: no arm pays, whichever expectation (R7).
