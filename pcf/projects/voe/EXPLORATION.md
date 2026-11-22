@@ -379,3 +379,90 @@ Movers by group (EPA | success):
 - **One definition of success.** WPA above 0 wasn't tried (the CEO chose EPA).
 - **A linear model.** A logistic model of success might use the ratings differently. The plain sums, which don't depend on the model, give the same answer.
 - **The QB movers go the other way** (success +0.12 against EPA -0.07), on 36 movers. That's too few to read, but it's the one group where success travels better.
+
+---
+
+# Fifth look: predictable plays, a below-average counterexample, a simple net (H90 to H92; written before the run, 2026-11-22)
+
+> The CEO, 2026-11-21: "What would happen if we artificially inflated the voe model's predictive power by stratifying the samples by plays that are easy to predict or that carry context inputs that expect little variance in the play outcome? This way we can perform a leaky-boost to the model so it learns interactions between players on predictable plays. We should make the adjustment to not replace players with the average but rather a slightly below average rating. Why don't we use a simple neural net to find interactions between positions and context rather than a simple linear regression? I know we have tried that in the past but still."
+>
+> The CEO's odds, 2026-11-22: "H90; 40%, h91; 20%, h92; 50%. Can we please test these hunches?" No sizes given.
+
+**The reference** is the fourth look's EPA arm, the CEO's design: a lasso, pass and run apart, fit on 2018 to T-1 and scored on season T (2019-2024). Its inputs are the slot ratings, the plus-minus sums and the context expectations, and its target is the play's EPA. Its roster-change gain was +5.26%. Every arm below changes one thing against it; the ratings (a) and (b) stay as they are.
+
+**The yardsticks** (the ones agreed for H89, applied to what each hunch changes):
+1. **The roster-change test,** as in the fourth look. Each arm's side values (the side's players knocked out together) are averaged by team and forecast the team's next-season EPA over expected a play, against last season alone. 2020-2024, offense and defense pooled. The comparison with the reference is paired, with a 90% interval from resampling teams.
+2. **The movers' repeat** of each arm's player values: this season against next, for players with 300+ plays in both, with each season's mean taken out. There's a 90% interval on the difference from resampling players.
+   - **For H91 and H92, a player's value comes from the model.** Each slot is knocked out on its own: his ratings are replaced by the slot's reference, and his part of the sums goes with them. The change in the prediction is shared among the players in that slot, and his season value is his average over his plays. The reference lasso gets values the same way, so the comparison is like for like.
+   - **For H90, a player's value is the plain plus-minus, fit the arm's way** (weighted, or on the same chosen half of plays). The VOE model's player values sit on pre-season ratings that H90 doesn't change, so their movers' repeat could hardly move.
+
+## H90: training on predictable plays
+
+**Each play's expected variance** is judged before the snap. A boosted-tree model predicts the squared leftover (EPA less its situation expectation) from the situation fields and context-live's expectations. Each season's model is fit on the seasons before it, from 2017 on (the context starts in 2017).
+
+**Four arms:**
+- **The reference:** every play counts the same.
+- **H90's main arm, the CEO's "context inputs that expect little variance":** the model trains only on the half of the training plays with the lowest expected variance, pass and run apart. It's scored on every held-out play.
+- **The textbook version (Claude's, beside it):** every play is kept, each weighted by one over its expected variance (clipped at the 5th and 95th percentiles).
+- **The CEO's "plays that are easy to predict", read as after the fact (the leak, shown on purpose):** the model trains only on the half of the training plays whose EPA landed closest to the situation's expectation. Claude expects it to look better on a fit measured the same way and worse on both yardsticks.
+
+**The plus-minus, fit the same four ways,** gives each arm's yardstick 2.
+
+**Also reported:** the held-out play fit (squared error removed against the training mean) on three sets of plays:
+- all held-out plays;
+- the predictable half, judged before the snap;
+- the half closest to expectation, judged after the fact. This one shows the leak's inflation.
+
+**Pass rule for H90:**
+- **Held** if either of the CEO's two arms beats the reference on both yardsticks, with at least one difference's interval above zero.
+- **Failed** if each of the CEO's arms is worse on both, or better on neither.
+- **Unclear** otherwise.
+
+## H91: a slightly below-average counterexample
+
+**The reference level is WAR's replacement level, taken from the data.**
+- For each position group and each rating: the gap between the average of the players who were on the field and the average of the players with under 300 plays that season (the backups). Both are plays-weighted, from the training seasons only.
+- Each slot's counterexample value is its average less that gap, times the slot's usual number of players. The sums move with it.
+
+**One arm:** the reference lasso, unchanged, with the knockouts measured against replacement level instead of the average. Only the values change; the model doesn't.
+
+**Pass rule for H91:**
+- **Held** if the below-average counterexample beats the average one on both yardsticks, with at least one interval above zero.
+- **Failed** if it's worse on both, or better on neither.
+- **Unclear** otherwise.
+
+**Claude's side bet, tested beside it (the sizing):** for each position group, compare the main starters' (300+ plays) average value per play with what a main starter's absence costs per game (F20). The bet holds if, with the replacement level, the squared gap over the eight groups falls by half or more. Claude's odds: 55%.
+
+## H92: a simple net for interactions
+
+**A ladder, all on the same inputs and target as the reference:**
+1. **The reference lasso.**
+2. **Named interactions (Claude's structured rung):** the lasso plus products of group totals (each player's ratings (a) and (b), added up within his position group):
+   - on offense, the QB with his line, receivers, tight ends and backs;
+   - across the ball, the line with the defensive line, receivers with defensive backs, and tight ends with linebackers;
+   - each side's total with each context expectation.
+3. **All pairs (the exploratory rung):** the lasso plus every product of the 16 group totals and the 7 context expectations (253 terms), all shrunk together. It's a small version of a factorization machine.
+4. **H92's main arm, the CEO's net:** a one-layer net of 32 units, as in the second look, on the reference's inputs, with three seeds averaged and early stopping.
+5. **The net with H90's weights** (one over the expected variance): the CEO's two hunches together.
+
+**Pass rule for H92:**
+- **Held** if the CEO's net beats the reference lasso on both yardsticks, with at least one interval above zero.
+- **Failed** if it's worse on both, or better on neither.
+- **Unclear** otherwise.
+
+**Also reported:** each rung's held-out play fit, paired against the lasso, with a 90% interval from resampling games.
+
+## The bets
+
+| Hunch | The CEO | Claude, as worded | Claude's side bets |
+|---|---|---|---|
+| H90 | 40% | 20% (before the snap); about 0% (the leak) | Weighting by expected variance raises the held-out play fit: 60% |
+| H91 | 20% | 5% | Replacement-level values match absence costs better (above): 55% |
+| H92 | 50% | 15% | The named-interaction rung beats the lasso, with the roster-change interval above zero: 20% |
+
+**Claude's technical calls, for the CEO to veto:**
+- **Stratifying** is read as training on the predictable half and scoring every play. Scoring only the predictable plays would give teams values from different mixes of plays.
+- **Half is the cut** for both stratified arms. There's one cut only, so no cut can be chosen after the result.
+- **Replacement level is the backups' average** (under 300 plays), not a fixed fraction below the average, so it comes from the data and not from a choice.
+- **The movers' repeat for H91 and H92** uses each player's slot knockout, shared equally among the players in his slot.
+- **The net's size and settings are the second look's,** so it isn't tuned after the result.
