@@ -470,7 +470,7 @@ projects:
       cadence: retrospective
       known_at: the day after the Super Bowl (participation's release), for the whole season
       model: "per outcome and mode, the shipped rung of decision 0040: trees with context-live's settings, logistic for the sack; trained within one provider for pressure, time to throw and every E1 model"
-      how_to_use: "A completed season's QB after-pressure part as his trait (R5); never credit a lineman with his sack parts (R6). Into an in-season model only as last season's prior (rule m), and as a yards prior it doesn't pay (R7). Take each season's league level out before comparing pressure across seasons (R8). Train only on the walk-forward history (rule e)"
+      how_to_use: "A completed season's QB after-pressure part as his trait (R5) on the old provider's pressures (2017-2022) only; from 2023 the QB's sack trait is in the pressure part, so use his whole sack over expected (over_e0) or plain sacks per dropback (R13); never credit a lineman with his sack parts (R6). Into an in-season model only as last season's prior (rule m), and as a yards prior it doesn't pay (R7). Take each season's league level out before comparing pressure across seasons (R8). Train only on the walk-forward history (rule e)"
       feeds: skill-over-expected (QB sacks), qb-talent, line-play; context-live stays the in-season expert
 
   - id: context-v2
