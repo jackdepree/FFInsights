@@ -137,6 +137,51 @@ Also in this project's `interface` block in `registry.yaml`.
 | **How to use it** | Expected points per player-game as an opportunity feature (a trait, R3). The forecasts as features for points and yards, from saved histories only (rule e); beside participation the trees forecast still adds 3.7% (R13). The measure as a player-card number and a prior, not for sorting players (R8) |
 | **Feeds** | td-expert, vacated-opportunity, player-opportunity, fantasy-projections; the yardstick |
 
+## Spot-check: R17 and the luck measure (the CEO's pick, 2026-11-22)
+
+The CEO's words: "Please spot check r17 and the luck measure. If the luck measure comes out of the spot check better than before, then we will add it to the player card." The CEO also chose B as the number to publish (their 3b), knowing the vault said A, and asked for I100 and I101 to be tried inside the spot-check (their 4c).
+
+### Pre-registered, 2026-11-22, before any run
+
+**What gets tried.** Two fixes, alone and together, so there are four versions of the measure: as built; I100; I101; both.
+- **I100, position in the expected-points model.** The five situation models are refit with his position as one more input, on the same seasons. "Expected" then means expected for an average player *at his position* in that spot. The gaps and the future gaps are recomputed from it.
+- **I101, the noise model.** A skewed distribution alone doesn't change the noise in an average of many chances (the variance of a mean is σ²/n whatever the shape). What can make B keep too much (0.45 kept against 0.25 seen at 200-400 chances on the vault) is chances that aren't independent: a player's chances in one game share a quarterback, a defense and a game plan. So I101 is tried as **game-level noise**. Per position, a factor φ is fit on the same 6 earlier seasons: how much a player's game-to-game swings exceed what independent chances would give. Every noise term (V, and the future chances' noise) is multiplied by it. φ = 1 is the build's model.
+- A's mean doesn't use the noise model, so I101 changes only B and the chances. I100 changes the gaps themselves, so A and B are compared within each version, never across.
+
+**How the winner is picked.** The 2025 vault has already been looked at once for this measure (R17), so it can't pick the winner as well as judge it. The version used for the bar is the one with the best B-against-A on 2016-2024. Ties within 0.1% go to the simpler one, in the order: as built, I101, I100, both. The vault then judges that one version. The other versions' vault numbers are reported, but they don't count toward the bar.
+
+**"Better than before" means all three, for the picked version:**
+1. **B is at least as good as A:**
+   - on the 2025 vault, B against A ≥ 0.0% of the weighted squared error, with tight ends ≥ −0.5% (was −0.98% and −4.17%);
+   - and B still beats A by ≥ +0.5% on 2016-2024 (was +1.19%).
+2. **Calibration stays honest:** B's recalibrated chance the gap closes has a calibration error ≤ 2.0 points and a slope between 0.80 and 1.25, on the vault and on 2016-2024 (was 0.9 points and 0.85 on the vault).
+3. **The chances separate players more:**
+   - the share of chances between 50% and 60% falls to 60% or less (was 72% on 2016-2024, 74% on the vault);
+   - and the chance's Brier skill against the training seasons' base rate is higher than the build's on the vault. Without this, spreading the chances could be noise.
+
+**What follows:**
+- All three pass: the luck measure goes on the player card.
+- Any one fails: it stays off, with the reason written here.
+- B is published as the CEO chose. If test 1 still fails, this section says so plainly and the CEO confirms B over A before the merge.
+
+**Claude's odds (before any run):**
+
+| Event | Chance | Expected size |
+|---|---|---|
+| Test 1 passes | 35% | B against A on the vault moves from −1.0% to about −0.3% |
+| Tight ends alone pass (≥ −0.5%) | 40% | |
+| Test 2 passes | 85% | |
+| Test 3's 50-60% share falls to 60% or less | 15% | about 70% |
+| Test 3's Brier skill rises | 45% | |
+| All three pass (it goes on the card) | 8% | |
+| The picked version is I101 or both | 60% | φ about 1.2-1.5 |
+
+**Why the odds are low:** the rest of a season is about 40 chances, and over 40 chances one player's points over expected are mostly noise. A better mean moves the forecast of the gap, but it barely moves whether the gap lands on the near side of half. So the chances can't spread much without signal the measure doesn't have.
+
+### The spot-check
+
+⟨running⟩
+
 ## Open questions for the CEO
 1. Ship method A's mean for the regression measure (the vault's verdict), or keep B because it won nine backtest seasons?
 2. Is a measure whose chances sit at 50-60% worth a line on the player card, or should the card show the kept share instead?
