@@ -216,6 +216,22 @@ The rule for every row: lasso champion, fit from 2016, scored 2019–2024 (the 2
 - **No vetoes** on decision 0042's calls.
 - **I115 goes into Elo's next build** (registry, Elo's entry).
 
+## QB rushing joins the yardstick (2026-11-23)
+*The CEO: "Yes qb rushing should be a yardstick table." Decision 0042, calls 5 and 20. Numbers: [`build/yardstick_qb_rushing.txt`](build/yardstick_qb_rushing.txt); runs by [`explore/yardstick_batch/publish_qb_rushing.sh`](explore/yardstick_batch/publish_qb_rushing.sh).*
+
+QBs' rushing yards are the fifth target: 3 horizons, 4 rungs, `qb_rushing_<horizon>_<rung>` (60 variants in all). Rows are QBs expected to play (participation's chance of a snap 50%+), as for passing. The lasso champion's three backtests (2019–2024, refit each season) pass **all 10 checks**, including the leakage checks and beating 20 of 20 shuffled refits. Runs: next `2cd4858ae70f4e31848551567d9f7142`, next 3 `bf99de6603924ef6ac1471d26badde63`, rest of season `3badeefbdbb343ba9d70bc948329e7c9`.
+
+| Horizon | Rows | Average (yards a game) | Crude forecast removes | Over the season average | 80% range holds | Participation added alone | Anything else? |
+|---|---|---|---|---|---|---|---|
+| next game | 3,413 | 15.5 | **34.5%** | +10.2% (+6.8 to +13.6) | 78.9% | **+0.68% (+0.24 to +1.13)** | no (schemes −0.34%, pace −0.09%, Elo −0.19%, efficiency −0.10%) |
+| next 3 | 2,966 | 14.9 | **51.4%** | +20.5% (+14.1 to +26.9) | 78.0% | **+1.19% (+0.70 to +1.68)**, range score clear | no (pace −0.76%, schemes −0.52% hurt) |
+| rest of season | 3,413 | 13.1 | **48.3%** | +32.1% (+26.5 to +37.3) | 76.9% | +0.64% (−0.21 to +1.57), not clear | no |
+
+- **The lasso wins the ladder on all three** (trees lose 6.5–18%; the mix ties or loses 1–3%), so the CEO's "lasso everywhere" fits here too.
+- **A QB's rushing is mostly who he is**: his own past rushing yards alone get 96% of what the full crude forecast gets (H51's check), and the forecast removes a third of next game's error, more than for any other player target.
+- **Experts have little to add yet**: participation's +0.7% to +1.2% is a fifth to a third of its worth on RB rushing. The 80% ranges run a little narrow over the rest of the season (76.9%).
+- **How to use it:** score an input on QB rushing like any other table, `Y.load_board("qb_rushing", horizon)`. Its smallest readable gain wasn't measured (R7 did that for the other four); participation's +0.68% beat its 19 copies (largest +0.09%) in the batch.
+
 ## The spot-check: I114, the opener against the kickoff line (the CEO's pick, 2026-11-23)
 *The checks, the rules that would change the verdict and Claude's expectations were written into [`explore/yardstick_batch/spotcheck_i114.py`](explore/yardstick_batch/spotcheck_i114.py) and committed before any of its numbers were run. Numbers: [`spotcheck_i114.txt`](explore/yardstick_batch/spotcheck_i114.txt).*
 

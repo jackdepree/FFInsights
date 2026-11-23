@@ -1,0 +1,140 @@
+crude-forecaster build: the yardstick. Held out 2019-2024, fit from 2016 at the Saturday run; 'removes' = share of squared error removed; intervals are 90%, resampling whole weeks.
+
+==================== qb_rushing_next (qb_rushing_yards) ====================
+== 1. The ladder (crude inputs; held out 2019-2024)
+  season  removes +27.07%; took a snap: +29.79% of 3110; range score 3.93; MAE 11.86; 80% range holds 77.7%, above q50 49.4%, width 36.1; typical miss 0.80 of the average 15.5
+  lasso   removes +34.52%; took a snap: +35.84% of 3110; range score 3.74; MAE 11.48; 80% range holds 78.9%, above q50 50.3%, width 35.4; typical miss 0.77 of the average 15.5
+  trees   removes +30.25%; took a snap: +31.45% of 3110; range score 3.84; MAE 11.72; 80% range holds 79.2%, above q50 48.6%, width 36.8; typical miss 0.79 of the average 15.5
+  mix     removes +33.83%; took a snap: +35.09% of 3110; range score 3.75; MAE 11.50; 80% range holds 78.4%, above q50 49.4%, width 35.5; typical miss 0.77 of the average 15.5
+  lasso>season   +10.22% (+6.75% to +13.55%); range score +4.72% (+3.43% to +5.96%)
+  trees>lasso    -6.53% (-8.99% to -3.98%); range score -2.69% (-3.87% to -1.46%)
+  mix>lasso      -1.06% (-2.23% to +0.15%); range score -0.15% (-0.84% to +0.57%)
+  mix>trees      +5.13% (+3.95% to +6.22%); range score +2.47% (+1.83% to +3.10%)
+  champion: lasso
+== 2. The yardstick (lasso; share of the crude forecast's squared error)
+  rows expected to play (the headline)
+    all members together: +0.33% (-0.27% to +0.91%), 3413 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    participation +0.68% (+0.24% to +1.13%)         +0.70% (+0.33% to +1.09%)         +0.34% (-0.03% to +0.72%)         neutral
+    shuffled      +0.01% (-0.19% to +0.21%)         +0.01% (-0.18% to +0.17%)         -0.07% (-0.28% to +0.15%)         neutral
+    efficiency    -0.10% (-0.43% to +0.23%)         -0.03% (-0.24% to +0.17%)         -0.02% (-0.43% to +0.39%)         neutral
+    pace          -0.09% (-0.37% to +0.20%)         -0.06% (-0.27% to +0.16%)         +0.02% (-0.26% to +0.30%)         neutral
+    elo           -0.19% (-0.47% to +0.13%)         -0.07% (-0.35% to +0.23%)         -0.07% (-0.34% to +0.22%)         neutral
+    schemes       -0.34% (-0.58% to -0.08%)         -0.21% (-0.44% to +0.02%)         +0.05% (-0.21% to +0.32%)         neutral
+  check: rows where he took a snap (a filter on the outcome, never the headline)
+    all members together: -0.51% (-1.09% to +0.07%), 3110 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    pace          -0.20% (-0.49% to +0.11%)         +0.06% (-0.18% to +0.29%)         -0.06% (-0.35% to +0.22%)         neutral
+    shuffled      +0.01% (-0.20% to +0.21%)         +0.03% (-0.17% to +0.20%)         -0.08% (-0.30% to +0.15%)         neutral
+    elo           -0.26% (-0.56% to +0.06%)         -0.06% (-0.34% to +0.25%)         -0.03% (-0.30% to +0.26%)         neutral
+    efficiency    -0.19% (-0.53% to +0.14%)         -0.07% (-0.28% to +0.13%)         -0.11% (-0.52% to +0.30%)         neutral
+    schemes       -0.48% (-0.72% to -0.23%)         -0.12% (-0.37% to +0.11%)         -0.08% (-0.35% to +0.21%)         neutral
+    participation -0.47% (-0.89% to -0.07%)         -0.34% (-0.70% to +0.02%)         -0.26% (-0.63% to +0.12%)         neutral
+  halves: 2019-2021 order ['participation', 'pace', 'shuffled', 'efficiency', 'schemes', 'elo']; 2022-2024 order ['participation', 'shuffled', 'efficiency', 'elo', 'pace', 'schemes']
+    participation  share +0.28% / +1.07%; alone +0.26% / +1.04%
+    elo            share -0.13% / -0.02%; alone -0.18% / -0.20%
+    efficiency     share -0.07% / +0.00%; alone -0.03% / -0.16%
+    pace           share +0.06% / -0.16%; alone -0.07% / -0.11%
+    schemes        share -0.10% / -0.31%; alone -0.25% / -0.41%
+    shuffled       share -0.00% / +0.01%; alone -0.02% / +0.04%
+== 3. Fitting noise: added-alone gain across refits (seeds, one early season left out)
+  participation  alone +0.59% to +1.04% (spread 0.45 pts); range -0.16% to +0.55%; crude removes +34.04% to +34.52%
+  elo            alone -0.42% to +0.07% (spread 0.49 pts); range -0.70% to +0.34%; crude removes +34.04% to +34.52%
+  efficiency     alone -0.14% to +0.21% (spread 0.35 pts); range -0.24% to +0.13%; crude removes +34.04% to +34.52%
+  pace           alone -0.66% to -0.09% (spread 0.57 pts); range -0.41% to +0.11%; crude removes +34.04% to +34.52%
+  schemes        alone -0.38% to -0.20% (spread 0.19 pts); range -0.70% to +0.32%; crude removes +34.04% to +34.52%
+  shuffled       alone -0.15% to +0.19% (spread 0.33 pts); range -0.58% to -0.07%; crude removes +34.04% to +34.52%
+  all            alone -0.44% to +0.89% (spread 1.33 pts); range -0.57% to +0.27%; crude removes +34.04% to +34.52%
+== 4. Hunch checks
+  H51 yards only             removes +33.25% = 96.3% of the full crude forecast's +34.52%
+  H51 yards + first downs    removes +33.28% = 96.4% of the full crude forecast's +34.52%
+  H54 recent (last 4, trend)   adds +0.89% (-0.22% to +1.90%); range score +0.25% (-0.39% to +0.87%)
+  H54 recent (last 4, trend) w/ particip. adds +0.62% (-0.61% to +1.78%); range score +0.39% (-0.32% to +1.04%)
+  H55 spread                   adds +0.36% (-0.16% to +0.88%); range score -0.15% (-0.58% to +0.28%)
+  H55 spread w/ particip.      adds +0.04% (-0.63% to +0.70%); range score -0.20% (-0.64% to +0.25%)
+  H52 QB qb_rushing took a snap: rows   3110; removes +35.84%; typical miss 0.70 of the average (17.0)
+  H55 consistency spread      week to week +0.73 (+0.68 to +0.78); season to season +0.70 (+0.61 to +0.76); trait
+  H55 consistency spread_rel  week to week +0.79 (+0.75 to +0.83); season to season +0.61 (+0.51 to +0.69); trait
+== 5. SHAP on held-out rows, all experts in: mean |SHAP| per row, by group (yards)
+  crude          QB  8.36
+  efficiency     QB  0.44
+  elo            QB  0.32
+  pace           QB  0.85
+  participation  QB  0.83
+  schemes        QB  0.85
+
+==================== qb_rushing_next3 (qb_rushing_yards_next3) ====================
+== 1. The ladder (crude inputs; held out 2019-2024)
+  season  removes +38.92%; took a snap: +40.56% of 2735; range score 2.84; MAE 8.75; 80% range holds 78.4%, above q50 49.8%, width 26.8; typical miss 0.61 of the average 14.9
+  lasso   removes +51.43%; took a snap: +51.90% of 2735; range score 2.65; MAE 8.21; 80% range holds 78.0%, above q50 50.7%, width 25.4; typical miss 0.55 of the average 14.9
+  trees   removes +44.64%; took a snap: +45.34% of 2735; range score 2.80; MAE 8.68; 80% range holds 77.2%, above q50 50.2%, width 27.6; typical miss 0.59 of the average 14.9
+  mix     removes +50.02%; took a snap: +50.64% of 2735; range score 2.67; MAE 8.27; 80% range holds 78.3%, above q50 50.8%, width 25.9; typical miss 0.56 of the average 14.9
+  lasso>season   +20.48% (+14.14% to +26.87%); range score +6.60% (+4.26% to +9.07%)
+  trees>lasso    -13.99% (-18.41% to -9.89%); range score -5.73% (-7.33% to -4.12%)
+  mix>lasso      -2.91% (-4.91% to -1.02%); range score -0.56% (-1.43% to +0.29%)
+  mix>trees      +9.72% (+7.94% to +11.44%); range score +4.89% (+4.03% to +5.71%)
+  champion: lasso
+== 2. The yardstick (lasso; share of the crude forecast's squared error)
+  rows expected to play (the headline)
+    all members together: -0.54% (-1.48% to +0.38%), 2966 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    participation +1.19% (+0.70% to +1.68%)         +1.12% (+0.63% to +1.59%)         +0.92% (+0.47% to +1.37%)         adds value
+    elo           +0.31% (-0.14% to +0.78%)         +0.16% (-0.10% to +0.43%)         +0.09% (-0.39% to +0.57%)         neutral
+    shuffled      -0.06% (-0.15% to +0.01%)         -0.04% (-0.10% to +0.00%)         -0.12% (-0.22% to -0.02%)         adds noise
+    efficiency    +0.10% (-0.62% to +0.75%)         -0.12% (-0.60% to +0.30%)         -0.13% (-0.60% to +0.31%)         neutral
+    schemes       -0.52% (-0.78% to -0.27%)         -0.79% (-1.10% to -0.50%)         -0.03% (-0.37% to +0.31%)         neutral
+    pace          -0.76% (-1.17% to -0.35%)         -0.86% (-1.27% to -0.46%)         +0.31% (-0.01% to +0.62%)         neutral
+  check: rows where he took a snap (a filter on the outcome, never the headline)
+    all members together: -1.47% (-2.48% to -0.47%), 2735 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    participation +0.22% (-0.31% to +0.74%)         +0.26% (-0.25% to +0.75%)         +0.42% (-0.05% to +0.90%)         neutral
+    elo           +0.37% (-0.10% to +0.86%)         +0.20% (-0.07% to +0.48%)         +0.10% (-0.38% to +0.55%)         neutral
+    shuffled      -0.05% (-0.14% to +0.03%)         -0.03% (-0.09% to +0.02%)         -0.13% (-0.24% to -0.02%)         adds noise
+    efficiency    +0.06% (-0.74% to +0.78%)         -0.18% (-0.71% to +0.27%)         -0.13% (-0.63% to +0.33%)         neutral
+    schemes       -0.51% (-0.80% to -0.23%)         -0.78% (-1.12% to -0.48%)         -0.08% (-0.44% to +0.26%)         neutral
+    pace          -0.95% (-1.41% to -0.49%)         -0.93% (-1.39% to -0.48%)         +0.23% (-0.09% to +0.53%)         neutral
+  halves: 2019-2021 order ['elo', 'efficiency', 'participation', 'shuffled', 'schemes', 'pace']; 2022-2024 order ['participation', 'pace', 'shuffled', 'elo', 'efficiency', 'schemes']
+    participation  share +0.16% / +1.97%; alone +0.15% / +2.11%
+    elo            share +0.50% / -0.14%; alone +0.60% / +0.05%
+    efficiency     share +0.21% / -0.42%; alone -0.02% / +0.21%
+    pace           share -1.87% / +0.03%; alone -1.87% / +0.23%
+    schemes        share -0.51% / -1.04%; alone -1.03% / -0.07%
+    shuffled       share -0.04% / -0.04%; alone -0.14% / +0.01%
+
+==================== qb_rushing_rest (qb_rushing_yards_rest) ====================
+== 1. The ladder (crude inputs; held out 2019-2024)
+  season  removes +23.86%; took a snap: +29.76% of 3110; range score 2.55; MAE 7.71; 80% range holds 80.0%, above q50 49.7%, width 24.0; typical miss 0.65 of the average 13.1
+  lasso   removes +48.28%; took a snap: +50.04% of 3110; range score 2.38; MAE 7.25; 80% range holds 76.9%, above q50 52.0%, width 21.4; typical miss 0.54 of the average 13.1
+  trees   removes +38.99%; took a snap: +40.39% of 3110; range score 2.51; MAE 7.61; 80% range holds 78.0%, above q50 51.0%, width 23.5; typical miss 0.58 of the average 13.1
+  mix     removes +46.71%; took a snap: +48.32% of 3110; range score 2.36; MAE 7.20; 80% range holds 77.5%, above q50 50.8%, width 21.7; typical miss 0.55 of the average 13.1
+  lasso>season   +32.07% (+26.50% to +37.26%); range score +6.72% (+4.30% to +8.98%)
+  trees>lasso    -17.95% (-24.10% to -12.21%); range score -5.71% (-7.70% to -3.77%)
+  mix>lasso      -3.03% (-5.55% to -0.62%); range score +0.71% (-0.23% to +1.66%)
+  mix>trees      +12.66% (+10.26% to +15.10%); range score +6.07% (+4.96% to +7.14%)
+  champion: lasso
+== 2. The yardstick (lasso; share of the crude forecast's squared error)
+  rows expected to play (the headline)
+    all members together: -0.65% (-1.60% to +0.36%), 3413 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    participation +0.64% (-0.21% to +1.57%)         +0.62% (+0.17% to +1.11%)         +0.54% (-0.00% to +1.09%)         neutral
+    efficiency    -0.30% (-0.78% to +0.14%)         +0.11% (-0.16% to +0.39%)         +0.07% (-0.41% to +0.52%)         neutral
+    shuffled      -0.00% (-0.06% to +0.05%)         -0.03% (-0.09% to +0.02%)         -0.14% (-0.23% to -0.05%)         adds noise
+    pace          +0.18% (-0.97% to +1.41%)         -0.05% (-0.84% to +0.84%)         -0.85% (-1.47% to -0.20%)         adds noise
+    elo           -0.29% (-0.68% to +0.09%)         -0.07% (-0.28% to +0.13%)         +0.06% (-0.26% to +0.38%)         neutral
+    schemes       -2.14% (-2.98% to -1.22%)         -1.23% (-1.64% to -0.81%)         -0.69% (-1.07% to -0.32%)         adds noise
+  check: rows where he took a snap (a filter on the outcome, never the headline)
+    all members together: -1.68% (-2.48% to -0.88%), 3110 rows
+    member        added alone (A)                   fair share (C)                    range score alone                 verdict
+    efficiency    -0.35% (-0.84% to +0.10%)         +0.09% (-0.19% to +0.38%)         +0.08% (-0.41% to +0.54%)         neutral
+    elo           -0.17% (-0.47% to +0.12%)         -0.02% (-0.21% to +0.18%)         +0.15% (-0.16% to +0.46%)         neutral
+    shuffled      -0.02% (-0.08% to +0.04%)         -0.04% (-0.09% to +0.02%)         -0.20% (-0.31% to -0.09%)         adds noise
+    participation -0.22% (-1.10% to +0.72%)         -0.12% (-0.56% to +0.35%)         +0.30% (-0.27% to +0.86%)         neutral
+    pace          -0.16% (-1.34% to +1.02%)         -0.24% (-0.91% to +0.40%)         -1.01% (-1.66% to -0.35%)         adds noise
+    schemes       -2.60% (-3.30% to -1.90%)         -1.35% (-1.73% to -0.98%)         -0.79% (-1.21% to -0.39%)         adds noise
+  halves: 2019-2021 order ['pace', 'elo', 'participation', 'shuffled', 'efficiency', 'schemes']; 2022-2024 order ['participation', 'efficiency', 'shuffled', 'elo', 'pace', 'schemes']
+    participation  share -0.06% / +1.25%; alone +0.26% / +0.99%
+    elo            share +0.03% / -0.16%; alone -0.03% / -0.53%
+    efficiency     share -0.46% / +0.64%; alone -1.16% / +0.49%
+    pace           share +0.24% / -0.32%; alone +0.51% / -0.12%
+    schemes        share -1.84% / -0.67%; alone -3.08% / -1.26%
+    shuffled       share -0.07% / +0.01%; alone -0.01% / +0.01%
