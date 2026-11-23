@@ -190,7 +190,7 @@ Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and
 
 | Bucket | Ideas | What's stopping it | Needs |
 |---|---|---|---|
-| **D. Yardstick inputs** | I48, I58, I59, I60, I61, I67, I70, I75, I84, I114 (10) | Nothing but scheduling: each is a new feature run through `score_input` | **A build-chat batch. Ready now** |
+| **D. Yardstick inputs** | I48, I59, I60, I67, I70, I75, I84, I114 (8; I58 and I61 moved to td-expert's build) | Nothing but scheduling: each is a new feature run through `score_input` | **A build-chat batch: the CEO's pick, 2026-11-23** ([brief](crude-forecaster/YARDSTICK_BATCH.md)) |
 | **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111, I113 (10); hunches H71, H74 | skill-over-expected's build hasn't started (brief agreed 2026-11-20). I76 to I78 are heavy in compute; I97 needs a data check first (are there enough quasi-random absences?) | **A build** (skill-over-expected) |
 | **B. Misses after a change** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 (10) | They live in experts that are done (team-efficiency, participation, pace, crude-forecaster), and none has a next version scheduled | **Builds**, each inside its expert's next version |
 | **H. Coaches and schemes** | I21, I23, I25, I28, I71, I86, I88 (7) | schemes-v2 is done, and no next look is scheduled. I23 and I25 already have first looks | **Mixed:** I23, I25 and I28 are discovery checks on tables we have (retro-sized); the rest need schemes-v2's next look |
@@ -205,6 +205,11 @@ Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and
 
 **Retro-sized** (discovery on data we have, no package code): K after the season, I23, I25 and I28 in H, and I97's data check in E. That's 6 of 68.
 **Build-sized:** the other 62. **The backlog now shrinks only when builds are scheduled.** Three builds would clear about half of it: the yardstick batch (D, 10), skill-over-expected (E, 10) and participation's next version (G plus B's participation rows I9, I10, I11 and I55: 8).
+
+**The CEO's pick, 2026-11-23:** "Ok, the build chat should do the yardstick batch, d." The brief is [`crude-forecaster/YARDSTICK_BATCH.md`](crude-forecaster/YARDSTICK_BATCH.md). Writing it, Claude made three calls for the CEO's veto:
+- **I58 and I61 leave the batch for `td-expert`'s build.** They're about touchdowns, and the yardstick is yards only, so the batch runs 8 ideas.
+- **I48 is scored in yards**, not fantasy points.
+- **I114 needs its timing settled first.** The schedule's lines count as known at kickoff, after the yardstick's Saturday moment. The batch reports the kickoff line as a ceiling and the earlier lines (ESPN openers from 2022) as the honest number.
 
 ### The case against this retro
 
