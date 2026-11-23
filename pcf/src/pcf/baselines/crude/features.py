@@ -50,6 +50,10 @@ RECEIVING = Target(
 # exploration); volume is its plays (attempts, carries, sacks).
 TEAM = Target("team", "yards", "plays", "first_downs", "tds")
 PLAYER_TARGETS = {t.name: t for t in (PASSING, RUSHING, RECEIVING)}
+# QBs' rushing yards (I67): scored by the yardstick, not one of its published targets.
+QB_RUSHING = Target(
+    "qb_rushing", "rushing_yards", "carries", "rushing_first_downs", "rushing_tds", ("QB",)
+)
 
 STATS = ("y", "vol", "fd", "td")
 # Every crude input a unit gets, named without the unit's prefix.
@@ -140,6 +144,8 @@ PLAYER_EXPERTS = ["part_share", "part_play", "part_share_if"]
 # The row rule (the CEO's call 3, Claude's reading): a player counts when participation's saved
 # chance of taking a snap is at least this, known before kickoff.
 EXPECTED_TO_PLAY = 0.5
+# The depth-chart row rule (I70): a starter (1) or the first backup (2) at his listed position.
+DEPTH_ROWS = 2
 
 
 def experts(horizon: str, players: bool) -> dict[str, list[str]]:

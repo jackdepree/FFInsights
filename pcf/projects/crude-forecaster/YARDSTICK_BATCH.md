@@ -1,5 +1,7 @@
 # The yardstick batch (retro 3's group D)
 
+**Status: run, 2026-11-23** (the CEO: "Yes, start it"). Results: [RESULTS.md, "The yardstick batch"](RESULTS.md#the-yardstick-batch-2026-11-23); calls: [decision 0042](../../docs/decisions/0042-yardstick-batch.md); scripts and outputs: [`explore/yardstick_batch/`](explore/yardstick_batch/).
+
 > **The CEO, 2026-11-23:** "Ok, the build chat should do the yardstick batch, d."
 >
 > Retro 3 sorted the backlog (`projects/RETRO.md`, retro 3). Group D is the backlog's yardstick inputs: ideas that are each scored once against the crude forecaster. Retro 2 sorted them as one session, and nothing ran them. This page is the build chat's brief. It holds everything the session needs, so it can start from this file, the ideas' rows in `projects/IDEAS.md`, and the crude forecaster's own files (`BRIEF.md`, `RESULTS.md`, and the registry's interface card).

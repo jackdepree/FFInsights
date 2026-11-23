@@ -32,6 +32,7 @@ INPUTS: dict[str, Any] = {
     "team_game": ("schedule", "stats"),
     **F.EXPERT_INPUTS,
 }
+DEPTH_INPUTS: dict[str, Any] = {**INPUTS, "player_game": ("roster", "stats", "snaps", "depth")}
 
 
 class Crude(Expert):
@@ -50,6 +51,7 @@ class Crude(Expert):
     extra: ClassVar[tuple[str, ...]] = ()  # any other columns joined onto the features (a scorer's)
     keep: ClassVar[tuple[str, ...] | None] = None  # only these crude inputs (the hunch checks)
     seed: ClassVar[int | None] = None  # the trees' seed; config's when None
+    row_rule: ClassVar[str] = "participation"  # which players are rows (ROW_RULES)
     baseline = True  # the base class isn't a model `find` returns
 
     # ------------------------------------------------------------ what it predicts
@@ -114,7 +116,18 @@ class Crude(Expert):
             .select("gsis_id", "game_id", "season", "week", "team", "position")
             .join(mine.select("game_id", "team"), on=["game_id", "team"], how="inner")
         )
-        rows = F.player_expert_inputs(view, rows).filter(c("part_play") >= F.EXPECTED_TO_PLAY)
+        rows = F.player_expert_inputs(view, rows)
+        if self.row_rule == "depth":
+            # the depth chart going into the game (known at the week's start): a starter or the
+            # first backup at his listed position (I70), whatever participation expects
+            depth = pg.filter(c("game_id").is_in(mine["game_id"].implode())).select(
+                "gsis_id", "game_id", "depth"
+            )
+            rows = rows.join(depth, on=["gsis_id", "game_id"], how="inner").filter(
+                c("depth") <= F.DEPTH_ROWS
+            ).drop("depth")  # fmt: skip
+        else:
+            rows = rows.filter(c("part_play") >= F.EXPECTED_TO_PLAY)
         known = played_games(pg).join(sides.select("game_id", "team"), on=["game_id", "team"])
         crude = F.crude_inputs(F.unit_games(known, spec), "gsis_id", season)
         rows = F.with_crude(rows, crude, "gsis_id", "gsis_id")
@@ -196,7 +209,7 @@ class Crude(Expert):
     @classmethod
     def baselines(cls) -> list[type[Expert]]:
         lower = fitting.METHODS[: fitting.METHODS.index(cls.method)]
-        return [variant(cls.target_spec.name, cls.horizon, m) for m in lower]
+        return [variant(cls.target_spec.name, cls.horizon, m, cls.row_rule) for m in lower]
 
 
 def played_games(pg: pl.DataFrame) -> pl.DataFrame:
@@ -249,13 +262,33 @@ QUANTITIES = {
     "rushing": "rushing_yards",
     "receiving": "receiving_yards",
     "team": "team_yards_gained",
+    "qb_rushing": "qb_rushing_yards",
 }
+# Targets and row rules the yardstick can score on but doesn't publish (no champion, no history):
+# QBs' rushing (I67); the depth chart's starters and first backups as rows (I70).
+EXTRA_TARGETS = {"qb_rushing": F.QB_RUSHING}
+ROW_RULES = ("participation", "depth")
 VARIANTS: dict[str, type[Crude]] = {}
+_EXTRA: dict[str, type[Crude]] = {}
 
 
-def variant(target: str, horizon: str = "next", method: str = "mix") -> type[Crude]:
-    """The module-level class for one target, horizon and rung."""
-    return VARIANTS[f"{target}_{horizon}_{method}"]
+def variant(
+    target: str, horizon: str = "next", method: str = "mix", rows: str = "participation"
+) -> type[Crude]:
+    """The class for one target, horizon and rung: the module-level (published) one, or, for an
+    extra target or another row rule, one made on first use and kept out of `find`."""
+    if rows not in ROW_RULES:
+        raise ValueError(f"no row rule {rows!r} (one of {ROW_RULES})")
+    name = f"{target}_{horizon}_{method}"
+    if rows == "participation" and name in VARIANTS:
+        return VARIANTS[name]
+    if target not in TARGETS and target not in EXTRA_TARGETS:
+        raise KeyError(name)
+    tag = name if rows == "participation" else f"{name}_{rows}rows"
+    if tag not in _EXTRA:
+        cls = _make(target, horizon, method, rows)
+        _EXTRA[tag] = type(cls.__name__, (cls,), {"baseline": True, "__module__": __name__})
+    return _EXTRA[tag]
 
 
 def with_experts(
@@ -276,12 +309,15 @@ def with_experts(
     return type(f"{cls.__name__}_{tag or 'crude'}_{seed}", (cls,), attrs)
 
 
-def _make(target: str, horizon: str, method: str) -> type[Crude]:
-    spec = TARGETS[target]
+def _make(target: str, horizon: str, method: str, rows: str = "participation") -> type[Crude]:
+    spec = {**TARGETS, **EXTRA_TARGETS}[target]
     grain = "player_game" if target != "team" else "team_game"
     suffix = "" if horizon == "next" else f"_{horizon}"
+    rule = "" if rows == "participation" else f"_{rows}rows"
     attrs = {
-        "variant": f"{target}_{horizon}_{method}",
+        "variant": f"{target}_{horizon}_{method}{rule}",
+        "row_rule": rows,
+        "inputs": INPUTS if rows == "participation" else DEPTH_INPUTS,
         "target_spec": spec,
         "horizon": horizon,
         "method": method,

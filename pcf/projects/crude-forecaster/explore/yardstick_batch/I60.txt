@@ -1,0 +1,17 @@
+I60: availability over the rest of the season. Forecast: av_rate (games played so far shrunk toward last season's rate), av_y = y_s x av_rate, this week's report (av_q, av_dnp), weeks listed out or doubtful (av_out_s). Hindsight (ceiling): the share of the window's games he did play.
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  games-played forecast     passing_rest        crude                        3413  +0.19% (-1.04% to +1.42%)     -0.11% (-0.95% to +0.74%)     +0.19%      0.05  no
+  games-played forecast     passing_rest        participation                3413  -0.79% (-1.27% to -0.34%)     +1.47% (+0.87% to +2.04%)     +0.13%      1.00  no
+  hindsight (ceiling)       passing_rest        crude                        3413  +70.24% (+66.62% to +73.48%)  +45.61% (+42.98% to +48.01%)  +0.52%      0.05  yes
+  hindsight (ceiling)       passing_rest        participation                3413  +68.51% (+64.89% to +71.82%)  +44.62% (+41.87% to +47.05%)  +0.45%      0.05  yes
+  games-played forecast     rushing_rest        crude                       10207  +0.09% (-0.28% to +0.46%)     -0.13% (-0.35% to +0.09%)     +0.01%      0.05  no
+  games-played forecast     rushing_rest        participation               10207  -0.03% (-0.21% to +0.15%)     -0.12% (-0.28% to +0.02%)     +0.19%      0.90  no
+  hindsight (ceiling)       rushing_rest        crude                       10207  +26.76% (+24.48% to +29.07%)  +15.56% (+14.35% to +16.72%)  +0.01%      0.05  yes
+  hindsight (ceiling)       rushing_rest        participation               10207  +26.11% (+23.88% to +28.43%)  +15.74% (+14.51% to +16.91%)  +0.02%      0.05  yes
+  games-played forecast     receiving_rest      crude                       36125  +1.29% (+0.99% to +1.58%)     +0.78% (+0.59% to +0.97%)     +0.02%      0.05  yes
+  games-played forecast     receiving_rest      participation               36125  +0.66% (+0.44% to +0.88%)     +0.30% (+0.19% to +0.40%)     +0.02%      0.05  yes
+  hindsight (ceiling)       receiving_rest      crude                       36125  +23.82% (+21.51% to +26.08%)  +13.57% (+12.37% to +14.70%)  +0.01%      0.05  yes
+  hindsight (ceiling)       receiving_rest      participation               36125  +23.05% (+20.77% to +25.32%)  +12.98% (+11.76% to +14.12%)  +0.02%      0.05  yes
+  starters' games forecast  team_rest           crude                        3198  -0.46% (-1.13% to +0.18%)     -0.91% (-1.41% to -0.42%)     +0.13%      1.00  no
+  starters' games forecast  team_rest           elo                          3198  +2.84% (+1.42% to +4.47%)     +0.50% (-0.35% to +1.36%)     +0.18%      0.05  yes
+  hindsight (ceiling)       team_rest           crude                        3198  +4.22% (+3.08% to +5.34%)     +1.59% (+0.70% to +2.50%)     +0.19%      0.05  yes

@@ -1,0 +1,27 @@
+I114: the betting lines (the team's expected margin, the total, its implied points). kickoff = the schedule's near-closing line, a CEILING (known at kickoff, not at the Saturday run). open = ESPN's openers (known at the run), scored only on games that have one (2023: 194 games, 2024: all; 2022 has none in ESPN's history).
+  openers: 843 games
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  kickoff line (ceiling)    team_next           crude                        3198  +6.86% (+5.52% to +8.34%)     +3.29% (+2.39% to +4.27%)     +0.16%      0.05  yes
+  kickoff line (ceiling)    team_next           crude                         900  +8.37% (+5.71% to +10.98%)    +4.37% (+2.97% to +5.71%)     +0.15%      0.05  yes
+  opening line (honest)     team_next           crude                         900  +5.19% (+2.28% to +8.18%)     +2.41% (+0.95% to +3.87%)     +0.14%      0.05  yes
+  kickoff line (ceiling)    team_next           elo                          3198  +5.00% (+3.82% to +6.18%)     +2.40% (+1.66% to +3.15%)     +0.18%      0.05  yes
+  kickoff line (ceiling)    team_next           elo                           900  +5.35% (+3.41% to +7.30%)     +2.78% (+1.63% to +3.90%)     +0.14%      0.05  yes
+  opening line (honest)     team_next           elo                           900  +2.03% (-0.18% to +4.22%)     +0.90% (-0.36% to +2.11%)     +0.12%      0.05  no
+  kickoff line (ceiling)    passing_next        crude                        3413  +1.43% (+0.67% to +2.15%)     +1.42% (+0.79% to +2.04%)     +0.18%      0.05  yes
+  kickoff line (ceiling)    passing_next        crude                         956  +1.28% (-0.22% to +2.89%)     +1.53% (+0.71% to +2.42%)     +0.26%      0.05  no
+  opening line (honest)     passing_next        crude                         956  +0.70% (-0.39% to +1.84%)     +0.43% (-0.30% to +1.19%)     +0.33%      0.05  no
+  kickoff line (ceiling)    passing_next        participation                3413  +2.58% (+1.51% to +3.57%)     +1.71% (+1.01% to +2.42%)     +0.36%      0.05  yes
+  kickoff line (ceiling)    passing_next        participation                 956  +0.23% (-1.37% to +1.92%)     +0.93% (-0.09% to +1.97%)     +0.23%      0.05  no
+  opening line (honest)     passing_next        participation                 956  -0.60% (-2.08% to +0.89%)     +0.66% (-0.42% to +1.74%)     +0.18%      1.00  no
+  kickoff line (ceiling)    rushing_next        crude                       10207  +0.10% (+0.03% to +0.17%)     -0.04% (-0.13% to +0.05%)     +0.02%      0.05  yes
+  kickoff line (ceiling)    rushing_next        crude                        2742  +0.21% (+0.05% to +0.37%)     +0.13% (-0.04% to +0.30%)     +0.05%      0.05  yes
+  opening line (honest)     rushing_next        crude                        2742  +0.18% (+0.02% to +0.33%)     +0.14% (-0.04% to +0.32%)     +0.04%      0.05  yes
+  kickoff line (ceiling)    rushing_next        participation               10207  +0.11% (+0.02% to +0.20%)     +0.03% (-0.07% to +0.15%)     +0.02%      0.05  yes
+  kickoff line (ceiling)    rushing_next        participation                2742  +0.29% (+0.12% to +0.46%)     +0.35% (+0.12% to +0.59%)     +0.07%      0.05  yes
+  opening line (honest)     rushing_next        participation                2742  +0.25% (+0.10% to +0.40%)     +0.28% (+0.09% to +0.48%)     +0.06%      0.05  yes
+  kickoff line (ceiling)    receiving_next      crude                       36125  +0.10% (+0.02% to +0.18%)     -0.06% (-0.15% to +0.02%)     +0.02%      0.05  yes
+  kickoff line (ceiling)    receiving_next      crude                       10179  +0.01% (-0.16% to +0.18%)     -0.02% (-0.18% to +0.13%)     +0.01%      0.10  no
+  opening line (honest)     receiving_next      crude                       10179  -0.01% (-0.16% to +0.14%)     +0.06% (-0.07% to +0.20%)     +0.01%      0.55  no
+  kickoff line (ceiling)    receiving_next      participation               36125  +0.17% (+0.08% to +0.26%)     +0.07% (-0.02% to +0.15%)     +0.02%      0.05  yes
+  kickoff line (ceiling)    receiving_next      participation               10179  +0.05% (-0.14% to +0.24%)     -0.09% (-0.24% to +0.04%)     +0.01%      0.05  no
+  opening line (honest)     receiving_next      participation               10179  +0.01% (-0.16% to +0.18%)     -0.02% (-0.16% to +0.13%)     +0.01%      0.05  no

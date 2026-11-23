@@ -1,0 +1,39 @@
+I67: QB rushing yards as a yardstick target (QBs expected to play). removed = share of squared error around the scored rows' average.
+
+== QB rushing, next: rows 3413; crude forecast removes 34.5% of the error around the average
+  against the season-so-far average: +10.22% (+6.75% to +13.55%); the average removes 27.1%
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  participation             qb_rushing_next     crude                        3413  +0.68% (+0.24% to +1.13%)     +0.34% (-0.03% to +0.72%)     +0.09%      0.05  yes
+  elo                       qb_rushing_next     crude                        3413  -0.19% (-0.47% to +0.13%)     -0.07% (-0.34% to +0.22%)     +0.09%      0.80  no
+  efficiency                qb_rushing_next     crude                        3413  -0.10% (-0.43% to +0.23%)     -0.02% (-0.43% to +0.39%)     +0.17%      0.65  no
+  pace                      qb_rushing_next     crude                        3413  -0.09% (-0.37% to +0.20%)     +0.02% (-0.26% to +0.30%)     -0.02%      0.30  no
+  schemes                   qb_rushing_next     crude                        3413  -0.34% (-0.58% to -0.08%)     +0.05% (-0.21% to +0.32%)     -0.04%      1.00  no
+  fair shares: participation +0.71%, elo -0.08%, efficiency -0.02%, pace -0.05%, schemes -0.24%; all together +0.32%
+
+== RB rushing, next: rows 10207; crude forecast removes 42.5% of the error around the average
+  against the season-so-far average: +7.26% (+5.48% to +8.98%); the average removes 38.0%
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  participation             rushing_next        crude                       10207  +3.32% (+2.57% to +4.10%)     +1.32% (+0.86% to +1.78%)     +0.06%      0.05  yes
+  elo                       rushing_next        crude                       10207  +0.35% (+0.15% to +0.55%)     +0.02% (-0.18% to +0.22%)     +0.03%      0.05  yes
+  efficiency                rushing_next        crude                       10207  +0.58% (+0.33% to +0.83%)     -0.06% (-0.26% to +0.15%)     +0.04%      0.05  yes
+  pace                      rushing_next        crude                       10207  +0.19% (-0.06% to +0.46%)     -0.14% (-0.35% to +0.08%)     +0.04%      0.05  no
+  schemes                   rushing_next        crude                       10207  +0.01% (-0.10% to +0.12%)     +0.11% (-0.01% to +0.24%)     +0.05%      0.25  no
+  fair shares: participation +3.24%, elo +0.13%, efficiency +0.39%, pace +0.13%, schemes -0.06%; all together +3.83%
+
+== QB rushing, next3: rows 2966; crude forecast removes 51.4% of the error around the average
+  against the season-so-far average: +20.48% (+14.14% to +26.87%); the average removes 38.9%
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  participation             qb_rushing_next3    crude                        2966  +1.19% (+0.70% to +1.68%)     +0.92% (+0.47% to +1.37%)     +0.07%      0.05  yes
+  elo                       qb_rushing_next3    crude                        2966  +0.31% (-0.14% to +0.78%)     +0.09% (-0.39% to +0.57%)     +0.09%      0.05  no
+  efficiency                qb_rushing_next3    crude                        2966  +0.10% (-0.62% to +0.75%)     -0.13% (-0.60% to +0.31%)     +0.27%      0.10  no
+  pace                      qb_rushing_next3    crude                        2966  -0.76% (-1.17% to -0.35%)     +0.31% (-0.01% to +0.62%)     +0.23%      1.00  no
+  schemes                   qb_rushing_next3    crude                        2966  -0.52% (-0.78% to -0.27%)     -0.03% (-0.37% to +0.31%)     +0.40%      1.00  no
+
+== RB rushing, next3: rows 8969; crude forecast removes 53.8% of the error around the average
+  against the season-so-far average: +16.09% (+13.54% to +18.66%); the average removes 45.0%
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  participation             rushing_next3       crude                        8969  +3.06% (+2.24% to +3.88%)     +1.19% (+0.72% to +1.65%)     +0.05%      0.05  yes
+  elo                       rushing_next3       crude                        8969  -0.16% (-0.35% to +0.02%)     +0.05% (-0.13% to +0.23%)     +0.06%      1.00  no
+  efficiency                rushing_next3       crude                        8969  -0.07% (-0.20% to +0.07%)     -0.01% (-0.16% to +0.13%)     +0.07%      0.80  no
+  pace                      rushing_next3       crude                        8969  +0.19% (-0.07% to +0.45%)     -0.47% (-0.72% to -0.22%)     +0.06%      0.05  no
+  schemes                   rushing_next3       crude                        8969  +0.04% (-0.01% to +0.09%)     +0.10% (+0.02% to +0.18%)     +0.05%      0.15  no

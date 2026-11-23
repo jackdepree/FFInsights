@@ -1,0 +1,12 @@
+I48: garbage-time yards, per player-game (regular season 2016-2024, games with any of that kind of yards). Week r: odd against even weeks; season r: one season's average against the next.
+  passing    gt     week r +0.16 (+0.09 to +0.23); season r +0.14 (+0.06 to +0.21); 545 player-seasons; mean |x| 13.34; trait
+  passing    share  week r +0.49 (+0.43 to +0.54); season r +0.20 (+0.13 to +0.27); 545 player-seasons; mean |x| 0.10; trait
+  passing    garbage time's share of all these yards: 6.3%
+  rushing    gt     week r +0.17 (+0.14 to +0.21); season r +0.21 (+0.17 to +0.25); 2098 player-seasons; mean |x| 1.89; trait
+  rushing    share  week r +0.22 (+0.19 to +0.25); season r +0.18 (+0.14 to +0.21); 2098 player-seasons; mean |x| 0.09; trait
+  rushing    garbage time's share of all these yards: 6.1%
+  receiving  gt     week r +0.08 (+0.05 to +0.11); season r +0.06 (+0.03 to +0.09); 3520 player-seasons; mean |x| 2.17; trait
+  receiving  share  week r +0.09 (+0.06 to +0.12); season r +0.08 (+0.05 to +0.11); 3520 player-seasons; mean |x| 0.07; trait
+  receiving  garbage time's share of all these yards: 6.3%
+
+I60: share of his team's games he played (QB, RB, WR, TE with a snap that season): season r +0.46 (+0.44 to +0.49), 3669 pairs; mean 0.63

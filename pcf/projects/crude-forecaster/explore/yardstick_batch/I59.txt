@@ -1,0 +1,10 @@
+I59: a pass-heavy team's WRs and TEs. Input: pace's pass rate over expected (pace_proe) and schemes-v2's 4 traits (sch_*), WR and TE rows only.
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  proe + schemes            receiving_next      crude                       25918  +0.01% (-0.05% to +0.06%)     -0.12% (-0.18% to -0.06%)     +0.01%      0.10  no
+  proe + schemes            receiving_next      participation               25918  -0.02% (-0.06% to +0.03%)     -0.05% (-0.09% to +0.00%)     +0.02%      0.55  no
+  proe + schemes            receiving_next      efficiency+participation    25918  -0.01% (-0.05% to +0.03%)     -0.03% (-0.07% to +0.01%)     +0.02%      0.65  no
+  proe alone                receiving_next      efficiency+participation    25918  -0.00% (-0.01% to +0.01%)     +0.02% (-0.00% to +0.03%)     +0.02%      0.70  no
+  proe + schemes            receiving_rest      crude                       25918  +0.05% (-0.03% to +0.12%)     -0.01% (-0.07% to +0.05%)     -0.00%      0.05  no
+  proe + schemes            receiving_rest      participation               25918  +0.01% (-0.07% to +0.09%)     +0.05% (-0.01% to +0.11%)     +0.00%      0.05  no
+  proe + schemes            receiving_rest      efficiency+participation    25918  -0.08% (-0.15% to -0.01%)     +0.01% (-0.05% to +0.07%)     -0.01%      1.00  no
+  proe alone                receiving_rest      efficiency+participation    25918  -0.00% (-0.01% to +0.00%)     +0.00% (-0.01% to +0.02%)     +0.00%      0.35  no
