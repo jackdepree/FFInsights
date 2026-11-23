@@ -1,0 +1,13 @@
+== next season's sacks per dropback: the gain from adding the pressure rate (share of the base's weighted squared error removed)
+shape: (5, 7)
+┌────────────┬──────────────────────────────────────┬──────┬────────────────────┬────────┬─────────┬────────┐
+│ group      ┆ arm                                  ┆ rows ┆ past_vs_league_avg ┆ gain   ┆ lo90    ┆ hi90   │
+│ ---        ┆ ---                                  ┆ ---  ┆ ---                ┆ ---    ┆ ---     ┆ ---    │
+│ str        ┆ str                                  ┆ i64  ┆ f64                ┆ f64    ┆ f64     ┆ f64    │
+╞════════════╪══════════════════════════════════════╪══════╪════════════════════╪════════╪═════════╪════════╡
+│ OLB        ┆ all (the second look)                ┆ 283  ┆ 0.1425             ┆ 0.1511 ┆ 0.0752  ┆ 0.2190 │
+│ OLB        ┆ rushers only (rush share over 2/3)   ┆ 164  ┆ -0.0036            ┆ 0.0078 ┆ -0.0441 ┆ 0.0551 │
+│ OLB        ┆ droppers only (rush share under 1/3) ┆ 67   ┆ -0.0113            ┆ 0.0338 ┆ -0.1069 ┆ 0.1315 │
+│ OLB        ┆ all, rush share added to the base    ┆ 283  ┆ 0.2778             ┆ 0.0140 ┆ -0.0280 ┆ 0.0506 │
+│ DE, DT, NT ┆ all (the second look)                ┆ 761  ┆ 0.1839             ┆ 0.0941 ┆ 0.0633  ┆ 0.1276 │
+└────────────┴──────────────────────────────────────┴──────┴────────────────────┴────────┴─────────┴────────┘

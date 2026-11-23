@@ -28,6 +28,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Opportunity quality** (`opportunity-quality`, built 2026-11-21 to 22, validating): expected fantasy points per chance as a table, a forecast of next game's opportunity (trees, with efficiency) and a regression-to-the-mean measure (one pull-back rate per position ships); waiting for the CEO's spot-check. `td-expert` builds on it.
 
+**The yardstick batch** (the CEO's pick at retro 3, 2026-11-23): eight backlog ideas scored on the crude forecaster in the build chat ([brief](../projects/crude-forecaster/YARDSTICK_BATCH.md)).
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later

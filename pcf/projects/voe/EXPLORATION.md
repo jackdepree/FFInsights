@@ -567,7 +567,7 @@ The squared gap over the eight groups is 44% smaller with replacement level. Val
 
 **H90: failed.** Each of the CEO's two arms is worse on both yardsticks: before the snap, -41.9 points and -0.02; the leak, -4.1 points and -0.09.
 
-**H91: unclear by the rule, leaning failed.**
+**H91: unclear by the rule, leaning failed. Closed as failed by the CEO, 2026-11-23 ("We can say h91 is failed").**
 - **By the rule:** it's better on the movers' repeat (+0.14, interval above zero) and worse on the roster-change test (-2.4, interval below zero).
 - **The check after the result:** the movers' gain is mostly the position constant (+0.02 within positions, spanning zero).
 
@@ -579,8 +579,8 @@ The squared gap over the eight groups is 44% smaller with replacement level. Val
 | H90, before the snap | Claude | 20% | Failed |
 | H90, the leak | Claude | about 0% | Failed |
 | Weighting by expected variance raises the held-out play fit | Claude | 60% | Failed (+0.02, -0.09 to +0.15) |
-| H91 as worded | CEO | 20% | Unclear, leaning failed |
-| H91 as worded | Claude | 5% | Unclear, leaning failed |
+| H91 as worded | CEO | 20% | Failed (closed by the CEO, 2026-11-23; unclear by the rule) |
+| H91 as worded | Claude | 5% | Failed (closed by the CEO, 2026-11-23; unclear by the rule) |
 | Replacement-level values match absence costs better (the gap halves) | Claude | 55% | Failed (44% smaller, short of half) |
 | H92 as worded | CEO | 50% | Failed |
 | H92 as worded | Claude | 15% | Failed |

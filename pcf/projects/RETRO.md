@@ -5,7 +5,228 @@
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
-- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects.
+- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects. **Retro 3** came due on 2026-11-22 (`context-retro` and `opportunity-quality`) and the CEO started it on 2026-11-23.
+
+---
+
+## Retro 3 (started 2026-11-23)
+
+> The CEO, 2026-11-23: "Let's start the retro analysis for iteration number 3. What do you need from me?"
+
+**Why now:** two projects finished since retro 2: `context-retro` (built 2026-11-22) and `opportunity-quality` (built 2026-11-22). `context-v2` (explored, its build was context-retro) and voe's fourth and fifth looks came in between.
+
+**Read:** hunches H78 to H92 (15, all with the CEO's odds written before the test), ideas I84 to I112, and the projects since retro 2: `skill-over-expected` (third and fourth looks, brief agreed), `context-v2` (four looks), `context-retro` (built), `opportunity-quality` (built), `voe` (fourth and fifth looks).
+
+**The steps,** in the charter's order: 1. sort the backlog; 2. score the predictions; 3. run the quick groups; 4. update the patterns; 5. new ideas and a prediction for every open one; 6. the findings table's summary; 7. workflow changes for the CEO.
+
+### 1. The backlog, sorted (2026-11-23)
+
+**Housekeeping first.** 19 rows sat under "Open" in IDEAS.md although they had a result (I13, I19, I22, I24, I33-I38, I40, I47, I73, I74, I89, I90, I94, I95, I102). They now sit under Graduated (7) or Killed (12), with their source, test and odds kept in the row. The real open count was 75, not 94.
+
+**Closed by Claude (the CEO, 2026-11-20: "You have authority with the ideas, but I still want to learn about the ideas"):**
+
+| Idea | Closed as | Why, in one line |
+|---|---|---|
+| I80, where a player's chances come from, in the yardstick | **Held** | opportunity-quality's build ran it (R14): expected receiving yards +4.15%, rushing +4.55% beside participation, above Claude's 1 to 3% |
+| I46, incentive states beyond seed-locked | Killed | Its main bet failed in retro 2's batch; the rest needs standings math we don't have, and seed-locked already covers the big case |
+| I26, matchup types learned from results | Killed | Real but tiny (r +0.03 to +0.05) and matches no charted style; matchups have tied every time (P2) |
+| I27, outside runs against man-heavy defenses | Killed | One term of 308, at the edge of chance, and a matchup |
+| I39, the play weights without DML | Killed | A reweighting of the same plays (P4), only needed for futures, which has no brief |
+
+**The sort: 70 open ideas,** by what they need and what they cost (quick: under an hour; a session; expensive):
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Quick, data in hand: run in this retro** | I87 (the total after a QB change), I91 (the rushers' forecast), I98 (the sorting test for VOE), I103 (trees for opportunity-quality's longer horizons) | Under an hour each | Step 3 |
+| **D. Yardstick inputs: one batch** | I48, I58, I59, I60, I61, I67, I70, I75, I84 | Quick each through `score_input`; one batch | Step 3, after A (retro 2 sorted them and they never ran: the slip to fix) |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111; hunches H71, H74 | A session each; I76-I78 expensive in compute; I97 needs a data check first | skill-over-expected's build |
+| **M. Context's next build** | I92, I93, I110, I112 | A session each; the CEO, 2026-11-22: "No split idea for now" on I110 and I112 | context-retro's next version |
+| **B. Misses after a change, fixed inside an expert** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 | A session each, inside that expert's next build | team-efficiency, participation, pace, crude-forecaster |
+| **C. Ranges** | I1, I14, I42, I52, I85 | One session together (one coverage tool) | `pcf.validation`, then each expert |
+| **G. Playing time** | I15, I16, I49, I51 | One session | participation's next build |
+| **H. Coaches and schemes** | I21, I23, I25, I28, I71, I86, I88 | One session | schemes-v2's next look |
+| **F. Fatigue** | I29, I30, I50 | A project | injury-fatigue |
+| **J. Tooling, not bets** | I45, I62, I64, I66, I69, I72 | Done when a build next touches the harness | the build that needs it |
+| **K. Wait for a live season** | I6, I8 | Nothing until 2026 ends | after the season |
+| **L. Parked** | I20 (graduated, the CEO's answer below), I31, I32, I43, I57, I96, I104 | | their projects |
+
+**What the sort says:** 13 of the 70 can run now (A and D). 36 wait for a build of an existing expert (B, E, G, H, M), so the backlog shrinks mostly when builds happen, not at retros. Group D is the one that should have shrunk since retro 2 and didn't: it was sorted as "one session" and no session picked it up.
+
+**Open hunches (the CEO's to close):** H5 (strength is conditional), H6 (consistent measures predict other outcomes), H18 (schemes predict who teams pursue), all open since retro 1; H71 (the latent space of 22) and H74 (other experts as confounders), open since VOE's kickoff with no odds asked.
+
+### Waiting on the CEO (asked 2026-11-23)
+
+1. H71 and H74: odds now (they're untested, so they count as before the test), or park them with VOE.
+2. H5, H6, H18: keep open, or close as not tested.
+3. I20 (the CEO's consistency discovery): graduate it, since `CONSISTENCY.md`, the findings table and skill-over-expected's "whose trait is it?" now do what it asked?
+4. For step 7: what in the last week's way of working helped, and what wasted time.
+
+**The CEO's answers (2026-11-23):** "H71; 30% h74; 40%. H5, h6, and h18 keep them open. I20 yes graduated." On the workflow: "I think our current workflow is good. I like splitting my work/input between strategy and vision where I think thoughtfully. Then I let you build on your own and give me updates in the build and work chat."
+
+- H71 30% and H74 40% are in HUNCHES.md, beside Claude's numbers from retro 2 (25% and 35%). They count as before the test: neither has been tested.
+- H5, H6 and H18 stay open.
+- I20 is graduated. **69 ideas are open.**
+
+### 2. How the predictions scored ([`retro/explore/retro3_calibration.py`](retro/explore/retro3_calibration.py), output [`.txt`](retro/explore/retro3_calibration.txt))
+
+**What's scored:** every bet written before its test since retro 2 that now has a result. H84 and I94 are left out (unclear), and so are bets the tests never answered. "Held in part" counts as held. The Brier score is the average squared gap between the odds and what happened: 0 is perfect, and always saying 50% scores 0.250.
+
+**The CEO's first number: 14 hunches (H78 to H92 without H84), 7 held.**
+
+| | Bets | Held | Average odds | Brier |
+|---|---|---|---|---|
+| **Retro 3: all** | 14 | 7 (50%) | 53% | **0.177** |
+| Football claims | 8 | **7 (88%)** | 60% | |
+| Methods | 6 | **0 (0%)** | 43% | |
+| Retro 2, for comparison | 16 | 10 (62%) | 62% | 0.249 |
+
+- **The CEO's calibration improved a lot:** 0.249 to 0.177. At retro 2 the CEO's odds did no better than a coin; now they clearly do.
+- **The whole error is in one place: claims are under-bet, methods over-bet.** Claims came true 88% of the time at average odds of 60%. Methods came true 0% of the time at 43%.
+- **The running total over both retros:** claims 15 of 18 held, methods 2 of 12.
+
+**Claude, on the CEO's claim as worded (W6, first used this round): 14 bets, 6 held, average odds 39%, Brier 0.114.** Claude's numbers sat lower on methods (16% against the CEO's 43%) and about level on claims (57% against 60%). Most of Claude's edge is the methods, where Claude bets second, after seeing the design.
+
+**Claude's side bets and ideas: 29 bets, 10 held (34%) at average odds of 52%. Brier 0.260, worse than a coin.**
+
+| Claude's stated odds | Bets | Came true |
+|---|---|---|
+| 0 to 35% | 5 | 40% |
+| 35 to 55% | 8 | 25% |
+| **55 to 75%** | **13** | **23%** |
+| 75% and up | 3 | 100% |
+
+- **Claude was badly overconfident on its narrower bets in the 55 to 75% band** (3 of 13 came true). At retro 2 that band was right (9 of 12).
+- **What the misses share:** most were bets on *how big* or *how precise* something would be once it was real: movers keeping 75%+ (14% kept), a weighting raising the fit (+0.02), the gap halving (44%), the 200-400 gap halving, time to throw being the QB's (it is partly the offense's). Claude got the direction right and the size too generous.
+- **Lesson for Claude:** a side bet about size should start nearer 40% than 60%. Retro 3's new predictions (step 5) apply it.
+
+### 3. The quick groups, run (2026-11-23, discovery only; scripts in `retro/explore/retro3_*.py`)
+
+**Group A:**
+
+| Idea | Result | Claude's odds, scored |
+|---|---|---|
+| I87, the total after an in-season QB change | **No edge.** The total is 0.57 points too high in games 1-4 after (-1.39 to +0.24), and the under wins 49.7%. With I83, the line prices a QB change on both the spread and the total | 45% that it's 1+ point too high: failed. 20% for an edge: right to be low |
+| I91, the pass rushers' forecast | **It was the role.** Across outside linebackers, pressures add +15.1% to next season's sacks. Within rushers they add +0.8% (-4.4 to +5.5), and past sacks forecast nothing there either | 65% that the gain falls under half: held. 75% that it stays above zero: failed (the interval spans zero) |
+| I98, the sorting test for VOE | **Closed without a run.** The movers' repeat already answers it (0.08 against stayers' 0.27), and here the test is confounded, because good teams sign genuinely good players | Not scored |
+| I103, trees for opportunity-quality's longer horizons | **Moved to the build chat.** It needs harness runs inside a built expert | |
+
+**Group D (nine yardstick inputs) goes to the build chat as one batch.** Each input is a new feature put through `score_input`, which is a build session's work, not a retro's. Retro 2 sorted it as "one session" and no session picked it up. W7 below is the fix. The batch's brief:
+- **Run:** I48, I58, I59, I60, I61, I67, I70, I75, I84, and the new I114.
+- **The rule for each:** it beats its shuffled copies and its interval clears zero, beside participation, as I69's rule says. The 2025 vault stays out.
+- **Odds:** each idea's own row in IDEAS.md, written before this retro. Step 5 updates I84 and I59.
+
+**The backlog after this:** 69 open, less I87, I91 and I98 (closed), plus I113 and I114 (step 5). **68 open.**
+
+### 4. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P1 | "This habit is real, and it belongs to X" | H82 (sacks are the QB's, as pressure to sack), H83 (broken tackles are the runner's), H81 (coverage traits are weak but travel), I89 (throw depth is the QB's and the receivers'; time to throw is partly the QB's) | Narrowed again by P11: much of what travels is the role, not the skill |
+| P4 | **Cleverer methods tie the simple version, or lose** | **The strongest pattern in the record.** H85 (diffusion, worse on all 11 outcomes), H89 (success), H90 (predictable plays), H91 (replacement level), H92 (a net and interactions), I95. The CEO's methods since retro 2: 0 of 6; over both retros: 2 of 12 | None. The one exception is a method that brings new information (H86: conditioning on the real pressure), which is really a claim about data |
+| P5 | The gains are where history is stale or blind | H78's who-is-left (+6.8%); the blame split | **Limit: the market already sees the obvious changes** (I83, I87: the line prices a QB change on spread and total). Our edge from P5 is for players and props, not for the game line |
+| P7 | Real is not the same as useful | H79, H80, H81, H83 are all real, and none was tested as a forecast; H86 is real but not a forecast; F43 (season over-expected priors don't pay) | I80 paid more than expected (+4%) |
+| P9 | Volume carries player forecasts | I80: expected yards, which is volume weighted by where the chances happen, add 4% beside participation | |
+| P10 | On-field value is the team's, except at QB | VOE's fourth and fifth looks: no outcome, reference, weighting or model makes a non-QB's plus-minus his own | |
+| **P11 (new)** | **Role first: much of what repeats and travels is the player's role, not his skill** | I91 (a rusher's 15.1% was knowing who rushes), H80 (the outside linebacker's 97% was role), H79 (plain catch rate repeats more than catches over expected because it holds his role), H84 (measuring over the situation adds nothing: the situation he's put in is his role), H78 (who is in the backfield, not how good) | Not every trait: after-pressure handling is the QB's skill (F33, F40). Role is volume's cousin (P9): both say "what he's asked to do" carries more than "how well" |
+| **P12 (new)** | **Before the snap, context explains little whatever the method; facts from after the snap explain a lot** | H84 and context-v2 (the situation explains 1 to 9% of an outcome), H85 (a bigger model doesn't raise it), H86 (given the real pressure, sack loss falls 31%), F41 | It's for retrospective experts (blame, credit) and never for forecasts before kickoff. It fits Claude's I99 and I111: credit each player on what happened at his job |
+
+**What the patterns say to do:** read every player measure within his role before calling it skill (P11), and give player credit from after-snap facts (P12). Expect methods alone to tie (P4), so a method is worth a look only when it brings new information. The game line already knows about changes (P5's limit), so the betting edge has to come from props and player rates, where P9 and P11 live.
+
+### 5. New ideas and predictions
+
+**Two new ideas, as Claude's** (in IDEAS.md with their odds; Claude's size bets now start nearer 40%, as step 2 says):
+
+| # | Idea | The bet | Claude's odds |
+|---|---|---|---|
+| I113 | **A role table:** for every player-season, his role in a few numbers (a rusher's rush share; a receiver's slot, wide or inline share and his depth; a back's share of his backfield), as the standard input every skill measure is read within (P11) | At least half of skill-over-expected's 14 measures repeat less once role is held | **65%** for half or more; size: the median repeat falls 0.05 or more, 40% |
+| I114 | **The betting lines as yardstick inputs:** the spread and total known before kickoff, in the crude forecaster's team yards and the players' yards (P5's limit turned around: if the line knows, use it) | Team yards gained and allowed: the total and the spread add 2%+ of the remaining error | **75%** for team yards; 40% for players' yards (participation and expected yards already carry the volume) |
+
+**Predictions moved by this retro:**
+
+| Bet | Was | Now | Why |
+|---|---|---|---|
+| H71, the latent space of 22 (Claude's number) | 25% | **20%** | P4: methods 0 of 6 since retro 2. The CEO's is 30% |
+| H74, other experts as confounders | 35% | **30%** | P12: the context explains little before the snap, so matching on it adds little. The CEO's is 40% |
+| I84, running backs: the new backfield's split wins or ties | 65% | **75%** | H78: who is left in the backfield beats the old habit (+6.8%) |
+| I86, the backfield split is the coach's | 55% | **35%** | H78 again: the coach's past split lost to who is in the room |
+| I59, a pass-heavy team's receivers score more | 35% | **30%** | P9 and P11: volume and role carry it |
+| I76 to I78, the causal player-value methods | open, as forecasts | **20% each to beat the plain version as forecasts** | P4, P10. They're still worth running for the question they answer: how much is the player's |
+
+Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and H18, stand.
+
+### 6. The findings table
+
+- **F49 (I91):** an outside linebacker's pressures forecast next season's sacks only because they say who rushes.
+- **F50 (I87):** the closing total prices an in-season QB change, as the spread does.
+- **"Use and ignore" now has a VOE row** (use the lasso for team values and a QB's plus-minus; ignore any non-QB's plus-minus as his own, and F46 to F48's methods). The pass rushers' and teams' rows now cite F49 and F50.
+- **Still to do:** the first full fill, every project finished before retro 2. FINDINGS.md has said so since 2026-11-20.
+
+### 7. Workflow changes, proposed (the CEO accepts, edits or rejects)
+
+**How retro 2's accepted changes worked:**
+
+| Change | How it went |
+|---|---|
+| W1, the obvious-input check | Worked. It's what made I91 visible: the obvious input for a rusher's pressures is whether he rushes |
+| W3, odds with the hunch | Kept: all 15 hunches since retro 2 had the CEO's odds before the test. H71 and H74 got theirs today |
+| W4, a backlog read at each exploration | Partly: I90, I94 and I95 were checked in context-v2, but group D sat untouched |
+| W5, the findings table | Built and used (F1 to F50). The first full fill is still owed |
+| W6, Claude's number on the exact claim first | Used on all 15. It shows the gap is in methods: on claims Claude's odds and the CEO's were about level |
+| The sorted backlog | It shrinks when builds happen: 36 of 66 ideas wait for a build |
+
+**Proposed now:**
+
+| # | Change | Why |
+|---|---|---|
+| W7 | **Quick work that needs new features or harness runs goes to the build chat as a named batch,** with a short brief in RETRO.md, and is not left in the retro | Group D sat for a retro cycle. It's build work, and the CEO's split is strategy here, builds there (the CEO, 2026-11-23: "I let you build on your own and give me updates in the build and work chat") |
+| W8 | **A stop rule for method looks:** when two looks in a row fail on one expert's data with methods alone, the next look must change the data or the outcome | VOE had five looks. The last two were methods on the same plays and failed as P4 predicted; the ideas that change the data (I97, I99) waited behind them. The CEO can still overrule it for any one look |
+| W9 | **An idea with a result leaves "Open" in the same commit as its result** | 19 closed rows had piled up under Open, so the backlog looked like 94 when it was 75 |
+
+**The CEO's decisions (2026-11-23):** "w7; approved. w8; declined. w9; approved."
+
+| # | Decision | Where |
+|---|---|---|
+| W7 | **Accepted** | `CLAUDE.md`, the retro's step 3 |
+| W8 | **Declined.** No stop rule: a method look can follow two failed method looks on the same data. Claude still states its odds first, and P4 stays in its numbers | |
+| W9 | **Accepted** | `CLAUDE.md`, "The hunch scoreboard" (ideas) |
+
+### The buckets after step 3, and what blocks each (the CEO's question, 2026-11-23)
+
+> The CEO, 2026-11-23: "Can you tell me the buckets for backlog open ideas? What is stopping each bucket and which buckets are most appropriate for a retro analysis; which buckets need a build?"
+
+68 open ideas. Group A (quick, run in the retro) is now empty.
+
+| Bucket | Ideas | What's stopping it | Needs |
+|---|---|---|---|
+| **D. Yardstick inputs** | I48, I59, I60, I67, I70, I75, I84, I114 (8; I58 and I61 moved to td-expert's build) | Nothing but scheduling: each is a new feature run through `score_input` | **A build-chat batch: the CEO's pick, 2026-11-23** ([brief](crude-forecaster/YARDSTICK_BATCH.md)) |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111, I113 (10); hunches H71, H74 | skill-over-expected's build hasn't started (brief agreed 2026-11-20). I76 to I78 are heavy in compute; I97 needs a data check first (are there enough quasi-random absences?) | **A build** (skill-over-expected) |
+| **B. Misses after a change** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 (10) | They live in experts that are done (team-efficiency, participation, pace, crude-forecaster), and none has a next version scheduled | **Builds**, each inside its expert's next version |
+| **H. Coaches and schemes** | I21, I23, I25, I28, I71, I86, I88 (7) | schemes-v2 is done, and no next look is scheduled. I23 and I25 already have first looks | **Mixed:** I23, I25 and I28 are discovery checks on tables we have (retro-sized); the rest need schemes-v2's next look |
+| **J. Tooling** | I45, I62, I64, I66, I69, I72 (6) | Not bets: they're fixes to the harness or a model, done when a build next touches it | **A build** that needs them |
+| **L. Parked** | I31, I32, I43, I57, I96, I104 (6) | Their projects don't exist yet (futures, roles-archetypes, the game simulator), or the CEO said wait (I104) | **Their project's kickoff** |
+| **C. Ranges** | I1, I14, I42, I52, I85 (5) | No shared coverage tool in `pcf.validation` yet | **A build** (one tool, then each expert) |
+| **G. Playing time** | I15, I16, I49, I51 (4) | participation's next build isn't scheduled | **A build** (participation) |
+| **M. Context's next version** | I92, I93, I110, I112 (4) | The CEO, 2026-11-22: "No split idea for now" (I110, I112). I92 has no free data source, so it's a session; I93 needs a kickoff | **A build**, when the CEO lifts the hold |
+| **F. Fatigue** | I29, I30, I50 (3) | injury-fatigue is still an idea in the registry | **A project kickoff** (strategy chat), then a build |
+| **K. Wait for a live season** | I6, I8 (2) | The 2026 season has to finish (January 2027) | **A retro**, after the season: both are quick checks against ECR |
+| **N. Inside a built expert** | I103 (1) | Harness runs inside opportunity-quality | **A build** (opportunity-quality's next version) |
+
+**Retro-sized** (discovery on data we have, no package code): K after the season, I23, I25 and I28 in H, and I97's data check in E. That's 6 of 68.
+**Build-sized:** the other 62. **The backlog now shrinks only when builds are scheduled.** Three builds would clear about half of it: the yardstick batch (D, 10), skill-over-expected (E, 10) and participation's next version (G plus B's participation rows I9, I10, I11 and I55: 8).
+
+**The CEO's pick, 2026-11-23:** "Ok, the build chat should do the yardstick batch, d." The brief is [`crude-forecaster/YARDSTICK_BATCH.md`](crude-forecaster/YARDSTICK_BATCH.md). Writing it, Claude made three calls for the CEO's veto:
+- **I58 and I61 leave the batch for `td-expert`'s build.** They're about touchdowns, and the yardstick is yards only, so the batch runs 8 ideas.
+- **I48 is scored in yards**, not fantasy points.
+- **I114 needs its timing settled first.** The schedule's lines count as known at kickoff, after the yardstick's Saturday moment. The batch reports the kickoff line as a ceiling and the earlier lines (ESPN openers from 2022) as the honest number.
+
+### The case against this retro
+
+- **The claim-or-method sort is Claude's,** made after the results (W2 was rejected). H86 and H87 could be read as methods and H88 as a claim. Moving them changes the counts (claims 7 of 8 could become 5 of 6; methods 0 of 6 could become 2 of 8), but not the gap.
+- **The CEO's methods since retro 2 were all on exploratory or parked projects** (VOE, context-v2), where P4 was already expected to bite. That's part of why 0 of 6 looks so stark.
+- **I91 rests on 164 rusher seasons,** so "+0.8%, spanning zero" can't rule out a real gain of 3 to 5%.
+- **I98 was closed by argument, not by a run.** A run with a prior-season control could have been less ambiguous than the argument says.
+- **P11 and P12 are fitted after the fact** on a few projects (skill-over-expected and context-v2 supply most of both). They are hypotheses until I113 and the build batch predict something in advance.
+
 
 ---
 

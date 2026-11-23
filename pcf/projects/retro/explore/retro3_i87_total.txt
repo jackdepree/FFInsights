@@ -1,0 +1,26 @@
+games 2006-2024, regular season, with a closing total: 4927
+the total's average miss overall: +0.611 points; under rate 0.503
+
+== the total's miss (points minus the closing total), flagged games minus the same weeks' others; 90% from resampling weeks
+shape: (3, 6)
+┌─────────────────────────────────────────────────┬───────┬───────────┬────────┬───────┬───────────────────┐
+│ games flagged                                   ┆ games ┆ line_miss ┆ lo90   ┆ hi90  ┆ seasons_same_sign │
+│ ---                                             ┆ ---   ┆ ---       ┆ ---    ┆ ---   ┆ ---               │
+│ str                                             ┆ i64   ┆ f64       ┆ f64    ┆ f64   ┆ str               │
+╞═════════════════════════════════════════════════╪═══════╪═══════════╪════════╪═══════╪═══════════════════╡
+│ starting QB changed in season, games 1-4 after  ┆ 1942  ┆ -0.567    ┆ -1.391 ┆ 0.238 ┆ 11 of 19          │
+│ starting QB changed in season, games 5 on after ┆ 895   ┆ 0.691     ┆ -0.216 ┆ 1.642 ┆ 10 of 19          │
+│ both teams                                      ┆ 292   ┆ -0.585    ┆ -1.828 ┆ 0.673 ┆ 10 of 19          │
+└─────────────────────────────────────────────────┴───────┴───────────┴────────┴───────┴───────────────────┘
+
+== the pre-registered bet: the under in games 1-4 after (and, shown beside it, games 5 on)
+shape: (2, 8)
+┌─────────────────────────────────────────────────┬──────┬─────────┬───────┬───────────┬─────────────────┬─────────────────┬─────────────────┐
+│ games flagged                                   ┆ side ┆ decided ┆ cover ┆ beats_524 ┆ shuffles_beaten ┆ cover_2006_2015 ┆ cover_2016_2024 │
+│ ---                                             ┆ ---  ┆ ---     ┆ ---   ┆ ---       ┆ ---             ┆ ---             ┆ ---             │
+│ str                                             ┆ str  ┆ i64     ┆ f64   ┆ bool      ┆ str             ┆ f64             ┆ f64             │
+╞═════════════════════════════════════════════════╪══════╪═════════╪═══════╪═══════════╪═════════════════╪═════════════════╪═════════════════╡
+│ starting QB changed in season, games 1-4 after  ┆ on   ┆ 1905    ┆ 0.497 ┆ false     ┆ 45%             ┆ 0.485           ┆ 0.510           │
+│ starting QB changed in season, games 5 on after ┆ on   ┆ 873     ┆ 0.511 ┆ false     ┆ 56%             ┆ 0.494           ┆ 0.527           │
+└─────────────────────────────────────────────────┴──────┴─────────┴───────┴───────────┴─────────────────┴─────────────────┴─────────────────┘
+   (side 'on' here means the under)
