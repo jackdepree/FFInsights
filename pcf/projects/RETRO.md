@@ -99,6 +99,89 @@
 - **What the misses share:** most were bets on *how big* or *how precise* something would be once it was real: movers keeping 75%+ (14% kept), a weighting raising the fit (+0.02), the gap halving (44%), the 200-400 gap halving, time to throw being the QB's (it is partly the offense's). Claude got the direction right and the size too generous.
 - **Lesson for Claude:** a side bet about size should start nearer 40% than 60%. Retro 3's new predictions (step 5) apply it.
 
+### 3. The quick groups, run (2026-11-23, discovery only; scripts in `retro/explore/retro3_*.py`)
+
+**Group A:**
+
+| Idea | Result | Claude's odds, scored |
+|---|---|---|
+| I87, the total after an in-season QB change | **No edge.** The total is 0.57 points too high in games 1-4 after (-1.39 to +0.24), and the under wins 49.7%. With I83, the line prices a QB change on both the spread and the total | 45% that it's 1+ point too high: failed. 20% for an edge: right to be low |
+| I91, the pass rushers' forecast | **It was the role.** Across outside linebackers, pressures add +15.1% to next season's sacks. Within rushers they add +0.8% (-4.4 to +5.5), and past sacks forecast nothing there either | 65% that the gain falls under half: held. 75% that it stays above zero: failed (the interval spans zero) |
+| I98, the sorting test for VOE | **Closed without a run.** The movers' repeat already answers it (0.08 against stayers' 0.27), and here the test is confounded, because good teams sign genuinely good players | Not scored |
+| I103, trees for opportunity-quality's longer horizons | **Moved to the build chat.** It needs harness runs inside a built expert | |
+
+**Group D (nine yardstick inputs) goes to the build chat as one batch.** Each input is a new feature put through `score_input`, which is a build session's work, not a retro's. Retro 2 sorted it as "one session" and no session picked it up. W7 below is the fix. The batch's brief:
+- **Run:** I48, I58, I59, I60, I61, I67, I70, I75, I84, and the new I114.
+- **The rule for each:** it beats its shuffled copies and its interval clears zero, beside participation, as I69's rule says. The 2025 vault stays out.
+- **Odds:** each idea's own row in IDEAS.md, written before this retro. Step 5 updates I84 and I59.
+
+**The backlog after this:** 69 open, less I87, I91 and I98 (closed), plus I113 and I114 (step 5). **68 open.**
+
+### 4. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P1 | "This habit is real, and it belongs to X" | H82 (sacks are the QB's, as pressure to sack), H83 (broken tackles are the runner's), H81 (coverage traits are weak but travel), I89 (throw depth is the QB's and the receivers'; time to throw is partly the QB's) | Narrowed again by P11: much of what travels is the role, not the skill |
+| P4 | **Cleverer methods tie the simple version, or lose** | **The strongest pattern in the record.** H85 (diffusion, worse on all 11 outcomes), H89 (success), H90 (predictable plays), H91 (replacement level), H92 (a net and interactions), I95. The CEO's methods since retro 2: 0 of 6; over both retros: 2 of 12 | None. The one exception is a method that brings new information (H86: conditioning on the real pressure), which is really a claim about data |
+| P5 | The gains are where history is stale or blind | H78's who-is-left (+6.8%); the blame split | **Limit: the market already sees the obvious changes** (I83, I87: the line prices a QB change on spread and total). Our edge from P5 is for players and props, not for the game line |
+| P7 | Real is not the same as useful | H79, H80, H81, H83 are all real, and none was tested as a forecast; H86 is real but not a forecast; F43 (season over-expected priors don't pay) | I80 paid more than expected (+4%) |
+| P9 | Volume carries player forecasts | I80: expected yards, which is volume weighted by where the chances happen, add 4% beside participation | |
+| P10 | On-field value is the team's, except at QB | VOE's fourth and fifth looks: no outcome, reference, weighting or model makes a non-QB's plus-minus his own | |
+| **P11 (new)** | **Role first: much of what repeats and travels is the player's role, not his skill** | I91 (a rusher's 15.1% was knowing who rushes), H80 (the outside linebacker's 97% was role), H79 (plain catch rate repeats more than catches over expected because it holds his role), H84 (measuring over the situation adds nothing: the situation he's put in is his role), H78 (who is in the backfield, not how good) | Not every trait: after-pressure handling is the QB's skill (F33, F40). Role is volume's cousin (P9): both say "what he's asked to do" carries more than "how well" |
+| **P12 (new)** | **Before the snap, context explains little whatever the method; facts from after the snap explain a lot** | H84 and context-v2 (the situation explains 1 to 9% of an outcome), H85 (a bigger model doesn't raise it), H86 (given the real pressure, sack loss falls 31%), F41 | It's for retrospective experts (blame, credit) and never for forecasts before kickoff. It fits Claude's I99 and I111: credit each player on what happened at his job |
+
+**What the patterns say to do:** read every player measure within his role before calling it skill (P11), and give player credit from after-snap facts (P12). Expect methods alone to tie (P4), so a method is worth a look only when it brings new information. The game line already knows about changes (P5's limit), so the betting edge has to come from props and player rates, where P9 and P11 live.
+
+### 5. New ideas and predictions
+
+**Two new ideas, as Claude's** (in IDEAS.md with their odds; Claude's size bets now start nearer 40%, as step 2 says):
+
+| # | Idea | The bet | Claude's odds |
+|---|---|---|---|
+| I113 | **A role table:** for every player-season, his role in a few numbers (a rusher's rush share; a receiver's slot, wide or inline share and his depth; a back's share of his backfield), as the standard input every skill measure is read within (P11) | At least half of skill-over-expected's 14 measures repeat less once role is held | **65%** for half or more; size: the median repeat falls 0.05 or more, 40% |
+| I114 | **The betting lines as yardstick inputs:** the spread and total known before kickoff, in the crude forecaster's team yards and the players' yards (P5's limit turned around: if the line knows, use it) | Team yards gained and allowed: the total and the spread add 2%+ of the remaining error | **75%** for team yards; 40% for players' yards (participation and expected yards already carry the volume) |
+
+**Predictions moved by this retro:**
+
+| Bet | Was | Now | Why |
+|---|---|---|---|
+| H71, the latent space of 22 (Claude's number) | 25% | **20%** | P4: methods 0 of 6 since retro 2. The CEO's is 30% |
+| H74, other experts as confounders | 35% | **30%** | P12: the context explains little before the snap, so matching on it adds little. The CEO's is 40% |
+| I84, running backs: the new backfield's split wins or ties | 65% | **75%** | H78: who is left in the backfield beats the old habit (+6.8%) |
+| I86, the backfield split is the coach's | 55% | **35%** | H78 again: the coach's past split lost to who is in the room |
+| I59, a pass-heavy team's receivers score more | 35% | **30%** | P9 and P11: volume and role carry it |
+| I76 to I78, the causal player-value methods | open, as forecasts | **20% each to beat the plain version as forecasts** | P4, P10. They're still worth running for the question they answer: how much is the player's |
+
+Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and H18, stand.
+
+### 6. The findings table
+
+- **F49 (I91):** an outside linebacker's pressures forecast next season's sacks only because they say who rushes.
+- **F50 (I87):** the closing total prices an in-season QB change, as the spread does.
+- **"Use and ignore" now has a VOE row** (use the lasso for team values and a QB's plus-minus; ignore any non-QB's plus-minus as his own, and F46 to F48's methods). The pass rushers' and teams' rows now cite F49 and F50.
+- **Still to do:** the first full fill, every project finished before retro 2. FINDINGS.md has said so since 2026-11-20.
+
+### 7. Workflow changes, proposed (the CEO accepts, edits or rejects)
+
+**How retro 2's accepted changes worked:**
+
+| Change | How it went |
+|---|---|
+| W1, the obvious-input check | Worked. It's what made I91 visible: the obvious input for a rusher's pressures is whether he rushes |
+| W3, odds with the hunch | Kept: all 15 hunches since retro 2 had the CEO's odds before the test. H71 and H74 got theirs today |
+| W4, a backlog read at each exploration | Partly: I90, I94 and I95 were checked in context-v2, but group D sat untouched |
+| W5, the findings table | Built and used (F1 to F50). The first full fill is still owed |
+| W6, Claude's number on the exact claim first | Used on all 15. It shows the gap is in methods: on claims Claude's odds and the CEO's were about level |
+| The sorted backlog | It shrinks when builds happen: 36 of 66 ideas wait for a build |
+
+**Proposed now:**
+
+| # | Change | Why |
+|---|---|---|
+| W7 | **Quick work that needs new features or harness runs goes to the build chat as a named batch,** with a short brief in RETRO.md, and is not left in the retro | Group D sat for a retro cycle. It's build work, and the CEO's split is strategy here, builds there (the CEO, 2026-11-23: "I let you build on your own and give me updates in the build and work chat") |
+| W8 | **A stop rule for method looks:** when two looks in a row fail on one expert's data with methods alone, the next look must change the data or the outcome | VOE had five looks. The last two were methods on the same plays and failed as P4 predicted; the ideas that change the data (I97, I99) waited behind them. The CEO can still overrule it for any one look |
+| W9 | **An idea with a result leaves "Open" in the same commit as its result** | 19 closed rows had piled up under Open, so the backlog looked like 94 when it was 75 |
+
 
 ---
 
