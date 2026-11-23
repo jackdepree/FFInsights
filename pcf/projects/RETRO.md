@@ -182,6 +182,30 @@ Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and
 | W8 | **A stop rule for method looks:** when two looks in a row fail on one expert's data with methods alone, the next look must change the data or the outcome | VOE had five looks. The last two were methods on the same plays and failed as P4 predicted; the ideas that change the data (I97, I99) waited behind them. The CEO can still overrule it for any one look |
 | W9 | **An idea with a result leaves "Open" in the same commit as its result** | 19 closed rows had piled up under Open, so the backlog looked like 94 when it was 75 |
 
+### The buckets after step 3, and what blocks each (the CEO's question, 2026-11-23)
+
+> The CEO, 2026-11-23: "Can you tell me the buckets for backlog open ideas? What is stopping each bucket and which buckets are most appropriate for a retro analysis; which buckets need a build?"
+
+68 open ideas. Group A (quick, run in the retro) is now empty.
+
+| Bucket | Ideas | What's stopping it | Needs |
+|---|---|---|---|
+| **D. Yardstick inputs** | I48, I58, I59, I60, I61, I67, I70, I75, I84, I114 (10) | Nothing but scheduling: each is a new feature run through `score_input` | **A build-chat batch. Ready now** |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111, I113 (10); hunches H71, H74 | skill-over-expected's build hasn't started (brief agreed 2026-11-20). I76 to I78 are heavy in compute; I97 needs a data check first (are there enough quasi-random absences?) | **A build** (skill-over-expected) |
+| **B. Misses after a change** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 (10) | They live in experts that are done (team-efficiency, participation, pace, crude-forecaster), and none has a next version scheduled | **Builds**, each inside its expert's next version |
+| **H. Coaches and schemes** | I21, I23, I25, I28, I71, I86, I88 (7) | schemes-v2 is done, and no next look is scheduled. I23 and I25 already have first looks | **Mixed:** I23, I25 and I28 are discovery checks on tables we have (retro-sized); the rest need schemes-v2's next look |
+| **J. Tooling** | I45, I62, I64, I66, I69, I72 (6) | Not bets: they're fixes to the harness or a model, done when a build next touches it | **A build** that needs them |
+| **L. Parked** | I31, I32, I43, I57, I96, I104 (6) | Their projects don't exist yet (futures, roles-archetypes, the game simulator), or the CEO said wait (I104) | **Their project's kickoff** |
+| **C. Ranges** | I1, I14, I42, I52, I85 (5) | No shared coverage tool in `pcf.validation` yet | **A build** (one tool, then each expert) |
+| **G. Playing time** | I15, I16, I49, I51 (4) | participation's next build isn't scheduled | **A build** (participation) |
+| **M. Context's next version** | I92, I93, I110, I112 (4) | The CEO, 2026-11-22: "No split idea for now" (I110, I112). I92 has no free data source, so it's a session; I93 needs a kickoff | **A build**, when the CEO lifts the hold |
+| **F. Fatigue** | I29, I30, I50 (3) | injury-fatigue is still an idea in the registry | **A project kickoff** (strategy chat), then a build |
+| **K. Wait for a live season** | I6, I8 (2) | The 2026 season has to finish (January 2027) | **A retro**, after the season: both are quick checks against ECR |
+| **N. Inside a built expert** | I103 (1) | Harness runs inside opportunity-quality | **A build** (opportunity-quality's next version) |
+
+**Retro-sized** (discovery on data we have, no package code): K after the season, I23, I25 and I28 in H, and I97's data check in E. That's 6 of 68.
+**Build-sized:** the other 62. **The backlog now shrinks only when builds are scheduled.** Three builds would clear about half of it: the yardstick batch (D, 10), skill-over-expected (E, 10) and participation's next version (G plus B's participation rows I9, I10, I11 and I55: 8).
+
 ### The case against this retro
 
 - **The claim-or-method sort is Claude's,** made after the results (W2 was rejected). H86 and H87 could be read as methods and H88 as a claim. Moving them changes the counts (claims 7 of 8 could become 5 of 6; methods 0 of 6 could become 2 of 8), but not the gap.
