@@ -1,0 +1,79 @@
+
+== THE CEO, FIRST NUMBER: 14 bets, 7 came true (50%), average stated 53%; Brier 0.177 (always saying 50%: 0.250)
+   stated 0%-35%: 3 bets, average stated 25%, came true 0%
+   stated 35%-55%: 5 bets, average stated 46%, came true 40%
+   stated 55%-75%: 2 bets, average stated 60%, came true 100%
+   stated 75%-100%: 4 bets, average stated 79%, came true 75%
+   claims: 7 of 8 came true, average stated 60%
+   methods: 0 of 6 came true, average stated 43%
+     30%  no   H78 a moving back's share from who is in his new backfield
+     40%  yes  H79 a receiver's plain catch rate repeats and travels
+     90%  yes  H80 two kinds of outside linebacker (the roles exist)
+     50%  yes  H81 coverage numbers repeat and travel
+     60%  yes  H82 sacks are the QB's
+     60%  yes  H83 how a runner is brought down follows the runner
+     25%  no   H85 a diffusion model uncovers more signal
+     75%  yes  H86 conditioning on a play's own pressure
+     75%  yes  H87 play action and quick passing are strategy
+     50%  no   H88 near-exponential gains downstream
+     75%  no   H89 success as VOE's outcome
+     40%  no   H90 VOE trained on predictable plays
+     20%  no   H91 a below-average counterexample
+     50%  no   H92 a simple net for interactions
+
+== CLAUDE, ON THE CEO'S CLAIM AS WORDED: 14 bets, 6 came true (43%), average stated 39%; Brier 0.114 (always saying 50%: 0.250)
+   stated 0%-35%: 7 bets, average stated 17%, came true 14%
+   stated 35%-55%: 2 bets, average stated 40%, came true 0%
+   stated 55%-75%: 3 bets, average stated 62%, came true 100%
+   stated 75%-100%: 2 bets, average stated 82%, came true 100%
+   claims: 6 of 8 came true, average stated 57%
+   methods: 0 of 6 came true, average stated 16%
+     45%  no   H78
+     60%  yes  H79
+     35%  no   H80 (as worded, incl. outside roles move with the coordinator)
+     25%  yes  H81
+     70%  yes  H82
+     55%  yes  H83
+     15%  no   H85
+     90%  yes  H86
+     75%  yes  H87
+     10%  no   H88
+     30%  no   H89 (as defined, both yardsticks)
+     20%  no   H90 (before the snap)
+     5%  no   H91
+     15%  no   H92
+
+== CLAUDE, SIDE BETS AND IDEAS: 29 bets, 10 came true (34%), average stated 52%; Brier 0.260 (always saying 50%: 0.250)
+   stated 0%-35%: 5 bets, average stated 22%, came true 40%
+   stated 35%-55%: 8 bets, average stated 42%, came true 25%
+   stated 55%-75%: 13 bets, average stated 62%, came true 23%
+   stated 75%-100%: 3 bets, average stated 83%, came true 100%
+     70%  yes  H78 the remaining backs' shares alone beat the past split
+     30%  no   H78 how well everyone ran adds beyond the shares
+     85%  yes  H80 the role split is clear
+     65%  no   H80 within rushers, movers keep 75%+ of pressure rate
+     60%  no   H80 an outside linebacker's role moves more than an inside one's
+     45%  yes  H81 throw depth against repeats 0.3+
+     45%  no   H81 passes defensed per target 0.2+
+     25%  yes  H81 catch rate allowed 0.2+
+     10%  yes  H81 interceptions 0.2+
+     60%  no   H83 broken tackles per carry repeat 0.3+
+     35%  yes  H83 tacklers needed after the line repeat 0.2+
+     25%  no   H84 the repeat goes up for most measures
+     60%  yes  H84 movers keep more for most measures
+     50%  no   H85 matches the trees within the fitting noise on most outcomes
+     80%  yes  H86 sack's share of error to 10%+ given pressure
+     60%  no   H88 downstream gains real but shrinking
+     50%  no   H89 the repeat rises 0.05+
+     60%  no   H90 weighting raises the held-out play fit
+     55%  no   H91 the gap to absence costs halves
+     20%  no   H92 named interactions beat the lasso
+     85%  yes  I80 receiving yards
+     70%  yes  I80 rushing yards
+     70%  no   I89 time to throw is the QB's
+     60%  no   I89 target depth the QB's more than the receivers'
+     35%  no   I89 the line owns either
+     45%  no   I95 quick-pass rate adds to next game's sacks
+     55%  no   I100 B's tight-end rows stop losing
+     60%  no   I101 the 200-400 gap halves
+     35%  no   I101 B then beats A on the vault

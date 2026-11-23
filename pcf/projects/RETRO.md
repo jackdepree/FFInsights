@@ -67,6 +67,39 @@
 - H5, H6 and H18 stay open.
 - I20 is graduated. **69 ideas are open.**
 
+### 2. How the predictions scored ([`retro/explore/retro3_calibration.py`](retro/explore/retro3_calibration.py), output [`.txt`](retro/explore/retro3_calibration.txt))
+
+**What's scored:** every bet written before its test since retro 2 that now has a result. H84 and I94 are left out (unclear), and so are bets the tests never answered. "Held in part" counts as held. The Brier score is the average squared gap between the odds and what happened: 0 is perfect, and always saying 50% scores 0.250.
+
+**The CEO's first number: 14 hunches (H78 to H92 without H84), 7 held.**
+
+| | Bets | Held | Average odds | Brier |
+|---|---|---|---|---|
+| **Retro 3: all** | 14 | 7 (50%) | 53% | **0.177** |
+| Football claims | 8 | **7 (88%)** | 60% | |
+| Methods | 6 | **0 (0%)** | 43% | |
+| Retro 2, for comparison | 16 | 10 (62%) | 62% | 0.249 |
+
+- **The CEO's calibration improved a lot:** 0.249 to 0.177. At retro 2 the CEO's odds did no better than a coin; now they clearly do.
+- **The whole error is in one place: claims are under-bet, methods over-bet.** Claims came true 88% of the time at average odds of 60%. Methods came true 0% of the time at 43%.
+- **The running total over both retros:** claims 15 of 18 held, methods 2 of 12.
+
+**Claude, on the CEO's claim as worded (W6, first used this round): 14 bets, 6 held, average odds 39%, Brier 0.114.** Claude's numbers sat lower on methods (16% against the CEO's 43%) and about level on claims (57% against 60%). Most of Claude's edge is the methods, where Claude bets second, after seeing the design.
+
+**Claude's side bets and ideas: 29 bets, 10 held (34%) at average odds of 52%. Brier 0.260, worse than a coin.**
+
+| Claude's stated odds | Bets | Came true |
+|---|---|---|
+| 0 to 35% | 5 | 40% |
+| 35 to 55% | 8 | 25% |
+| **55 to 75%** | **13** | **23%** |
+| 75% and up | 3 | 100% |
+
+- **Claude was badly overconfident on its narrower bets in the 55 to 75% band** (3 of 13 came true). At retro 2 that band was right (9 of 12).
+- **What the misses share:** most were bets on *how big* or *how precise* something would be once it was real: movers keeping 75%+ (14% kept), a weighting raising the fit (+0.02), the gap halving (44%), the 200-400 gap halving, time to throw being the QB's (it is partly the offense's). Claude got the direction right and the size too generous.
+- **Lesson for Claude:** a side bet about size should start nearer 40% than 60%. Retro 3's new predictions (step 5) apply it.
+
+
 ---
 
 ## Retro 2 (2026-11-20)
