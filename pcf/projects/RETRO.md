@@ -182,6 +182,14 @@ Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and
 | W8 | **A stop rule for method looks:** when two looks in a row fail on one expert's data with methods alone, the next look must change the data or the outcome | VOE had five looks. The last two were methods on the same plays and failed as P4 predicted; the ideas that change the data (I97, I99) waited behind them. The CEO can still overrule it for any one look |
 | W9 | **An idea with a result leaves "Open" in the same commit as its result** | 19 closed rows had piled up under Open, so the backlog looked like 94 when it was 75 |
 
+**The CEO's decisions (2026-11-23):** "w7; approved. w8; declined. w9; approved."
+
+| # | Decision | Where |
+|---|---|---|
+| W7 | **Accepted** | `CLAUDE.md`, the retro's step 3 |
+| W8 | **Declined.** No stop rule: a method look can follow two failed method looks on the same data. Claude still states its odds first, and P4 stays in its numbers | |
+| W9 | **Accepted** | `CLAUDE.md`, "The hunch scoreboard" (ideas) |
+
 ### The buckets after step 3, and what blocks each (the CEO's question, 2026-11-23)
 
 > The CEO, 2026-11-23: "Can you tell me the buckets for backlog open ideas? What is stopping each bucket and which buckets are most appropriate for a retro analysis; which buckets need a build?"

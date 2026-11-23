@@ -46,7 +46,7 @@
 
 ## When it's done
 
-- **IDEAS.md:** each idea's row moves to Graduated or Killed in the same commit as its result (retro 3's W9, if accepted). The row gives the numbers, which of Claude's odds came true, and the input's script.
+- **IDEAS.md:** each idea's row moves to Graduated or Killed in the same commit as its result (retro 3's W9, accepted 2026-11-23). The row gives the numbers, which of Claude's odds came true, and the input's script.
 - **FINDINGS.md:** a row for each settled finding. **CONSISTENCY.md:** a row for any new measure (I75, the garbage-time split).
 - **The crude forecaster's `RESULTS.md`:** a short "yardstick batch" section with one row per input.
 - **Code:** reusable feature code goes in the package with tests (rule j). One-off checks stay in `projects/crude-forecaster/explore/`.
