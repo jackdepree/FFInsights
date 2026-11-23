@@ -182,6 +182,14 @@ Retro 1's and retro 2's predictions for the other open ideas, and for H5, H6 and
 | W8 | **A stop rule for method looks:** when two looks in a row fail on one expert's data with methods alone, the next look must change the data or the outcome | VOE had five looks. The last two were methods on the same plays and failed as P4 predicted; the ideas that change the data (I97, I99) waited behind them. The CEO can still overrule it for any one look |
 | W9 | **An idea with a result leaves "Open" in the same commit as its result** | 19 closed rows had piled up under Open, so the backlog looked like 94 when it was 75 |
 
+### The case against this retro
+
+- **The claim-or-method sort is Claude's,** made after the results (W2 was rejected). H86 and H87 could be read as methods and H88 as a claim. Moving them changes the counts (claims 7 of 8 could become 5 of 6; methods 0 of 6 could become 2 of 8), but not the gap.
+- **The CEO's methods since retro 2 were all on exploratory or parked projects** (VOE, context-v2), where P4 was already expected to bite. That's part of why 0 of 6 looks so stark.
+- **I91 rests on 164 rusher seasons,** so "+0.8%, spanning zero" can't rule out a real gain of 3 to 5%.
+- **I98 was closed by argument, not by a run.** A run with a prior-season control could have been less ambiguous than the argument says.
+- **P11 and P12 are fitted after the fact** on a few projects (skill-over-expected and context-v2 supply most of both). They are hypotheses until I113 and the build batch predict something in advance.
+
 
 ---
 
