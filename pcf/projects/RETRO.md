@@ -5,7 +5,61 @@
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
-- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects.
+- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects. **Retro 3** came due on 2026-11-22 (`context-retro` and `opportunity-quality`) and the CEO started it on 2026-11-23.
+
+---
+
+## Retro 3 (started 2026-11-23)
+
+> The CEO, 2026-11-23: "Let's start the retro analysis for iteration number 3. What do you need from me?"
+
+**Why now:** two projects finished since retro 2: `context-retro` (built 2026-11-22) and `opportunity-quality` (built 2026-11-22). `context-v2` (explored, its build was context-retro) and voe's fourth and fifth looks came in between.
+
+**Read:** hunches H78 to H92 (15, all with the CEO's odds written before the test), ideas I84 to I112, and the projects since retro 2: `skill-over-expected` (third and fourth looks, brief agreed), `context-v2` (four looks), `context-retro` (built), `opportunity-quality` (built), `voe` (fourth and fifth looks).
+
+**The steps,** in the charter's order: 1. sort the backlog; 2. score the predictions; 3. run the quick groups; 4. update the patterns; 5. new ideas and a prediction for every open one; 6. the findings table's summary; 7. workflow changes for the CEO.
+
+### 1. The backlog, sorted (2026-11-23)
+
+**Housekeeping first.** 19 rows sat under "Open" in IDEAS.md although they had a result (I13, I19, I22, I24, I33-I38, I40, I47, I73, I74, I89, I90, I94, I95, I102). They now sit under Graduated (7) or Killed (12), with their source, test and odds kept in the row. The real open count was 75, not 94.
+
+**Closed by Claude (the CEO, 2026-11-20: "You have authority with the ideas, but I still want to learn about the ideas"):**
+
+| Idea | Closed as | Why, in one line |
+|---|---|---|
+| I80, where a player's chances come from, in the yardstick | **Held** | opportunity-quality's build ran it (R14): expected receiving yards +4.15%, rushing +4.55% beside participation, above Claude's 1 to 3% |
+| I46, incentive states beyond seed-locked | Killed | Its main bet failed in retro 2's batch; the rest needs standings math we don't have, and seed-locked already covers the big case |
+| I26, matchup types learned from results | Killed | Real but tiny (r +0.03 to +0.05) and matches no charted style; matchups have tied every time (P2) |
+| I27, outside runs against man-heavy defenses | Killed | One term of 308, at the edge of chance, and a matchup |
+| I39, the play weights without DML | Killed | A reweighting of the same plays (P4), only needed for futures, which has no brief |
+
+**The sort: 70 open ideas,** by what they need and what they cost (quick: under an hour; a session; expensive):
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Quick, data in hand: run in this retro** | I87 (the total after a QB change), I91 (the rushers' forecast), I98 (the sorting test for VOE), I103 (trees for opportunity-quality's longer horizons) | Under an hour each | Step 3 |
+| **D. Yardstick inputs: one batch** | I48, I58, I59, I60, I61, I67, I70, I75, I84 | Quick each through `score_input`; one batch | Step 3, after A (retro 2 sorted them and they never ran: the slip to fix) |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111; hunches H71, H74 | A session each; I76-I78 expensive in compute; I97 needs a data check first | skill-over-expected's build |
+| **M. Context's next build** | I92, I93, I110, I112 | A session each; the CEO, 2026-11-22: "No split idea for now" on I110 and I112 | context-retro's next version |
+| **B. Misses after a change, fixed inside an expert** | I4, I5, I9, I10, I11, I41, I54, I55, I56, I68 | A session each, inside that expert's next build | team-efficiency, participation, pace, crude-forecaster |
+| **C. Ranges** | I1, I14, I42, I52, I85 | One session together (one coverage tool) | `pcf.validation`, then each expert |
+| **G. Playing time** | I15, I16, I49, I51 | One session | participation's next build |
+| **H. Coaches and schemes** | I21, I23, I25, I28, I71, I86, I88 | One session | schemes-v2's next look |
+| **F. Fatigue** | I29, I30, I50 | A project | injury-fatigue |
+| **J. Tooling, not bets** | I45, I62, I64, I66, I69, I72 | Done when a build next touches the harness | the build that needs it |
+| **K. Wait for a live season** | I6, I8 | Nothing until 2026 ends | after the season |
+| **L. Parked** | I20 (the CEO's; see below), I31, I32, I43, I57, I96, I104 | | their projects |
+
+**What the sort says:** 13 of the 70 can run now (A and D). 36 wait for a build of an existing expert (B, E, G, H, M), so the backlog shrinks mostly when builds happen, not at retros. Group D is the one that should have shrunk since retro 2 and didn't: it was sorted as "one session" and no session picked it up.
+
+**Open hunches (the CEO's to close):** H5 (strength is conditional), H6 (consistent measures predict other outcomes), H18 (schemes predict who teams pursue), all open since retro 1; H71 (the latent space of 22) and H74 (other experts as confounders), open since VOE's kickoff with no odds asked.
+
+### Waiting on the CEO (asked 2026-11-23)
+
+1. H71 and H74: odds now (they're untested, so they count as before the test), or park them with VOE.
+2. H5, H6, H18: keep open, or close as not tested.
+3. I20 (the CEO's consistency discovery): graduate it, since `CONSISTENCY.md`, the findings table and skill-over-expected's "whose trait is it?" now do what it asked?
+4. For step 7: what in the last week's way of working helped, and what wasted time.
 
 ---
 
