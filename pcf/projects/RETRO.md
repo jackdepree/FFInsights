@@ -48,7 +48,7 @@
 | **F. Fatigue** | I29, I30, I50 | A project | injury-fatigue |
 | **J. Tooling, not bets** | I45, I62, I64, I66, I69, I72 | Done when a build next touches the harness | the build that needs it |
 | **K. Wait for a live season** | I6, I8 | Nothing until 2026 ends | after the season |
-| **L. Parked** | I20 (the CEO's; see below), I31, I32, I43, I57, I96, I104 | | their projects |
+| **L. Parked** | I20 (graduated, the CEO's answer below), I31, I32, I43, I57, I96, I104 | | their projects |
 
 **What the sort says:** 13 of the 70 can run now (A and D). 36 wait for a build of an existing expert (B, E, G, H, M), so the backlog shrinks mostly when builds happen, not at retros. Group D is the one that should have shrunk since retro 2 and didn't: it was sorted as "one session" and no session picked it up.
 
@@ -60,6 +60,12 @@
 2. H5, H6, H18: keep open, or close as not tested.
 3. I20 (the CEO's consistency discovery): graduate it, since `CONSISTENCY.md`, the findings table and skill-over-expected's "whose trait is it?" now do what it asked?
 4. For step 7: what in the last week's way of working helped, and what wasted time.
+
+**The CEO's answers (2026-11-23):** "H71; 30% h74; 40%. H5, h6, and h18 keep them open. I20 yes graduated." On the workflow: "I think our current workflow is good. I like splitting my work/input between strategy and vision where I think thoughtfully. Then I let you build on your own and give me updates in the build and work chat."
+
+- H71 30% and H74 40% are in HUNCHES.md, beside Claude's numbers from retro 2 (25% and 35%). They count as before the test: neither has been tested.
+- H5, H6 and H18 stay open.
+- I20 is graduated. **69 ideas are open.**
 
 ---
 
