@@ -256,7 +256,9 @@ def _window_mean(out: pl.DataFrame, keys: list[str]) -> pl.DataFrame:
 
 
 # ---------------------------------------------------------------- the variants
-TARGETS = {**F.PLAYER_TARGETS, "team": F.TEAM}
+# QBs' rushing yards joined the published targets after the yardstick batch (I67; the CEO,
+# 2026-11-23: "Yes qb rushing should be a yardstick table").
+TARGETS = {**F.PLAYER_TARGETS, "qb_rushing": F.QB_RUSHING, "team": F.TEAM}
 QUANTITIES = {
     "passing": "passing_yards",
     "rushing": "rushing_yards",
@@ -265,8 +267,8 @@ QUANTITIES = {
     "qb_rushing": "qb_rushing_yards",
 }
 # Targets and row rules the yardstick can score on but doesn't publish (no champion, no history):
-# QBs' rushing (I67); the depth chart's starters and first backups as rows (I70).
-EXTRA_TARGETS = {"qb_rushing": F.QB_RUSHING}
+# the depth chart's starters and first backups as rows (I70). No extra targets now.
+EXTRA_TARGETS: dict[str, F.Target] = {}
 ROW_RULES = ("participation", "depth")
 VARIANTS: dict[str, type[Crude]] = {}
 _EXTRA: dict[str, type[Crude]] = {}

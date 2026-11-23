@@ -1,6 +1,6 @@
 # The yardstick batch (retro 3's group D)
 
-**Status: run, 2026-11-23** (the CEO: "Yes, start it"). Results: [RESULTS.md, "The yardstick batch"](RESULTS.md#the-yardstick-batch-2026-11-23); calls: [decision 0042](../../docs/decisions/0042-yardstick-batch.md); scripts and outputs: [`explore/yardstick_batch/`](explore/yardstick_batch/).
+**Status: run, 2026-11-23** (the CEO: "Yes, start it"). Results: [RESULTS.md, "The yardstick batch"](RESULTS.md#the-yardstick-batch-2026-11-23); calls: [decision 0042](../../docs/decisions/0042-yardstick-batch.md); scripts and outputs: [`explore/yardstick_batch/`](explore/yardstick_batch/). **The CEO's answers, 2026-11-23:** spot-check (a) of I114 (held; RESULTS, "The spot-check: I114"), QB rushing published as a yardstick target, the yardstick market-free for now, no vetoes, I115 into Elo's next build.
 
 > **The CEO, 2026-11-23:** "Ok, the build chat should do the yardstick batch, d."
 >

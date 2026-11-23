@@ -50,7 +50,7 @@ RECEIVING = Target(
 # exploration); volume is its plays (attempts, carries, sacks).
 TEAM = Target("team", "yards", "plays", "first_downs", "tds")
 PLAYER_TARGETS = {t.name: t for t in (PASSING, RUSHING, RECEIVING)}
-# QBs' rushing yards (I67): scored by the yardstick, not one of its published targets.
+# QBs' rushing yards (I67): a published yardstick target since the CEO's call, 2026-11-23.
 QB_RUSHING = Target(
     "qb_rushing", "rushing_yards", "carries", "rushing_first_downs", "rushing_tds", ("QB",)
 )

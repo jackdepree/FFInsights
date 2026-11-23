@@ -144,7 +144,7 @@ def test_lasso_shap_values_add_up_to_the_forecast():
 # ---------------------------------------------------------------- the variants
 def test_every_variant_meets_the_contract_and_is_found():
     found = find_all("crude-forecaster")
-    assert len(found) == len(VARIANTS) == 4 * 3 * 4
+    assert len(found) == len(VARIANTS) == 5 * 3 * 4  # 5 targets (QB rushing since I67)
     for cls in found:
         check_expert(cls)
     assert Crude not in found
@@ -505,15 +505,19 @@ def test_a_shuffle_within_weeks_keeps_each_week_s_values_and_moves_columns_toget
 
 
 # ---------------------------------------------------------------- the extra target, the row rule
-def test_extra_variants_are_made_on_use_and_never_published():
+def test_qb_rushing_is_published_and_depth_rows_are_made_on_use_and_never_published():
     qb = variant("qb_rushing", "next", "lasso")
-    assert qb is variant("qb_rushing", "next", "lasso")  # made once
+    assert qb is VARIANTS["qb_rushing_next_lasso"] and not qb.baseline  # published (I67)
     assert qb.target_spec.positions == ("QB",) and qb.quantity == "qb_rushing_yards"
+    assert variant("qb_rushing", "rest", "lasso").quantity == "qb_rushing_yards_rest"
+    assert qb.players() and qb.row_rule == "participation"
     depth = variant("rushing", "next", "lasso", rows="depth")
     assert depth.row_rule == "depth" and depth.variant == "rushing_next_lasso_depthrows"
     assert "depth" in depth.inputs["player_game"]
     assert variant("rushing", "next", "lasso").row_rule == "participation"
-    assert len(VARIANTS) == 48 and len(find_all("crude-forecaster")) == 48
+    assert depth is variant("rushing", "next", "lasso", rows="depth")  # made once
+    assert len(VARIANTS) == 60 and len(find_all("crude-forecaster")) == 60
+    assert depth not in find_all("crude-forecaster")
     assert Y.board_path("rushing", "next", "depth").name == "rushing_next_depthrows"
     with pytest.raises(ValueError, match="row rule"):
         variant("rushing", rows="snaps")

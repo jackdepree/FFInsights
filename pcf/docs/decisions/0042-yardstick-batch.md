@@ -11,7 +11,7 @@
 
 ## New boards
 
-5. **QB rushing (I67) is a target the yardstick can score but doesn't publish** (`qb_rushing`, QBs expected to play): made on first use by `variant("qb_rushing", ...)`, kept out of the 48 published variants and out of `find`. Adding it to the published yardstick would change what the yardstick predicts, which is the CEO's call (CLAUDE.md, sign-off list).
+5. **QB rushing (I67) is a published yardstick target** (`qb_rushing`, QBs expected to play). It was first made as a board the yardstick could score but didn't publish, because adding it changes what the yardstick predicts (the CEO's call, CLAUDE.md sign-off list). **The CEO, 2026-11-23: "Yes qb rushing should be a yardstick table."** So it is now one of `TARGETS` (60 variants: 5 targets, 3 horizons, 4 rungs), found by `find`, with the lasso champion's three backtests and a yardstick table (call 20).
 6. **The depth-chart row rule (I70)** is a second row rule (`ROW_RULES`: `participation`, `depth`): a row is a starter or the first backup (depth 1 or 2) at his listed position on the depth chart going into the game (known at the week's start), whatever participation expects. It still needs participation's forecast for the row (its columns are the thing scored), so a player participation didn't forecast isn't a row.
 7. **Boards under another rule have their own folders** (`boards/<target>_<horizon>_depthrows`); the published boards are untouched.
 
@@ -28,6 +28,15 @@
     - **How the honest number is fit:** the lasso trains on earlier seasons' kickoff lines (all known long before any later season's fit, so nothing leaks into a forecast) and forecasts 2023-2024 with the openers; only rows with an opener are scored, against the crude forecast on the same rows. The ceiling is also scored on those rows, so the two can be set side by side.
     - The inputs: the team's expected margin, the game total and the team's implied points (total / 2 + margin / 2).
 
+## The CEO's answers (2026-11-23)
+
+"Spot check a, please. Yes qb rushing should be a yardstick table. The yardstick should be market-free for now. No vetoes. Yes, i115 can go into Eli's next build, thank you!" (Elo's.)
+
+- **No vetoes** on calls 1-19.
+- **Market-free for now** (the CEO, 2026-11-23): the line (I114) isn't added to the yardstick's standard inputs; I114 stays graduated as a finding (F58).
+- **The spot-check (a)** is in crude-forecaster RESULTS, "The spot-check: I114"; it didn't change the verdict.
+- **I115 goes into Elo's next build** (registry, Elo's entry).
+
 ## Reading the results
 
 14. **I67's "the crude forecast removes 20-35% of the error"** is read as `removed()`, the share of squared error around the scored rows' average (the exploration's unit), next game.
@@ -39,3 +48,8 @@
 17. **"Beside Elo" gains on team rest of season are checked against the plain crude forecast** (`check_beside_elo.py`), because Elo alone doesn't help that board (−0.86%): a gain beside it may only repair Elo. Both I60's and I75's team gains survive the check and are read as a lead (I115), not as the ideas' verdicts, which stay on the added-alone numbers set before the run.
 18. **Ideas closed** (W9, in the same commit as the results): graduated I60, I67, I84, I114; killed I48, I59, I70, I75. New idea I115. Findings F51-F58. No odds were added or changed after a result.
 19. **`I114`'s first run failed** (the lines builder dropped a team board's `team` key); fixed and rerun before any I114 number was read. The I75 run was repeated once to add the hindsight versions beside Elo (a check, not a change of reading).
+
+## After the CEO's answers (2026-11-23)
+
+20. **QB rushing is published like the other four targets**: all three horizons (next game, next 3, rest of season), all four rungs, the lasso champion (the CEO's "lasso everywhere", 2026-11-19, applied without a new ladder decision; the ladder is still printed in `build/yardstick_qb_rushing.txt`). Its champion backtests were run as the 12 others were (`--seasons 2019-2024 --shuffles 20 --refit season`), and its yardstick table by `build/yardstick_run.py qb_rushing`. `EXTRA_TARGETS` stays as the mechanism, now empty; the depth-chart row rule (call 6) stays unpublished.
+21. **The spot-check's rules were written before its numbers** (`explore/yardstick_batch/spotcheck_i114.py`, its own commit): failed if the opener equals ESPN's close in over half the games; unclear if either season's gain is at or below zero, or if the gain without its best week falls under +2% or reaches zero. None fired.
