@@ -1,0 +1,90 @@
+== EXPECTED VARIANCE (judged before the snap; each season fit on the seasons before it, 2017 on) ==
+  2019: the predictable half's real squared leftover 0.977 against the rest's 2.945; r(expected, real) = 0.263
+  2024: the predictable half's real squared leftover 0.891 against the rest's 2.907; r(expected, real) = 0.301
+  expected variance: pass plays 2.585, run plays 1.071
+
+== THE LASSOS' CHOICES (2019 and 2024: inputs kept / inputs; interaction terms kept; training plays) ==
+  2019 pass ref   : 43/211 kept; interactions kept 0; 18875 plays
+  2019 pass strat : 12/211 kept; interactions kept 0; 9437 plays
+  2019 pass wvar  : 14/211 kept; interactions kept 0; 18875 plays
+  2019 pass leak  : 36/211 kept; interactions kept 0; 9437 plays
+  2019 pass named : 42/232 kept; interactions kept 2; 18875 plays
+  2019 pass pairs : 24/464 kept; interactions kept 10; 18875 plays
+  2019 run  ref   : 14/211 kept; interactions kept 0; 12874 plays
+  2019 run  strat : 9/211 kept; interactions kept 0; 6349 plays
+  2019 run  wvar  : 36/211 kept; interactions kept 0; 12874 plays
+  2019 run  leak  : 9/211 kept; interactions kept 0; 6437 plays
+  2019 run  named : 15/232 kept; interactions kept 1; 12874 plays
+  2019 run  pairs : 21/464 kept; interactions kept 9; 12874 plays
+  2024 pass ref   : 27/211 kept; interactions kept 0; 115851 plays
+  2024 pass strat : 34/211 kept; interactions kept 0; 57925 plays
+  2024 pass wvar  : 50/211 kept; interactions kept 0; 115851 plays
+  2024 pass leak  : 30/211 kept; interactions kept 0; 57925 plays
+  2024 pass named : 31/232 kept; interactions kept 5; 115851 plays
+  2024 pass pairs : 126/464 kept; interactions kept 48; 115851 plays
+  2024 run  ref   : 20/211 kept; interactions kept 0; 81862 plays
+  2024 run  strat : 29/211 kept; interactions kept 0; 40931 plays
+  2024 run  wvar  : 25/211 kept; interactions kept 0; 81862 plays
+  2024 run  leak  : 10/211 kept; interactions kept 0; 40931 plays
+  2024 run  named : 22/232 kept; interactions kept 2; 81862 plays
+  2024 run  pairs : 17/464 kept; interactions kept 7; 81862 plays
+
+== HELD-OUT PLAY FIT (% of EPA's squared error removed against the training mean; the arm less the reference; 90% by resampling games) ==
+  all held-out plays:
+    the reference lasso (the fourth look's EPA arm)                          +7.671%  less the reference +0.000 (90% +0.000 to +0.000)
+    H90: trained on the predictable half (before the snap)                   +3.435%  less the reference -4.236 (90% -4.435 to -4.047)
+    H90 textbook: weighted by 1 / expected variance                          +7.690%  less the reference +0.019 (90% -0.085 to +0.149)
+    H90 leak: trained on the half closest to expectation (after the fact)    +2.384%  less the reference -5.287 (90% -5.514 to -5.054)
+    H92 rung 2: named interactions                                           +7.654%  less the reference -0.017 (90% -0.049 to +0.013)
+    H92 rung 3: all pairs of group totals and context                        +7.667%  less the reference -0.003 (90% -0.109 to +0.114)
+    H92: the CEO's net (32 units, 3 seeds)                                   -25.357%  less the reference -33.028 (90% -53.246 to -17.714)
+    H92 + H90: the net, weighted by 1 / expected variance                    -21.947%  less the reference -29.618 (90% -48.135 to -14.748)
+  the predictable half (before the snap):
+    the reference lasso (the fourth look's EPA arm)                          +0.585%  less the reference +0.000 (90% +0.000 to +0.000)
+    H90: trained on the predictable half (before the snap)                   +1.226%  less the reference +0.640 (90% +0.464 to +0.865)
+    H90 textbook: weighted by 1 / expected variance                          +0.968%  less the reference +0.383 (90% +0.249 to +0.552)
+    H90 leak: trained on the half closest to expectation (after the fact)    -0.921%  less the reference -1.506 (90% -1.801 to -1.203)
+    H92 rung 2: named interactions                                           +0.543%  less the reference -0.042 (90% -0.088 to -0.000)
+    H92 rung 3: all pairs of group totals and context                        +0.687%  less the reference +0.102 (90% -0.052 to +0.267)
+    H92: the CEO's net (32 units, 3 seeds)                                   -49.673%  less the reference -50.259 (90% -76.069 to -28.831)
+    H92 + H90: the net, weighted by 1 / expected variance                    -43.933%  less the reference -44.518 (90% -68.115 to -24.876)
+  the half closest to expectation (after the fact):
+    the reference lasso (the fourth look's EPA arm)                          -20.796%  less the reference +0.000 (90% +0.000 to +0.000)
+    H90: trained on the predictable half (before the snap)                   -2.631%  less the reference +18.164 (90% +16.880 to +19.814)
+    H90 textbook: weighted by 1 / expected variance                          -13.436%  less the reference +7.359 (90% +6.150 to +8.917)
+    H90 leak: trained on the half closest to expectation (after the fact)    +17.135%  less the reference +37.930 (90% +36.415 to +39.763)
+    H92 rung 2: named interactions                                           -21.444%  less the reference -0.649 (90% -0.940 to -0.381)
+    H92 rung 3: all pairs of group totals and context                        -19.867%  less the reference +0.928 (90% -0.197 to +2.204)
+    H92: the CEO's net (32 units, 3 seeds)                                   -355.092%  less the reference -334.296 (90% -519.480 to -183.791)
+    H92 + H90: the net, weighted by 1 / expected variance                    -315.605%  less the reference -294.810 (90% -468.045 to -154.089)
+
+== YARDSTICK 1: THE ROSTER-CHANGE TEST (next-season EPA over expected a play, offense and defense pooled, 2020-2024; % of squared error removed beyond last season; 90% by resampling teams) ==
+  the reference lasso (the fourth look's EPA arm)                          +5.26% (90% +0.53 to +9.60); offense +5.12%, defense +5.48%; less the reference +0.00 points (90% -0.00 to +0.00)
+  H90: trained on the predictable half (before the snap)                   -36.68% (90% -62.80 to -14.67); offense +2.83%, defense -94.92%; less the reference -41.94 points (90% -68.82 to -19.80)
+  H90 textbook: weighted by 1 / expected variance                          +4.79% (90% +0.22 to +9.25); offense +7.17%, defense +1.30%; less the reference -0.47 points (90% -3.11 to +1.88)
+  H90 leak: trained on the half closest to expectation (after the fact)    +1.15% (90% -1.51 to +3.63); offense +3.70%, defense -2.60%; less the reference -4.11 points (90% -9.01 to +0.44)
+  H92 rung 2: named interactions                                           +3.14% (90% -1.56 to +7.62); offense +2.38%, defense +4.26%; less the reference -2.12 points (90% -3.33 to -0.87)
+  H92 rung 3: all pairs of group totals and context                        -0.45% (90% -5.45 to +3.82); offense +1.08%, defense -2.72%; less the reference -5.72 points (90% -8.69 to -2.68)
+  H92: the CEO's net (32 units, 3 seeds)                                   +2.33% (90% +0.85 to +4.01); offense +3.35%, defense +0.83%; less the reference -2.93 points (90% -7.27 to +2.12)
+  H92 + H90: the net, weighted by 1 / expected variance                    +1.21% (90% +0.35 to +2.12); offense +1.61%, defense +0.63%; less the reference -4.05 points (90% -8.42 to +0.58)
+  H91: the reference, against replacement level                            +2.89% (90% -1.22 to +7.12); offense -0.56%, defense +7.97%; less the reference -2.38 points (90% -4.08 to -0.68)
+
+== YARDSTICK 2: THE MOVERS' REPEAT (this season against next, 300+ plays in both, each season's mean out; the arm less the reference, 90% by resampling players) ==
+  H90: the plain plus-minus, fit the arm's way (2018-2024)
+    the reference lasso (the fourth look's EPA arm)                          all +0.238 (4005); stayed +0.272; moved +0.077 (882); movers less the reference +0.000 (90% +0.000 to +0.000); agree with the reference 1.000
+    H90: trained on the predictable half (before the snap)                   all +0.153 (4005); stayed +0.173; moved +0.053 (882); movers less the reference -0.024 (90% -0.080 to +0.037); agree with the reference 0.718
+    H90 textbook: weighted by 1 / expected variance                          all +0.223 (4005); stayed +0.254; moved +0.076 (882); movers less the reference -0.000 (90% -0.038 to +0.038); agree with the reference 0.898
+    H90 leak: trained on the half closest to expectation (after the fact)    all +0.139 (4005); stayed +0.177; moved -0.010 (882); movers less the reference -0.086 (90% -0.158 to -0.017); agree with the reference 0.424
+  H91 and H92: each player's value from the model (each slot knocked out on its own; 2019-2024)
+    the reference lasso (the fourth look's EPA arm)                          all +0.300 (3349); stayed +0.290; moved +0.348 (750); movers less the reference +0.000 (90% +0.000 to +0.000); agree with the reference 1.000
+    H92 rung 2: named interactions                                           all +0.317 (3349); stayed +0.309; moved +0.356 (750); movers less the reference +0.008 (90% -0.014 to +0.029); agree with the reference 0.971
+    H92 rung 3: all pairs of group totals and context                        all +0.222 (3349); stayed +0.225; moved +0.215 (750); movers less the reference -0.133 (90% -0.203 to -0.057); agree with the reference 0.732
+    H92: the CEO's net (32 units, 3 seeds)                                   all +0.007 (3349); stayed +0.010; moved -0.004 (750); movers less the reference -0.352 (90% -0.464 to -0.238); agree with the reference 0.269
+    H92 + H90: the net, weighted by 1 / expected variance                    all +0.018 (3349); stayed +0.023; moved -0.003 (750); movers less the reference -0.351 (90% -0.458 to -0.227); agree with the reference 0.264
+    H91: the reference, against replacement level                            all +0.448 (3349); stayed +0.442; moved +0.485 (750); movers less the reference +0.137 (90% +0.043 to +0.226); agree with the reference 0.862
+
+== H91'S SIZING: MAIN STARTERS' VALUE PER PLAY (300+ plays) AGAINST WHAT A MAIN STARTER'S ABSENCE COSTS (F20), EPA a play ==
+  the reference lasso (the fourth look's EPA arm)                          QB -0.0038 (F20 0.049); RB +0.0002 (F20 0.010); WR +0.0003 (F20 0.014); TE -0.0000 (F20 0.014); OL -0.0000 (F20 0.013); DL +0.0003 (F20 0.011); LB +0.0002 (F20 0.021); DB +0.0001 (F20 0.016); squared gap 0.004233
+  H91: the reference, against replacement level                            QB +0.0157 (F20 0.049); RB +0.0007 (F20 0.010); WR +0.0015 (F20 0.014); TE +0.0014 (F20 0.014); OL +0.0006 (F20 0.013); DL +0.0012 (F20 0.011); LB +0.0011 (F20 0.021); DB +0.0016 (F20 0.016); squared gap 0.002362
+  the squared gap with replacement level is 44.2% smaller than with the average
+  per-player values, average against replacement level: r = 0.7269

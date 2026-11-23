@@ -228,6 +228,7 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
 |---|---|---|---|---|---|---|---|
 | Plain plus-minus on success (EPA above 0) | voe (H89) | Ridge plus-minus of each play's success less its situation chance, one season at a time | | 0.28 (stayers 0.33, movers 0.05; EPA's: 0.25, 0.29, 0.08) | **mostly the team's** | No: worse than EPA's values on the roster-change test (-3.4 to -3.7 points) | 5,307 player-season pairs, 300+ plays in both |
+| Plain plus-minus, weighted or on predictable plays | voe (H90) | Ridge plus-minus with each play weighted by 1 / its expected variance (before the snap), or fit on the predictable half only, or on the half that landed nearest its expectation (after the fact, a leak) | | Weighted 0.22 (stayers 0.25, movers 0.08); predictable half 0.15 (0.17, 0.05); nearest half 0.14 (0.18, -0.01); every play the same 0.24 (0.27, 0.08) | **mostly the team's**, as plain plus-minus; the halves are noisier | No: the VOE lasso trained the same ways loses 0.5, 41.9 and 4.1 points on the roster-change test | 4,005 player-season pairs, 2018-2024, 300+ plays in both |
 
 **Opportunity measures** (opportunity-quality build, 2026-11-21, decision 0041): per **player-game** with a chance, RB, WR and TE, regular season 2012-2024 (5,488 player-seasons, 4,178 season pairs), from `player_game.opportunity` (the 2009-start expected models). Per chance means averaged over his chances.
 
