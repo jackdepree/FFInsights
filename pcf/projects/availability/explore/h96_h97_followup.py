@@ -71,6 +71,11 @@ pg = pg.with_columns(
 # no history yet: his position's average risk per play, with a flag
 pg = pg.with_columns(no_hist=c("crisk_raw").is_null().cast(pl.Int8),
                      crisk=c("crisk_raw").fill_null(c("crisk_raw").mean().over("position")))
+EPS = float(pr["risk"].mean())  # one average play's risk, so log(w + EPS) mirrors log(1 + snaps)
+pg = pg.with_columns(
+    **{f"l{k}": (c(k) + 1).log() for k in ["plays", "cnt_last", "cnt4", "cntS"]},
+    **{f"l{k}": (c(k) + EPS).log() for k in ["wsum", "w4", "wS"]},
+)
 d = pg.filter((c("played") == 1) & (c("season") >= 2017)).with_columns(
     gw=pl.concat_str([c("season").cast(pl.Utf8), c("week").cast(pl.Utf8), c("team")], separator="-"))
 print(f"rows (played, 2017-2024): {d.height:,}; injuries {int(d['hurt'].sum()):,}")
@@ -163,7 +168,7 @@ Lw = wf(WEIGHTED, y)
 gain(Lcnt, Lw, Lcnt, "   (H96 again, for scale) risk-weighted against counts")
 for g in ["RB", "WR", "TE", "LB", "DB", "QB"]:
     x = d.filter((c("position") == g) & (c("con4") > 0))
-    print(f"    {g}: contacts per snap over the last 4 games, mean {np.mean(x['con4'] / x['cnt4']):.3f}; corr with the count {np.corrcoef(x['cnt4'], x['con4'])[0, 1]:.2f}")
+    print(f"    {g}: contacts per snap over the last 4 games, mean {(x['con4'] / x['cnt4']).mean():.3f}; corr with the count {np.corrcoef(x['cnt4'].to_numpy(), x['con4'].to_numpy())[0, 1]:.2f}")
 
 print("\nE. Is H98's gain recency or the risk weights? (each beside the counts set, H98's half-lives)")
 Le_c = wf([*COUNTS, "ec{h}"], y)
@@ -177,3 +182,23 @@ print("\nF. A trait, not a load: his career-long average risk per play")
 Lf0 = wf([*COUNTS, "inj_car", "cpg", "no_hist"], y)
 Lf1 = wf([*COUNTS, "inj_car", "cpg", "no_hist", "crisk"], y)
 gain(Lf0, Lf1, Lf0, "F: career risk per play beside career injuries and snaps per game")
+
+print("\nG (addendum, after A-D's first run): the same tests with log exposure, log(1 + snaps) and log(weighted + one play's risk)")
+LCOUNTS = ["lcnt_last", "lcnt4", "lcntS"]
+LWEIGHTED = ["lcnt_last", "lw4", "lwS"]
+La, Lb_ = wf(["lplays"], y), wf(["lwsum"], y)
+gain(La, Lb_, La, "G-B: this game's log weighted sum against its log count (real injuries)")
+La, Lb_ = wf(LCOUNTS, y), wf(LWEIGHTED, y)
+gain(La, Lb_, La, "G-H96: last 4 and season, log weighted against log counts (real)")
+g1, g2, g2_cover = [], [], 0
+for _ in range(NSIM):
+    ys = (RNG.random(len(pgame)) < pgame).astype(float)
+    a, b = wf(["lplays"], ys), wf(["lwsum"], ys)
+    g1.append(gain(a, b, a, show=False)[0])
+    a, b = wf(LCOUNTS, ys), wf(LWEIGHTED, ys)
+    e, lo, hi = gain(a, b, a, show=False)
+    g2.append(e)
+    g2_cover += int(lo <= 0 <= hi)
+print(f"  G-C1, same game on drawn injuries: mean {100 * np.mean(g1):+.3f}% (range {100 * min(g1):+.3f} to {100 * max(g1):+.3f})")
+print(f"  G-C2, H96's forward test on drawn injuries: mean {100 * np.mean(g2):+.3f}% (range {100 * min(g2):+.3f} to {100 * max(g2):+.3f}); intervals covering 0: {g2_cover} of {NSIM}")
+
