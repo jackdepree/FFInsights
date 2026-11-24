@@ -394,15 +394,10 @@ def espn_openers(path=None) -> pl.DataFrame:
     our data): the median over books (live-odds feeds left out) of the home spread and the total.
     Columns game_id, open_home_spread (betting sign: negative when the home team is favored),
     open_total. 2022 has no opening values in ESPN's history; 2023 has them for most games."""
+    from pcf.data.tables.games import opener_lines
+
     path = path or get_config().zone("interim") / "espn_odds" / "game_lines.parquet"
-    g = pl.read_parquet(path).filter(
-        (c("seasontype") == 2) & ~c("provider_name").str.contains("(?i)live")
-    )
-    return (
-        g.group_by("game_id")
-        .agg(open_home_spread=c("open_home_spread").median(), open_total=c("open_total").median())
-        .filter(c("open_home_spread").is_not_null() & c("open_total").is_not_null())
-    )
+    return opener_lines(pl.read_parquet(path))
 
 
 def lines(rows: pl.DataFrame, kind: str = "kickoff", gateway: Gateway | None = None,

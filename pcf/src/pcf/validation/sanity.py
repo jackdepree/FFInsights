@@ -58,7 +58,14 @@ def shares_at_most_one(col: str, group: Sequence[str]) -> Rule:
 
 def shared(kind: str) -> list[Rule]:
     """The rules every model's output passes."""
+    if kind == "count":
+        return [quantiles_ordered(), mean_not_negative()]
     return [quantiles_ordered()] if kind == "amount" else [probabilities_valid()]
+
+
+def mean_not_negative() -> Rule:
+    """A count's forecast mean is 0 or more."""
+    return Rule("mean is not negative", lambda df: df.filter(c("mean") < 0).height)
 
 
 def run_rules(df: pl.DataFrame, rules: Sequence[Rule]) -> pl.DataFrame:

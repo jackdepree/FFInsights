@@ -323,6 +323,16 @@ def state(
     )
 
 
+def espn_openers(df: pl.DataFrame, cal: Calendar, **_: object) -> pl.DataFrame:
+    """ESPN's opening lines (the odds collection's history, `interim/espn_odds`): openers are
+    posted by the start of a game's week (most on the Sunday before, many earlier), so the start
+    of the week + 2 days, leaning late: before the Thursday and Saturday runs (td-expert, I118).
+    Needs `season` and `week`."""
+    out = df.with_columns(known_at=_week_edge(df, cal, "start", pl.duration(days=2)))
+    _require(out, "known_at", "a season-week not in the schedule")
+    return out
+
+
 Rule = Callable[..., pl.DataFrame]
 RULES: dict[str, Rule] = {
     **{
@@ -353,6 +363,7 @@ RULES: dict[str, Rule] = {
     "combine": combine,
     "draft_picks": draft_picks,
     "trades": trades,
+    "espn_openers": espn_openers,
     **{d: ecr for d in ["ecr_archive", "ecr_draft", "ecr_week"]},
     **{d: state for d in ["players", "rosters", "contracts", "player_ids", "teams"]},
 }

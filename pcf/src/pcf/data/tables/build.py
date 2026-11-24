@@ -22,11 +22,11 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import efficiency, leverage, opportunity, pace
+from pcf.data.tables import efficiency, leverage, opportunity, pace, touchdowns
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
-from pcf.data.tables.games import game_parts, team_game_parts
+from pcf.data.tables.games import game_parts, opener_lines, openers_rows, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
 from pcf.data.tables.player_pace import ON_FIELD_COLUMNS, player_pace_rows, player_season_rows
 from pcf.data.tables.plays import play_parts, player_play_parts
@@ -129,7 +129,40 @@ def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | N
         rated = efficiency_part(seasons, cal, parts["schedule"])
         if rated is not None:
             parts["efficiency"] = rated
+        opened = openers_part(cal, parts["schedule"])
+        if opened is not None:
+            parts["openers"] = opened
     write_parts(parts, name, seasons, root)
+
+
+def _game_lines_path() -> Path:
+    return get_config().zone("interim") / "espn_odds" / "game_lines.parquet"
+
+
+def openers_part(cal: Calendar, spine: pl.DataFrame) -> pl.DataFrame | None:
+    """The `team_game.openers` part on `spine`'s games: ESPN's opening lines, already in our data
+    from the odds collection (no new source; decision 0042 call 13), known by the start of the
+    game's week + 2 days. None without the odds collection's parse or any opener."""
+    path = _game_lines_path()
+    if not path.exists():
+        return None
+    rows = openers_rows(opener_lines(pl.read_parquet(path)), spine, cal)
+    if rows.is_empty():
+        return None
+    out = known_at("espn_openers", rows, cal).drop("week")
+    return on_spine(out, spine, ["game_id", "team"], "team_game.openers")
+
+
+def build_openers(seasons: Sequence[int] | None = None, root: Path | None = None) -> None:
+    """Only the `team_game.openers` part (td-expert, I118), for `seasons` (default: every season
+    with an opener), without rebuilding the rest of team_game."""
+    schedules = _schedules()
+    cal = calendar(schedules)
+    spine = read_part("team_game", "schedule", seasons, root).collect()
+    part = openers_part(cal, spine)
+    if part is not None:
+        chosen = sorted(part["season"].unique().to_list())
+        write_parts({"openers": part}, "team_game", chosen, root)
 
 
 @cache
@@ -300,6 +333,7 @@ def build_player_game(season: int, cal: Calendar, root: Path | None) -> None:
         )
     write_parts(parts, "player_game", [season], root)
     build_opportunity([season], root)
+    build_touchdowns([season], root)
 
 
 @cache
@@ -344,6 +378,73 @@ def build_opportunity(seasons: Sequence[int] | None = None, root: Path | None = 
         pg = opportunity.player_game_rows(plays, pbp, roster, fitted is not None)
         write_parts({"opportunity": known_at("pbp", pg, cal)}, "player_game", [season], root)
         log.info("opportunity %d: %d chances in %.0fs", season, plays.height, time.time() - t)
+
+
+@cache
+def _touchdown_chances(season: int) -> pl.DataFrame:
+    """A season's chances by anyone (`touchdowns.chance_rows`), kept for the process."""
+    pbp = scan("pbp", [season]).select(touchdowns.PBP_COLUMNS).collect()
+    roster = read_part("player_game", "roster", [season]).select("gsis_id", "game_id", "position")
+    return touchdowns.chance_rows(pbp, roster.collect())
+
+
+@cache
+def _drive_snaps(season: int) -> pl.DataFrame:
+    return touchdowns.drive_snaps(scan("pbp", [season]).select(touchdowns.PBP_COLUMNS).collect())
+
+
+def build_touchdowns(seasons: Sequence[int] | None = None, root: Path | None = None) -> None:
+    """Only the touchdown parts (decision 0043): `play.xtd`, `drive.td_chance`,
+    `player_game.touchdowns` and `team_game.touchdowns`, for `seasons` (default: every season with
+    expected touchdowns, 2012 on). Needs `play.xfp` and the roster part built first. The QB
+    carries' and the drive model's fits are cached in the interim zone, per season."""
+    cal = calendar(_schedules())
+    have = local_seasons("pbp")
+    chosen = sorted(
+        s for s in have if s >= touchdowns.FIRST_SEASON and (seasons is None or s in seasons)
+    )
+    folder = get_config().zone("interim") / "td_expert"
+    oq_dir = get_config().zone("interim") / "opportunity_quality" / "xfp"
+    for season in chosen:
+        t = time.time()
+        try:
+            roster = read_part("player_game", "roster", [season], root).collect()
+            xfp = read_part("play", "xfp", [season], root).collect()
+        except (FileNotFoundError, pl.exceptions.ComputeError):
+            continue
+        oq_fit = opportunity.fitted_for(season, have, _opportunity_chances, oq_dir)
+        qb_fit = touchdowns.cached_fit(
+            season, have, touchdowns.FIRST_FIT, _touchdown_chances, touchdowns.fit_qb_carry,
+            folder / "qb_carry" / f"season={season}" / "fit.pkl", "qb carries",
+        )  # fmt: skip
+        drive_fit = touchdowns.cached_fit(
+            season, have, touchdowns.FIRST_DRIVE_FIT, _drive_snaps, touchdowns.fit_drive,
+            folder / "drive" / f"season={season}" / "fit.pkl", "drive model",
+        )  # fmt: skip
+        if oq_fit is None or qb_fit is None or drive_fit is None:
+            continue
+        pbp = scan("pbp", [season]).select(touchdowns.PBP_COLUMNS).collect()
+        chances = touchdowns.chance_rows(pbp, roster.select("gsis_id", "game_id", "position"))
+        plays = touchdowns.expected(chances, xfp, qb_fit, oq_fit)
+        spine = read_part("play", "pbp", [season], root).select("game_id", "play_id").collect()
+        plays = on_spine(plays, spine, ["game_id", "play_id"], "play.xtd")
+        write_parts({"xtd": known_at("pbp", plays, cal)}, "play", [season], root)
+        drives = touchdowns.drive_rows(touchdowns.drive_snaps(pbp), drive_fit)
+        d_spine = read_part("drive", "summary", [season], root).select(
+            "game_id", "fixed_drive"
+        ).collect()
+        drives = on_spine(drives, d_spine, ["game_id", "fixed_drive"], "drive.td_chance")
+        write_parts({"td_chance": known_at("pbp", drives, cal)}, "drive", [season], root)
+        pg = touchdowns.player_game_rows(plays, roster)
+        write_parts({"touchdowns": known_at("pbp", pg, cal)}, "player_game", [season], root)
+        tg = touchdowns.team_game_rows(plays, drives, pbp)
+        t_spine = read_part("team_game", "schedule", [season], root).select(
+            "game_id", "team"
+        ).collect()
+        tg = on_spine(tg, t_spine, ["game_id", "team"], "team_game.touchdowns")
+        write_parts({"touchdowns": known_at("pbp", tg, cal)}, "team_game", [season], root)
+        log.info("touchdowns %d: %d chances, %d drives in %.0fs", season, plays.height,
+                 drives.height, time.time() - t)  # fmt: skip
 
 
 def _variant_dir(variant: str) -> Path:

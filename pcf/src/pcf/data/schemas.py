@@ -64,6 +64,8 @@ TABLES: dict[str, Table] = {
                 "tags_result",
                 "pace",
                 "efficiency",
+                "touchdowns",
+                "openers",
             ),
             after=(
                 "result",
@@ -73,6 +75,7 @@ TABLES: dict[str, Table] = {
                 "tags_result",
                 "pace",
                 "efficiency",
+                "touchdowns",
             ),  # fmt: skip
             post_season=("charted",),
         ),
@@ -95,11 +98,16 @@ TABLES: dict[str, Table] = {
         Table(
             "play",
             (_GAME, _PLAY),
-            ("pbp", "participation", "ftn", "tags", "pace", "leverage", "xfp"),
-            after=("pbp", "participation", "ftn", "tags", "pace", "leverage", "xfp"),
+            ("pbp", "participation", "ftn", "tags", "pace", "leverage", "xfp", "xtd"),
+            after=("pbp", "participation", "ftn", "tags", "pace", "leverage", "xfp", "xtd"),
             post_season=("participation",),
         ),
-        Table("drive", (_GAME, _DRIVE), ("summary", "tags"), after=("summary", "tags")),
+        Table(
+            "drive",
+            (_GAME, _DRIVE),
+            ("summary", "tags", "td_chance"),
+            after=("summary", "tags", "td_chance"),
+        ),
         Table(
             "player_play",
             (_GAME, _PLAY, _PLAYER),
@@ -126,6 +134,7 @@ TABLES: dict[str, Table] = {
                 "on_field_pace",
                 "leverage_usage",
                 "opportunity",
+                "touchdowns",
             ),
             after=(
                 "stats",
@@ -137,6 +146,7 @@ TABLES: dict[str, Table] = {
                 "on_field_pace",
                 "leverage_usage",
                 "opportunity",
+                "touchdowns",
             ),
             post_season=("on_field_pace", "leverage_usage"),
         ),

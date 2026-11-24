@@ -117,6 +117,8 @@ def validate(
         calib = calibration.spike_report(groups, [*expert.groups, "season"])
     elif expert.kind == "amount":
         calib = calibration.coverage(groups, [*expert.groups, "season"])
+    elif expert.kind == "count":
+        calib = calibration.count_report(groups, [*expert.groups, "season"])
     else:
         calib = calibration.probability_report(scored)
     checks = leakage.run_checks(bt, gateway, signal, n_cutoffs, seed)
@@ -126,7 +128,7 @@ def validate(
         bt.history.join(bt.features.select(*keys, *expert.groups), on=keys, how="left"), show
     )
     misses = None
-    if expert.grain == "player_game" and expert.kind == "amount":
+    if expert.grain == "player_game" and expert.kind in ("amount", "count"):
         misses = miss_report(scored, lens_frame(gateway.source, tested), seed=seed)
     return Validation(
         bt, base_hist, comps, signal, None, calib, checks, rules_df, review, tested, open_vault,

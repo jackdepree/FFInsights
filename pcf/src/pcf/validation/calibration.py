@@ -105,6 +105,40 @@ def coverage(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
     return {**overall, "groups": groups_df, "passed": passed}
 
 
+def count_report(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
+    """A count forecast (decision 0043): its chance of 1+ and of 2+ under a Poisson count around
+    the mean, each judged as a probability; the q10-q90 range (Poisson's) and the mean by tenth
+    reported. Passed when both chances pass. A frame with an `alpha` column (and optionally
+    `power`) is judged under a negative binomial with that spread instead (idea I116: a count
+    wider than Poisson; `pcf.validation.scores.negbin_at_least`)."""
+    from pcf.validation.scores import negbin_at_least
+
+    lam = df["mean"].to_numpy().clip(1e-6)
+    y = df["y"].to_numpy()
+    alpha = df["alpha"].to_numpy() if "alpha" in df.columns else 0.0
+    power = df["power"].to_numpy() if "power" in df.columns else 2.0
+    chances = {}
+    for k in (1, 2):
+        frame = pl.DataFrame({"mean": negbin_at_least(lam, alpha, k, power),
+                              "y": (y >= k).astype(float)})  # fmt: skip
+        chances[k] = probability_report(frame)
+    means = (
+        df.with_columns(bin=(c("mean").rank("ordinal") * BINS / (pl.len() + 1)).floor().cast(
+            pl.Int32))
+        .group_by("bin")
+        .agg(rows=pl.len(), predicted=c("mean").mean(), actual=c("y").mean())
+        .sort("predicted")
+    )
+    return {
+        "count": True,
+        "one": chances[1],
+        "two": chances[2],
+        "means": means,
+        "range": coverage(df, groups),
+        "passed": chances[1]["passed"] and chances[2]["passed"],
+    }
+
+
 def spike_report(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
     """A spike forecast's two parts, each against its usual bar (decision 0014): the chance the
     result is above 0, as a probability, and on rows where it was, the range and q50. The blend's

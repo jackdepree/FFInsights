@@ -83,7 +83,7 @@ Use **proper scores** (they reward honest probabilities and honest ranges) to de
 - **Resample whole weeks** 2,000 times (a block bootstrap) to get a **90% interval** for the improvement.
   - Retrospective models have few seasons, so they resample by team or player instead. The brief says which.
 - **A model beats another only if the whole 90% interval is above zero.**
-- **Ties go to the simpler model** (rule k).
+- **Ties go to the simpler model** (rule k): the simpler, faster and less computationally expensive one, in every brief and build. A brief's own tie rule doesn't override this (the CEO, 2026-11-24: "in future briefs and in future builds, the tie should go to the simpler, faster, and less computationally expensive model").
 - **The scorecard shows how many versions were tried** (counted in MLflow), so 40 attempts are never presented as one.
 
 ## 5. Expert tests: signal and no noise

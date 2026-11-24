@@ -1,0 +1,9 @@
+td-expert ideas (2026-11-24): I61, the throw's expected touchdowns knowing the passer and his offense; seasons 2016-2024, each fit on the seasons before
+
+1. Per throw (164,099 throws): log loss 0.11292 situation only, 0.11287 knowing the passer and offense (+0.04% of it)
+   the fit for 2024: passer 8.0 a unit of over-expected per throw (on the log-odds), offense 0.190 a unit of EPA per play
+
+2. F22 rerun, QBs' rest-of-season thrown touchdowns (987 rows: after weeks 4, 8, 12; a straight line per game left, not the exploration's lasso and trees):
+  past thrown touchdowns beyond expected (situation only): +4.13% (-0.81% to +8.92%)
+  past thrown touchdowns beyond expected (passer-aware): +4.06% (-1.05% to +8.77%)
+  passer-aware expected against situation only: +0.08% (-1.03% to +1.13%)

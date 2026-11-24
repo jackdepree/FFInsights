@@ -1,0 +1,17 @@
+td-expert/team_rest_volume run fa0a9e01d5fe4484add2e9b760512b6e
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\td-expert\team_rest_volume\fa0a9e01d5fe4484add2e9b760512b6e\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (1,932 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (1,932 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against TD_team_rest_rate: Comparison(a='td-expert', b='TD_team_rest_rate', diff=-0.027250432792930105, lo=-0.04656646091635033, hi=-0.007941209746587425, rows=4734, blocks=157)
+chance of one+: error 0.14 points, slope 0.85, passed False
+chance of two+: error 0.59 points, slope 0.91, passed True
+Poisson q10-q90 holds 73.8% (reported)

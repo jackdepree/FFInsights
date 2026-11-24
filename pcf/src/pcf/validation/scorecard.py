@@ -250,6 +250,26 @@ def render(v: Validation) -> str:
             f"{blend['width']:.2f}. A result of exactly 0 counts as inside any range starting at "
             "0, so even a perfect forecast covers more than the 75–85% bar.</p>",
         ]
+    elif cal.get("count"):
+        one, two, rng = cal["one"], cal["two"], cal["range"]
+        body += [
+            "<h2>The chances of 1+ and 2+</h2>",
+            f"<p>{_status(cal['passed'])} A count forecast: its chances of at least one and at "
+            "least two come from a Poisson count around its mean, and each is judged as a "
+            "probability (decision 0043).</p>",
+            f"<p>{_status(one['passed'])} <b>1 or more:</b> calibration error "
+            f"{one['error']:.2f} points (bar ≤ {calibration.MAX_ERROR:.0f}); slope "
+            f"{one['slope']:.2f} (bar 0.9–1.1).</p>",
+            _calibration_svg(one["table"]),
+            _table(one["table"]),
+            f"<p>{_status(two['passed'])} <b>2 or more:</b> calibration error "
+            f"{two['error']:.2f} points; slope {two['slope']:.2f}.</p>",
+            _table(two["table"]),
+            "<p><b>The mean by tenth of the forecast</b> (reported):</p>",
+            _table(cal["means"]),
+            '<p class="muted">Poisson&#39;s q10–q90, reported and not judged (a count&#39;s '
+            f"range includes its ends, so it covers more than 80%): {rng['inside']:.1%}.</p>",
+        ]
     elif kind == "amount":
         body += [
             "<h2>Range coverage</h2>",

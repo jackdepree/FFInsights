@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from pcf.data.gateway import View
 
 CADENCES = ("in_season", "retrospective", "offseason_events")
-KINDS = ("amount", "probability")
+KINDS = ("amount", "probability", "count")  # count: decision 0043
 UTC_TIME = pl.Datetime("us", "UTC")
 OUTPUT_SCHEMA: dict[str, pl.DataType] = {
     "as_of": UTC_TIME,
@@ -61,6 +61,14 @@ SPIKE_PARTS: dict[str, pl.DataType] = {
     "if_nonzero_q10": pl.Float64(),
     "if_nonzero_q50": pl.Float64(),
     "if_nonzero_q90": pl.Float64(),
+}
+# A count with a spread wider than Poisson (td-expert, I116): the negative binomial's alpha and
+# power, and the chances of 1+ and 2+ under it where they're published (null elsewhere).
+COUNT_PARTS: dict[str, pl.DataType] = {
+    "alpha": pl.Float64(),
+    "power": pl.Float64(),
+    "p_one": pl.Float64(),
+    "p_two": pl.Float64(),
 }
 # Model layers in the registry (phase 1-3) must be named in a consumer's inputs.
 MODEL_PHASES = (1, 2, 3)
@@ -92,6 +100,9 @@ class Expert(ABC):
       the season; e.g. position, rookie, starter.
     - `spike`: an amount whose results pile up at exactly 0. `predict` also returns `SPIKE_PARTS`,
       they're saved with the history, and the harness judges the two parts (decision 0014).
+    - `spread`: a count wider than Poisson (td-expert, I116). `predict` also returns
+      `COUNT_PARTS`; they're saved with the history, and the harness judges the chances under
+      that spread. `p_one` and `p_two` may be null where the chance isn't published.
     - `first_read`: the earliest season its features and targets read, if it reads a table too
       big to hold whole (the play-by-play): the harness's default gateway then holds only the
       seasons from it on (`pcf.data.gateway.for_expert`; decision 0033).
@@ -114,6 +125,7 @@ class Expert(ABC):
     first_train: ClassVar[int | None] = None
     first_read: ClassVar[int | None] = None
     spike: ClassVar[bool] = False
+    spread: ClassVar[bool] = False
     publishes: ClassVar[tuple[str, ...]] = ()
 
     @abstractmethod
@@ -241,12 +253,34 @@ def check_output(df: pl.DataFrame, keys: list[str], kind: str = "amount") -> Non
         raise ValueError("output train_end must be set and no later than as_of (check 6)")
     if df["mean"].null_count():
         raise ValueError(f"output has {df['mean'].null_count()} rows with no mean")
-    if kind == "amount":
+    if kind in ("amount", "count"):
         bad = df.filter((pl.col("q10") > pl.col("q50")) | (pl.col("q50") > pl.col("q90"))).height
         if bad or df.select(pl.sum_horizontal(pl.col(*QUANTILES).null_count())).item():
             raise ValueError(f"output quantiles are missing or out of order on {bad} rows")
     if "p_nonzero" in df.columns:
         check_spike_parts(df)
+    if "alpha" in df.columns:
+        check_count_parts(df)
+
+
+def check_count_parts(df: pl.DataFrame) -> None:
+    """A count's spread and its published chances: alpha and power set, alpha at least 0, each
+    chance between 0 and 1 where given, and 2+ never likelier than 1+."""
+    c = pl.col
+    for p in ("alpha", "power"):
+        if p not in df.columns or df[p].null_count():
+            raise ValueError(f"output is missing the count part {p}")
+    if (df["alpha"] < 0).any():
+        raise ValueError("output alpha must be at least 0")
+    for p in ("p_one", "p_two"):
+        if p not in df.columns:
+            raise ValueError(f"output is missing the count part {p}")
+        if not df[p].drop_nulls().is_between(0, 1).all():
+            raise ValueError(f"output {p} must be between 0 and 1")
+    if df.filter(c("p_two") > c("p_one") + 1e-12).height:
+        raise ValueError("output p_two is above p_one")
+    if df.filter(c("p_two").is_not_null() & c("p_one").is_null()).height:
+        raise ValueError("output p_two is published where p_one isn't")
 
 
 def check_spike_parts(df: pl.DataFrame) -> None:

@@ -1,0 +1,17 @@
+td-expert/skill_rest_volume+qb_rz run 756d21f9767643ad994732460531c4aa
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\td-expert\skill_rest_volume+qb_rz\756d21f9767643ad994732460531c4aa\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (30,792 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (30,792 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against TD_skill_rest_volume: Comparison(a='td-expert', b='TD_skill_rest_volume', diff=-0.004918471001954897, lo=-0.005940578243909339, hi=-0.0039466261552268764, rows=75865, blocks=157)
+chance of one+: error 8.16 points, slope 0.78, passed False
+chance of two+: error 3.07 points, slope 0.80, passed False
+Poisson q10-q90 holds 89.2% (reported)
