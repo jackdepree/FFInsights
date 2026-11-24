@@ -660,17 +660,17 @@ projects:
     horizon: next
     cadence: [in_season]
     depends_on: [participation, timeline]
-    summary: "The CEO's pick, 2026-11-23 (\"Ok, let's start the availability expert\"), after the yardstick batch's I60: knowing the share of games a player goes on to play would remove 24-70% of a rest-of-season forecast's error, and a crude games-played forecast gets about 1%. Who plays, and for how many games, for players and teams. Kickoff in projects/availability/BRIEF.md; waiting for the CEO's hunches. Overlaps injury-fatigue (scope to settle in the brief)."
+    summary: "The CEO's pick, 2026-11-23 (\"Ok, let's start the availability expert\"), after the yardstick batch's I60: knowing the share of games a player goes on to play would remove 24-70% of a rest-of-season forecast's error, and a crude games-played forecast gets about 1%. Who plays, and for how many games, for players and teams. Kickoff in projects/availability/BRIEF.md; the CEO's hunches H93-H98 (a two-part model, chance of injury and time missed given one; which injuries repeat; roles; risk-weighted snaps; a per-play injury propensity; fatigue as recent risky plays) and a rebuild of Football Outsiders' adjusted games lost. Replaces injury-fatigue (the CEO, 2026-11-23)."
 
   - id: injury-fatigue
     name: Injury and fatigue
     phase: 1
-    status: idea
+    status: parked
     horizon: later
     cadence: [in_season]
     depends_on: [participation, timeline]
     origin: Fatigue_Model_Training.ipynb
-    summary: Workload, injury-risk tiers (not "he'll get hurt") and recovery.
+    summary: "Replaced by availability (the CEO, 2026-11-23: \"The overlap with injury and fatigue idea can be overwritten by this availability expert.\"). Was: workload, injury-risk tiers (not 'he'll get hurt') and recovery. Kept as a pointer, since older notes name it."
 
   - id: roles-archetypes
     name: Roles and archetypes
