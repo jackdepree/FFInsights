@@ -1,6 +1,6 @@
 # Roles and archetypes: what each player is asked to do
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "i would like to start roles and archetypes, please"). The CEO's hunches H99 to H108 are in, all with the CEO's odds. **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md), three looks), and the CEO closed H99 to H108 as their pass rules read (2026-11-24: "Yes h99-h108 can be closed"). The CEO's direction after each look is below, word for word. **The brief proper is drafted at the end (2026-11-24) and waits for the CEO's agreement,** with its no-noise target.
+> **Status:** kickoff, 2026-11-24 (the CEO: "i would like to start roles and archetypes, please"). The CEO's hunches H99 to H108 are in, all with the CEO's odds. **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md), three looks), and the CEO closed H99 to H108 as their pass rules read (2026-11-24: "Yes h99-h108 can be closed"). The CEO's direction after each look is below, word for word. **The brief is agreed (the CEO, 2026-11-24: "Yes I approve, you may merge"),** with its no-noise target approved and its technical calls in [decision 0045](../../docs/decisions/0045-roles-archetypes-exploration.md). Next: the build, in its own session.
 
 ## Why now
 
@@ -154,9 +154,9 @@ The CEO's fourth message, 2026-11-24, after the second look and Claude's options
 
 ---
 
-*The brief proper starts here (drafted 2026-11-24, after three looks; **not yet agreed**).*
+*The brief proper starts here (drafted 2026-11-24, after three looks; agreed the same day: "Yes I approve, you may merge").*
 
-**Status:** draft (2026-11-24) · **Layer:** expert (layer 1) · **Cadence:** retrospective (rule m: the in-season role-change chance went to participation, the CEO, 2026-11-24)
+**Status:** agreed (2026-11-24) · **Layer:** expert (layer 1) · **Cadence:** retrospective (rule m: the in-season role-change chance went to participation, the CEO, 2026-11-24)
 
 ## Methods
 
@@ -269,7 +269,7 @@ What is each player asked to do? Described as coordinates in a positionless spac
   - the pooled PCA over the nonlinear embedding;
   - the lasso over trees.
 - **Failure looks like:** tests 3 and 4 fail, which the exploration expects. The coordinates then ship as a **shared map**: description, comparables, the bin other measures are read within. They're not a forecasting input, as the CEO allowed. If test 1 fails too, the role table ships alone.
-- **No-noise target (the CEO approves):** next season's per-snap usage rates (targets and carries per snap; tackles and rushes per pass snap), against position labels plus his own last-season rates. Downstream: the yardstick's rest-of-season receiving and rushing boards.
+- **No-noise target (approved by the CEO, 2026-11-24: "Yes I approve, you may merge"):** next season's per-snap usage rates (targets and carries per snap; tackles and rushes per pass snap), against position labels plus his own last-season rates. Downstream: the yardstick's rest-of-season receiving and rushing boards.
 - **Seasons:** 2016–2024 (participation's span), fit 2016–2020, scored 2021–2024 walk-forward; the vault is 2025, untouched.
 
 ## Inputs and outputs
