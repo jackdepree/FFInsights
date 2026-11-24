@@ -1,6 +1,6 @@
 # Availability: who plays, and for how many games
 
-> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). By the pass rules: H93 held, H94 held, H95 held in part, H96 failed, H97 held, H98 held (small); the CEO closes them. The brief is drafted after the CEO's direction. Nothing has been tested for this project yet.
+> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read, and kept H96 open for a follow-up test against H97 (2026-11-23). The CEO's direction after the exploration is below; the brief's success tests are drafted next.
 
 ## Why now
 
@@ -56,3 +56,17 @@ The CEO's message, 2026-11-23, in full:
 | H96 | Snaps weighted by each play's injury risk forecast injuries better than plain snap counts: "I would also expect that weighted snaps will predict injuries better than simple counts of snaps played." | 70% (given 2026-11-23, before any test) | For the claim as worded (weighted snaps beat counts on held-out injuries, beyond the clear interval): 45%; if so, small, under 1% of the log loss |
 | H97 | A propensity model gives each position group's chance of an injury on each play; plays with more than one tackler, a tackle behind the line, or over 5 seconds long have higher rates: "We can create a propensity model to estimate the chance of an injury for each position type (offensive line or wide receiver) on a given play; maybe plays that include more than one tackler or a tackle behind line is scrimmage or a play that ran for more than 5 seconds are more likely on average to observe an injury." | 70% (given 2026-11-23, before any test) | For the claim as worded (at least two of the three features raise the play's injury rate, beside position and play type): 75%; all three, 45%. The play-by-play names in-game injuries ("was injured during the play", about 800 in 2024; pace exploration). A play's length isn't in the free data, so it needs a proxy |
 | H98 | Each player's running total of risky plays, weighted toward recent ones, measures his fatigue and explains high recent injury rates: "Then if we cumulatively sum the risky play for each player we can measure the fatigue for each player and we can even include a recency bias to explain high and recent rates of injury-prone plays." | 50% (given 2026-11-23, before any test) | For the claim as worded (the recency-weighted total forecasts his next injury beyond position, snaps and plain season totals): 30%; if so, under 1% of the log loss. Fatigue failed on performance before (H24, H25) and held on substitution (H34); I29 is the lead |
+
+## The CEO's direction after the exploration (word for word)
+
+The CEO's message, 2026-11-23, in full:
+
+> "Can you please explain or test the possible incongruity between the results of h96 and h97? I think availability should forecast games played for any reason and even the estimate or chance of decreased participation or snap share. I think healthy scratches and benches are participation expert domain, respectively. I think adjusted games lost should be weighted by snaps played. I will close all hunches except for h96, for now."
+
+**What it decides:**
+- **The main output is games played, for any reason.** Availability forecasts whether each player plays, not only whether he's injured ("I think availability should forecast games played for any reason").
+- **A second output: reduced participation.** The chance he plays with a reduced snap share, and by how much ("and even the estimate or chance of decreased participation or snap share").
+- **Healthy scratches and benchings belong to `participation`, not here** ("I think healthy scratches and benches are participation expert domain, respectively"). The line between the two experts is drafted in the brief, for the CEO to confirm.
+- **Adjusted games lost is weighted by snaps played** ("I think adjusted games lost should be weighted by snaps played"), not FO's equal weights per starter.
+- **Hunches:** H93, H94, H95, H97 and H98 closed as the pass rules read; H96 stays open ("I will close all hunches except for h96, for now"), with the follow-up test of H96 against H97 in [EXPLORATION.md](EXPLORATION.md).
+

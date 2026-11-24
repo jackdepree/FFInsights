@@ -326,3 +326,23 @@ More about (a):
 
 - **I116 (proposed): proneness as a yardstick input.** A player's credibility-shrunk injury rate per snap, beside I60's crude games-played forecast, on the rest-of-season receiving and rushing boards.
   - Claude: 45% that it adds 0.5%+ to receiving rest-of-season, 30% for rushing.
+
+## Follow-up: H96 against H97 (pre-registered 2026-11-23, before any number)
+
+The CEO, 2026-11-23: "Can you please explain or test the possible incongruity between the results of h96 and h97?" H96 stays open meanwhile ("I will close all hunches except for h96, for now").
+
+**The puzzle.** H97 says some plays are riskier than others (more tacklers 1.27x, long plays 1.48x). H96 says adding up a player's plays by that risk doesn't forecast his next injury any better than counting them. Both can be true in four ways, and each gets a check. Rows, scoring and intervals are H96's (189,181 player-games played, 2017–2024, walk-forward by season, log loss, team-week bootstrap). Script: [`explore/h96_h97_followup.py`](explore/h96_h97_followup.py).
+
+| # | Why both could hold | The check | Claude's odds, before the run | Pass rule |
+|---|---|---|---|---|
+| A | **Averaging.** Over 4 games (about 150–250 plays) every player at a position gets about the same mix of risky and safe plays, so the weighted sum is a count times a constant | Within each position group: the correlation of the last-4 weighted sum with the last-4 count, and how much a player-game's average play risk varies (SD as a share of the mean) | 85% that the median group's correlation is 0.95 or more | "Averaging explains most of it" if the median correlation is 0.95+ |
+| B | **Acute, not cumulative.** A risky play's danger is spent on that play. H97 is about the play itself; H96 asks whether last month's risky plays raise this week's risk | The same game, after the fact (not a forecast): this game's weighted sum against this game's count | 45% clear; if so, under 0.3% of the log loss | Clear if the interval is above 0 |
+| C | **How much room weighting could ever have.** If the play model were exactly true and risk acute, what would weighting gain? | A simulated world: each player-play's injury drawn from its modelled risk, 10 draws. C1: B's same-game comparison on the drawn injuries. C2: H96's forward comparison on them | C2 covers 0 (a method check): 90%. The real B is at or below C1: 70% | Reported as the ceiling; C2 must cover 0 or the method is wrong |
+| D | **Not personal.** A play's risk goes to all 22 players on it: a receiver 30 yards from a gang tackle gets the gang tackle's risk | Personal contacts instead: carries, catches, times hit or sacked as passer, tackles made (solo, assisted, sacks), over the last 4 games and season to date, beside the counts. A forecast, like H96 | 55% clear; if so, under 0.3% of the log loss | Clear if the interval is above 0 |
+| E | **H98's gain is recency, not the risk weights** | H98's recency-weighted sum built on plain counts, against H98's own on risk-weighted plays, each beside the counts set, at H98's chosen half-lives | 60% that recency on plain counts gets 80%+ of the weighted version's gain | Reported as a share; "the weights carry H98" if weighted against counts is clear |
+| F | **A trait, not a load.** How risky a player's plays are is part of his role (H95's deep receivers) | His career-long average risk per play beside his career injuries and career snaps per game (the obvious input) | 40% clear | Clear if the interval is above 0 |
+
+**How it reads for H96 (the CEO closes it):**
+- If **D is clear**, the CEO's idea holds with a personal weight. Weighting snaps works when the weight follows the player, not the play.
+- If only **B is clear**, weighted snaps explain the same game's injuries but don't forecast the next one. H97's risk is acute.
+- If **A holds and nothing else does**, the weights are a count in disguise.
