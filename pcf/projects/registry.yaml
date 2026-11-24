@@ -712,7 +712,7 @@ projects:
     horizon: next
     cadence: [in_season, retrospective]
     depends_on: [participation]
-    summary: "The CEO's pick, 2026-11-24 (\"i would like to start roles and archetypes, please\"): what each player is asked to do (slot receiver, deep threat, receiving back, blocking tight end, box safety, rusher or dropper), from usage patterns. Weekly from play-by-play, snap counts and depth charts; refined between seasons with participation (routes, personnel). Its first deliverable is I113's role table, which skill-over-expected, I79, vacated-opportunity and availability wait for. Kickoff in projects/roles-archetypes/BRIEF.md; waiting for the CEO's hunches."
+    summary: "The CEO's pick, 2026-11-24 (\"i would like to start roles and archetypes, please\"): what each player is asked to do (slot receiver, deep threat, receiving back, blocking tight end, box safety, rusher or dropper), from usage patterns. Weekly from play-by-play, snap counts and depth charts; refined between seasons with participation (routes, personnel). Its first deliverable is I113's role table, which skill-over-expected, I79, vacated-opportunity and availability wait for. Kickoff in projects/roles-archetypes/BRIEF.md. The CEO's hunches H99-H102 are in (2026-11-24): the plays he's off say his role (60%), a positionless latent space (PCA), like-for-like substitutes, and an in-season chance that his role is unchanged; both traditional clusters and an experimental latent space; labels between seasons from participation, a role-change chance in season (two experts by rule m, proposed roles-retro and roles-live)."
 
   - id: schemes-v2
     name: Schemes v2
