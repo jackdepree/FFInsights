@@ -520,3 +520,51 @@ Still **go** for `roles-retro` on offense. The second look adds:
 - **Positions blur (side bet, Claude 70%):** the position comes back from the 6 coordinates less than 85% of the time, against offense's 98%. Also reported: which positions get confused (the edge: DL with OLB; the hybrids: CB, S, ILB).
 - **Also reported:** loadings, season r, movers' season r.
 - **The forecasting stress test (the CEO's direction):** the H107 design on defense. Next season's tackles per snap and rushes per pass snap, from the 6 coordinates against the 5 position labels (ridge, leave-one-season-out, 90% player bootstrap). Side bet, Claude 60%: the coordinates beat the labels on both.
+
+### Results of the third look
+
+> Run 2026-11-24: `explore/i124_defense_pooled.py` (`.txt` beside it). 7,301 defensive player-seasons with 200+ snaps; 3,369 season pairs (799 movers).
+
+- **The space.** Explained share: 0.46, 0.17, 0.08, 0.05, 0.05, 0.04. Read from the loadings:
+  - dz0: **in the box or in coverage** (on the field against 11 personnel, off against runs and heavy sets): corners and safeties against linemen and inside linebackers;
+  - dz1: **rusher or dropper** (rushes per pass snap up, tackle depth and passes defensed down);
+  - dz2: the red zone;
+  - dz3: **the tackler** (tackles per snap up, solo share down): the inside linebacker's axis;
+  - dz4: **3rd down** (on for late downs, off in 11): sub-package players;
+  - dz5: playing time.
+- **I124 (Claude 60%): held.**
+  - Pooled split-half r is 0.88, 0.88, 0.35, 0.72, 0.53, 0.56: **5 of 6 at 0.5+**, against 1–2 per position in the first look.
+  - **Centred within position (side bet, 35%): held**, 4 of 6 (0.82, 0.70, 0.33, 0.49, 0.52, 0.55). The position's own mean doesn't explain it.
+  - Within each position separately, 3–5 of 6 repeat: DL 4, OLB 5, ILB 5, CB 3, S 4.
+- **It travels:**
+  - season r: 0.73, 0.84, 0.29, 0.73, 0.30, 0.46;
+  - movers: 0.65, **0.80**, 0.22, **0.69**, 0.18, 0.39.
+
+  Rusher-or-dropper and the tackler axis follow a player to a new team almost undiminished. The 3rd-down axis mostly doesn't: that's the team's package, not the player.
+- **Positions blur (side bet, 70%): held.** The coordinates give the position back **77.6%** of the time, against offense's 98%.
+
+  | Listed as | Looks like DL | OLB | ILB | CB | S |
+  |---|---|---|---|---|---|
+  | DL | 94% | 6% | 0 | 0 | 0 |
+  | OLB | **51%** | 29% | 16% | 0 | 4% |
+  | ILB | 2% | 7% | 82% | 0 | 8% |
+  | CB | 0 | 0 | 0 | 86% | 13% |
+  | S | 0 | 1% | 6% | **23%** | 70% |
+
+  **Half the listed outside linebackers sit with the defensive linemen.** These are the 3-4 edge rushers, the CEO's "same job, different name". A quarter of safeties sit with the corners: slot and deep safeties.
+- **Forecasting stress test (side bet, 60%): held.** Next season's rates from the coordinates against the five position labels:
+  - tackles per snap: **+25.5%** of the labels' error (90% +19.8% to +31.5%);
+  - rushes per pass snap: **+27.7%** (+22.2% to +33.7%).
+- **The obvious-input check** (the charter; added after the pre-registration, so reported, not a verdict). Beside the labels, his own last-season rate and his snap share:
+  - tackles per snap: −0.2% (−0.4% to +0.0%);
+  - rushes per pass snap: −0.1% (−0.4% to +0.1%).
+
+  **Nothing beyond his own rate**, the same pattern as offense (H107).
+- **Why pooling helped so much more than on offense.** Fit one position at a time, PCA spends its components on that position's noisiest differences: passes defensed at 0.12 within a season, the solo share. Pooled, the components point along the differences that separate positions, and those are the reliable ones (rush rate, tackle depth, coverage personnel). **Pooling works as a filter for football that repeats.** Comparing component counts across two different fits isn't quite like for like, which is why the within-position count is the fairer read.
+
+**Case against:**
+1. The pooled axes are partly positions, so their pooled repeat is inflated. The centred count (4 of 6) is the honest one.
+2. The forecasting gain over labels is mostly last season's own rate inside the coordinates. Beyond that rate there's nothing.
+3. OLB as DL may partly be how depth charts list players, not football alone. Only 20 players (0.6%) changed listed position between seasons, too few to test.
+
+**For the brief:** defense joins `roles-retro` with its own pooled space, alongside offense's. The DL/OLB split and the CB/S split should come from the coordinates, not the depth chart: an "edge" role across DL and OLB, a "slot defender" across CB and S. The forecasting test stays as the CEO directed: coordinates against position labels and against his own last-season rates, with the simpler side winning ties.
