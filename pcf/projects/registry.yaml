@@ -616,11 +616,11 @@ projects:
   - id: vacated-opportunity
     name: Vacated opportunity
     phase: 1
-    status: idea
-    horizon: later
+    status: exploring
+    horizon: next
     cadence: [in_season]
-    depends_on: [participation, opportunity-quality]
-    summary: When a player is out, who absorbs his targets and carries.
+    depends_on: [participation, opportunity-quality, roles-archetypes, availability]
+    summary: "When a player is out, who absorbs his targets and carries. The CEO's pick, 2026-11-24 (\"Ok, let's start vacated opportunity\"). Kickoff in projects/vacated-opportunity/BRIEF.md: the usual way (vacated targets split by current share or to the next man up; with-or-without splits) and two analogies (diversion ratios in merger analysis; competitive release in ecology). Waiting for the CEO's hunches. Reads roles' spaces (H101's like-for-like) and availability's chance he plays once they're built."
 
   - id: td-expert
     name: Touchdown expert

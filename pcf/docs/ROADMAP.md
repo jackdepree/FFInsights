@@ -36,6 +36,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Roles and archetypes** (`roles-archetypes`, the CEO's pick, 2026-11-24): what each player is asked to do, from usage. Kickoff in the strategy chat ([brief](../projects/roles-archetypes/BRIEF.md)); the CEO's hunches H99-H108 are in and closed. The exploration is done (go, three looks: pooled positionless spaces for offense and defense repeat and travel, but add nothing beyond a player's own last-season rates); the brief is agreed (2026-11-24, decision 0045); next, the build in its own session. Its first deliverable is I113's role table.
 
+**Vacated opportunity** (`vacated-opportunity`, the CEO's pick, 2026-11-24): when a player is out, who absorbs his targets and carries. Kickoff in the strategy chat ([brief](../projects/vacated-opportunity/BRIEF.md)); waiting for the CEO's hunches.
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later
