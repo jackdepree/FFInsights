@@ -1,6 +1,6 @@
 # Availability: who plays, and for how many games
 
-> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read, and kept H96 open for a follow-up test against H97 (2026-11-23). The CEO's direction after the exploration is below; the brief's success tests are drafted next.
+> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read (2026-11-23), and H96 as failed after the follow-up test against H97 (2026-11-24: "Failed"). The CEO's direction after the exploration is below; the brief's success tests are drafted next.
 
 ## Why now
 
@@ -68,5 +68,5 @@ The CEO's message, 2026-11-23, in full:
 - **A second output: reduced participation.** The chance he plays with a reduced snap share, and by how much ("and even the estimate or chance of decreased participation or snap share").
 - **Healthy scratches and benchings belong to `participation`, not here** ("I think healthy scratches and benches are participation expert domain, respectively"). The line between the two experts is drafted in the brief, for the CEO to confirm.
 - **Adjusted games lost is weighted by snaps played** ("I think adjusted games lost should be weighted by snaps played"), not FO's equal weights per starter.
-- **Hunches:** H93, H94, H95, H97 and H98 closed as the pass rules read; H96 stays open ("I will close all hunches except for h96, for now"), with the follow-up test of H96 against H97 in [EXPLORATION.md](EXPLORATION.md).
+- **Hunches:** H93, H94, H95, H97 and H98 closed as the pass rules read; H96 stays open ("I will close all hunches except for h96, for now"), with the follow-up test of H96 against H97 in [EXPLORATION.md](EXPLORATION.md). After the follow-up, the CEO closed H96 as failed (2026-11-24: "Failed").
 

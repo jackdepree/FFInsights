@@ -353,6 +353,8 @@ The CEO, 2026-11-23: "Can you please explain or test the possible incongruity be
 
 ### Follow-up results (2026-11-23) ([`h96_h97_followup.txt`](explore/h96_h97_followup.txt), [`h96_contacts_split.txt`](explore/h96_contacts_split.txt))
 
+**The CEO closed H96 as failed after these results (2026-11-24: "Failed").**
+
 **The answer: there's no contradiction. Plays differ (H97), but every player at a position gets almost the same mix of plays, so a risk-weighted count is a plain count in disguise.** The weight H96 used belongs to the play, shared by all 22 players on it. A weight that follows the player does forecast, but most of it is touches, the usual way.
 
 | Check | Result | Claude's odds | |
