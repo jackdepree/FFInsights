@@ -708,11 +708,11 @@ projects:
   - id: roles-archetypes
     name: Roles and archetypes
     phase: 1
-    status: idea
-    horizon: later
+    status: exploring
+    horizon: next
     cadence: [in_season, retrospective]
     depends_on: [participation]
-    summary: Slot receiver, deep threat, receiving back, blocking tight end, ... from usage patterns. Weekly from snap counts and depth charts; refined between seasons with route data.
+    summary: "The CEO's pick, 2026-11-24 (\"i would like to start roles and archetypes, please\"): what each player is asked to do (slot receiver, deep threat, receiving back, blocking tight end, box safety, rusher or dropper), from usage patterns. Weekly from play-by-play, snap counts and depth charts; refined between seasons with participation (routes, personnel). Its first deliverable is I113's role table, which skill-over-expected, I79, vacated-opportunity and availability wait for. Kickoff in projects/roles-archetypes/BRIEF.md; waiting for the CEO's hunches."
 
   - id: schemes-v2
     name: Schemes v2
