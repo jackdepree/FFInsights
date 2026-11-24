@@ -673,6 +673,9 @@ projects:
       the spot-check (teams' rest of season) kept B; the opener added to teams' next game (I118:
       +1.6% of the squared error in the harness, +5.0% trained on kickoff lines); a wider count
       makes players' rest-of-season chances calibrated (I116), published only on the CEO's yes.
+      The CEO, 2026-11-24: "Yes, where calibrated" (the last five games for RBs and TEs, 1+ for
+      WRs; the rest average only); no vetoes on calls 25-27; ties go to the simpler, faster,
+      cheaper model from here on (rule k). Done 2026-11-24 ("yes, you can merge into main").
 
   - id: aging
     name: Aging curves
