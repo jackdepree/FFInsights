@@ -631,7 +631,7 @@ projects:
     depends_on: [grain-tables]  # reads opportunity-quality's play.xfp and team-efficiency's team_game.efficiency as table parts, not their forecasts (decision 0043)
     history_runs:  # the champions' walk-forward histories, 2016-2024 (decision 0043, call 21)
       skill_next_volume_trees: {1: 7b6321a205184bd99fa03e87c78b0a4d}
-      skill_rest_volume+qb_rz: {1: 756d21f9767643ad994732460531c4aa}
+      skill_rest_volume+qb_rz: {1: 756d21f9767643ad994732460531c4aa, 2: 0fdfa650e2d741a794da5fb779ce0cd3}  # 2: with its spread and the published chances (decision 0043 call 27)
       thrown_next_chances: {1: 63479e9abfa3484795ce80d7a31051d6}
       thrown_rest_volume: {1: eb589a2ba02e4111a69c7a6c49c31d41}
       team_next_volume: {1: 1005eb299a734dc2bd8765130f968b04}  # 2016-2022 of the teams' next-game champion
@@ -645,7 +645,7 @@ projects:
       cadence: in_season
       known_at: facts with the play-by-play (kickoff + 1 day); forecasts at the Saturday run (12:00 Eastern)
       model: none registered yet (histories pinned above)
-      how_to_use: "Next game: the mean, and the chance of 1+ = 1 - exp(-mean) (calibrated for players and QBs; the chance of 2+ a little too sure except the players' trees). Teams next game read the game's opener where there is one (R17). Rest of season and teams: the mean only (the CEO, 2026-11-24; a calibrated spread for players, R18, waits for the CEO's call). Expected touchdowns a game as a feature (a trait, 0.55); touchdowns over expected is noise except a QB's thrown (0.15). The luck measure looking back only. From saved histories only (rule e)"
+      how_to_use: "Next game: the mean, and the chance of 1+ = 1 - exp(-mean) (calibrated for players and QBs; the chance of 2+ a little too sure except the players' trees). Teams next game read the game's opener where there is one (R17). Rest of season: the mean; players' p_one and p_two (the chances of 1+ and 2+ under the model's negative binomial) where calibrated, the last five games (games left 1-5) for RB and TE 1+ and 2+, WR 1+, null elsewhere (the CEO, 2026-11-24, 'Yes, where calibrated'; R18). Teams: the mean only. Expected touchdowns a game as a feature (a trait, 0.55); touchdowns over expected is noise except a QB's thrown (0.15). The luck measure looking back only. From saved histories only (rule e)"
       feeds: TD-scorer props, fantasy-projections, player-opportunity; candidates vacated-opportunity
     summary: >-
       Expected touchdowns per chance, touchdown regression, the luck in a touchdown total, and a

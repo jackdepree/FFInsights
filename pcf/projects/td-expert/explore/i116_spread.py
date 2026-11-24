@@ -94,3 +94,21 @@ for family, rung in CHAMPIONS.items():
     print("\n".join(out[-12:]), flush=True)
 
 OUT.write_text("\n".join(out) + "\n", encoding="utf-8")
+
+
+# ---------------------------------------------------------------- the CEO's "Yes, where calibrated" (2026-11-24)
+# Every position x window cell of the players' slower spread, so the published slices are exact.
+p = pl.read_parquet(cache_dir() / "walk_skill_rest_volume+qb_rz.parquet")
+feats, _ = backtest.load_features(saved_dir("skill", "rest", ""))
+keys = ["gsis_id", "game_id"]
+p = p.join(feats.select(*keys, "games_left").unique(keys), on=keys, how="left").with_columns(
+    window=bucket(c("games_left")))
+cells = with_alpha(p, ["position", "window"], power=None)
+cal = ["", "== players, the slower spread, every position x window cell (2017-2024):"]
+for pos in ("QB", "RB", "WR", "TE"):
+    for w in ("1-5", "6-11", "12+"):
+        q = cells.filter((c("position") == pos) & (c("window") == w))
+        cal.append(line(f"  {pos} {w} ({q.height:,})", q))
+out += cal
+OUT.write_text("\n".join(out) + "\n", encoding="utf-8")
+print("\n".join(cal))

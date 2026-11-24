@@ -45,3 +45,17 @@ tested 2017-2024
     games left 6-11, slower spread   1+: error 0.00 points, slope 1.01; 2+: error 0.00, slope 0.98 (passes); q10-q90 holds 81.0%; log loss 3.0814
     games left 12+, slower spread    1+: error 0.00 points, slope 2.59; 2+: error 0.00, slope 1.29 (fails); q10-q90 holds 81.4%; log loss 3.5483
 
+
+== players, the slower spread, every position x window cell (2017-2024):
+    QB 1-5 (3,305)                   1+: error 2.88 points, slope 0.74; 2+: error 0.92, slope 0.78 (fails); q10-q90 holds 94.3%; log loss 0.4549
+    QB 6-11 (3,875)                  1+: error 1.72 points, slope 0.86; 2+: error 1.60, slope 0.98 (fails); q10-q90 holds 93.1%; log loss 0.8576
+    QB 12+ (3,518)                   1+: error 2.42 points, slope 0.95; 2+: error 1.55, slope 0.96 (passes); q10-q90 holds 91.9%; log loss 1.1434
+    RB 1-5 (5,299)                   1+: error 2.36 points, slope 0.91; 2+: error 1.40, slope 0.93 (passes); q10-q90 holds 93.1%; log loss 0.8902
+    RB 6-11 (6,356)                  1+: error 2.77 points, slope 1.13; 2+: error 3.27, slope 1.11 (fails); q10-q90 holds 92.2%; log loss 1.4984
+    RB 12+ (5,807)                   1+: error 2.97 points, slope 1.10; 2+: error 4.08, slope 1.19 (fails); q10-q90 holds 90.3%; log loss 1.9224
+    WR 1-5 (7,494)                   1+: error 1.00 points, slope 0.95; 2+: error 1.64, slope 0.85 (fails); q10-q90 holds 93.9%; log loss 0.7906
+    WR 6-11 (9,009)                  1+: error 3.64 points, slope 1.09; 2+: error 2.29, slope 1.10 (fails); q10-q90 holds 93.5%; log loss 1.3591
+    WR 12+ (8,273)                   1+: error 3.68 points, slope 1.13; 2+: error 3.54, slope 1.20 (fails); q10-q90 holds 91.9%; log loss 1.7270
+    TE 1-5 (4,334)                   1+: error 1.22 points, slope 0.94; 2+: error 1.30, slope 0.94 (passes); q10-q90 holds 94.8%; log loss 0.6218
+    TE 6-11 (5,246)                  1+: error 4.20 points, slope 1.02; 2+: error 2.63, slope 1.19 (fails); q10-q90 holds 94.2%; log loss 1.1626
+    TE 12+ (4,812)                   1+: error 3.45 points, slope 1.11; 2+: error 4.76, slope 1.33 (fails); q10-q90 holds 92.7%; log loss 1.5015

@@ -133,18 +133,80 @@ def recalibrate(model: dict | None, mean: np.ndarray) -> np.ndarray:
     return mean * np.exp(model["beta"][0] + model["beta"][1] * z + model["beta"][2] * z * z)
 
 
-def calibrated(fit, predict, train: pl.DataFrame) -> dict:
+def calibrated(fit, predict, train: pl.DataFrame, spread_cells=None) -> dict:
     """`fit(rows) -> model` and `predict(model, rows) -> mean`, with the mean's recalibration
     fit on the latest 20% of `train` (in its time order) from a model fit on the earlier 80%,
-    then the model refit on all of it."""
+    then the model refit on all of it. With `spread_cells(rows) -> labels`, the count's spread
+    is fit on those same latest rows, around their recalibrated means, per cell (I116)."""
     cut = int(train.height * (1 - HOLDOUT))
     early, late = train[:cut], train[cut:]
-    recal = None
+    recal, spread = None, None
     if cut > 100 and late.height > 100:
         m = predict(fit(early), late)
-        recal = fit_recalibration(m, late["y"].to_numpy().astype(float),
-                                  late["weight"].to_numpy())  # fmt: skip
-    return {"model": fit(train), "recal": recal}
+        y = late["y"].to_numpy().astype(float)
+        recal = fit_recalibration(m, y, late["weight"].to_numpy())
+        if spread_cells is not None:
+            spread = fit_spreads(recalibrate(recal, m), y, spread_cells(late))
+    return {"model": fit(train), "recal": recal, "spread": spread}
+
+
+# ---------------------------------------------------------------- the rest-of-season spread (I116)
+# The CEO, 2026-11-24: "Yes, where calibrated". The chances of 1+ and 2+ are published only in
+# the cells whose chance passed the calibration bar (3 points, slope 0.9-1.1) both in the first
+# look (`explore/i116_spread.txt`, spread fit on earlier seasons, 2017-2024) and in the shipped
+# model's own run (`explore/i116_published.txt`, spread fit inside it, 2016-2024); a 2+ only where
+# its 1+ is (decision 0043 call 27). That leaves the last five games' window. RB 12+ passed the
+# first look at the edge (slope 1.10) and failed the second (4.1 points, slope 0.85): dropped.
+# Everywhere else the average only (QBs' rushing, thrown touchdowns, 6+ games left).
+WINDOWS = ((5, "1-5"), (11, "6-11"), (10_000, "12+"))  # games left, up to
+PUBLISHED: dict[tuple[str, str], tuple[int, ...]] = {
+    ("RB", "1-5"): (1, 2),
+    ("WR", "1-5"): (1,),
+    ("TE", "1-5"): (1, 2),
+}
+
+
+def window_of(games_left: np.ndarray) -> np.ndarray:
+    g = np.asarray(games_left, dtype=float)
+    out = np.full(g.shape, WINDOWS[-1][1], dtype=object)
+    for top, label in reversed(WINDOWS):
+        out[g <= top] = label
+    return out
+
+
+def spread_cells(rows: pl.DataFrame) -> np.ndarray:
+    """Each row's cell for the spread: (position, window of games left)."""
+    pos = rows["position"].to_numpy().astype(str)
+    win = window_of(rows["games_left"].to_numpy())
+    return np.array([f"{p}|{w}" for p, w in zip(pos, win, strict=True)], dtype=object)
+
+
+def fit_spreads(mean: np.ndarray, y: np.ndarray, cells: np.ndarray) -> dict[str, tuple[float, float]]:
+    """The negative binomial's (alpha, power) per cell (`pcf.validation.scores.fit_spread`, power
+    fit), on rows the model didn't see."""
+    from pcf.validation.scores import fit_spread
+
+    return {str(k): fit_spread(y[cells == k], mean[cells == k], power=None)
+            for k in np.unique(cells)}  # fmt: skip
+
+
+def chances(rows: pl.DataFrame, mean: np.ndarray, spread: dict) -> dict[str, np.ndarray]:
+    """alpha, power, the range under them, and the published chances of 1+ and 2+ (NaN where
+    a cell isn't published, or has no spread fit)."""
+    from pcf.validation.scores import negbin_at_least, negbin_quantile
+
+    cells = spread_cells(rows)
+    fit = [spread.get(str(k)) for k in cells]
+    alpha = np.array([f[0] if f else 0.0 for f in fit])
+    power = np.array([f[1] if f else 2.0 for f in fit])
+    out: dict[str, np.ndarray] = {"alpha": alpha, "power": power}
+    for q, lvl in (("q10", 0.1), ("q50", 0.5), ("q90", 0.9)):
+        out[q] = negbin_quantile(mean, alpha, lvl, power)
+    for k, col in ((1, "p_one"), (2, "p_two")):
+        shown = np.array([f is not None and k in PUBLISHED.get(tuple(str(c).split("|")), ())
+                          for c, f in zip(cells, fit, strict=True)])  # fmt: skip
+        out[col] = np.where(shown, negbin_at_least(mean, alpha, k, power), np.nan)
+    return out
 
 
 def ranges(mean: np.ndarray) -> dict[str, np.ndarray]:
@@ -191,12 +253,14 @@ class _Base(Expert):
     def _x(self, rows: pl.DataFrame, columns: list[str] | None = None) -> np.ndarray:
         return rows.select(columns or self.columns).to_numpy().astype(float)
 
-    def _out(self, rows: pl.DataFrame, mean: np.ndarray) -> pl.DataFrame:
+    def _out(self, rows: pl.DataFrame, mean: np.ndarray, spread: dict | None = None
+             ) -> pl.DataFrame:  # fmt: skip
         mean = np.maximum(mean, 0.0)
-        r = ranges(mean)
-        return rows.select(*self.keys()).with_columns(
+        r = chances(rows, mean, spread or {}) if self.spread else ranges(mean)
+        out = rows.select(*self.keys()).with_columns(
             mean=pl.Series(mean), **{k: pl.Series(v) for k, v in r.items()}
         )
+        return out.with_columns(c(p).fill_nan(None) for p in ("p_one", "p_two") if p in r)
 
 
 class _PlayerBase(_Base):
@@ -339,10 +403,11 @@ class _Volume:
         return predict_poisson(model, self._x(rows), self.exposure(rows))
 
     def fit(self, train: pl.DataFrame) -> dict[str, Any]:
-        return calibrated(self._fit_raw, self._mean, train)
+        return calibrated(self._fit_raw, self._mean, train, spread_cells if self.spread else None)
 
     def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
-        return self._out(rows, recalibrate(model["recal"], self._mean(model["model"], rows)))
+        mean = recalibrate(model["recal"], self._mean(model["model"], rows))
+        return self._out(rows, mean, model.get("spread"))
 
     def explain(self, model: dict[str, Any]) -> dict[str, Any]:
         raw, recal = model["model"], model["recal"]
@@ -438,7 +503,7 @@ for _family in ("skill", "thrown", "team"):
 _make("skill", "next", "volume_trees")
 # The build's side tests, walked on saved features (checks.py): B plus one set of inputs
 _make("skill", "next", "volume+qb_rz", columns=[*F.VOLUME, *F.QB_RZ])  # I58
-_make("skill", "rest", "volume+qb_rz", columns=[*F.VOLUME, *F.QB_RZ])  # I58
+_make("skill", "rest", "volume+qb_rz", columns=[*F.VOLUME, *F.QB_RZ], spread=True)  # I58; I116
 _make("skill", "rest", "volume+red_zone", columns=[*F.VOLUME, *F.RED_ZONE])  # H68
 _make("skill", "next", "volume-calling",
       columns=[x for x in F.VOLUME if x not in F.CALLING])  # H67  # fmt: skip
