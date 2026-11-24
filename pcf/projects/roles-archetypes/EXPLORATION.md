@@ -385,3 +385,39 @@ What the brief should carry (the CEO decides):
 - **`roles-live`** (the in-season chance): **the snap-share change wins by rule k** until a label that isn't playing time exists, so it may fold into participation rather than stand alone.
 - **Dropped from the build, as tested:** on/off tilts as a general measure; role × scheme efficiency effects; role targeting in free agency.
 
+
+## The second look: H107 and H108 (pre-registered 2026-11-24, before any number)
+
+> After the CEO's reply to the results (BRIEF.md, the third message) and their odds ("H107; 75%, h108; 50% please proceed with the exploration"). Offense only (WR, TE, RB), as the CEO directed. Written before either script ran.
+
+### The positionless space (both tests use it)
+
+- **One PCA across WR, TE and RB pooled**, not one per group: the same features as M2 (snap share, the team-adjusted own-snap shares, the on/off tilts, the offensive usage rates), standardized, 6 components, fit on 2016–2020 player-seasons with 200+ snaps, applied to every season. No measurables and no position label inside it.
+- **Reported:** its loadings, its components' split-half and season r, and how well the coordinates alone recover the position label (cross-validated accuracy against the majority share), so we see whether "positionless" still sorts the positions.
+
+### H107: a latent space of responsibilities describes players better than position labels (the CEO 75%; Claude 80%)
+
+- **Rows:** consecutive-season pairs, WR, TE and RB, 200+ snaps in both seasons.
+- **Targets:** next season's targets per snap and carries per snap.
+- **Models** (ridge, standardized inputs, leave-one-target-season-out):
+  - **P:** the three position labels;
+  - **Z:** the 6 pooled coordinates from season s, no position label.
+- **Pass rule:** **held** if Z's squared error beats P's on both targets, each with a 90% player-bootstrap interval above 0. **Held in part** if one. **Failed** if neither.
+- **Side bets (Claude):**
+  - **Beyond the obvious input (45%):** on next season's receiving plus rushing yards per game (a stand-in for the crude yardstick, not `score_input`), the base is P plus last season's targets, carries and yards per game and his snap share; adding Z beats the base with a 90% player-bootstrap interval above 0.
+  - **Against a role table of the same size (30%):** six hand-picked features (snap share, targets per pass snap, carries per run snap, target depth, the team-adjusted run share and 11-personnel share), added to the same base. Z beats the table with an interval above 0. A tie goes to the table (rule k).
+
+### H108: outcomes attributed by responsibility (the CEO 50%; Claude 25%)
+
+- **Plays:** every regular-season pass or run, 2016–2024. Each offensive WR, TE and RB on the field (participation), the play's EPA.
+- **The target group** on a play is the targeted receiver or the ball carrier. Every other skill player on the field is the **support group**. Sacks and scrambles have no target: everyone is support.
+- **Three credit models,** one season at a time, ridge, with the offense's and the defense's team-season as fixed effects (they absorb the quarterback, the line and the opponent):
+  - **A, plain plus-minus (the simpler side):** one value per player for being on the field.
+  - **B1, by responsibility:** two values per player, one when he's the target group and one when he's support. His credit is the two weighted by his own mix that season.
+  - **B2, by identity in the latent space:** plain plus-minus with his pooled coordinates as inputs. A play's skill players' coordinates enter as summed features, so outcomes are partly credited to the role. His credit is the role's part plus his own.
+  - The ridge penalty is chosen once, by 5-fold cross-validation on 2016 only, for each model.
+- **The test:** each model's credits, season to season, for **movers**: players with 300+ on-field plays in both seasons who changed teams. Stayers are reported beside them.
+- **Pass rule:** **held** if B1 or B2 repeats more for movers than A does (season r), with a 90% player-bootstrap interval above 0. **Failed** otherwise. A tie goes to A.
+- **B2 is partly circular,** because its role part repeats whenever the coordinates do. So its player's own part (the residual) is reported apart, and the verdict names which part carried it.
+- **Side bet (Claude 50%):** the target-group value alone (B1's) repeats for movers at r 0.2 or more.
+- **Pays? (reported, not part of the pass rule):** each team-season's average of last season's credits for its skill players on the field. Does it forecast this season's offensive EPA per play beyond last season's EPA per play? This is the roster-change idea at small scale: the partial correlation with a team bootstrap, for each model.
