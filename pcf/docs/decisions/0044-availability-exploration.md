@@ -1,4 +1,4 @@
-# 0043: availability's exploration and brief, their technical calls
+# 0044: availability's exploration and brief, their technical calls
 
 **Date:** 2026-11-24 · **Decided by:** Claude (technical calls, listed for the CEO's veto at merge) · **Project:** `availability` (exploration and brief; nothing ships)
 

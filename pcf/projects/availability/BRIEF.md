@@ -192,8 +192,8 @@ Will each player be available next game, and over the next three games and the r
 
 - **Ladder (the CEO, 2026-11-24: "All three"):** baseline (the position's rates plus a status-by-body-part table) → logistic and lasso (method 1, with proneness, log exposure and recency) → the health-state chain (method 2) → trees on the chain's moves → the hidden health state (method 3). All three methods are built and scored, whatever the rung below does; the champion is the one that wins on the tests, and the ladder's rule (rule k) still decides which ships.
 - **Time box:** four build sessions (three before the CEO chose all three methods): the tables and baseline with method 1; the chain; the hidden health state; then scoring, the yardstick and the team output.
-- **The backlog it carries:** I29, I30, I50 (fatigue) and I116 (proneness on the yardstick). I49 and I51 stay with participation and `vacated-opportunity`.
-- **Technical calls (for veto; logged in [decision 0043](../../docs/decisions/0043-availability-exploration.md)):**
+- **The backlog it carries:** I29, I30, I50 (fatigue) and I121 (proneness on the yardstick). I49 and I51 stay with participation and `vacated-opportunity`.
+- **Technical calls (for veto; logged in [decision 0044](../../docs/decisions/0044-availability-exploration.md)):**
   - week 1 and a player's first game of a season weight adjusted games lost by last season's snap share (known before the game); with neither, his depth-chart rank's average share at his position that week;
   - a release or trade is not a health absence;
   - exposure enters as logs (the H96 follow-up's G).
