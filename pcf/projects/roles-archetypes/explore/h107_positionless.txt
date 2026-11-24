@@ -1,0 +1,34 @@
+pooled positionless PCA (WR, TE, RB together; fit 2016-2020): explained [0.41, 0.17, 0.09, 0.07, 0.05, 0.05]
+  pz0: oo_run+, oo_p11-, adj_p11-, oo_heavy+
+  pz1: car_per_run+, behind+, adot-, deep-
+  pz2: oo_rz+, adj_rz+, middle+, oo_late+
+  pz3: oo_p12+, adj_p12+, adj_heavy-, middle+
+  pz4: snap_share+, tgt_per_pass+, adj_rz+, adj_late-
+  pz5: tgt_per_pass+, adj_heavy+, adj_p11-, oo_p11-
+  group means of each coordinate:
+shape: (3, 7)
+┌───────┬───────┬───────┬───────┬───────┬───────┬───────┐
+│ group ┆ pz0   ┆ pz1   ┆ pz2   ┆ pz3   ┆ pz4   ┆ pz5   │
+│ ---   ┆ ---   ┆ ---   ┆ ---   ┆ ---   ┆ ---   ┆ ---   │
+│ str   ┆ f64   ┆ f64   ┆ f64   ┆ f64   ┆ f64   ┆ f64   │
+╞═══════╪═══════╪═══════╪═══════╪═══════╪═══════╪═══════╡
+│ RB    ┆ 2.13  ┆ 2.58  ┆ -0.65 ┆ -0.12 ┆ 0.1   ┆ -0.05 │
+│ TE    ┆ 2.09  ┆ -0.96 ┆ 0.88  ┆ 0.62  ┆ -0.31 ┆ 0.26  │
+│ WR    ┆ -2.14 ┆ -0.68 ┆ -0.21 ┆ -0.42 ┆ 0.11  ┆ -0.2  │
+└───────┴───────┴───────┴───────┴───────┴───────┴───────┘
+  split-half r: [0.96, 0.94, 0.48, 0.78, 0.69, 0.77]
+  season r:     [0.87, 0.88, 0.48, 0.58, 0.6, 0.62]
+  season r, movers (348): [0.82, 0.82, 0.3, 0.5, 0.46, 0.44]
+  the position recovered from the 6 coordinates alone: 98.2% (the majority share 48.2%)
+
+H107: 1,575 consecutive-season pairs (200+ snaps both seasons)
+  tps_n: P (position labels) against Z (6 coordinates): error 0.0015356 -> 0.00085914; gain +44.1% (90% +36.7% to +51.5%)
+  cps_n: P (position labels) against Z (6 coordinates): error 0.0046047 -> 0.0049581; gain -7.7% (90% -27.3% to +15.5%)
+  -> H107: HELD IN PART
+side bets, next season's yards per game:
+  base (P + last season's volume, yards, snap share) against base + Z (Claude 45%): error 268.23 -> 266.74; gain +0.6% (90% -0.4% to +1.5%)
+  base against base + the role table: error 268.23 -> 265.59; gain +1.0% (90% -0.0% to +2.0%)
+  base + role table against base + Z (Claude 30%; a tie goes to the table): error 265.59 -> 266.74; gain -0.4% (90% -1.2% to +0.3%)
+    WR: n 772
+    TE: n 437
+    RB: n 366

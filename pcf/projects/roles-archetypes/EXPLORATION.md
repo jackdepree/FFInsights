@@ -421,3 +421,91 @@ What the brief should carry (the CEO decides):
 - **B2 is partly circular,** because its role part repeats whenever the coordinates do. So its player's own part (the residual) is reported apart, and the verdict names which part carried it.
 - **Side bet (Claude 50%):** the target-group value alone (B1's) repeats for movers at r 0.2 or more.
 - **Pays? (reported, not part of the pass rule):** each team-season's average of last season's credits for its skill players on the field. Does it forecast this season's offensive EPA per play beyond last season's EPA per play? This is the roster-change idea at small scale: the partial correlation with a team bootstrap, for each model.
+
+### Results of the second look
+
+> Run 2026-11-24: `explore/h107_positionless.py` and `explore/h108_credit.py` (each `.txt` beside it). **Verdicts are by the pass rule; the CEO closes them.**
+
+#### The pooled positionless space
+
+- **6 components across WR, TE and RB together.** Explained share: 0.41, 0.17, 0.09, 0.07, 0.05, 0.05. Read from their loadings:
+  - pz0: **in tight or split out** (on for runs and heavy sets, off in 11 personnel);
+  - pz1: **the ball carrier** (carries per run snap, targets behind the line, short depth);
+  - pz2: the red zone and the middle;
+  - pz3: 12 personnel;
+  - pz4: **the featured player** (snap share and targets per pass snap);
+  - pz5: targets in heavy sets.
+- **It rediscovers the positions on its first two axes.** The position comes back from the 6 coordinates alone 98.2% of the time (the majority share is 48%). The other four axes say how a player differs within his position.
+- **It is far more consistent than the per-position fits (M2):**
+
+  | | pz0 | pz1 | pz2 | pz3 | pz4 | pz5 |
+  |---|---|---|---|---|---|---|
+  | Split-half r | 0.96 | 0.94 | 0.48 | 0.78 | 0.69 | 0.77 |
+  | Season r | 0.87 | 0.88 | 0.48 | 0.58 | 0.60 | 0.62 |
+  | Season r, movers (348) | 0.82 | 0.82 | 0.30 | 0.50 | 0.46 | 0.44 |
+
+  5 of 6 components repeat at 0.5+ within a season, and movers keep most of it. Part of that is the positions themselves, which repeat by construction, like measurables. The within-position axes (pz3–pz5) still repeat at 0.44–0.62 for movers.
+
+#### H107: a latent space describes players better than position labels (CEO 75%; Claude 80%) — **held in part**
+
+- **The data:** 1,575 consecutive-season pairs (WR 772, TE 437, RB 366).
+- **Next season's targets per snap:** the 6 coordinates beat the 3 position labels by **44%** of the squared error (90% +37% to +52%). **Clear.**
+- **Next season's carries per snap:** −7.7% (−27% to +16%). **Not clear.** Carries are a step, near zero for receivers and tight ends and large for backs. The labels catch the step exactly, and a straight-line model on the coordinates blurs it.
+- **Claude's side bets**, on next season's yards per game:
+  - **Beyond the obvious input (45%): no.** Adding the coordinates to the position plus last season's volume, yards and snap share gains +0.6% (−0.4% to +1.5%).
+  - **Against a role table of the same size (30%): no.** The table gains +1.0% (−0.0% to +2.0%), and the coordinates against the table give −0.4% (−1.2% to +0.3%). **A tie, so the simpler table wins.**
+- **Reading:**
+  - **Real?** Yes: as a description, the space carries what the position label carries (98%) and more (how much he's targeted, his depth, his personnel), and it repeats for movers.
+  - **Pays?** Not beyond what a forecaster already has (last season's volume), and not beyond six named features.
+
+#### H108: outcomes attributed by responsibility (CEO 50%; Claude 25%) — **held** by the pass rule, **carried by the role's part**
+
+- **The data:** every regular-season pass and run 2016–2024, with the skill players on the field. 1,211 player-season pairs with 300+ plays both seasons (255 movers).
+- **The penalties chosen on 2016:** A 1,000; B1 30; B2 1,000.
+- **Season-to-season r of each credit:**
+
+  | Credit | Movers | Stayers |
+  |---|---|---|
+  | A, plain plus-minus | 0.10 | 0.21 |
+  | B1, by responsibility | 0.14 | 0.22 |
+  | the target value | 0.20 | 0.38 |
+  | the support value | 0.01 | 0.16 |
+  | B2, by latent identity | **0.23** | 0.38 |
+  | his own part | 0.11 | 0.19 |
+  | the role's part | 0.29 | 0.53 |
+
+- **Against A, for movers:**
+  - B1 +0.04 (90% −0.07 to +0.16): **not clear**;
+  - B2 **+0.13** (+0.06 to +0.21): **clear**, so the pass rule says held;
+  - B2's own part +0.01 (−0.02 to +0.04): nothing.
+- **Which part carried it:** as pre-registered, B2's gain is all in the role's part. The role weights, re-fit every season, put nearly all their weight on pz4, the featured player: +0.005 to +0.019 EPA a play per unit, positive in all 9 seasons. **A play goes better when the offense's featured, high-target players are on the field.** That credit follows the role to a new team because the role travels (pz4 repeats 0.46 for movers). The player's own part, beyond his role, repeats no more than plain plus-minus.
+- **Side bet (Claude 50%): at the line.** The target value repeats for movers at r 0.20 (0.09 to 0.29). Not counted as cleared.
+- **Pays?** Last season's credits on the field against this season's offensive EPA per play, beyond last season's (256 team-seasons; last season alone r 0.38). Partial r:
+
+  | Credit | Partial r | 90% interval |
+  |---|---|---|
+  | A | +0.19 | 0.10 to 0.29 |
+  | B1 | −0.01 | −0.10 to +0.08 |
+  | B2 | +0.21 | 0.11 to 0.32 |
+  | B2's own part | +0.17 | 0.07 to 0.26 |
+
+  **B2 ties A, so the simpler A wins.** B1 pays nothing.
+- **Reading:**
+  - **Real?** Yes, in the CEO's sense: part of a play's value belongs to the role a player fills (the featured target), and it travels with him.
+  - **Pays?** No more than plain plus-minus, which already pays at this scale (and VOE already uses it).
+  - **The support group's value doesn't repeat (0.01 for movers).** Free data can't see what a support player does, so it can't credit him for it.
+
+#### The case against the second look
+
+1. **The pooled space's consistency is partly the positions'.** Its first two axes are WR against TE against RB, which don't change, so their 0.82 repeat for movers is no more a discovery than the measurables' was.
+2. **H107's carries result is a model-shape failure, not a football one.** A tree or a position-by-coordinate interaction would catch the step. The pre-registered ridge didn't, and the verdict stands as run.
+3. **H108's B2 "held" is the circular part, as warned:** coordinates that repeat make a role credit that repeats. That only matters if the role credit is value, not selection (good offenses feature their best receivers). The team forecast (B2 ties A) says it adds little beyond plain plus-minus.
+4. **B1's light penalty (30, chosen on 2016)** makes its two values noisy. A heavier one might rescue its team forecast, but it was chosen as pre-registered.
+5. **One season of plays per credit;** pairs need 300+ plays, so fringe players are out.
+
+#### Go, and what changes for the brief
+
+Still **go** for `roles-retro` on offense. The second look adds:
+- **The pooled space is the better latent space:** one positionless space for WR, TE and RB, with the positions on its first two axes and four within-position axes that repeat. It beats per-position PCA on consistency.
+- **Its forecasting value is description, not edge.** The six-feature role table ties it downstream, so the build ships both, and the table wins ties.
+- **Credit by role (B2's role part) is a candidate input for VOE,** which currently credits each skill player on the field alike. It's a portable part of value, but it doesn't beat plain plus-minus on the team forecast here.
