@@ -34,7 +34,7 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **The touchdown expert** (`td-expert`, built 2026-11-24, validating): expected touchdowns per chance, drive touchdown chances, the luck measure and six count forecasts (players, thrown, teams; next game and rest of season). Volume forecasts touchdowns as well as chances do; trees win for players next game; QBs' red-zone carries pay. Waiting for the CEO's spot-check.
 
-**Roles and archetypes** (`roles-archetypes`, the CEO's pick, 2026-11-24): what each player is asked to do, from usage. Kickoff in the strategy chat ([brief](../projects/roles-archetypes/BRIEF.md)); the CEO's hunches H99-H102 are in. Its first deliverable is I113's role table.
+**Roles and archetypes** (`roles-archetypes`, the CEO's pick, 2026-11-24): what each player is asked to do, from usage. Kickoff in the strategy chat ([brief](../projects/roles-archetypes/BRIEF.md)); the CEO's hunches H99-H108 are in and closed. The exploration is done (go, three looks: pooled positionless spaces for offense and defense repeat and travel, but add nothing beyond a player's own last-season rates); the brief is drafted (2026-11-24) and waits for the CEO's agreement. Its first deliverable is I113's role table.
 
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 

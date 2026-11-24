@@ -1,6 +1,6 @@
 # Roles and archetypes: what each player is asked to do
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "i would like to start roles and archetypes, please"). The CEO's hunches H99 to H106 are in, all with the CEO's odds (2026-11-24). Nothing has been tested for this project yet.
+> **Status:** kickoff, 2026-11-24 (the CEO: "i would like to start roles and archetypes, please"). The CEO's hunches H99 to H108 are in, all with the CEO's odds. **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md), three looks), and the CEO closed H99 to H108 as their pass rules read (2026-11-24: "Yes h99-h108 can be closed"). The CEO's direction after each look is below, word for word. **The brief proper is drafted at the end (2026-11-24) and waits for the CEO's agreement,** with its no-noise target.
 
 ## Why now
 
@@ -147,3 +147,176 @@ The CEO's fourth message, 2026-11-24, after the second look and Claude's options
 - **The coordinates are judged as a forecasting input,** not only as a shared map ("we can still treat the latent space coordinates as a forecasting input so that we appropriately stress test the idea and we can always revert to a shared map approach later on"). The brief's success tests score them downstream, against position labels and the role table, with the table winning ties.
 - **H99 to H108 closed** as their pass rules read.
 - **The pooled defense check runs now** (EXPLORATION.md, the third look).
+
+## The CEO's fifth message, 2026-11-24 (word for word)
+
+> "Yes please proceed and draft the brief, these are great findings! After the brief we can start another project"
+
+---
+
+*The brief proper starts here (drafted 2026-11-24, after three looks; **not yet agreed**).*
+
+**Status:** draft (2026-11-24) · **Layer:** expert (layer 1) · **Cadence:** retrospective (rule m: the in-season role-change chance went to participation, the CEO, 2026-11-24)
+
+## Methods
+
+The ladder (rule k) runs them in order, and each rung must beat the one below.
+
+| | Method | What it assumes | Cost |
+|---|---|---|---|
+| 1 | **The usual way, and the simpler side: a role table plus named roles.** Six hand-picked features per side, plus explicit rules that name roles from them (below) | A few features carry the role; named cuts are stable enough | Cheap. Version 1 is in the exploration (I113, H107's table) |
+| 2 | **The CEO's latent space: one pooled PCA per side.** Offense: WR, TE and RB together. Defense: DL, OLB, ILB, CB and S together. 6 components each, no position label, no measurables | Roles lie along a few straight directions, and the stable ones are those that separate positions (the third look) | A session. The exploration's version passed on both sides |
+| 3 | **Exploratory: a small nonlinear embedding.** An autoencoder, fit on the same features per side, with a 6-number middle layer | Roles bend: a receiving back and a move tight end may be close in a way no straight axis shows. It also catches H107's carries step, which the straight-line model missed | A session, plus seeds (its fitting noise must be measured). It must beat PCA clearly or PCA ships |
+
+## The noise ceiling (from the exploration)
+
+- **How much a role repeats:**
+  - **Playing time** repeats most: snap share 0.90 within a season.
+  - **When he's on the field:** team-adjusted own-snap shares 0.69–0.88; the red zone only 0.29.
+  - **What he does:** targets per pass snap 0.69, target depth 0.52, rushes per pass snap 0.42, passes defensed only 0.12.
+- **The pooled spaces:**
+  - offense: 5 of 6 components at split-half 0.5+;
+  - defense: 5 of 6, and 4 of 6 centred within position;
+  - movers keep most of it (the defense's rusher-or-dropper axis repeats 0.80 for movers).
+- **Label noise:** a 2-cluster mixture's label flips between a season's halves 14% of the time. Any named role must beat that.
+- **Efficiency barely repeats** (EPA per target 0.11–0.12 within a season, per touch 0.29). So the role is the input, not a performance score.
+
+## The question
+
+What is each player asked to do? Described as coordinates in a positionless space (one for offense, one for defense) and as named roles, published after each season. Do those beat position labels as forecasting inputs?
+
+## Why it matters
+
+- **Other experts are waiting for it:**
+  - skill-over-expected reads its measures within role (I113);
+  - VOE could credit value by role, which traveled with movers (H108);
+  - `vacated-opportunity` asks who's like the missing player (H101);
+  - availability reads deep-target receivers' risk (H95).
+- **The depth chart's labels are wrong where the roles blur.** Half the listed outside linebackers are edge rushers indistinguishable from defensive linemen. A quarter of safeties play like corners.
+- **Users would notice it** in player comparisons ("players like him"), in a role column on every player page, and in role-aware projections for movers and backups.
+
+## Terms
+
+- **Standard terms used:** snap share, personnel, target depth (aDOT), EPA ([`docs/GLOSSARY.md`](../../docs/GLOSSARY.md)).
+- **New terms:**
+  - **Pooled role space:** one PCA per side of the ball, fit across its positions together, with no position label. Offense's 6 axes:
+    - in tight or split out;
+    - the ball carrier;
+    - red zone and middle;
+    - 12 personnel;
+    - the featured player;
+    - targets in heavy sets.
+
+    Defense's 6 axes:
+    - box or coverage;
+    - rusher or dropper;
+    - red zone;
+    - the tackler;
+    - 3rd down;
+    - playing time.
+
+    The build re-reads and renames them after its refits.
+  - **Role coordinates:** a player-season's 6 numbers in his side's space, with an interval.
+  - **Named role:** a region of the space with an explicit rule, for example "edge" (rushes per pass snap above a cut, DL or OLB alike) or "slot defender" (CB or S on the field mostly against 11 personnel). The rules are set in the build and logged as technical calls.
+  - **Team-adjusted own-snap share:** the share of his snaps that are, say, runs, minus his team's share of runs (the better role measure in H99).
+  - **Role credit:** the part of a play's EPA credited to the roles on the field (H108's role part), offered to VOE.
+
+## Builds on
+
+| Project | What we use | Why |
+|---|---|---|
+| `participation` | `player_play.on_field` (who's on the field, after the season) | The on-field counts every feature comes from |
+| `schemes-v2` | `team_season.charted` | The scheme traits roles cluster on (H103's side bet) |
+| `skill-over-expected` | I113, its 14 measures | The first user, reading measures within role |
+| `voe` | plain plus-minus (FINDINGS' VOE row) | H108's role credit is offered to it, and plain plus-minus is the bar |
+| `crude-forecaster` | the yardstick (`score_input`) | The downstream score |
+| `opportunity-quality` | F-rows on target depth and deep share | Usage measures already known to repeat |
+
+**Already tried (the exploration; don't redo):**
+- **On/off tilts** as a general role measure repeat less than own-snap shares (H99 failed); they stay only as inputs inside the space.
+- **One PCA per position** repeats worse than the pooled space.
+- **A mixture by BIC** gives playing-time tiers, not roles.
+- **Role × scheme effects on efficiency** (H103, H106) and role targeting in free agency (H105) failed.
+- **The in-season role-change chance** reduces to the snap-share change (H102) and moved to participation.
+
+## Assumptions
+
+1. **Participation's on-field lists are complete** for the players we place. The back seven's weak on/off tilts (H99) may partly be recording noise, flagged.
+2. **A role is a season-level trait** of the player with his team. It's published after the season and used next season as a prior (rule m).
+3. **Free data sees the target group, not the support group's job:** no alignment, blocking or coverage assignment. Slot against outside, and man against zone roles, rest on proxies (personnel faced, the middle-target share, the depth chart's slot label where a team lists one). Each named role states its proxy.
+4. **Players under 200 snaps** are placed in the same space and shrunk toward their position's mean, by his snaps over his snaps plus 200.
+5. **Measurables stay outside the space** (they repeat by construction); they're separate fixed inputs.
+6. **Depth-chart positions** are used only to report and to compare, never inside the space.
+
+## Goals
+
+- Two pooled role spaces (offense, defense), refit after each completed season, with coordinates and intervals for every player-season since 2016.
+- Named roles that are stable, with flips between halves below 14%, and that read as football.
+- The coordinates scored as a forecasting input (the CEO, 2026-11-24: "we can still treat the latent space coordinates as a forecasting input so that we appropriately stress test the idea and we can always revert to a shared map approach later on").
+- The role table (I113's next version) for skill-over-expected.
+
+## Tests
+
+- **Success looks like:**
+  1. **Consistency, held out:** fit on 2016–2020; on 2021–2024, 4 or more of each side's 6 components repeat at split-half 0.5+, centred within position, and movers keep at least half of each component's season r.
+  2. **Against position labels:** next season's per-snap rates (targets and carries; tackles and rushes per pass snap) from the coordinates beat the position labels (the exploration: +44% for targets, +26–28% for defense, carries not clear).
+  3. **Beyond his own rates (the stricter test):** the coordinates add to position labels plus his own last-season rates and snap share. **The exploration found nothing here on either side**, so this is the test most likely to fail.
+  4. **The yardstick:** through `score_input`, beside participation, on the receiving and rushing rest-of-season boards. The gain clears its interval and the 19 shuffled copies (coordinates shuffled within position).
+  5. **Named roles:** flip between halves under 14%. Like-for-like substitutes on the pooled space rank under 0.5 (H101's test).
+- **Ties (rule k):** a tie is an interval that includes zero, and the simpler side wins it. The simpler side, named now:
+  - position labels plus his own rates over the coordinates;
+  - the role table over the pooled PCA;
+  - the pooled PCA over the nonlinear embedding;
+  - the lasso over trees.
+- **Failure looks like:** tests 3 and 4 fail, which the exploration expects. The coordinates then ship as a **shared map**: description, comparables, the bin other measures are read within. They're not a forecasting input, as the CEO allowed. If test 1 fails too, the role table ships alone.
+- **No-noise target (the CEO approves):** next season's per-snap usage rates (targets and carries per snap; tackles and rushes per pass snap), against position labels plus his own last-season rates. Downstream: the yardstick's rest-of-season receiving and rushing boards.
+- **Seasons:** 2016–2024 (participation's span), fit 2016–2020, scored 2021–2024 walk-forward; the vault is 2025, untouched.
+
+## Inputs and outputs
+
+- **Inputs** (known-at in brackets):
+  - `player_play.on_field` [after the season];
+  - play-by-play: targets, air yards, pass location, carries, run direction, tacklers, sacks and hits, passes defensed [after each game];
+  - `team_season.charted` [after the season];
+  - measurables from `players` and the combine [offseason], beside the space, not in it.
+- **Outputs** (player-team-season, published after each season, known-at the season's last game plus participation's release):
+  - offense or defense coordinates (6), each with a split-half interval;
+  - named role and how sure the rule is (distance to its cut);
+  - the role table's six features;
+  - the shrinkage weight (for players under 200 snaps);
+  - the PCA version (axes aligned to the last fit).
+
+## How it will be used
+
+- **As a prior in next season's in-season models,** from completed seasons only (rule m):
+  - skill-over-expected (within-role measures);
+  - participation (its role-change chance reads last season's role);
+  - `vacated-opportunity`;
+  - VOE (role credit);
+  - availability.
+- **In the yardstick,** as a candidate input (test 4).
+- **In products:** player pages (role and comparables), and mover and backup projections.
+
+## Plan
+
+- **Ladder:** position labels (baseline) → the role table and named roles, lasso (method 1) → the pooled PCA per side (method 2) → trees on the coordinates (for H107's carries step) → the nonlinear embedding (method 3). Each rung must beat the one below; the ladder stops when one doesn't.
+- **Time box:** three build sessions:
+  1. package code, the on-field counts and both pooled spaces with refits, consistency and shrinkage;
+  2. named roles, the forecasting tests and the yardstick;
+  3. the nonlinear embedding and the scorecard.
+- **Later, by the expansion plan the CEO agreed:**
+  - quarterbacks as their own space;
+  - rookies started from measurables and draft slot. That's an offseason event, so by rule m it registers as its own small expert when built.
+- **The backlog it carries:**
+  - I57 (route mix; the forecast itself);
+  - I113 (the role table);
+  - I122 (a shrunk vacancy forecast);
+  - I123 (labels that aren't playing time);
+  - I49 (swap pairs, with participation).
+- **Technical calls (for veto):**
+  - **Refits:** each side's PCA is refit after every completed season on all completed seasons. The new axes are rotated to match the last fit (Procrustes), so a coordinate keeps its meaning across versions. Walk-forward history: season s's coordinates come from a fit on seasons up to s.
+  - **Inputs inside the space:** the team-adjusted own-snap shares and the on/off tilts both stay in. PCA weights them, and H99's failure was as a stand-alone measure.
+  - **Placement and shrinkage:** players are fit on 200+ snaps; those under 200 are placed and shrunk by snaps / (snaps + 200).
+  - **Measurables:** outside the space.
+  - **Named-role rules:** set on the 2016–2020 fit, frozen for scoring.
+  - **Trees:** added as a rung (not in the exploration) to answer the carries step.
