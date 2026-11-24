@@ -1,0 +1,8 @@
+rows (played, 2017-2024): 189,181; injuries 6,424
+  H1: touches beside the counts (the usual way)                      +0.088% (+0.042 to +0.137)  clear
+  H2: tackles made and hits taken beside counts and touches          +0.023% (-0.002 to +0.048)  covers 0
+     H2 on defensive players' rows (tackles, sacks, hits made)       +0.076% (+0.042 to +0.114)  clear
+     H2 on offensive players' rows (a passer's sacks and hits taken) -0.050% (-0.083 to -0.018)  clear, worse
+
+Consistency, defenders' tackles made per snap (player-games with 10+ snaps), within position and season:
+{'measure': 'tps_w', 'week_r': 0.287, 'week_lo': 0.268, 'week_hi': 0.306, 'season_r': 0.335, 'season_lo': 0.314, 'season_hi': 0.356, 'unit_seasons': 6292, 'season_pairs': 4724, 'mean_abs': 0.043, 'verdict': 'trait'}

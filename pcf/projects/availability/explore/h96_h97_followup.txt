@@ -1,0 +1,47 @@
+rows (played, 2017-2024): 189,181; injuries 6,424
+====================================================================================================
+A. Averaging: within position, how close is the risk-weighted sum to a count?
+  QB: corr(last-4 weighted, last-4 count) 0.991; season to date 0.996; a game's average risk per play varies by 7.3% of its mean (single plays: 34%)
+  RB: corr(last-4 weighted, last-4 count) 0.996; season to date 0.998; a game's average risk per play varies by 7.6% of its mean (single plays: 34%)
+  WR: corr(last-4 weighted, last-4 count) 0.997; season to date 0.998; a game's average risk per play varies by 6.3% of its mean (single plays: 33%)
+  TE: corr(last-4 weighted, last-4 count) 0.998; season to date 0.999; a game's average risk per play varies by 6.2% of its mean (single plays: 33%)
+  OL: corr(last-4 weighted, last-4 count) 0.996; season to date 0.998; a game's average risk per play varies by 6.4% of its mean (single plays: 35%)
+  DL: corr(last-4 weighted, last-4 count) 0.981; season to date 0.989; a game's average risk per play varies by 11.1% of its mean (single plays: 35%)
+  LB: corr(last-4 weighted, last-4 count) 0.997; season to date 0.998; a game's average risk per play varies by 6.6% of its mean (single plays: 36%)
+  DB: corr(last-4 weighted, last-4 count) 0.998; season to date 0.999; a game's average risk per play varies by 6.7% of its mean (single plays: 46%)
+  -> median group correlation 0.997: averaging explains most of it (0.95+)
+
+B. Acute, not cumulative: the same game, after the fact (not a forecast)
+  B: this game's weighted sum against its count (pre-registered)     +0.136% (+0.104 to +0.170)  clear
+     both, against the count alone                                   +0.121% (+0.073 to +0.170)  clear
+     (D's description) this game's personal contacts beside its count +0.504% (+0.418 to +0.588)  clear
+
+C. The ceiling: a simulated world where the play model is exactly true and risk is acute
+  real injuries per game 0.0340; the model's expected per game 0.0285 (scrimmage plays only; real ones include special teams)
+  C1, same game, weighted against count: mean -0.156% over 10 draws (range -0.264 to -0.039)
+  C2, H96's forward test on the drawn injuries: mean +0.025% (range +0.006 to +0.041); intervals covering 0: 2 of 10
+
+D. Personal contacts (carries, catches, hit or sacked as passer, tackles made), a forecast like H96
+  D: contacts (last game, last 4, season) beside the counts (pre-registered) +0.123% (+0.078 to +0.171)  clear
+     (H96 again, for scale) risk-weighted against counts             -0.017% (-0.030 to -0.005)  clear, worse
+    RB: contacts per snap over the last 4 games, mean 0.388; corr with the count 0.90
+    WR: contacts per snap over the last 4 games, mean 0.090; corr with the count 0.80
+    TE: contacts per snap over the last 4 games, mean 0.065; corr with the count 0.77
+    LB: contacts per snap over the last 4 games, mean 0.127; corr with the count 0.87
+    DB: contacts per snap over the last 4 games, mean 0.097; corr with the count 0.83
+    QB: contacts per snap over the last 4 games, mean 0.152; corr with the count 0.75
+
+E. Is H98's gain recency or the risk weights? (each beside the counts set, H98's half-lives)
+     recency on plain counts, beside the counts                      +0.195% (+0.121 to +0.268)  clear
+     recency on risk-weighted plays (H98's), beside the counts       +0.127% (+0.065 to +0.190)  clear
+  E: weighted against plain counts, both with recency                -0.068% (-0.101 to -0.037)  clear, worse
+  -> recency on plain counts gets 153% of the weighted version's gain
+
+F. A trait, not a load: his career-long average risk per play
+  F: career risk per play beside career injuries and snaps per game  -0.002% (-0.007 to +0.004)  covers 0
+
+G (addendum, after A-D's first run): the same tests with log exposure, log(1 + snaps) and log(weighted + one play's risk)
+  G-B: this game's log weighted sum against its log count (real injuries) +0.039% (+0.024 to +0.055)  clear
+  G-H96: last 4 and season, log weighted against log counts (real)   -0.003% (-0.009 to +0.002)  covers 0
+  G-C1, same game on drawn injuries: mean +0.098% (range +0.044 to +0.141)
+  G-C2, H96's forward test on drawn injuries: mean +0.008% (range +0.003 to +0.014); intervals covering 0: 4 of 10

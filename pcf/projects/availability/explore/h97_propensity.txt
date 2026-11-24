@@ -1,0 +1,72 @@
+========================================================================================== 
+1. Play level, any injury on the play, within play type (the pre-registered test)
+  (a) more than one tackler                                      rate ratio  1.27 (1.20 to 1.33)  above 1   plays with it: 58,421
+  (b) a tackle behind the line (tackle for loss or sack)         rate ratio  0.94 (0.86 to 1.01)  covers 1  plays with it: 22,464
+  (c) over 5 s of game clock, incomplete passes                  rate ratio  1.48 (1.32 to 1.66)  above 1   plays with it: 18,433
+  (c') time to throw over 3.5 s, passes                          rate ratio  1.12 (1.04 to 1.20)  above 1   plays with it: 25,659
+  -> features above 1: 2 of 3 ((c) counts if either stand-in is above 1)
+  incomplete passes with a clock length: 53,624; median 5.0 s; share over 5 s 0.344
+
+  Checks beside the test (not the pass rule):
+  (a) among tackled plays only: 2+ tacklers against 1            rate ratio  1.20 (1.14 to 1.27)  above 1   plays with it: 58,421
+      3+ tacklers against fewer                                  rate ratio  2.57 (1.37 to 3.88)  above 1   plays with it: 206
+========================================================================================== 
+2. Player level, by position group (rate ratio within play type, the player injured)
+ QB: 297,152 player-plays, 205 injured
+     (a) more than one tackler                                   rate ratio  0.78 (0.54 to 1.09)  covers 1  plays with it: 58,589
+     (b) a tackle behind the line                                rate ratio  5.18 (4.05 to 6.65)  above 1   plays with it: 22,489
+     (c) over 5 s, incomplete passes                             rate ratio  1.80 (1.00 to 3.32)  above 1   plays with it: 18,477
+     (c') time to throw over 3.5 s                               rate ratio  2.93 (1.99 to 4.15)  above 1   plays with it: 25,737
+ RB: 327,236 player-plays, 349 injured
+     (a) more than one tackler                                   rate ratio  1.31 (1.07 to 1.59)  above 1   plays with it: 66,466
+     (b) a tackle behind the line                                rate ratio  1.80 (1.37 to 2.29)  above 1   plays with it: 25,076
+     (c) over 5 s, incomplete passes                             rate ratio  0.94 (0.34 to 2.03)  covers 1  plays with it: 19,679
+     (c') time to throw over 3.5 s                               rate ratio  1.00 (0.60 to 1.49)  covers 1  plays with it: 27,635
+ WR: 760,091 player-plays, 660 injured
+     (a) more than one tackler                                   rate ratio  1.05 (0.85 to 1.26)  covers 1  plays with it: 142,798
+     (b) a tackle behind the line                                rate ratio  0.12 (0.04 to 0.21)  below 1   plays with it: 56,567
+     (c) over 5 s, incomplete passes                             rate ratio  2.04 (1.63 to 2.57)  above 1   plays with it: 49,158
+     (c') time to throw over 3.5 s                               rate ratio  1.00 (0.82 to 1.20)  covers 1  plays with it: 67,199
+ TE: 380,662 player-plays, 250 injured
+     (a) more than one tackler                                   rate ratio  1.33 (1.01 to 1.71)  above 1   plays with it: 79,283
+     (b) a tackle behind the line                                rate ratio  0.55 (0.28 to 0.86)  below 1   plays with it: 29,395
+     (c) over 5 s, incomplete passes                             rate ratio  0.94 (0.54 to 1.55)  covers 1  plays with it: 22,740
+     (c') time to throw over 3.5 s                               rate ratio  0.98 (0.68 to 1.31)  covers 1  plays with it: 32,633
+ OL: 1,491,425 player-plays, 1107 injured
+     (a) more than one tackler                                   rate ratio  1.14 (1.01 to 1.29)  above 1   plays with it: 294,855
+     (b) a tackle behind the line                                rate ratio  1.47 (1.25 to 1.70)  above 1   plays with it: 113,228
+     (c) over 5 s, incomplete passes                             rate ratio  0.75 (0.54 to 1.02)  covers 1  plays with it: 92,484
+     (c') time to throw over 3.5 s                               rate ratio  0.99 (0.80 to 1.21)  covers 1  plays with it: 128,883
+ DL: 956,945 player-plays, 1069 injured
+     (a) more than one tackler                                   rate ratio  1.44 (1.28 to 1.62)  above 1   plays with it: 193,162
+     (b) a tackle behind the line                                rate ratio  1.14 (0.94 to 1.35)  covers 1  plays with it: 73,035
+     (c) over 5 s, incomplete passes                             rate ratio  1.80 (1.28 to 2.50)  above 1   plays with it: 57,318
+     (c') time to throw over 3.5 s                               rate ratio  1.46 (1.18 to 1.76)  above 1   plays with it: 80,657
+ LB: 864,589 player-plays, 920 injured
+     (a) more than one tackler                                   rate ratio  1.42 (1.26 to 1.60)  above 1   plays with it: 173,296
+     (b) a tackle behind the line                                rate ratio  0.75 (0.58 to 0.93)  below 1   plays with it: 65,843
+     (c) over 5 s, incomplete passes                             rate ratio  0.78 (0.47 to 1.20)  covers 1  plays with it: 53,188
+     (c') time to throw over 3.5 s                               rate ratio  0.98 (0.77 to 1.20)  covers 1  plays with it: 73,941
+ DB: 1,436,828 player-plays, 1757 injured
+     (a) more than one tackler                                   rate ratio  1.27 (1.14 to 1.40)  above 1   plays with it: 275,885
+     (b) a tackle behind the line                                rate ratio  0.35 (0.26 to 0.43)  below 1   plays with it: 108,113
+     (c) over 5 s, incomplete passes                             rate ratio  1.94 (1.57 to 2.40)  above 1   plays with it: 92,056
+     (c') time to throw over 3.5 s                               rate ratio  1.07 (0.95 to 1.22)  covers 1  plays with it: 127,421
+========================================================================================== 
+3. Per-play models, walk-forward 2017-2024 (held-out log loss per player-play)
+  scored player-plays 5,807,440; injuries 5,672; base log loss per play 0.007748
+  play                       log loss removed against position x play type: +0.82% (+0.70 to +0.93)
+  play+fatigue               log loss removed against position x play type: +1.21% (+1.08 to +1.33)
+  trees play+fatigue s0      log loss removed against position x play type: +1.40% (+1.29 to +1.50)
+  trees play+fatigue s1      log loss removed against position x play type: +1.38% (+1.28 to +1.47)
+  trees play+fatigue s2      log loss removed against position x play type: +1.25% (+1.15 to +1.34)
+  I29 side check: the fatigue bins (game snap, drive play) beside the play features: +0.39% (+0.32 to +0.45)
+  trees' seed spread: +1.247% to +1.396%
+
+  The logistic 'play' model's injury rate by fatigue bin (per 1,000 player-plays, all seasons):
+   his snaps so far in the game (<=15, 16-35, 36-55, 56+):
+     offense: 0.64, 0.82, 0.97, 0.77
+     defense: 0.80, 1.25, 1.54, 1.37
+   play number in the drive (1-3, 4-6, 7-9, 10+):
+     offense: 0.78, 0.77, 0.88, 0.76
+     defense: 1.06, 1.24, 1.24, 1.22

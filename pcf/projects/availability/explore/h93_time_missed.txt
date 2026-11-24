@@ -1,0 +1,26 @@
+injuries with age: 9,235; scored 2016-2024: 7,186; with 1+ past injury: 0.671
+shrinkage k chosen per season: [0.5, 2, 8, 0.5, 8, 0.5, 8, 2, 1]
+==================================================================================================== 
+H93, walk-forward 2016-2024: share of the error removed
+  pre-registered: past injuries, recovery rate, age vs position average (log(1+games)) +1.62% (+1.09 to +2.21)
+  the same, Poisson regression, Poisson deviance                                 +2.05% (+1.21 to +2.99)
+  the same, chance of missing 1+ game, log loss                                  +0.99% (+0.63 to +1.38)
+  -> H93 as worded: HELD
+Claude's side bet: beside the after-the-fact ceiling (next week's status x body part)
+  the ceiling alone vs position average (log(1+games))                           +61.95% (+59.73 to +64.19)
+  the three, added beside the ceiling                                            +0.24% (-0.22 to +0.69)
+
+Description, all seasons (log(1+games) per unit):
+  log(1+past injuries)               -0.1375
+  past injuries per 1,000 snaps      +0.0366
+  log(1+shrunk recovery, games)      +0.1818
+  age-27                             +0.0252
+  (age-27)^2                         -0.0016
+  age 20-24:  3296 injuries, mean games missed 1.43, share missing 1+ 0.345
+  age 25-27:  3248 injuries, mean games missed 1.47, share missing 1+ 0.342
+  age 28-30:  1843 injuries, mean games missed 1.53, share missing 1+ 0.352
+  age 31-40:   845 injuries, mean games missed 1.82, share missing 1+ 0.369
+  past in-game injuries 0   :  3042 injuries, mean games missed 1.87, share missing 1+ 0.394
+  past in-game injuries 1   :  1847 injuries, mean games missed 1.44, share missing 1+ 0.347
+  past in-game injuries 2-3 :  2045 injuries, mean games missed 1.45, share missing 1+ 0.355
+  past in-game injuries 4+  :  2301 injuries, mean games missed 1.11, share missing 1+ 0.281

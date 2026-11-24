@@ -1,0 +1,24 @@
+rows (played, 2017-2024): 189,181; injuries 6,424
+H98 half-life (games) chosen per season 2017-2024: [1, 1, 4, 4, 8, 2, 4, 2] (2017 and 2018 fall back to the first, with no inner season)
+====================================================================================================
+base log loss per player-game 0.14369
+  counts (last 4, season to date) beside the base                        +0.062% (+0.028 to +0.097) of the base's log loss
+  weighted (the same windows, risk-weighted) beside the base             +0.045% (+0.017 to +0.075) of the base's log loss
+  H96: weighted against counts (positive = weighted better)              -0.017% (-0.030 to -0.005) of the base's log loss
+  -> H96: FAILED
+  H98: the recency-weighted sum beside counts and the season's weighted sum +0.149% (+0.085 to +0.215) of the base's log loss
+  -> H98: HELD
+Exposure check (after the fact; this game's own snaps in both models, so the gain is per snap, not more snaps):
+    H98's sum beside this game's snaps, counts and the season's weighted sum +0.225% (+0.140 to +0.313) of the base's log loss
+    H96 with this game's snaps in: weighted against counts               -0.018% (-0.034 to -0.004) of the base's log loss
+Trait check (is H98's gain recency, or who he is?): the career-long average risk per game and past injuries in the base
+    the trait terms alone beside H98's base                              +1.368% (+1.086 to +1.657) of the base's log loss
+    H98's recency-weighted sum beside the trait terms                    +0.090% (+0.031 to +0.147) of the base's log loss
+
+Description: injuries per 100 games played, by quintile of the last 4 games' risk-weighted snaps (within position group)
+  quintile 1:  37834 games, 1.65 injuries per 100 games, 15 snaps that game on average
+  quintile 2:  37837 games, 2.03 injuries per 100 games, 17 snaps that game on average
+  quintile 3:  37839 games, 3.57 injuries per 100 games, 31 snaps that game on average
+  quintile 4:  37837 games, 4.49 injuries per 100 games, 40 snaps that game on average
+  quintile 5:  37834 games, 5.25 injuries per 100 games, 50 snaps that game on average
+  per 1,000 snaps that game (games with 20+ snaps): 0.74, 0.86, 0.94, 0.98, 0.93

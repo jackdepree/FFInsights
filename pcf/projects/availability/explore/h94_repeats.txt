@@ -1,0 +1,16 @@
+excluded as not injuries: ['Not Injury Related', 'Illness', 'Not injury related - resting player', 'Not injury related - personal matter']
+listings 2009-2024: 57180 | the 10 parts: ['Knee', 'Ankle', 'Hamstring', 'Shoulder', 'Concussion', 'Foot', 'Groin', 'Back', 'Hip', 'Calf']
+episodes: 27421
+
+part         episodes  R_same  R_other same/other  90% interval     repeats specifically?
+Knee             3443    1.35     1.17       1.15  (1.08 to 1.22)   yes
+Ankle            3033    1.15     1.20       0.96  (0.89 to 1.03)   no (covers 1)
+Hamstring        1941    1.36     1.11       1.22  (1.10 to 1.34)   yes
+Shoulder         1876    1.27     1.21       1.04  (0.93 to 1.15)   no (covers 1)
+Concussion       1484    1.10     1.14       0.96  (0.84 to 1.10)   no (covers 1)
+Foot              949    1.90     1.18       1.61  (1.31 to 1.89)   yes
+Groin             939    1.75     1.21       1.45  (1.18 to 1.72)   yes
+Back             1067    2.21     1.20       1.84  (1.55 to 2.12)   yes
+Hip               882    1.72     1.22       1.41  (1.15 to 1.68)   yes
+Calf              672    2.27     1.16       1.96  (1.46 to 2.45)   yes
+-> parts repeating specifically: 7; covering 1: 3; H94: HELD
