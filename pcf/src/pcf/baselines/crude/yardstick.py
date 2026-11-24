@@ -113,10 +113,9 @@ def shuffled_columns(base: type[Crude]) -> list[str]:
     return [f"shuffled_{col}" for col in groups[source]]
 
 
-def with_shuffled(feats: pl.DataFrame, base: type[Crude], seed: int) -> pl.DataFrame:
-    """The features plus the shuffled copy: one expert's columns, shuffled together within each
-    week, so they keep their spread and lose their link to the rows."""
-    cols = [col.removeprefix("shuffled_") for col in shuffled_columns(base)]
+def _shuffled_values(feats: pl.DataFrame, cols: Sequence[str], seed: int) -> np.ndarray:
+    """These columns' values with whole rows moved to other rows of the same week (the columns
+    move together, so they keep their relation to each other and lose their link to the row)."""
     order = feats.select("step").with_columns(
         row=pl.int_range(pl.len()), r=pl.int_range(pl.len()).shuffle(seed=seed).over("step")
     )
@@ -126,14 +125,31 @@ def with_shuffled(feats: pl.DataFrame, base: type[Crude], seed: int) -> pl.DataF
     source = feats.select(cols).to_numpy()
     values = np.empty_like(source)
     values[perm] = source[shuffled_rows]
+    return values
+
+
+def shuffle_within_weeks(feats: pl.DataFrame, cols: Sequence[str], seed: int) -> pl.DataFrame:
+    """The features with these columns shuffled together within each week, in place: a copy of
+    an input that keeps its spread and loses its link to the rows (the permutation null, R7)."""
+    values = _shuffled_values(feats, cols, seed)
+    return feats.with_columns(pl.Series(col, values[:, i]) for i, col in enumerate(cols))
+
+
+def with_shuffled(feats: pl.DataFrame, base: type[Crude], seed: int) -> pl.DataFrame:
+    """The features plus the shuffled copy: one expert's columns, shuffled together within each
+    week, so they keep their spread and lose their link to the rows."""
+    cols = [col.removeprefix("shuffled_") for col in shuffled_columns(base)]
+    values = _shuffled_values(feats, cols, seed)
     return feats.with_columns(
         pl.Series(f"shuffled_{col}", values[:, i]) for i, col in enumerate(cols)
     )
 
 
 # ---------------------------------------------------------------- building and caching a board
-def board_path(target: str, horizon: str) -> Path:
-    return get_config().zone("outputs") / "crude-forecaster" / "boards" / f"{target}_{horizon}"
+def board_path(target: str, horizon: str, rows: str = "participation") -> Path:
+    """A board's folder; a board under another row rule (`ROW_RULES`) gets its own."""
+    name = f"{target}_{horizon}" + ("" if rows == "participation" else f"_{rows}rows")
+    return get_config().zone("outputs") / "crude-forecaster" / "boards" / name
 
 
 def build_board(
@@ -143,10 +159,12 @@ def build_board(
     gateway: Gateway | None = None,
     seasons: Sequence[int] = range(2019, 2025),
     save: bool = True,
+    rows: str = "participation",
 ) -> Board:
     """The crude forecast's feature history through the gateway (every expert's columns
-    included), its outcomes and the shuffled copy; saved so later scorers start in seconds."""
-    base = variant(target, horizon, method)
+    included), its outcomes and the shuffled copy; saved so later scorers start in seconds.
+    `rows` picks the row rule (`ROW_RULES`: participation's chance of a snap by default)."""
+    base = variant(target, horizon, method, rows=rows)
     gateway = gateway or Gateway()
     first = base.first_train or get_config().seasons.first_train
     every = backtest.steps(gateway.calendar, base.cadence, range(first, max(seasons) + 1), base.run)
@@ -155,7 +173,7 @@ def build_board(
     outcomes = backtest.targets(base(), gateway)
     feats = with_shuffled(feats, base, get_config().seed)
     if save:
-        path = board_path(target, horizon)
+        path = board_path(target, horizon, rows)
         path.mkdir(parents=True, exist_ok=True)
         feats.write_parquet(path / "features.parquet")
         outcomes.write_parquet(path / "outcomes.parquet")
@@ -163,11 +181,15 @@ def build_board(
 
 
 def load_board(
-    target: str, horizon: str = "next", method: str = "lasso", gateway: Gateway | None = None
+    target: str,
+    horizon: str = "next",
+    method: str = "lasso",
+    gateway: Gateway | None = None,
+    rows: str = "participation",
 ) -> Board:
     """A saved board (built by `build_board`), with its steps rebuilt from the calendar."""
-    base = variant(target, horizon, method)
-    path = board_path(target, horizon)
+    base = variant(target, horizon, method, rows=rows)
+    path = board_path(target, horizon, rows)
     feats = pl.read_parquet(path / "features.parquet")
     outcomes = pl.read_parquet(path / "outcomes.parquet")
     gateway = gateway or Gateway()
@@ -371,39 +393,90 @@ def history_columns(
 
 def score_input(
     board: Board,
-    frame: pl.DataFrame,
+    frame: pl.DataFrame | None,
     name: str,
     fill: float | None = None,
     rows: pl.DataFrame | None = None,
+    *,
+    beside: Sequence[str] = (),
+    existing: Sequence[str] = (),
+    copies: int = 0,
+    seed: int | None = None,
 ) -> dict:
     """The one-call scorer: what the new columns in `frame` (the board's keys plus the columns,
-    made before each row's moment, e.g. by `history_columns`) add to the crude forecast, alone.
-    Missing values get the column's median, or `fill`. Returns the added-alone gain, its range
-    score change, both 90% intervals and the no-noise verdict."""
-    new_cols = [col for col in frame.columns if col not in board.keys]
-    if not new_cols:
+    made before each row's moment, e.g. by `history_columns`) add to the crude forecast.
+    Missing values get the column's median, or `fill`. Returns the gain, its range score change,
+    both 90% intervals and the no-noise verdict.
+
+    - `beside`: expert groups in both forecasts (e.g. ``("participation",)``): the gain is then
+      what the input adds beside them, not beside the crude inputs alone.
+    - `existing`: columns already on the board to add as (part of) the input, e.g. one expert's
+      column on its own; `frame` may then be None.
+    - `copies`: that many copies of the input, shuffled together within each week and refit
+      through the same walk (the permutation null, R7). The result then also gives the copies'
+      largest gain (`copies_max`, to print beside every row: I69), `p`, and `counts`, the
+      yardstick's rule: the 90% interval clears zero and the gain beats every copy.
+    - `rows`: score only these rows (keys); every row is still fit.
+    """
+    frame_cols = [] if frame is None else [col for col in frame.columns if col not in board.keys]
+    missing = set(existing) - set(board.features.columns)
+    if missing:
+        raise ValueError(f"score_input: columns {sorted(missing)} aren't on the board")
+    if not frame_cols and not existing:
         raise ValueError("score_input: the frame has no columns besides the board's keys")
-    clash = set(new_cols) & set(board.features.columns)
+    clash = set(frame_cols) & set(board.features.columns)
     if clash:
         raise ValueError(f"score_input: columns {sorted(clash)} are already on the board")
-    feats = board.features.join(frame, on=board.keys, how="left").with_columns(
-        c(col).fill_null(c(col).median() if fill is None else fill) for col in new_cols
-    )
-    crude = board.forecast()
-    new = board.forecast(extra=new_cols, feats=feats)
+    groups = board.base.expert_groups()
+    unknown = set(beside) - set(groups)
+    if unknown:
+        raise ValueError(f"score_input: no expert group {sorted(unknown)}")
+    doubled = {col for g in beside for col in groups[g]} & set(existing)
+    if doubled:
+        raise ValueError(f"score_input: {sorted(doubled)} are already in the groups beside it")
+    feats = board.features
+    if frame is not None:
+        feats = feats.join(frame, on=board.keys, how="left").with_columns(
+            c(col).fill_null(c(col).median() if fill is None else fill) for col in frame_cols
+        )
+    new_cols = [*existing, *frame_cols]
+    added = tuple(sorted(beside))
+    crude = board.forecast(added)
+    new = board.forecast(added, extra=new_cols, feats=feats)
     g = gain(new, crude, board.keys, rows)
-    return {
+    out = {
         "input": name, "target": board.base.target_spec.name, "horizon": board.base.horizon,
-        "method": board.base.method, "alone": g.share, "alone_lo": g.lo, "alone_hi": g.hi,
+        "method": board.base.method, "beside": "+".join(added) or "crude",
+        "alone": g.share, "alone_lo": g.lo, "alone_hi": g.hi,
         "range_alone": g.range_share, "range_lo": g.range_lo, "range_hi": g.range_hi,
         "verdict": g.verdict, "rows": g.rows, "weeks": g.weeks,
         "made": datetime.now(UTC).date().isoformat(),
     }  # fmt: skip
+    if copies:
+        first = (get_config().seed if seed is None else seed) + 1000
+        null, null_range = [], []
+        for k in range(1, copies + 1):
+            shuffled = shuffle_within_weeks(feats, new_cols, seed=first + k)
+            n = gain(board.forecast(added, extra=new_cols, feats=shuffled), crude, board.keys, rows)
+            null.append(n.share)
+            null_range.append(n.range_share)
+        ns = np.sort(null)
+        out |= {
+            "copies": copies, "copies_max": float(ns[-1]),
+            "copies_range_max": float(np.max(null_range)),
+            "p": (1 + int((ns >= g.share).sum())) / (copies + 1),
+            "counts": bool(g.lo > 0 and g.share > ns[-1]),
+        }  # fmt: skip
+    return out
 
 
 # ---------------------------------------------------------------- the lasso's coefficients
 def coefficients(
-    board: Board, added: Sequence[str] = (), draws: int = 200, seed: int | None = None
+    board: Board,
+    added: Sequence[str] = (),
+    draws: int = 200,
+    seed: int | None = None,
+    extra: Sequence[str] = (),
 ) -> pl.DataFrame:
     """The lasso's coefficients, readable: the fit a forecast after the board's last season would
     use (every row, recency-weighted), each input's coefficient in the target's units per one
@@ -416,7 +489,7 @@ def coefficients(
     pulls every coefficient toward zero (decision 0037)."""
     if board.base.method != "lasso":
         raise ValueError("coefficients: the board's rung must be the lasso")
-    expert = with_experts(board.base, tuple(sorted(added)))()
+    expert = with_experts(board.base, tuple(sorted(added)), extra=tuple(extra))()
     # every row, weighted as the walk weights them for the season after the board's last
     last = int(board.features["step_season"].max())
     train = (
@@ -442,6 +515,7 @@ def coefficients(
         boot[i] = m["coef"] / m["sd"]
     lo, hi = np.quantile(boot, [(1 - LEVEL) / 2, (1 + LEVEL) / 2], axis=0)
     groups = {col: g for g, members in expert.expert_groups().items() for col in members}
+    groups |= dict.fromkeys(extra, "extra")
     return pl.DataFrame({
         "input": cols,
         "group": [groups.get(col, "crude") for col in cols],
@@ -514,4 +588,5 @@ __all__ = [
     "F", "Board", "Gain", "allowed", "build_board", "coefficients", "gain", "group_of",
     "history_columns",
     "load_board", "noise", "played_rows", "removed", "score_input", "shap_values", "shapley",
+    "shuffle_within_weeks",
 ]  # fmt: skip

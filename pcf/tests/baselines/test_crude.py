@@ -1,6 +1,8 @@
 """The crude forecaster and its yardstick (crude-forecaster): the crude inputs, the windows, the
 rungs and their ranges, the point-in-time features on a small synthetic league, and the
-yardstick's arithmetic (paired gains, Shapley shares that add up, the shuffled copy)."""
+yardstick's arithmetic (paired gains, Shapley shares that add up, the shuffled copy), and the
+yardstick batch's additions (the scorer's copies, the extra target and depth-chart rows, the
+input builders: decision 0042)."""
 
 from datetime import UTC, datetime, timedelta
 
@@ -10,6 +12,7 @@ import pytest
 
 from pcf.baselines.crude import features as F
 from pcf.baselines.crude import fitting
+from pcf.baselines.crude import inputs as I
 from pcf.baselines.crude import yardstick as Y
 from pcf.baselines.crude.model import (
     VARIANTS,
@@ -141,7 +144,7 @@ def test_lasso_shap_values_add_up_to_the_forecast():
 # ---------------------------------------------------------------- the variants
 def test_every_variant_meets_the_contract_and_is_found():
     found = find_all("crude-forecaster")
-    assert len(found) == len(VARIANTS) == 4 * 3 * 4
+    assert len(found) == len(VARIANTS) == 5 * 3 * 4  # 5 targets (QB rushing since I67)
     for cls in found:
         check_expert(cls)
     assert Crude not in found
@@ -435,3 +438,187 @@ def test_coefficients_read_in_yards_per_unit_with_intervals_from_resampled_weeks
     assert t["input"][0] == "y_s"  # the biggest per standard deviation comes first
     noise = t.filter(c("input") != "y_s")
     assert noise["per_sd"].abs().max() < 0.5  # yards per sd: pure-noise inputs stay near zero
+
+
+# ================================================================ the yardstick batch (0042)
+# ---------------------------------------------------------------- the scorer's copies
+class _Fake(Y.Board):
+    """A board whose forecast is the outcome's average plus 0.9 of each added column, so an
+    informative column helps and a shuffled copy of it hurts."""
+
+    def forecast(self, added=(), extra=(), seed=None, drop_season=None, feats=None, keep=None):
+        d = (self.features if feats is None else feats).join(self.outcomes, on=self.keys)
+        mean = pl.lit(50.0)
+        for col in extra:
+            mean = mean + 0.9 * c(col)
+        return d.select(*self.keys, "step", season=pl.lit(2020), y="y", mean=mean).with_columns(
+            q10=c("mean") - 20, q50=c("mean"), q90=c("mean") + 20
+        )
+
+
+def _fake(weeks=30, per=40, seed=0):
+    rng = np.random.default_rng(seed)
+    n = weeks * per
+    signal = rng.normal(0, 10, n)
+    feats = pl.DataFrame({
+        "gsis_id": [f"p{i}" for i in range(n)], "game_id": [f"g{i // per}" for i in range(n)],
+        "step": np.arange(n) // per, "part_play": rng.uniform(size=n),
+        "x_real": signal, "x_noise": rng.normal(0, 10, n),
+    })  # fmt: skip
+    outcomes = feats.select("gsis_id", "game_id", y=50 + signal + rng.normal(0, 5, n))
+    return _Fake(variant("receiving", "next", "lasso"), feats, outcomes, [], [])
+
+
+def test_a_real_input_counts_and_beats_its_shuffled_copies():
+    board = _fake()
+    frame = board.features.select("gsis_id", "game_id", z=c("x_real"))
+    r = Y.score_input(board, frame, "real", copies=19)
+    assert r["alone_lo"] > 0 and r["alone"] > r["copies_max"]
+    assert r["p"] == pytest.approx(1 / 20) and r["counts"]
+    assert r["beside"] == "crude" and r["copies"] == 19
+
+
+def test_a_noise_input_doesnt_count():
+    board = _fake()
+    r = Y.score_input(board, None, "noise", existing=["x_noise"], copies=19)
+    assert not r["counts"] and r["alone_hi"] < 0
+
+
+def test_the_scorer_refuses_inputs_it_cant_read():
+    board = _fake()
+    with pytest.raises(ValueError, match="aren't on the board"):
+        Y.score_input(board, None, "x", existing=["nope"])
+    with pytest.raises(ValueError, match="no columns"):
+        Y.score_input(board, None, "x")
+    with pytest.raises(ValueError, match="no expert group"):
+        Y.score_input(board, None, "x", existing=["x_real"], beside=("nope",))
+    with pytest.raises(ValueError, match="already in the groups"):
+        Y.score_input(board, None, "x", existing=["part_play"], beside=("participation",))
+
+
+def test_a_shuffle_within_weeks_keeps_each_week_s_values_and_moves_columns_together():
+    feats = pl.DataFrame({"step": [1, 1, 1, 2, 2], "a": [1.0, 2, 3, 4, 5], "b": [1.0, 2, 3, 4, 5]})
+    out = Y.shuffle_within_weeks(feats, ["a", "b"], seed=4)
+    for s in (1, 2):
+        assert sorted(out.filter(c("step") == s)["a"]) == sorted(feats.filter(c("step") == s)["a"])
+    assert out.select((c("a") == c("b")).all()).item()
+
+
+# ---------------------------------------------------------------- the extra target, the row rule
+def test_qb_rushing_is_published_and_depth_rows_are_made_on_use_and_never_published():
+    qb = variant("qb_rushing", "next", "lasso")
+    assert qb is VARIANTS["qb_rushing_next_lasso"] and not qb.baseline  # published (I67)
+    assert qb.target_spec.positions == ("QB",) and qb.quantity == "qb_rushing_yards"
+    assert variant("qb_rushing", "rest", "lasso").quantity == "qb_rushing_yards_rest"
+    assert qb.players() and qb.row_rule == "participation"
+    depth = variant("rushing", "next", "lasso", rows="depth")
+    assert depth.row_rule == "depth" and depth.variant == "rushing_next_lasso_depthrows"
+    assert "depth" in depth.inputs["player_game"]
+    assert variant("rushing", "next", "lasso").row_rule == "participation"
+    assert depth is variant("rushing", "next", "lasso", rows="depth")  # made once
+    assert len(VARIANTS) == 60 and len(find_all("crude-forecaster")) == 60
+    assert depth not in find_all("crude-forecaster")
+    assert Y.board_path("rushing", "next", "depth").name == "rushing_next_depthrows"
+    with pytest.raises(ValueError, match="row rule"):
+        variant("rushing", rows="snaps")
+
+
+def _with_depth(frames, depths: dict[str, int]):
+    roster = frames[("player_game", "roster")]
+    d = roster.select("gsis_id", "game_id", "season", "known_at").with_columns(
+        depth=c("gsis_id").replace_strict(depths, default=1).cast(pl.Int32),
+        depth_mean=pl.lit(1.0), weeks_listed=pl.lit(1),
+        position_label=pl.lit("WR1"), depth_position=pl.lit("WR"),
+    )  # fmt: skip
+    return {**frames, ("player_game", "depth"): d}
+
+
+def test_the_depth_rule_takes_starters_and_first_backups_whatever_participation_expects():
+    frames = _with_depth(_league(), {"A_TE": 3, "B_TE": 2})
+    out = _outputs(frames)
+
+    def low(project_id, version):
+        df = out(project_id, version)
+        if project_id == "participation/trees_week":  # A_WR isn't expected to play
+            df = df.with_columns(p_nonzero=pl.when(c("gsis_id") == "A_WR").then(0.3).otherwise(0.9))
+        return df
+
+    g = _gateway(frames, low)
+    moment = _kick(2018, 3) - timedelta(hours=29)
+    e = variant("receiving", "next", "lasso", rows="depth")()
+    f = e.features(g.view(moment, "in_season", e.inputs), _games_at(2018, 3))
+    ids = f["gsis_id"].to_list()
+    assert "A_WR" in ids and "B_TE" in ids and "A_TE" not in ids
+    p = variant("receiving", "next", "lasso")()
+    f = p.features(g.view(moment, "in_season", p.inputs), _games_at(2018, 3))
+    assert "A_WR" not in f["gsis_id"].to_list() and "A_TE" in f["gsis_id"].to_list()
+
+
+# ---------------------------------------------------------------- the input builders
+def test_prior_average_takes_games_known_by_the_moment_and_last_season_in_week_one():
+    d = lambda *a: datetime(*a, tzinfo=UTC)  # noqa: E731
+    games = pl.DataFrame({
+        "gsis_id": ["a"] * 4, "season": [2017, 2017, 2018, 2018], "y": [10.0, 30.0, 50.0, 70.0],
+        "known_at": [d(2017, 9, 1), d(2017, 9, 8), d(2018, 9, 8), d(2018, 9, 15)],
+    })  # fmt: skip
+    rows = pl.DataFrame({"gsis_id": ["a", "a", "b"], "game_id": ["w1", "w3", "w1"],
+                         "season": [2018, 2018, 2018],
+                         "as_of": [d(2018, 9, 6), d(2018, 9, 20), d(2018, 9, 6)]})  # fmt: skip
+    out = I.prior_average(rows, games, "gsis_id", ["y"])
+    by = {(r["gsis_id"], r["game_id"]): r for r in out.iter_rows(named=True)}
+    assert by[("a", "w1")]["y_s"] == pytest.approx(20.0)  # week 1: last season's
+    assert by[("a", "w3")]["y_s"] == pytest.approx(60.0) and by[("a", "w3")]["y_ls"] == 20.0
+    assert by[("b", "w1")]["y_s"] == 0.0  # no games: 0
+
+
+def _line_world():
+    sched = pl.DataFrame({
+        "game_id": ["g1", "g1"], "season": [2023, 2023], "week": [1, 1], "game_type": ["REG"] * 2,
+        "team": ["H", "A"], "opponent": ["A", "H"], "home": [True, False],
+        "known_at": [datetime(2023, 6, 1, tzinfo=UTC)] * 2,
+    })  # fmt: skip
+    pre = pl.DataFrame({"game_id": ["g1", "g1"], "team": ["H", "A"], "season": [2023, 2023],
+                        "spread": [-3.0, 3.0], "total_line": [44.0, 44.0],
+                        "known_at": [datetime(2023, 9, 10, tzinfo=UTC)] * 2})  # fmt: skip
+    frames = {("team_game", "schedule"): sched, ("team_game", "pregame"): pre}
+    frames = {k: f.with_columns(c("known_at").cast(TS), c("season").cast(pl.Int32),
+                                *([c("week").cast(pl.Int32)] if "week" in f.columns else []))
+              for k, f in frames.items()}  # fmt: skip
+    g = Gateway(FrameSource(frames), outputs=lambda *a: None)
+    g.finished = lambda at: []
+    return g
+
+
+def test_the_lines_give_the_team_s_margin_and_implied_points_with_the_right_sign():
+    g = _line_world()
+    rows = pl.DataFrame({"game_id": ["g1", "g1"], "team": ["H", "A"], "season": [2023, 2023]})
+    k = {r["team"]: r for r in I.lines(rows, "kickoff", g).with_columns(team=rows["team"])
+         .iter_rows(named=True)}  # fmt: skip
+    assert k["H"]["ln_margin"] == 3.0 and k["A"]["ln_margin"] == -3.0
+    assert k["H"]["ln_implied"] == pytest.approx(23.5) and k["A"]["ln_total"] == 44.0
+    op = pl.DataFrame({"game_id": ["g1"], "open_home_spread": [-7.0], "open_total": [40.0]})
+    o = {r["team"]: r for r in I.lines(rows, "open", g, openers=op).with_columns(team=rows["team"])
+         .iter_rows(named=True)}  # fmt: skip
+    assert o["H"]["ln_margin"] == 7.0 and o["A"]["ln_margin"] == -7.0 and o["H"]["ln_total"] == 40
+    assert I.opener_rows(rows, op).height == 2
+    assert I.opener_rows(rows, op.filter(c("game_id") == "none")).height == 0
+
+
+def test_continuity_counts_starters_and_snaps_of_players_with_no_snap_the_season_before():
+    frames = _with_depth(_league(), {})
+    snaps = frames[("player_game", "snaps")].with_columns(
+        offense_snaps=pl.when((c("gsis_id") == "A_TE") & (c("season") == 2017)).then(0)
+        .otherwise(c("offense_snaps")),
+        defense_snaps=pl.lit(0),
+    )  # fmt: skip
+    frames[("player_game", "snaps")] = snaps
+    depth = frames[("player_game", "depth")].with_columns(depth_position=pl.when(
+        c("gsis_id").str.ends_with("TE")).then(pl.lit("TE")).otherwise(pl.lit("WR")))  # fmt: skip
+    frames[("player_game", "depth")] = depth
+    g = _gateway(frames)
+    out = I.continuity(g, seasons=[2018])
+    a = out.filter(c("team") == "A").row(0, named=True)
+    assert a["off_new_pre"] == pytest.approx(0.5)  # A_TE: a week-1 starter with no 2017 snap
+    assert a["off_new_hindsight"] == pytest.approx(0.5)  # half A's 2018 offensive snaps
+    b = out.filter(c("team") == "B").row(0, named=True)
+    assert b["off_new_pre"] == 0.0 and b["off_new_hindsight"] == 0.0

@@ -1,0 +1,60 @@
+I114 spot-check (a): team yards next game. Opener rows: 900 team-games, 450 games.
+
+1. Is the opener an opener?
+  both: 450 games; opener = ESPN's close on spread and total in 4%; = the schedule's line in 3%; spread moved (median) 1.0 pts, mean 1.27; total moved median 1.0, mean 1.51; r(open, kickoff spread) 0.943
+  2023: 179 games; opener = ESPN's close on spread and total in 2%; = the schedule's line in 2%; spread moved (median) 1.0 pts, mean 1.50; total moved median 1.5, mean 1.89; r(open, kickoff spread) 0.931
+  2024: 271 games; opener = ESPN's close on spread and total in 6%; = the schedule's line in 4%; spread moved (median) 0.5 pts, mean 1.12; total moved median 1.0, mean 1.26; r(open, kickoff spread) 0.953
+
+2. By season (opener rows)
+  2023-2024
+    opener  +5.19% (+2.28% to +8.18%); range +2.41% (+0.95% to +3.87%); 900 team-games, 30 weeks; copies max +0.14%
+    ceiling +8.37% (+5.71% to +10.98%); range +4.37% (+2.97% to +5.71%); 900 team-games, 30 weeks
+    the opener's share of the ceiling: 62%
+  2023
+    opener  +3.49% (+0.24% to +6.67%); range +1.04% (-1.08% to +2.96%); 358 team-games, 12 weeks; copies max +0.30%
+    ceiling +9.84% (+6.03% to +14.21%); range +4.83% (+2.58% to +7.28%); 358 team-games, 12 weeks
+    the opener's share of the ceiling: 36%
+  2024
+    opener  +6.26% (+1.86% to +10.75%); range +3.29% (+1.25% to +5.40%); 542 team-games, 18 weeks; copies max +0.04%
+    ceiling +7.45% (+3.86% to +11.02%); range +4.07% (+2.36% to +5.79%); 542 team-games, 18 weeks
+    the opener's share of the ceiling: 84%
+
+3. By how far the line moved, open to kickoff (|spread move| + |total move| / 2)
+  under 1 point: 109 games
+  under 1 point
+    opener  +3.76% (-1.64% to +8.87%); range +3.08% (-0.16% to +6.28%); 218 team-games, 29 weeks; copies max +0.52%
+    ceiling +4.09% (-1.49% to +9.40%); range +3.13% (-0.21% to +6.43%); 218 team-games, 29 weeks
+    the opener's share of the ceiling: 92%
+  1 to 2.5 points: 234 games
+  1 to 2.5 points
+    opener  +5.83% (+2.66% to +9.15%); range +2.41% (+0.88% to +4.01%); 468 team-games, 30 weeks; copies max +0.09%
+    ceiling +8.23% (+4.42% to +12.04%); range +3.69% (+2.10% to +5.37%); 468 team-games, 30 weeks
+    the opener's share of the ceiling: 71%
+  over 2.5 points: 107 games
+  over 2.5 points
+    opener  +5.55% (-0.89% to +11.44%); range +1.72% (-1.03% to +4.64%); 214 team-games, 30 weeks; copies max +0.40%
+    ceiling +13.13% (+7.51% to +17.46%); range +7.02% (+4.16% to +9.59%); 214 team-games, 30 weeks
+    the opener's share of the ceiling: 42%
+
+4. How many games it rests on
+  30 weeks; the best week carries 22% of the gain; weeks with a positive gain 67%
+  without the best 1 week(s): +4.25% (+1.65% to +7.03%)
+  without the best 3 week(s): +2.95% (+0.47% to +5.29%)
+
+5. Beside every team input (Elo, efficiency, pace, schemes), 19 copies
+  opening line (honest): +2.26% (-0.07% to +4.49%); range +1.24% (-0.03% to +2.50%); copies max +0.09%; counts no
+  kickoff line (ceiling): +5.52% (+3.61% to +7.35%); range +3.39% (+2.10% to +4.64%); copies max +0.11%; counts yes
+  (every team input together vs the plain crude forecast, opener rows: +3.10% (+1.67% to +4.45%); range +1.28% (+0.49% to +1.99%); 900 team-games, 30 weeks)
+
+6. Is the line's weight biased? (slope of the surprise on the line's push, opener rows)
+  opener: slope 1.10 (0.77 to 1.43); push sd 15.4 yards; gain with the slope applied (in-sample, an upper bound) +5.24%
+  kickoff line: slope 1.23 (1.00 to 1.45); push sd 18.1 yards; gain with the slope applied (in-sample, an upper bound) +8.67%
+
+7. The ceiling by season, 2019-2024 (all rows)
+  2019: +4.02% (+0.15% to +7.77%); range +2.25% (-1.20% to +5.60%); 512 team-games, 17 weeks
+  2020: +7.47% (+4.15% to +10.64%); range +2.70% (+0.46% to +4.99%); 512 team-games, 17 weeks
+  2021: +7.99% (+4.50% to +11.22%); range +4.02% (+1.51% to +6.53%); 544 team-games, 18 weeks
+  2022: +6.07% (+2.89% to +8.95%); range +2.80% (+0.99% to +4.63%); 542 team-games, 18 weeks
+  2023: +8.13% (+5.26% to +11.28%); range +3.82% (+1.83% to +5.92%); 544 team-games, 18 weeks
+  2024: +7.41% (+3.81% to +11.01%); range +4.06% (+2.35% to +5.78%); 544 team-games, 18 weeks
+  ceiling all seasons +6.86%; on the opener rows +8.37%; the honest number scaled to a typical season: +4.26%

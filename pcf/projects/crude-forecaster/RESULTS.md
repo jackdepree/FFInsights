@@ -1,6 +1,6 @@
 # Results: Crude forecaster (`crude-forecaster`)
 
-**Date:** 2026-11-17, updated 2026-11-19 (the CEO's answers, the lasso everywhere, the R7 spot-check) · **Status:** validating; the CEO approved the merge on 2026-11-19, with no vetoes · **Brief:** [BRIEF.md](BRIEF.md) (agreed 2026-11-15) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `crude-forecaster` · **Champions:** the lasso for all 12 targets and horizons (the CEO, 2026-11-19); no model registered (a yardstick, like `baselines`) · **Decision:** [0037](../../docs/decisions/0037-crude-forecaster.md)
+**Date:** 2026-11-17, updated 2026-11-19 (the CEO's answers, the lasso everywhere, the R7 spot-check) and 2026-11-23 (the yardstick batch, the I114 spot-check, QB rushing published) · **Status:** validating; the CEO approved the merge on 2026-11-19, with no vetoes · **Brief:** [BRIEF.md](BRIEF.md) (agreed 2026-11-15) · **Exploration:** [EXPLORATION.md](EXPLORATION.md) · **MLflow experiment:** `crude-forecaster` · **Champions:** the lasso for all 15 targets and horizons (the CEO, 2026-11-19; QB rushing's 3 added 2026-11-23); no model registered (a yardstick, like `baselines`) · **Decision:** [0037](../../docs/decisions/0037-crude-forecaster.md)
 
 ## The CEO's answers (2026-11-19, word for word)
 - **The vault:** "I think for the crude forecaster, we can just keep it closed and let the live 2026 ledger be the test." (Option C.)
@@ -167,13 +167,111 @@ Also in this project's `interface` block in `registry.yaml`.
 | | |
 |---|---|
 | **Inputs** | `player_game` roster, stats, snaps; `team_game` schedule, stats (gateway only); the 15 pinned histories in `registry.yaml` `history_runs` (participation `trees_week`, `lasso_h3`, `lasso_rest`; Elo `margin`, `total`; team-efficiency `off_next3_change`; pace's 5; schemes-v2's 4) |
-| **Outputs** | `pcf.baselines.crude`: 48 variants `<target>_<horizon>_<rung>` (`variant(target, horizon, method)`, `with_experts(cls, added=...)`); the champion is `<target>_<horizon>_lasso`. Histories in `outputs/crude-forecaster/<variant>/<run_id>/history.parquet`: `passing_yards`, `rushing_yards`, `receiving_yards`, `team_yards_gained` (and `_next3`, `_rest`: yards per game over the window), mean q10 q50 q90; `allowed.parquet` beside each team history (`team_yards_allowed`, filed under the defense). The yardstick: `yardstick.build_board`, `load_board`, `gain`, `shapley`, `noise`, `score_input`, `coefficients`; tables in `outputs/crude-forecaster/yardstick/<target>_<horizon>/` |
-| **Level of detail** | player-game (QB passing; RB rushing; WR, TE, RB receiving), players expected to play only; team-game |
+| **Outputs** | `pcf.baselines.crude`: 60 variants `<target>_<horizon>_<rung>` (`variant(target, horizon, method)`, `with_experts(cls, added=...)`); the champion is `<target>_<horizon>_lasso`. Histories in `outputs/crude-forecaster/<variant>/<run_id>/history.parquet`: `passing_yards`, `rushing_yards`, `receiving_yards`, `qb_rushing_yards` (QBs' rushing, since 2026-11-23), `team_yards_gained` (and `_next3`, `_rest`: yards per game over the window), mean q10 q50 q90; `allowed.parquet` beside each team history (`team_yards_allowed`, filed under the defense). The yardstick: `yardstick.build_board`, `load_board`, `gain`, `shapley`, `noise`, `score_input`, `coefficients`; tables in `outputs/crude-forecaster/yardstick/<target>_<horizon>/` |
+| **Level of detail** | player-game (QB passing; RB rushing; QB rushing; WR, TE, RB receiving), players expected to play only; team-game |
 | **Interval** | regular season, every week from week 1; fit from 2016, scored 2019–2024 |
 | **Cadence** | in_season |
 | **Known at** | the Saturday run (Thursday games at the Thursday run) |
-| **How to use it** | As a yardstick, never a product: `score_input(board, frame, name)` scores a new expert's or idea's input (a frame on the board's keys) against the crude forecast in minutes, alone and with participation in. A gain counts when its interval clears zero and it beats 19 shuffled copies of itself (R7; `build/spotcheck_r7.py`); readable down to about 0.1 points (receiving), 0.2–0.3 (rushing), 0.5 (passing), 0.7 (team) next game, 1 point over the next 3. `coefficients(board, added)` reads the lasso. Cite it as a yardstick row in each new RESULTS.md |
+| **How to use it** | As a yardstick, never a product: `score_input(board, frame, name, beside=("participation",), copies=19)` scores a new expert's or idea's input (a frame on the board's keys, or `existing=` board columns) against the crude forecast in minutes, alone and with participation in (Elo for teams). With `copies=19` it returns the copies' largest gain and `counts`: the interval clears zero and the gain beats every copy (R7, I69); print the copies' largest gain beside every row. Readable down to about 0.1 points (receiving), 0.2–0.3 (rushing), 0.5 (passing), 0.7 (team) next game, 1 point over the next 3. `coefficients(board, added, extra=...)` reads the lasso. **Market-free for now** (the CEO, 2026-11-23): never add the betting line as a standard input; a product adds it itself (I114, F58). QB rushing is published (I67, the CEO, 2026-11-23). An extra board, scored but not published: `rows="depth"` (I70). The batch's inputs: `pcf.baselines.crude.inputs`. Cite it as a yardstick row in each new RESULTS.md |
 | **Feeds** | every later RESULTS.md (a yardstick row); the retro's ranking of what's been built |
 
+## The yardstick batch (2026-11-23)
+*Retro 3's group D, run in the build chat ([YARDSTICK_BATCH.md](YARDSTICK_BATCH.md); the CEO: "Yes, start it"). Discovery: nothing ships. Decision [0042](../../docs/decisions/0042-yardstick-batch.md). Numbers: [`explore/yardstick_batch/`](explore/yardstick_batch/) (`run_batch.py`, one `.txt` per idea; `check_beside_elo.txt`, `consistency.txt`); tables in `data/outputs/crude-forecaster/yardstick_batch/`.*
+
+The rule for every row: lasso champion, fit from 2016, scored 2019–2024 (the 2025 vault untouched); share of the crude forecast's squared error removed, with its 90% interval from resampled weeks; **counts** when that interval clears zero **and** the gain beats all 19 copies of the input shuffled within each week. The copies' largest gain is beside every row. Each bet's reading was written into `run_batch.py`'s header before the first result: the verdict reads the added-alone number unless the bet names what it sits beside.
+
+| Idea | Input | Board (rows) | Alone (90%) | Beside participation / Elo (90%) | Copies' max | Counts? | Claude's odds: came true? |
+|---|---|---|---|---|---|---|---|
+| **I48** | Garbage-time yards per game, this season and last, beside the pooled averages | passing / rushing / receiving next (3,413 / 10,207 / 36,125) | +0.29% (−0.02 to +0.60) / +0.01% / +0.03% | +0.15% / +0.00% / −0.01% | +0.03% / +0.03% / +0.00% | no, on all three | 75% "holds": **failed**. The split ties the pooled yards (range score within +0.02%), but a garbage yard is worth far less than the rest: 0.40 of a yard for receiving (0.28 to 0.51), 0.24 rushing (0.06 to 0.42), −0.09 passing (−0.37 to 0.17), against the bet's 0.8 |
+| **I59** | Pace's PROE and schemes-v2's 4 traits, WR and TE rows | receiving next / rest (25,918) | +0.01% / +0.05% | beside participation and efficiency: −0.01% (−0.05 to +0.03) / −0.08% | +0.02% / −0.01% | no | 30% that 1%+ survives: **didn't** (the 70% side came true) |
+| **I60** | A games-played forecast (games so far shrunk to last season's rate; this week's report) | rest of season: passing / rushing / receiving / team | +0.19% / +0.09% / **+1.29% (+0.99 to +1.58)** / −0.46% | −0.79% / −0.03% / **+0.66% (+0.44 to +0.88)** / beside Elo **+2.84% (+1.42 to +4.47)** | +0.19% / +0.01% / +0.02% / +0.18% (beside Elo) | receiving (both); team beside Elo | 60% "2+ points": **failed** on the pre-set reading (best alone: +1.29%). The room is real: the hindsight share of games played is worth 70.2% (passing), 26.8% (rushing), 23.8% (receiving), 4.2% (team) |
+| **I67** | QB rushing as a target; each expert's worth on it | qb_rushing next (3,413) / next 3 (2,966) | the crude forecast removes **34.5%** of the error around the average (next; 51.4% next 3), +10.2% (+6.8 to +13.6) over the season average; participation **+0.68% (+0.24 to +1.13)**, against RB rushing's +3.32% on the same run | — | participation's: +0.09% | participation only (Elo, efficiency, pace, schemes don't) | 70% participation worth less on QBs: **held**. "Removes 20–35%": **held**, at the top (34.5%) |
+| **I70** | Participation, on depth-chart rows (starter or first backup) | next: passing (6,239 rows against 3,413) / rushing / receiving / QB rushing | **+38.8%** against +10.6% on its own rows / **+11.4%** against +3.3% / **+9.9%** against +3.7% / +8.3% against +0.7% | — | +0.08% / +0.02% / +0.01% / +0.04% | yes, all | 65% "passing rises, the others move under 1 point": **failed**. Passing rose, but rushing moved 8.0 points and receiving 6.2 |
+| **I75** | Roster continuity: offense's own; the opposing defense's (pre-season, from the week-1 depth chart) | team rest (3,198) | offense −1.44% (−2.23 to −0.71); defense −0.03% | offense beside Elo **+2.21% (+1.00 to +3.48)**; defense −0.02% | +0.13% / +0.25%; beside Elo +0.29% / +0.51% | offense beside Elo only | defense 50%: **failed**; offense 30%: **didn't** (alone it hurts). Hindsight versions: offense −0.20% (−0.13% beside Elo), defense +0.14% |
+| **I84** | A mover's first-4-games prior: his own old share, or the new team's slot | movers' rows: receiving (WR, TE; 1,755) / rushing (RB; 725) | own +1.56% / slot **+2.64%**; own −1.23% / slot **+2.03%** | own +0.47% / slot +0.74%; own −0.85% / slot +1.27% | +0.17% / +0.13%; +0.30% / +0.29% | both priors for receivers; slot only for backs | receivers 80% own wins: **failed** (own over slot −1.11%, −2.44 to +0.32). Backs 75% slot wins or ties: **held** (own over slot −3.32%, −6.34 to −0.31). Size 2–5% on movers' rows and under 0.3% overall: **held** (0.09%, 0.14% overall) |
+| **I114** | The line: the team's expected margin, the total, its implied points | team next; passing, rushing, receiving next. Honest: ESPN's openers, 2023–2024 (900 team rows) | **honest +5.19% (+2.28 to +8.18)** (ceiling on the same rows +8.37%; on every row +6.86%); passing +0.70% (−0.39 to +1.84), rushing +0.18% (+0.02 to +0.33), receiving −0.01% | honest beside Elo +2.03% (−0.18 to +4.22); passing −0.60%, rushing +0.25%, receiving +0.01% | +0.14%; +0.33%, +0.04%, +0.01% | team alone; rushing (small) | teams 75%: **held**. Players 40% (2%+ on one): **didn't** (the 60% side came true). The kickoff line is a ceiling, never known at the Saturday run |
+
+**What it says, in short.**
+- **The line is the biggest input the batch found** (I114): ESPN's opening line, known at the Saturday run, removes 5.2% of the crude forecast's team-yards error next game, about 60% of what the near-closing line would (8.4% on the same games). Players barely: what the line knows about a player's yards, his own averages and participation already carry.
+- **Availability is most of the room in rest-of-season forecasts, and the crude forecast of it gets little** (I60): knowing the share of games he went on to play would remove 24–70% of the error; a forecast from his games so far and the report removes 1.3% for receivers and nothing for QBs and backs.
+- **The row rule hides most of participation's worth** (I70): on the depth chart's starters and first backups, participation is worth 3–4 times its R3 number. Most of that is "will a listed player play at all" (the depth rows double the QB rows with backups who rarely play: the exploration's easy zeros), so the yardstick's rule stays; the R3 numbers are participation's worth among players already expected to play, as R4 said.
+- **QB rushing is a readable target** (I67): the crude forecast removes 34.5% of its error, participation adds 0.7%, and nothing else clears the floor.
+- **Movers: the new team's slot adds more than his own old share** (I84), for backs clearly and for receivers not clearly. His own last-season yards are already on the board (`y_ls`, `vol_ls`), so the own-share prior mostly repeats them: this doesn't contradict F1 (target share travels), it says the slot is the new information.
+- **Pass-heaviness (I59), garbage time (I48) and roster continuity (I75) add nothing on their own.** Garbage yards are worth a third of a yard or less, but they're 6% of a player's yards, so splitting them out costs nothing measurable.
+
+**Beside Elo on team rest of season** (`check_beside_elo.txt`). Two team inputs hurt alone and help only beside Elo (I60's starters' games, I75's offense continuity), and on that board Elo itself doesn't help (−0.86%, −2.35 to +0.55). Against the plain crude forecast, crude + Elo + the input still gains: starters' games **+2.01% (+0.95 to +3.07)**, range score −0.12% (not clear); offense continuity **+1.37% (+0.25 to +2.44)**, but its range score is **worse** (−1.18%, −2.12 to −0.27). The copies (crude + Elo + a shuffled input) reach −0.63% and −0.74%. So the inputs repair something in Elo's rating over a rest-of-season window: a team's rating doesn't know its starters will miss games or are new. A new idea (I115) tests it inside Elo. Continuity's hindsight version doesn't help even beside Elo (−0.13%), which says its gain isn't "new players" as such.
+
+**The case against.**
+- **The 2019–2024 seasons have now been read many times.** The batch adds 8 ideas, about 100 rows; a few will clear the rule by chance even with 19 copies (p = 0.05 a row). The rows that count on one board and nowhere else (I60's receiving, I114's rushing at +0.18%) are the most likely to be that.
+- **The honest line has two seasons** (179 games in 2023, 271 in 2024), so its interval is wide (+2.3% to +8.2%), and the lasso learns the line's weight from kickoff lines and then reads openers. If openers are noisier than the close in a way the weight doesn't fit, the honest number is low; if 2023–2024 were kind to lines, it's high.
+- **Every input is a crude version of its idea.** A fitted availability model, a real slot model for movers or a continuity weighted by snaps would score differently. A failed bet here says "the crude version adds nothing", not "the football claim is false". The verdicts' "real?" columns say which claims were tested as claims (I48's weight, I60's room, I67, I70) and which only as inputs.
+- **"Beside Elo" readings rest on a board where Elo hurts.** The I60 and I75 team gains are Elo repairs, not stand-alone signal; they count by the rule, and they're read here as a lead (I115), not a verdict.
+- **I84's own-share prior is half on the board already**, so the head-to-head favours the slot by construction. A test of "whose share it is" (F1, F2) needs the own share against the slot with his own past yards held out, which isn't the yardstick's question.
+
+## The CEO's answers on the yardstick batch (2026-11-23, word for word)
+"Spot check a, please. Yes qb rushing should be a yardstick table. The yardstick should be market-free for now. No vetoes. Yes, i115 can go into Eli's next build, thank you!" ("Eli's" is Elo's.)
+- **The spot-check:** (a), I114's opener against the kickoff line (below).
+- **QB rushing is published** (I67): a yardstick table at all three horizons, like the other four targets (below, "QB rushing joins the yardstick"; decision 0042, call 5).
+- **Market-free for now** (I114): the line is **not** a standard yardstick input. Experts and ideas are scored against a crude forecast that knows football only. I114 stays graduated as a finding (F58); a betting model or a product adds the line itself.
+- **No vetoes** on decision 0042's calls.
+- **I115 goes into Elo's next build** (registry, Elo's entry).
+
+## QB rushing joins the yardstick (2026-11-23)
+*The CEO: "Yes qb rushing should be a yardstick table." Decision 0042, calls 5 and 20. Numbers: [`build/yardstick_qb_rushing.txt`](build/yardstick_qb_rushing.txt); runs by [`explore/yardstick_batch/publish_qb_rushing.sh`](explore/yardstick_batch/publish_qb_rushing.sh).*
+
+QBs' rushing yards are the fifth target: 3 horizons, 4 rungs, `qb_rushing_<horizon>_<rung>` (60 variants in all). Rows are QBs expected to play (participation's chance of a snap 50%+), as for passing. The lasso champion's three backtests (2019–2024, refit each season) pass **all 10 checks**, including the leakage checks and beating 20 of 20 shuffled refits. Runs: next `2cd4858ae70f4e31848551567d9f7142`, next 3 `bf99de6603924ef6ac1471d26badde63`, rest of season `3badeefbdbb343ba9d70bc948329e7c9`.
+
+| Horizon | Rows | Average (yards a game) | Crude forecast removes | Over the season average | 80% range holds | Participation added alone | Anything else? |
+|---|---|---|---|---|---|---|---|
+| next game | 3,413 | 15.5 | **34.5%** | +10.2% (+6.8 to +13.6) | 78.9% | **+0.68% (+0.24 to +1.13)** | no (schemes −0.34%, pace −0.09%, Elo −0.19%, efficiency −0.10%) |
+| next 3 | 2,966 | 14.9 | **51.4%** | +20.5% (+14.1 to +26.9) | 78.0% | **+1.19% (+0.70 to +1.68)**, range score clear | no (pace −0.76%, schemes −0.52% hurt) |
+| rest of season | 3,413 | 13.1 | **48.3%** | +32.1% (+26.5 to +37.3) | 76.9% | +0.64% (−0.21 to +1.57), not clear | no |
+
+- **The lasso wins the ladder on all three** (trees lose 6.5–18%; the mix ties or loses 1–3%), so the CEO's "lasso everywhere" fits here too.
+- **A QB's rushing is mostly who he is**: his own past rushing yards alone get 96% of what the full crude forecast gets (H51's check), and the forecast removes a third of next game's error, more than for any other player target.
+- **Experts have little to add yet**: participation's +0.7% to +1.2% is a fifth to a third of its worth on RB rushing. The 80% ranges run a little narrow over the rest of the season (76.9%).
+- **How to use it:** score an input on QB rushing like any other table, `Y.load_board("qb_rushing", horizon)`. Its smallest readable gain wasn't measured (R7 did that for the other four); participation's +0.68% beat its 19 copies (largest +0.09%) in the batch.
+
+## The spot-check: I114, the opener against the kickoff line (the CEO's pick, 2026-11-23)
+*The checks, the rules that would change the verdict and Claude's expectations were written into [`explore/yardstick_batch/spotcheck_i114.py`](explore/yardstick_batch/spotcheck_i114.py) and committed before any of its numbers were run. Numbers: [`spotcheck_i114.txt`](explore/yardstick_batch/spotcheck_i114.txt).*
+
+**The verdict stands: held for teams.** None of the three rules that would change it fired. But the size is smaller than +5.2% in a normal season (about **+4.3%**), and beside every team input we have, the opener adds about **+2.3%, not clear**.
+
+The unit throughout: the share of the crude forecast's squared error in a team's yards next game that the line removes. A team-game is one team's side of a game (900 team-games = 450 games).
+
+**The three rules that would have changed the verdict**
+
+| Check | Changes the verdict if | What came out | Fired? |
+|---|---|---|---|
+| Is the opener really an opener? | it equals ESPN's own close on both spread and total in over half the games (failed: a closing line under another name) | equal in **4%** of games (2023: 2%, 2024: 6%). From open to kickoff the spread moved a median 1 point (mean 1.3), the total a median 1 point (mean 1.5) | no |
+| Each season on its own | either season's gain is at or below zero (unclear) | 2023 **+3.49% (+0.24 to +6.67)**, 179 games over 12 weeks; 2024 **+6.26% (+1.86 to +10.75)**, 271 games over 18 weeks | no |
+| One week carrying it | without its best week the gain falls under +2% or its interval reaches zero (unclear) | the best week is 22% of the gain; without it **+4.25% (+1.65 to +7.03)**; without the best 3, +2.95% (+0.47 to +5.29). Two weeks in three gain | no |
+
+**Where the closing line's lead comes from (the football sanity check: it makes sense).** Games split by how far the line moved from open to kickoff (spread points plus half the total's points):
+
+| Line moved | Games | Opener | Kickoff line (ceiling) | Opener's share of the ceiling |
+|---|---|---|---|---|
+| under 1 point | 109 | +3.76% | +4.09% | 92% |
+| 1 to 2.5 points | 234 | +5.83% | +8.23% | 71% |
+| over 2.5 points | 107 | +5.55% | +13.13% | 42% |
+
+Where the line didn't move, the opener knows nearly everything the close does. Where it moved more than 2.5 points (an injury, the weather, sharp money), the close knows something the opener couldn't yet. Those games hold about 58% of the gap (if each game's error is about the same size). The seasons say the same: 2023's lines moved more (the spread a mean 1.5 points, against 1.1 in 2024), and the opener got 36% of the ceiling in 2023 against 84% in 2024. The ceiling's lead is late news, which is what it should be.
+
+**What else the spot-check found (none of it changes the verdict)**
+- **Is it just Elo, or the team's form?** Partly. Beside every team input on the board (Elo, efficiency, pace, schemes), the opener adds **+2.26% (−0.07 to +4.49)**, with a copies' max of +0.09%: it **doesn't count**. Those four inputs together add +3.10% on the same games. So about half of the opener's 5 points are things our ratings already know (openers are set largely from power ratings), and what's left, about 2 points, isn't clear on 450 games. The kickoff line beside the same four still adds **+5.52% (+3.61 to +7.35)** and counts: what the line learns during the week is news our inputs don't have.
+- **Is the line's weight biased?** No. The lasso learns the line's weight mostly from kickoff lines and applies it to openers. The test is the slope of what actually happened (yards minus the crude forecast) on how far the line moved the forecast. A slope of 1 means the weight was right. The opener's slope is **1.10 (0.77 to 1.43)**: the weight fits. Re-weighting it gains nothing (+5.24% in-sample, against +5.19%). The kickoff line's slope is 1.23 (1.00 to 1.45), so the lasso, if anything, shrinks the line a little. The line moves a team's forecast by about 15 yards (one standard deviation).
+- **Were 2023–2024 a normal pair of seasons for the line?** No, kinder than usual. The ceiling, season by season: 2019 +4.0%, 2020 +7.5%, 2021 +8.0%, 2022 +6.1%, 2023 +8.1%, 2024 +7.4%; +6.86% over all six. On the 30 weeks with openers it's +8.37%. 2023's 12 opener weeks were especially kind: +9.84%, against +8.13% over the whole season. Scaled to a normal season, the honest number is about **+4.3%**.
+- **How many games it rests on:** 450 games in 30 weeks. The interval (+2.3 to +8.2) is wide, but every rule above holds within it.
+
+**Claude's expectations, written before the run.**
+- The opener is a real opener (equal to the close in under 30% of games): came true (4%).
+- Both seasons positive (70%): came true.
+- The gap sits mostly in games that moved over 2.5 points (65%): came true (about 58%).
+- Beside every team input, the opener adds 1–3% with an interval reaching zero (55%): came true (+2.26%).
+- The weight's slope is under 1 (55%): didn't come true (1.10).
+- 2023–2024 within a point of the other seasons' ceiling (60%): didn't come true. The opener rows are 1.5 points over the six-season ceiling, and 2 points over 2019–2022's average of 6.4%.
+
+**What it changes.** Not I114's verdict. F58's size gets two more numbers: about +4.3% in a normal season, and about +2.3% (not clear) beside our team inputs. For a betting model at the Saturday run, the opener on its own is worth most of what Elo and efficiency already give, plus perhaps 2 points. The closing line's extra over our inputs (+5.5%) is the week's news, which the injury and news experts would have to find.
+
 ## Open questions for the CEO
-None left from this build. The vault, the champion rule, the vetoes, the spot-check and the merge were answered on 2026-11-19 (above).
+None left. The yardstick batch's two (QB rushing as a published target; the line at the Saturday run) were answered on 2026-11-23: QB rushing is published, and the yardstick stays market-free for now (above, "The CEO's answers on the yardstick batch").

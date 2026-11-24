@@ -1,0 +1,10 @@
+I70: participation's added-alone gain on rows it didn't choose (depth chart: a starter or first backup), against the same on its own rows (R3's rule), next game.
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  participation             passing_next        crude                        3413  +10.63% (+8.67% to +12.44%)   +6.04% (+5.11% to +6.95%)     +0.41%      0.05  yes
+  participation             passing_next_depthrowscrude                        6239  +38.81% (+35.92% to +41.47%)  +27.46% (+25.40% to +29.34%)  +0.08%      0.05  yes
+  participation             rushing_next        crude                       10207  +3.32% (+2.57% to +4.10%)     +1.32% (+0.86% to +1.78%)     +0.06%      0.05  yes
+  participation             rushing_next_depthrowscrude                        7884  +11.35% (+10.24% to +12.50%)  +5.51% (+4.78% to +6.21%)     +0.02%      0.05  yes
+  participation             receiving_next      crude                       36125  +3.66% (+3.21% to +4.10%)     +2.15% (+1.88% to +2.40%)     +0.01%      0.05  yes
+  participation             receiving_next_depthrowscrude                       29497  +9.85% (+9.20% to +10.49%)    +5.78% (+5.37% to +6.18%)     +0.01%      0.05  yes
+  participation             qb_rushing_next     crude                        3413  +0.68% (+0.24% to +1.13%)     +0.34% (-0.03% to +0.72%)     +0.09%      0.05  yes
+  participation             qb_rushing_next_depthrowscrude                        6239  +8.26% (+7.19% to +9.34%)     +7.01% (+6.10% to +7.86%)     +0.04%      0.05  yes

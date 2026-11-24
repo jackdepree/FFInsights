@@ -100,6 +100,16 @@ Player rows measured 2026-11-11 with [`projects/player-pace/explore/h26_h28_h29_
 | Yards spread, receiving (WR, TE, RB) | crude-forecaster (H55) | The same | 0.72 (0.70–0.74) | 0.68 (0.65–0.70) | trait | No: −0.14%; range +0.04% (not clear) with participation in | The same |
 | Relative yards spread, QB / RB / receiving | crude-forecaster (H55) | Spread over his season average | 0.70 / 0.47 / 0.32 | 0.58 / 0.72 / 0.63 | trait | Not tested apart | Partly the average again, inverted: low-average players have large relative spreads. Not a clean "boom-or-bust" measure |
 
+**Yardstick batch measures** (crude-forecaster's yardstick batch, 2026-11-23, I48, I60, I75): per **player** per regular-season game (garbage time), per **player-season** (games played) and per **team-season** (continuity), 2016-2024, with `pcf.validation.consistency` ([`crude-forecaster/explore/yardstick_batch/consistency.txt`](crude-forecaster/explore/yardstick_batch/consistency.txt), [`I75.txt`](crude-forecaster/explore/yardstick_batch/I75.txt)). A season-level measure has one value a season, so only its season-to-season r is read.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Garbage-time yards, QB passing / RB rushing / receiving | crude-forecaster (I48) | A player-game's yards in garbage time (the tag table's rule) | 0.16 (0.09–0.23) / 0.17 (0.14–0.21) / 0.08 (0.05–0.11) | 0.14 / 0.21 / 0.06 | trait (weak) | No: +0.29%, +0.01%, +0.03% of next game's error, none counts (FINDINGS F51) | Mostly who trails late: the team's script more than the player |
+| Garbage-time share of his yards, QB / RB / receiving | crude-forecaster (I48) | The same over all his yards that game | 0.49 (0.43–0.54) / 0.22 (0.19–0.25) / 0.09 (0.06–0.12) | 0.20 / 0.18 / 0.08 | trait (weak) | Not tested apart | |
+| Share of his team's games played, QB, RB, WR, TE | crude-forecaster (I60) | Games with an offensive snap over the team's regular-season games | — | 0.46 (0.44–0.49), 3,669 pairs | trait | A little: the games-played forecast adds +1.3% to receivers' rest of season, nothing for QBs and backs (F53) | The room is far bigger: the hindsight share removes 24-70% |
+| New starters, offense / defense (pre-season) | crude-forecaster (I75) | Share of week-1 depth-chart starters with no NFL snap the season before | — | −0.07 (−0.16 to 0.02) / 0.12 (0.03–0.21) | offense noise; defense trait (weak) | No: −1.44% (offense, it hurts) and −0.03% of team yards over the rest of the season (F56) | Beside Elo the offense's +2.2%: an Elo repair (IDEAS I115) |
+| New players' snap share, offense / defense (hindsight) | crude-forecaster (I75) | Share of the season's snaps to players with no snap the season before | — | −0.06 (−0.15 to 0.03) / 0.17 (0.08–0.26) | offense noise; defense trait (weak) | No: −0.20%, +0.14% (a ceiling) | |
+
 **Participation measures** (participation-live exploration, 2026-11-11): substitution per **team** per game, and on-and-off rhythm per **player** per game, from the true participation 2016–2024. Team measures are each team-game's players changed per snap above the league's in the same situation and season.
 
 | Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |

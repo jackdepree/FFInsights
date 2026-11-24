@@ -1,0 +1,11 @@
+I48: garbage-time yards split from the rest, next game. Inputs gt_y_s, gt_y_ls (garbage yards per game this season so far, last season) beside the board's pooled averages.
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  garbage split             passing_next        crude                        3413  +0.29% (-0.02% to +0.60%)     -0.20% (-0.57% to +0.17%)     +0.03%      0.05  no
+  garbage split             passing_next        participation                3413  +0.15% (-0.04% to +0.35%)     -0.06% (-0.31% to +0.19%)     +0.33%      0.45  no
+  passing: garbage time is 6.3% of past yards. OLS weights per yard: rest this season 0.582, garbage 0.306; rest last season 0.120, garbage -0.370. Garbage over rest (both seasons): -0.09 (90% -0.37 to 0.17)
+  garbage split             rushing_next        crude                       10207  +0.01% (-0.13% to +0.14%)     +0.02% (-0.11% to +0.16%)     +0.03%      0.25  no
+  garbage split             rushing_next        participation               10207  +0.00% (-0.03% to +0.03%)     -0.03% (-0.07% to +0.01%)     +0.04%      0.20  no
+  rushing: garbage time is 7.3% of past yards. OLS weights per yard: rest this season 0.756, garbage 0.385; rest last season 0.134, garbage -0.176. Garbage over rest (both seasons): 0.24 (90% 0.06 to 0.42)
+  garbage split             receiving_next      crude                       36125  +0.03% (-0.02% to +0.08%)     -0.02% (-0.07% to +0.03%)     +0.00%      0.05  no
+  garbage split             receiving_next      participation               36125  -0.01% (-0.05% to +0.02%)     -0.00% (-0.04% to +0.03%)     +0.00%      0.55  no
+  receiving: garbage time is 6.7% of past yards. OLS weights per yard: rest this season 0.594, garbage 0.440; rest last season 0.284, garbage -0.092. Garbage over rest (both seasons): 0.40 (90% 0.28 to 0.51)

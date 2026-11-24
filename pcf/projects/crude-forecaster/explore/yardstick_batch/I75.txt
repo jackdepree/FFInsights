@@ -1,0 +1,24 @@
+I75: roster continuity. pre = share of week-1 depth-chart starters with no NFL snap last season (known at week 1); hindsight = share of the season's snaps to such players (a ceiling). Offense: the team's own; defense: the opponent's (this row's yards allowed).
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  off continuity pre        team_rest           crude                        3198  -1.44% (-2.23% to -0.71%)     -2.73% (-3.42% to -2.03%)     +0.13%      1.00  no
+  off continuity pre        team_rest           elo                          3198  +2.21% (+1.00% to +3.48%)     -0.56% (-1.46% to +0.42%)     +0.29%      0.05  yes
+  off continuity hindsight  team_rest           crude                        3198  -0.20% (-0.87% to +0.44%)     -0.65% (-1.05% to -0.27%)     +0.12%      1.00  no
+  off continuity hindsight  team_rest           elo                          3198  -0.13% (-0.71% to +0.41%)     -1.13% (-1.58% to -0.69%)     +0.19%      0.95  no
+  def continuity pre        team_rest           crude                        3198  -0.03% (-0.08% to +0.03%)     -0.07% (-0.17% to +0.02%)     +0.25%      0.60  no
+  def continuity pre        team_rest           elo                          3198  -0.02% (-0.04% to -0.00%)     +0.13% (+0.05% to +0.21%)     +0.51%      0.80  no
+  def continuity hindsight  team_rest           crude                        3198  +0.14% (-0.07% to +0.35%)     -0.04% (-0.26% to +0.17%)     +0.05%      0.05  no
+  def continuity hindsight  team_rest           elo                          3198  +0.07% (-0.01% to +0.14%)     +0.04% (-0.05% to +0.13%)     +0.14%      0.25  no
+  off continuity pre        team_next           crude                        3198  -0.23% (-0.39% to -0.08%)     -0.04% (-0.22% to +0.16%)     +0.17%      1.00  no
+  off continuity pre        team_next           elo                          3198  -0.12% (-0.30% to +0.07%)     -0.37% (-0.62% to -0.14%)     +0.14%      1.00  no
+  off continuity hindsight  team_next           crude                        3198  +0.18% (+0.03% to +0.32%)     +0.02% (-0.18% to +0.22%)     +0.26%      0.10  no
+  off continuity hindsight  team_next           elo                          3198  +0.07% (-0.03% to +0.16%)     +0.09% (-0.06% to +0.23%)     +0.09%      0.10  no
+  def continuity pre        team_next           crude                        3198  -0.06% (-0.18% to +0.06%)     +0.14% (-0.12% to +0.40%)     +0.09%      0.85  no
+  def continuity pre        team_next           elo                          3198  -0.04% (-0.11% to +0.02%)     +0.02% (-0.12% to +0.15%)     +0.04%      0.85  no
+  def continuity hindsight  team_next           crude                        3198  +0.26% (+0.01% to +0.51%)     -0.24% (-0.60% to +0.13%)     +0.07%      0.05  yes
+  def continuity hindsight  team_next           elo                          3198  -0.00% (-0.14% to +0.14%)     -0.05% (-0.23% to +0.13%)     +0.07%      0.25  no
+
+  consistency (season to season; week to week is 1 by construction):
+  off_new_pre          season r -0.07 (-0.16 to +0.02), 320 pairs, mean 0.078
+  def_new_pre          season r +0.12 (+0.03 to +0.21), 320 pairs, mean 0.053
+  off_new_hindsight    season r -0.06 (-0.15 to +0.03), 320 pairs, mean 0.150
+  def_new_hindsight    season r +0.17 (+0.08 to +0.26), 320 pairs, mean 0.136

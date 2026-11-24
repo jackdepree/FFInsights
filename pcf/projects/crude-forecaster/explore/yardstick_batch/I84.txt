@@ -1,0 +1,24 @@
+I84: movers' first 4 games with a new team. own = his old-team share x new team's volume; slot = the new team's share at his depth-chart slot last season x the same volume; both x his own yards per target or carry. mv_flag marks the rows.
+  input                     board               beside                       rows  share (90%)                   range (90%)                   copies max  p     counts
+  receiving: 1755 mover rows scored (2019-2024)
+  own share                 receiving_next      crude                        1755  +1.56% (+0.83% to +2.56%)     -0.04% (-0.63% to +0.59%)     +0.17%      0.05  yes
+  slot share                receiving_next      crude                        1755  +2.64% (+1.21% to +4.20%)     -0.52% (-1.65% to +0.55%)     +0.13%      0.05  yes
+  own share (all rows)      receiving_next      crude                       36125  +0.07% (+0.03% to +0.10%)     +0.02% (-0.02% to +0.05%)     +0.00%      0.05  yes
+  slot share (all rows)     receiving_next      crude                       36125  +0.09% (+0.02% to +0.17%)     +0.03% (-0.04% to +0.09%)     +0.01%      0.05  yes
+  head to head, own over slot, movers' rows, beside crude: -1.11% (-2.44% to +0.32%); range +0.48% (-0.40% to +1.42%)
+  own share                 receiving_next      participation                1755  +0.47% (+0.04% to +0.99%)     +0.43% (+0.11% to +0.80%)     +0.12%      0.05  yes
+  slot share                receiving_next      participation                1755  +0.74% (+0.02% to +1.49%)     +0.01% (-0.47% to +0.56%)     +0.08%      0.05  yes
+  own share (all rows)      receiving_next      participation               36125  +0.02% (-0.00% to +0.03%)     +0.03% (+0.01% to +0.06%)     +0.00%      0.05  no
+  slot share (all rows)     receiving_next      participation               36125  +0.03% (-0.01% to +0.06%)     +0.02% (-0.01% to +0.06%)     +0.01%      0.05  no
+  head to head, own over slot, movers' rows, beside participation: -0.27% (-0.99% to +0.51%); range +0.42% (-0.10% to +0.96%)
+  rushing: 725 mover rows scored (2019-2024)
+  own share                 rushing_next        crude                         725  -1.23% (-3.94% to +1.78%)     +0.39% (-0.98% to +1.85%)     +0.30%      1.00  no
+  slot share                rushing_next        crude                         725  +2.03% (+0.75% to +3.42%)     -0.72% (-2.12% to +0.64%)     +0.29%      0.05  yes
+  own share (all rows)      rushing_next        crude                       10207  -0.06% (-0.28% to +0.15%)     -0.02% (-0.14% to +0.10%)     +0.05%      0.95  no
+  slot share (all rows)     rushing_next        crude                       10207  +0.14% (+0.04% to +0.25%)     -0.10% (-0.22% to +0.02%)     +0.04%      0.05  yes
+  head to head, own over slot, movers' rows, beside crude: -3.32% (-6.34% to -0.31%); range +1.10% (-0.29% to +2.69%)
+  own share                 rushing_next        participation                 725  -0.85% (-2.68% to +1.07%)     +0.69% (-0.26% to +1.78%)     +0.36%      1.00  no
+  slot share                rushing_next        participation                 725  +1.27% (+0.24% to +2.32%)     +0.34% (-0.80% to +1.44%)     +0.21%      0.05  yes
+  own share (all rows)      rushing_next        participation               10207  -0.07% (-0.21% to +0.06%)     +0.03% (-0.06% to +0.12%)     +0.03%      0.85  no
+  slot share (all rows)     rushing_next        participation               10207  +0.08% (+0.00% to +0.16%)     -0.03% (-0.11% to +0.05%)     +0.04%      0.05  yes
+  head to head, own over slot, movers' rows, beside participation: -2.15% (-4.60% to +0.16%); range +0.35% (-1.18% to +1.80%)
