@@ -227,3 +227,5 @@
 | **Near miss** | A field-goal drive's best chance of a touchdown (`p_peak`). A description, never an input (the brief) | td-expert |
 | **Count forecast** (kind `count`) | A forecast of a whole number (touchdowns) as a mean, scored by the Poisson log loss (−log P(y) under a Poisson count with that mean) and judged by its chance of 1+ and of 2+ under that Poisson (decision 0043) | td-expert |
 | **Poisson log loss** | −log P(y) for a count y under a Poisson with the forecast mean: lower is better; the count kind's main score | td-expert |
+| **Negative binomial** (a count's spread) | A count wider than Poisson: variance mean + α·mean^p (p = 2 the usual one; a lower p spreads big means less). α 0 is Poisson. `pcf.validation.scores.negbin_at_least`, `fit_spread` | td-expert R18 |
+| **Opener** (`team_game.openers`) | ESPN's opening line for a game, the median over books, per team: `open_total` and `open_spread` (betting sign). Known at the start of the game's week + 2 days; 2023 on | td-expert R17, decision 0043 call 25 |

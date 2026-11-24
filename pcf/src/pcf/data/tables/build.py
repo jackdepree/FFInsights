@@ -26,7 +26,7 @@ from pcf.data.tables import efficiency, leverage, opportunity, pace, touchdowns
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
-from pcf.data.tables.games import game_parts, team_game_parts
+from pcf.data.tables.games import game_parts, opener_lines, openers_rows, team_game_parts
 from pcf.data.tables.player_game import DAILY_CHARTS_FROM, player_game_parts
 from pcf.data.tables.player_pace import ON_FIELD_COLUMNS, player_pace_rows, player_season_rows
 from pcf.data.tables.plays import play_parts, player_play_parts
@@ -129,7 +129,40 @@ def build_games(name: str, seasons: Sequence[int], cal: Calendar, root: Path | N
         rated = efficiency_part(seasons, cal, parts["schedule"])
         if rated is not None:
             parts["efficiency"] = rated
+        opened = openers_part(cal, parts["schedule"])
+        if opened is not None:
+            parts["openers"] = opened
     write_parts(parts, name, seasons, root)
+
+
+def _game_lines_path() -> Path:
+    return get_config().zone("interim") / "espn_odds" / "game_lines.parquet"
+
+
+def openers_part(cal: Calendar, spine: pl.DataFrame) -> pl.DataFrame | None:
+    """The `team_game.openers` part on `spine`'s games: ESPN's opening lines, already in our data
+    from the odds collection (no new source; decision 0042 call 13), known by the start of the
+    game's week + 2 days. None without the odds collection's parse or any opener."""
+    path = _game_lines_path()
+    if not path.exists():
+        return None
+    rows = openers_rows(opener_lines(pl.read_parquet(path)), spine, cal)
+    if rows.is_empty():
+        return None
+    out = known_at("espn_openers", rows, cal).drop("week")
+    return on_spine(out, spine, ["game_id", "team"], "team_game.openers")
+
+
+def build_openers(seasons: Sequence[int] | None = None, root: Path | None = None) -> None:
+    """Only the `team_game.openers` part (td-expert, I118), for `seasons` (default: every season
+    with an opener), without rebuilding the rest of team_game."""
+    schedules = _schedules()
+    cal = calendar(schedules)
+    spine = read_part("team_game", "schedule", seasons, root).collect()
+    part = openers_part(cal, spine)
+    if part is not None:
+        chosen = sorted(part["season"].unique().to_list())
+        write_parts({"openers": part}, "team_game", chosen, root)
 
 
 @cache

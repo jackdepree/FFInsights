@@ -68,3 +68,44 @@ def test_check_output_orders_count_quantiles():
     check_output(df, ["gsis_id"], "count")
     with pytest.raises(ValueError, match="quantiles"):
         check_output(df.with_columns(q10=pl.lit(2.0)), ["gsis_id"], "count")
+
+
+# ---------------------------------------------------------------- a count wider than Poisson (I116)
+def test_negative_binomial_is_poisson_at_zero_spread_and_wider_above():
+    from scipy.stats import nbinom, poisson
+
+    mu = np.array([0.3, 2.0, 7.5])
+    assert np.allclose(scores.negbin_at_least(mu, 0.0, 1), poisson.sf(0, mu))
+    assert np.allclose(scores.negbin_quantile(mu, 0.0, 0.9), poisson.ppf(0.9, mu))
+    a = 0.5
+    n = 1 / a
+    assert np.allclose(scores.negbin_at_least(mu, a, 2), nbinom.sf(1, n, n / (n + mu)))
+    assert (scores.negbin_at_least(mu, a, 1) < poisson.sf(0, mu)).all()  # more zeros
+    # power 1: the variance grows linearly with the mean
+    n1 = mu / a
+    assert np.allclose(scores.negbin_log_loss([0, 1, 3], mu, a, 1.0),
+                       -nbinom.logpmf([0, 1, 3], n1, n1 / (n1 + mu)))  # fmt: skip
+
+
+def test_fit_spread_finds_the_spread_and_poisson_when_there_is_none():
+    rng = np.random.default_rng(0)
+    mu = rng.uniform(0.5, 8.0, 20_000)
+    n = 1 / 0.4
+    y = rng.negative_binomial(n, n / (n + mu))
+    a, power = scores.fit_spread(y, mu)
+    assert a == pytest.approx(0.4, abs=0.05) and power == 2.0
+    a_free, p_free = scores.fit_spread(y, mu, power=None)
+    assert p_free == pytest.approx(2.0, abs=0.25)
+    a0, _ = scores.fit_spread(rng.poisson(mu), mu)
+    assert a0 < 0.02
+
+
+def test_count_report_judges_a_wide_count_under_its_spread():
+    rng = np.random.default_rng(1)
+    mu = rng.uniform(0.2, 6.0, 30_000)
+    n = 1 / 0.8
+    y = rng.negative_binomial(n, n / (n + mu)).astype(float)
+    df = pl.DataFrame({"mean": mu, "y": y, "q10": 0.0, "q50": 0.0, "q90": 1.0})
+    assert not calibration.count_report(df)["one"]["passed"]  # Poisson is too sure of 1+
+    wide = calibration.count_report(df.with_columns(alpha=pl.lit(0.8)))
+    assert wide["one"]["passed"] and wide["two"]["passed"]

@@ -65,6 +65,7 @@ TABLES: dict[str, Table] = {
                 "pace",
                 "efficiency",
                 "touchdowns",
+                "openers",
             ),
             after=(
                 "result",

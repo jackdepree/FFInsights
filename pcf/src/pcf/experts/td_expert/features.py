@@ -39,7 +39,7 @@ from pcf.experts.td_expert.common import (
 )
 
 c = pl.col
-TEAM_PARTS = ("touchdowns", "efficiency", "tendencies")
+TEAM_PARTS = ("touchdowns", "efficiency", "tendencies", "openers")
 INPUTS = {
     "player_game": (*PART_INPUTS["player_game"], "touchdowns"),
     "team_game": TEAM_PARTS,
@@ -93,11 +93,16 @@ TEAM_OWN = [*lagged(*TEAM_AVERAGED), "team_epa_s", "team_epa_ls", "team_i10_pass
 TEAM_OPP = ["opp_td_allowed", "opp_xtd_allowed", "opp_epa_allowed", "opp_hind_allowed"]
 TEAM_RATE = ["td2", "games2"]
 TEAM_VOLUME = [*TEAM_OWN, *TEAM_OPP]
+# I118 (the CEO, 2026-11-24): ESPN's opening line for the game, known at the run (2023 on): the
+# total around 44 and the team's expected margin; 0 and a flag where there's none, so the line's
+# weight is learned on the rows that have one
+LINE = ["line_total", "line_margin", "has_line"]
+LINE_CENTER = 44.0
 TEAM_STAGE1 = [*lagged("xtd", "hind", "rz_trips", "drives", "chances"), "team_epa_s",
                "games_played", "home", "opp_xtd_allowed", "opp_hind_allowed"]  # fmt: skip
 TEAM_CORRECTIONS = ["team_epa_s", "team_i10_pass", "team_pass_oe", "tdoe_g", "opp_td_allowed",
                     "opp_epa_allowed"]  # fmt: skip
-TEAM_NUMERIC = sorted({*TEAM_VOLUME, *TEAM_STAGE1, *TEAM_CORRECTIONS, *TEAM_RATE, "xtd2",
+TEAM_NUMERIC = sorted({*TEAM_VOLUME, *TEAM_STAGE1, *TEAM_CORRECTIONS, *TEAM_RATE, *LINE, "xtd2",
                        "last_xtd", "games_left"})  # fmt: skip
 
 
@@ -227,6 +232,16 @@ def features(view, games: pl.DataFrame, keys: Sequence[str]) -> pl.DataFrame:
 
 
 # ---------------------------------------------------------------- teams
+def openers(view, season: int) -> pl.DataFrame:
+    """The opening line of each team-game the view knows this season (I118): `line_total` (the
+    total less 44), `line_margin` (the team's expected margin) and `has_line`."""
+    o = view.table("team_game", seasons=[season]).filter(c("open_total").is_not_null())
+    return o.select(
+        "game_id", "team", line_total=c("open_total") - LINE_CENTER,
+        line_margin=-c("open_spread"), has_line=pl.lit(1.0),
+    )  # fmt: skip
+
+
 def team_features(view, games: pl.DataFrame, keys: Sequence[str]) -> pl.DataFrame:
     """A row per team in `games`, with every column of `TEAM_NUMERIC` and `last_game_id`."""
     season = int(games["season"].max())
@@ -237,6 +252,7 @@ def team_features(view, games: pl.DataFrame, keys: Sequence[str]) -> pl.DataFram
     rows = rows.join(own, on="team", how="left").join(
         defense.rename({"team": "opponent"}), on="opponent", how="left"
     )
+    rows = rows.join(openers(view, season), on=["game_id", "team"], how="left")
     rows = rows.with_columns(
         *[c(f"{v}_s").fill_null(c(f"{v}_ls")) for v in TEAM_AVERAGED],
         tdoe_g=(c("td2").fill_null(0.0) - c("xtd2").fill_null(0.0)) / (c("games2").fill_null(0.0)

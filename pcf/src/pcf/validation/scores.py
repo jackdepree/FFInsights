@@ -55,6 +55,76 @@ def poisson_at_least(mean: np.ndarray, k: int) -> np.ndarray:
     return poisson.sf(k - 1, np.maximum(mean, MIN_RATE))
 
 
+# ---------------------------------------------------------------- a count wider than Poisson (I116)
+# A negative binomial with variance mean + alpha * mean**power: power 2 is the usual one, a lower
+# power spreads big means less (td-expert: a rest-of-season total). alpha 0 is Poisson.
+def _negbin(mean, alpha, power):
+    mu = np.maximum(np.asarray(mean, dtype=float), MIN_RATE)
+    a = np.broadcast_to(np.asarray(alpha, dtype=float), mu.shape)
+    pw = np.broadcast_to(np.asarray(power, dtype=float), mu.shape)
+    wide = a > 1e-9
+    n = np.full(mu.shape, np.inf)
+    n[wide] = mu[wide] ** (2.0 - pw[wide]) / a[wide]
+    return mu, wide, n
+
+
+def negbin_at_least(mean, alpha, k: int, power=2.0) -> np.ndarray:
+    """The chance a negative-binomial count with this mean and spread is k or more."""
+    from scipy.stats import nbinom, poisson
+
+    mu, wide, n = _negbin(mean, alpha, power)
+    out = poisson.sf(k - 1, mu)
+    out[wide] = nbinom.sf(k - 1, n[wide], n[wide] / (n[wide] + mu[wide]))
+    return out
+
+
+def negbin_log_loss(y, mean, alpha, power=2.0) -> np.ndarray:
+    """−log P(y) under that negative binomial, per row (Poisson where alpha is 0)."""
+    from scipy.stats import nbinom, poisson
+
+    y = np.asarray(y, dtype=float)
+    mu, wide, n = _negbin(mean, alpha, power)
+    out = -poisson.logpmf(y, mu)
+    out[wide] = -nbinom.logpmf(y[wide], n[wide], n[wide] / (n[wide] + mu[wide]))
+    return out
+
+
+def negbin_quantile(mean, alpha, level: float, power=2.0) -> np.ndarray:
+    """That negative binomial's quantile at `level` (Poisson's where alpha is 0)."""
+    from scipy.stats import nbinom, poisson
+
+    mu, wide, n = _negbin(mean, alpha, power)
+    out = poisson.ppf(level, mu)
+    out[wide] = nbinom.ppf(level, n[wide], n[wide] / (n[wide] + mu[wide]))
+    return out.astype(float)
+
+
+def fit_spread(y, mean, power: float | None = 2.0) -> tuple[float, float]:
+    """The spread (alpha, power) that best fits outcomes `y` around forecasts `mean` taken as
+    given, by maximum likelihood: alpha between 0 and 20; `power` fixed, or fit between 1 and 2.5
+    when None. Poisson (alpha 0) when no spread fits better."""
+    from scipy.optimize import minimize, minimize_scalar
+
+    y, mean = np.asarray(y, dtype=float), np.asarray(mean, dtype=float)
+    if len(y) == 0:
+        return 0.0, 2.0 if power is None else power
+    poisson_loss = negbin_log_loss(y, mean, 0.0).mean()
+    if power is not None:
+        res = minimize_scalar(lambda la: negbin_log_loss(y, mean, np.exp(la), power).mean(),
+                              bounds=(-12.0, 3.0), method="bounded")  # fmt: skip
+        best = (float(np.exp(res.x)), float(power))
+    else:
+        def loss(t):
+            return negbin_log_loss(y, mean, np.exp(t[0]), 1 + 1.5 / (1 + np.exp(-t[1]))).mean()
+
+        res = minimize(loss, x0=[np.log(0.3), 0.0], method="Nelder-Mead",
+                       options={"xatol": 1e-3, "fatol": 1e-6})  # fmt: skip
+        best = (float(np.exp(res.x[0])), float(1 + 1.5 / (1 + np.exp(-res.x[1]))))
+    if negbin_log_loss(y, mean, *best).mean() < poisson_loss:
+        return best
+    return 0.0, best[1]
+
+
 def brier(y: str = "y", p: str = "mean") -> pl.Expr:
     return (c(p) - c(y)) ** 2
 

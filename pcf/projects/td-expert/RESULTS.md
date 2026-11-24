@@ -5,7 +5,7 @@
 ## In short
 Touchdowns are now a table: every chance's expected touchdown (`play.xtd`, scrambles included), every drive's touchdown chance (`drive.td_chance`), and per player-game and team-game the sums, the luck measure and near misses. Six forecasts are built and validated: players' rushing and receiving touchdowns, a quarterback's thrown touchdowns and a team's touchdowns, each for next game and for the rest of the season, with the chance of at least one.
 
-The headline is the brief's bet on method: **forecasting from chances (method A) is not better than forecasting from volume (method B)**. A ties B for players next game, beats it for thrown touchdowns next game (+0.19%), and loses everywhere over the rest of the season (players −1.25%, thrown −10.1%: whether he keeps playing is the story there, and volume knows it better). **Trees on B's inputs win for players next game** (+0.57% over B, +3.0% for QBs). **A quarterback's red-zone carries are the one red-zone input that pays** in the backtest (I58: +10.6% of the squared error on QBs' rest-of-season touchdowns), **but the vault reversed it** (2025: −5.1%). On the vault, every champion passes the leakage checks and its shuffled copies; A beat B for players next game (+0.46%), and trees tied both (R15). The team's ceiling is large (61% of next game's error knowing every red-zone trip's chance), but the market-free team forecast gets 6.5% of it.
+The headline is the brief's bet on method: **forecasting from chances (method A) is not better than forecasting from volume (method B)**. A ties B for players next game, beats it for thrown touchdowns next game (+0.19%), and loses everywhere over the rest of the season (players −1.25%, thrown −10.1%: whether he keeps playing is the story there, and volume knows it better). **Trees on B's inputs win for players next game** (+0.57% over B, +3.0% for QBs). **A quarterback's red-zone carries are the one red-zone input that pays** in the backtest (I58: +10.6% of the squared error on QBs' rest-of-season touchdowns), **but the vault reversed it** (2025: −5.1%). On the vault, every champion passes the leakage checks and its shuffled copies; A beat B for players next game (+0.46%), and trees tied both (R15). The team's ceiling is large (61% of next game's error knowing every red-zone trip's chance), but the market-free team forecast gets 6.5% of it. **After the CEO's answers (2026-11-24):** the game's opening line now feeds teams' next-game touchdowns (+1.6% of the squared error in the harness, +5.0% trained on kickoff lines; R17), a wider count makes players' rest-of-season chances calibrated (published only on the CEO's yes; R18), and the spot-check kept B for teams' rest of season.
 
 **Champions** (`registry.yaml`):
 
@@ -15,7 +15,7 @@ The headline is the brief's bet on method: **forecasting from chances (method A)
 | Players, rest of season | `skill_rest_volume+qb_rz` | `756d21f9…` | 20 of 20 | +10.6% (walk) | B beats A +1.25%; + QBs' red-zone carries +0.37% (+0.30 to +0.45) |
 | Thrown, next game | `thrown_next_chances` (A) | `63479e9a…` | 20 of 20 | +2.2% | A beats B +0.19% (+0.01 to +0.37) |
 | Thrown, rest of season | `thrown_rest_volume` (B) | `eb589a2b…` | 20 of 20 | +37.9% | B beats A +10.1% |
-| Teams, next game | `team_next_volume` (B) | `1005eb29…` | 20 of 20 | +0.60% (+0.34 to +0.85) | B beats A +0.19% |
+| Teams, next game | `team_next_volume+line` (B + the opener, I118; the CEO, 2026-11-24) | `e26a1d97…` (2023-2024; 2016-2022: B's `1005eb29…`, the same model without an opener) | 20 of 20 | +0.89% (+0.32 to +1.47), 2023-2024 | beats B +0.24% (+0.03 to +0.45) on every 2023-2024 row; B beats A +0.19% (R17) |
 | Teams, rest of season | `team_rest_volume` (B) | `fa0a9e01…` | 20 of 20 | +0.88% (+0.24 to +1.47) | tie (A −0.29%, −0.64 to +0.07): B ships, decision 0043 call 21 (for veto) |
 
 **Vault (2025), opened once, 2026-11-24:** **all six champions pass all 10 leakage checks and beat 20 of 20 shuffled copies; five beat rung 0 clearly (teams next game ties it on 570 rows).** Two verdicts moved: players next game, A beat B (+0.46%, +0.08 to +0.85) and trees tied both; QBs' red-zone carries lost on 2025's QBs over the rest of the season (−5.1% of the log loss). Reported as they are; the champions stand (R15; decision 0043 call 24) · **Versions tried:** 24 variants (3 families × 2 horizons × 3 rungs, trees, 5 side variants), one recalibration fix and one ordering fix (decision 0043, calls 18-19), on 6 saved feature histories.
@@ -28,7 +28,7 @@ The headline is the brief's bet on method: **forecasting from chances (method A)
 | Calibration and range | Next game, chance of 1+: players (the trees champion) error 0.42 points, slope 1.04; thrown 2.4, slope 1.04; teams 3.0, slope 1.15 (fails the slope). Chance of 2+: players 0.21 points, slope 0.92 (passes; B and A: slope 0.89); thrown 3.4 points, slope 0.86; teams 5.1 points (one game's touchdowns are less spread than a Poisson count: I119). Rest of season: the chances fail under a Poisson count (players' 1+ error 8 points, thrown 16; the season's total spreads wider: I116). The Poisson q10-q90 range is reported only (R6) |
 | Leakage | All 10 checks pass for every champion (25 cutoffs). Check 8 caught an ordering bug in A's stage 1 (not a leak; fixed and tested; decision 0043 call 19) and check 1 an import in the build's own checks (fixed) |
 | Football sanity | Claude's: 2024's highest next-game forecasts (8+ games, A's run): Saquon Barkley 0.90 touchdowns a game (scored 1.00), Kyren Williams 0.82 (0.94), Joe Mixon 0.70 (0.88), Jonathan Taylor 0.69 (0.86); QBs Jalen Hurts 0.49 (1.00), Josh Allen 0.43 (0.70); WRs Justin Jefferson 0.56 (0.56), CeeDee Lamb 0.55 (0.40); TEs Sam LaPorta 0.36 (0.47), Travis Kelce 0.34 (0.21) (R16). The CEO's review: ⟨pending⟩ |
-| CEO spot-check | ⟨pending⟩ |
+| CEO spot-check | Teams' rest of season, B over A (the CEO's pick, 2026-11-24): B stays, by rules written first ("The spot-check" below) |
 
 ## Hunch verdicts
 Copied into [`projects/HUNCHES.md`](../HUNCHES.md).
@@ -103,6 +103,22 @@ Calibration, the chance of 1+ next game: players (trees) error 1.05 points, slop
 
 **R16. Football sanity.** See the table above: the top of every list is the backs and quarterbacks who run near the goal line; tight ends top out at about a third of a touchdown a game. Over the season, 2024's highest rest-of-season forecasts made before week 9 (`skill_rest_volume+qb_rz`; Poisson q10-q90 in brackets): Kyren Williams 9.5 (6 to 14; scored 6), Jalen Hurts 7.3 (4 to 11; 7), Saquon Barkley 7.1 (4 to 11; 9), Bijan Robinson 6.1 (3 to 9; 10), D'Andre Swift 6.0 (3 to 9; 2), CeeDee Lamb 5.6 (2), Jahmyr Gibbs 5.5 (3 to 9; 13). Sensible names; the misses (Gibbs, Swift) are the season-long spread R6 says a Poisson understates.
 
+**R17. The opening total for teams (I118; the CEO, 2026-11-24: "the open total market data can be used for the touchdown expert").** ESPN's opener (already in our data from the odds collection: no new source) is now a table part, `team_game.openers`, known at the start of the game's week + 2 days, before the Thursday and Saturday runs. History starts in 2023 (2022's ESPN files carry no openers). Two ways, both scored on 2023-2024's games with an opener:
+- **Decision 0042's way** (`explore/i118_opener.txt`): earlier seasons train on the kickoff line (known long before any later fit), the forecast rows use the opener. Beside B, teams next game: **+5.0% of the squared error (+2.7 to +7.3), +1.15% of the log loss (+0.55 to +1.72)**; the kickoff line, the ceiling, +7.1%. Both seasons clear; 20 of 20 shuffled copies. I118's odds (75%: 3%+ of the squared error, interval clear) held.
+- **The harness's way, what ships** (`team_next_volume+line`, run `e26a1d97…`, 2023-2024; `explore/i118_harness.txt`): each row sees only what was known at its own moment, so the line's weight is learned on opener rows only. All 10 leakage checks pass, 20 of 20 shuffled copies; against B on every row −0.0041 a row (−0.0077 to −0.0004). On the opener rows: **+1.6% of the squared error (+0.1 to +2.9), +0.31% of the log loss (+0.03 to +0.57)**. All of it is 2024 (+2.7%, +0.3 to +4.8): the model refits once a season, so 2023's fit had no opener rows to learn from. Live, the 2026 fit learns from 2023-2025's openers, so 2024 is the closer guide.
+- **Players** (`explore/i118_players.txt`, the harness's way on the trees champion's features): a tie (+0.02%, −0.02 to +0.05; every position ties). Not shipped. Decision 0042's way gave +0.25% (+0.02 to +0.48), squared error a tie: the team's line is mostly in the players' forecasts already, through their team's inputs.
+- **The vault is spent** for td-expert (R15), so **the live 2026 ledger is this input's only clean test.** Calibration of teams' chances of 1+ and 2+ next game still fails (error 4.2 and 10.8 points on the opener rows), as before: the mean is the product for teams.
+
+**R18. A count wider than Poisson for the rest of the season (I116; the CEO: "we need to resolve the wider spread fits").** The champions' means stay as they are; only the spread around them changes (`explore/i116_spread.txt`). A negative binomial whose spread is fit on the seasons before each tested one (tested 2017-2024), judged on the chance of 1+ and of 2+ (bars: error 3 points, slope 0.9-1.1). The plain one (variance mean + α·mean²) overshoots long windows (players' 1+ slope 1.31 with 12+ games left), so the second look lets the spread grow more slowly with the mean (variance mean + α·mean^p, α and p fit per position and window length: games left 1-5, 6-11, 12+):
+
+| Rest of season | Poisson | Negative binomial, by position | The slower spread, position × window |
+|---|---|---|---|
+| Players (67,328 windows) | 1+ error 8.1 points, slope 0.79; 2+ 3.1, 0.80 | 1+ 3.8, 1.05; 2+ 2.3, 1.09 | **1+ 1.7, slope 0.98; 2+ 1.6, slope 1.05: passes**; log loss +6.4% over Poisson |
+| QBs' thrown (10,698) | 1+ 15.7, slope 0.45 | 1+ 7.8, 1.06 | 1+ 2.9, **slope 0.76: fails**; log loss +25% |
+| Teams (4,222) | q10-q90 holds 73% | **q10-q90 holds 83%**; log loss +2.5% | the same (power runs to its bound: no gain) |
+
+Players pass overall, and not in every slice: QBs' rushing 1+ slope 0.86, TEs' 2+ slope 1.14, windows with 12+ games left 2+ slope 1.17. QBs' thrown touchdowns don't fit any of these: the spread its fit wants runs to the bound (linear in the mean) and is still too narrow at the top and too wide at the bottom, the signature of a mixture (he keeps starting, or he doesn't: idea I120). For a team's season the chance of 1+ is near 100%, so the range is the readable test; the plain negative binomial brings it from 73% to 83%. I116's odds held for players (70%: 1+ under 3 points, slope 0.9-1.1) and failed for thrown touchdowns (45%). **The rest-of-season output stays the average only** (the CEO); publishing players' rest-of-season chances under the slower spread is a call for the CEO (decision 0043 call 27). The vault is spent here too: the 2026 ledger is the clean test.
+
 ## The ladder
 
 | Rung | Method | Players next game (log loss vs rung below) | Takeaway carried forward |
@@ -130,6 +146,17 @@ Lens list 2026-11-15, the players' next-game champion (`skill_next_volume_trees`
 | snap share (after) | under 25% | 17,716 | −0.052 | −0.055 to −0.050 | after | as any forecast made before the game |
 
 The pattern: the forecast knows who the player is but not the game it's in. The betting lines (big favorites, then the after-game team points and margin) are the clearest missing input.
+
+## The spot-check: teams' rest of season, B over A
+The CEO picked candidate 3. The rules were written and committed before any number (`explore/spotcheck_team_rest.md`, commit 5d3453b); the numbers are in `explore/spotcheck_team_rest.txt` (2016-2024, the saved walks, 4,734 windows; Poisson log loss, positive: the first one better).
+
+**What the brief says.** "Method A must do at least as well as ... method B ... where it doesn't, B ships." Read literally, a tie is A doing as well, so the brief's letter ships A. Decision 0043 call 21 shipped B on the tie because only B beats rung 0 clearly (rule k).
+
+**The gaps.** Overall A ties B (−0.29%, −0.64 to +0.06). B beats rung 0 (+0.88%, +0.26 to +1.44); A doesn't clearly (+0.59%, −0.20 to +1.29). **By season the two trade places, by more than the overall gap:** B ahead in 2016 (−1.3%), 2018 (−2.6%), 2019 (−1.7%), 2020 (−1.8%) and 2024 (−0.4%); A ahead in 2017 (+2.4%), 2021 (+2.0%), 2022 (+0.3%) and 2023 (+0.3%). Most single seasons are clear one way. Per window, A is worse in 51% of them, and the net is small (0.009 a window). Both means are honest: said 20.9 touchdowns a window and scored 21.0 (B), 20.8 (A).
+
+**Why volume wins where it does.** It isn't the players' "keeps playing" story: a team plays every game. It isn't a QB change either: **where the same QB starts every game of the window, B beats A by 0.65% (−1.10 to −0.22); where another QB starts some games, they tie** (+0.07%; a quarter or more of the games, +0.26%). B also wins the windows starting in weeks 7-12 (−0.54%) and 13+ (−0.27%), and the teams with a cold start (the bottom fifth of expected touchdowns a game so far, −0.44%); weeks 1-6 and hot starts tie. The reading: for a stable team, its yards and efficiency over the season (B) are a steadier guide to its touchdowns than its chances so far (A's stage 1: expected touchdowns, the hindsight, red-zone trips), which carry more of the dice of a few games. When the QB changes, both lose the same information.
+
+**The verdict, by the rules written first:** B stays. A doesn't clearly beat rung 0 overall, and B is at least as good as A in 5 of the 9 seasons. The vault (2025) agreed (B better by 1.84%, −2.61 to −1.09). **Is shipping volume right?** Yes on the evidence: the difference is a season-to-season coin, and B is the simpler forecast and the only one that clears rung 0. The brief's letter points the other way. With the CEO's "no vetoes", B stands, and the rule's wording on a tie is a question for the next brief (below).
 
 ## The case against
 1. **The rest-of-season and team chances aren't calibrated,** so the product for anytime-scorer chances is next game only (players and QBs), and even there the chance of 2+ is a little too sure. A user who reads a rest-of-season "chance of 10+ touchdowns" from a Poisson will be misled (R6).
@@ -177,12 +204,17 @@ Also in this project's `interface` block in `registry.yaml`.
 | **Interval** | facts 2012 on (expected touchdowns; drive chances 2006 on); forecasts weekly, 2016-2024 reported plus the 2025 vault, every rostered QB, RB, WR, TE and every team |
 | **Cadence** | in_season |
 | **Known at** | facts with the play-by-play (kickoff + 1 day); forecasts at the Saturday run |
-| **How to use it** | Next game: the mean and the chance of 1+ = 1 − exp(−mean) (calibrated for players and QBs); the chance of 2+ a little too sure (R6). Rest of season: the mean only. Expected touchdowns a game as a feature (a trait); touchdowns over expected is noise except a QB's thrown (R14). The luck measure looking back only. From saved histories only (rule e) |
+| **How to use it** | Next game: the mean and the chance of 1+ = 1 − exp(−mean) (calibrated for players and QBs); the chance of 2+ a little too sure (R6). Teams next game use the game's opener where there is one (R17). Rest of season: the mean only (the CEO, 2026-11-24); a calibrated spread for players exists (`pcf.validation.scores.negbin_at_least`, R18) and waits for the CEO's call. Expected touchdowns a game as a feature (a trait); touchdowns over expected is noise except a QB's thrown (R14). The luck measure looking back only. From saved histories only (rule e) |
 | **Feeds** | TD-scorer props, fantasy-projections, player-opportunity; candidates vacated-opportunity |
 
+## The CEO's answers (2026-11-24)
+The CEO, 2026-11-24 (through the strategy chat): "Please spot check the rest of season, 3. The yardstick should be market free but the open total market data can be used for the touchdown expert of course. The rest of season touchdowns should show the average only, but we need to resolve the wider spread fits. No vetoes."
+- **No vetoes:** every call in decision 0043 stands, calls 21 (teams' rest of season ships B) and 24 (the champions stand after the vault, I58 in) among them.
+- **The spot-check (3):** done; B stays ("The spot-check" above).
+- **I118:** the opener may be used by td-expert (the yardstick stays market-free); built and shipped for teams next game (R17; decision 0043 call 25).
+- **Rest of season:** the average only; the wider spread is resolved for players, not for QBs' thrown (R18; calls 26-27).
+
 ## Open questions for the CEO
-1. **I58 after the vault:** keep QBs' red-zone carries in the rest-of-season champion (nine seasons +10.6%, 2025 −15.6%), or drop them (that forecast's vault is then spent and the 2026 ledger is its test)? Claude: keep, and watch it live (decision 0043 call 24).
-2. **Teams rest of season, B or A** (a veto): the brief's rule would ship A on the tie; Claude shipped B (simpler, and only B beats rung 0). The vault sided with B (+1.84%).
-3. **Taste: the opening total for team touchdowns** (I118). It is a market input, and the yardstick is market-free for now; the misses say it is the clearest missing input.
-4. **Taste: rest-of-season chances.** Publish the mean only until a wider spread fits (I116), or publish Poisson chances marked as too narrow?
-5. **The spot-check:** which one? Candidates: I58's reversal; the recalibration; teams rest of season B over A; trees as the players' next-game champion.
+1. **Publish players' rest-of-season chances** under the slower spread (calibrated overall, 2017-2024; QBs' rushing and TEs' 2+ outside the bar)? Claude: yes for "1+ / 3+ / 5+ touchdowns over the rest of the season", marked as tested on the backtest only until the 2026 ledger has a season (call 27).
+2. **The brief's tie rule:** "at least as well" lets a tie ship the more complex method; the spot-check says a tie is a coin. Word it as "A ships only when it clearly beats B" in the next brief?
+

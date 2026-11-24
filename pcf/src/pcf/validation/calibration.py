@@ -108,14 +108,19 @@ def coverage(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
 def count_report(df: pl.DataFrame, groups: list[str] | None = None) -> dict:
     """A count forecast (decision 0043): its chance of 1+ and of 2+ under a Poisson count around
     the mean, each judged as a probability; the q10-q90 range (Poisson's) and the mean by tenth
-    reported. Passed when both chances pass."""
-    from scipy.stats import poisson
+    reported. Passed when both chances pass. A frame with an `alpha` column (and optionally
+    `power`) is judged under a negative binomial with that spread instead (idea I116: a count
+    wider than Poisson; `pcf.validation.scores.negbin_at_least`)."""
+    from pcf.validation.scores import negbin_at_least
 
     lam = df["mean"].to_numpy().clip(1e-6)
     y = df["y"].to_numpy()
+    alpha = df["alpha"].to_numpy() if "alpha" in df.columns else 0.0
+    power = df["power"].to_numpy() if "power" in df.columns else 2.0
     chances = {}
     for k in (1, 2):
-        frame = pl.DataFrame({"mean": poisson.sf(k - 1, lam), "y": (y >= k).astype(float)})
+        frame = pl.DataFrame({"mean": negbin_at_least(lam, alpha, k, power),
+                              "y": (y >= k).astype(float)})  # fmt: skip
         chances[k] = probability_report(frame)
     means = (
         df.with_columns(bin=(c("mean").rank("ordinal") * BINS / (pl.len() + 1)).floor().cast(

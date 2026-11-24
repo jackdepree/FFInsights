@@ -445,6 +445,8 @@ _make("skill", "next", "volume-calling",
 _make("skill", "rest", "volume-calling",
       columns=[x for x in F.VOLUME if x not in F.CALLING])  # H67  # fmt: skip
 
+_make("team", "next", "volume+line", columns=[*F.TEAM_VOLUME, *F.LINE])  # I118: the opener
+
 
 def _with_baselines() -> None:
     for name, cls in VARIANTS.items():

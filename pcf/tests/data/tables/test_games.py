@@ -74,3 +74,26 @@ def test_team_stats_join_the_spine_in_pcf_team_codes():
     check_parts(parts, "team_game")
     assert parts["stats"]["known_at"].unique().to_list() == [KICK + timedelta(days=1)]
     assert set(parts["stats"].columns) == {"game_id", "team", "season", "passing_yards", "known_at"}
+
+
+def test_openers_are_the_median_book_per_team_known_before_the_thursday_run():
+    """I118 (td-expert): ESPN's openers, live feeds left out, each team its own spread, known at
+    the start of the game's week + 2 days."""
+    from pcf.data.tables.games import opener_lines, openers_rows
+    from pcf.data.timeline import known_at
+
+    lines = pl.DataFrame({
+        "game_id": ["2025_01_BUF_KC"] * 4,
+        "seasontype": [2, 2, 2, 2],
+        "provider_name": ["Book A", "Book B", "Book C", "Live Odds"],
+        "open_home_spread": [-2.5, -3.0, -3.5, 10.0],
+        "open_total": [47.0, 47.5, 48.0, 60.0],
+    })  # fmt: skip
+    op = opener_lines(lines)
+    assert op["open_home_spread"].to_list() == [-3.0] and op["open_total"].to_list() == [47.5]
+    spine = team_game_parts(schedules(), cal())["schedule"]
+    rows = known_at("espn_openers", openers_rows(op, spine, cal()), cal()).sort("team")
+    assert rows["team"].to_list() == ["BUF", "KC"]
+    assert rows["open_spread"].to_list() == [3.0, -3.0]  # KC at home, favored by 3
+    assert rows["known_at"].to_list() == [WEEK1_START + timedelta(days=2)] * 2
+    assert rows["known_at"].max() < KICK

@@ -115,6 +115,40 @@ def opening_coach(s: pl.DataFrame) -> pl.DataFrame:
     )
 
 
+def opener_lines(game_lines: pl.DataFrame) -> pl.DataFrame:
+    """ESPN's game lines (the odds collection's parse) → one opener per regular-season game: the
+    median over books (live-odds feeds left out) of the home spread (betting sign) and the total.
+    2022 has no opening values in ESPN's history; 2023 has them for most games (decision 0042)."""
+    g = game_lines.filter(
+        (pl.col("seasontype") == 2) & ~pl.col("provider_name").str.contains("(?i)live")
+    )
+    return (
+        g.group_by("game_id")
+        .agg(
+            open_home_spread=pl.col("open_home_spread").median(),
+            open_total=pl.col("open_total").median(),
+        )
+        .filter(pl.col("open_home_spread").is_not_null() & pl.col("open_total").is_not_null())
+    )
+
+
+def openers_rows(lines: pl.DataFrame, spine: pl.DataFrame, cal: Calendar) -> pl.DataFrame:
+    """`opener_lines` → the `team_game.openers` rows: per team, the opening total and its own
+    spread (betting sign: −3.5 = favored), with season and week for the known-at rule. `spine`:
+    the team_game schedule part (game_id, team, season, home)."""
+    weeks = cal.games.select("game_id", pl.col("week").cast(pl.Int32))
+    return (
+        spine.select("game_id", "team", "season", "home")
+        .join(lines, on="game_id", how="inner")
+        .join(weeks, on="game_id", how="inner")
+        .select(
+            "game_id", "team", pl.col("season").cast(pl.Int32), "week",
+            open_total="open_total",
+            open_spread=pl.when("home").then("open_home_spread").otherwise(-pl.col("open_home_spread")),
+        )  # fmt: skip
+    )
+
+
 def team_game_parts(
     schedules: pl.DataFrame,
     cal: Calendar,

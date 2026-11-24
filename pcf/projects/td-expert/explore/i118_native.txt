@@ -1,0 +1,8 @@
+I118, the harness's way (a preview before the table part is built): each row's line is only
+
+  volume                         removes   7.7% (900 rows)
+  volume+line (opener rows only) removes   9.2% (900 rows)
+  the opener beside volume, harness's way      log loss +0.32% (+0.05% to +0.57%); squared error +1.61% (+0.17% to +2.94%): better; 900 rows
+    2023                                       log loss +0.00% (-0.00% to +0.00%); squared error +0.00% (-0.00% to +0.00%): tie; 358 rows
+    2024                                       log loss +0.53% (+0.07% to +0.94%); squared error +2.71% (+0.29% to +4.93%): better; 542 rows
+  shuffled copies: 1.6974 against 1.7278 to 1.7413; beats 20 of 20

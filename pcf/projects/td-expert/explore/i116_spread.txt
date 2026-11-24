@@ -1,0 +1,47 @@
+I116 (the CEO, 2026-11-24: "we need to resolve the wider spread fits"): a count wider than
+tested 2017-2024
+
+== skill, rest of season (skill_rest_volume+qb_rz; 67,328 rows)
+  Poisson                            1+: error 8.10 points, slope 0.79; 2+: error 3.06, slope 0.80 (fails); q10-q90 holds 89.2%; log loss 1.3120
+  negative binomial, by position     1+: error 3.75 points, slope 1.05; 2+: error 2.34, slope 1.09 (fails); q10-q90 holds 93.3%; log loss 1.2433
+  negative binomial, position x window 1+: error 4.08 points, slope 1.06; 2+: error 2.49, slope 1.08 (fails); q10-q90 holds 93.3%; log loss 1.2433
+  slower spread, position x window   1+: error 1.74 points, slope 0.98; 2+: error 1.55, slope 1.05 (passes); q10-q90 holds 92.9%; log loss 1.2287
+    log loss against Poisson, by position: +5.23% (positive: better)
+    log loss against Poisson, position x window: +5.24% (positive: better)
+    log loss against Poisson, slower spread: +6.35% (positive: better)
+    the slower spread fit for 2024 (position, window: alpha, power): QB 1-5 0.80, 1.75; QB 12+ 1.20, 1.07; QB 6-11 0.86, 1.26; RB 1-5 0.43, 1.37; RB 12+ 1.84, 1.10; RB 6-11 0.99, 1.00; TE 1-5 0.29, 1.55; TE 12+ 0.78, 1.03; TE 6-11 0.46, 1.20; WR 1-5 0.18, 1.00; WR 12+ 1.19, 1.00; WR 6-11 0.66, 1.00
+    QB, slower spread                1+: error 1.88 points, slope 0.86; 2+: error 1.24, slope 0.93 (fails); q10-q90 holds 93.1%; log loss 0.8272
+    RB, slower spread                1+: error 1.92 points, slope 1.03; 2+: error 2.12, slope 1.08 (passes); q10-q90 holds 91.9%; log loss 1.4548
+    TE, slower spread                1+: error 2.83 points, slope 1.00; 2+: error 2.16, slope 1.14 (fails); q10-q90 holds 93.9%; log loss 1.1131
+    WR, slower spread                1+: error 2.47 points, slope 1.02; 2+: error 1.97, slope 1.05 (passes); q10-q90 holds 93.1%; log loss 1.3100
+    games left 1-5, slower spread    1+: error 1.10 points, slope 0.91; 2+: error 1.21, slope 0.89 (fails); q10-q90 holds 94.0%; log loss 0.7263
+    games left 6-11, slower spread   1+: error 2.29 points, slope 1.03; 2+: error 1.82, slope 1.09 (passes); q10-q90 holds 93.2%; log loss 1.2738
+    games left 12+, slower spread    1+: error 2.42 points, slope 1.06; 2+: error 3.19, slope 1.17 (fails); q10-q90 holds 91.7%; log loss 1.6376
+
+== thrown, rest of season (thrown_rest_volume; 10,698 rows)
+  Poisson                            1+: error 15.65 points, slope 0.45; 2+: error 8.83, slope 0.47 (fails); q10-q90 holds 74.0%; log loss 2.6684
+  negative binomial, by position     1+: error 7.76 points, slope 1.06; 2+: error 3.96, slope 1.05 (fails); q10-q90 holds 91.2%; log loss 2.1278
+  negative binomial, position x window 1+: error 8.56 points, slope 1.09; 2+: error 4.41, slope 1.05 (fails); q10-q90 holds 90.7%; log loss 2.1215
+  slower spread, position x window   1+: error 2.85 points, slope 0.76; 2+: error 2.18, slope 0.87 (fails); q10-q90 holds 88.3%; log loss 1.9918
+    log loss against Poisson, by position: +20.26% (positive: better)
+    log loss against Poisson, position x window: +20.50% (positive: better)
+    log loss against Poisson, slower spread: +25.36% (positive: better)
+    the slower spread fit for 2024 (position, window: alpha, power): QB 1-5 0.94, 1.00; QB 12+ 5.25, 1.00; QB 6-11 2.86, 1.00
+    QB, slower spread                1+: error 2.85 points, slope 0.76; 2+: error 2.18, slope 0.87 (fails); q10-q90 holds 88.3%; log loss 1.9918
+    games left 1-5, slower spread    1+: error 2.53 points, slope 0.87; 2+: error 3.20, slope 0.92 (fails); q10-q90 holds 91.1%; log loss 1.3019
+    games left 6-11, slower spread   1+: error 3.50 points, slope 0.73; 2+: error 1.95, slope 0.90 (fails); q10-q90 holds 87.9%; log loss 2.0729
+    games left 12+, slower spread    1+: error 4.46 points, slope 0.66; 2+: error 3.30, slope 0.81 (fails); q10-q90 holds 86.2%; log loss 2.5506
+
+== team, rest of season (team_rest_volume; 4,222 rows)
+  Poisson                            1+: error 0.08 points, slope 0.83; 2+: error 0.63, slope 0.88 (fails); q10-q90 holds 73.4%; log loss 3.0980
+  negative binomial, by position     1+: error 0.14 points, slope 0.90; 2+: error 0.71, slope 0.95 (passes); q10-q90 holds 82.5%; log loss 3.0210
+  negative binomial, position x window 1+: error 0.09 points, slope 0.86; 2+: error 0.68, slope 0.90 (fails); q10-q90 holds 81.8%; log loss 3.0202
+  slower spread, position x window   1+: error 0.09 points, slope 0.85; 2+: error 0.66, slope 0.90 (fails); q10-q90 holds 81.9%; log loss 3.0196
+    log loss against Poisson, by position: +2.48% (positive: better)
+    log loss against Poisson, position x window: +2.51% (positive: better)
+    log loss against Poisson, slower spread: +2.53% (positive: better)
+    the slower spread fit for 2024 (position, window: alpha, power): team 1-5 0.00, 2.50; team 12+ 0.01, 2.50; team 6-11 0.00, 2.50
+    games left 1-5, slower spread    1+: error 0.29 points, slope 0.85; 2+: error 2.19, slope 0.90 (fails); q10-q90 holds 83.4%; log loss 2.3647
+    games left 6-11, slower spread   1+: error 0.00 points, slope 1.01; 2+: error 0.00, slope 0.98 (passes); q10-q90 holds 81.0%; log loss 3.0814
+    games left 12+, slower spread    1+: error 0.00 points, slope 2.59; 2+: error 0.00, slope 1.29 (fails); q10-q90 holds 81.4%; log loss 3.5483
+
