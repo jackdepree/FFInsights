@@ -132,3 +132,18 @@ The CEO's third message, 2026-11-24, after the exploration's results, in full:
 |---|---|---|---|
 | H107 | A latent space of responsibilities describes players better than position labels: "Each play utilizes players differently in unique ways, a play still relies on roles and jobs that define a players role. ... A latent space would simply be a better descriptor than simple position labels." | 75% (the CEO, 2026-11-24, before any test: "H107; 75%, h108; 50% please proceed with the exploration"); no size given | For the claim as worded (offense pooled across WR, TE and RB, positionless coordinates forecast next season's targets and carries per snap better than the three position labels, held out): 80%. Side bets: beyond the position label *and* last season's volume (the obvious input), the coordinates still add on the crude yardstick (receiving and rushing yards), 45%; they beat a hand-built role table of the same size, 30% (H100's side bet; the table is the simpler side) |
 | H108 | A play's outcome can be attributed to the players on it by their identity in the latent space (their responsibility: target group or support group): "Each play utilizes a support group and target group to accomplish an offensive or defensive stance and goal, so I assume we can place players into a latent space of responsibilities and possibly even attribute outcomes to different players based on their identity within the latent space." | 50% (the CEO, 2026-11-24, before any test: "H107; 75%, h108; 50% please proceed with the exploration"); no size given | For the claim as worded (credit by responsibility repeats season to season for players who change teams more than plain plus-minus does, with a clear interval): 25%. Side bet: for the target group alone (credit to the targeted receiver and the ball carrier, weighted by his role), the credit repeats for movers at r 0.2+, 50%. VOE's non-QB plus-minus was mostly the team's (movers repeat 0.08; FINDINGS.md's VOE row), and the support group's jobs aren't seen in free data |
+
+The CEO's fourth message, 2026-11-24, after the second look and Claude's options for widening the space, in full:
+
+> "I think what you mocked up is great. I think we can still treat the latent space coordinates as a forecasting input so that we appropriately stress test the idea and we can always revert to a shared map approach later on. Yes h99-h108 can be closed. Yes please run the pooled defense check now"
+
+**Direction (not bets):**
+- **The expansion plan is agreed** ("I think what you mocked up is great"):
+  - defense pooled across its positions next;
+  - players under 200 snaps, shrunk toward their group, with rookies started from measurables and draft slot;
+  - quarterbacks later, as their own space;
+  - no offensive line (the free data can't place them);
+  - no single space for all 22.
+- **The coordinates are judged as a forecasting input,** not only as a shared map ("we can still treat the latent space coordinates as a forecasting input so that we appropriately stress test the idea and we can always revert to a shared map approach later on"). The brief's success tests score them downstream, against position labels and the role table, with the table winning ties.
+- **H99 to H108 closed** as their pass rules read.
+- **The pooled defense check runs now** (EXPLORATION.md, the third look).

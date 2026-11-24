@@ -509,3 +509,14 @@ Still **go** for `roles-retro` on offense. The second look adds:
 - **The pooled space is the better latent space:** one positionless space for WR, TE and RB, with the positions on its first two axes and four within-position axes that repeat. It beats per-position PCA on consistency.
 - **Its forecasting value is description, not edge.** The six-feature role table ties it downstream, so the build ships both, and the table wins ties.
 - **Credit by role (B2's role part) is a candidate input for VOE,** which currently credits each skill player on the field alike. It's a portable part of value, but it doesn't beat plain plus-minus on the team forecast here.
+
+## The third look: a pooled defensive space (pre-registered 2026-11-24, before any number)
+
+> The CEO: "Yes please run the pooled defense check now". It's Claude's idea, I124, with Claude's odds written before the run. Defensive position labels are partly scheme labels: a 3-4 outside linebacker and a 4-3 end do the same job, and nickel corners, box safeties and coverage linebackers overlap. Fitting one position at a time (M2) may have cut real roles in half.
+
+- **The space:** one PCA across DL, OLB, ILB, CB and S pooled. Features: snap share, the team-adjusted own-snap shares, the on/off tilts, the defensive usage rates (tackles per snap, the solo share, tackle depth, rushes per pass snap, passes defensed per pass snap). Standardized, 6 components, fit on 2016–2020 player-seasons with 200+ snaps, applied to all seasons. No measurables, no position label.
+- **The test (I124, Claude 60%):** **held** if 3 or more of the 6 components have a split-half r (odd weeks against even) of 0.5+, pooled. Per position (M2), defense had 1 or 2.
+- **The honest version (side bet, Claude 35%):** the same count with each component centred within its position, so a position's own mean can't make it repeat.
+- **Positions blur (side bet, Claude 70%):** the position comes back from the 6 coordinates less than 85% of the time, against offense's 98%. Also reported: which positions get confused (the edge: DL with OLB; the hybrids: CB, S, ILB).
+- **Also reported:** loadings, season r, movers' season r.
+- **The forecasting stress test (the CEO's direction):** the H107 design on defense. Next season's tackles per snap and rushes per pass snap, from the 6 coordinates against the 5 position labels (ridge, leave-one-season-out, 90% player bootstrap). Side bet, Claude 60%: the coordinates beat the labels on both.
