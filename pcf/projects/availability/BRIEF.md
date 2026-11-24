@@ -1,6 +1,6 @@
 # Availability: who plays, and for how many games
 
-> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). The exploration is under way ([EXPLORATION.md](EXPLORATION.md)). Nothing has been tested for this project yet.
+> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). By the pass rules: H93 held, H94 held, H95 held in part, H96 failed, H97 held, H98 held (small); the CEO closes them. The brief is drafted after the CEO's direction. Nothing has been tested for this project yet.
 
 ## Why now
 

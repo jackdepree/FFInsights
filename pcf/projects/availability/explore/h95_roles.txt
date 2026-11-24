@@ -1,0 +1,21 @@
+player-seasons: 2,395; injuries 1052
+
+WR: 1204 player-seasons, 603 injuries, 0.87 per 1,000 snaps
+  tps          rate ratio per SD 1.265 (1.166 to 1.376)  clear
+  ysd          rate ratio per SD 1.063 (0.968 to 1.170)  covers 0
+  adot         rate ratio per SD 1.125 (1.008 to 1.251)  clear
+  per 1,000 snaps by yards-per-touch SD tercile (low, mid, high): 0.78 (SD 7.1), 0.88 (SD 10.0), 0.94 (SD 13.8)
+
+TE: 577 player-seasons, 196 injuries, 0.65 per 1,000 snaps
+  tps          rate ratio per SD 1.236 (1.157 to 1.427)  clear
+  ysd          rate ratio per SD 1.107 (0.951 to 1.296)  covers 0
+  adot         rate ratio per SD 1.135 (0.980 to 1.308)  covers 0
+  per 1,000 snaps by yards-per-touch SD tercile (low, mid, high): 0.54 (SD 5.6), 0.71 (SD 7.7), 0.68 (SD 10.7)
+
+RB: 614 player-seasons, 253 injuries, 0.97 per 1,000 snaps
+  tps          rate ratio per SD 1.287 (1.015 to 1.667)  clear
+  ysd          rate ratio per SD 1.086 (0.958 to 1.203)  covers 0
+  catch_share  rate ratio per SD 1.071 (0.823 to 1.346)  covers 0
+  per 1,000 snaps by yards-per-touch SD tercile (low, mid, high): 0.81 (SD 4.9), 0.91 (SD 6.2), 1.16 (SD 8.2)
+
+-> roles differ: True; speedsters (yards-per-touch SD) clearly higher in any position: False; H95: HELD IN PART

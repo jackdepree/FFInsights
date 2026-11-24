@@ -1,0 +1,13 @@
+team-seasons 384; starters' games lost per team-season: mean 45.9, SD 17.6, range 6 to 114 (FO's published AGL runs roughly 20 to 140, with a fuller roster and real weights)
+
+Consistency: this season's tally against last season's (team-seasons 2014-2024)
+  with the Questionable half-games: +0.20 (+0.12 to +0.29, n 352)
+  full games only:                  +0.14 (+0.05 to +0.22, n 352)
+  offense: +0.14 (+0.05 to +0.22, n 352)  defense: +0.13 (+0.04 to +0.22, n 352)
+Does it help: the same season's tally against the change in net EPA per play from the season before
+  all starters vs change in net EPA/play:      -0.22 (-0.30 to -0.13, n 352)
+  offense's tally vs change in offense EPA/play: -0.18 (-0.26 to -0.08, n 352)
+  defense's tally vs change in EPA allowed/play: +0.14 (+0.05 to +0.23, n 352)
+  slope: each 10 starter games lost moves net EPA per play by -0.0155 (a team's net EPA per play has SD 0.117)
+  last season's tally vs this season's change in net EPA/play (the forecasting use): +0.06 (-0.02 to +0.15, n 352)
+most games lost: DEN 2022 (114), NYJ 2019 (100), HOU 2023 (98), ARI 2022 (96), DET 2021 (94)

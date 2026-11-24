@@ -1,0 +1,49 @@
+================================================================================ 
+1. Players' injury rates per snap beyond position (2016-2024 scrimmage snaps)
+group  players rate/1000    tau2 (true spread of rate multiplier)  snaps for Z=0.5
+QB         140      0.69 +0.408     (+0.250 to +0.547)            3,567
+RB         321      1.06 +0.471     (+0.266 to +0.708)            2,010
+WR         491      0.87 +0.414     (+0.288 to +0.522)            2,777
+TE         275      0.66 +0.227     (+0.061 to +0.385)            6,738
+OL         657      0.74 +0.437     (+0.319 to +0.565)            3,084
+DL         681      1.12 +0.537     (+0.434 to +0.644)            1,665
+LB         587      1.06 +0.542     (+0.324 to +0.792)            1,735
+DB         790      1.22 +0.505     (+0.425 to +0.595)            1,628
+all groups pooled: tau2 +0.485; a player with 1,000 snaps a season expects about 0.97 injuries, so his own record is half signal after about 2 expected injuries
+
+Season-to-season repeat of a player's rate multiplier (injuries over his group's expectation), players with 300+ snaps both seasons
+  this season at or below expectation: 3291 player-seasons; next season's injuries / expected = 0.699
+  this season above expectation: 2010 player-seasons; next season's injuries / expected = 1.365
+  gap (above minus at-or-below): +0.666 (+0.598 to +0.732)
+================================================================================ 
+2. Time missed given an in-game injury (2013-2024)
+injuries 9235; games missed mean 1.50, SD 3.14; log(1 + games) SD 0.788
+share missing 0, 1, 2-3, 4-7, 8+ games: [0.652, 0.105, 0.101, 0.075, 0.067]
+shape: (6, 4)
+┌────────────────────────┬──────┬──────────┬──────────┐
+│ stat                   ┆ n    ┆ mean     ┆ zero     │
+│ ---                    ┆ ---  ┆ ---      ┆ ---      │
+│ str                    ┆ u32  ┆ f64      ┆ f64      │
+╞════════════════════════╪══════╪══════════╪══════════╡
+│ not listed             ┆ 4494 ┆ 0.039831 ┆ 0.987094 │
+│ not rostered next game ┆ 1611 ┆ 5.649286 ┆ 0.212291 │
+│ Questionable           ┆ 1256 ┆ 0.552548 ┆ 0.660828 │
+│ Out                    ┆ 1246 ┆ 2.775281 ┆ 0.000803 │
+│ Probable               ┆ 421  ┆ 0.068884 ┆ 0.978622 │
+│ Doubtful               ┆ 207  ┆ 1.94686  ┆ 0.014493 │
+└────────────────────────┴──────┴──────────┴──────────┘
+  after-the-fact ceiling, walk-forward 2016-2024, position      : share of log(1 + games) error removed against the overall mean = 0.010
+  after-the-fact ceiling, walk-forward 2016-2024, status        : share of log(1 + games) error removed against the overall mean = 0.621
+  after-the-fact ceiling, walk-forward 2016-2024, status x part : share of log(1 + games) error removed against the overall mean = 0.605
+================================================================================ 
+3. Rest-of-season games for regular QB/RB/WR/TE (2013-2024): severity against frequency
+regular player-seasons 3211; forecast moments x games ahead: 412,505
+games missed ahead: 82,088 (0.199 of games ahead)
+  severity (absence going on at the moment): 0.244 of games missed ahead
+  frequency (absences that start later):     0.756
+absence spells 2,878; share that start right after a game with a named in-game injury: 0.198
+  spells starting on the report (Out/Doubtful/Questionable): 0.423
+  spells starting rostered and not on the report (healthy scratch, illness, other): 0.222
+  spells starting named in-game injury: 0.198
+  spells starting off the active roster (reserve lists, released): 0.156
+note: a player released or traded stays in his first team's weeks; weeks he was rostered nowhere count as missed (reserve lists or out of the league)
