@@ -350,3 +350,35 @@ The CEO, 2026-11-23: "Can you please explain or test the possible incongruity be
 **Addendum G (written after A–D's first run and before G's run, 2026-11-23).** The first run's C1 came out *negative*: in a world where the play model is exactly true, this game's weighted sum loses to its count (−0.16%). That points at the method, not the football. H96's models put the sums in as straight lines, but with a small risk on each play the chance of an injury grows like the log of exposure (logit p ≈ log of the expected count). A straight line in the weighted sum is the wrong shape and is penalised for it, and H96's own test used the same shape. So **G** reruns B, C1, C2 and H96's forward test with log exposure: log(1 + snaps) for counts, and log(weighted sum + one average play's risk) for weights. Claude, before G's run: C1 turns positive, 80%; H96's forward test becomes clear for weighting, 25%; if so, under 0.1% of the log loss. C2's method check (pre-registered to cover 0) failed in the first run: the past weights also forecast this game's mix of plays, so even an acute world gives weighting a small forward edge. G reports C2 again as the acute world's *expected* forward gain, which the real one is read against.
 
 **Addendum H (written after A–G's run and before H's, 2026-11-23).** D's personal contacts include carries and catches, which are the usual way's "touches" (H96's own usual-way column: "Exposure is snaps played, or touches"). So D alone can't say whether the gain is the CEO's idea or the usual way. **H** splits D: (H1) touches (carries, catches) over the last game, last 4 and season, beside the counts; (H2) the other contacts (tackles made, sacks and hits made, and a passer's sacks and hits taken) beside the counts and touches. Same rows and scoring. Script: [`explore/h96_contacts_split.py`](explore/h96_contacts_split.py). Claude, before the run: H1 clear, 75%; H2 clear, 50%, and if so under 0.1% of the log loss.
+
+### Follow-up results (2026-11-23) ([`h96_h97_followup.txt`](explore/h96_h97_followup.txt), [`h96_contacts_split.txt`](explore/h96_contacts_split.txt))
+
+**The answer: there's no contradiction. Plays differ (H97), but every player at a position gets almost the same mix of plays, so a risk-weighted count is a plain count in disguise.** The weight H96 used belongs to the play, shared by all 22 players on it. A weight that follows the player does forecast, but most of it is touches, the usual way.
+
+| Check | Result | Claude's odds | |
+|---|---|---|---|
+| **A. Averaging** | The last-4 weighted sum and the last-4 count correlate **0.997** (median group; 0.981 to 0.998). Single plays' risk varies by about 35% of its mean, but a game's average risk per play varies by only **6–7%** (DL 11%) | 85% | **came true** |
+| **B. The same game** (after the fact) | This game's weighted sum beats its count: **+0.136%** (+0.104 to +0.170); with log exposure +0.039% (+0.024 to +0.055) | 45% clear, under 0.3% | **came true** |
+| **C. The ceiling** (the play model exactly true, 10 simulated draws) | Same game: −0.156% with straight lines, **+0.098%** with log exposure. **Forward (H96's test): +0.025% straight, +0.008% log**, with intervals covering 0 in 2 and 4 of 10 draws | C2 covers 0: 90%. Real B at or below C1: 70% | C2 **didn't** (the past mix also forecasts this game's mix). Real B below C1: true with log exposure (+0.039 against +0.098), not with straight lines |
+| **D. Personal contacts** (carries, catches, hits taken, tackles made), a forecast | Beside the counts: **+0.123%** (+0.078 to +0.171), clear. The same game: +0.504% | 55% clear, under 0.3% | **came true** |
+| **E. H98: recency or weights?** | Recency on plain counts +0.195%, on risk-weighted plays +0.127%; **weighted against counts −0.068%** (−0.101 to −0.037) | 60% that counts get 80%+ | **came true** (153%) |
+| **F. A trait?** His career risk per play beside his injuries and snaps per game | −0.002% (−0.007 to +0.004) | 40% clear | didn't |
+| **G. Log exposure** (addendum) | H96's forward test: **−0.003%** (−0.009 to +0.002), covering 0. Same game: C1 turns positive (+0.098%) | C1 positive 80%; H96 clear 25% | C1 **came true**; H96 clear didn't |
+| **H. Touches or the rest?** (addendum) | **Touches beside the counts: +0.088%** (+0.042 to +0.137). Tackles made and hits taken beside touches: +0.023% (−0.002 to +0.048), covering 0. Defenders' rows alone **+0.076%** (+0.042 to +0.114); offensive rows (a passer's hits taken) −0.050% | H1 75%, H2 50% | H1 **came true**; H2 didn't overall, did for defenders |
+
+**What it means:**
+1. **Why H97 holds and H96 fails.** A risky play is risky for the play, and it's spread evenly: over four games a starter's plays carry 1.00 times his position's average risk, give or take 7%. The weighted sum then adds almost nothing a count doesn't already say (A).
+2. **Even a perfect play model couldn't have passed H96's test.** In the simulated world where the play model is exactly true, the most weighting could gain forward is **+0.008% to +0.025%**, below H96's 0.1% pass line and about the width of its interval (C). The test asked for more than this kind of weight can give.
+3. **The straight-line shape hurt the weights.** With log exposure, H96 goes from −0.017% (clearly worse) to −0.003% (no difference), and the same-game ceiling turns from negative to positive (G).
+4. **The risk is acute.** Within the same game the weights do explain injuries a little (+0.04% to +0.14%, B), but that's after the fact. A risky play's danger is spent on the play.
+5. **A weight that follows the player works, and most of it is touches.** Carries and catches beside snap counts add +0.088% (the usual way's "touches"). Tackles made add a little more for defenders (+0.076% of their loss), and a passer's hits taken don't help. A defender's tackles made per snap is a trait (week r 0.29, season r 0.34).
+6. **H98's fatigue is recent workload, not recent risk.** Recency on plain snaps beats recency on risk-weighted snaps (E).
+
+**For the build:**
+- Exposure is snaps, touches and (defenders) tackles made, entered as logs, with a recency-weighted sum of snaps.
+- The play model stays a description of which plays hurt players (H97), not a workload weight.
+
+**The case against the follow-up:**
+- **B and D's same-game numbers are after the fact.** An injury also cuts the game's snaps short, so the same-game sums are partly caused by the injury.
+- **The pooled model gives one coefficient to "other contacts" for every position.** For a passer that's hits taken, for a defender it's tackles made, which may be why the offensive rows came out worse. A per-position fit could change H2.
+- **G and H were added after seeing A–D's first run.** Each was written down before its own run, but they're follow-ups, not part of the first plan.
