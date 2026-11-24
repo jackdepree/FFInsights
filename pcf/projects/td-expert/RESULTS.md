@@ -147,7 +147,7 @@ Lens list 2026-11-15, the players' next-game champion (`skill_next_volume_trees`
 
 The pattern: the forecast knows who the player is but not the game it's in. The betting lines (big favorites, then the after-game team points and margin) are the clearest missing input.
 
-## The spot-check: teams' rest of season, B over A
+## The spot-check: teams' rest of season, B over A (R19)
 The CEO picked candidate 3. The rules were written and committed before any number (`explore/spotcheck_team_rest.md`, commit 5d3453b); the numbers are in `explore/spotcheck_team_rest.txt` (2016-2024, the saved walks, 4,734 windows; Poisson log loss, positive: the first one better).
 
 **What the brief says.** "Method A must do at least as well as ... method B ... where it doesn't, B ships." Read literally, a tie is A doing as well, so the brief's letter ships A. Decision 0043 call 21 shipped B on the tie because only B beats rung 0 clearly (rule k).
