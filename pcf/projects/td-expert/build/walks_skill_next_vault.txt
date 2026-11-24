@@ -1,0 +1,37 @@
+td-expert walks: skill, next game; seasons 2025-2025; saved features from 2013
+
+Share of squared error removed against the scored rows' own average:
+  rate                           removes  10.0% (6,907 rows); QB 8.3%, RB 12.3%, TE 6.0%, WR 6.0%
+  volume                         removes  13.1% (6,907 rows); QB 6.6%, RB 15.9%, TE 10.0%, WR 9.5%
+  chances                        removes  13.8% (6,907 rows); QB 7.7%, RB 17.5%, TE 10.2%, WR 9.3%
+  volume_trees                   removes  13.0% (6,907 rows); QB 9.3%, RB 15.7%, TE 10.0%, WR 8.8%
+  volume+qb_rz                   removes  13.1% (6,907 rows); QB 6.6%, RB 16.1%, TE 9.8%, WR 9.4%
+  volume-calling                 removes  13.1% (6,907 rows); QB 6.5%, RB 15.9%, TE 9.9%, WR 9.5%
+
+Calibration (Poisson around the mean):
+  rate                           1+: error 0.87 points, slope 0.90; 2+: error 0.26, slope 0.86; said 0.202 a row, got 0.199
+  volume                         1+: error 0.78 points, slope 0.94; 2+: error 0.45, slope 0.86; said 0.198 a row, got 0.199
+  chances                        1+: error 0.41 points, slope 0.97; 2+: error 0.45, slope 0.90; said 0.200 a row, got 0.199
+  volume_trees                   1+: error 1.05 points, slope 0.91; 2+: error 0.23, slope 0.87; said 0.200 a row, got 0.199
+  volume+qb_rz                   1+: error 1.12 points, slope 0.92; 2+: error 0.40, slope 0.85; said 0.195 a row, got 0.199
+  volume-calling                 1+: error 0.83 points, slope 0.94; 2+: error 0.55, slope 0.85; said 0.197 a row, got 0.199
+
+Gains (positive: the first is better; log loss decides, 90% by week):
+  A (chances) against B (volume)               log loss +0.46% (+0.08% to +0.85%); squared error +0.78% (+0.04% to +1.57%): better; 6,907 rows
+  B (volume) against rung 0 (rate)             log loss +3.55% (+2.30% to +4.80%); squared error +3.48% (+1.78% to +5.17%): better; 6,907 rows
+  A (chances) against rung 0 (rate)            log loss +3.99% (+2.94% to +5.05%); squared error +4.24% (+2.90% to +5.69%): better; 6,907 rows
+    A against B, QB                            log loss +1.69% (+0.95% to +2.44%); squared error +1.19% (-0.45% to +2.58%): better; 716 rows
+    A against B, RB                            log loss +0.84% (+0.21% to +1.47%); squared error +1.85% (+0.52% to +3.35%): better; 1,711 rows
+    A against B, WR                            log loss -0.06% (-0.57% to +0.52%); squared error -0.22% (-1.00% to +0.61%): tie; 2,758 rows
+    A against B, TE                            log loss +0.28% (-0.14% to +0.76%); squared error +0.28% (-0.34% to +0.93%): tie; 1,722 rows
+  trees against B (O22)                        log loss +0.27% (-0.29% to +0.81%); squared error -0.08% (-0.82% to +0.69%): tie; 6,907 rows
+  I58: + QB red-zone carries, QBs              log loss +0.57% (-1.65% to +2.68%); squared error +0.04% (-4.18% to +3.26%): tie; 716 rows
+  I58: + QB red-zone carries, everyone         log loss +0.00% (-0.24% to +0.25%); squared error -0.01% (-0.46% to +0.46%): tie; 6,907 rows
+  H67: the calling (B against B without it)    log loss +0.00% (-0.02% to +0.03%); squared error +0.02% (-0.03% to +0.07%): tie; 6,907 rows
+    H67, QB                                    log loss +0.01% (-0.11% to +0.13%); squared error +0.05% (-0.05% to +0.17%): tie; 716 rows
+    H67, RB                                    log loss +0.02% (-0.02% to +0.05%); squared error +0.01% (-0.11% to +0.12%): tie; 1,711 rows
+    H67, WR                                    log loss -0.03% (-0.07% to +0.01%); squared error +0.02% (-0.03% to +0.08%): tie; 2,758 rows
+    H67, TE                                    log loss +0.03% (-0.05% to +0.10%); squared error +0.03% (-0.04% to +0.10%): tie; 1,722 rows
+
+By season, A against B (log loss, positive: A better):
+  2025: +0.46% (+0.08% to +0.86%)

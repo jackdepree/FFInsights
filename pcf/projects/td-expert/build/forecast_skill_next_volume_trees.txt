@@ -1,0 +1,17 @@
+td-expert/skill_next_volume_trees run 7b6321a205184bd99fa03e87c78b0a4d
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\td-expert\skill_next_volume_trees\7b6321a205184bd99fa03e87c78b0a4d\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (12,590 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (12,590 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against TD_skill_next_volume: Comparison(a='td-expert', b='TD_skill_next_volume', diff=-0.0027536249191174823, lo=-0.0036577485047626537, hi=-0.0018920819000989878, rows=59819, blocks=193)
+chance of one+: error 0.42 points, slope 1.04, passed True
+chance of two+: error 0.21 points, slope 0.92, passed True
+Poisson q10-q90 holds 95.8% (reported)

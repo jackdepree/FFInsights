@@ -625,10 +625,28 @@ projects:
   - id: td-expert
     name: Touchdown expert
     phase: 1
-    status: brief
+    status: done
     horizon: later
     cadence: [in_season]
-    depends_on: [opportunity-quality, team-efficiency]
+    depends_on: [grain-tables]  # reads opportunity-quality's play.xfp and team-efficiency's team_game.efficiency as table parts, not their forecasts (decision 0043)
+    history_runs:  # the champions' walk-forward histories, 2016-2024 (decision 0043, call 21)
+      skill_next_volume_trees: {1: 7b6321a205184bd99fa03e87c78b0a4d}
+      skill_rest_volume+qb_rz: {1: 756d21f9767643ad994732460531c4aa, 2: 0fdfa650e2d741a794da5fb779ce0cd3}  # 2: with its spread and the published chances (decision 0043 call 27)
+      thrown_next_chances: {1: 63479e9abfa3484795ce80d7a31051d6}
+      thrown_rest_volume: {1: eb589a2ba02e4111a69c7a6c49c31d41}
+      team_next_volume: {1: 1005eb299a734dc2bd8765130f968b04}  # 2016-2022 of the teams' next-game champion
+      team_next_volume+line: {1: e26a1d97b290431aa580b0b0f8f9804a}  # the champion from 2023 (I118; decision 0043 call 25)
+      team_rest_volume: {1: fa0a9e01d5fe4484add2e9b760512b6e}
+    interface:
+      inputs: play.pbp, play.xfp (opportunity-quality's expected touchdowns), drive.summary; player_game parts roster, snaps, game_status, depth, injury, stats, opportunity, touchdowns; team_game touchdowns, efficiency, tendencies, openers (ESPN's opening line, 2023 on, teams next game); the schedule for windows
+      outputs: "Facts: play.xtd (tdx_ columns: kind, player, position, passer, team, yard line, air yards, xtd, td, source), drive.td_chance (p_start, p_rz, p_peak, reached the 20, field-goal try, hindsight), player_game.touchdowns and team_game.touchdowns (counts; touchdowns and expected by kind and zone; thrown; dice spreads; luck z; the chance of at least that many; teams: drives, red-zone trips, the drive-aware hindsight, near misses). Forecasts: outputs/td-expert/<variant>/<run_id>/history.parquet, quantities td_rush_rec, td_thrown, td_team (next game) and *_rest (rest of the regular season): the mean count with Poisson q10/q50/q90"
+      grain: play; drive; player-game; team-game; forecasts per player (or team) and the game a window starts on
+      interval: facts 2012 on (drive chances 2006 on); forecasts weekly, 2016-2024 reported plus the 2025 vault, every rostered QB, RB, WR, TE and every team
+      cadence: in_season
+      known_at: facts with the play-by-play (kickoff + 1 day); forecasts at the Saturday run (12:00 Eastern)
+      model: none registered yet (histories pinned above)
+      how_to_use: "Next game: the mean, and the chance of 1+ = 1 - exp(-mean) (calibrated for players and QBs; the chance of 2+ a little too sure except the players' trees). Teams next game read the game's opener where there is one (R17). Rest of season: the mean; players' p_one and p_two (the chances of 1+ and 2+ under the model's negative binomial) where calibrated, the last five games (games left 1-5) for RB and TE 1+ and 2+, WR 1+, null elsewhere (the CEO, 2026-11-24, 'Yes, where calibrated'; R18). Teams: the mean only. Expected touchdowns a game as a feature (a trait, 0.55); touchdowns over expected is noise except a QB's thrown (0.15). The luck measure looking back only. From saved histories only (rule e)"
+      feeds: TD-scorer props, fantasy-projections, player-opportunity; candidates vacated-opportunity
     summary: >-
       Expected touchdowns per chance, touchdown regression, the luck in a touchdown total, and a
       forecast with the chance of at least one. Feeds TD-scorer props. Explored 2026-11-16 (GO):
@@ -642,7 +660,19 @@ projects:
       calibrated 0/1/2+; near misses on field-goal drives are a description, noise as an input;
       a QB keeps about 9% of thrown touchdowns over expected. Brief agreed 2026-11-17 ("I
       approve the brief"): near misses built as a description only; the team ceiling is measured
-      first in the build; the build runs in its own session.
+      first in the build; the build runs in its own session. Built 2026-11-24 (decision 0043):
+      the touchdown parts (play.xtd, drive.td_chance, player_game and team_game touchdowns) and
+      six count forecasts. Method A (chances) ties B (volume) for players next game, beats it
+      for thrown next game (+0.19%), loses over the rest of the season (players -1.25%, thrown
+      -10.1%); trees win for players next game (+0.57%); QBs' red-zone carries pay (I58 held,
+      +10.6% of QBs' rest-of-season squared error); H67 and H68 don't pay; I61 killed. The team
+      ceiling is 61% next game; the market-free team forecast gets 6.5%. The vault (2025, opened
+      2026-11-24): every champion passes the 10 checks and 20 of 20 shuffles; A beat B for players
+      next game (+0.46%) and trees tied both; I58 reversed on 2025's QBs (-5.1%); teams next game
+      ties the season rate. The champions stand (decision 0043 call 24). The CEO (2026-11-24): no vetoes;
+      the spot-check (teams' rest of season) kept B; the opener added to teams' next game (I118:
+      +1.6% of the squared error in the harness, +5.0% trained on kickoff lines); a wider count
+      makes players' rest-of-season chances calibrated (I116), published only on the CEO's yes.
 
   - id: aging
     name: Aging curves

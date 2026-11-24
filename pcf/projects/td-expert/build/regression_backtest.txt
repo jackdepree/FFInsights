@@ -1,0 +1,17 @@
+td-expert regression measure: tested seasons 2016-2024; the share kept fitted on the 6 season pairs before each; regular season only
+
+rushing and receiving (2,209 player-seasons with 30+ chances before them):
+  share kept (fit for the last tested season): QB 0.01, RB 0.16, TE 0.10, WR 0.09
+  QB: 153 pairs; this season's rate against next's r = -0.01; against keep-none -1.52% (-4.86 to +1.71); against keep-all +54.3% (+40.9 to +63.8)
+  RB: 747 pairs; this season's rate against next's r = 0.03; against keep-none +0.70% (-2.84 to +3.87); against keep-all +49.9% (+44.1 to +54.9)
+  TE: 360 pairs; this season's rate against next's r = 0.06; against keep-none +1.38% (-1.38 to +4.17); against keep-all +46.6% (+39.6 to +52.9)
+  WR: 949 pairs; this season's rate against next's r = 0.04; against keep-none -0.04% (-0.56 to +0.52); against keep-all +53.7% (+50.1 to +57.2)
+  everyone: against keep-none +0.38% (-1.07 to +1.91); against keep-all +51.4% (+48.6 to +54.2); beats both, intervals clear: False
+  by season (gain on keep-none): 2016 +1.0%, 2017 -1.0%, 2018 +2.6%, 2019 +3.9%, 2020 +2.0%, 2021 -2.5%, 2022 +2.0%, 2023 -4.5%, 2024 +0.0%
+
+thrown, QBs (308 player-seasons with 150+ chances before them):
+  share kept (fit for the last tested season): QB 0.17
+  QB: 308 pairs; this season's rate against next's r = 0.09; against keep-none -1.01% (-4.75 to +2.25); against keep-all +49.3% (+40.7 to +56.0)
+  everyone: against keep-none -1.01% (-4.90 to +2.29); against keep-all +49.3% (+41.2 to +55.9); beats both, intervals clear: False
+  by season (gain on keep-none): 2016 -15.4%, 2017 -16.4%, 2018 -1.0%, 2019 +2.4%, 2020 +3.6%, 2021 +1.6%, 2022 -1.9%, 2023 +11.0%, 2024 +4.4%
+

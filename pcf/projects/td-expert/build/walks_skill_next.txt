@@ -1,0 +1,45 @@
+td-expert walks: skill, next game; seasons 2016-2024; saved features from 2013
+
+Share of squared error removed against the scored rows' own average:
+  rate                           removes   9.3% (59,819 rows); QB 7.8%, RB 10.9%, TE 5.4%, WR 6.5%
+  volume                         removes  11.8% (59,819 rows); QB 5.8%, RB 14.3%, TE 8.0%, WR 9.0%
+  chances                        removes  11.7% (59,819 rows); QB 6.2%, RB 13.8%, TE 8.2%, WR 9.1%
+  volume_trees                   removes  12.1% (59,819 rows); QB 8.5%, RB 14.5%, TE 8.0%, WR 9.0%
+  volume+qb_rz                   removes  11.9% (59,819 rows); QB 7.3%, RB 14.2%, TE 8.0%, WR 9.0%
+  volume-calling                 removes  11.8% (59,819 rows); QB 5.7%, RB 14.3%, TE 8.1%, WR 9.0%
+
+Calibration (Poisson around the mean):
+  rate                           1+: error 0.84 points, slope 0.93; 2+: error 0.32, slope 0.82; said 0.200 a row, got 0.200
+  volume                         1+: error 0.39 points, slope 1.03; 2+: error 0.28, slope 0.89; said 0.198 a row, got 0.200
+  chances                        1+: error 0.26 points, slope 1.01; 2+: error 0.26, slope 0.89; said 0.198 a row, got 0.200
+  volume_trees                   1+: error 0.42 points, slope 1.04; 2+: error 0.21, slope 0.92; said 0.200 a row, got 0.200
+  volume+qb_rz                   1+: error 0.42 points, slope 1.03; 2+: error 0.28, slope 0.89; said 0.198 a row, got 0.200
+  volume-calling                 1+: error 0.34 points, slope 1.03; 2+: error 0.27, slope 0.89; said 0.198 a row, got 0.200
+
+Gains (positive: the first is better; log loss decides, 90% by week):
+  A (chances) against B (volume)               log loss +0.03% (-0.07% to +0.13%); squared error -0.13% (-0.27% to +0.04%): tie; 59,819 rows
+  B (volume) against rung 0 (rate)             log loss +2.95% (+2.59% to +3.29%); squared error +2.75% (+2.38% to +3.12%): better; 59,819 rows
+  A (chances) against rung 0 (rate)            log loss +2.97% (+2.65% to +3.31%); squared error +2.63% (+2.28% to +2.98%): better; 59,819 rows
+    A against B, QB                            log loss +0.07% (-0.35% to +0.50%); squared error +0.46% (+0.01% to +0.95%): tie; 6,058 rows
+    A against B, RB                            log loss -0.37% (-0.55% to -0.19%); squared error -0.61% (-0.90% to -0.32%): worse; 15,612 rows
+    A against B, WR                            log loss +0.19% (+0.06% to +0.32%); squared error +0.10% (-0.10% to +0.30%): better; 23,790 rows
+    A against B, TE                            log loss +0.35% (+0.17% to +0.54%); squared error +0.17% (-0.04% to +0.38%): better; 14,359 rows
+  trees against B (O22)                        log loss +0.57% (+0.39% to +0.74%); squared error +0.33% (+0.10% to +0.58%): better; 59,819 rows
+  I58: + QB red-zone carries, QBs              log loss +0.92% (+0.42% to +1.42%); squared error +1.64% (+0.63% to +2.52%): better; 6,058 rows
+  I58: + QB red-zone carries, everyone         log loss +0.02% (-0.04% to +0.08%); squared error +0.05% (-0.04% to +0.13%): tie; 59,819 rows
+  H67: the calling (B against B without it)    log loss -0.01% (-0.03% to +0.01%); squared error -0.01% (-0.04% to +0.02%): tie; 59,819 rows
+    H67, QB                                    log loss +0.19% (+0.09% to +0.29%); squared error +0.10% (+0.02% to +0.18%): better; 6,058 rows
+    H67, RB                                    log loss -0.01% (-0.05% to +0.03%); squared error -0.01% (-0.07% to +0.05%): tie; 15,612 rows
+    H67, WR                                    log loss -0.01% (-0.04% to +0.02%); squared error -0.01% (-0.04% to +0.03%): tie; 23,790 rows
+    H67, TE                                    log loss -0.08% (-0.13% to -0.03%); squared error -0.06% (-0.12% to -0.00%): worse; 14,359 rows
+
+By season, A against B (log loss, positive: A better):
+  2016: -0.08% (-0.46% to +0.28%)
+  2017: -0.24% (-0.50% to +0.04%)
+  2018: +0.06% (-0.24% to +0.38%)
+  2019: +0.19% (-0.04% to +0.42%)
+  2020: +0.14% (-0.14% to +0.39%)
+  2021: +0.04% (-0.22% to +0.31%)
+  2022: -0.14% (-0.41% to +0.13%)
+  2023: +0.15% (-0.24% to +0.55%)
+  2024: +0.11% (-0.16% to +0.39%)

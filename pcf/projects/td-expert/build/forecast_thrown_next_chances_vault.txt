@@ -1,0 +1,18 @@
+td-expert/thrown_next_chances run d55876b85a0d44329d8e1b0ec83f8474
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\td-expert\thrown_next_chances\d55876b85a0d44329d8e1b0ec83f8474\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (2,930 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (2,930 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  22 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against TD_thrown_next_rate: Comparison(a='td-expert', b='TD_thrown_next_rate', diff=-0.06352371798026493, lo=-0.08395391865637755, hi=-0.0426288798835083, rows=658, blocks=22)
+against TD_thrown_next_volume: Comparison(a='td-expert', b='TD_thrown_next_volume', diff=-0.002535990436443965, lo=-0.005791162361728264, hi=0.0008465535099740321, rows=658, blocks=22)
+chance of one+: error 5.81 points, slope 1.22, passed False
+chance of two+: error 3.95 points, slope 0.90, passed False
+Poisson q10-q90 holds 95.1% (reported)

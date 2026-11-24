@@ -1,0 +1,14 @@
+td-expert: trees against A (chances), players next game, on the saved walks (log loss; positive: trees better)
+
+2016-2024:
+  trees against A      log loss +0.54% (+0.35% to +0.71%); squared error +0.45% (+0.24% to +0.69%): better; 59,819 rows
+    QB                 log loss +3.02% (+2.29% to +3.80%); squared error +2.42% (+1.68% to +3.13%): better; 6,058 rows
+    RB                 log loss +1.08% (+0.77% to +1.37%); squared error +0.86% (+0.41% to +1.31%): better; 15,612 rows
+    WR                 log loss -0.18% (-0.41% to +0.07%); squared error -0.07% (-0.37% to +0.23%): tie; 23,790 rows
+    TE                 log loss +0.00% (-0.36% to +0.37%); squared error -0.16% (-0.55% to +0.22%): tie; 14,359 rows
+2025 (vault):
+  trees against A      log loss -0.19% (-0.76% to +0.35%); squared error -0.87% (-1.62% to -0.06%): tie; 6,907 rows
+    QB                 log loss +1.78% (-1.14% to +4.29%); squared error +1.74% (-1.56% to +4.12%): tie; 716 rows
+    RB                 log loss -0.39% (-1.48% to +0.72%); squared error -2.11% (-4.34% to +0.20%): tie; 1,711 rows
+    WR                 log loss -0.77% (-1.40% to -0.10%); squared error -0.53% (-1.17% to +0.17%): worse; 2,758 rows
+    TE                 log loss +0.32% (-0.59% to +1.18%); squared error -0.30% (-0.99% to +0.33%): tie; 1,722 rows

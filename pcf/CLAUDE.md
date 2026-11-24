@@ -39,6 +39,7 @@ Dependencies point down, or sideways within a layer (for example, context feeds 
 - **i. Notebooks are for exploring only.** Reusable code lives in the package.
 - **j. Modularity.** Before writing new code, check the shared package for something that already does it. When writing something reusable, put it in the shared package so new and parallel projects reuse it. Flag duplication when you see it.
 - **k. Simple first, no noise.** Every complex technique is tested against a cheap, simple version.
+  - **A tie goes to the simpler, faster and cheaper model**, in every brief and every build (the CEO, 2026-11-24: "in future briefs and in future builds, the tie should go to the simpler, faster, and less computationally expensive model"). A tie is an interval that includes zero (VALIDATION §4). A brief can't set a different tie rule: name the simpler side when the brief is written.
   - **Models climb a ladder:** baseline → linear/lasso → structured → trees → … (`docs/ARCHITECTURE.md`). A rung needn't reuse the previous rung's outputs, but it must use its **takeaways** (which features matter, collinearity, interactions), and say which ones it applied. The ladder stops when a rung doesn't beat the one below.
   - **Experts** must show real signal on held-out data: they beat a shuffled, signal-free version of themselves, and they don't add noise. They don't have to beat other models. Downstream feature selection decides whether they get used.
   - **Feature selection always happens inside the cross-validation folds**, never on the full dataset.

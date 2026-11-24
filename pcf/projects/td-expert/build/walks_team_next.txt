@@ -1,0 +1,27 @@
+td-expert walks: team, next game; seasons 2016-2024; saved features from 2013
+
+Share of squared error removed against the scored rows' own average:
+  rate                           removes   4.2% (4,952 rows)
+  volume                         removes   6.5% (4,952 rows)
+  chances                        removes   5.7% (4,952 rows)
+
+Calibration (Poisson around the mean):
+  rate                           1+: error 2.80 points, slope 0.83; 2+: error 4.59, slope 0.78; said 2.416 a row, got 2.420
+  volume                         1+: error 2.99 points, slope 1.15; 2+: error 5.09, slope 0.92; said 2.396 a row, got 2.420
+  chances                        1+: error 3.09 points, slope 1.14; 2+: error 5.23, slope 0.88; said 2.390 a row, got 2.420
+
+Gains (positive: the first is better; log loss decides, 90% by week):
+  A (chances) against B (volume)               log loss -0.19% (-0.28% to -0.09%); squared error -0.85% (-1.27% to -0.43%): worse; 4,952 rows
+  B (volume) against rung 0 (rate)             log loss +0.60% (+0.34% to +0.85%); squared error +2.35% (+1.19% to +3.46%): better; 4,952 rows
+  A (chances) against rung 0 (rate)            log loss +0.41% (+0.12% to +0.70%); squared error +1.52% (+0.30% to +2.77%): better; 4,952 rows
+
+By season, A against B (log loss, positive: A better):
+  2016: -0.21% (-0.39% to -0.03%)
+  2017: +0.08% (-0.27% to +0.44%)
+  2018: -0.37% (-0.55% to -0.20%)
+  2019: -0.51% (-0.82% to -0.22%)
+  2020: -0.36% (-0.56% to -0.14%)
+  2021: -0.06% (-0.27% to +0.17%)
+  2022: -0.05% (-0.43% to +0.35%)
+  2023: -0.05% (-0.31% to +0.20%)
+  2024: -0.14% (-0.36% to +0.08%)

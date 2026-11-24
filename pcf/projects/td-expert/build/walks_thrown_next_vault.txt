@@ -1,0 +1,20 @@
+td-expert walks: thrown, next game; seasons 2025-2025; saved features from 2013
+
+Share of squared error removed against the scored rows' own average:
+  rate                           removes   5.8% (658 rows); QB 5.8%
+  volume                         removes  14.7% (658 rows); QB 14.7%
+  chances                        removes  15.2% (658 rows); QB 15.2%
+
+Calibration (Poisson around the mean):
+  rate                           1+: error 2.72 points, slope 0.93; 2+: error 5.30, slope 0.68; said 1.265 a row, got 1.289
+  volume                         1+: error 3.41 points, slope 1.23; 2+: error 3.50, slope 0.91; said 1.291 a row, got 1.289
+  chances                        1+: error 5.81 points, slope 1.22; 2+: error 3.95, slope 0.90; said 1.302 a row, got 1.289
+
+Gains (positive: the first is better; log loss decides, 90% by week):
+  A (chances) against B (volume)               log loss +0.18% (-0.06% to +0.42%); squared error +0.54% (-0.28% to +1.41%): tie; 658 rows
+  B (volume) against rung 0 (rate)             log loss +4.21% (+2.78% to +5.53%); squared error +9.47% (+5.68% to +12.99%): better; 658 rows
+  A (chances) against rung 0 (rate)            log loss +4.39% (+2.94% to +5.74%); squared error +9.97% (+6.60% to +13.31%): better; 658 rows
+    A against B, QB                            log loss +0.18% (-0.05% to +0.42%); squared error +0.54% (-0.30% to +1.36%): tie; 658 rows
+
+By season, A against B (log loss, positive: A better):
+  2025: +0.18% (-0.05% to +0.41%)

@@ -1,0 +1,22 @@
+I118 in the harness (run e26a1d97, `team_next_volume+line`, 2023-2024, all 10 checks, 20 of 20
+
+== every row
+  rate                           removes   6.9% (1,140 rows)
+  volume                         removes   9.6% (1,140 rows)
+  volume+line                    removes  10.7% (1,140 rows)
+  volume+line                    1+: error 3.87 points, slope 1.17; 2+: error 9.81, slope 1.09; said 2.228 a row, got 2.353
+  the opener beside B (I118)                   log loss +0.24% (+0.03% to +0.45%); squared error +1.21% (+0.07% to +2.34%): better; 1,140 rows
+  B+line against rung 0                        log loss +0.89% (+0.32% to +1.47%); squared error +4.01% (+1.65% to +6.37%): better; 1,140 rows
+    2023                                       log loss +0.00% (-0.00% to +0.00%); squared error +0.00% (-0.00% to +0.00%): tie; 570 rows
+    2024                                       log loss +0.48% (+0.08% to +0.88%); squared error +2.46% (+0.20% to +4.48%): better; 570 rows
+
+== rows with an opener
+  rate                           removes   5.8% (896 rows)
+  volume                         removes   7.7% (896 rows)
+  volume+line                    removes   9.1% (896 rows)
+  volume+line                    1+: error 4.22 points, slope 0.98; 2+: error 10.84, slope 0.97; said 2.239 a row, got 2.382
+  the opener beside B (I118)                   log loss +0.31% (+0.03% to +0.57%); squared error +1.58% (+0.14% to +2.93%): better; 896 rows
+  B+line against rung 0                        log loss +0.81% (+0.22% to +1.39%); squared error +3.56% (+1.00% to +6.18%): better; 896 rows
+    2023                                       log loss -0.00% (-0.00% to +0.00%); squared error +0.00% (-0.00% to +0.00%): tie; 358 rows
+    2024                                       log loss +0.52% (+0.09% to +0.92%); squared error +2.67% (+0.31% to +4.83%): better; 538 rows
+

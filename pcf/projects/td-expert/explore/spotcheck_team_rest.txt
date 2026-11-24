@@ -1,0 +1,37 @@
+Spot-check 3: teams' rest of season, B (volume) against A (chances), 2016-2024
+(Poisson log loss share; positive: the first better; 90% by week blocks)
+
+  A against B                                  log loss -0.29% (-0.64% to +0.06%); squared error +0.02% (-2.02% to +2.11%): tie; 4,734 rows
+  B against rung 0                             log loss +0.88% (+0.26% to +1.44%); squared error +2.82% (-0.75% to +6.21%): better; 4,734 rows
+  A against rung 0                             log loss +0.59% (-0.20% to +1.29%); squared error +2.84% (-0.97% to +6.72%): tie; 4,734 rows
+
+By season (A against B; B against rung 0; A against rung 0):
+  2016: A-B -1.26% (-1.67% to -0.88%); B-rate +0.42%; A-rate -0.84%; 512 windows
+  2017: A-B +2.35% (+1.59% to +3.19%); B-rate +6.58%; A-rate +8.77%; 512 windows
+  2018: A-B -2.57% (-3.57% to -1.60%); B-rate +0.70%; A-rate -1.86%; 512 windows
+  2019: A-B -1.68% (-2.46% to -0.94%); B-rate +2.53%; A-rate +0.89%; 512 windows
+  2020: A-B -1.82% (-2.54% to -1.16%); B-rate -1.82%; A-rate -3.68%; 512 windows
+  2021: A-B +1.95% (+0.99% to +2.88%); B-rate -5.32%; A-rate -3.26%; 544 windows
+  2022: A-B +0.25% (-0.27% to +0.82%); B-rate +2.41%; A-rate +2.65%; 542 windows
+  2023: A-B +0.33% (-0.19% to +0.85%); B-rate +0.19%; A-rate +0.52%; 544 windows
+  2024: A-B -0.38% (-1.47% to +0.65%); B-rate +2.53%; A-rate +2.16%; 544 windows
+  A ahead in 4 of 9 seasons, B ahead or level in 5
+
+Lenses (A against B):
+  window starts weeks 1-6                      log loss -0.10% (-0.86% to +0.65%); squared error +0.96% (-1.83% to +3.84%): tie; 1,664 rows
+  window starts weeks 7-12                     log loss -0.54% (-0.96% to -0.13%); squared error -2.24% (-4.28% to -0.26%): worse; 1,538 rows
+  window starts week 13+                       log loss -0.27% (-0.49% to -0.04%); squared error -0.90% (-1.91% to +0.11%): worse; 1,532 rows
+  same QB starts every game                    log loss -0.65% (-1.10% to -0.22%); squared error -2.87% (-5.21% to -0.48%): worse; 2,452 rows
+  another QB starts some games                 log loss +0.07% (-0.47% to +0.61%); squared error +2.36% (-0.76% to +5.36%): tie; 2,282 rows
+  another QB starts a quarter or more          log loss +0.26% (-0.45% to +0.99%); squared error +3.39% (-1.14% to +7.40%): tie; 1,375 rows
+  (windows with another QB starting some games: 2,282 of 4,734)
+  hot start (top fifth of xtd a game so far)   log loss -0.33% (-1.31% to +0.65%); squared error -0.37% (-4.38% to +3.49%): tie; 776 rows
+  cold start (bottom fifth)                    log loss -0.44% (-0.83% to -0.09%); squared error -3.22% (-5.48% to -1.15%): worse; 769 rows
+
+Calibration of the mean, by fifths of each forecast (said, scored, touchdowns over the window):
+  B: 4.9/5.1; 12.7/12.8; 20.5/20.8; 28.0/28.9; 38.3/37.3
+     overall said 20.89, scored 20.98
+  A: 4.9/5.1; 12.8/12.8; 20.4/20.7; 27.9/29.1; 37.9/37.1
+     overall said 20.79, scored 20.98
+
+Per window, A's loss minus B's: mean +0.0088; A worse in 51% of windows; the worst 10% for A carry 810% of the net (net +41.74)
