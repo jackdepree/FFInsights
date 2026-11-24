@@ -343,8 +343,6 @@ def _fit_share(df: pl.DataFrame, cols: list[str], y: str) -> float:
 
 def luck_lines(view, plays: pl.DataFrame) -> list[str]:
     """The luck measure, looking back (the CEO's idea; EXPLORATION F19)."""
-    from pcf.data.tables.touchdowns import at_least
-
     seasons = list(range(2016, 2025))
     plays = plays.filter(c("season").is_between(2016, 2024))
     pg = view.table("player_game", seasons=seasons).filter(c("touchdowns_known_at").is_not_null())
@@ -381,12 +379,22 @@ def luck_lines(view, plays: pl.DataFrame) -> list[str]:
     if ids.height:
         r = ids.row(0, named=True)
         mine = pos.filter((c("tdx_gsis_id") == r["gsis_id"]) & (c("season") == r["season"]))
-        p = at_least(mine["tdx_xtd"].to_numpy(), np.zeros(mine.height, dtype=int),
-                     np.array([int(r["td"])]))[0]  # fmt: skip
+        p = _at_least(mine["tdx_xtd"].to_numpy(), int(r["td"]))
         lines.append(f"  e.g. the most touchdowns in a season ({r['gsis_id']}, {r['season']}): "
                      f"{r['td']:.0f} on {r['xtd']:.1f} expected; chance of {r['td']:.0f}+ from "
                      f"those chances {100 * p:.2f}%")  # fmt: skip
     return lines
+
+
+def _at_least(p: np.ndarray, k: int) -> float:
+    """The chance these chances score k or more (Poisson-binomial). The parts' own vectorized
+    version lives in the table builders, which an expert may not import (leakage check 1)."""
+    dist = np.zeros(k + 1)
+    dist[0] = 1.0
+    for q in p:
+        dist[1:] = dist[1:] * (1 - q) + dist[:-1] * q
+        dist[0] *= 1 - q
+    return float(1 - dist[:k].sum())
 
 
 def consistency_lines(view) -> list[str]:

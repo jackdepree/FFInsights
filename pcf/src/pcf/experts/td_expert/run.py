@@ -87,6 +87,16 @@ def forecast(variant: str, seasons: list[int] | None, open_vault: bool, shuffles
     return run_id
 
 
+def _seasons(seasons: list[int] | None, open_vault: bool) -> list[int]:
+    """The tested seasons of a walk: the backtest unless given; the vault only when opened."""
+    from pcf.experts.td_expert.checks import SEASONS
+    from pcf.validation.backtest import check_seasons
+
+    seasons = seasons or SEASONS
+    check_seasons(seasons, open_vault)
+    return seasons
+
+
 def main(argv: list[str] | None = None) -> None:
     p = argparse.ArgumentParser(prog="td_expert.run")
     sub = p.add_subparsers(dest="command", required=True)
@@ -103,6 +113,8 @@ def main(argv: list[str] | None = None) -> None:
     w.add_argument("--horizon", required=True)
     w.add_argument("--tag", default="")
     w.add_argument("--shuffles", type=int, default=20)
+    w.add_argument("--seasons", nargs="+", type=int)
+    w.add_argument("--open-vault", action="store_true")
     sub.add_parser("facts")
     r = sub.add_parser("regression")
     r.add_argument("--seasons", nargs="+", type=int, default=list(range(2016, 2025)))
@@ -116,7 +128,8 @@ def main(argv: list[str] | None = None) -> None:
         from pcf.experts.td_expert import checks
 
         write(f"walks_{args.family}_{args.horizon}{'_' + args.tag if args.tag else ''}",
-              checks.walks(args.family, args.horizon, args.tag, args.shuffles))  # fmt: skip
+              checks.walks(args.family, args.horizon, args.tag, args.shuffles,
+                           _seasons(args.seasons, args.open_vault)))  # fmt: skip
     elif args.command == "facts":
         from pcf.experts.td_expert import checks
 

@@ -625,10 +625,27 @@ projects:
   - id: td-expert
     name: Touchdown expert
     phase: 1
-    status: building
+    status: validating
     horizon: later
     cadence: [in_season]
     depends_on: [grain-tables]  # reads opportunity-quality's play.xfp and team-efficiency's team_game.efficiency as table parts, not their forecasts (decision 0043)
+    history_runs:  # the champions' walk-forward histories, 2016-2024 (decision 0043, call 21)
+      skill_next_volume_trees: {1: 7b6321a205184bd99fa03e87c78b0a4d}
+      skill_rest_volume+qb_rz: {1: 756d21f9767643ad994732460531c4aa}
+      thrown_next_chances: {1: 63479e9abfa3484795ce80d7a31051d6}
+      thrown_rest_volume: {1: eb589a2ba02e4111a69c7a6c49c31d41}
+      team_next_volume: {1: 1005eb299a734dc2bd8765130f968b04}
+      team_rest_volume: {1: fa0a9e01d5fe4484add2e9b760512b6e}
+    interface:
+      inputs: play.pbp, play.xfp (opportunity-quality's expected touchdowns), drive.summary; player_game parts roster, snaps, game_status, depth, injury, stats, opportunity, touchdowns; team_game touchdowns, efficiency, tendencies; the schedule for windows
+      outputs: "Facts: play.xtd (tdx_ columns: kind, player, position, passer, team, yard line, air yards, xtd, td, source), drive.td_chance (p_start, p_rz, p_peak, reached the 20, field-goal try, hindsight), player_game.touchdowns and team_game.touchdowns (counts; touchdowns and expected by kind and zone; thrown; dice spreads; luck z; the chance of at least that many; teams: drives, red-zone trips, the drive-aware hindsight, near misses). Forecasts: outputs/td-expert/<variant>/<run_id>/history.parquet, quantities td_rush_rec, td_thrown, td_team (next game) and *_rest (rest of the regular season): the mean count with Poisson q10/q50/q90"
+      grain: play; drive; player-game; team-game; forecasts per player (or team) and the game a window starts on
+      interval: facts 2012 on (drive chances 2006 on); forecasts weekly, 2016-2024 reported plus the 2025 vault, every rostered QB, RB, WR, TE and every team
+      cadence: in_season
+      known_at: facts with the play-by-play (kickoff + 1 day); forecasts at the Saturday run (12:00 Eastern)
+      model: none registered yet (histories pinned above)
+      how_to_use: "Next game: the mean, and the chance of 1+ = 1 - exp(-mean) (calibrated for players and QBs; the chance of 2+ a little too sure except the players' trees). Rest of season and teams: the mean only (the chances aren't Poisson: RESULTS R6, ideas I116, I119). Expected touchdowns a game as a feature (a trait, 0.55); touchdowns over expected is noise except a QB's thrown (0.15). The luck measure looking back only. From saved histories only (rule e)"
+      feeds: TD-scorer props, fantasy-projections, player-opportunity; candidates vacated-opportunity
     summary: >-
       Expected touchdowns per chance, touchdown regression, the luck in a touchdown total, and a
       forecast with the chance of at least one. Feeds TD-scorer props. Explored 2026-11-16 (GO):
@@ -642,7 +659,13 @@ projects:
       calibrated 0/1/2+; near misses on field-goal drives are a description, noise as an input;
       a QB keeps about 9% of thrown touchdowns over expected. Brief agreed 2026-11-17 ("I
       approve the brief"): near misses built as a description only; the team ceiling is measured
-      first in the build; the build runs in its own session.
+      first in the build; the build runs in its own session. Built 2026-11-24 (decision 0043):
+      the touchdown parts (play.xtd, drive.td_chance, player_game and team_game touchdowns) and
+      six count forecasts. Method A (chances) ties B (volume) for players next game, beats it
+      for thrown next game (+0.19%), loses over the rest of the season (players -1.25%, thrown
+      -10.1%); trees win for players next game (+0.57%); QBs' red-zone carries pay (I58 held,
+      +10.6% of QBs' rest-of-season squared error); H67 and H68 don't pay; I61 killed. The team
+      ceiling is 61% next game; the market-free team forecast gets 6.5%.
 
   - id: aging
     name: Aging curves

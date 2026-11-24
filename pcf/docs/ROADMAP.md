@@ -30,6 +30,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **The yardstick batch** (the CEO's pick at retro 3, 2026-11-23): eight backlog ideas scored on the crude forecaster in the build chat ([brief](../projects/crude-forecaster/YARDSTICK_BATCH.md)).
 
+**The touchdown expert** (`td-expert`, built 2026-11-24, validating): expected touchdowns per chance, drive touchdown chances, the luck measure and six count forecasts (players, thrown, teams; next game and rest of season). Volume forecasts touchdowns as well as chances do; trees win for players next game; QBs' red-zone carries pay. Waiting for the CEO's spot-check.
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later

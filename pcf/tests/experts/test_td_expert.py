@@ -66,6 +66,21 @@ def test_stage_one_reads_the_next_rows_last_value():
     assert out["y1"].to_list() == [0.4, 0.9]
 
 
+def test_stage_one_keeps_the_training_order():
+    """The penalty is picked on the latest 20% by position: a row order that changed from run to
+    run changed the fit (leakage check 8 caught it on thrown touchdowns)."""
+    n = 2_000
+    rng = np.random.default_rng(0)
+    ids = [f"p{i % 40}" for i in range(n)]
+    games = [f"g{i:05d}" for i in range(n)]
+    lasts = [None, *games[:-1]]
+    train = pl.DataFrame({"gsis_id": ids, "game_id": games, "last_game_id": lasts,
+                          "last_xtd": rng.uniform(0, 1, n)})  # fmt: skip
+    for _ in range(3):
+        out = M.stage_one(train, "gsis_id", "last_xtd")
+        assert out["game_id"].to_list() == sorted(out["game_id"].to_list())
+
+
 def test_poisson_fit_recovers_a_rate_with_exposure():
     rng = np.random.default_rng(1)
     n = 20_000

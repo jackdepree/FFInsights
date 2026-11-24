@@ -1,0 +1,17 @@
+td-expert/team_next_volume run 1005eb299a734dc2bd8765130f968b04
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\td-expert\team_next_volume\1005eb299a734dc2bd8765130f968b04\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (784 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (784 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (no model inputs)
+ 7 walk_forward         pass  193 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against TD_team_next_rate: Comparison(a='td-expert', b='TD_team_next_rate', diff=-0.010323108989625551, lo=-0.014574701025144014, hi=-0.005983111717247065, rows=4952, blocks=193)
+chance of one+: error 2.99 points, slope 1.15, passed False
+chance of two+: error 5.09 points, slope 0.92, passed False
+Poisson q10-q90 holds 93.6% (reported)

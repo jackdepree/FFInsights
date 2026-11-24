@@ -253,6 +253,23 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Goal-line share | opportunity-quality (H56) | Share of his chances inside the 5 (carries) or 10 (targets) | 0.17 (0.13-0.20) | 0.20 | trait | No: beyond counts +0.08% on next game's points (R4) | |
 | Deep-target share | opportunity-quality | Share of his targets 20+ yards downfield | 0.42 (0.40-0.44) | 0.45 | trait | No, as above (R4) | A role trait; the schemes-v2 R3 owner is the passer as much as the receiver |
 
+**Touchdown measures** (td-expert build, 2026-11-24, decision 0043): per **player-game** with a chance (QB, RB, WR, TE; 6,157 player-seasons), per QB-game with 10+ throws (660), and per **team-game** (416 team-seasons), regular season 2012-2024, from `player_game.touchdowns` and `team_game.touchdowns` (`build/facts.txt`, section 5).
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Expected touchdowns (xtd), a game | td-expert | The touchdown chances of his targets and carries, summed | 0.55 (0.54-0.57) | 0.57 | trait | It is method A's stage 1; A ties B, which reads volume instead (R4) | QB 0.29/0.36, RB 0.60/0.54, WR 0.57/0.61, TE 0.42/0.51 |
+| Touchdowns (rushing and receiving), a game | td-expert | What he scored | 0.38 (0.36-0.40) | 0.45 | trait | The target | Less consistent than its expected part, as for points (opportunity-quality) |
+| Touchdowns over expected, a game | td-expert (Q3) | Touchdowns minus expected | 0.03 (0.00-0.05) | 0.05 | trait (barely) | The regression measure: kept shares 0.1 to 0.16 don't beat keeping none clearly (R12) | RB 0.06/0.07 (a weak trait); QB, WR, TE **noise** week to week (TE 0.11 season to season) |
+| Luck measure (dice spreads) | td-expert | Touchdowns over expected / √Σp(1−p) | 0.01 (−0.01-0.03) | 0.07 | **noise** | Never an input (the brief) | As it should be: luck doesn't repeat |
+| Thrown expected touchdowns, a game | td-expert | His throws' touchdown chances | 0.45 (0.40-0.50) | 0.41 | trait | Stage 1 for thrown touchdowns (R10) | Per throw 0.32/0.23 |
+| Thrown touchdowns over expected, per throw | td-expert (S-3, I61) | Thrown touchdowns less expected, per throw | 0.15 (0.09-0.21) | 0.11 | trait | Past thrown touchdowns add about 4% to the rest of the season beside expected (interval reaches 0); knowing the passer in the throw's model doesn't change it (I61, R7) | The one touchdown efficiency that repeats; the exploration's 0.12 (F22) |
+| Team touchdowns, a game | td-expert | Offensive touchdowns (rushing and receiving) | 0.53 (0.47-0.58) | 0.35 | trait | The target | |
+| Team expected touchdowns, chances summed | td-expert | Every chance's expected touchdowns, summed | 0.36 (0.29-0.43) | 0.35 | trait | Not the ceiling (F21's warning): 12% next game against the hindsight's 61% (R1) | |
+| Drive-aware hindsight, a game | td-expert | Each red-zone trip's chance at the 20 plus every long touchdown | 0.48 (0.42-0.54) | 0.36 | trait | The team ceiling (R1) | |
+| Team touchdowns over the hindsight | td-expert | Touchdowns minus the hindsight: finishing from the 20 | 0.21 (0.13-0.29) | 0.15 | trait | Stage 2's `tdoe_g` for teams (R11) | Red-zone touchdown rate 0.09/0.15, a weak trait |
+| Near misses, a game | td-expert | Field-goal drives' best touchdown chances, summed | 0.04 (−0.04-0.12) | 0.02 | **noise** | Never an input (the brief) | Per field-goal drive 0.11/0.07: a **state** |
+| Goal-to-go pass share | td-expert (H67) | Targets among chances inside the 10 | 0.30 (0.22-0.37) | 0.29 | trait | A calling input: adds nothing beside volume (−0.01%); QBs +0.19% (R8) | A real tendency that doesn't pay |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).

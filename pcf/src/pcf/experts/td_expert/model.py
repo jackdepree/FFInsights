@@ -104,6 +104,49 @@ def fit_trees(x: np.ndarray, y: np.ndarray, w: np.ndarray, exposure: np.ndarray)
     return {"trees": trees}
 
 
+def fit_recalibration(mean: np.ndarray, y: np.ndarray, w: np.ndarray, steps: int = 50) -> dict:
+    """The mean's recalibration (decision 0043): a Poisson fit of y on L = log(mean) and L^2 with
+    log(mean) as the offset, so the result is mean x exp(a + bL + cL^2). Fit on rows the model
+    didn't see (the latest 20% of its training window); L is held inside the range it saw."""
+    lam = np.maximum(mean, MIN_RATE)
+    big = np.log(lam)
+    lo, hi = np.quantile(big, [0.005, 0.995])
+    centre = float(np.average(big, weights=w))
+    z = np.clip(big, lo, hi) - centre
+    d = np.column_stack([np.ones_like(z), z, z * z])
+    beta = np.zeros(3)
+    for _ in range(steps):  # Newton steps; a small ridge keeps it near no change
+        mu = lam * np.exp(d @ beta)
+        step = np.linalg.solve(d.T @ (d * (w * mu)[:, None]) + 1.0 * np.eye(3),
+                               d.T @ (w * (y - mu)) - 1.0 * beta)  # fmt: skip
+        beta += step
+        if np.abs(step).max() < 1e-10:
+            break
+    return {"beta": beta, "lo": float(lo), "hi": float(hi), "centre": centre}
+
+
+def recalibrate(model: dict | None, mean: np.ndarray) -> np.ndarray:
+    if model is None:
+        return mean
+    lam = np.maximum(mean, MIN_RATE)
+    z = np.clip(np.log(lam), model["lo"], model["hi"]) - model["centre"]
+    return mean * np.exp(model["beta"][0] + model["beta"][1] * z + model["beta"][2] * z * z)
+
+
+def calibrated(fit, predict, train: pl.DataFrame) -> dict:
+    """`fit(rows) -> model` and `predict(model, rows) -> mean`, with the mean's recalibration
+    fit on the latest 20% of `train` (in its time order) from a model fit on the earlier 80%,
+    then the model refit on all of it."""
+    cut = int(train.height * (1 - HOLDOUT))
+    early, late = train[:cut], train[cut:]
+    recal = None
+    if cut > 100 and late.height > 100:
+        m = predict(fit(early), late)
+        recal = fit_recalibration(m, late["y"].to_numpy().astype(float),
+                                  late["weight"].to_numpy())  # fmt: skip
+    return {"model": fit(train), "recal": recal}
+
+
 def ranges(mean: np.ndarray) -> dict[str, np.ndarray]:
     lam = np.maximum(mean, MIN_RATE)
     return {q: poisson.ppf(lvl, lam).astype(float) for q, lvl in
@@ -112,11 +155,13 @@ def ranges(mean: np.ndarray) -> dict[str, np.ndarray]:
 
 def stage_one(train: pl.DataFrame, key: str, last: str) -> pl.DataFrame:
     """Training rows with `y1`, the expected touchdowns of the game each row predicts, read from
-    the same player's (team's) next row's `last` column; rows without one are dropped."""
+    the same player's (team's) next row's `last` column; rows without one are dropped. In the
+    training rows' own order: the penalty is picked on the latest 20% by position, so an order
+    that changed from run to run would change the fit (leakage check 8 caught it)."""
     nxt = train.select(c(key), game_id=c("last_game_id"), y1=c(last)).unique(
-        [key, "game_id"], keep="first"
+        [key, "game_id"], keep="first", maintain_order=True
     )
-    return train.join(nxt, on=[key, "game_id"], how="inner")
+    return train.join(nxt, on=[key, "game_id"], how="inner", maintain_order="left")
 
 
 # ---------------------------------------------------------------- the shared base
@@ -276,25 +321,33 @@ class _Rate:
 
 
 class _Volume:
-    """Method B: a Poisson regression on volume."""
+    """Method B: a Poisson regression on volume, its mean recalibrated (`calibrated`)."""
 
     method: ClassVar[str] = "glm"
 
-    def fit(self, train: pl.DataFrame) -> dict[str, Any]:
+    def _fit_raw(self, train: pl.DataFrame) -> dict[str, Any]:
         x, y = self._x(train), train["y"].to_numpy().astype(float)
         w, e = train["weight"].to_numpy(), self.exposure(train)
         if self.method == "trees":
             return fit_trees(x, y, w, e)
         return fit_poisson(x, y, w, e)
 
+    def _mean(self, model: dict[str, Any], rows: pl.DataFrame) -> np.ndarray:
+        return predict_poisson(model, self._x(rows), self.exposure(rows))
+
+    def fit(self, train: pl.DataFrame) -> dict[str, Any]:
+        return calibrated(self._fit_raw, self._mean, train)
+
     def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
-        return self._out(rows, predict_poisson(model, self._x(rows), self.exposure(rows)))
+        return self._out(rows, recalibrate(model["recal"], self._mean(model["model"], rows)))
 
     def explain(self, model: dict[str, Any]) -> dict[str, Any]:
-        if "glm" not in model:
-            return {}
-        coef = np.round(model["glm"].coef_, 4).tolist()
-        return {"alpha": model["alpha"], **dict(zip(self.columns, coef, strict=True))}
+        raw, recal = model["model"], model["recal"]
+        out = {"recal": np.round(recal["beta"], 4).tolist() if recal else None}
+        if "glm" not in raw:
+            return out
+        coef = np.round(raw["glm"].coef_, 4).tolist()
+        return {**out, "alpha": raw["alpha"], **dict(zip(self.columns, coef, strict=True))}
 
 
 class _Chances:
@@ -305,7 +358,7 @@ class _Chances:
     corrections: ClassVar[list[str]]
     last: ClassVar[str] = "last_xtd"
 
-    def fit(self, train: pl.DataFrame) -> dict[str, Any]:
+    def _fit_raw(self, train: pl.DataFrame) -> dict[str, Any]:
         s1 = stage_one(train, self.key, self.last)
         one = fit_poisson(self._x(s1, self.stage1), s1["y1"].to_numpy().astype(float),
                           s1["weight"].to_numpy(), np.ones(s1.height))  # fmt: skip
@@ -315,16 +368,22 @@ class _Chances:
                           train["weight"].to_numpy(), self.exposure(train) * xhat)  # fmt: skip
         return {"one": one, "two": two, "stage1_rows": s1.height}
 
-    def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
+    def _mean(self, model: dict[str, Any], rows: pl.DataFrame) -> np.ndarray:
         xhat = np.maximum(predict_poisson(model["one"], self._x(rows, self.stage1),
                                           np.ones(rows.height)), MIN_RATE)  # fmt: skip
-        mean = predict_poisson(model["two"], self._x(rows, self.corrections),
+        return predict_poisson(model["two"], self._x(rows, self.corrections),
                                self.exposure(rows) * xhat)  # fmt: skip
-        return self._out(rows, mean)
+
+    def fit(self, train: pl.DataFrame) -> dict[str, Any]:
+        return calibrated(self._fit_raw, self._mean, train)
+
+    def predict(self, model: dict[str, Any], rows: pl.DataFrame) -> pl.DataFrame:
+        return self._out(rows, recalibrate(model["recal"], self._mean(model["model"], rows)))
 
     def explain(self, model: dict[str, Any]) -> dict[str, Any]:
-        two = model["two"]
-        return {"stage1_rows": model["stage1_rows"], "alpha2": two["alpha"],
+        two, recal = model["model"]["two"], model["recal"]
+        return {"stage1_rows": model["model"]["stage1_rows"], "alpha2": two["alpha"],
+                "recal": np.round(recal["beta"], 4).tolist() if recal else None,
                 **dict(zip(self.corrections, np.round(two["glm"].coef_, 4).tolist(),
                            strict=True))}  # fmt: skip
 
