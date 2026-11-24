@@ -665,7 +665,10 @@ projects:
       for thrown next game (+0.19%), loses over the rest of the season (players -1.25%, thrown
       -10.1%); trees win for players next game (+0.57%); QBs' red-zone carries pay (I58 held,
       +10.6% of QBs' rest-of-season squared error); H67 and H68 don't pay; I61 killed. The team
-      ceiling is 61% next game; the market-free team forecast gets 6.5%.
+      ceiling is 61% next game; the market-free team forecast gets 6.5%. The vault (2025, opened
+      2026-11-24): every champion passes the 10 checks and 20 of 20 shuffles; A beat B for players
+      next game (+0.46%) and trees tied both; I58 reversed on 2025's QBs (-5.1%); teams next game
+      ties the season rate. The champions stand (decision 0043 call 24).
 
   - id: aging
     name: Aging curves

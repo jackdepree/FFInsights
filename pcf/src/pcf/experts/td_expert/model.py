@@ -168,6 +168,9 @@ def stage_one(train: pl.DataFrame, key: str, last: str) -> pl.DataFrame:
 class _Base(Expert):
     id = "td-expert"
     cadence = "in_season"
+    grain = "player_game"  # the players' defaults (as opportunity-quality's base): _TeamBase overrides
+    inputs = F.INPUTS
+    groups = ("position",)
     run = "saturday"
     kind = "count"
     first_train = FIRST_SEASON
