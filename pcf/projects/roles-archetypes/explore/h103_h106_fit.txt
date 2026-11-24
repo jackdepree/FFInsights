@@ -1,0 +1,27 @@
+====================================================================================================
+H103 side bet: do roles cluster on schemes? (multinomial of M1 labels on the team's scheme traits, 5-fold CV)
+  WR: n 1239, CV log loss 0.6932; teams shuffled 0.6966 (5-95% 0.6941 to 0.7007); real better than 98% of shuffles
+  TE: n 703, CV log loss 0.6834; teams shuffled 0.6898 (5-95% 0.6849 to 0.6965); real better than 98% of shuffles
+  RB: n 625, CV log loss 0.7674; teams shuffled 0.8521 (5-95% 0.8424 to 0.8614); real better than 100% of shuffles
+
+====================================================================================================
+H103 fit test: does a role's efficiency depend on the scheme? (B = A + label x scheme, leave-one-season-out)
+  WR: n 1239, labels 2; weighted MSE A 0.04871; B's gain -0.000293 (-0.60% of A; 90% -0.000636 to +0.000018)
+  WR: in-sample interactions with a clear 90% interval: 1 of 7
+    label1 x proe: +0.0216 EPA per SD (+0.00683 to +0.0381)
+  TE: n 703, labels 2; weighted MSE A 0.05734; B's gain -0.000666 (-1.16% of A; 90% -0.001211 to -0.000158)
+  TE: in-sample interactions with a clear 90% interval: 0 of 7
+  RB: n 625, labels 3; weighted MSE A 0.00985; B's gain -0.000268 (-2.72% of A; 90% -0.000550 to -0.000011)
+  RB: in-sample interactions with a clear 90% interval: 1 of 14
+    label1 x off_12_rate_oe: -0.00887 EPA per SD (-0.0194 to -0.000626)
+  pooled (WR, TE, RB): B's gain -0.000333 (90% -0.000544 to -0.000136)
+  -> H103 (fit): FAILED
+
+====================================================================================================
+H106: archetype against the defense's scheme (WR, TE player-games with 3+ targets, 2019-2024)
+  WR: player-games 6,494 (scored 5,443); weighted MSE A 0.4268; B's gain -0.001104 (-0.259% of A; 90% -0.001870 to -0.000340)
+  WR: in-sample interactions with a clear 90% interval: 0 of 4
+  TE: player-games 2,582 (scored 2,213); weighted MSE A 0.3935; B's gain -0.000668 (-0.170% of A; 90% -0.001895 to +0.000488)
+  TE: in-sample interactions with a clear 90% interval: 0 of 4
+  pooled (WR, TE): B's gain -0.000994 (90% -0.001657 to -0.000353)
+  -> H106: FAILED

@@ -1,0 +1,35 @@
+A: CV error by penalty {30: np.float64(1.86895), 100: np.float64(1.86136), 300: np.float64(1.85672), 1000: np.float64(1.85528), 3000: np.float64(1.8564), 10000: np.float64(1.85865)} -> 1000
+B1: CV error by penalty {30: np.float64(1.84213), 100: np.float64(1.84459), 300: np.float64(1.84715), 1000: np.float64(1.85126), 3000: np.float64(1.85511), 10000: np.float64(1.85848)} -> 30
+B2: CV error by penalty {30: np.float64(1.86893), 100: np.float64(1.86127), 300: np.float64(1.85651), 1000: np.float64(1.85503), 3000: np.float64(1.85634), 10000: np.float64(1.85872)} -> 1000
+  2016 B2's role weights (EPA per play per unit of each coordinate): [-0.0017, 0.003, 0.0036, -0.0014, 0.0169, 0.007]
+  2017 B2's role weights (EPA per play per unit of each coordinate): [-0.002, -0.0007, -0.0011, -0.0, 0.0187, 0.0078]
+  2018 B2's role weights (EPA per play per unit of each coordinate): [0.0012, -0.0018, -0.0026, -0.0009, 0.0161, 0.0165]
+  2019 B2's role weights (EPA per play per unit of each coordinate): [-0.0017, -0.0031, 0.0033, 0.0044, 0.0145, 0.0081]
+  2020 B2's role weights (EPA per play per unit of each coordinate): [-0.0015, -0.005, -0.0001, 0.0026, 0.0125, 0.0095]
+  2021 B2's role weights (EPA per play per unit of each coordinate): [-0.0022, -0.0027, 0.0026, -0.0062, 0.0093, 0.0073]
+  2022 B2's role weights (EPA per play per unit of each coordinate): [0.0004, 0.0044, -0.0049, 0.0008, 0.005, 0.0014]
+  2023 B2's role weights (EPA per play per unit of each coordinate): [0.002, 0.0083, -0.0028, 0.0071, 0.0122, -0.0033]
+  2024 B2's role weights (EPA per play per unit of each coordinate): [-0.0017, 0.0006, 0.0056, 0.0049, 0.0076, 0.0118]
+
+player-season pairs with 300+ plays both seasons: 1,211 (movers 255, stayers 956)
+  season-to-season r:  credit          movers  stayers
+    A plain plus-minus           +0.10   +0.21
+    B1 by responsibility         +0.14   +0.22
+      B1 target value            +0.20   +0.38
+      B1 support value           +0.01   +0.16
+    B2 by latent identity        +0.23   +0.38
+      B2 his own part            +0.11   +0.19
+      B2 the role's part         +0.29   +0.53
+  movers: B1 minus A +0.04 (90% -0.07 to +0.16)
+  movers: B2 minus A +0.13 (90% +0.06 to +0.21)
+  movers: B2_own minus A +0.01 (90% -0.02 to +0.04)
+  side bet: B1's target value for movers r +0.20 (90% +0.09 to +0.29); Claude 50% for 0.2+
+  -> H108: HELD
+
+pays: a team-season's average of last season's credits on the field, against this season's offensive EPA per play, beyond last season's
+  team-seasons 256; last season's EPA per play alone: r 0.38
+  A     : partial r +0.194 (90% +0.095 to +0.293)
+  B1    : partial r -0.005 (90% -0.095 to +0.083)
+  B2    : partial r +0.210 (90% +0.107 to +0.317)
+  B2_own: partial r +0.166 (90% +0.069 to +0.264)
+

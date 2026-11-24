@@ -1,0 +1,26 @@
+C:\Users\jacka\Documents\GitHub\FFInsights\.claude\worktrees\roles-archetypes\pcf\projects\roles-archetypes\explore\h101_substitutes.py:47: UserWarning: Sortedness of columns cannot be checked when 'by' groups provided
+  cand = cand.sort("week").join_asof(last.sort("week").rename({"week": "wk_last"}), left_on="week", right_on="wk_last", by=["gsis_id", "team", "season"], strategy="backward")
+regulars' absences: 13,294
+
+H101 (M2's prior-season components, the pre-registered test): events 904 (pool of 2+ non-regular teammates with a prior-season role); mean rank 0.439 (90% 0.404 to 0.471); chance 0.5
+  closest in the pool: 47% (chance about 44%)
+  WR   events   198  mean rank 0.446
+  TE   events    78  mean rank 0.423
+  RB   events    67  mean rank 0.302
+  DL   events   327  mean rank 0.484
+  OLB  events    34  mean rank 0.240
+  ILB  events    30  mean rank 0.433
+  CB   events   114  mean rank 0.474
+  S    events    56  mean rank 0.382
+  -> H101 (like-for-like): HELD
+
+Sensitivity: components refitted without snap share (playing time): events 904 (pool of 2+ non-regular teammates with a prior-season role); mean rank 0.435 (90% 0.402 to 0.467); chance 0.5
+  closest in the pool: 47% (chance about 44%)
+  WR   events   198  mean rank 0.418
+  TE   events    78  mean rank 0.423
+  RB   events    67  mean rank 0.317
+  DL   events   327  mean rank 0.478
+  OLB  events    34  mean rank 0.255
+  ILB  events    30  mean rank 0.500
+  CB   events   114  mean rank 0.474
+  S    events    56  mean rank 0.400
