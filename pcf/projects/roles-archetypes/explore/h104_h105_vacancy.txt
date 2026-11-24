@@ -1,0 +1,22 @@
+
+H104/H105 on M2's components (pre-registered): newcomers 393 (filling 218 vacancies)
+  mean squared distance: (a) group average 13.880; (b) the departed player 20.822; (c) the team's usual role 15.833
+  (b) departed beats the group average by -6.943 (90% -8.141 to -5.824)
+  (c) team's usual beats the group average by -1.953 (90% -2.475 to -1.442)
+    WR: n 237  (a) 14.459  (b) 20.249  (c) 15.269
+    TE: n  83  (a) 14.652  (b) 24.483  (c) 19.276
+    RB: n  73  (a) 11.120  (b) 18.522  (c) 13.747
+  side bet: his own team's departed player ranks 0.421 among all departures in his group (90% 0.393 to 0.449; chance 0.5)
+  H105: veteran movers 190; his pre-arrival role's rank against the departed player, among that offseason's movers in his group: 0.491 (90% 0.458 to 0.524; chance 0.5)
+
+  -> H104: FAILED | H105: FAILED
+
+Sensitivity: components refitted without snap share: newcomers 393 (filling 218 vacancies)
+  mean squared distance: (a) group average 13.640; (b) the departed player 20.142; (c) the team's usual role 15.543
+  (b) departed beats the group average by -6.502 (90% -7.737 to -5.326)
+  (c) team's usual beats the group average by -1.903 (90% -2.408 to -1.415)
+    WR: n 237  (a) 14.066  (b) 19.310  (c) 14.814
+    TE: n  83  (a) 14.734  (b) 23.909  (c) 19.351
+    RB: n  73  (a) 11.014  (b) 18.561  (c) 13.583
+  side bet: his own team's departed player ranks 0.415 among all departures in his group (90% 0.389 to 0.444; chance 0.5)
+  H105: veteran movers 190; his pre-arrival role's rank against the departed player, among that offseason's movers in his group: 0.499 (90% 0.467 to 0.532; chance 0.5)

@@ -1,0 +1,44 @@
+player-season pairs (same group, 200+ snaps both): 4,924; changed label 21.1%
+shape: (8, 3)
+┌───────┬──────┬──────────┐
+│ group ┆ n    ┆ changed  │
+│ ---   ┆ ---  ┆ ---      │
+│ str   ┆ u32  ┆ f64      │
+╞═══════╪══════╪══════════╡
+│ CB    ┆ 737  ┆ 0.207598 │
+│ DL    ┆ 1150 ┆ 0.15913  │
+│ ILB   ┆ 415  ┆ 0.248193 │
+│ OLB   ┆ 436  ┆ 0.061927 │
+│ RB    ┆ 366  ┆ 0.243169 │
+│ S     ┆ 611  ┆ 0.371522 │
+│ TE    ┆ 437  ┆ 0.19222  │
+│ WR    ┆ 772  ┆ 0.221503 │
+└───────┴──────┴──────────┘
+
+through week 4: scored 4,318 pairs (2018-2024); change rate 21.0%
+  log loss: baseline 0.5031, model 0.4822; gain 0.0209 (4.2% of the baseline; 90% 0.0128 to 0.0289); calibration slope 0.69
+  changed in the model's bottom fifth 8.6%, top fifth 38.3%
+  WR   n  675  change 22.2%  gain +0.0411
+  TE   n  383  change 19.6%  gain +0.0408
+  RB   n  326  change 26.7%  gain +0.0185
+  DL   n 1010  change 15.8%  gain +0.0219
+  OLB  n  375  change 6.4%  gain -0.0100
+  ILB  n  369  change 23.6%  gain +0.0409
+  CB   n  650  change 20.6%  gain +0.0189
+  S    n  530  change 35.5%  gain -0.0094
+
+through week 8: scored 4,318 pairs (2018-2024); change rate 21.0%
+  log loss: baseline 0.5031, model 0.4857; gain 0.0174 (3.5% of the baseline; 90% 0.0085 to 0.0256); calibration slope 0.65
+  changed in the model's bottom fifth 7.9%, top fifth 37.5%
+  WR   n  675  change 22.2%  gain +0.0402
+  TE   n  383  change 19.6%  gain +0.0370
+  RB   n  326  change 26.7%  gain -0.0231
+  DL   n 1010  change 15.8%  gain +0.0186
+  OLB  n  375  change 6.4%  gain -0.0126
+  ILB  n  369  change 23.6%  gain +0.0380
+  CB   n  650  change 20.6%  gain +0.0304
+  S    n  530  change 35.5%  gain -0.0124
+  the obvious input: the snap-share change alone (with group dummies) gains 0.0198, 114% of the full model's gain
+
+-> H102 (week 8): HELD IN PART
+   week 4 (Claude's side bet, 50%): gain clear

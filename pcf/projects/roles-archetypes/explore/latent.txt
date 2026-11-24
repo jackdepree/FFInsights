@@ -1,0 +1,178 @@
+rows: 7,871 player-team-seasons; consecutive pairs 4,924 (1,141 movers); halves 7,871
+==============================================================================================================
+0. NOISE CEILING: split-half reliability (odd weeks against even weeks), median over groups, and range
+  snap_share     median 0.90 (range 0.72 to 0.93)
+  adj_run        median 0.80 (range 0.64 to 0.93)
+  adj_p11        median 0.84 (range 0.69 to 0.94)
+  adj_p12        median 0.69 (range 0.57 to 0.90)
+  adj_heavy      median 0.72 (range 0.51 to 0.97)
+  adj_late       median 0.88 (range 0.72 to 0.94)
+  adj_rz         median 0.29 (range 0.15 to 0.35)
+  oo_run         median 0.66 (range 0.23 to 0.91)
+  oo_p11         median 0.78 (range 0.44 to 0.94)
+  oo_p12         median 0.60 (range 0.35 to 0.88)
+  oo_heavy       median 0.68 (range 0.32 to 0.91)
+  oo_late        median 0.75 (range 0.62 to 0.94)
+  oo_rz          median 0.31 (range 0.22 to 0.40)
+  tgt_per_pass   median 0.69 (range 0.60 to 0.72)
+  adot           median 0.52 (range 0.52 to 0.64)
+  deep           median 0.33 (range 0.27 to 0.47)
+  behind         median 0.45 (range 0.44 to 0.65)
+  middle         median 0.31 (range 0.25 to 0.39)
+  car_per_run    median 0.90 (range 0.87 to 0.97)
+  outside        median 0.46 (range 0.31 to 0.51)
+  tkl_per_snap   median 0.44 (range 0.38 to 0.69)
+  solo_share     median 0.32 (range 0.27 to 0.39)
+  tkl_depth      median 0.34 (range 0.25 to 0.65)
+  rush_per_pass  median 0.42 (range 0.27 to 0.56)
+  pd_per_pass    median 0.12 (range 0.02 to 0.28)
+  efficiency (the room for H103 and H106):
+    WR: EPA per target (shrunk, 10), split-half r 0.11; season-to-season r 0.16 (raw)
+    TE: EPA per target (shrunk, 10), split-half r 0.12; season-to-season r 0.05 (raw)
+    RB: EPA per touch (shrunk, 10), split-half r 0.29; season-to-season r 0.39 (raw)
+==============================================================================================================
+H99: on/off against own-snap (team-adjusted), the same dimension two ways: season-to-season r (and split-half)
+  dim    group season r: own-adj  on/off | split-half: own-adj  on/off | gain part-time / every-down (n)
+  run    WR                 0.39    0.42 |                0.71    0.66 | +0.01 (223) / -0.06 (549)
+  run    TE                 0.77    0.76 |                0.93    0.91 | -0.01 (235) / +0.02 (202)
+  run    RB                 0.76    0.74 |                0.93    0.91 | -0.01 (260) / -0.01 (106)
+  run    DL                 0.72    0.73 |                0.86    0.85 | +0.02 (690) / -0.02 (460)
+  run    OLB                0.55    0.53 |                0.80    0.66 | +0.03 (179) / -0.03 (257)
+  run    ILB                0.43    0.23 |                0.80    0.55 | -0.02 (106) / -0.21 (309)
+  run    CB                 0.43    0.17 |                0.64    0.24 | -0.04 (133) / -0.29 (604)
+  run    S                  0.42    0.18 |                0.73    0.23 | -0.09 (115) / -0.07 (496)
+  p11    WR                 0.44    0.39 |                0.86    0.81 | +0.02 (223) / -0.07 (549)
+  p11    TE                 0.53    0.50 |                0.94    0.90 | +0.02 (235) / +0.04 (202)
+  p11    RB                 0.77    0.80 |                0.94    0.94 | +0.05 (260) / +0.01 (106)
+  p11    DL                 0.65    0.64 |                0.83    0.80 | +0.02 (690) / -0.02 (460)
+  p11    OLB                0.48    0.43 |                0.86    0.77 | +0.02 (179) / -0.00 (257)
+  p11    ILB                0.33    0.17 |                0.82    0.56 | +0.01 (106) / -0.12 (309)
+  p11    CB                 0.57    0.41 |                0.74    0.57 | -0.10 (133) / -0.15 (604)
+  p11    S                  0.37    0.26 |                0.69    0.44 | +0.00 (115) / +0.03 (496)
+  p12    WR                 0.41    0.43 |                0.83    0.81 | +0.04 (223) / +0.01 (549)
+  p12    TE                 0.47    0.41 |                0.90    0.85 | +0.03 (235) / +0.04 (202)
+  p12    RB                 0.62    0.76 |                0.88    0.88 | +0.16 (260) / +0.04 (106)
+  p12    DL                 0.56    0.56 |                0.66    0.63 | +0.03 (690) / -0.01 (460)
+  p12    OLB                0.38    0.26 |                0.72    0.57 | -0.02 (179) / -0.02 (257)
+  p12    ILB                0.34    0.19 |                0.66    0.50 | -0.00 (106) / -0.06 (309)
+  p12    CB                 0.50    0.37 |                0.65    0.50 | -0.07 (133) / -0.17 (604)
+  p12    S                  0.36    0.18 |                0.57    0.35 | +0.01 (115) / -0.01 (496)
+  heavy  WR                 0.34    0.31 |                0.84    0.79 | -0.01 (223) / -0.03 (549)
+  heavy  TE                 0.47    0.47 |                0.88    0.85 | -0.03 (235) / +0.08 (202)
+  heavy  RB                 0.87    0.80 |                0.97    0.91 | -0.06 (260) / -0.16 (106)
+  heavy  DL                 0.60    0.60 |                0.70    0.70 | +0.04 (690) / -0.04 (460)
+  heavy  OLB                0.49    0.42 |                0.73    0.65 | +0.01 (179) / +0.00 (257)
+  heavy  ILB                0.26    0.11 |                0.68    0.47 | +0.06 (106) / -0.07 (309)
+  heavy  CB                 0.50    0.31 |                0.52    0.34 | -0.02 (133) / -0.19 (604)
+  heavy  S                  0.32    0.21 |                0.51    0.32 | -0.04 (115) / -0.03 (496)
+  late   WR                 0.39    0.29 |                0.72    0.62 | +0.04 (223) / -0.08 (549)
+  late   TE                 0.70    0.72 |                0.92    0.89 | +0.00 (235) / +0.03 (202)
+  late   RB                 0.68    0.69 |                0.94    0.94 | +0.02 (260) / +0.01 (106)
+  late   DL                 0.72    0.76 |                0.93    0.91 | +0.02 (690) / +0.02 (460)
+  late   OLB                0.56    0.63 |                0.88    0.83 | +0.00 (179) / +0.09 (257)
+  late   ILB                0.50    0.39 |                0.88    0.66 | -0.05 (106) / -0.13 (309)
+  late   CB                 0.36    0.44 |                0.78    0.65 | +0.03 (133) / +0.04 (604)
+  late   S                  0.47    0.35 |                0.81    0.67 | -0.05 (115) / +0.01 (496)
+  rz     WR                 0.24    0.23 |                0.30    0.31 | -0.01 (223) / -0.01 (549)
+  rz     TE                 0.21    0.14 |                0.35    0.28 | -0.04 (235) / -0.06 (202)
+  rz     RB                 0.23    0.25 |                0.28    0.22 | -0.02 (260) / -0.02 (106)
+  rz     DL                 0.33    0.33 |                0.31    0.30 | +0.01 (690) / -0.00 (460)
+  rz     OLB                0.09    0.06 |                0.35    0.40 | +0.02 (179) / -0.15 (257)
+  rz     ILB                0.12    0.09 |                0.23    0.25 | -0.06 (106) / -0.09 (309)
+  rz     CB                 0.04    0.14 |                0.15    0.32 | +0.04 (133) / +0.03 (604)
+  rz     S                  0.11    0.09 |                0.27    0.31 | -0.10 (115) / +0.00 (496)
+  -> average gain in season-to-season r, on/off minus own-snap: -0.051 (90% -0.067 to -0.035; 200 player-bootstrap draws)
+  -> H99: FAILED (held needs the interval above 0 and a gain of 0.02+)
+  part-time players' average gain -0.002; every-down -0.039
+==============================================================================================================
+H100: the three methods per group (fit 2016-2020, applied to all); with and without measurables
+  WR M1 clusters (k=2 by BIC): centres [0] adot=11.74, tgt_per_pass=0.17, middle=0.21, oo_run=-0.34, snap_share=0.17 (n=595); [1] adot=10.49, tgt_per_pass=0.20, middle=0.25, oo_run=-0.88, snap_share=1.25 (n=644)
+  WR M2 PCA components (explained [0.28, 0.13, 0.12, 0.08, 0.06, 0.06]); top loadings: z0: adj_p11+, oo_p11+, adj_run- | z1: adot+, behind-, deep+ | z2: snap_share+, tgt_per_pass+, oo_run- | z3: adj_rz+, oo_rz+, car_per_run-
+  TE M1 clusters (k=2 by BIC): centres [0] oo_run=1.04, tgt_per_pass=0.12, adot=6.42, snap_share=-0.40 (n=294); [1] oo_run=-0.27, tgt_per_pass=0.17, adot=7.80, snap_share=0.69 (n=411)
+  TE M2 PCA components (explained [0.37, 0.1, 0.09, 0.07, 0.06, 0.06]); top loadings: z0: adj_run+, oo_run+, adj_late- | z1: oo_rz+, adj_rz+, adot- | z2: adot+, deep+, behind- | z3: car_per_run+, outside+, tgt_per_pass+
+  RB M1 clusters (k=3 by BIC): centres [0] car_per_run=0.88, tgt_per_pass=0.16, oo_late=-0.51, snap_share=0.00, outside=0.72 (n=406); [1] car_per_run=0.80, tgt_per_pass=0.18, oo_late=0.64, snap_share=-0.23, outside=0.70 (n=168); [2] car_per_run=0.34, tgt_per_pass=0.15, oo_late=-0.83, snap_share=-0.75, outside=0.66 (n=52)
+  RB M2 PCA components (explained [0.33, 0.21, 0.09, 0.08, 0.06, 0.05]); top loadings: z0: adj_p11+, oo_p11+, adj_run- | z1: oo_p12+, adj_p12+, car_per_run+ | z2: adj_rz+, oo_rz+, adot- | z3: adot+, deep+, behind-
+  DL M1 clusters (k=2 by BIC): centres [0] rush_per_pass=0.03, tkl_per_snap=0.06, oo_run=-0.30, snap_share=0.62 (n=890); [1] rush_per_pass=0.02, tkl_per_snap=0.07, oo_run=0.66, snap_share=-0.22 (n=894)
+  DL M2 PCA components (explained [0.52, 0.1, 0.08, 0.06, 0.05, 0.04]); top loadings: z0: adj_run+, oo_run+, oo_p11- | z1: oo_rz+, adj_rz+, snap_share+ | z2: solo_share+, rush_per_pass+, tkl_depth- | z3: pd_per_pass+, tkl_per_snap+, snap_share+
+  OLB M1 clusters (k=2 by BIC): centres [0] rush_per_pass=0.01, pd_per_pass=0.01, oo_run=0.25, tkl_per_snap=0.11, snap_share=1.12 (n=231); [1] rush_per_pass=0.03, pd_per_pass=0.01, oo_run=-0.21, tkl_per_snap=0.07, snap_share=0.44 (n=481)
+  OLB M2 PCA components (explained [0.45, 0.14, 0.09, 0.06, 0.05, 0.05]); top loadings: z0: adj_run+, adj_p11-, oo_p11- | z1: tkl_depth+, rush_per_pass-, tkl_per_snap+ | z2: oo_rz+, adj_rz+, oo_p12- | z3: solo_share+, snap_share+, adj_rz+
+  ILB M1 clusters (k=2 by BIC): centres [0] tkl_per_snap=0.13, tkl_depth=5.13, oo_late=-1.08, pd_per_pass=0.01, snap_share=0.27 (n=334); [1] tkl_per_snap=0.13, tkl_depth=5.58, oo_late=-0.29, pd_per_pass=0.01, snap_share=2.63 (n=337)
+  ILB M2 PCA components (explained [0.39, 0.1, 0.09, 0.07, 0.06, 0.05]); top loadings: z0: adj_run+, adj_p11-, oo_p11- | z1: oo_rz+, adj_rz+, rush_per_pass+ | z2: tkl_per_snap+, oo_late-, adj_rz+ | z3: tkl_depth+, rush_per_pass-, oo_late+
+  CB M1 clusters (k=2 by BIC): centres [0] pd_per_pass=0.02, tkl_depth=9.89, oo_p11=0.58, tkl_per_snap=0.07, snap_share=2.11 (n=742); [1] pd_per_pass=0.02, tkl_depth=9.10, oo_p11=1.83, tkl_per_snap=0.08, snap_share=0.40 (n=445)
+  CB M2 PCA components (explained [0.41, 0.13, 0.08, 0.07, 0.05, 0.04]); top loadings: z0: adj_p11+, adj_run-, adj_p12- | z1: oo_rz+, snap_share-, oo_heavy+ | z2: tkl_depth+, solo_share+, rush_per_pass- | z3: adj_rz+, tkl_per_snap-, oo_rz+
+  S M1 clusters (k=2 by BIC): centres [0] tkl_depth=9.08, tkl_per_snap=0.09, pd_per_pass=0.01, oo_heavy=-0.40, snap_share=1.05 (n=532); [1] tkl_depth=11.18, tkl_per_snap=0.08, pd_per_pass=0.01, oo_heavy=-0.56, snap_share=3.05 (n=415)
+  S M2 PCA components (explained [0.35, 0.13, 0.1, 0.07, 0.06, 0.05]); top loadings: z0: adj_p11+, adj_run-, adj_heavy- | z1: oo_rz+, snap_share-, oo_heavy+ | z2: tkl_depth+, tkl_per_snap-, rush_per_pass- | z3: adj_rz+, oo_rz+, oo_p12-
+
+  method comparison (first 6 components): split-half r, season r, movers' kept share (first 4), |corr| with snap share, split-half after snap share removed (first 4)
+  WR   M1       k=2 label differs between halves 19%, between seasons 23%; seeds' agreement (ARI) 0.98
+  WR   M1+meas  k=2 label differs between halves 8%, between seasons 11%; seeds' agreement (ARI) 0.84
+  WR   M2       split [0.85, 0.67, 0.83, 0.41, 0.69, 0.53] (>=0.5: 5) season [0.49, 0.54, 0.66, 0.38, 0.32, 0.43] kept [0.51, 0.6, 0.72, 0.3] snap|r| [0.05, 0.37, 0.73, 0.34, 0.07, 0.22] resid [0.85, 0.63, 0.66, 0.37]; congruence (bootstrap, first 4) [1.0, 0.91, 0.93, 0.91]
+  WR   M2+meas  split [0.86, 0.66, 0.84, 0.85, 0.45, 0.65] (>=0.5: 5) season [0.55, 0.58, 0.68, 0.81, 0.41, 0.37] kept [0.59, 0.68, 0.77, 0.85] snap|r| [0.07, 0.22, 0.72, 0.42, 0.21, 0.02] resid [0.86, 0.65, 0.69, 0.83]
+  WR   FA       split [0.6, 0.81, 0.66, 0.29, 0.82, 0.82] (>=0.5: 5) season [0.59, 0.35, 0.36, 0.23, 0.32, 0.56] kept [0.7, 0.73, 0.46, 0.27] snap|r| [0.04, 0.21, 0.11, 0.03, 0.14, 0.88] resid [0.6, 0.8, 0.65, 0.29]
+  WR   M3       split [0.9, 0.82, 0.75, 0.6, 0.35, 0.29] (>=0.5: 4) season [0.6, 0.36, 0.21, 0.22, 0.14, 0.05] kept [0.72, 0.2, 0.06, 0.51] snap|r| [0.93, 0.14, 0.13, 0.01, 0.04, 0.04] resid [0.71, 0.82, 0.74, 0.61]
+  WR   M3+meas  split [0.9, 0.84, 0.75, 0.97, 0.64, 0.35] (>=0.5: 5) season [0.61, 0.41, 0.22, 0.9, 0.27, 0.15] kept [0.72, 0.35, 0.11, 0.95] snap|r| [0.93, 0.16, 0.13, 0.0, 0.01, 0.04] resid [0.73, 0.84, 0.74, 0.97]
+  TE   M1       k=2 label differs between halves 10%, between seasons 19%; seeds' agreement (ARI) 1.00
+  TE   M1+meas  k=6 label differs between halves 12%, between seasons 21%; seeds' agreement (ARI) 0.19
+  TE   M2       split [0.96, 0.45, 0.59, 0.81, 0.63, 0.55] (>=0.5: 5) season [0.75, 0.3, 0.41, 0.44, 0.28, 0.24] kept [0.88, 0.67, 0.24, 0.7] snap|r| [0.57, 0.17, 0.23, 0.09, 0.06, 0.07] resid [0.91, 0.44, 0.56, 0.81]; congruence (bootstrap, first 4) [1.0, 0.9, 0.88, 0.81]
+  TE   M2+meas  split [0.96, 0.45, 0.68, 0.83, 0.75, 0.67] (>=0.5: 5) season [0.77, 0.36, 0.46, 0.63, 0.5, 0.43] kept [0.9, 0.73, 0.35, 0.87] snap|r| [0.56, 0.01, 0.42, 0.05, 0.16, 0.17] resid [0.92, 0.45, 0.61, 0.83]
+  TE   FA       split [0.9, 0.47, 0.57, 0.85, 0.33, 0.85] (>=0.5: 4) season [0.7, 0.49, 0.35, 0.29, 0.19, 0.37] kept [0.75, 0.2, 0.13, 1.04] snap|r| [0.25, 0.05, 0.19, 0.42, 0.17, 0.41] resid [0.89, 0.47, 0.55, 0.82]
+  TE   M3       split [0.89, 0.86, 0.84, 0.77, 0.67, 0.27] (>=0.5: 5) season [0.56, 0.57, 0.28, 0.26, 0.34, 0.14] kept [0.47, 0.91, 0.18, 0.54] snap|r| [0.93, 0.13, 0.11, 0.03, 0.05, 0.04] resid [0.63, 0.85, 0.83, 0.77]
+  TE   M3+meas  split [0.9, 0.88, 0.84, 0.78, 0.8, 0.82] (>=0.5: 6) season [0.57, 0.62, 0.28, 0.29, 0.51, 0.63] kept [0.48, 0.94, 0.2, 0.65] snap|r| [0.93, 0.14, 0.1, 0.04, 0.03, 0.07] resid [0.63, 0.87, 0.83, 0.78]
+  RB   M1       k=3 label differs between halves 17%, between seasons 25%; seeds' agreement (ARI) 0.99
+  RB   M1+meas  k=2 label differs between halves 5%, between seasons 12%; seeds' agreement (ARI) 0.99
+  RB   M2       split [0.95, 0.91, 0.28, 0.42, 0.48, 0.53] (>=0.5: 3) season [0.83, 0.82, 0.31, 0.36, 0.46, 0.53] kept [0.81, 0.86, 0.41, 0.87] snap|r| [0.08, 0.36, 0.06, 0.17, 0.36, 0.32] resid [0.95, 0.89, 0.28, 0.4]; congruence (bootstrap, first 4) [0.99, 0.98, 0.94, 0.9]
+  RB   M2+meas  split [0.96, 0.92, 0.36, 0.39, 0.62, 0.85] (>=0.5: 4) season [0.87, 0.82, 0.41, 0.35, 0.57, 0.78] kept [0.85, 0.85, 0.59, 0.85] snap|r| [0.09, 0.37, 0.05, 0.18, 0.31, 0.49] resid [0.96, 0.89, 0.36, 0.38]
+  RB   FA       split [0.92, 0.47, 0.64, 0.9, 0.26, 0.73] (>=0.5: 4) season [0.66, 0.49, 0.34, 0.76, 0.22, 0.49] kept [0.6, 1.05, 0.28, 0.79] snap|r| [0.21, 0.08, 0.08, 0.29, 0.07, 0.1] resid [0.92, 0.47, 0.63, 0.9]
+  RB   M3       split [0.92, 0.91, 0.79, 0.72, 0.5, 0.4] (>=0.5: 4) season [0.73, 0.75, 0.49, 0.44, 0.17, 0.13] kept [0.95, 0.67, 0.44, 0.28] snap|r| [0.85, 0.27, 0.19, 0.12, 0.05, 0.06] resid [0.84, 0.91, 0.79, 0.72]
+  RB   M3+meas  split [0.92, 0.92, 0.79, 0.73, 0.79, 0.62] (>=0.5: 6) season [0.75, 0.78, 0.5, 0.44, 0.65, 0.31] kept [0.95, 0.72, 0.45, 0.3] snap|r| [0.82, 0.34, 0.19, 0.12, 0.02, 0.06] resid [0.87, 0.93, 0.79, 0.73]
+  DL   M1       k=2 label differs between halves 10%, between seasons 16%; seeds' agreement (ARI) 1.00
+  DL   M1+meas  k=6 label differs between halves 15%, between seasons 21%; seeds' agreement (ARI) 0.34
+  DL   M2       split [0.91, 0.34, 0.41, 0.35, 0.37, 0.42] (>=0.5: 1) season [0.77, 0.37, 0.42, 0.35, 0.41, 0.33] kept [0.92, 0.69, 0.56, 0.69] snap|r| [0.4, 0.41, 0.4, 0.2, 0.24, 0.51] resid [0.89, 0.27, 0.34, 0.32]; congruence (bootstrap, first 4) [1.0, 0.99, 0.98, 0.95]
+  DL   M2+meas  split [0.92, 0.4, 0.59, 0.61, 0.82, 0.48] (>=0.5: 4) season [0.8, 0.45, 0.56, 0.6, 0.85, 0.5] kept [0.93, 0.82, 0.68, 0.9] snap|r| [0.39, 0.41, 0.36, 0.12, 0.16, 0.4] resid [0.9, 0.33, 0.55, 0.61]
+  DL   FA       split [0.77, 0.66, 0.21, 0.28, 0.1, 0.57] (>=0.5: 3) season [0.59, 0.52, 0.16, 0.3, 0.1, 0.31] kept [0.89, 0.61, 0.13, 0.84] snap|r| [0.27, 0.36, 0.36, 0.11, 0.04, 0.07] resid [0.75, 0.62, 0.15, 0.28]
+  DL   M3       split [0.9, 0.85, 0.14, 0.35, 0.1, 0.11] (>=0.5: 2) season [0.66, 0.69, 0.06, 0.14, 0.05, 0.02] kept [0.74, 0.87, nan, 0.62] snap|r| [0.97, 0.16, 0.11, 0.04, 0.04, 0.04] resid [0.51, 0.85, 0.08, 0.29]
+  DL   M3+meas  split [0.9, 0.89, 0.61, 0.67, 0.47, 0.44] (>=0.5: 4) season [0.66, 0.77, 0.45, 0.52, 0.31, 0.3] kept [0.74, 0.92, 0.9, 0.91] snap|r| [0.97, 0.15, 0.06, 0.06, 0.08, 0.04] resid [0.48, 0.89, 0.58, 0.66]
+  OLB  M1       k=2 label differs between halves 12%, between seasons 6%; seeds' agreement (ARI) 1.00
+  OLB  M1+meas  k=2 label differs between halves 8%, between seasons 4%; seeds' agreement (ARI) 1.00
+  OLB  M2       split [0.89, 0.76, 0.36, 0.48, 0.45, 0.35] (>=0.5: 2) season [0.61, 0.7, 0.1, 0.33, 0.33, 0.34] kept [0.47, 0.87, 0.82, 0.22] snap|r| [0.08, 0.45, 0.07, 0.56, 0.37, 0.33] resid [0.89, 0.69, 0.36, 0.29]; congruence (bootstrap, first 4) [1.0, 0.99, 0.97, 0.94]
+  OLB  M2+meas  split [0.89, 0.87, 0.43, 0.77, 0.5, 0.67] (>=0.5: 5) season [0.63, 0.81, 0.21, 0.66, 0.46, 0.65] kept [0.52, 0.88, 0.81, 0.9] snap|r| [0.06, 0.37, 0.25, 0.56, 0.33, 0.0] resid [0.89, 0.85, 0.39, 0.71]
+  OLB  FA       split [0.81, 0.38, 0.23, 0.73, 0.35, 0.71] (>=0.5: 3) season [0.42, 0.06, 0.06, 0.43, 0.14, 0.75] kept [-0.05, nan, -1.7, 0.44] snap|r| [0.18, 0.16, 0.08, 0.08, 0.09, 0.2] resid [0.8, 0.36, 0.23, 0.73]
+  OLB  M3       split [0.91, 0.81, 0.32, 0.27, 0.34, 0.27] (>=0.5: 2) season [0.57, 0.54, 0.15, -0.08, 0.07, 0.0] kept [0.49, 0.48, 0.94, nan] snap|r| [0.95, 0.01, 0.08, 0.12, 0.12, 0.05] resid [0.55, 0.81, 0.32, 0.15]
+  OLB  M3+meas  split [0.91, 0.83, 0.87, 0.48, 0.25, 0.77] (>=0.5: 4) season [0.57, 0.57, 0.78, 0.26, -0.09, 0.62] kept [0.5, 0.54, 1.07, 0.49] snap|r| [0.95, 0.01, 0.01, 0.14, 0.09, 0.02] resid [0.55, 0.83, 0.87, 0.46]
+  ILB  M1       k=2 label differs between halves 8%, between seasons 25%; seeds' agreement (ARI) 0.98
+  ILB  M1+meas  k=5 label differs between halves 18%, between seasons 24%; seeds' agreement (ARI) 0.18
+  ILB  M2       split [0.83, 0.34, 0.51, 0.44, 0.3, 0.26] (>=0.5: 2) season [0.43, 0.23, 0.43, 0.41, 0.23, 0.28] kept [0.54, 0.88, 0.6, 1.08] snap|r| [0.46, 0.3, 0.29, 0.22, 0.28, 0.04] resid [0.77, 0.29, 0.5, 0.43]; congruence (bootstrap, first 4) [1.0, 0.89, 0.83, 0.8]
+  ILB  M2+meas  split [0.84, 0.59, 0.37, 0.83, 0.45, 0.6] (>=0.5: 4) season [0.45, 0.53, 0.27, 0.84, 0.47, 0.47] kept [0.57, 1.0, 0.95, 0.86] snap|r| [0.46, 0.43, 0.07, 0.01, 0.1, 0.39] resid [0.78, 0.56, 0.37, 0.83]
+  ILB  FA       split [0.67, 0.29, 0.78, 0.37, 0.25, 0.44] (>=0.5: 2) season [0.18, 0.18, 0.43, 0.03, 0.09, 0.56] kept [0.7, -0.08, 0.34, nan] snap|r| [0.4, 0.16, 0.14, 0.04, 0.22, 0.12] resid [0.6, 0.28, 0.77, 0.37]
+  ILB  M3       split [0.87, 0.65, 0.29, 0.22, 0.21, 0.17] (>=0.5: 2) season [0.45, 0.33, 0.14, 0.05, -0.09, 0.05] kept [0.56, 0.69, 2.78, -1.13] snap|r| [0.94, 0.03, 0.22, 0.14, 0.03, 0.08] resid [0.4, 0.65, 0.15, 0.2]
+  ILB  M3+meas  split [0.87, 0.67, 0.94, 0.84, 0.39, 0.22] (>=0.5: 4) season [0.45, 0.37, 0.88, 0.78, 0.16, 0.07] kept [0.56, 0.79, 0.93, 0.95] snap|r| [0.94, 0.04, 0.01, 0.02, 0.26, 0.11] resid [0.4, 0.67, 0.94, 0.84]
+  CB   M1       k=2 label differs between halves 16%, between seasons 21%; seeds' agreement (ARI) 0.98
+  CB   M1+meas  k=2 label differs between halves 9%, between seasons 13%; seeds' agreement (ARI) 0.99
+  CB   M2       split [0.81, 0.36, 0.43, 0.21, 0.15, 0.25] (>=0.5: 1) season [0.61, 0.19, 0.45, 0.08, 0.24, 0.33] kept [0.76, 0.44, 0.74, nan] snap|r| [0.55, 0.6, 0.13, 0.26, 0.12, 0.06] resid [0.67, 0.25, 0.42, 0.19]; congruence (bootstrap, first 4) [1.0, 0.99, 0.97, 0.94]
+  CB   M2+meas  split [0.82, 0.37, 0.49, 0.9, 0.23, 0.76] (>=0.5: 3) season [0.64, 0.2, 0.51, 0.9, 0.14, 0.82] kept [0.79, 0.44, 0.77, 0.95] snap|r| [0.55, 0.6, 0.15, 0.07, 0.24, 0.01] resid [0.69, 0.26, 0.48, 0.9]
+  CB   FA       split [0.27, 0.27, 0.3, 0.63, 0.15, 0.31] (>=0.5: 1) season [0.22, 0.11, 0.33, 0.28, 0.02, 0.15] kept [0.9, -0.26, 0.65, 0.51] snap|r| [0.16, 0.44, 0.1, 0.58, 0.24, 0.01] resid [0.25, 0.17, 0.3, 0.5]
+  CB   M3       split [0.82, 0.59, 0.25, 0.1, 0.04, 0.05] (>=0.5: 2) season [0.54, 0.43, 0.16, 0.07, 0.0, 0.08] kept [0.78, 1.07, 0.27, nan] snap|r| [0.95, 0.05, 0.13, 0.08, 0.05, 0.0] resid [0.34, 0.59, 0.24, 0.09]
+  CB   M3+meas  split [0.82, 0.65, 0.28, 0.86, 0.26, 0.83] (>=0.5: 4) season [0.54, 0.5, 0.21, 0.81, 0.17, 0.75] kept [0.78, 1.07, 0.53, 0.95] snap|r| [0.95, 0.04, 0.13, 0.05, 0.06, 0.01] resid [0.35, 0.65, 0.27, 0.86]
+  S    M1       k=2 label differs between halves 26%, between seasons 37%; seeds' agreement (ARI) 0.96
+  S    M1+meas  k=4 label differs between halves 17%, between seasons 20%; seeds' agreement (ARI) 0.54
+  S    M2       split [0.75, 0.49, 0.55, 0.34, 0.29, 0.21] (>=0.5: 2) season [0.43, 0.26, 0.54, 0.21, 0.28, 0.16] kept [0.25, 0.64, 0.87, 0.18] snap|r| [0.38, 0.63, 0.23, 0.29, 0.01, 0.07] resid [0.68, 0.39, 0.56, 0.31]; congruence (bootstrap, first 4) [1.0, 0.98, 0.97, 0.91]
+  S    M2+meas  split [0.76, 0.56, 0.65, 0.8, 0.36, 0.34] (>=0.5: 4) season [0.45, 0.38, 0.64, 0.8, 0.24, 0.33] kept [0.29, 0.72, 0.94, 0.99] snap|r| [0.38, 0.61, 0.28, 0.03, 0.29, 0.01] resid [0.69, 0.51, 0.67, 0.8]
+  S    FA       split [0.4, 0.3, 0.19, 0.71, 0.62, 0.49] (>=0.5: 2) season [0.27, 0.2, 0.09, 0.39, 0.57, 0.26] kept [0.18, 0.39, 0.42, 0.0] snap|r| [0.06, 0.07, 0.04, 0.44, 0.04, 0.77] resid [0.4, 0.32, 0.19, 0.63]
+  S    M3       split [0.87, 0.4, 0.45, 0.17, 0.14, 0.1] (>=0.5: 1) season [0.45, 0.19, 0.21, 0.13, 0.06, 0.06] kept [0.61, 0.18, 0.09, 0.51] snap|r| [0.94, 0.08, 0.2, 0.04, 0.0, 0.07] resid [0.43, 0.38, 0.41, 0.17]
+  S    M3+meas  split [0.87, 0.57, 0.7, 0.63, 0.2, 0.39] (>=0.5: 4) season [0.45, 0.38, 0.6, 0.42, 0.14, 0.25] kept [0.61, 0.64, 0.92, 0.72] snap|r| [0.94, 0.04, 0.16, 0.13, 0.04, 0.01] resid [0.43, 0.57, 0.68, 0.62]
+  M2      : median over groups of the first 4 components' split-half r 0.57; season r 0.42; components with split-half >= 0.5 (median group) 2 of 6; kept 0.69
+  M2+meas : median over groups of the first 4 components' split-half r 0.71; season r 0.58; components with split-half >= 0.5 (median group) 4 of 6; kept 0.84
+  FA      : median over groups of the first 4 components' split-half r 0.54; season r 0.30; components with split-half >= 0.5 (median group) 3 of 6; kept 0.53
+  M3      : median over groups of the first 4 components' split-half r 0.58; season r 0.32; components with split-half >= 0.5 (median group) 2 of 6; kept 0.53
+  M3+meas : median over groups of the first 4 components' split-half r 0.85; season r 0.55; components with split-half >= 0.5 (median group) 4 of 6; kept 0.63
+  M1      : median label flip between halves 14%, between seasons 22%, seeds' ARI 0.99
+  M1+meas : median label flip between halves 11%, between seasons 17%, seeds' ARI 0.69
+
+  H100 (b): the vertical share of targeted routes (held out), cross-validated R² from M2's 6 components (folds by player)
+    WR: 1234 player-seasons, R² 0.43
+    TE: 641 player-seasons, R² 0.34
+    RB: 600 player-seasons, R² 0.38
+  -> H100: (a) consistent: False; (b) predicts roles in 3 of 3 groups (needs 2): HELD IN PART
+
+I57: a receiver's vertical share of targeted routes, season to season r 0.60 (724 pairs, 20+ targeted routes both seasons)
+saved latent.parquet (23613, 25)

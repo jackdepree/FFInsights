@@ -1,0 +1,28 @@
+2016 player-plays 511215 player-team-seasons 1632
+2017 player-plays 510838 player-team-seasons 1700
+2018 player-plays 507928 player-team-seasons 1728
+2019 player-plays 511895 player-team-seasons 1719
+2020 player-plays 518149 player-team-seasons 1767
+2021 player-plays 542354 player-team-seasons 1888
+2022 player-plays 537214 player-team-seasons 1793
+2023 player-plays 540215 player-team-seasons 1719
+2024 player-plays 532415 player-team-seasons 1775
+
+player-team-seasons (all): 15,721; with 200+ snaps: 7,871
+shape: (8, 2)
+┌───────┬──────┐
+│ group ┆ len  │
+│ ---   ┆ ---  │
+│ str   ┆ u32  │
+╞═══════╪══════╡
+│ CB    ┆ 1187 │
+│ DL    ┆ 1784 │
+│ ILB   ┆ 671  │
+│ OLB   ┆ 712  │
+│ RB    ┆ 626  │
+│ S     ┆ 947  │
+│ TE    ┆ 705  │
+│ WR    ┆ 1239 │
+└───────┴──────┘
+cells: 32
+measurables among them: height 100.0% weight 100.0% forty 66.9%
