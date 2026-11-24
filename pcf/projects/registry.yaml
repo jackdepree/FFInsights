@@ -653,6 +653,15 @@ projects:
     depends_on: [grain-tables, validation-harness]
     summary: Decline by position and age. Curves are fit between seasons; in-season projects use curves fit on completed seasons only.
 
+  - id: availability
+    name: Availability
+    phase: 1
+    status: idea
+    horizon: next
+    cadence: [in_season]
+    depends_on: [participation, timeline]
+    summary: "The CEO's pick, 2026-11-23 (\"Ok, let's start the availability expert\"), after the yardstick batch's I60: knowing the share of games a player goes on to play would remove 24-70% of a rest-of-season forecast's error, and a crude games-played forecast gets about 1%. Who plays, and for how many games, for players and teams. Kickoff in projects/availability/BRIEF.md; waiting for the CEO's hunches. Overlaps injury-fatigue (scope to settle in the brief)."
+
   - id: injury-fatigue
     name: Injury and fatigue
     phase: 1

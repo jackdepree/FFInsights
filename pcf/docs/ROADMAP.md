@@ -30,6 +30,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **The yardstick batch** (the CEO's pick at retro 3, 2026-11-23): eight backlog ideas scored on the crude forecaster in the build chat ([brief](../projects/crude-forecaster/YARDSTICK_BATCH.md)).
 
+**Availability** (`availability`, the CEO's pick, 2026-11-23): who plays, and for how many games. Kickoff in the strategy chat ([brief](../projects/availability/BRIEF.md)), waiting for the CEO's hunches.
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later
