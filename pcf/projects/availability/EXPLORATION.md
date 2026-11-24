@@ -322,7 +322,7 @@ More about (a):
 - **A play's length** is measured only on incomplete passes (the game clock) and by time to throw. Runs and completions have no free length.
 - **All seven forecasting checks read the 2016–2024 seasons.** This is discovery. The build's harness and the vault confirm.
 
-### Claude's new idea (to add to IDEAS.md when the brief is agreed)
+### Claude's new idea (added to IDEAS.md with the draft brief, 2026-11-24)
 
 - **I116 (proposed): proneness as a yardstick input.** A player's credibility-shrunk injury rate per snap, beside I60's crude games-played forecast, on the rest-of-season receiving and rushing boards.
   - Claude: 45% that it adds 0.5%+ to receiving rest-of-season, 30% for rushing.

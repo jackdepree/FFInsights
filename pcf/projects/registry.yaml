@@ -656,7 +656,7 @@ projects:
   - id: availability
     name: Availability
     phase: 1
-    status: exploring
+    status: brief
     horizon: next
     cadence: [in_season]
     depends_on: [participation, timeline]

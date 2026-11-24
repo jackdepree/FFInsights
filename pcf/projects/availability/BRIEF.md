@@ -1,6 +1,6 @@
 # Availability: who plays, and for how many games
 
-> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read (2026-11-23), and H96 as failed after the follow-up test against H97 (2026-11-24: "Failed"). The CEO's direction after the exploration is below; the brief's success tests are drafted next.
+> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read (2026-11-23), and H96 as failed after the follow-up test against H97 (2026-11-24: "Failed"). The CEO's direction after the exploration is below, with the CEO's answers on the line between availability and participation (2026-11-24). **The brief is drafted (2026-11-24) for the CEO to agree.**
 
 ## Why now
 
@@ -70,3 +70,130 @@ The CEO's message, 2026-11-23, in full:
 - **Adjusted games lost is weighted by snaps played** ("I think adjusted games lost should be weighted by snaps played"), not FO's equal weights per starter.
 - **Hunches:** H93, H94, H95, H97 and H98 closed as the pass rules read; H96 stays open ("I will close all hunches except for h96, for now"), with the follow-up test of H96 against H97 in [EXPLORATION.md](EXPLORATION.md). After the follow-up, the CEO closed H96 as failed (2026-11-24: "Failed").
 
+## The CEO's answers on the line between experts (word for word)
+
+The CEO, 2026-11-24: "1; yes, availability. 2; yes, only what was known before the game to weight by their share."
+
+- **Playing hurt belongs to availability** ("1; yes, availability"). When a player plays with fewer snaps because he's hurt, availability forecasts the drop. Participation keeps his healthy share.
+- **Adjusted games lost weights each game lost by the player's snap share, using only what was known before that game** ("2; yes, only what was known before the game to weight by their share").
+
+---
+
+# The brief (draft, 2026-11-24, for the CEO to agree)
+
+**Status:** draft · **Layer:** expert (1) · **Cadence:** in_season (the Saturday run, 12:00 Eastern, like participation)
+
+## Methods
+
+Three ways to build it. The ladder (rule k) runs them in order, and each rung must beat the one below.
+
+| | Method | What it assumes | Cost |
+|---|---|---|---|
+| 1 | **The usual way: two separate models.** A classifier for "plays next game" and, for players who are out, a model of games missed. Each horizon (next game, next 3, rest of season) is fitted on its own | Each horizon can be learned apart, and the pieces add up | Cheap. Participation's `active` and the exploration's H93 model are already this |
+| 2 | **Structured: a weekly health-state chain.** Each player is in one state each week: healthy, listed (Questionable, Doubtful), Out, or on a reserve list. The model learns the chance of each move from his report, history, proneness, age and exposure, then rolls forward week by week. Next-3 and rest-of-season ranges come out of the same chain | A week's move depends on this week's state and his traits, not on the whole path (with "weeks in this state" added to soften that) | A session. It gives the spike at 0 games and the "a few games lost" misses (participation#F14, F24) by construction |
+| 3 | **Exploratory: a hidden health state.** The report, practice status and snap share are noisy readings of a health state nobody sees. A hidden Markov model infers the state, so "listed Questionable but full practice Friday" and "played 60% of his usual snaps" are read as evidence about the same hidden health | The readings are conditionally independent given the state; three or four states are enough | Expensive: identifiability, and fitting on about 2 million player-weeks. It's the only method that gives playing hurt and missing games from one model |
+
+## The noise ceiling (from the exploration)
+
+- **Next game:** players' injury rates differ beyond position (a fragile player at +1 SD gets hurt about 1.7x as often). Per game, it's barely forecastable: 1–2% of the log loss.
+- **How long he's out:** the next report removes 62% of the error, and history adds 1.6%.
+- **Rest of season:** regular skill players miss about 20% of their team's games. Three-quarters of those are new absences, and a fifth of all absences start with a named in-game injury.
+- **The room on the yardstick (I60):** 24–70% of a rest-of-season forecast's error is availability. A crude games-played forecast gets about 1%.
+
+## The question
+
+Will each player be available next game, and over the next three games and the rest of the season? When he plays hurt, how much of his usual role does he keep? And how much is each team losing to absences?
+
+## Why it matters
+
+- **It's the biggest measured gap between hindsight and forecast** in PCF: 24–70% of a rest-of-season forecast's error is who plays, and we capture about 1% of it.
+- **It repairs what participation gets wrong:** Out and Doubtful players overstated about twofold (F27), and rest-of-season ranges with no spike at 0 (F14).
+- **It feeds teams:** a starters' availability forecast adds +2.84% to Elo's rest-of-season team yards (I115).
+- **Users notice it** in rest-of-season and dynasty values, weekly start/sit on Questionable players, and futures.
+
+## Terms
+
+- **Standard terms used:** snap share, injury report status, log loss, credibility ([`docs/GLOSSARY.md`](../../docs/GLOSSARY.md)).
+- **New terms:**
+  - **Health absence:** a game he doesn't play while he's on the injury report (any status) or on a reserve list for injury, illness or NFI. Absences while he's healthy and on the active roster (healthy scratches, benchings) are participation's.
+  - **Games played (any reason):** what availability reports at the top. It's the health part from this expert, times participation's chance of playing when healthy. Availability owns the health part; the composite is scored on the yardstick.
+  - **Playing hurt:** a game he plays while listed. His **kept share** is his snap share that game over participation's healthy-share forecast.
+  - **Proneness:** his in-game injuries per scrimmage snap over his position's rate, shrunk toward 1 by credibility (half weight at about 2 expected injuries), with body-part repeat factors for calf, back, foot, groin, hip, hamstring and knee (H94).
+  - **Snap-weighted adjusted games lost:** per team, the sum over players of games lost to health absence, each weighted by his snap share on his side in his earlier games that season (known before the game). It's the CEO's version of Football Outsiders' adjusted games lost.
+  - **Exposure:** snaps, touches and (for defenders) tackles made, entered as logs, plus a recency-weighted sum of snaps (the H96 follow-up).
+
+## Builds on
+
+| Project | What we use | Why |
+|---|---|---|
+| `participation` | `active`, the next-game share (trees_week) and the horizons' shares, from saved histories; F12, F14, F24, F27 | The incumbent to beat, the healthy share that kept share is read against, and the misses to fix |
+| `timeline` | known-at timestamps | The report's known-at rule (`date_modified`, else noon on the final report's day) |
+| `crude-forecaster` | the yardstick, and I60's crude games-played forecast | The downstream score and the baseline to beat |
+| `pace` | F10–F12 and I29's long-drive fatigue | The fatigue leads this expert takes over from `injury-fatigue` |
+| `elo` | I115 | Where the team output goes first |
+
+**Already tried:**
+- Fatigue on performance failed (H24, H25); fatigue on substitution held (H34).
+- **H96 failed:** weighting snaps by the play's risk is a count in disguise (correlation 0.997), so H97's play model is a description, not a workload weight.
+- H98's recency is workload, not risk.
+- A player's career mix of risky plays adds nothing (the follow-up, F).
+
+## Assumptions
+
+1. **The report is known by the Saturday run.** We use the final report and practice through Friday. The game-day inactive list is never an input.
+2. **Health absence can be told apart from scratches.** "On the report or a reserve list" marks health. A player released or traded lands "off every roster", which is participation's (flagged and counted in the build).
+3. **In-game injury names in the play-by-play are logged unevenly** (660–960 a season, rising). They feed proneness as a rate per snap, read within season.
+4. **Games missed means no snap.** A benching right after an injury counts as health time missed (the case against).
+5. **Body parts exist only for listed players,** so injured-reserve stints are the least described.
+6. **Participation's forecasts already read the report.** The overlap is handled by scoring availability's outputs beside participation's, never alone.
+
+## Goals
+
+- Forecast health availability at three horizons, with honest ranges, a spike at 0 and calibrated Questionable players.
+- Forecast kept share when playing hurt.
+- Build proneness and the snap-weighted adjusted games lost as standing measures, with their consistency tests.
+- Hand the team output to Elo (I115) and the player outputs to the yardstick.
+
+## Tests
+
+- **Success looks like:**
+  1. **Next game:** the chance he plays beats participation's `active` on held-out log loss (2017–2024 walk-forward, the interval above 0). The Questionable calibration slope comes out between 0.85 and 1.15 (participation's is 0.70), and Out or Doubtful is no longer overstated twofold.
+  2. **Rest of season:** games played beats I60's crude forecast, with q10–q90 coverage of 75–85% and the q10 problem fixed (F14).
+  3. **Playing hurt:** kept share beats participation's share alone on the squared error of listed players who play.
+  4. **The yardstick:** beside I60's crude forecast and participation, it adds clearly on at least one rest-of-season board (receiving, rushing or passing yards) and beats its 19 shuffled copies.
+  5. **Team:** the snap-weighted adjusted games lost repeats (season r with its interval) and tracks the change in net EPA. Its forecast adds beside Elo on the team rest-of-season board (I115's test).
+- **Failure looks like:** it doesn't beat `active` or I60's crude forecast. Then availability ships as descriptions only (proneness, the severity table, snap-weighted adjusted games lost) and participation stays the forecast.
+- **No-noise target (the CEO approves):** games played next game and over the rest of the season, against participation's `active` and I60's crude forecast. Downstream: the yardstick's rest-of-season boards.
+- **Seasons:** training from 2013 (reports from 2009; in-game injury names from 2016 for proneness), scored 2017–2024, vault 2025.
+
+## Inputs and outputs
+
+- **Inputs** (known-at in brackets):
+  - the injury report and practice status through Friday [`date_modified`, else noon on the final report's day];
+  - weekly roster status and reserve lists [that week's file];
+  - snaps, touches and tackles made from earlier games [after each game];
+  - in-game injuries named in the play-by-play [after each game];
+  - age;
+  - participation's saved histories [the Saturday run].
+- **Outputs** (player-game, Saturday run):
+  - chance of a health absence next game, and expected games of health absence over the next 3 and the rest of the season, with q10, q50 and q90;
+  - games played (any reason), composed with participation;
+  - kept share when listed, with an interval;
+  - proneness, with its credibility;
+  - per team: snap-weighted adjusted games lost to date and its forecast for the next game and the rest of the season.
+
+## How it will be used
+
+- In rest-of-season and dynasty values, and weekly start/sit for listed players.
+- In the yardstick and the crude forecaster's rest-of-season boards.
+- In Elo's rest-of-season regression (I115), and later in team strength and futures.
+
+## Plan
+
+- **Ladder:** baseline (the position's rates plus a status-by-body-part table) → logistic and lasso (method 1, with proneness, log exposure and recency) → the health-state chain (method 2) → trees on the chain's moves → the hidden health state (method 3) only if the chain leaves playing hurt unexplained.
+- **Time box:** three build sessions: the tables and baseline, the chain, then scoring and the team output.
+- **The backlog it carries:** I29, I30, I50 (fatigue) and I116 (proneness on the yardstick). I49 and I51 stay with participation and `vacated-opportunity`.
+- **Technical calls (for veto):**
+  - week 1 and a player's first game of a season weight adjusted games lost by last season's snap share (known before the game); with neither, his depth-chart rank's average share at his position that week;
+  - a release or trade is not a health absence;
+  - exposure enters as logs (the H96 follow-up's G).
