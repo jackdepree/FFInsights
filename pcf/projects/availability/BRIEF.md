@@ -85,7 +85,7 @@ The CEO, 2026-11-24: "1; yes, availability. 2; yes, only what was known before t
 
 ## Methods
 
-Three ways to build it. The ladder (rule k) runs them in order, and each rung must beat the one below.
+Three ways to build it. The ladder (rule k) runs them in order, and each rung must beat the one below. **The CEO chose all three** (2026-11-24: "All three").
 
 | | Method | What it assumes | Cost |
 |---|---|---|---|
@@ -190,8 +190,8 @@ Will each player be available next game, and over the next three games and the r
 
 ## Plan
 
-- **Ladder:** baseline (the position's rates plus a status-by-body-part table) → logistic and lasso (method 1, with proneness, log exposure and recency) → the health-state chain (method 2) → trees on the chain's moves → the hidden health state (method 3) only if the chain leaves playing hurt unexplained.
-- **Time box:** three build sessions: the tables and baseline, the chain, then scoring and the team output.
+- **Ladder (the CEO, 2026-11-24: "All three"):** baseline (the position's rates plus a status-by-body-part table) → logistic and lasso (method 1, with proneness, log exposure and recency) → the health-state chain (method 2) → trees on the chain's moves → the hidden health state (method 3). All three methods are built and scored, whatever the rung below does; the champion is the one that wins on the tests, and the ladder's rule (rule k) still decides which ships.
+- **Time box:** four build sessions (three before the CEO chose all three methods): the tables and baseline with method 1; the chain; the hidden health state; then scoring, the yardstick and the team output.
 - **The backlog it carries:** I29, I30, I50 (fatigue) and I116 (proneness on the yardstick). I49 and I51 stay with participation and `vacated-opportunity`.
 - **Technical calls (for veto):**
   - week 1 and a player's first game of a season weight adjusted games lost by last season's snap share (known before the game); with neither, his depth-chart rank's average share at his position that week;
