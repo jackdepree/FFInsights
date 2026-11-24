@@ -1,6 +1,6 @@
 # Availability: who plays, and for how many games
 
-> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read (2026-11-23), and H96 as failed after the follow-up test against H97 (2026-11-24: "Failed"). The CEO's direction after the exploration is below, with the CEO's answers on the line between availability and participation (2026-11-24). **The brief is drafted (2026-11-24) for the CEO to agree.**
+> **Status:** kickoff, 2026-11-23 (the CEO: "Ok, let's start the availability expert"). The CEO's hunches H93 to H98 are in, all with the CEO's odds (2026-11-23: "H93; 60%. H96; 70%. h97; 70%. H98; 50%. Please proceed with the exploration and any more questions that you have, thank you"). **The exploration is done: GO** ([EXPLORATION.md](EXPLORATION.md)). The CEO closed H93, H94, H95, H97 and H98 as the pass rules read (2026-11-23), and H96 as failed after the follow-up test against H97 (2026-11-24: "Failed"). The CEO's direction after the exploration is below, with the CEO's answers on the line between availability and participation (2026-11-24). **The brief is agreed (the CEO, 2026-11-24: "Yes, agree it"),** with its no-noise target approved. Next: the build, in its own session.
 
 ## Why now
 
@@ -79,9 +79,9 @@ The CEO, 2026-11-24: "1; yes, availability. 2; yes, only what was known before t
 
 ---
 
-# The brief (draft, 2026-11-24, for the CEO to agree)
+# The brief (agreed 2026-11-24)
 
-**Status:** draft · **Layer:** expert (1) · **Cadence:** in_season (the Saturday run, 12:00 Eastern, like participation)
+**Status:** agreed (the CEO, 2026-11-24: "Yes, agree it") · **Layer:** expert (1) · **Cadence:** in_season (the Saturday run, 12:00 Eastern, like participation)
 
 ## Methods
 
@@ -163,7 +163,7 @@ Will each player be available next game, and over the next three games and the r
   4. **The yardstick:** beside I60's crude forecast and participation, it adds clearly on at least one rest-of-season board (receiving, rushing or passing yards) and beats its 19 shuffled copies.
   5. **Team:** the snap-weighted adjusted games lost repeats (season r with its interval) and tracks the change in net EPA. Its forecast adds beside Elo on the team rest-of-season board (I115's test).
 - **Failure looks like:** it doesn't beat `active` or I60's crude forecast. Then availability ships as descriptions only (proneness, the severity table, snap-weighted adjusted games lost) and participation stays the forecast.
-- **No-noise target (the CEO approves):** games played next game and over the rest of the season, against participation's `active` and I60's crude forecast. Downstream: the yardstick's rest-of-season boards.
+- **No-noise target (approved by the CEO, 2026-11-24: "Yes, agree it"):** games played next game and over the rest of the season, against participation's `active` and I60's crude forecast. Downstream: the yardstick's rest-of-season boards.
 - **Seasons:** training from 2013 (reports from 2009; in-game injury names from 2016 for proneness), scored 2017–2024, vault 2025.
 
 ## Inputs and outputs
@@ -193,7 +193,7 @@ Will each player be available next game, and over the next three games and the r
 - **Ladder (the CEO, 2026-11-24: "All three"):** baseline (the position's rates plus a status-by-body-part table) → logistic and lasso (method 1, with proneness, log exposure and recency) → the health-state chain (method 2) → trees on the chain's moves → the hidden health state (method 3). All three methods are built and scored, whatever the rung below does; the champion is the one that wins on the tests, and the ladder's rule (rule k) still decides which ships.
 - **Time box:** four build sessions (three before the CEO chose all three methods): the tables and baseline with method 1; the chain; the hidden health state; then scoring, the yardstick and the team output.
 - **The backlog it carries:** I29, I30, I50 (fatigue) and I116 (proneness on the yardstick). I49 and I51 stay with participation and `vacated-opportunity`.
-- **Technical calls (for veto):**
+- **Technical calls (for veto; logged in [decision 0043](../../docs/decisions/0043-availability-exploration.md)):**
   - week 1 and a player's first game of a season weight adjusted games lost by last season's snap share (known before the game); with neither, his depth-chart rank's average share at his position that week;
   - a release or trade is not a health absence;
   - exposure enters as logs (the H96 follow-up's G).
