@@ -4,14 +4,17 @@ Proper scores decide; readable ones are reported alongside. Every function here 
 expressions or frames, so a backtest scores each row once and compares models row by row.
 """
 
+import numpy as np
 import polars as pl
+from scipy.special import gammaln
 
 c = pl.col
 QUANTILE_LEVELS = {"q10": 0.1, "q50": 0.5, "q90": 0.9}
 EPS = 1e-15
 # The main score per kind decides; the readable one is reported (lower is better for both).
-MAIN = {"amount": "pinball", "probability": "log_loss"}
-READABLE = {"amount": "mae", "probability": "brier"}
+MAIN = {"amount": "pinball", "probability": "log_loss", "count": "poisson_log_loss"}
+READABLE = {"amount": "mae", "probability": "brier", "count": "squared_error"}
+MIN_RATE = 1e-6  # a count forecast's smallest mean, so its log loss is finite
 
 
 def pinball(y: pl.Expr, q: pl.Expr, level: float) -> pl.Expr:
@@ -31,6 +34,27 @@ def log_loss(y: str = "y", p: str = "mean") -> pl.Expr:
     return -(c(y) * prob.log() + (1 - c(y)) * (1 - prob).log())
 
 
+def poisson_log_loss(y: str = "y", mean: str = "mean") -> pl.Expr:
+    """−log P(y) under a Poisson count with this mean: the main score for counts (decision
+    0043). It rewards an honest mean and, through it, honest chances of 0, 1, 2+."""
+    lam = c(mean).clip(MIN_RATE)
+    log_fact = c(y).map_batches(
+        lambda s: pl.Series(gammaln(s.to_numpy().astype(float) + 1.0)), return_dtype=pl.Float64
+    )
+    return lam - c(y) * lam.log() + log_fact
+
+
+def squared_error(y: str = "y", mean: str = "mean") -> pl.Expr:
+    return (c(y) - c(mean)) ** 2
+
+
+def poisson_at_least(mean: np.ndarray, k: int) -> np.ndarray:
+    """The chance a Poisson count with this mean is k or more."""
+    from scipy.stats import poisson
+
+    return poisson.sf(k - 1, np.maximum(mean, MIN_RATE))
+
+
 def brier(y: str = "y", p: str = "mean") -> pl.Expr:
     return (c(p) - c(y)) ** 2
 
@@ -46,6 +70,8 @@ def row_losses(df: pl.DataFrame, kind: str) -> pl.DataFrame:
         return df.with_columns(loss=mean_pinball(), readable=absolute_error())
     if kind == "probability":
         return df.with_columns(loss=log_loss(), readable=brier())
+    if kind == "count":
+        return df.with_columns(loss=poisson_log_loss(), readable=squared_error())
     raise ValueError(f"no scores for kind {kind!r}")
 
 

@@ -625,10 +625,10 @@ projects:
   - id: td-expert
     name: Touchdown expert
     phase: 1
-    status: brief
+    status: building
     horizon: later
     cadence: [in_season]
-    depends_on: [opportunity-quality, team-efficiency]
+    depends_on: [grain-tables]  # reads opportunity-quality's play.xfp and team-efficiency's team_game.efficiency as table parts, not their forecasts (decision 0043)
     summary: >-
       Expected touchdowns per chance, touchdown regression, the luck in a touchdown total, and a
       forecast with the chance of at least one. Feeds TD-scorer props. Explored 2026-11-16 (GO):

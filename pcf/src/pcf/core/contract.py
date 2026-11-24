@@ -36,7 +36,7 @@ if TYPE_CHECKING:
     from pcf.data.gateway import View
 
 CADENCES = ("in_season", "retrospective", "offseason_events")
-KINDS = ("amount", "probability")
+KINDS = ("amount", "probability", "count")  # count: decision 0043
 UTC_TIME = pl.Datetime("us", "UTC")
 OUTPUT_SCHEMA: dict[str, pl.DataType] = {
     "as_of": UTC_TIME,
@@ -241,7 +241,7 @@ def check_output(df: pl.DataFrame, keys: list[str], kind: str = "amount") -> Non
         raise ValueError("output train_end must be set and no later than as_of (check 6)")
     if df["mean"].null_count():
         raise ValueError(f"output has {df['mean'].null_count()} rows with no mean")
-    if kind == "amount":
+    if kind in ("amount", "count"):
         bad = df.filter((pl.col("q10") > pl.col("q50")) | (pl.col("q50") > pl.col("q90"))).height
         if bad or df.select(pl.sum_horizontal(pl.col(*QUANTILES).null_count())).item():
             raise ValueError(f"output quantiles are missing or out of order on {bad} rows")
