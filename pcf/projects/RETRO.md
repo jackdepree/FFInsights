@@ -113,6 +113,115 @@
 3. **Group D2** (I103, I117, I119): send them to the build chat as one batch, like the yardstick batch?
 4. **For step 7:** what in the last two days' way of working helped, and what wasted time?
 
+**The CEO's answers (2026-11-25):** "1; can we test those hunches? 2; no, we will test those ideas within the build and i want to do builds at night when i am asleep. 3; i do not have any new workflow ideas. 4; yes run group a now. then when group a finishes. please review all of our ideas and hunches to then spontaneously - and thoughtfully - create three to ten more ideas that we can test now or later. the goal is to almost replicate the google deepmind paper on large language models sleeping. we want to create a dataset of football knowledge so that we can iteratively improve our experts and find new features."
+
+- **H5, H6 and H18 get tests** (designs below). All three have the CEO's odds from 2026-11-15, written before any test, so they count as before the test.
+- **Group D2 (I103, I117, I119) is tested inside each expert's next build**, not as a batch. **Builds run at night,** while the CEO sleeps.
+- **No new workflow ideas from the CEO.** Step 7 has Claude's proposal.
+- **Group A ran (step 3).** Then the backlog and the hunches were read again for new ideas, modelled on Google's "Language Models Need Sleep" paper (step 5).
+
+### 3. The quick groups, run (2026-11-25, discovery only; scripts in `retro/explore/retro4_*.py`)
+
+**Group A:**
+
+| Idea | Result | Claude's odds, scored |
+|---|---|---|
+| I97's data check: enough quasi-random absences? ([`retro4_i97_absences.py`](retro/explore/retro4_i97_absences.py)) | **Too few for the QB test.** The weekly roster codes mark the COVID list (R59, 2020-2021), fixed suspensions (R40) and indefinite ones (R30). Regulars (top players, and each team's main QB) missed **202 games** on these lists after their first game for the team: OL 74, DL 48, WR 26, TE 18, RB 17, **QB 9** (nine players, one game each). Suspensions almost all start before a player's first game, so they leave the count. For scale, vacated's absences for any reason number 2,737 | 50% that the free data mark too few: **came true** for QBs. The 40% QB slope and the 20% for other groups can't be tested |
+| I28, a playoff flag for the traits ([`retro4_i28_playoffs.py`](retro/explore/retro4_i28_playoffs.py)) | **The bias is real, and the flag doesn't pay.** On 218 playoff rows, actual less forecast: pass rate over expected +0.010, shotgun +0.015, +0.44 seconds a snap (the sizes schemes-v2 found). A flag learned on earlier seasons changes playoff squared error by −1.9% (−6.8 to +2.2), +1.1% (−1.2 to +3.4) and −0.5% (−5.9 to +4.2): all ties. A constant shift is small beside one game's noise. A side result: the same teams pass *less* than forecast in their last three regular-season games (−0.015) | 75% (medium) that a flag beats the blends at about the stated sizes: **failed.** The sizes held; the forecast gain didn't |
+| I137, the yardstick's rushing floor ([`retro4_i137_floor.py`](retro/explore/retro4_i137_floor.py)) | **The guess was wrong: it isn't the penalty pick.** The grid tops out at 1.0 while the target's SD is about 27 yards, so the picks are nearly least squares. But scaling the grid to the target changes nothing (role-table copies −0.53% to −0.55%). A one-standard-error rule, about 10 times the penalty, halves the copies' cost (−0.30%), and it also shrinks real gains (the role table +0.74% to +0.22%) and flips four verdicts (fine back roles lose; carries per run snap gains on rushing; on receiving the coordinates and their backs-only version lose). On rushing, the copies cost about 0.08% per noise column. The floor is the board's size (15,383 rows, few backs), not the rule | 55% that the copies' cost falls under −0.15%: **failed** (−0.30% at best). 70% that no counted input loses its verdict: **failed** under the one-SE rule |
+
+**What it means:** a no-signal input costs about −0.5% on the rushing board under any reasonable rule, so a rushing gain means something only beside its copies, as test 4 already requires. The yardstick doesn't change. But the rushing verdicts depend on the penalty rule, so each night's replay re-scores them under a second rule (I142).
+
+**Closed by Claude:** I28 and I137 killed; I97 killed (its QB test can't be run on 9 games; the usable part, the 202 non-QB games, became I143). **The backlog: 58, less these three, plus 6 new ideas (step 5): 61 open.**
+
+**H5, H6 and H18: how they'll be tested** (pre-registered now; the CEO's odds from 2026-11-15 stand, written before any test):
+
+| Hunch | The test | Pass rule | Cost | The CEO's odds | Claude's odds |
+|---|---|---|---|---|---|
+| **H5** strength is conditional | Elo's saved walk-forward margins, 2016-2024. Each team's residual margin (actual less Elo's) split by four conditions: home or away; the opponent's QB in the top or bottom third (by dropback EPA to date); the opponent pass-heavy or run-heavy (pass rate over expected to date); leading or trailing at the half. For each, does a team's condition gap repeat between a season's halves, and does a team-by-condition term lower next games' squared error beyond Elo, walk-forward? | Held if at least one non-home condition repeats (split-half r 0.2+, interval above 0) **and** its term adds with an interval above 0 | Under an hour each (saved histories): retro-sized | 30% a large effect; 50% nothing worth keeping | 10% for a large effect; 75% that only home holds (P2, matchups tie). Unchanged |
+| **H6** consistent measures predict other outcomes (sharpened, 2026-11-15) | Inside the first dream batch (I141): every measure in CONSISTENCY.md with a week r, scored on the yardstick boards it wasn't built for, with 19 copies each | Held if measures with week r 0.5+ count on another outcome more often than measures under 0.5, the difference's interval above 0 (bootstrap over measures) | A night build | "almost certainly true" (given for the first wording) | **50%** for the sharpened claim; 75% that few forecast beyond the overall rating |
+| **H18** schemes predict whom teams pay | Contracts (the OverTheCap file snap-leverage read once) by team, position and signing year, 2017-2024: the share of new money a team spends at TE, WR and RB, on its last-season personnel rates (12 and 11 personnel, pass rate over expected), beside need (the group's departures, age, last season's spend) | Held if a scheme term adds to the need-only model with an interval above 0, held out by season | A session (the contract table's join) | 20% a modest effect; 50% nothing | **35%** (was 60%): P13, the CEO's claims about team decisions failed 6 of 6, and H105 found teams don't shop for roles |
+
+### 4. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P4 | **Methods tie the simple version, or lose** | Refined: methods now hold as **descriptions** (H100, H107, H108 held) and still don't pay. The one that paid, H109, brings new information: who sat | Claude bet against methods' pass rules (H108 25%, H109 35%) and lost those bets: P4 is about paying, not about holding |
+| P11 | Role first | The role table beats the coordinates and the pooled PCA (I113's build, F76); I135 (the table counts without his own target rates); I136 | |
+| **P13 (new)** | **Bodies and usage hold; front-office decisions don't** | Claims about players' bodies held 5 of 5 (H93 to H98, injury). Claims about what teams decide failed 6 of 6: H103 scheme fit, H104 coaches seek roles, H105 teams target roles, H106 matchups, H110 intake after efficiency losses, H112 efficiency after intake. A team gives the role after arrival (H104's side bet); it doesn't shop for it (H105) | Not usage: how teams *redistribute* share when a player sits is real and pays (H109). It's the decision (whom to sign, which scheme to fit) that the free data can't see: contracts, medicals, price |
+| **P14 (new)** | **Real but small loses to the board's noise** | I28 (a real playoff bias, too small to beat one game's noise), I137 (no-signal copies cost 0.5% on a small board), I97 (natural experiments too rare), H94 and H95 (real, never tried as forecasts). 31 hunches are real and never paid | The cure is pooling (I140 to I142): many small, real effects, tried together on every outcome with a false-discovery control, not one at a time |
+
+**What the patterns say to do:** the CEO's next football bets should lean on bodies and usage (P13), not on what front offices decide. A method is worth testing when it brings new information (P4). The record now holds 31 real hunches that never paid and many consistent measures. That bank is the "day's experience" the sleep paper consolidates (step 5).
+
+### 5. New ideas and predictions
+
+**The paper** ([arXiv 2606.03979](https://arxiv.org/abs/2606.03979), Behrouz, Hashemi, Javanmard and Mirrokni, Google, July 2026; read from its abstract and two explainers, not the full text):
+- language models learn well in context but can't move that short-term knowledge into their long-term parameters without forgetting old skills;
+- the fix is a **sleep** phase after waking:
+  - **consolidation** distils the short-term knowledge upward into long-term capacity, keeping the old;
+  - **dreaming** has the model write its own practice data and keep only what makes a test copy better, so new learning doesn't overwrite old.
+
+**The football version:**
+- **Waking:** the day's builds and explorations. Their findings sit in many files, as short-term memory.
+- **Sleep:** each night after the builds.
+  - **Consolidation:** everything learned goes into one football knowledge dataset (I140).
+  - **Dreaming:** the system writes its own candidate features from that dataset and tests each on a sandbox copy, the yardstick with shuffled twins. It keeps only what beats the copies (I141).
+  - **Rehearsal:** it replays what we already know, so a change can't silently overwrite an old finding (I142).
+
+**Six new ideas, as Claude's** (in IDEAS.md with their odds; size bets start at 35%, step 2's rule):
+
+| # | Idea | The bet | Claude's odds |
+|---|---|---|---|
+| I140 | **The football knowledge ledger (consolidation):** one machine-readable table, a row per tested claim, measure or input. Each row has its id (H, I, F) and kind (claim or method). It has its subject (bodies, usage, skill, role, team decision, scheme, market) and its level. It holds the outcomes tried, its consistency (week r, season r, movers' share kept), its gain on its own target and on each yardstick board with intervals, and real? and pays?. It also holds when it's known, where its column lives (table, run id) and the odds written before. Built from HUNCHES, IDEAS, CONSISTENCY, FINDINGS and RESULTS, and rebuilt each night | It parses every F row and every closed H and I row with an outcome; it reproduces retro 4's calibration with no hand entry | **80%** for the parse; 60% that it reproduces retro 4's Brier scores within 0.005 |
+| I141 | **Dreaming: a nightly candidate batch.** Candidates come from the ledger by fixed rules, not by hand: (1) **transfer:** every real-but-unpaid measure (31 hunches, plus consistent rows in CONSISTENCY.md) on every yardstick board and expert target it wasn't built for; (2) **within role** (P11); (3) **recency** variants. Each runs through `score_input` with 19 copies, and is kept only if it counts and survives a false-discovery control across the night (Benjamini-Hochberg at 10%). Kept ones enter the ledger as discoveries, never a champion without a build. **H6's test runs inside it** | The first night's batch | **55%** at least one candidate passes; 25% three or more; 35% the best adds 0.3%+ on some board |
+| I142 | **Rehearsal: replay what counts.** Each night, every input the ledger marks as counting is re-scored on its board under today's code and data (the vault closed), and under a second penalty rule (I137's one-SE). A flip is flagged as forgetting before it reaches a build | The first replay | **40%** at least one counted input flips under today's code; 35% that a quarter or more flip under the second rule |
+| I143 | **The COVID-list knockouts check vacated-live** (from I97's count): absences for injury may be confounded (a player playing hurt loses share before he sits). The 202 games regulars missed to the COVID list are close to random, so group-mates' share changes there should match the transfer rates fit on all absences | The plus-minus's pooled same-group rates on COVID-list absences against injury absences, the difference's interval | **65%** they agree (interval covers 0); 25% the COVID rate is higher |
+| I144 | **A self-model: the ledger predicts verdicts.** A plain logistic on the ledger's tags (kind, subject, level, whether a cheaper input exists, consistency), fit on every bet through retro 4, predicts whether the next 20 bets hold and pay, before their tests. Scored against our own written odds | Brier on the next 20 bets | **35%** it beats Claude's odds on "holds"; 50% it beats both of ours on "pays" (the subject tag carries P13) |
+| I145 | **Upward distillation into the crude forecaster:** fit the yardstick's lasso on a blend of the true outcome and the champion experts' walk-forward forecasts (soft targets), to steady the small boards (rushing) | The rushing and receiving rest-of-season boards, distilled against plain, with copies | **30%** it lowers rushing's squared error clearly. A yardstick change needs the CEO's yes; it's also a candidate for `player-opportunity` |
+
+**Predictions moved by this retro:**
+
+| Bet | Was | Now | Why |
+|---|---|---|---|
+| H18 (Claude's number) | 60% | **35%** | P13: team-decision claims 0 of 6; H105 |
+| H6, sharpened (Claude's first number for it) | (none) | **50%** | The test exists now (I141) |
+| I9, movers over-projected (participation's next build) | medium | medium | I84 and I122 gave it a slot and a vacancy prior; still open |
+| I126, H111 where the group was left empty | 25% | **20%** | P13 and H111: who receives among stayers is a small slice |
+
+Retro 3's predictions for the other open ideas, and for H71 and H74, stand.
+
+### 6. The findings table
+
+- **F89 (I25):** a new head coach's tendencies (shotgun, no-huddle, man rate) settle in 1-2 games, efficiency in many more.
+- **F90 (I28):** playoff teams pass more over expected, use the shotgun more and play slower than their regular season says (+0.010, +0.015, +0.44 seconds a snap), but a playoff flag doesn't improve the forecast.
+- **F91 (I137):** on the yardstick's rushing rest-of-season board, signal-free inputs cost about 0.08% per column under any reasonable penalty rule. Read a rushing gain only beside its copies.
+- **"Use and ignore":** the teams' row adds F89 and F90.
+
+### 7. Workflow changes, proposed (the CEO accepts, edits or rejects)
+
+**How retro 3's accepted changes worked:**
+
+| Change | How it went |
+|---|---|
+| W7, quick build work goes to the build chat as a batch | Worked: the yardstick batch ran and closed 8 ideas. The CEO now prefers ideas tested inside each expert's build (D2) |
+| W9, an idea leaves Open with its result | Worked for every build since; three older rows were left over (cleaned at step 1) |
+
+**Proposed now:**
+
+| # | Change | Why |
+|---|---|---|
+| W10 | **The nightly sleep cycle.** Builds run at night (the CEO, 2026-11-25: "i want to do builds at night when i am asleep"). Each night ends with three steps and a short morning note: **consolidation** (rebuild the ledger, I140), **rehearsal** (replay what counts, I142) and **dreaming** (the candidate batch, I141), within a fixed budget (about 30 candidates a night) and with the versions-tried count kept. Nothing a dream finds reaches a champion or the vault without a build | It turns 31 real-but-unpaid hunches and the consistency table into features, tested the same way every night, as the CEO asked: "create a dataset of football knowledge so that we can iteratively improve our experts and find new features" |
+| W11 | **Claude's size bets start at 35%** unless an earlier result of the same kind measured the size | Size bets came true 6 of 23 at 57% (step 2). This is Claude's own rule, listed so the CEO sees it |
+
+### The case against this retro
+
+- **Step 2's scores lean on Claude's sorting.** Claim or method, and which side bets count, were sorted after the results (W2 was rejected). H111 as a method and H102 as a claim could each go the other way.
+- **P13 rests on one week of hunches** from three projects (availability, roles, vacated). The six team-decision failures share data limits (no contracts, no medicals), so P13 may be "the free data can't see decisions" more than "decisions aren't football".
+- **I137 tried only three rules.** A rule fit across several holdout seasons, or a stronger penalty grid, wasn't tried.
+- **I28's test is small:** 196 rows, 8 seasons. A real 1% gain can't be ruled out.
+- **The sleep mapping is Claude's reading of the paper from its abstract and two explainers,** not its full text. The football ideas stand on their own tests either way.
+- **I141 is a multiple-testing machine.** The false-discovery control and the vault are what keep it honest. Its finds are discoveries, never proof.
+
 ---
 
 ## Retro 3 (started 2026-11-23)

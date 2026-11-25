@@ -1,0 +1,75 @@
+== status codes present, by season (share of rows with a code)
+shape: (9, 3)
+┌────────┬──────────┬───────┐
+│ season ┆ coded    ┆ rows  │
+│ ---    ┆ ---      ┆ ---   │
+│ i32    ┆ f64      ┆ u32   │
+╞════════╪══════════╪═══════╡
+│ 2016   ┆ 0.487902 ┆ 34097 │
+│ 2017   ┆ 0.852198 ┆ 33538 │
+│ 2018   ┆ 0.86129  ┆ 33033 │
+│ 2019   ┆ 0.849439 ┆ 33508 │
+│ 2020   ┆ 0.968174 ┆ 34186 │
+│ 2021   ┆ 1.0      ┆ 37042 │
+│ 2022   ┆ 1.0      ┆ 36059 │
+│ 2023   ┆ 1.0      ┆ 35883 │
+│ 2024   ┆ 1.0      ┆ 36406 │
+└────────┴──────────┴───────┘
+
+== player-weeks on each list, by season
+shape: (11, 3)
+┌────────┬───────────────────────┬─────┐
+│ season ┆ why                   ┆ len │
+│ ---    ┆ ---                   ┆ --- │
+│ i32    ┆ str                   ┆ u32 │
+╞════════╪═══════════════════════╪═════╡
+│ 2020   ┆ COVID list            ┆ 326 │
+│ 2020   ┆ opted out (2020)      ┆ 701 │
+│ 2020   ┆ suspended             ┆ 27  │
+│ 2020   ┆ suspended, indefinite ┆ 5   │
+│ 2021   ┆ COVID list            ┆ 746 │
+│ 2021   ┆ suspended             ┆ 50  │
+│ 2022   ┆ suspended             ┆ 57  │
+│ 2022   ┆ suspended, indefinite ┆ 11  │
+│ 2023   ┆ suspended             ┆ 68  │
+│ 2023   ┆ suspended, indefinite ┆ 52  │
+│ 2024   ┆ suspended             ┆ 56  │
+└────────┴───────────────────────┴─────┘
+
+== regulars' games missed while on a list (after his first game for the team that season)
+shape: (8, 4)
+┌────────────┬───────┬───────┬─────────┐
+│ why        ┆ group ┆ games ┆ players │
+│ ---        ┆ ---   ┆ ---   ┆ ---     │
+│ str        ┆ str   ┆ u32   ┆ u32     │
+╞════════════╪═══════╪═══════╪═════════╡
+│ COVID list ┆ DL    ┆ 48    ┆ 37      │
+│ COVID list ┆ OL    ┆ 74    ┆ 59      │
+│ COVID list ┆ QB    ┆ 9     ┆ 9       │
+│ COVID list ┆ RB    ┆ 17    ┆ 14      │
+│ COVID list ┆ TE    ┆ 18    ┆ 12      │
+│ COVID list ┆ WR    ┆ 26    ┆ 23      │
+│ suspended  ┆ DL    ┆ 2     ┆ 1       │
+│ suspended  ┆ WR    ┆ 8     ┆ 3       │
+└────────────┴───────┴───────┴─────────┘
+
+== QBs: games, players, and who
+shape: (9, 5)
+┌────────────┬──────┬────────┬────────────┬───────┐
+│ gsis_id    ┆ team ┆ season ┆ why        ┆ games │
+│ ---        ┆ ---  ┆ ---    ┆ ---        ┆ ---   │
+│ str        ┆ str  ┆ i32    ┆ str        ┆ u32   │
+╞════════════╪══════╪════════╪════════════╪═══════╡
+│ 00-0034796 ┆ BAL  ┆ 2020   ┆ COVID list ┆ 1     │
+│ 00-0027973 ┆ DAL  ┆ 2020   ┆ COVID list ┆ 1     │
+│ 00-0033357 ┆ NO   ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0023459 ┆ GB   ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0033106 ┆ DET  ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0031800 ┆ WAS  ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0034855 ┆ CLE  ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0029604 ┆ MIN  ┆ 2021   ┆ COVID list ┆ 1     │
+│ 00-0036945 ┆ CHI  ┆ 2021   ┆ COVID list ┆ 1     │
+└────────────┴──────┴────────┴────────────┴───────┘
+
+== totals: quasi-random games missed by regulars 202 ; QB games 9
+for scale: vacated's absences of top players (any reason), 2016-2024: 2,737 games

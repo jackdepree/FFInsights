@@ -1,0 +1,18 @@
+
+== pass rate over expected (pass_oe_rung2)
+  playoff rows 2016-2024: 218; mean miss +0.0103; by season: 2016 +0.036, 2017 +0.006, 2018 -0.017, 2019 +0.004, 2020 +0.007, 2021 +0.010, 2022 +0.016, 2023 +0.029, 2024 -0.000
+  the walk-forward flag (2017-2024, 196 rows): squared error 1.019 of the unflagged; gain -1.9% (90% -6.8% to +2.2%) -> not clear
+  the flag's size in 2024: +0.0118
+  placebo, the same teams' last 3 regular-season games: 354 rows, mean miss -0.0148; all other regular-season rows -0.0021
+
+== shotgun rate (shotgun_rung2)
+  playoff rows 2016-2024: 218; mean miss +0.0150; by season: 2016 +0.006, 2017 -0.009, 2018 +0.006, 2019 -0.010, 2020 +0.045, 2021 +0.041, 2022 +0.032, 2023 -0.003, 2024 +0.016
+  the walk-forward flag (2017-2024, 196 rows): squared error 0.989 of the unflagged; gain +1.1% (90% -1.2% to +3.4%) -> not clear
+  the flag's size in 2024: +0.0148
+  placebo, the same teams' last 3 regular-season games: 354 rows, mean miss -0.0006; all other regular-season rows -0.0035
+
+== seconds a snap (tempo_shrunk)
+  playoff rows 2016-2024: 217; mean miss +0.4395; by season: 2016 -0.596, 2017 +0.966, 2018 +1.123, 2019 +1.247, 2020 +0.347, 2021 +0.635, 2022 -0.251, 2023 +0.406, 2024 +0.226
+  the walk-forward flag (2017-2024, 195 rows): squared error 1.005 of the unflagged; gain -0.5% (90% -5.9% to +4.2%) -> not clear
+  the flag's size in 2024: +0.4686
+  placebo, the same teams' last 3 regular-season games: 353 rows, mean miss +0.0530; all other regular-season rows +0.0048
