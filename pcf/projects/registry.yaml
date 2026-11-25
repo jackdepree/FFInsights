@@ -427,11 +427,11 @@ projects:
   - id: stabilization
     name: Stabilization and regression
     phase: 1
-    status: idea
-    horizon: next
+    status: exploring
+    horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty.
+    summary: "How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty. The CEO's pick, 2026-11-25 (\"Kick off stabilization\"). Kickoff in projects/stabilization/BRIEF.md: the usual way (stabilization points from split-half reliability; regress by k; empirical Bayes) and two analogies (credibility theory in insurance: pull toward the right class, layered; psychometrics: attempts differ in information, reliability changes with conditions, talent drifts). Waiting for the CEO's hunches."
 
   - id: context-live
     name: Context (in-season)

@@ -38,6 +38,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Vacated opportunity** (`vacated-opportunity`, the CEO's pick, 2026-11-24): when a player is out, who absorbs his targets and carries. Kickoff in the strategy chat ([brief](../projects/vacated-opportunity/BRIEF.md)); the CEO's hunches H109-H112 are in and closed (H109 held; H110-H112 failed), I125 held. The exploration is done (GO): the CEO's plus-minus for all players beats no change by 31% on weekly absences, and by 17% in the offseason where the group was left empty. Split by rule m into two experts sharing one brief, agreed 2026-11-24 ("Yes I approve and yes the build should as the exploratory choice model method 3."): `vacated-live` (in season) and `vacated-offseason` (between seasons), with the choice model fit on completed seasons; decision 0046. Next: the builds, vacated-live first.
 
+**Stabilization** (`stabilization`, the CEO's pick, 2026-11-25: "Kick off stabilization"): how many attempts until a player's rate is real, how far to pull it back and toward what, and how sure to be of it; the base of player-level uncertainty, served to every expert. Kickoff in the strategy chat ([brief](../projects/stabilization/BRIEF.md)): the usual way and two analogies (credibility theory, psychometrics). Waiting for the CEO's hunches.
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later
