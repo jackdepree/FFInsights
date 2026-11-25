@@ -50,3 +50,28 @@ Two tests' numbers were seen while the package was being written and checked aga
 | Fine flips under 14% | 25% | Didn't hold | 16.3% (expected 15 to 16) |
 
 Claude's read: the direction calls were well calibrated. The sizes were too small wherever the PCA lasso met a step (carries) or the table. I underrated how much a handful of plain rates beats a fitted space.
+
+## Round 2: the CEO's answers and the odds written before the second round's tests (2026-11-25)
+
+The CEO's answers (2026-11-25, word for word): "I think the 12 role names work great! I think movers keep only the parts that repeat. Yes ship roles as leans with a certainty score. Can you spot check the rushing noise? No vetoes from me. Make sure to check the backlog of ideas and test the ones that fit into both of these builds, please."
+
+Written by Claude before any of these tests ran. The ideas' own rows in `IDEAS.md` already hold odds for I122, I133–I136 and I43 (written earlier, before any test); they're repeated here so the round is scored in one place, and the new ones are marked new.
+
+| Test | Claude's odds | Expected size |
+|---|---|---|
+| **Spot-check S1** (new): the coordinates' rushing loss sits mostly (over 60% of it) in one position group's rows | 55% (RB 30%, WR 15%, QB or others 10%) | |
+| **Spot-check S2** (new): it sits mostly (over 50%) in one target season | 25% | |
+| **Spot-check S3 = I133** (earlier): dropping fullbacks' rows from the prior, or adding carries per run snap beside the axes, turns the coordinates' rushing gain to a tie or better | 50% | |
+| **Spot-check S4** (new): a fix of the coordinates (any variant here) beats the role table on the rushing board | 15% | |
+| **Spot-check S5** (new): the loss comes from the board's linear fit reading a coordinate as a straight line where carries are a step (back or not): the coordinates turned into the coarse role (back, in tight, split out as three dummies) count on rushing | 45% | +0.3 to +0.6% |
+| **I134** (earlier): a hysteresis band brings the fine roles' median flip under 14% | 45%; DL and OLB under 20%: 70% | |
+| **I134** (new): the band's labels predict next season's rates as well as the plain labels (a tie or better) | 80% | |
+| **I135** (earlier): the 4-feature table (no targets per pass snap, no carries per run snap) still counts on the receiving board | 40%; on rushing 30% | |
+| **I135** (new): the 4-feature table still beats the position labels on next season's targets and carries per snap | 75% targets, 50% carries | +10 to +25% |
+| **I136** (earlier): offense's substitutes rank under 0.5 with its interval on the role table | 55% | about 0.45 |
+| **I122** (earlier): the shrunk vacancy blend beats the group average on newcomers (team-bootstrap interval above 0) | 55% | about 5% of the squared distance |
+| **I43** (earlier, medium): a passing-down role measure adds to a next-contract model within position, on contracts it wasn't fit on | 75% (written as medium) | about +1% |
+| **I57** (new): a receiver's own past vertical route share forecasts next season's better than his position's mix | 90% | 20 to 40% of the squared error |
+| **I57** (new): the role table adds to his own past share | 40% | 2 to 5% |
+| **I132** (earlier): measurables (40, height, weight, draft slot) beat the position mean on a rookie's first-season in-tight and ball-carrier axes | 60% | 10 to 20% of the squared distance |
+| **Test 1 re-scored** (new): offense passes under the CEO's reading (movers keep half of each repeating component's season r) | 95% (the report already shows it) | |
