@@ -3,6 +3,7 @@ backtest, its baselines, the shuffled refits, the leakage suite and the scorecar
 MLflow), and the walks of every variant on one saved feature history.
 
     python -m pcf.experts.availability.run forecast --variant next_logit --shuffles 100
+    python -m pcf.experts.availability.run forecast --variant rest_chain --seasons 2025 --open-vault
     python -m pcf.experts.availability.run walks                      # every variant, cached
 
 Reports go to `projects/availability/build/`; tables to `interim/availability/build/`.
@@ -22,8 +23,8 @@ ID = "availability"
 BASELINES = {
     "next_logit": ("next_table",),
     "next_lasso": ("next_table", "next_logit"),
-    "next3_chain": ("next3_table",),
-    "rest_chain": ("rest_table",),
+    "next3_chain": ("next3_table", "next3_two"),
+    "rest_chain": ("rest_table", "rest_two"),
     "next3_two": ("next3_table",),
     "rest_two": ("rest_table",),
 }
@@ -41,8 +42,10 @@ def write(name: str, lines: list[str]) -> None:
     print(text)
 
 
-def forecast(variant: str, shuffles: int, cutoffs: int | None, seasons: list[int] | None) -> str:
-    """`pcf backtest` for one variant with its baselines. Returns the MLflow run id."""
+def forecast(variant: str, shuffles: int, cutoffs: int | None, seasons: list[int] | None,
+             open_vault: bool = False) -> str:  # fmt: skip
+    """`pcf backtest` for one variant with its baselines (the vault, 2025, only with
+    `open_vault`: logged in MLflow). Returns the MLflow run id."""
     from pcf.core import tracking
     from pcf.core.contract import check_expert
     from pcf.experts.availability import checks as K
@@ -53,10 +56,12 @@ def forecast(variant: str, shuffles: int, cutoffs: int | None, seasons: list[int
     cls = VARIANTS[variant]
     check_expert(cls)
     baselines = [VARIANTS[b]() for b in BASELINES.get(variant, ())]
-    v = validate(cls(), seasons=seasons or K.SEASONS, baselines=baselines, shuffles=shuffles,
+    v = validate(cls(), seasons=seasons or K.SEASONS, open_vault=open_vault, baselines=baselines,
+                 shuffles=shuffles,
                  refit=K.REFIT, n_cutoffs=leakage.CUTOFFS if cutoffs is None else cutoffs)  # fmt: skip
     train_end = v.bt.history["train_end"].max()
-    with tracking.attempt(ID, train_end=train_end, name=f"backtest {variant}", variant=variant):
+    tag = "_vault" if open_vault else ""
+    with tracking.attempt(ID, train_end=train_end, name=f"backtest {variant}{tag}", variant=variant):
         path = record(v)
         run_id = tracking.active_run_id()
     lines = [f"{cls.label()} run {run_id}", f"scorecard: {path}"]
@@ -70,7 +75,7 @@ def forecast(variant: str, shuffles: int, cutoffs: int | None, seasons: list[int
     for k, val in v.calibration.items():
         if not hasattr(val, "shape"):
             lines.append(f"calibration {k}: {val}")
-    write(f"forecast_{variant}", lines)
+    write(f"forecast_{variant}{tag}", lines)
     return run_id
 
 
@@ -105,11 +110,12 @@ def main(argv: list[str] | None = None) -> None:
     f.add_argument("--shuffles", type=int, default=100)
     f.add_argument("--cutoffs", type=int)
     f.add_argument("--seasons", nargs="+", type=int)
+    f.add_argument("--open-vault", action="store_true")
     w = sub.add_parser("walks")
     w.add_argument("variants", nargs="*")
     a = p.parse_args(argv)
     if a.command == "forecast":
-        forecast(a.variant, a.shuffles, a.cutoffs, a.seasons)
+        forecast(a.variant, a.shuffles, a.cutoffs, a.seasons, a.open_vault)
     else:
         walks(a.variants)
 
