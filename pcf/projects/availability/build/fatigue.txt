@@ -1,0 +1,48 @@
+plays 296,407 (regular-season runs and passes, 2016-2024)
+player-plays 6,520,233; plays with a defense on record 296,398
+
+I29 (real?): injuries per player-play by play in the drive, a Poisson fit per play (offset: players on the field), 90% intervals clustered by game
+  defense: player-plays 3,259,340, injuries 3,745; raw per 1,000 by drive play: 1-3 1.06, 10+ 1.22, 4-6 1.24, 7-9 1.24
+    play type only                         rate ratio against plays 1-3: dp=4-6 1.168 (1.097 to 1.244); dp=7+ 1.164 (1.085 to 1.249)
+    + play (tacklers, loss, yards, down)   rate ratio against plays 1-3: dp=4-6 1.199 (1.125 to 1.278); dp=7+ 1.299 (1.208 to 1.397)
+    + field position, quarter, score       rate ratio against plays 1-3: dp=4-6 1.123 (1.044 to 1.208); dp=7+ 1.184 (1.078 to 1.301)
+    -> the rise at 7+ with play type and field position held: +18.4% against +16.4% with play type only; kept 112% of it (the bet: under 50%)
+    + the defense's strength               rate ratio against plays 1-3: dp=4-6 1.122 (1.043 to 1.207); dp=7+ 1.182 (1.076 to 1.299)
+    + snaps since the defense rested       rate ratio against plays 1-3: dp=4-6 1.121 (1.042 to 1.205); dp=7+ 1.102 (0.989 to 1.228); sr=06-11 1.105 (1.018 to 1.200); sr=12-17 1.116 (1.005 to 1.239); sr=18+ 1.193 (1.035 to 1.376)
+    snaps since rest alone (+ every control but drive play): sr=06-11 1.116 (1.042 to 1.196); sr=12-17 1.123 (1.015 to 1.243); sr=18+ 1.203 (1.046 to 1.383)
+  offense: player-plays 3,260,893, injuries 2,577; raw per 1,000 by drive play: 1-3 0.78, 10+ 0.77, 4-6 0.77, 7-9 0.88
+    play type only                         rate ratio against plays 1-3: dp=4-6 0.986 (0.914 to 1.063); dp=7+ 1.076 (0.991 to 1.169)
+    + play (tacklers, loss, yards, down)   rate ratio against plays 1-3: dp=4-6 0.955 (0.884 to 1.031); dp=7+ 1.037 (0.952 to 1.130)
+    + field position, quarter, score       rate ratio against plays 1-3: dp=4-6 0.976 (0.893 to 1.067); dp=7+ 1.115 (0.995 to 1.250)
+    + the defense's strength               rate ratio against plays 1-3: dp=4-6 0.977 (0.894 to 1.067); dp=7+ 1.116 (0.996 to 1.251)
+    + snaps since the defense rested       rate ratio against plays 1-3: dp=4-6 0.976 (0.893 to 1.066); dp=7+ 1.084 (0.949 to 1.238); sr=06-11 1.033 (0.931 to 1.146); sr=12-17 1.124 (0.990 to 1.275); sr=18+ 1.188 (0.995 to 1.419)
+    snaps since rest alone (+ every control but drive play): sr=06-11 1.081 (0.992 to 1.177); sr=12-17 1.153 (1.021 to 1.303); sr=18+ 1.222 (1.027 to 1.454)
+
+I29 (pays?): a defender's long-drive snaps last game beside next_logit, next game's health absence, walk-forward 2018-2024
+  defender rows 108,466; mean long-drive snaps last game 6.5 of 30.1
+  next_logit + long                 against next_logit recalibrated: -0.094% of the log loss (-0.244 to +0.044); copies' max +0.042%; counts: False
+  next_logit + long, share_long     against next_logit recalibrated: -0.207% of the log loss (-0.350 to -0.055); copies' max +0.044%; counts: False
+
+I30: second-half plays, the defense's first-half snaps faced (per +10), errors clustered by game
+  dropbacks, EPA                         situation only                                   per +10 first-half snaps: fh10 +0.0181 (+0.0021 to +0.0341) [90,103 plays]
+  dropbacks, EPA                         + both sides' strength                           per +10 first-half snaps: fh10 +0.0128 (-0.0030 to +0.0286) [90,103 plays]
+  dropbacks, EPA                         + the day's matchup (offense's first-half EPA)   per +10 first-half snaps: fh10 +0.0080 (-0.0081 to +0.0241) [90,103 plays]
+  dropbacks, sack or hit (pass rush)     situation only                                   per +10 first-half snaps: fh10 -0.0038 (-0.0075 to -0.0001) [90,103 plays]
+  dropbacks, sack or hit (pass rush)     + both sides' strength                           per +10 first-half snaps: fh10 -0.0031 (-0.0068 to +0.0005) [90,103 plays]
+  dropbacks, sack or hit (pass rush)     + the day's matchup (offense's first-half EPA)   per +10 first-half snaps: fh10 -0.0019 (-0.0055 to +0.0018) [90,103 plays]
+  non-sack dropbacks, EPA (coverage)     situation only                                   per +10 first-half snaps: fh10 +0.0097 (-0.0061 to +0.0256) [84,320 plays]
+  non-sack dropbacks, EPA (coverage)     + both sides' strength                           per +10 first-half snaps: fh10 +0.0049 (-0.0107 to +0.0206) [84,320 plays]
+  non-sack dropbacks, EPA (coverage)     + the day's matchup (offense's first-half EPA)   per +10 first-half snaps: fh10 +0.0016 (-0.0143 to +0.0176) [84,320 plays]
+  runs, EPA (the check)                  situation only                                   per +10 first-half snaps: fh10 +0.0085 (-0.0035 to +0.0204) [61,374 plays]
+  runs, EPA (the check)                  + both sides' strength                           per +10 first-half snaps: fh10 +0.0069 (-0.0049 to +0.0186) [61,374 plays]
+  runs, EPA (the check)                  + the day's matchup (offense's first-half EPA)   per +10 first-half snaps: fh10 +0.0055 (-0.0064 to +0.0174) [61,374 plays]
+
+I50: the share of the defenders on the field who aren't the team's regulars (under 60% of its defensive snaps that season)
+  defensive plays 296,398; mean backup share 0.462; by drive play: 1-3 0.455, 10+ 0.471, 4-6 0.465, 7-9 0.475
+  backup               points of share against plays 1-3, situation held: dp4=4-6 +0.8663 pts (+0.7282 to +1.0044); dp4=7-9 +1.8578 pts (+1.6079 to +2.1078); dp4=10+ +1.4945 pts (+1.0693 to +1.9196)
+  backup_line          points of share against plays 1-3, situation held: dp4=4-6 +1.3477 pts (+1.0723 to +1.6230); dp4=7-9 +3.7225 pts (+3.2621 to +4.1829); dp4=10+ +2.6728 pts (+1.9546 to +3.3910)
+  backup_linebackers   points of share against plays 1-3, situation held: dp4=4-6 +0.7500 pts (+0.4583 to +1.0418); dp4=7-9 +1.6323 pts (+1.0997 to +2.1649); dp4=10+ +1.3603 pts (+0.4882 to +2.2324)
+  backup_backs         points of share against plays 1-3, situation held: dp4=4-6 +0.9035 pts (+0.7076 to +1.0994); dp4=7-9 +1.0038 pts (+0.6393 to +1.3683); dp4=10+ +0.9202 pts (+0.2852 to +1.5552)
+  second half, backup share per +10 first-half snaps faced, situation held: fh10 +0.1170 pts (-0.4063 to +0.6402)
+  I30 with the matchup                     dropback EPA: fh10 +0.0082 (-0.0079 to +0.0243)
+  I30 with the matchup + backup share      dropback EPA: fh10 +0.0080 (-0.0082 to +0.0242); backup +0.2318 (+0.1729 to +0.2907)

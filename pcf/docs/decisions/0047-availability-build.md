@@ -1,0 +1,59 @@
+# 0047: availability's build, its technical calls
+
+**Date:** 2026-11-24 · **Decided by:** Claude (technical calls, listed for the CEO's veto at merge) · **Project:** `availability` (build; brief agreed 2026-11-24, all three methods) · Plan and odds: [`projects/availability/BUILD.md`](../../projects/availability/BUILD.md) · Results: [`projects/availability/RESULTS.md`](../../projects/availability/RESULTS.md)
+
+## The tables (layer 0, additive)
+
+1. **A new table, `roster_week`** (spine part `status`), one row per player on a team's 53 or a reserve list for each of its regular-season games, 2016 on. `player_game`'s spine leaves reserve lists out, so an injured-reserve stint was invisible. Known at the start of the week, like `player_game`'s spine (the weekly roster's own rule). When a player is listed twice in a week, the active row wins.
+2. **Health reserve lists are `RES`, `PUP` and `RSN`** (injured reserve, physically unable to perform, non-football injury or illness, read from the status's description). `R02` (reserve/retired) is left out. Suspensions, exempt, practice squad, `RSR` and others are not health. `RSN`'s reading comes from its description; it was not checked against news.
+3. **A new part, `player_game.injured`** (2013 on): the first play each player is named "was injured during the play", and how many times, matched by standardized team, jersey and last name (decision 0044 call 1). Known the day after the game. Unmatched names are dropped.
+
+## The definitions
+
+4. **Listed means a game status (Questionable, Doubtful, Out) or a limited or no-practice day.** A full practice with no game status isn't listed.
+5. **The states:** healthy (on the 53, not listed), listed (Questionable or no status), out (Out or Doubtful), reserve, and off (no roster that week; absorbing when rolling forward). This week's state uses this week's final report, known at the Saturday run.
+6. **Training rows start in 2016, not 2013** (the brief said training from 2013). Before 2016 there are no weekly statuses, so reserve stints can't be told apart and players on a season-long list show up with their season-end status. A player's record (snaps, reports, in-game injuries) still starts in 2013.
+7. **Snap-weighted games lost:** before a player's first game of a season, last season's mean share; with neither, his position's mean share last season. Decision 0044 call 11 said the depth-chart rank's average share; the position's mean is simpler, and the rank is often missing for reserve players. Offense (QB, RB, WR, TE, OL) and defense (DL, LB, DB) are summed apart; specialists are left out.
+8. **Proneness:** named in-game injuries per scrimmage snap over his position's rate, shrunk by credibility Z = n_exp / (n_exp + 2) (decision 0044 call 6), with a repeat flag for the same body part.
+
+## The models
+
+9. **Every model refits once per season,** with the harness's recency weights (half-life), walk-forward, scored 2017-2024 (2017 trains on 2016 alone).
+10. **Next game's health-absence models fit on listed rows only.** An unlisted player's health absence is about 0.2% (an injury after the report, or a late listing); those rows get the training rate of unlisted rows.
+11. **Penalties and settings:** the plain logistic's C is 0.3; the lasso's C is picked from a grid on the pool's latest 20%; trees are scikit-learn's histogram boosting (200 rounds, learning rate 0.06, 15 leaves, 80 rows a leaf), the same settings everywhere.
+12. **The two-part horizons** (method 1): a lasso logistic for any health absence in the window, times a ridge on the share of the window if any; the count if any is drawn from the empirical shares in the predicted share's bin, from the latest 20% of training.
+13. **The chain** (method 2): a multinomial logistic for each state's moves (to healthy, listed, out, reserve, off), with weeks in the state bucketed 1, 2, 3, 4+, and a logistic for whether a listed or out week is an absence. It's rolled forward exactly (state × weeks-in-state × count) over the window.
+14. **The hidden health state** (method 3): four hidden states per position group, two observed symbols each week (the report with snaps, eight kinds; practice, four kinds), fit by Baum-Welch (30 rounds), filtered through this week's partial report and rolled forward.
+15. **The active stack** uses participation's `active` from its pinned walk-forward history (run `1a5406548afa4be181c2e88b9fa3b987`), and kept share uses participation's `trees_week` (run `2abc96bcab5047f5b7d505416f538b0f`). Both are lined up as each row's latest output made by its moment (rule e).
+16. **`active_gated` was added after the first walk.** The stack helped listed players and cost unlisted ones, so the gated version fits and uses the stack on listed players only. It was added after seeing a result, so it counts as a discovery, not a confirmation.
+
+## The scoring
+
+17. **The build's comparisons run on one saved feature history** (every Saturday and Thursday moment, 2016-2024, from the gateway), through the harness's own `backtest.walk` and the paired comparison by whole weeks. The shipped variants also go through the harness's full validation (`run forecast`), which rebuilds the features itself.
+18. **Games played for any reason:** his rate of playing when healthy, (games played + 4 × 0.9) / (games not health-absent + 4), this season so far, times the share of the window he isn't health-absent. The prior and its weight mirror I60's crude forecast. Its range comes from the health count's range only.
+19. **On the yardstick, availability's columns start in 2017,** so the boards' training rows start in 2017 for both the base and the new forecast. I60's crude columns go in the base beside participation, so the gain is what availability adds beyond them.
+20. **The vault (2025) stays closed** (the build chat: "Don't open the vault (2025) unless the brief says to"). Opening it once is a yes/no for the CEO.
+21. **Games played's range is the forecast plus earlier seasons' misses** (q10, q50, q90 of outcome − forecast, in five sizes of forecast, refit each season from 2017 on; `games.py`). This replaced the first range, the health count's own (coverage 26.5%), after seeing it: a benching, scratch or release isn't in the health count, so its range can't cover them. It's the conventional residual range, and it's written down here because it came after a result.
+22. **The champions, by the brief's tie rule (rule k):** next game's health absence, the plain logistic (`next_logit`: it ties the lasso, +0.14%, and trees, and needs no penalty search); next 3 and rest of season, the chain (`next3_chain`, `rest_chain`: both beat method 1 and the table clearly). Participation's `active` stays the chance he's active (the stack and the gated stack tie it), and participation's share stays the kept share (the ridge ties it on squared error and loses on the range score).
+23. **The harness runs:** 100 shuffled refits for `next_logit`, 20 for the chains (the 20-of-20 rule for the expensive ones, VALIDATION §5); 25 leakage cutoffs; baselines that share the features (the tables).
+24. **The build cache is read through the harness's own `backtest.save_features` and `load_features`,** one folder per family, so the expert's package reads nothing but its view (leakage check 1 caught the first version's direct reads; not a leak, since the cache is the gateway's own output).
+25. **A small hook in the shared signal test** (`pcf.validation.nulls.signal_test`): an expert may define `shuffle(pool, seed)`, its own signal-free training pool, and the test uses it in place of shuffling `y` alone. The chain and the hidden state learn from the week-to-week health record in the features, not from `y`, so shuffling `y` left them unchanged: the first harness runs read 0 of 20 (next 3) and a spurious 20 of 20 (rest; the shuffle changed which rows had known outcomes). Availability's windows shuffle `y` with the record (state, weeks in it, the last game's absence, the sequences) across players within each step, so every learned move is between two unrelated players. Every other expert is unchanged (the default is the old shuffle).
+
+## After the CEO's review (2026-11-25)
+
+The CEO, 2026-11-25: "No vetoes from me." Calls 1-25 stand.
+
+26. **The vault run, as pre-registered** (REVIEW.md §1): each champion exactly as registered, trained on 2016-2024, refit once before 2025's week 1, scored on 2025's regular season; the baselines are the rung 0 tables and, for the two chains, method 1 (the rung each beat), now in `run.BASELINES`; 100 shuffles for `next_logit`, 20 for each chain; the MLflow run tagged `vault_opened`. Approved by the CEO (relayed by the build chat), then kept closed (the CEO, 2026-11-25, in the build session: "Keep it closed, actually") when the permission check asked for the yes in the build session. Never run; the 2026 ledger is the champions' unseen test.
+27. **Games played's healthy rate is now fitted** (I129, `games.walk_healthy`): a weighted logistic of the share of his not-health-absent games he plays over the rest of the season, on the shrunk rate's log-odds, his last game's snap share, his season's log snaps, age, games this season, whether he played last game and position, fit walk-forward by season on the yardstick board's rows (from 2017, so 2018 is the first fitted season and 2017 keeps the shrunk rate). It replaces the shrunk rate (call 18) because it beat the simpler rung (the shrunk composite times one walk-forward factor) by 8.6% of the squared error (+7.96 to +9.27). It was adopted after its test, on the rows it was scored on, so its unseen-season test is the 2026 ledger. The range (call 21) is unchanged in method and refit on the new forecast's misses.
+28. **COVID-era reserve codes are left as health for this build.** R62 (2020's opt-outs) and R59 (2020-2021's Reserve/COVID-19 list) read as `RES`. Fixing them needs a rebuild of `roster_week`, the features and every walk; they are 0.24% and 0.39% of the horizons' rows and at most 2.5% of a range score's total, and the champions were final for the vault. The next build reads R62 as not health and R59 as its own short stint (I139).
+29. **The fatigue tests' fits are written in numpy** (a Poisson fit per play with an offset, least squares, errors clustered by game; `build/fatigue_run.py`), not with statsmodels, so no new dependency was added for a discovery check.
+30. **The spot-check of R8 reads the team gain season by season** and with the weekly averages of each column in the base (what a copy shuffled within the week keeps). R8 is reworded as one season's gain (RESULTS R12); the team forecast stays a description and an input for Elo's next build to test (I115), not a finding to build on.
+31. **I128's comparison is against `active` recalibrated on the same rows,** not against raw `active`, so the habit is credited only beyond the recalibration (which alone gains 1.66%: I138).
+
+## At the merge (2026-11-25)
+
+The CEO, word for word: "Yes merge both builds. No keep 2025 closed please." Earlier, the same day: "Yes Elos next build should definitely utilize games lost forecast. Can you spot check the team gain for elo. No vetoes from me."
+
+- No vetoes on decision 0047.
+- I115 (Elo's next build) uses the games-lost forecast, scored season by season and beside I60's starters' forecast (the spot-check found the gain is 2021 alone).
+- The 2025 vault stays closed for availability.

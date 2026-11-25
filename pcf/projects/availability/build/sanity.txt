@@ -1,0 +1,19 @@
+2024, week 9 run: QB/RB/WR/TE not on a reserve list, most expected games of health absence over the rest of the season (rest_chain)
+  Tee Higgins            WR CIN  state o (soft)  expected 4.2 of 9 (q10 1, q90 8); missed 2
+  Bryce Ford-Wheaton     WR NYG  state o (soft)  expected 4.2 of 9 (q10 1, q90 9); missed 2
+  Rasheen Ali            RB BAL  state o (ankle)  expected 4.1 of 9 (q10 1, q90 9); missed 2
+  Dallas Goedert         TE PHI  state o (hamstring)  expected 4.0 of 10 (q10 1, q90 8); missed 5
+  Dameon Pierce          RB HOU  state o (soft)  expected 4.0 of 9 (q10 1, q90 8); missed 2
+  Mike Evans             WR TB  state o (hamstring)  expected 3.5 of 9 (q10 1, q90 6); missed 2
+  Tyjae Spears           RB TEN  state o (hamstring)  expected 3.5 of 10 (q10 1, q90 7); missed 3
+  Sione Vaki             RB DET  state o (knee)  expected 3.4 of 10 (q10 1, q90 8); missed 1
+  Noah Fant              TE SEA  state o (soft)  expected 3.3 of 9 (q10 1, q90 7); missed 3
+  Feleipe Franks         TE CAR  state o (concussion)  expected 3.3 of 9 (q10 1, q90 9); missed 1
+  Jamaal Williams        RB NO  state o (soft)  expected 3.3 of 9 (q10 1, q90 6); missed 3
+  DK Metcalf             WR SEA  state o (knee)  expected 3.3 of 9 (q10 1, q90 7); missed 1
+  and the healthiest-looking starters' spread: share of healthy rows with q90 of 0 games: 0.00
+
+Snap-weighted games lost, the most and least per season (2016-2024)
+  2022: most DEN 146, ARI 139, LA 135; least KC 50, PHI 49, GB 48
+  2023: most HOU 177, ARI 139, NE 135; least TB 48, LA 48, CIN 46
+  2024: most CAR 128, CLE 125, MIA 124; least DEN 49, BAL 47, WAS 47

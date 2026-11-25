@@ -1,0 +1,15 @@
+TEST 2: games played (any reason) over the rest of the season, from rest_chain, on the receiving board's rows (QB/RB/WR/TE, participation's chance of a snap 50%+), 2019-2024
+  rows 36125, weeks 106; outcome (share played) mean 0.815; composite mean 0.850; I60 mean 0.797
+  squared error: I60 0.08120, availability's composite 0.06951
+  A7: the composite removes +14.39% of I60's squared error (+11.33 to +17.42), better
+    healthy at the run (health share under 10%): rows 24730, I60 0.08078, composite 0.07100
+    a health absence expected (10%+): rows 11395, I60 0.08210, composite 0.06628
+    2019: rows 5645, I60 0.09141, composite 0.07604 (+16.8%)
+    2020: rows 5860, I60 0.08174, composite 0.07013 (+14.2%)
+    2021: rows 6116, I60 0.08432, composite 0.06840 (+18.9%)
+    2022: rows 6188, I60 0.08081, composite 0.07081 (+12.4%)
+    2023: rows 6188, I60 0.07434, composite 0.06463 (+13.1%)
+    2024: rows 6128, I60 0.07547, composite 0.06764 (+10.4%)
+  A8/A9: the range (earlier seasons' misses by size of forecast, games.py): q10-q90 coverage 79.9%, below q10 9.9%, above q90 10.2%
+  range score (share of the window, q10/q50/q90): composite 0.0562
+  the health count itself (rest_chain, every roster row): coverage 91.3%, below q10 1.4%

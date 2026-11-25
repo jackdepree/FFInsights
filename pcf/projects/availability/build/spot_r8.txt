@@ -1,0 +1,56 @@
+SPOT-CHECK R8: the snap-weighted games-lost forecast (rest_chain) on the team rest-of-season board, team yards per game, scored 2019-2024 (trained from 2017)
+  rows 4222; scored rows are the board's 2019-2024 test weeks. Forecasts made after the board's moment, dropped: 0
+  missing or non-finite values filled with the column's median (all seasons): agl_off_hat 0, agl_def_hat 0, agl_qb 0, agl_sk 0, agl_ol 0, agl_off_s 256, agl_def_s 256, tav_qb 81, tav_skill 0
+
+R8 as published (beside Elo; beside Elo + I60's starters)
+  beside Elo: forecast (off, def)                                        +5.06% (+2.86 to +7.32); range score +1.98% (+0.36 to +3.45); copies mean +2.29%, max +3.82%; counts: True
+  beside Elo + I60's starters: forecast (off, def)                       +1.27% (-0.25 to +2.62); range score +1.59% (+0.22 to +2.86); copies mean -0.33%, max +0.78%; counts: False
+
+S1: what the copies keep, each column's weekly average, added alone
+  beside Elo: the weekly averages of the forecast (off, def)             +0.60% (-0.23 to +1.42); range score -1.29% (-2.01 to -0.60)
+  beside Elo + I60's starters: the weekly averages                       -4.07% (-5.99 to -2.38); range score -3.27% (-4.21 to -2.32)
+  beside Elo: the week number (step_week) instead                        -0.35% (-0.60 to -0.12); range score -0.15% (-0.36 to +0.06)
+
+S2/S3: the real columns beside the weekly averages
+  beside Elo + weekly averages: forecast (off, def)                      +3.32% (+0.92 to +5.77); range score +0.28% (-1.14 to +1.60); copies mean -0.13%, max +0.21%; counts: True
+  beside Elo + I60's starters + weekly averages: forecast (off, def)     +3.90% (+1.61 to +6.22); range score +1.21% (-0.04 to +2.41); copies mean -0.24%, max +0.08%; counts: True
+  beside Elo + weekly averages: I60's starters (for scale)               -1.63% (-2.31 to -0.96); range score -1.53% (-2.19 to -0.87); copies mean -0.16%, max +0.27%; counts: False
+
+S4: who is missing (offense split: QB, RB/WR/TE, line), beside Elo + weekly averages
+  beside Elo + weekly averages: QB part                                  +4.75% (+3.09 to +6.56); range score +1.02% (+0.15 to +1.95); copies mean -0.05%, max +0.09%; counts: True
+  beside Elo + weekly averages: RB/WR/TE part                            -1.06% (-2.49 to +0.20); range score -1.15% (-2.09 to -0.24); copies mean -0.13%, max +0.01%; counts: False
+  beside Elo + weekly averages: line part                                +0.18% (-0.20 to +0.57); range score -1.63% (-2.46 to -0.81); copies mean -0.10%, max +0.05%; counts: False
+  beside Elo + weekly averages: all three offense parts                  +5.06% (+2.79 to +7.41); range score -0.42% (-1.51 to +0.75); copies mean -0.19%, max +0.03%; counts: True
+  beside Elo + I60's starters + weekly averages: line part               +0.64% (+0.33 to +0.94); range score -0.45% (-0.91 to -0.02); copies mean +0.31%, max +3.56%; counts: False
+  beside Elo + I60's starters + weekly averages: QB + RB/WR/TE parts     +4.73% (+2.57 to +6.96); range score +2.80% (+1.88 to +3.69); copies mean +0.09%, max +3.11%; counts: True
+
+S5: offense and defense apart, beside Elo + weekly averages
+  offense's forecast only                                                +1.10% (+0.28 to +1.93); range score -0.28% (-1.29 to +0.72); copies mean -0.08%, max +0.21%; counts: True
+  defense's forecast only                                                +0.00% (-1.11 to +1.07); range score +1.98% (+1.01 to +2.99); copies mean -0.05%, max +0.05%; counts: False
+
+S6: per season (beside Elo + weekly averages: forecast (off, def)), and the overlap with I60's starters
+  2019: +1.67% (-0.99 to +3.90), rows 512
+  2020: -10.55% (-15.77 to -6.04), rows 512
+  2021: +22.13% (+17.58 to +27.41), rows 544
+  2022: +3.49% (+0.09 to +7.87), rows 542
+  2023: -4.83% (-8.34 to -2.72), rows 544
+  2024: +3.60% (+2.32 to +5.59), rows 544
+  the published comparisons by season, and without 2021:
+    beside Elo: forecast (off, def)                  2019 +3.8%, 2020 -4.2%, 2021 +23.0%, 2022 +3.2%, 2023 -4.1%, 2024 +3.6%; without 2021 +0.40% (-1.19 to +1.90)
+    beside Elo + I60's starters: forecast (off, def) 2019 +5.5%, 2020 -8.3%, 2021 +6.5%, 2022 +3.1%, 2023 -3.3%, 2024 +3.7%; without 2021 +0.12% (-1.65 to +1.73)
+    beside Elo: QB part only                         2019 +3.8%, 2020 +2.0%, 2021 +15.6%, 2022 -1.6%, 2023 -3.3%, 2024 +1.1%; without 2021 +0.82% (+0.00 to +1.60)
+    beside Elo + I60's starters: QB part only        2019 +2.4%, 2020 -2.7%, 2021 +0.2%, 2022 -2.1%, 2023 -2.4%, 2024 +1.1%; without 2021 -0.52% (-1.26 to +0.13)
+  S8: 2021 by part of the season (the Reserve/COVID-19 list, code R59, held 601 players that year, most in December):
+    beside Elo                     weeks 1-8 +35.4% (244 rows); weeks 9-13 +22.6% (144 rows); weeks 14-18 +9.1% (156 rows)
+    beside Elo + I60's starters    weeks 1-8 +6.2% (244 rows); weeks 9-13 +5.5% (144 rows); weeks 14-18 +7.1% (156 rows)
+  correlation agl_off_hat with tav_qb: -0.19
+  correlation agl_off_hat with tav_skill: -0.34
+  correlation agl_qb with tav_qb: -0.27
+  correlation agl_sk with tav_skill: -0.25
+  correlation agl_ol with tav_skill: -0.24
+  correlation agl_off_hat with agl_def_hat: +0.30
+  the forecast's within-week share of its spread: offense 0.15 of the variance is between weeks
+
+S7: leak audit
+  weights: this season's share uses only earlier games (cum_sum minus the game), else last season's, else the position's last season (measures.weights); timeline rows checked in 2023: 34196
+  forecast moment: every player row's as_of is its game's Saturday run; team rows whose forecast was made after the board's as_of: 0

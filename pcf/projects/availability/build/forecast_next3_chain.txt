@@ -1,0 +1,69 @@
+availability/next3_chain run efc698b233b34beda884315ef070494c
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\availability\next3_chain\efc698b233b34beda884315ef070494c\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (119,867 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (119,867 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (participation/active)
+ 7 walk_forward         pass  172 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against Next3Table: Comparison(a='availability', b='Next3Table', diff=-0.00320599037653403, lo=-0.003764422506635871, hi=-0.0027241250676850568, rows=266917, blocks=140)
+calibration spike: True
+calibration chance: {'table': shape: (10, 4)
+┌─────┬────────┬───────────┬──────────┐
+│ bin ┆ rows   ┆ predicted ┆ actual   │
+│ --- ┆ ---    ┆ ---       ┆ ---      │
+│ i32 ┆ u32    ┆ f64       ┆ f64      │
+╞═════╪════════╪═══════════╪══════════╡
+│ 0   ┆ 160348 ┆ 0.057201  ┆ 0.061722 │
+│ 1   ┆ 43577  ┆ 0.130838  ┆ 0.127957 │
+│ 2   ┆ 6045   ┆ 0.240089  ┆ 0.202481 │
+│ 3   ┆ 3040   ┆ 0.34689   ┆ 0.304276 │
+│ 4   ┆ 2079   ┆ 0.44778   ┆ 0.401635 │
+│ 5   ┆ 1602   ┆ 0.548733  ┆ 0.501248 │
+│ 6   ┆ 1305   ┆ 0.647445  ┆ 0.583142 │
+│ 7   ┆ 865    ┆ 0.746039  ┆ 0.640462 │
+│ 8   ┆ 465    ┆ 0.84457   ┆ 0.791398 │
+│ 9   ┆ 47591  ┆ 0.999619  ┆ 0.999138 │
+└─────┴────────┴───────────┴──────────┘, 'error': 0.6002454901398565, 'slope': 0.8675565020759615, 'passed': False}
+calibration share: {'rows': 68493, 'inside': 0.9520388944855679, 'above': 0.12919568423050531, 'width': 0.698538536784781, 'groups': shape: (21, 6)
+┌────────┬───────┬───────┬──────────┬────────┬───────┐
+│ group  ┆ value ┆ rows  ┆ inside   ┆ judged ┆ ok    │
+│ ---    ┆ ---   ┆ ---   ┆ ---      ┆ ---    ┆ ---   │
+│ str    ┆ str   ┆ u32   ┆ f64      ┆ bool   ┆ bool  │
+╞════════╪═══════╪═══════╪══════════╪════════╪═══════╡
+│ grp    ┆ DB    ┆ 14364 ┆ 0.949248 ┆ true   ┆ false │
+│ grp    ┆ DL    ┆ 9540  ┆ 0.951677 ┆ true   ┆ false │
+│ grp    ┆ LB    ┆ 9712  ┆ 0.955107 ┆ true   ┆ false │
+│ grp    ┆ OL    ┆ 12546 ┆ 0.95656  ┆ true   ┆ false │
+│ grp    ┆ QB    ┆ 1991  ┆ 0.947263 ┆ true   ┆ false │
+│ …      ┆ …     ┆ …     ┆ …        ┆ …      ┆ …     │
+│ season ┆ 2020  ┆ 8516  ┆ 0.911813 ┆ true   ┆ false │
+│ season ┆ 2021  ┆ 10473 ┆ 0.930011 ┆ true   ┆ false │
+│ season ┆ 2022  ┆ 8679  ┆ 0.956677 ┆ true   ┆ false │
+│ season ┆ 2023  ┆ 8065  ┆ 0.962678 ┆ true   ┆ false │
+│ season ┆ 2024  ┆ 8638  ┆ 0.956819 ┆ true   ┆ false │
+└────────┴───────┴───────┴──────────┴────────┴───────┘, 'passed': False}
+calibration blend: {'rows': 266917, 'inside': 0.9420643870566505, 'above': 0.08115631450975397, 'width': 0.3503448637591461, 'groups': shape: (21, 6)
+┌────────┬───────┬───────┬──────────┬────────┬───────┐
+│ group  ┆ value ┆ rows  ┆ inside   ┆ judged ┆ ok    │
+│ ---    ┆ ---   ┆ ---   ┆ ---      ┆ ---    ┆ ---   │
+│ str    ┆ str   ┆ u32   ┆ f64      ┆ bool   ┆ bool  │
+╞════════╪═══════╪═══════╪══════════╪════════╪═══════╡
+│ grp    ┆ DB    ┆ 51208 ┆ 0.935225 ┆ true   ┆ false │
+│ grp    ┆ DL    ┆ 39469 ┆ 0.94236  ┆ true   ┆ false │
+│ grp    ┆ LB    ┆ 37103 ┆ 0.939601 ┆ true   ┆ false │
+│ grp    ┆ OL    ┆ 45860 ┆ 0.944352 ┆ true   ┆ false │
+│ grp    ┆ QB    ┆ 11718 ┆ 0.949479 ┆ true   ┆ false │
+│ …      ┆ …     ┆ …     ┆ …        ┆ …      ┆ …     │
+│ season ┆ 2020  ┆ 32453 ┆ 0.920716 ┆ true   ┆ false │
+│ season ┆ 2021  ┆ 35345 ┆ 0.919423 ┆ true   ┆ false │
+│ season ┆ 2022  ┆ 34387 ┆ 0.948033 ┆ true   ┆ false │
+│ season ┆ 2023  ┆ 34196 ┆ 0.953123 ┆ true   ┆ false │
+│ season ┆ 2024  ┆ 34743 ┆ 0.946925 ┆ true   ┆ false │
+└────────┴───────┴───────┴──────────┴────────┴───────┘, 'passed': False}
+calibration passed: False

@@ -22,7 +22,7 @@ from pcf.data.clean.depth_charts import (
     weekly_depth_rows,
 )
 from pcf.data.sources.nflverse import DATASETS, files, scan
-from pcf.data.tables import efficiency, leverage, opportunity, pace, touchdowns
+from pcf.data.tables import availability, efficiency, leverage, opportunity, pace, touchdowns
 from pcf.data.tables.charted import PARTICIPATION_COLUMNS, charted_rows
 from pcf.data.tables.charted import PBP_COLUMNS as CHARTED_PBP
 from pcf.data.tables.frames import on_spine
@@ -554,16 +554,45 @@ def build_player_season(season: int, cal: Calendar, root: Path | None) -> None:
 
 Builder = Callable[[int, Calendar, Path | None], None]
 # Each table: the dataset that decides its seasons, and its builder (per season, or all at once).
+def build_roster_week(season: int, cal: Calendar, root: Path | None) -> None:
+    """`roster_week.status` (2016 on) and `player_game.injured` (2013 on) for one season
+    (availability, decision 0047). Needs `player_game`'s roster part built first (TABLE_ORDER)."""
+    from pcf.data.tables.frames import team_games
+
+    if season >= availability.FIRST_SEASON:
+        rosters = _rosters(season)
+        if rosters is not None:
+            rows = availability.roster_week_rows(
+                known_at("weekly_rosters", rosters, cal), team_games(cal.games)
+            )
+            write_parts({"status": rows}, "roster_week", [season], root)
+    if season < availability.FIRST_INJURED or season not in local_seasons("pbp"):
+        return
+    try:
+        roster = read_part("player_game", "roster", [season], root).collect()
+    except (FileNotFoundError, pl.exceptions.ComputeError):
+        return
+    pbp = scan("pbp", [season]).select(availability.PBP_COLUMNS).collect()
+    pbp = pbp.with_columns(pl.col("season").cast(pl.Int32), pl.col("play_id").cast(pl.Int64))
+    hurt = on_spine(
+        availability.injured_rows(pbp, roster), roster, ["gsis_id", "game_id"],
+        "player_game.injured",
+    )  # fmt: skip
+    write_parts({"injured": known_at("pbp", hurt, cal)}, "player_game", [season], root)
+
+
 PER_SEASON: dict[str, tuple[str, Builder]] = {
     "team_season": ("participation", build_team_season),
     "play": ("pbp", build_play),
     "player_play": ("participation", build_player_play),
     "player_game": ("weekly_rosters", build_player_game),
     "player_season": ("participation", build_player_season),
+    "roster_week": ("weekly_rosters", build_roster_week),
 }
 ALL_SEASONS = {"game", "team_game"}
 TABLE_ORDER = [
     "game", "team_game", "team_season", "play", "player_play", "player_game", "player_season",
+    "roster_week",
 ]  # fmt: skip
 
 

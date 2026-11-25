@@ -1,0 +1,8 @@
+TEAM: the snap-weighted games-lost forecast (rest_chain) on the team rest-of-season board (team yards), 2019-2024
+  rows with a forecast: 4222 of 4222
+  beside Elo                              forecast (off, def)  rows 3198: +5.06% (+2.86 to +7.32); range score +1.98% (+0.36 to +3.45); copies' max +3.82%; counts: True
+  beside Elo                              to date (off, def)   rows 3198: +2.94% (+1.03 to +5.02); range score +0.28% (-0.95 to +1.45); copies' max +3.71%; counts: False
+  beside Elo                              forecast + to date   rows 3198: +3.61% (+1.32 to +5.87); range score +1.66% (+0.22 to +2.96); copies' max +3.84%; counts: False
+  beside Elo + I60's starters' forecast   forecast (off, def)  rows 3198: +1.27% (-0.25 to +2.62); range score +1.59% (+0.22 to +2.86); copies' max +0.78%; counts: False
+  beside Elo + I60's starters' forecast   to date (off, def)   rows 3198: -1.05% (-2.20 to +0.02); range score +0.36% (-0.47 to +1.16); copies' max +0.80%; counts: False
+  beside Elo + I60's starters' forecast   forecast + to date   rows 3198: -1.53% (-3.96 to +0.59); range score +0.54% (-0.76 to +1.85); copies' max +0.95%; counts: False

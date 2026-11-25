@@ -45,8 +45,13 @@ class SignalTest:
 
 def signal_test(bt: Backtest, n: int = SHUFFLES, seed: int = 0) -> SignalTest:
     """Refit the backtest `n` times on outcomes shuffled within each step. Each refit is scored
-    against the real outcomes on the same rows as the real model."""
+    against the real outcomes on the same rows as the real model.
+
+    An expert that learns from something besides `y` (availability's chain learns the week-to-week
+    health states) defines `shuffle(pool, seed)`, its own signal-free pool; it must shuffle `y`
+    too (decision 0047)."""
     keys = bt.expert.keys()
+    shuffle = getattr(bt.expert, "shuffle", None) or shuffle_within_steps
     real_rows = bt.scored.select(*keys, "loss")
     real = real_rows["loss"].mean()
     nulls = []
@@ -59,7 +64,7 @@ def signal_test(bt: Backtest, n: int = SHUFFLES, seed: int = 0) -> SignalTest:
             bt.test,
             bt.refit,
             bt.half_life,
-            train_transform=lambda pool, s=seed + i: shuffle_within_steps(pool, s),
+            train_transform=lambda pool, s=seed + i: shuffle(pool, s),
         )
         scored = row_losses(
             pred.join(bt.targets.select(*keys, "y"), on=keys, how="inner"), bt.expert.kind
