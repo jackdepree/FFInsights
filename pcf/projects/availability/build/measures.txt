@@ -1,0 +1,43 @@
+Snap-weighted adjusted games lost (AGL), per team-game, 2016-2024
+  team-games 4734; per game: offense 2.95, defense 2.55, total 5.50 (SD 2.40)
+  per team-season: total 90.4 (SD 28.2, 31.3 to 176.9)
+  the most: HOU 2023 (176.9), SF 2020 (175.0), BAL 2021 (173.2), NYJ 2021 (172.1), WAS 2019 (148.0), NYG 2017 (147.9)
+  the least: DEN 2016 (31.3), BUF 2018 (31.5), PHI 2016 (32.4), CIN 2016 (32.7)
+
+A14, consistency (pcf.validation.consistency: odd against even weeks, and season to season)
+shape: (5, 11)
+┌──────────────────┬──────────┬──────────┬──────────┬──────────┬───────────┬───────────┬──────────────┬──────────────┬──────────┬─────────┐
+│ measure          ┆ week_r   ┆ week_lo  ┆ week_hi  ┆ season_r ┆ season_lo ┆ season_hi ┆ unit_seasons ┆ season_pairs ┆ mean_abs ┆ verdict │
+│ ---              ┆ ---      ┆ ---      ┆ ---      ┆ ---      ┆ ---       ┆ ---       ┆ ---          ┆ ---          ┆ ---      ┆ ---     │
+│ str              ┆ f64      ┆ f64      ┆ f64      ┆ f64      ┆ f64       ┆ f64       ┆ i64          ┆ i64          ┆ f64      ┆ str     │
+╞══════════════════╪══════════╪══════════╪══════════╪══════════╪═══════════╪═══════════╪══════════════╪══════════════╪══════════╪═════════╡
+│ agl_total        ┆ 0.971318 ┆ 0.965254 ┆ 0.976336 ┆ 0.227455 ┆ 0.127394  ┆ 0.322932  ┆ 288          ┆ 256          ┆ 5.500613 ┆ trait   │
+│ agl_off          ┆ 0.971226 ┆ 0.965144 ┆ 0.976261 ┆ 0.229797 ┆ 0.129824  ┆ 0.325145  ┆ 288          ┆ 256          ┆ 2.948921 ┆ trait   │
+│ agl_def          ┆ 0.960933 ┆ 0.952726 ┆ 0.967739 ┆ 0.121526 ┆ 0.018713  ┆ 0.221795  ┆ 288          ┆ 256          ┆ 2.551693 ┆ trait   │
+│ starters_out_off ┆ 0.972106 ┆ 0.966206 ┆ 0.976988 ┆ 0.181137 ┆ 0.079576  ┆ 0.278977  ┆ 288          ┆ 256          ┆ 2.972117 ┆ trait   │
+│ starters_out_def ┆ 0.954717 ┆ 0.945241 ┆ 0.962585 ┆ 0.136178 ┆ 0.033602  ┆ 0.235914  ┆ 288          ┆ 256          ┆ 2.350021 ┆ trait   │
+└──────────────────┴──────────┴──────────┴──────────┴──────────┴───────────┴───────────┴──────────────┴──────────────┴──────────┴─────────┘
+  season to season, bootstrap over team-seasons: total +0.223 (+0.125 to +0.312, n 256); offense +0.226 (+0.135 to +0.315, n 256); defense +0.122 (+0.020 to +0.219, n 256)
+
+A15, the same season's tally against the change in net EPA per play from the season before
+  total AGL vs change in net EPA/play:         -0.213 (-0.313 to -0.112, n 288)
+  offense AGL vs change in offense EPA/play:   -0.218 (-0.322 to -0.117, n 288)
+  defense AGL vs change in EPA allowed/play:   +0.123 (+0.032 to +0.211, n 288)
+  plain starters' count (weight 0.5+) vs change in net EPA/play: -0.179 (-0.279 to -0.071, n 288)
+  slope: each 10 snap-weighted games lost moves net EPA per play by -0.0089 (SD of net EPA/play 0.111)
+  last season's tally vs this season's change (the forecasting use): +0.193 (+0.092 to +0.283, n 256)
+
+A18, proneness: named in-game injuries per 100 scrimmage snaps, games with 10+ snaps
+shape: (1, 11)
+┌───────────┬─────────┬─────────┬──────────┬──────────┬───────────┬───────────┬──────────────┬──────────────┬──────────┬─────────┐
+│ measure   ┆ week_r  ┆ week_lo ┆ week_hi  ┆ season_r ┆ season_lo ┆ season_hi ┆ unit_seasons ┆ season_pairs ┆ mean_abs ┆ verdict │
+│ ---       ┆ ---     ┆ ---     ┆ ---      ┆ ---      ┆ ---       ┆ ---       ┆ ---          ┆ ---          ┆ ---      ┆ ---     │
+│ str       ┆ f64     ┆ f64     ┆ f64      ┆ f64      ┆ f64       ┆ f64       ┆ i64          ┆ i64          ┆ f64      ┆ str     │
+╞═══════════╪═════════╪═════════╪══════════╪══════════╪═══════════╪═══════════╪══════════════╪══════════════╪══════════╪═════════╡
+│ named_100 ┆ 0.03072 ┆ 0.01852 ┆ 0.042911 ┆ 0.047581 ┆ 0.03375   ┆ 0.061394  ┆ 18158        ┆ 14099        ┆ 0.117235 ┆ trait   │
+└───────────┴─────────┴─────────┴──────────┴──────────┴───────────┴───────────┴──────────────┴──────────────┴──────────┴─────────┘
+  player-seasons with 300+ snaps, per 1,000 snaps, season to season: +0.270 (+0.248 to +0.292, n 7397)
+    RB: +0.256 (+0.165 to +0.346, n 343)
+    WR: +0.196 (+0.138 to +0.259, n 857)
+    TE: +0.005 (-0.064 to +0.081, n 496)
+    QB: +0.171 (+0.065 to +0.292, n 303)

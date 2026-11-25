@@ -18,7 +18,7 @@ T0 = datetime(2024, 9, 10, tzinfo=UTC)
 
 
 def test_every_variant_passes_the_contract():
-    assert len(X.VARIANTS) == 19
+    assert len(X.VARIANTS) == 20
     for name, cls in X.VARIANTS.items():
         check_expert(cls)
         assert cls.variant == name

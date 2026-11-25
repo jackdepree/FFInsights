@@ -240,6 +240,29 @@ class ActiveStack(Active):
         return rows.select(self.keys()).with_columns(mean=pl.Series(np.clip(p, 1e-5, 1 - 1e-5)))
 
 
+class ActiveGated(ActiveStack):
+    """The stack fit and used on listed players only (on the report, or limited or no
+    practice); everyone else keeps participation's `active`. Added after the first walk showed
+    the stack helping listed players and costing unlisted ones (RESULTS.md R3): availability
+    owns the health part, and an unlisted player's health absence is about 0.2%."""
+
+    variant = "active_gated"
+    quantity = "p_active"
+
+    @staticmethod
+    def _listed(df):
+        return ((c("status") > 0) | (c("practice") >= 1)).fill_null(False)
+
+    def fit(self, train):
+        return super().fit(train.filter(self._listed(train)))
+
+    def predict(self, model, rows):
+        stack = super().predict(model, rows)["mean"].to_numpy()
+        on = rows.select(self._listed(rows)).to_series().to_numpy()
+        pa = rows["pa"].clip(1e-5, 1 - 1e-5).to_numpy()
+        return rows.select(self.keys()).with_columns(mean=pl.Series(np.where(on, stack, pa)))
+
+
 # ---------------------------------------------------------------- next 3, rest of season
 class Window(Availability):
     """Games of health absence over the window (this game on): a count with a spike at 0,
@@ -429,5 +452,6 @@ class KeptModel(Kept):
 VARIANTS: dict[str, type[Availability]] = {
     cls.variant: cls
     for cls in [NextTable, NextLogit, NextLasso, NextTrees, ActivePart, ActiveRecal, ActiveStack,
+                ActiveGated,
                 *WINDOWS.values(), KeptPart, KeptModel]
 }  # fmt: skip
