@@ -325,3 +325,38 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Offensive avoidance (pass, shotgun use) and the pass-gain blend | schemes-v2 (anti-traits) | `pass_use`, `shotgun_use` features; the `pass_gain_blend` forecast (not saved as outputs yet) | Yes: built from traits (pass rate over expected, shotgun rate) | No close to compare with. Use predicts the next game's gain from the option on held-out seasons, but faintly (+0.015 to +0.018 EPA a play per sd: schemes-v2#R6) | For play-mix and efficiency models (a team forced to pass); the raw use does as well as the opponent-adjusted one (R7) |
 | Next game's expected points and expected yards (`eff_trees`, `eff_rec_yards`, `eff_rush_yards`); expected points per game over 3 games and the rest of the season (`eff_h3`, `eff_rest`) | opportunity-quality | `outputs/opportunity-quality/<variant>/<run_id>/history.parquet` (pinned in the registry) | Yes: built from expected points (0.84 week to week) and playing time | No close to compare with; adds +3.7% to next game's points beside playing time and about 4% to the crude forecast of yards (opportunity-quality R13, R14) | Opportunity features for fantasy, props and player-opportunity |
 
+## Player rates (stabilization's exploration, 2026-11-25)
+
+Per player-season, centred by the position's mean that season (`projects/stabilization/EXPLORATION.md`, `explore/m1_curves.txt`). Columns differ from the team table above:
+- **k** is the 50% point in attempts.
+- **Reliability** is the share of the spread between players that is real at a typical season.
+- **Season r** is observed; **true r** is season r divided by the reliabilities' product's square root (under 1: the true rate drifts).
+- **Verdict** is trait when season r is clear of 0 (every one is), and the reliability says how much a single season shows of it.
+- **Helps its target** is M1 on next season's rate against the position's average.
+
+| Measure | What it is | Attempts | k | Reliability, typical season | Season r | True r | Verdict | Helps its target? |
+|---|---|---|---|---|---|---|---|---|
+| `tprr` | targets a route | routes | 70 | 0.70 | 0.62 | 0.78 | trait | Yes: M1 +36% against the position average; drifts in-season (+2.7%) |
+| `yprr` | yards a route | routes | 121 | 0.58 | 0.55 | 0.79 | trait | Yes: +30%; drifts in-season (+1.7%) |
+| `adot` | aDOT (receiver) | targets | 18 | 0.69 | 0.62 | 0.79 | trait | Yes: +32%; drifts in-season (+3.9%) |
+| `catch_oe` | catch over expected | targets | 136 | 0.22 | 0.20 | 0.58 | trait, mostly hidden in one season | Ties the position average (+0.8%) |
+| `yac_oe` | YAC over expected | catches | 95 | 0.25 | 0.24 | 0.72 | trait, mostly hidden in one season | Yes, small: +5% |
+| `car_per_run` | carries a run snap (RB) | run snaps | 2 | 0.98 | 0.96 | 0.97 | trait | Yes: +89% (a role marker) |
+| `yaco` | yards after contact (PFR) | carries | 149 | 0.33 | 0.27 | 0.53 | trait, mostly hidden in one season | Ties |
+| `broken_per_touch` | broken tackles a touch (PFR) | touches | 255 | 0.26 | 0.23 | 0.54 | trait, mostly hidden in one season | Ties |
+| `hitsack` | hit-or-sack rate faced (QB) | dropbacks | 176 | 0.60 | 0.52 | 0.73 | trait | Yes: +27% |
+| `sack` | sack rate (QB) | dropbacks | 269 | 0.50 | 0.42 | 0.68 | trait | Yes: +14% |
+| `scramble` | scramble rate (QB) | dropbacks | 69 | 0.79 | 0.78 | 0.92 | trait | Yes: +57% |
+| `qb_adot` | aDOT (QB) | attempts | 207 | 0.54 | 0.38 | 0.58 | trait | Ties (+9.6%) |
+| `cpoe` | completion over expected (QB) | attempts | 242 | 0.50 | 0.46 | 0.75 | trait | Yes: +21% |
+| `pressured` | pressured rate (QB, PFR) | dropbacks | 215 | 0.55 | 0.41 | 0.61 | trait | Ties (+13.6%) |
+| `press_per_snap` | pressures a pass snap (PFR) | pass snaps | 346 | 0.25 | 0.31 | 0.76 | trait, mostly hidden in one season | Yes: +9.7% |
+| `hits_per_snap` | QB hits a pass snap | pass snaps | 179 | 0.51 | 0.52 | 0.86 | trait | Yes: +26% |
+| `tgt_per_cov` | targets a coverage snap (PFR) | pass snaps | 67 | 0.77 | 0.74 | 0.89 | trait | Yes: +53% |
+| `catch_allowed` | catch rate allowed (PFR) | targets | 129 | 0.24 | 0.17 | 0.56 | trait, mostly hidden in one season | Ties |
+| `adot_allowed` | aDOT allowed (PFR) | targets | 33 | 0.55 | 0.36 | 0.59 | trait | Yes: +6.8% |
+| `missed_tackle` | missed tackle rate (PFR) | tackles and misses | 220 | 0.19 | 0.22 | 0.82 | trait, mostly hidden in one season | Yes, small: +4.1% |
+
+Team tendencies (the same file, centred by the season's league rate):
+- **Offense:** shotgun (k 68 plays), no-huddle (72) and pass rate over expected (194) are traits that also drift in-season (filter +10% to +37%).
+- **Defense:** pass rate over expected, shotgun and no-huddle faced (k 1,477-3,391) are mostly the schedule: noise for the defense itself until read through its opponents (I155).

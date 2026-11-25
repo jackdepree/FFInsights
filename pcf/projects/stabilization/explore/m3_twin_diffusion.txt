@@ -1,0 +1,52 @@
+# Method 3: denoising all of a player's rates at once (2026-11-25)
+
+Fit on target seasons before 2022, tested on 2022-2024. Rows: a player's season with 50+ routes (receivers) or coverage pass snaps (coverage), and a next season.
+Everything centred by last season's position mean. **M1:** each rate pulled alone. **The twin:** all rates pulled together through the true rates' covariance
+(the observed covariance less the noise; the noise's correlation between rates from odd-against-even game halves), its diagonal set to M1's spread, so with no
+correlation it is M1 exactly. Ranges: the posterior spread plus next season's noise, normal. **The diffusion model:** learns next season's whole rate vector
+given this season's vector, its attempts, position and the teammates' conditions (not next season's attempts: their ratios give some rates away, e.g. targets over routes),
+200 draws a row, mean as the forecast, the 10th and 90th
+percentiles as the 80% range. 400 passes, 2 seeds (forecasts averaged; the seed-to-seed gap is the fitting noise).
+
+## receivers (1510 training rows, 968 test rows)
+
+Noise correlation between rates (halves) and the true rates' correlation (moments, clipped at 0.95):
+
+| | tprr | yprr | adot | catch_oe | yac_oe |
+|---|---|---|---|---|---|
+| tprr | +1.00 / +1.00 | +0.57 / +0.88 | -0.02 / -0.00 | -0.02 / +0.18 | -0.00 / +0.08 |
+| yprr | +0.57 / +0.88 | +1.00 / +1.00 | +0.15 / +0.26 | +0.46 / +0.37 | +0.50 / +0.25 |
+| adot | -0.02 / -0.00 | +0.15 / +0.26 | +1.00 / +1.00 | -0.00 / -0.02 | +0.05 / -0.20 |
+| catch_oe | -0.02 / +0.18 | +0.46 / +0.37 | -0.00 / -0.02 | +1.00 / +1.00 | +0.02 / +0.11 |
+| yac_oe | -0.00 / +0.08 | +0.50 / +0.25 | +0.05 / -0.20 | +0.02 / +0.11 | +1.00 / +1.00 |
+
+(diffusion: 2 seeds trained and drawn in 40s)
+
+| Rate | k | Test rows | Twin against M1 | 90% interval | Clear | Diffusion against the twin | 90% interval | Clear | Seed 1 against seed 2 | Diffusion against M1 | 80% coverage: twin, diffusion | Ridge, same inputs, against the twin | Diffusion against that ridge (90%) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| tprr | 78 | 968 | +1.05% | +0.48% to +1.58% | yes | +5.45% | +0.92% to +10.15% | yes | -1.15% | +6.45% | 68%, 73% | +9.92% (+7.13% to +12.84%) | -4.96% (-9.77% to -0.24%) |
+| yprr | 133 | 968 | -0.10% | -2.71% to +2.35% | no | +5.85% | +0.30% to +11.51% | yes | -1.60% | +5.76% | 74%, 76% | +5.14% (+1.95% to +8.63%) | +0.75% (-3.88% to +5.68%) |
+| adot | 18 | 925 | +0.99% | -0.27% to +2.28% | no | -11.16% | -18.46% to -4.82% | no | -2.48% | -10.06% | 75%, 77% | +1.46% (-3.20% to +6.02%) | -12.81% (-21.60% to -4.72%) |
+| catch_oe | 128 | 925 | +0.81% | +0.19% to +1.38% | yes | -7.74% | -11.15% to -4.45% | no | -1.15% | -6.87% | 78%, 78% | -1.28% (-3.91% to +1.44%) | -6.38% (-9.49% to -3.41%) |
+| yac_oe | 102 | 905 | +0.74% | -0.21% to +1.64% | no | -5.21% | -8.28% to -2.07% | no | -3.46% | -4.43% | 82%, 77% | -1.70% (-4.65% to +0.83%) | -3.44% (-7.70% to +0.84%) |
+
+## coverage (1114 training rows, 1186 test rows)
+
+Noise correlation between rates (halves) and the true rates' correlation (moments, clipped at 0.95):
+
+| | tgt_per_cov | catch_allowed | adot_allowed | missed_tackle |
+|---|---|---|---|---|
+| tgt_per_cov | +1.00 / +1.00 | +0.03 / -0.11 | -0.03 / -0.05 | -0.02 / +0.02 |
+| catch_allowed | +0.03 / -0.11 | +1.00 / +1.00 | -0.25 / -0.69 | -0.02 / +0.07 |
+| adot_allowed | -0.03 / -0.05 | -0.25 / -0.69 | +1.00 / +1.00 | -0.04 / +0.08 |
+| missed_tackle | -0.02 / +0.02 | -0.02 / +0.07 | -0.04 / +0.08 | +1.00 / +1.00 |
+
+(diffusion: 2 seeds trained and drawn in 40s)
+
+| Rate | k | Test rows | Twin against M1 | 90% interval | Clear | Diffusion against the twin | 90% interval | Clear | Seed 1 against seed 2 | Diffusion against M1 | 80% coverage: twin, diffusion | Ridge, same inputs, against the twin | Diffusion against that ridge (90%) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| tgt_per_cov | 64 | 1186 | +0.21% | -0.08% to +0.48% | no | -26.36% | -36.81% to -16.57% | no | -0.47% | -26.10% | 78%, 78% | +7.49% (+4.34% to +10.44%) | -36.60% (-46.75% to -26.45%) |
+| catch_allowed | 132 | 1156 | -0.41% | -1.97% to +1.19% | no | -3.31% | -6.91% to +0.27% | no | +0.29% | -3.73% | 79%, 75% | +3.15% (+0.99% to +5.21%) | -6.67% (-9.81% to -3.25%) |
+| adot_allowed | 33 | 1156 | +0.02% | -0.49% to +0.51% | no | -2.94% | -6.57% to +0.60% | no | +2.10% | -2.92% | 79%, 78% | +1.20% (-2.89% to +5.13%) | -4.20% (-8.54% to +0.60%) |
+| missed_tackle | 197 | 1172 | -0.04% | -0.44% to +0.36% | no | -7.19% | -10.37% to -3.96% | no | -1.66% | -7.23% | 80%, 76% | -1.54% (-3.45% to +0.48%) | -5.56% (-8.56% to -2.66%) |
+

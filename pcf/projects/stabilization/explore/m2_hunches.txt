@@ -1,0 +1,85 @@
+# Method 2a: the CEO's hunches (2026-11-25)
+
+## H113: do teammates prop a player's rates up or hold them down?
+
+**Real:** a player's change in rate (each season centred by its position's mean) regressed on the change in his teammates' conditions (centred by the season's mean),
+weighted by 1/(1/n1 + 1/n2), players resampled (1,000 draws, 90% intervals). Receivers: the three conditions together. Effects in the rate's units per 1 unit of the condition,
+and per a typical change (the condition's spread of changes, 1 sd).
+
+| Measure | Condition | Pairs | Movers | Effect per typical change | 90% interval | Clear of 0 | Movers only (per typical change) |
+|---|---|---|---|---|---|---|---|
+| tprr | the team's hit-or-sack rate allowed | 2751 | 740 | -0.0012 | -0.0032 to +0.0008 | no | -0.0001 |
+| tprr | the passer's completion over expected to other players | 2751 | 740 | -0.0026 | -0.0045 to -0.0007 | yes | -0.0029 |
+| tprr | the team's pass rate over expected | 2751 | 740 | -0.0014 | -0.0034 to +0.0004 | no | -0.0026 |
+| yprr | the team's hit-or-sack rate allowed | 2751 | 738 | -0.0314 | -0.0508 to -0.0109 | yes | -0.0260 |
+| yprr | the passer's completion over expected to other players | 2751 | 738 | +0.0164 | -0.0050 to +0.0391 | no | +0.0168 |
+| yprr | the team's pass rate over expected | 2751 | 738 | -0.0280 | -0.0495 to -0.0061 | yes | -0.0297 |
+| adot | the team's hit-or-sack rate allowed | 3892 | 800 | +0.0228 | -0.0513 to +0.0912 | no | +0.0913 |
+| adot | the passer's completion over expected to other players | 3892 | 800 | +0.1198 | +0.0444 to +0.1924 | yes | +0.1375 |
+| adot | the team's pass rate over expected | 3892 | 800 | -0.3166 | -0.3952 to -0.2370 | yes | -0.3165 |
+| catch_oe | the team's hit-or-sack rate allowed | 3887 | 798 | -0.0022 | -0.0048 to +0.0006 | no | -0.0049 |
+| catch_oe | the passer's completion over expected to other players | 3887 | 798 | +0.0121 | +0.0091 to +0.0149 | yes | +0.0148 |
+| catch_oe | the team's pass rate over expected | 3887 | 798 | +0.0041 | +0.0015 to +0.0067 | yes | +0.0032 |
+| yac_oe | the team's hit-or-sack rate allowed | 3359 | 641 | -0.0944 | -0.1433 to -0.0438 | yes | -0.1071 |
+| yac_oe | the passer's completion over expected to other players | 3359 | 641 | +0.1291 | +0.0783 to +0.1814 | yes | +0.1483 |
+| yac_oe | the team's pass rate over expected | 3359 | 641 | -0.0127 | -0.0631 to +0.0373 | no | +0.0122 |
+| press_per_snap | the rest of the defense's pressures a dropback | 1188 | 337 | +0.0049 | +0.0031 to +0.0070 | yes | +0.0036 |
+| hits_per_snap | the rest of the defense's pressures a dropback | 1377 | 423 | -0.0003 | -0.0018 to +0.0012 | no | -0.0004 |
+| tgt_per_cov | the rest of the coverage's catch rate allowed | 2516 | 699 | -0.0005 | -0.0023 to +0.0012 | no | -0.0015 |
+| catch_allowed | the rest of the coverage's catch rate allowed | 1639 | 426 | +0.0112 | +0.0064 to +0.0163 | yes | +0.0046 |
+| adot_allowed | the rest of the coverage's catch rate allowed | 1639 | 426 | -0.0600 | -0.1852 to +0.0734 | no | -0.0892 |
+| missed_tackle | the rest of the coverage's catch rate allowed | 2015 | 530 | +0.0004 | -0.0018 to +0.0028 | no | -0.0014 |
+
+Coefficients clear of 0: 11 of 21 (about 2.1 expected by chance at 90%).
+
+**Pays:** M1 with the teammates' part taken out, then put back at next season's expected condition (his next team's condition last season, times that condition's own
+season-to-season slope), against M1. Fit before each target season (walk-forward); players resampled.
+
+| Measure | Rows | Target seasons | Gain over M1 (share of its squared error) | 90% interval | Clear |
+|---|---|---|---|---|---|
+| tprr | 2364 | 2019-2024 | +0.03% (movers +0.34%) | -0.26% to +0.33% | no |
+| yprr | 2364 | 2019-2024 | +0.02% (movers +0.24%) | -0.29% to +0.32% | no |
+| adot | 5246 | 2009-2024 | +0.68% (movers +1.27%) | +0.22% to +1.14% | yes |
+| catch_oe | 5245 | 2009-2024 | -0.36% (movers -0.27%) | -0.60% to -0.11% | no |
+| yac_oe | 5020 | 2009-2024 | +0.04% (movers +0.49%) | -0.13% to +0.20% | no |
+| press_per_snap | 849 | 2021-2024 | +0.77% (movers +0.62%) | +0.41% to +1.16% | yes |
+| hits_per_snap | 1000 | 2021-2024 | -1.37% (movers -0.77%) | -2.08% to -0.70% | no |
+| tgt_per_cov | 1856 | 2021-2024 | +0.00% (movers -0.01%) | -0.12% to +0.14% | no |
+| catch_allowed | 1767 | 2021-2024 | +0.04% (movers +0.12%) | -0.11% to +0.18% | no |
+| adot_allowed | 1766 | 2021-2024 | -0.01% (movers -0.08%) | -0.10% to +0.06% | no |
+| missed_tackle | 1826 | 2021-2024 | -0.00% (movers -0.01%) | -0.02% to +0.02% | no |
+
+H113 real: held (11 clear of 0); pays: 2 of 11 rates clear of 0 over M1.
+
+## H114: does a consistent measure set where the other rates regress to?
+
+Each rate is pulled toward a target predicted from the player's other consistent measures last season (their M1 pulled values: tprr, yprr, aDOT for receivers;
+plus carries a run snap for backs; hit-or-sack and scramble rates for QBs; QB hits a pass snap for rushers; targets a coverage snap for coverage), centred by position.
+The target is a ridge regression (alpha by GCV) of next season's centred rate on them, fit on earlier seasons. The weight on his own rate comes from the true spread
+left around that target (k grows by the share of next season's true spread the target removes). Side columns: the ridge with his own pulled rate added (the target
+and the weight fit together), and his own pulled rate alone recalibrated (what the side model gets from rescaling the pull, not from the other measures).
+
+| Measure | From | Rows | Features | k (M1 to conditional) | H114 against M1 | 90% interval | Clear | Ridge with own rate against M1 | Own rate recalibrated against M1 | What the other measures add (ridge against recalibrated) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tprr | 2016 | 2364 | yprr, adot | 77 to 137 | -0.19% | -1.26% to +0.93% | no | +4.09% (+2.64% to +5.36%) | +2.07% (+0.93% to +3.07%) | +2.07% (+1.10% to +3.06%) |
+| yprr | 2016 | 2364 | tprr, adot | 134 to 241 | -1.79% | -3.07% to -0.49% | no | +2.69% (+1.18% to +4.13%) | +1.44% (+0.34% to +2.34%) | +1.27% (+0.19% to +2.34%) |
+| adot | 2016 | 2141 | tprr, yprr | 18 to 18 | -0.68% | -1.01% to -0.34% | no | +2.79% (+0.88% to +4.47%) | +2.84% (+1.39% to +4.34%) | -0.05% (-0.69% to +0.59%) |
+| catch_oe | 2016 | 2141 | tprr, yprr, adot | 127 to 128 | -1.40% | -2.32% to -0.50% | no | +0.88% (+0.05% to +1.70%) | +0.86% (+0.18% to +1.48%) | +0.02% (-0.64% to +0.67%) |
+| yac_oe | 2016 | 2051 | tprr, yprr, adot | 100 to 105 | -0.98% | -1.84% to -0.16% | no | -0.13% (-0.70% to +0.41%) | -0.05% (-0.71% to +0.54%) | -0.09% (-0.43% to +0.28%) |
+| car_per_run | 2016 | 711 | tprr, yprr, adot | 1 to 1 | +0.07% | -0.51% to +0.60% | no | +0.84% (-0.84% to +2.28%) | +1.46% (+0.07% to +2.52%) | -0.63% (-1.51% to +0.22%) |
+| yaco | 2018 | 322 | car_per_run, tprr, yprr, adot | 159 to 174 | -0.99% | -2.93% to +0.87% | no | -0.28% (-4.47% to +3.16%) | +3.11% (+0.42% to +5.77%) | -3.50% (-6.42% to -0.79%) |
+| broken_per_touch | 2018 | 322 | car_per_run, tprr, yprr, adot | 259 to 270 | -0.46% | -1.72% to +0.79% | no | +3.90% (+0.86% to +6.45%) | +5.23% (+2.46% to +7.74%) | -1.41% (-3.16% to +0.47%) |
+| hitsack | 2006 | 770 | scramble | 197 to 225 | +0.89% | -0.85% to +2.50% | no | -0.02% (-2.89% to +2.76%) | +0.18% (-1.56% to +1.76%) | -0.20% (-2.85% to +2.37%) |
+| sack | 2006 | 770 | hitsack, scramble | 252 to 338 | +2.53% | +0.78% to +4.20% | yes | +5.42% (+1.55% to +8.87%) | +1.89% (+0.03% to +3.56%) | +3.60% (+0.46% to +6.61%) |
+| scramble | 2006 | 770 | hitsack | 67 to 75 | +0.18% | -0.76% to +1.30% | no | +0.36% (-0.67% to +1.41%) | +0.43% (-0.12% to +0.93%) | -0.07% (-0.98% to +0.87%) |
+| qb_adot | 2006 | 760 | hitsack, scramble | 206 to 219 | +0.89% | -0.06% to +1.78% | no | +5.52% (+0.56% to +9.80%) | +4.73% (+0.42% to +8.79%) | +0.84% (-0.97% to +2.62%) |
+| cpoe | 2006 | 758 | hitsack, scramble | 226 to 231 | -0.27% | -1.07% to +0.47% | no | +0.39% (-0.68% to +1.40%) | +0.89% (+0.26% to +1.49%) | -0.50% (-1.29% to +0.18%) |
+| pressured | 2018 | 121 | hitsack, scramble | 198 to 303 | +2.08% | -2.45% to +6.83% | no | +6.20% (-4.98% to +14.93%) | +0.47% (-4.89% to +5.56%) | +5.76% (-2.05% to +14.18%) |
+| press_per_snap | 2018 | 849 | hits_per_snap | 315 to 392 | +0.21% | -1.76% to +2.22% | no | +1.34% (+0.51% to +2.16%) | +0.37% (-0.24% to +1.05%) | +0.98% (+0.19% to +1.80%) |
+| catch_allowed | 2018 | 1767 | tgt_per_cov | 133 to 141 | +0.60% | -0.06% to +1.24% | no | +1.43% (+0.30% to +2.53%) | +0.76% (+0.02% to +1.49%) | +0.67% (-0.11% to +1.48%) |
+| adot_allowed | 2018 | 1766 | tgt_per_cov | 33 to 33 | +0.11% | -0.05% to +0.27% | no | +4.09% (+1.87% to +6.15%) | +4.15% (+2.09% to +6.21%) | -0.06% (-0.30% to +0.19%) |
+| missed_tackle | 2018 | 1826 | tgt_per_cov | 199 to 200 | -0.22% | -0.50% to +0.07% | no | -0.40% (-0.79% to -0.06%) | -0.13% (-0.26% to +0.01%) | -0.27% (-0.63% to +0.06%) |
+
+Side: the other measures add to his own recalibrated rate, clear of 0, for 4 of 18; recalibrating his own pull alone beats M1 clearly for 12 of 18 (M1's within-season pull isn't next season's).
+
+H114: 1 of 18 rates clear of 0 over M1 (one or more: held; most: failed).

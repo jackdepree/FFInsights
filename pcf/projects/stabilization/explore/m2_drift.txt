@@ -1,0 +1,114 @@
+# Method 2b: drift, ranges and new levels (2026-11-25)
+
+A local-level filter: each game the true rate takes a step (variance q), each offseason a bigger one (q_s); q and q_s chosen by likelihood on seasons before 2020
+from q in {0, 0.1%, 0.3%, 1%, 3%, 10%} of the true spread per game and q_s in {0, 3%, 10%, 30%, 100%} of it. Against static M1: last season and this one so far pooled
+and pulled back by k, no drift (and a side column: the whole career pooled the same way). Rates centred by the position's mean last season (known before the season).
+Scored on the next 4 games' rate after games 4, 8 and 12 of seasons 2020-2024, weighted by those games' attempts; players resampled.
+
+| Measure | k | q (share of spread a game) | q_s (a season) | Rows | Filter against static M1 | 90% interval | Clear | Static career against static M1 | Filter's 80% range coverage | Static's coverage |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tprr | 77 | 3.0% | 10% | 3945 | +2.7% | +1.3% to +4.0% | yes | -3.0% | 82% | 77% |
+| yprr | 135 | 1.0% | 10% | 3945 | +1.7% | +0.7% to +2.7% | yes | -1.7% | 83% | 82% |
+| adot | 18 | 0.3% | 30% | 2634 | +3.9% | +2.2% to +5.7% | yes | -0.7% | 80% | 77% |
+| catch_oe | 120 | 10.0% | 100% | 2632 | -5.8% | -7.5% to -4.4% | no | -0.3% | 80% | 77% |
+| yac_oe | 100 | 0.1% | 3% | 2196 | +1.1% | -0.3% to +2.5% | no | +0.7% | 84% | 85% |
+| car_per_run | 1 | 0.1% | 10% | 997 | +19.6% | +13.1% to +25.9% | yes | -5.8% | 78% | 69% |
+| yaco | 123 | 3.0% | 0% | 855 | -0.1% | -2.5% to +2.2% | no | -0.3% | 82% | 81% |
+| broken_per_touch | 217 | 0.0% | 30% | 855 | -1.0% | -3.0% to +0.7% | no | -1.2% | 82% | 81% |
+| hitsack | 194 | 0.0% | 30% | 380 | +5.6% | +1.9% to +9.1% | yes | -3.7% | 85% | 81% |
+| sack | 265 | 0.3% | 10% | 380 | +2.5% | -0.6% to +5.8% | no | -1.1% | 82% | 80% |
+| scramble | 65 | 0.0% | 10% | 380 | +3.4% | -0.2% to +6.8% | no | -15.8% | 76% | 73% |
+| qb_adot | 198 | 0.1% | 30% | 378 | -0.3% | -3.2% to +3.1% | no | -5.6% | 76% | 75% |
+| cpoe | 234 | 0.0% | 10% | 378 | -0.6% | -3.8% to +2.8% | no | -4.7% | 80% | 78% |
+| pressured | 225 | 3.0% | 100% | 378 | -2.2% | -7.5% to +3.1% | no | +2.2% | 85% | 81% |
+| press_per_snap | 300 | 1.0% | 30% | 923 | -1.6% | -3.7% to +0.4% | no | +0.6% | 83% | 82% |
+| hits_per_snap | 190 | 1.0% | 0% | 2650 | +2.9% | +2.0% to +4.1% | yes | +2.9% | 82% | 82% |
+| tgt_per_cov | 64 | 0.0% | 30% | 3535 | +0.0% | -1.6% to +1.7% | no | -1.3% | 84% | 82% |
+| catch_allowed | 150 | 0.0% | 30% | 2992 | +0.5% | -0.2% to +1.1% | no | +1.1% | 81% | 80% |
+| adot_allowed | 31 | 0.0% | 30% | 2987 | +1.0% | -0.3% to +2.0% | no | -0.4% | 80% | 79% |
+| missed_tackle | 141 | 1.0% | 0% | 3543 | +0.3% | -0.5% to +0.9% | no | +0.2% | 83% | 82% |
+
+Drift: the filter beats static M1 clearly for 6 of 20 measures (the bet: half or more). Ranges: 19 of 20 measures' filter ranges hold 75-85%.
+
+### I14: coverage by how much a player's games swing
+
+Each row's swing: the spread of his games' rates around the filter's level before the test point, against what the noise alone gives (1 = as expected). Terciles.
+
+Then the ranges widened by his swing (shrunk toward 1 with 20 games' weight). I14 passes for a measure if the spread of coverage across the bands narrows by 5 points or more
+and the range score (the 80% interval score, lower is better) doesn't get worse.
+
+| Measure | Low swing | Mid | High swing | Widened: low, mid, high | Spread narrows by (points) | Range score change | I14 |
+|---|---|---|---|---|---|---|---|
+| tprr | 86% (swing under 0.80) | 82% | 77% (over 1.13) | 81%, 82%, 82% | 8 | -0.5% | yes |
+| yprr | 92% (swing under 0.61) | 83% | 73% (over 1.21) | 87%, 82%, 84% | 13 | -3.4% | yes |
+| adot | 92% (swing under 0.68) | 81% | 66% (over 1.40) | 86%, 79%, 78% | 18 | -4.3% | yes |
+| catch_oe | 81% (swing under 0.96) | 79% | 81% (over 1.19) | 78%, 80%, 85% | -4 | +0.5% | no |
+| yac_oe | 89% (swing under 0.68) | 85% | 79% (over 1.08) | 83%, 83%, 88% | 5 | -0.3% | no |
+| car_per_run | 88% (swing under 0.61) | 80% | 67% (over 1.20) | 82%, 77%, 76% | 16 | -4.4% | yes |
+| yaco | 86% (swing under 0.61) | 85% | 75% (over 1.14) | 81%, 84%, 82% | 7 | -1.4% | yes |
+| broken_per_touch | 86% (swing under 0.75) | 85% | 73% (over 1.27) | 81%, 84%, 87% | 7 | -0.7% | yes |
+| hitsack | 91% (swing under 0.77) | 82% | 83% (over 1.01) | 86%, 80%, 86% | 4 | -1.0% | no |
+| sack | 87% (swing under 0.78) | 83% | 77% (over 0.99) | 78%, 80%, 81% | 6 | -0.4% | yes |
+| scramble | 87% (swing under 0.91) | 78% | 63% (over 1.58) | 80%, 82%, 80% | 21 | -4.8% | yes |
+| qb_adot | 79% (swing under 0.95) | 77% | 71% (over 1.16) | 76%, 77%, 80% | 3 | -0.4% | no |
+| cpoe | 75% (swing under 0.92) | 82% | 83% (over 1.04) | 72%, 81%, 87% | -6 | +1.0% | no |
+| pressured | 83% (swing under 0.80) | 84% | 87% (over 1.00) | 80%, 84%, 90% | -6 | +0.4% | no |
+| press_per_snap | 87% (swing under 0.71) | 82% | 80% (over 1.09) | 82%, 82%, 86% | 4 | -1.1% | no |
+| hits_per_snap | 92% (swing under 0.64) | 82% | 73% (over 1.19) | 88%, 81%, 84% | 12 | -2.7% | yes |
+| tgt_per_cov | 90% (swing under 0.71) | 83% | 80% (over 1.06) | 87%, 81%, 84% | 4 | -1.9% | no |
+| catch_allowed | 82% (swing under 0.85) | 79% | 80% (over 1.06) | 78%, 79%, 83% | -2 | +0.1% | no |
+| adot_allowed | 89% (swing under 0.68) | 77% | 75% (over 1.19) | 82%, 77%, 83% | 9 | -1.7% | yes |
+| missed_tackle | 86% (swing under 0.71) | 82% | 79% (over 1.01) | 80%, 80%, 84% | 3 | -0.5% | no |
+
+I14: 10 of 20 measures pass.
+
+### Peak, new level or noise: how much of a recent gap lasts
+
+The gap: his last 4 games' rate less his career rate before them (players with more attempts before than in the 4 games). The kept share: the slope of the next 4
+games' rate (less the career rate before) on the gap, by the recent games' attempts (terciles); the filter's kept share is the same slope for its forecast.
+
+| Measure | Recent attempts (median): observed kept share (90%), the filter's | Bins within 0.1 |
+|---|---|---|
+| tprr | low (29): 0.25 (0.21 to 0.31), 0.24; mid (78): 0.40 (0.35 to 0.44), 0.39; high (130): 0.40 (0.34 to 0.44), 0.48 | 3 of 3 |
+| yprr | low (29): 0.22 (0.17 to 0.27), 0.18; mid (78): 0.32 (0.27 to 0.37), 0.26; high (130): 0.32 (0.26 to 0.36), 0.30 | 3 of 3 |
+| adot | low (9): 0.31 (0.24 to 0.37), 0.28; mid (18): 0.38 (0.30 to 0.45), 0.38; high (30): 0.41 (0.35 to 0.47), 0.44 | 3 of 3 |
+| catch_oe | low (9): 0.16 (0.10 to 0.22), 0.26; mid (18): 0.22 (0.16 to 0.28), 0.33; high (30): 0.23 (0.17 to 0.30), 0.38 | 0 of 3 |
+| yac_oe | low (8): 0.16 (0.10 to 0.24), 0.15; mid (13): 0.26 (0.19 to 0.34), 0.16; high (20): 0.25 (0.17 to 0.33), 0.17 | 2 of 3 |
+| car_per_run | low (19): 0.46 (0.34 to 0.58), 0.60; mid (44): 0.54 (0.45 to 0.66), 0.70; high (69): 0.73 (0.63 to 0.81), 0.81 | 1 of 3 |
+| yaco | low (17): 0.39 (0.25 to 0.52), 0.19; mid (41): 0.27 (0.13 to 0.37), 0.29; high (63): 0.34 (0.22 to 0.47), 0.28 | 2 of 3 |
+| broken_per_touch | low (22): 0.12 (0.03 to 0.21), 0.15; mid (50): 0.23 (0.12 to 0.36), 0.20; high (74): 0.29 (0.18 to 0.40), 0.26 | 3 of 3 |
+| hitsack | low (127): 0.29 (0.17 to 0.43), 0.27; mid (147): 0.27 (0.10 to 0.43), 0.32; high (168): 0.46 (0.33 to 0.62), 0.36 | 2 of 3 |
+| sack | low (127): 0.14 (0.00 to 0.28), 0.21; mid (147): 0.14 (0.00 to 0.31), 0.21; high (168): 0.46 (0.28 to 0.63), 0.25 | 2 of 3 |
+| scramble | low (127): 0.23 (0.05 to 0.49), 0.15; mid (147): 0.43 (0.29 to 0.59), 0.43; high (168): 0.43 (0.28 to 0.56), 0.40 | 3 of 3 |
+| qb_adot | low (111): 0.45 (0.22 to 0.67), 0.41; mid (131): 0.35 (0.17 to 0.51), 0.27; high (152): 0.30 (0.15 to 0.46), 0.37 | 3 of 3 |
+| cpoe | low (107): 0.16 (-0.01 to 0.29), 0.21; mid (126): 0.37 (0.25 to 0.50), 0.20; high (147): 0.13 (-0.06 to 0.31), 0.24 | 1 of 3 |
+| pressured | low (127): 0.18 (0.05 to 0.33), 0.37; mid (148): 0.15 (0.01 to 0.28), 0.45; high (168): 0.37 (0.25 to 0.52), 0.45 | 1 of 3 |
+| press_per_snap | low (72): 0.12 (0.03 to 0.22), 0.24; mid (102): 0.13 (0.02 to 0.24), 0.26; high (126): 0.32 (0.23 to 0.44), 0.27 | 1 of 3 |
+| hits_per_snap | low (40): 0.19 (0.12 to 0.26), 0.16; mid (73): 0.14 (0.07 to 0.19), 0.17; high (112): 0.20 (0.13 to 0.26), 0.19 | 3 of 3 |
+| tgt_per_cov | low (85): 0.28 (0.23 to 0.33), 0.37; mid (129): 0.31 (0.25 to 0.36), 0.42; high (157): 0.33 (0.27 to 0.38), 0.45 | 1 of 3 |
+| catch_allowed | low (10): 0.18 (0.12 to 0.23), 0.17; mid (15): 0.14 (0.08 to 0.20), 0.17; high (22): 0.25 (0.19 to 0.30), 0.22 | 3 of 3 |
+| adot_allowed | low (10): 0.26 (0.21 to 0.32), 0.21; mid (15): 0.30 (0.25 to 0.37), 0.28; high (22): 0.39 (0.33 to 0.45), 0.32 | 3 of 3 |
+| missed_tackle | low (14): 0.26 (0.21 to 0.30), 0.17; mid (21): 0.25 (0.20 to 0.30), 0.17; high (32): 0.22 (0.17 to 0.27), 0.20 | 3 of 3 |
+
+New level: 10 of 20 measures match within 0.1 in every bin.
+
+## Teams, game by game
+
+| Measure | Side | k (plays) | q | q_s | Rows | Filter against static M1 | 90% interval (teams resampled) | Clear | Filter's coverage | Static's |
+|---|---|---|---|---|---|---|---|---|---|---|
+| hitsack | off | 252 | 1.0% | 30% | 480 | +5.0% | +2.3% to +7.9% | yes | 79% | 77% |
+| proe | off | 204 | 3.0% | 100% | 480 | +10.0% | +2.8% to +16.2% | yes | 75% | 64% |
+| shotgun | off | 74 | 3.0% | 100% | 480 | +24.1% | +17.0% to +30.5% | yes | 85% | 67% |
+| no_huddle | off | 72 | 3.0% | 100% | 480 | +37.1% | +10.7% to +57.2% | yes | 90% | 80% |
+| explosive | off | 834 | 1.0% | 30% | 480 | +0.5% | -2.3% to +3.6% | no | 80% | 77% |
+| success | off | 347 | 0.0% | 100% | 480 | +12.0% | +6.5% to +17.6% | yes | 76% | 70% |
+| adot | off | 242 | 1.0% | 30% | 480 | +0.7% | -2.2% to +4.0% | no | 77% | 74% |
+| hitsack | def | 770 | 0.3% | 30% | 480 | -0.8% | -3.2% to +1.7% | no | 77% | 75% |
+| proe | def | 1496 | 1.0% | 10% | 480 | -2.0% | -3.9% to -0.2% | no | 76% | 76% |
+| shotgun | def | 1663 | 3.0% | 100% | 480 | -2.4% | -6.6% to +1.5% | no | 82% | 81% |
+| no_huddle | def | 2802 | 0.1% | 30% | 480 | -4.8% | -8.6% to -2.0% | no | 87% | 88% |
+| explosive | def | 1083 | 0.3% | 30% | 480 | -3.3% | -5.8% to -1.0% | no | 78% | 78% |
+| success | def | 842 | 1.0% | 30% | 480 | +1.9% | -0.6% to +4.8% | no | 75% | 73% |
+| adot | def | 577 | 1.0% | 30% | 480 | +1.3% | -1.0% to +3.6% | no | 77% | 76% |
+
+Teams: the filter beats static M1 clearly for 5 of 14.
