@@ -148,3 +148,8 @@ ti = np.array([TIX[t] for t in h["team"].to_list()])
 bb = wls(y, X, np.ones(len(y)))
 bs = np.array([wls(y, X, WB[k, ti])[1] for k in range(B)])
 print(f"  reported: the difference controlling for last season's efficiency and departures {bb[1]:+.4f} (90% {np.percentile(bs, 5):+.4f} to {np.percentile(bs, 95):+.4f})")
+
+# reported after the pre-registration: H110's "he left" side bet overlaps the count of departures (he left means
+# the count is 1 or more), so the side bet again without the count
+print("\nreported (added after the pre-registration): H110's side bet without the count of departures")
+reg(cp, "n_new", ["z_eff", "left", "age"], "newcomers at the group (count), without n_left")

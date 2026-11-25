@@ -92,6 +92,151 @@
 - **I49:** swap pairs say who inherits an absent player's snaps. H109's pair part tests it.
 - **I122:** a shrunk vacancy forecast. H111's P and Z are a version of it for shares.
 
-## Results
+## Results (run 2026-11-24)
 
-*Not yet run.*
+> Scripts and their outputs sit side by side in `explore/`: `vo_common.py` (the tables), `h109_plus_minus.py` (the noise ceiling and H109), `h110_h112_intake.py`, `h111_role_distance.py`, `i125_intake_split.py`. Every interval is a 90% team bootstrap (2,000 draws). Verdicts are by the pass rules above; **the CEO closes the hunches.**
+
+**Go.** There's a clear signal, and it splits by cadence:
+- **In season,** the CEO's plus-minus is the best forecast of who absorbs an absent player's snaps.
+- **In the offseason,** what matters first is whether the team brought in a top player. Where it didn't, the plus-minus beats "no change" too.
+
+### 0. The noise ceiling
+
+- **A stayer's next share is very forecastable in principle:** split-half r of next season's snap share is 0.92 (WR), 0.95 (TE), 0.93 (RB), 0.78 (OL) and 0.92 (DL). That's 0.88–0.97 for a full season.
+- **The shares move a lot, and the usual way doesn't explain the moves:**
+  - A stayer's change in share, from his with share to next season, has an SD of 0.25 (2,616 stayers).
+  - The proportional split's allocation explains only 0–8% of that change (r-squared, by group).
+- **Team efficiency barely repeats:**
+  - offense EPA per play, season to season: r 0.39, SD of the change 0.098;
+  - defense: r 0.25, SD of the change 0.086.
+
+  So a single non-QB's effect on a season's efficiency (H110, H112) sits in a lot of noise.
+- **The plus-minus's fitting noise is small:**
+  - In 40 team-bootstrap refits, its same-group pooled values never flip sign, and their 90% ranges are narrow (WR +0.15 to +0.17).
+  - Its penalty chose the smallest value on the grid (1). The build should extend the grid.
+- **Absences:** 2,737 games missed by top players between their first and last game, 2016–2024. Per top player-season: OL 1.0, RB 0.9, WR 0.7, TE 0.6, DL 0.5.
+
+### H109: the plus-minus for all players: **held by its pass rule**, but the bar was weak
+
+- **What the plus-minus learned.** This is the pooled part: how much a player's share rises per unit of an absent top teammate's share.
+
+  | The absent top player's group | A same-group player's share rises |
+  |---|---|
+  | WR | +0.16 |
+  | TE | +0.28 |
+  | RB | +0.24 |
+  | OL | +0.08 |
+  | DL | +0.09 |
+
+  Across groups it's about 0. When a top player sits, his group-mates absorb a sixth to a quarter of his share, and other groups absorb none. The rest goes to players who weren't playing before.
+- **Offseason departures, against the proportional split (1a), the pre-registered test.** Lower squared error on next season's snap share:
+  - all groups: **+31%** (90% +28% to +34%); skill groups +48%, the lines +25%; every group is clear.
+  - So by its pass rule, **held**.
+- **Against "no change"** (his with share; reported):
+  - all groups +9.9% (+5.8% to +13.7%);
+  - the lines +13.6%;
+  - **the skill groups −6.7% (−16.7% to +3.0%): a tie, which no change wins.**
+
+  The proportional split loses badly to no change: 31% worse overall, 104% worse for the skill groups. It hands the stayers the departed share, but the team usually brings someone in (72% of the time, H112).
+- **With or without (1b):** +2.4% over 1a, close to nothing.
+- **I49 (swap pairs):** the pair part adds +2.3% (+0.1% to +4.5%) to the pooled part. Small, but clear of 0.
+- **Side bet, target and carry share (Claude 30%): held as worded, against 1a.**
+  - target share: +40% against 1a; carry share (RB stayers): +33%.
+  - Both lose to no change: targets −7.6% (−12.0% to −3.4%), carries −7.3% (−12.9% to −1.5%).
+- **Side bet, weekly absences (Claude 50%): held, and the strongest result.**
+  - **Setup:** walk-forward (the pooled part from earlier seasons, the pair part from this season's earlier games), 9,713 player-games, 2017–2024.
+  - **Against 1a:** +24.5% (+22.5% to +26.7%).
+  - **Against no change:** +31.3% (+28.8% to +34.0%).
+  - **Skill groups:** +29.8% against 1a and +38.7% against no change.
+  - **By group:** clear in all five.
+
+### I125 (Claude's idea, odds first): the stayers' forecast hinges on intake: **held**
+
+The idea: split H109's stayers by whether the team brought in a top player at the group.
+- **With the flag read from next season** (a newcomer among the group's top; hindsight):
+  - **the group left empty:** the plus-minus beats no change by +34.6% (+24.0% to +45.7%) on skill snap share;
+  - **a top player brought in:** it loses by 60%.
+- **With a flag known in the offseason** (a newcomer who was a top player at his group elsewhere last season, or a pick 1–64 rookie):
+  - **the group left empty:** skill snap share +16.9% (+2.1% to +32.4%); target share +11.4% (+3.2% to +20.7%); the lines +13.6%;
+  - **a top player brought in:** skill −25.5%, targets −11.3%; the lines +13.5%.
+- The proportional split loses to no change in every cell.
+- **Claude's odds were 55%, for a 5–15% gain.** The offseason-known size, 16.9%, is just above that range.
+
+### H110: an absence's efficiency cost and next offseason's intake: **failed by its pass rule**
+
+- **Rows:** 642 top player-seasons with 2+ games played and 2+ missed.
+- **Newcomers per SD of the efficiency cost:** +0.05 (90% −0.09 to +0.18). Their share of the group's snaps: −0.001 (−0.016 to +0.014).
+- **The lines' pressure cost** (reported): +0.12 newcomers (−0.05 to +0.28).
+- **Why it can't work as measured:** the cost averages +0.013 EPA per play, with an SD of 0.13. With a median of 3 games missed, sampling noise alone gives an SD of about 0.13 (a game's EPA per play has an SD of 0.20). The measured cost is almost all noise, for us and for a front office.
+- **Side bet (85%), he left: failed as specified.** +0.05 newcomers (−0.25 to +0.34), because the count of the group's departures carries it (+0.88 newcomers per departure).
+  - Without the count (reported, added after the pre-registration), he left: +0.98 (+0.69 to +1.25).
+  - That two of my own controls overlap is a design flaw in the pre-registration.
+
+### H111: roles' coordinates against position labels for who receives: **failed by its pass rule**
+
+- **Rows:** 987 WR, TE and RB stayers with coordinates, on teams where a top skill player left.
+- **Z (role distance) against P (same position):**
+  - target share change: −0.1% (−1.3% to +1.1%);
+  - carry share change: −2.7% (−5.5% to 0.0%).
+- **P itself doesn't beat the mean** on target share (−0.1%). The vacated share barely tells which stayer gains (r 0.05), while his own share's pull back toward the middle dominates (r −0.23).
+- **Side bet (35%): failed** (−0.3%, −0.4% to −0.1%).
+- **Why:** the vacated targets mostly go to newcomers (H112's side bet, I125). Who receives among the stayers is a small slice of the change.
+
+### H112: bringing in a top player against leaving the group empty: **failed by its pass rule**
+
+- **Rows:** 619 team-season-groups with a departure; 72% brought in a top player (OL 87%, RB and TE 56–57%).
+- **Efficiency change, s to s + 1:**
+
+  | | EPA per play |
+  |---|---|
+  | brought in a top player | +0.0065 |
+  | left the group empty | −0.0030 |
+  | difference | **+0.0095 (90% −0.0040 to +0.0237)** |
+
+- **By group:**
+  - **The skill groups lean positive:** WR +0.025 (−0.000 to +0.052), TE +0.035, RB +0.032, each interval just reaching 0.
+  - **The OL leans negative:** −0.022 (−0.051 to +0.006).
+  - **The DL:** about 0.
+- **Controlling for last season's efficiency** (reported): −0.008 (−0.021 to +0.007).
+- **The lines' pressure:** −0.005 (−0.015 to +0.005).
+- **Side bet, the spread differs (20%): failed, narrowly.** The SD ratio is 0.92 (0.85 to 1.01).
+- **Side bet, stayers grow less where a top player came in (90%): held.** The stayers' summed share gain is +0.05 against +0.32. The difference is −0.27 (−0.33 to −0.21).
+
+### What it means
+
+- **An analogy, diversion ratios.**
+  - **In season,** an absence is a stock-out. The plus-minus measures where the demand goes, and it's mostly to group-mates, at a sixth to a quarter of the share.
+  - **In the offseason,** the store restocks: a new product usually comes in. The stock-out ratios then apply only where nothing new came in (I125).
+- **The CEO's plus-minus is the method to build, in two cadences (rule m):**
+  - **`vacated-live`** (in season): the weekly result, the strongest.
+  - **`vacated-offseason`:** gated on intake, known after free agency and the draft.
+- **The usual proportional split shouldn't ship anywhere.** It loses to "no change" in every cell.
+
+### The case against (short; the full one goes in RESULTS.md)
+
+- **H109's pass rule compared against a weak bar.** Against no change, the skill-group offseason result is a tie.
+- **I125's offseason flag is a proxy.**
+  - It uses who played for the team in s + 1 to find the newcomers. The week 1 roster gives about the same set before the season, but that's not checked.
+  - Contracts aren't in the tables.
+- **The pair part is fit on the same season it's applied to** (by design, for the offseason). That is fine for a departure, which happens after the season, but it isn't walk-forward within season s.
+- **H110's side-bet model overlapped,** as written above.
+- **Stayers include marginal players.** Rows aren't weighted by snaps.
+
+### Technical calls (for veto before any merge)
+
+- **The groups and top k:** WR 2, TE 1, RB 1 (with FB), OL 5, DL 3. The roster's DL only, so edge rushers listed as LB are not in it.
+- **An absence:** a team game between his first and last game for that team in which he had no snap.
+- **Pressure:** pressure rate over dropbacks with the flag or a sack, a sack counted as a pressure (F34).
+- **The plus-minus:**
+  - fit on seasons up to s, demeaned within player-season;
+  - the pooled and pair parts share one penalty, chosen on 2016;
+  - forecasts clipped to [0, 1].
+- **Role distance:** Euclidean over the 6 pooled coordinates, scaled by its median, before exp(−d).
+- **I125's offseason intake flag:** a newcomer at the group who was a top player at his group elsewhere last season, or a pick 1–64 rookie.
+
+### The backlog checked
+
+- **I49 (swap pairs):** the pair part adds +2.3%, clear but small. Kept as the pair part.
+- **I122 (a shrunk vacancy forecast):** H111's P and Z models were the shares version, and neither found signal among the stayers. I122 stays open for roles' newcomers.
+- **I125:** new, held, and graduates to the brief.
+- **I126:** new, open. H111 retried on the groups left empty.

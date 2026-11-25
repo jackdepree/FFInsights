@@ -41,3 +41,9 @@ rows (team-season-groups with a departure, 2016-2023): 619; brought in a top pla
     DL: n 162 (brought in 111); efficiency difference +0.0009 (90% -0.0209 to +0.0243)
   the lines' own outcome (pressure, up = better; reported): difference -0.0047 (90% -0.0147 to +0.0052)
   reported: the difference controlling for last season's efficiency and departures -0.0078 (90% -0.0208 to +0.0073)
+
+reported (added after the pre-registration): H110's side bet without the count of departures
+  newcomers at the group (count), without n_left (n 642; mean 4.226):
+    z_eff : +0.060 (90% -0.096 to +0.201)
+    left  : +0.975 (90% +0.687 to +1.245)
+    age   : -0.030 (90% -0.081 to +0.028)

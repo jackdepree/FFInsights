@@ -1,6 +1,6 @@
 # Vacated opportunity: who absorbs an absent player's targets and carries
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration runs methods 1 and 2 (the CEO's choice); it's pre-registered in [EXPLORATION.md](EXPLORATION.md).
+> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. Waiting for the CEO's direction and closes.
 
 ## Why now
 
