@@ -1,0 +1,23 @@
+participation rows 79,417; availability rows 226,922
+flagged games: 1,414 of 56,114 played
+rows with a previous game on participation's rows: 65,644; flagged 1,163
+
+Next game's health absence:
+  flagged: absent 17.88%, forecast 16.60%
+  others:  absent 5.24%, forecast 5.13%
+  gap (flagged's miss less the others'): +1.17% (+0.43% to +1.99%), points of absence chance
+
+By season (flagged: absent less forecast):
+  2017: +1.62% on 124 rows
+  2018: +0.68% on 147 rows
+  2019: +0.63% on 146 rows
+  2020: +0.69% on 155 rows
+  2021: +0.34% on 148 rows
+  2022: +1.51% on 173 rows
+  2023: +3.65% on 129 rows
+  2024: +1.52% on 141 rows
+
+Pays (walk-forward, 2019-2024, 50,234 rows): the flag beside next_logit's own logit
+  log loss: recalibrated alone 0.04954; with the flag 0.04952; raw 0.05066
+  gain: +0.053% of the log loss (-0.108% to +0.216%)
+  on flagged rows only: +2.32%

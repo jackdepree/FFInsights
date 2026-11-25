@@ -303,6 +303,36 @@ Every idea born in a retro is now tagged in IDEAS.md. The tags were read from ea
 
 Retro 5 counts "paid" for the project-born rows as well, and scores the first dreams.
 
+**The CEO on the head start (2026-11-25, word for word):** "It seems like a head start, because you're already looking at all the other patterns and you're looking at the ideas and findings and what worked, what didn't work, and you're kind of making a guess on what would work in the future or what would be interesting to test, or even making an idea that you think will fail is good too, because then we know not to do that. We know that that path is blocked or constrained or restricted. So it's good to have failings too. It's what is really good is the thing that we really want is to know what we know and to know what we do not know. That's really the goal of everything in this project, and everything we do. We want to know what we don't know. And I think it is a head start, but that's kind of the point. The point is that it's a head start. The point that when you do this dreaming step, we can kind of like leapfrog some work or some tests or some thought process or some brainstorming. We can leapfrog it, and we can kind of like get ahead of the curve. So it's kind of the point to have a head start. And then I think which dream should run first? I guess. I don't know. You can do any of them. Any of them that are easy to test right now, go for it. And then if any of them fit like within an expert down in the future, like we can keep them there. But I mean, like any of them that are easy right now, just do. And if you don't do it, we'll revisit in the next retro. So I think you can do whatever you think. Your call."
+
+- **The head start is the point.** A retro or dream idea that graduates more often is the step working, not a bias to correct. The score compares origins so the dream step can be judged, not so retro ideas are marked down.
+- **A dream expected to fail is welcome.** A closed path is knowledge: we know what we don't know. Dreams may carry low odds on purpose.
+- **Run the dreams that are easy now** (Claude's call); the rest wait in their experts' builds or come back at retro 5.
+
+
+### The easy dreams, run (2026-11-25, the CEO: "Any of them that are easy to test right now, go for it"; discovery only)
+
+Three of the eight could run on saved walks (2016-2024, the vault untouched). The rest need a build or new data, or re-runs:
+- **I147:** the saved walks don't keep each input's base version, so it needs re-runs.
+- **I149, I152, I153:** need `player-opportunity`'s build.
+- **I150:** needs the betting cousin.
+
+| Dream | Result | Claude's odds, scored |
+|---|---|---|
+| **I146, the miss matrix** | **34 of 180 cells pass.** It re-finds the yardstick's known inputs (participation, opportunity-quality and availability in the crude forecaster), a check that it works. New: participation's snap-share misses are read in production forecasts (the fantasy lasso +1.7%, opportunity-quality +0.7%); team-efficiency and Elo fill each other's misses (+0.4% to +0.6%); schemes-v2's tempo misses what pace knows (+1.7%). Graduated; F92 | 60% a cell passes: **came true**. 35% for 0.3%+ once built: waits for the builds |
+| **I151, hidden injuries** | Real and small: after a big snap drop, the next game's absence is 1.2 points above the forecast (+0.4 to +2.0), in all 8 seasons; as a flag it ties. Killed; F93 | 50% beats the forecast: **came true, small**. 30% pays: **failed** |
+| **I148, the change alarm** | Outside known changes, team-efficiency misses more after an alarm (offense +10%, defense +15% of the squared miss) but neither interval clears 0. Stays open for the shorter-memory test in team-efficiency's build | 45% flagged weeks miss more: **unclear, leaning yes** |
+
+**What it means:**
+- The dream step's first scores: one dream paid as a discovery, one was real but small, one is unclear.
+- F92's new cells are named candidates for three builds:
+  - **participation:** read production forecasts, F36's "efficiency earns opportunity" from the other side;
+  - **team-efficiency and Elo:** read each other;
+  - **schemes-v2's tempo:** read pace.
+- F93 is a closed path. The report already knows most of what a snap drop says.
+
+**The backlog after the run:** 67 open, less I146 and I151: **65 open.**
+
 ### The case against this retro
 
 - **Step 2's scores lean on Claude's sorting.** Claim or method, and which side bets count, were sorted after the results (W2 was rejected). H111 as a method and H102 as a claim could each go the other way.
@@ -312,6 +342,7 @@ Retro 5 counts "paid" for the project-born rows as well, and scores the first dr
 - **The sleep mapping is Claude's reading of the paper from its abstract and two explainers,** not its full text. The football ideas stand on their own tests either way.
 - **I141 is a multiple-testing machine.** The false-discovery control and the vault are what keep it honest. Its finds are discoveries, never proof.
 
+- **I146's cells are one-column linear corrections on saved walks,** often on the overlap of two experts' rows. A cell's size is not what the input adds once built; the builds decide that.
 - **The dreams are Claude's reading of the logs, in one sitting.** They are guesses with odds, as every idea is. The first honest score comes at retro 5.
 - **The backward origin flags are Claude's judgment** for the follow-ups (I54-I56 are counted as retro 1's, though they came from running I47).
 
