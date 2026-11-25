@@ -1,6 +1,6 @@
 # Aging: how a player changes with age, and when his career ends
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. Waiting for the CEO to confirm the wording, add odds for H117, H119 and H122 and sizes if they like; then Claude proposes ways to test them (one exploratory).
+> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below (one exploratory), waiting for the CEO's pick.
 
 ## Why now
 
@@ -84,14 +84,43 @@ It updates between seasons, from completed seasons only. It serves next-season p
 |---|---|---|---|
 | **H115** | **Mileage, split by kind:** a player's cumulative snaps, passing plays and running plays counted apart, forecast his decline in efficiency and in usage better than his age alone | 30% | **25%** for both efficiency and usage. Side: 40% for at least one, at one position or more (likeliest: running backs' usage). Mileage and age move together, and good players play more, so most of mileage is age and talent. Size: 0.5-2% of next season's error where it pays |
 | **H116** | **Roles add to mileage and age:** the roles-and-archetypes coordinates reduce the error on a player's future decline in efficiency and usage beyond snaps and age | 30% | **30%** for both. Side: 45% for usage alone (the role table pays for usage elsewhere: F76, F79). Size: 0.5-2% |
-| **H117** | **Two ways to decline:** players who lose usage and keep their efficiency, and players who lose both, are distinct groups, and which one a player is can be told before it happens | no odds yet (the CEO: "I would be curious to see") | **Real (the two groups exist, beyond noise): 65%. Told apart in advance, better than chance: 30%** |
+| **H117** | **Two ways to decline:** players who lose usage and keep their efficiency, and players who lose both, are distinct groups, and which one a player is can be told before it happens | 45% (the CEO, after recording: "H117; 45%"; still before any test) | **Real (the two groups exist, beyond noise): 65%. Told apart in advance, better than chance: 30%** |
 | **H118** | **Mileage weighted by risk:** snaps weighted by each play's chance of an injury forecast a player's downfall (his decline and his career's end) better than his age alone | 50% | **25%.** No per-play injury risk exists yet. It would be built here from play type, contact and the injury reports (availability's events), which is the cost. Side: 35% it beats plain mileage (H115) for running backs |
 | **H119** | **Late-career comebacks:** some players' efficiency and usage fall, then their efficiency rises again before they retire, and which players will do it can be forecast | no odds yet (the CEO: "I wonder if") | **Real, beyond what pulling a bad season back toward his level already gives: 20%. Forecastable: 10%.** A dip followed by a rise is what noise and the pull-back produce on their own (stabilization: efficiency is mostly noise in one season), so the test must beat that |
 | **H120** | **Stars age differently:** players with at least one season of extremely high outcomes decline on a different pattern (their usage and efficiency trends) from career backups and players who never had one | 60% | **60%.** Side: 45% the difference is in usage (stars keep their jobs longer as they decline), against 25% in efficiency. Selection is the case against: a star's peak is partly luck, so he regresses from it |
 | **H121** | **Positions and roles age differently:** some positions, and some roles within a position (the roles-and-archetypes coordinates), age on different curves | 95% | **90%** for the claim as worded (positions alone: 97%). Roles within a position: 55% |
-| **H122** | **Usage shows aging better than efficiency:** the best measure of decline from age is usage, not efficiency, because efficiency is so tied to teammates' performance | no odds yet | **70%** that age explains a clearly larger share of the real change in usage than in efficiency. Two cases against: usage also depends on teammates (who else is on the depth chart), and efficiency is mostly noise in a season anyway. This is also a taste call on the target: which measure aging is judged on |
+| **H122** | **Usage shows aging better than efficiency:** the best measure of decline from age is usage, not efficiency, because efficiency is so tied to teammates' performance | 80% (the CEO, after recording: "H122; 80%"; still before any test) | **70%** that age explains a clearly larger share of the real change in usage than in efficiency. Two cases against: usage also depends on teammates (who else is on the depth chart), and efficiency is mostly noise in a season anyway. This is also a taste call on the target: which measure aging is judged on |
 
 **Assumptions to flag (Claude):**
 - **Mileage needs counts back to each career's start.** Snap counts begin in 2013 and participation in 2016. Before that, plays from play-by-play stand in: carries, targets and dropbacks from 1999. Careers that started earlier are cut off, a stated limit.
 - **Survivor bias touches every hunch.** Players who decline get cut and leave no next season. Each test also reads "still playing next season" as an outcome, or adds replacement-level seasons for those who vanish (the delta method's fix).
 - **The roles-and-archetypes coordinates** are read from that project's saved walk-forward history (rule e), for the seasons it covers.
+
+## Ways to test it (for the CEO to choose; one is exploratory)
+
+**Every method shares one design:**
+- **The rates:** usage (snap share, targets a route, carries a run snap, dropbacks) and efficiency (yards a route, catch over expected, yards after contact, cpoe and the like), each pulled back by stabilization's k before any change is read. Otherwise noise looks like decline.
+- **The target:** next season's change, plus whether he plays next season at all.
+- **The baseline:** the forecast with no age in it.
+- **The scoring:** held-out seasons, players resampled. A tie goes to the simpler side.
+
+1. **The usual way, drawn whole: delta curves with the survivor fix** (the base; the simple side under rule k).
+   - **The curves:** the weighted change from one age to the next by position, for usage and efficiency apart, chained into curves.
+   - **The survivor fix:** two versions, compared. One adds a replacement-level season for players who vanish. The other fits a separate "still playing" curve.
+   - **A mixed model as a check:** each player's own level, plus a shared age curve.
+   - **Tests:** H121 (curves by position, then by role), H122 (how much of each kind's real change age explains), H120 (stars against the rest) and the "real" half of H117.
+   - **Cost:** a session.
+2. **Load, risk and roles: what besides the calendar** (tests H115, H116, H118, H120).
+   - **The inputs:** cumulative plays split by kind (passing and rushing; touches and hits for backs), a risk-weighted version, and the roles-and-archetypes coordinates. Each is added to age in a ridge for next season's change, and in a yearly survival model (the chance he plays next season).
+   - **The risk score:** each play's chance of an injury, fit on play type, contact and the injury events (play-by-play's injury notes, the weekly reports).
+   - **The obvious-input check:** each one beside age and last season's usage.
+   - **Cost:** a session, mostly the risk score.
+3. **Exploratory: career phases as hidden states** (tests H117 and H119, and the CEO's comeback question directly).
+   - **The model:** a hidden Markov model over a player's seasons. Its states are rising, peak, usage-only decline, full decline and a comeback state. Each state has its own usage and efficiency trend, and the chance of moving between states can depend on age, load and role.
+   - **What it gives:** a player's chance of each state next season, so it says "losing his job but still good" apart from "losing it all".
+   - **Assumptions:** careers move through a few phases, and 10-20 thousand player-seasons are enough to learn them. That is the expensive part.
+   - **Its simple twin:** clustering each player's last two seasons of change (usage against efficiency), with the delta curves for the rest. The model must beat the twin.
+   - **The record** (P4: methods rarely win; F30, F80) says it will likely tie on forecasts. It may still be the clearest way to read H117 and H119.
+   - **Cost:** a session or two.
+
+**The backlog checked along the way:** I153 (historical analogs, PECOTA's way) as a side model in method 3, and I152 (role drift) in method 2.
