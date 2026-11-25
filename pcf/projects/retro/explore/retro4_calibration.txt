@@ -1,0 +1,136 @@
+
+== THE CEO, FIRST NUMBER: 20 bets, 11 came true (55%), average stated 51%; Brier 0.230 (always saying 50%: 0.250)
+   stated 0%-35%: 6 bets, average stated 30%, came true 17%
+   stated 35%-55%: 5 bets, average stated 48%, came true 100%
+   stated 55%-75%: 6 bets, average stated 63%, came true 50%
+   stated 75%-100%: 3 bets, average stated 75%, came true 67%
+   claims: 7 of 13 came true, average stated 45%, Brier 0.213
+   methods: 4 of 7 came true, average stated 63%, Brier 0.262
+     60%  yes  H93 past injuries, recovery and age forecast time missed
+     30%  yes  H94 proneness depends on the injury
+     50%  yes  H95 roles differ in injury risk within a position (held in part)
+     70%  no   H96 risk-weighted snaps beat counts
+     70%  yes  H97 tacklers, a tackle behind the line, long plays raise injury risk (2 of 3)
+     50%  yes  H98 a recency-weighted total of risky plays (held, small)
+     60%  no   H99 the plays he's not on say as much about his role
+     50%  yes  H100 a latent usage space of 4-6 features (held in part)
+     40%  yes  H101 like-for-like substitutes
+     60%  yes  H102 the chance of keeping last season's role (held in part)
+     75%  no   H103 roles gravitate to schemes, combinations predict
+     30%  no   H104 a coach's scheme seeks roles when a starter leaves
+     30%  no   H105 teams target roles in free agency and trades
+     30%  no   H106 archetype against defensive scheme
+     75%  yes  H107 a latent space of responsibilities beats labels (held in part)
+     50%  yes  H108 credit by identity and responsibility (held, by the role's part)
+     75%  yes  H109 a plus-minus for all players for stayers' shares
+     30%  no   H110 efficiency losses bring intake at the group
+     60%  no   H111 roles' coordinates predict recipients better than labels
+     30%  no   H112 bringing in a top player against leaving the group empty
+   claims that pay (any held-out gain): 4 of 13
+   methods that pay (any held-out gain): 1 of 7
+
+== CLAUDE, ON THE CEO'S CLAIM AS WORDED: 20 bets, 11 came true (55%), average stated 50%; Brier 0.193 (always saying 50%: 0.250)
+   stated 0%-35%: 6 bets, average stated 25%, came true 33%
+   stated 35%-55%: 4 bets, average stated 40%, came true 50%
+   stated 55%-75%: 7 bets, average stated 65%, came true 57%
+   stated 75%-100%: 3 bets, average stated 80%, came true 100%
+   claims: 7 of 13 came true, average stated 48%, Brier 0.139
+   methods: 4 of 7 came true, average stated 54%, Brier 0.292
+     70%  yes  H93
+     70%  yes  H94
+     45%  yes  H95 (held in part)
+     45%  no   H96
+     75%  yes  H97 (2 of 3)
+     30%  yes  H98
+     65%  no   H99
+     70%  yes  H100 (held in part)
+     85%  yes  H101 (like-for-like)
+     70%  yes  H102 (held in part)
+     30%  no   H103
+     55%  no   H104
+     35%  no   H105
+     15%  no   H106
+     80%  yes  H107 (held in part)
+     25%  yes  H108
+     35%  yes  H109 (against the proportional split)
+     25%  no   H110
+     55%  no   H111
+     25%  no   H112
+
+== CLAUDE, SIDE BETS AND IDEAS: 68 bets, 35 came true (51%), average stated 56%; Brier 0.220 (always saying 50%: 0.250)
+   stated 0%-35%: 8 bets, average stated 29%, came true 25%
+   stated 35%-55%: 21 bets, average stated 44%, came true 29%
+   stated 55%-75%: 23 bets, average stated 61%, came true 70%
+   stated 75%-100%: 16 bets, average stated 79%, came true 69%
+     35%  no   H93 adds beyond the after-the-fact ceiling
+     40%  no   H94 a hamstring repeats 2x+ in season
+     60%  yes  H95 roles differ within a position
+     30%  no   H95 high variance in yards per play, more injuries
+     45%  no   H97 all three features
+     55%  no   H99 part-timers gain 0.05+
+     85%  no   H99 every-down players: nothing
+     75%  no   H100 top components repeat season to season 0.5+
+     60%  yes  H100 stable loadings
+     55%  yes  H101 like-for-like more for TE and RB than WR
+     50%  yes  H102 already by week 4
+     80%  yes  H103 roles cluster on schemes
+     60%  yes  H104 newcomers nearer their own team's departed player
+     45%  no   H106 an interaction clear in-sample
+     45%  no   H107 beyond last season's volume
+     30%  no   H107 beats a role table of the same size
+     50%  no   H108 target group movers r 0.2+ (at the line, not cleared)
+     30%  yes  H109 target and carry share too (against 1a)
+     50%  yes  H109 weekly absences
+     85%  no   H110 he left: more intake (as specified)
+     35%  no   H111 beyond his current share
+     20%  no   H112 the spread differs
+     90%  yes  H112 stayers grow less where a top player came in
+     60%  no   I29 the long-drive rise halves
+     75%  yes  I30 it's the day's matchup (fails)
+     75%  yes  I43 passing-down share in contracts
+     75%  no   I48 garbage time pooled ties, weight 0.8+
+     75%  yes  I50 backups rise late in long drives (held, smaller)
+     60%  no   I50 the backup share explains I30
+     90%  yes  I57 his own routes beat the position's mix
+     40%  yes  I57 the role table adds beyond
+     70%  yes  I58 QB red-zone carries 2%+ (nine seasons; the vault reversed it)
+     30%  no   I59 pass-heavy receivers 1%+
+     60%  no   I60 games played worth 2+ points
+     50%  no   I61 past thrown TDs fall under 2% given the passer
+     70%  yes  I67 participation worth less on QB rushing
+     65%  no   I70 passing rises, the rest move under 1 point
+     50%  no   I75 continuity, defense 2%+
+     30%  no   I75 continuity, offense 2%+
+     80%  no   I84 receivers: own share wins
+     75%  yes  I84 backs: the slot wins or ties
+     75%  yes  I114 the line, team yards 2%+
+     40%  no   I114 the line, players' yards
+     70%  yes  I116 players' 1+ error under 3, slope 0.9-1.1
+     45%  no   I116 thrown touchdowns too
+     75%  yes  I118 the opener 3%+ for team touchdowns
+     45%  no   I121 proneness 0.5%+ receiving
+     30%  no   I121 proneness, rushing
+     55%  yes  I122 the shrunk vacancy wins clearly
+     60%  yes  I123 fewer flips than 14% (coarse yes, fine no)
+     60%  yes  I124 3+ of 6 pooled defensive axes repeat
+     35%  yes  I124 within position too
+     70%  yes  I124 positions blur
+     60%  yes  I124 beats labels on tackles and rushes
+     55%  yes  I125 the plus-minus beats no change where left empty
+     35%  no   I125 the proportional split does too
+     45%  no   I128 the team's Questionable habit
+     65%  yes  I129 the healthy rate counts releases, 2%+
+     55%  no   I130 a narrower chain
+     60%  yes  I132 measurables beat the position mean (one axis, WRs)
+     50%  yes  I133 the fullbacks fix turns rushing to a tie
+     45%  no   I134 the band: median under 14%
+     70%  no   I134 DL and OLB under 20%
+     80%  yes  I134 the band forecasts as well
+     40%  yes  I135 the 4-feature table, receiving
+     30%  yes  I135 the 4-feature table, rushing
+     55%  yes  I136 like-for-like on the role table
+     75%  yes  I49 swap pairs: the partner gains more (vacated's pair part, +2.3%, clear)
+   size bets: 6 of 23 came true, average stated 57%, Brier 0.237
+   other bets: 29 of 45 came true, average stated 56%, Brier 0.212
+
+== Head to head on the same 20 hunches: Claude closer on 13, the CEO on 7, level 0

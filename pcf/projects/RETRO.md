@@ -9,6 +9,112 @@
 
 ---
 
+## Retro 4 (started 2026-11-25)
+
+> The CEO, 2026-11-25: "Start retro 4"
+
+**Why now:** three projects finished since retro 3: `td-expert` (built 2026-11-24), `availability` (built 2026-11-24 to 25) and `roles-archetypes` (built 2026-11-24 to 25). The yardstick batch (retro 3's group D) and vacated opportunity's exploration and brief came in between. By the charter the retro was due at the second of them, before the next project starts.
+
+**Read:** hunches H93 to H112 (20, all with the CEO's odds written before the test), ideas I113 to I139, the yardstick batch, and the projects since retro 3: `td-expert` (built), `availability` (exploration, brief, build), `roles-archetypes` (three looks, brief, build in two rounds), `vacated-opportunity` (exploration, brief agreed).
+
+**The steps,** in the charter's order: 1. sort the backlog; 2. score the predictions; 3. run the quick groups; 4. update the patterns; 5. new ideas and a prediction for every open one; 6. the findings table; 7. workflow changes for the CEO.
+
+### 1. The backlog, sorted (2026-11-25)
+
+**Since retro 3:** 68 were open. The builds and the yardstick batch closed 32 (20 graduated, 12 killed) and opened 9 (I115, I117, I119, I120, I126, I127, I137, I138, I139). W9 worked: every row closed by a build left Open in the same commit.
+
+**Housekeeping, closed by Claude** (three rows had a result but sat under Open, from before W9):
+
+| Idea | Closed as | Why, in one line |
+|---|---|---|
+| I49, swap pairs inherit an absent player's snaps | **Held, small** | It became the vacated plus-minus's pair part: +2.3% (+0.1 to +4.5), with H101 and I136 (the replacement is nearer in role) |
+| I25, tendencies settle fast, efficiency doesn't | **Held in part** | schemes-v2#F5: shotgun, no-huddle and man rate settle in 1-2 games, efficiency a third; pass rate over expected and depth don't settle faster |
+| I23, receiver depth fit | Killed | schemes-v2#F13 left it unclear (+0.03 EPA per target, intervals touch zero, 193 movers); matchups tie (P2) and there are no new movers until the season ends |
+
+**The sort: 58 open ideas,** by what they need and what they cost:
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Retro-sized: data in hand, no package code** | I137 (the yardstick's rushing floor; the CEO, 2026-11-25: "Keep i137 for the next retro"), I28 (a playoff flag for the traits), I97's data check (enough quasi-random absences?) | Under an hour each | Step 3 |
+| **D2. Quick runs on saved walks: a build-chat batch** | I103 (trees for opportunity-quality's horizons), I117 (trees for the other touchdown forecasts), I119 (a game's chance of 2+ touchdowns) | Quick each, but inside built experts (W7) | The build chat, as one batch |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111 (9); hunches H71, H74 | A session each; I76-I78 heavy | skill-over-expected's build (brief agreed 2026-11-20, still not started) |
+| **G. Participation's next build** | I9, I10, I11, I15, I16, I51, I55, I138 (8) | A session | participation's next version |
+| **B. Misses after a change, other experts** | I4, I5, I41, I54, I56, I68 (6) | A session each | team-efficiency, pace, crude-forecaster |
+| **T. Teams** | I115, I127 (2) | In a build | Elo's next build (I115 with the games-lost forecast, the CEO, 2026-11-25), team-efficiency |
+| **V. Vacated** | I126 (1) | Quick | vacated-offseason's build |
+| **AV. Availability's next** | I120, I139 (2) | A session; I120 needs the starter's chance to keep the job | availability and td-expert |
+| **H. Coaches and schemes** | I21, I71, I86, I88 (4) | One session | schemes-v2's next look |
+| **J. Tooling** | I45, I62, I64, I66, I69, I72 (6) | When a build touches the harness | the build that needs it |
+| **C. Ranges** | I1, I14, I42, I52, I85 (5) | One session (one coverage tool) | `pcf.validation`, then each expert |
+| **M. Context's next version** | I92, I93, I110, I112 (4) | A session each; I110 and I112 on hold (the CEO, 2026-11-22) | context-retro's next version |
+| **K. After the season** | I6, I8 (2) | Quick | the first retro after 2026 ends |
+| **L. Parked** | I31, I32, I96, I104 (4) | | their projects |
+
+(I97 sits in A for its data check and in E for its test, so the groups add to 59.)
+
+**What the sort says:**
+- **The backlog shrank for the first time:** 68 to 58, because three builds ran (W7's batch and the builds closed 32).
+- **Group F (fatigue) is empty:** availability's review settled I29, I30 and I50.
+- **Two builds would clear a third of the rest:** skill-over-expected (E, 9 and two hunches) and participation's next version (G, 8).
+- **Only three are retro-sized** (group A), plus K after the season.
+
+**Open hunches (the CEO's to close):** H5, H6 and H18 (open since retro 1, kept open at retro 3), and H71 and H74 (odds given at retro 3; they wait for skill-over-expected's build).
+
+### 2. How the predictions scored ([`retro/explore/retro4_calibration.py`](retro/explore/retro4_calibration.py), output [`.txt`](retro/explore/retro4_calibration.txt))
+
+**What's scored:** every bet written before its test since retro 3 that now has a result, plus the yardstick batch's and the builds' ideas. "Held in part" counts as held, as before. Bets the tests never answered are left out (listed in the script). The Brier score is the average squared gap between the odds and what happened: 0 is perfect, and always saying 50% scores 0.250.
+
+**The CEO's first number: 20 hunches (H93 to H112), 11 held.**
+
+| | Bets | Held | Average odds | Brier | Pays (any held-out gain) |
+|---|---|---|---|---|---|
+| **Retro 4: all** | 20 | 11 (55%) | 51% | **0.230** | 5 |
+| Football claims | 13 | 7 (54%) | 45% | 0.213 | **4** |
+| Methods | 7 | 4 (57%) | 63% | 0.262 | **1** (H109) |
+| Retro 3, for comparison | 14 | 7 (50%) | 53% | 0.177 | |
+
+- **The CEO's calibration slipped back toward a coin:** 0.177 to 0.230.
+- **The CEO's 50% bets all held (5 of 5); the 30% bets mostly failed (1 of 6).** The CEO sorted the bets well and was too timid at both ends. The 60-75% bets were the weak band (H96, H99, H103, H111 failed).
+- **Methods held this time (4 of 7), but only one paid.** H100, H107 and H108 held by their pass rules as descriptions, and none improved a forecast beyond what we had. H109 is the exception: the CEO's plus-minus beats "no change" by 31% on weekly absences.
+- **The running total over three retros:**
+  - held: claims 22 of 31 (71%), methods 6 of 19 (32%);
+  - paid, this round: claims 4 of 13, methods 1 of 7.
+
+  So "football claims pay more than methods" still stands, on paying more than on holding.
+- **A sharper split than claim or method** (for step 4): the CEO's claims about players' bodies held 5 of 5 (H93, H94, H95, H97, H98, all injury). The claims about what teams decide or how schemes match up failed 6 of 6: H103 scheme fit, H104 coaches seek roles, H105 teams target roles, H106 matchups, H110 intake after efficiency losses, H112 efficiency after intake.
+
+**Claude, on the CEO's claim as worded (W6): 20 bets, 11 held, average odds 50%, Brier 0.193.**
+- On claims Claude was sharp: Brier 0.139, against the CEO's 0.213.
+- On methods Claude was worse than the CEO: 0.292 against 0.262. Claude bet low on H108 (25%) and H109 (35%), which held, and high on H99 (65%), which failed. P4 made Claude expect methods to fail on their pass rules, when they mostly fail on paying.
+- **Bet by bet, Claude was closer on 13 of the 20, the CEO on 7.**
+
+**Claude's side bets and ideas: 68 bets, 35 came true (51%) at average odds of 56%. Brier 0.220, better than retro 3's 0.260.**
+
+| Claude's stated odds | Bets | Came true |
+|---|---|---|
+| 0 to 35% | 8 | 25% |
+| 35 to 55% | 21 | 29% |
+| 55 to 75% | 23 | **70%** |
+| 75% and up | 16 | 69% |
+
+- **The 55-75% band is fixed** (retro 3: 23%; now 70%).
+- **The 35-55% band is too high:** 29% came true at 44%.
+- **Size bets are still the weak spot: 6 of 23 came true at average odds of 57%.** Retro 3's lesson ("a size bet should start nearer 40%") wasn't applied enough: the size bets written after retro 3 still averaged in the mid-50s, and about a quarter came true. Examples:
+  - a hamstring repeating 2x (1.22);
+  - part-timers gaining 0.05 (−0.002);
+  - proneness adding 0.5% (0.04%);
+  - the hysteresis band's 14% (14.05%).
+- **Lesson for Claude, made a rule for itself:** a bet on a size starts at 35% unless an earlier result of the same kind measured it.
+
+### Waiting on the CEO (asked 2026-11-25)
+
+1. **H5, H6 and H18** (open since retro 1, kept open at retro 3): keep them open again, or close them as not tested?
+2. **Group A:** run I137, I28 and I97's data check here in step 3?
+3. **Group D2** (I103, I117, I119): send them to the build chat as one batch, like the yardstick batch?
+4. **For step 7:** what in the last two days' way of working helped, and what wasted time?
+
+---
+
 ## Retro 3 (started 2026-11-23)
 
 > The CEO, 2026-11-23: "Let's start the retro analysis for iteration number 3. What do you need from me?"
