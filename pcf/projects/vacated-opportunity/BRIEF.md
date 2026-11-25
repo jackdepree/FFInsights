@@ -1,6 +1,6 @@
 # Vacated opportunity: who absorbs an absent player's targets and carries
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. The CEO closed H109 (held) and H110-H112 (failed) and split the project into two experts, `vacated-offseason` (between seasons) and `vacated-live` (within seasons). Next: the brief.
+> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. The CEO closed H109 (held) and H110-H112 (failed) and split the project into two experts, `vacated-offseason` (between seasons) and `vacated-live` (within seasons). The CEO answered the brief's three questions (the bar is no change; a preseason intake flag; all three shares). The brief is drafted below, for the CEO to agree.
 
 ## Why now
 
@@ -114,3 +114,152 @@ The CEO's second message, 2026-11-24, in full:
 **Direction (not bets):**
 - **Methods 1 and 2 in this exploration** ("Try the first two methods in this exploration"). The choice model (method 3) waits.
 - **The offensive and defensive lines are in** ("Yes I think the oline and dline can be incorporated in this project"): their snap shares in H109, and their group outcomes (pressures allowed by the line, pressures made by the defensive line) in H110 and H112.
+
+### The CEO's answers on the brief's three questions, 2026-11-24 (word for word)
+
+> "The bar to beat should be no change, yes. Yes a preseason flag is good enough. Yes both experts should forecast snapshare, target share, and carry share."
+
+- **The bar to beat is "no change"** (his own share in games where the absent or departed player played), not the proportional split, which lost to no change in every cell of the exploration.
+- **The offseason's intake gate uses a flag known before the season** (a newcomer at the group who was a top player at his group elsewhere last season, or a pick 1–64 rookie). Contracts stay out of the tables for now.
+- **Both experts forecast all three shares:** snap share, target share and carry share. For the lines, snap share only.
+
+---
+
+# The brief (draft, 2026-11-24, for the CEO to agree)
+
+**Status:** draft (for the CEO to agree) · **Layer:** expert (1), two experts sharing this brief · **Cadence:** `vacated-live` in_season (the Saturday run, 12:00 Eastern, like participation and availability); `vacated-offseason` offseason_events (after free agency's first wave, after the draft, and at the week-1 roster)
+
+## Methods
+
+The exploration ran methods 1 and 2 (the CEO's choice); method 3 waits.
+
+| | Method | Where it stands | In the build |
+|---|---|---|---|
+| 1 | **The proportional split** and with-or-without | Lost to no change in every cell (H109, I125). With-or-without adds nothing over it (+2.4%) | Scored as a reference only. **It doesn't ship** |
+| 2 | **The CEO's plus-minus for all players:** a ridge on every player-game's share, demeaned within his player-season, on each absent top teammate's share. A pooled part per pair of groups (the transfer rates), plus a pair part per same-group pair (I49) | Weekly: +31% of no change's error, clear in all five groups. Offseason: +17% where the group was left empty, a loss where a top player came in | **The method both experts build**, climbing the ladder below |
+| 3 | **Exploratory: diversion ratios from a choice model** (a nested logit over the players on the field, per target and carry) | Not run | Waits for the CEO's call (a question below). It's the only method that models the team's lost volume and who receives in one model |
+
+## The noise ceiling (from the exploration)
+
+- **A stayer's share repeats:** split-half r of next season's snap share is 0.78 (OL) to 0.95 (TE).
+- **It moves a lot:** a stayer's change in snap share has an SD of 0.25. The proportional split explains 0–8% of that change.
+- **In season, the room is large:** the plus-minus removes 31% of no change's squared error on the absent player's group-mates.
+- **The fitting noise is small:** across 40 bootstrap refits, no same-group transfer rate flips sign (WR's 90% range is +0.15 to +0.17).
+
+## The question
+
+**Within a season:** when a top player is Out this week, how much of his snap, target and carry share goes to each teammate?
+
+**Between seasons:** when a top player has left, what is each stayer's snap, target and carry share next season, given who the team brought in?
+
+## Why it matters
+
+- **It's the biggest clear in-season result in this project:** a third of no change's error on the absent player's group-mates.
+- **It's the link to products:** `player-opportunity`, the composite fantasy projections read, depends on it. Start/sit for the backup when a starter is Out is a weekly fantasy decision.
+- **It stops a common mistake:** "vacated targets" handed to stayers in proportion to their shares, the usual draft-season article, loses to doing nothing, because teams restock 72% of the time.
+- **Users notice it:** a backup's projection the week a starter is Out; a stayer's projection in drafts after free agency and the draft.
+
+## Terms
+
+- **Standard terms used:** snap share, target share, carry share, ridge regression, squared error ([`docs/GLOSSARY.md`](../../docs/GLOSSARY.md)).
+- **New terms:**
+  - **Group:** WR; TE; RB (with FB); OL; DL (the roster's DL; edge rushers listed as LB aren't in it).
+  - **Top player:** among his team's top k by snaps in his group: WR 2, TE 1, RB 1, OL 5, DL 3. In season, by snaps to date; between seasons, by last season's.
+  - **Absence:** a team game, after his first game for the team that season, in which a top player has no snap. Live, it's read from the Saturday run's report (assumption 1).
+  - **Departure:** a top player on the team in season s who isn't on its week-1 roster in s + 1.
+  - **Stayer:** a player in that group who played for the team in s and is on its week-1 roster in s + 1.
+  - **With share ("no change"):** his share in the games where every absent or departed group-mate played. It's the bar to beat.
+  - **Transfer rate:** the plus-minus's pooled part. How much a player's share rises per unit of an absent top teammate's share, per pair of groups (WR +0.16, TE +0.28, RB +0.24, OL +0.08, DL +0.09; across groups about 0).
+  - **Pair part:** a stayer's own extra rise when a particular group-mate is gone (I49's swap pairs).
+  - **Intake flag:** the team brought in a top player at the group: a newcomer who was a top player at his group elsewhere last season, or a pick 1–64 rookie. Known at the event (the CEO: "a preseason flag is good enough").
+  - **Unclaimed share:** the absent or departed players' share that the stayers' forecasts don't absorb. It's what newcomers, call-ups and the team's lost volume take.
+
+## Builds on
+
+| Project | What we use | Why |
+|---|---|---|
+| `participation` | snap shares per game; its saved next-game and season forecasts; F20, F21 | The shares, and the obvious-input check: participation already reads teammates' absences (F20) |
+| `availability` | the chance each player plays next game (once built) | `vacated-live`'s absence input, as an expected absence. Until it's built, the report's Out and Doubtful |
+| `opportunity-quality` | its next-game opportunity forecast | The incumbent for targets and carries; checked beside |
+| `crude-forecaster` | the yardstick's next-game and season boards | The downstream score |
+| `roles-archetypes` | the pooled coordinates | Only for I126 (H111 retried where the group was left empty). H111 failed, so coordinates aren't inputs |
+| `snap-leverage`, `miss-lenses`, `player-pace` | F11, F4, R5 | The room (a missing full-timer costs +0.021 EPA a play; a teammate Out is +0.61 fantasy points box scores miss) and the warning (only 32% of starter changes are visible by Saturday) |
+
+**Already tried (don't redo):**
+- The proportional split and with-or-without lose to no change everywhere (H109, I125).
+- Role distance doesn't beat position labels for who receives (H111); among stayers, who receives is a small slice, because newcomers take most of it.
+- An absence's efficiency cost is noise and doesn't forecast intake (H110). Intake doesn't clearly change efficiency (H112).
+
+## Assumptions
+
+1. **Live absences are known by the Saturday run only in part.** The exploration knew who sat (hindsight). The build reads the report: an expected absence of (1 − his chance of playing) × his share, with availability's chance once built and the report's Out and Doubtful until then. The hindsight version is reported beside it as the ceiling.
+2. **Absences teach us about departures.** The transfer rates are learned from in-season absences and applied to departures where the group was left empty (I125 held this).
+3. **The transfer rates are a trait of the league** (CONSISTENCY.md): one value per pair of groups, refit after every completed season. Teams and coaches may differ (the coach's role-pair habit, H37), which the structured rung tests.
+4. **The team's volume is someone else's.** The experts forecast shares. How many targets and carries the team gets is pace's and opportunity-quality's.
+5. **The offseason backtest uses the week-1 roster.** Historical rosters from March and April aren't in the free data, so the runs after free agency and the draft are live only, on that day's roster. Only the week-1 run is backtested.
+6. **Newcomers' shares are out of scope.** The experts forecast stayers. The unclaimed share is handed on for participation and roles (I9, I122).
+
+## Goals
+
+- **`vacated-live`:** each player's snap, target and carry share for next game when a top teammate is expected to miss it, with an interval.
+- **`vacated-offseason`:** each stayer's next-season snap, target and carry share after a departure, gated on intake, with an interval.
+- **Both:** the transfer rates as a standing table (per pair of groups, per season), and the unclaimed share per team-group.
+
+## Tests
+
+- **Success looks like** (walk-forward, 2017–2024; intervals are 90% team bootstraps):
+  1. **`vacated-live`:** beats no change on squared error for the absent player's group-mates, on snap share in each of the five groups, and on target and carry share for the skill groups, with the Saturday run's knowledge (assumption 1). The weekly target and carry result is new: the exploration tested only snap share in season.
+  2. **`vacated-offseason`:** where the group was left empty (the intake flag), beats no change on snap, target and carry share for the skill groups, and on snap share for the lines. The gated forecast (the plus-minus where the group was left empty and for the lines, no change where a top player came in) beats no change over all stayers.
+  3. **No noise:** each beats 19 shuffled copies of itself (absences shuffled across games within the team-season; departures shuffled across team-seasons).
+  4. **The obvious-input check:** beside participation's saved forecast (and opportunity-quality's for targets and carries), the expert's forecast still lowers squared error. If it doesn't, participation already has it, and the transfer rates go to participation as an input instead.
+  5. **Calibration and ranges:** the slope of the actual change on the forecast change is 0.85–1.15; q10–q90 coverage is 75–85%.
+  6. **The yardstick** (reported): next-game receiving and rushing yards (`vacated-live`) and season yards (`vacated-offseason`), beside the crude forecaster and participation.
+- **Ties (CLAUDE.md rule k):** a tie is an interval that includes zero, and the simpler side wins it. The simpler side, named now:
+  - no change over any plus-minus;
+  - the pooled part alone over the pooled part plus the pair part;
+  - one rate per pair of groups over team or coach rates;
+  - the ridge over trees;
+  - the plus-minus over the choice model (if it's built).
+- **Failure looks like:** it doesn't beat no change, or it adds nothing beside participation. Then no change ships, and the transfer rates are kept as a description and as participation's input.
+- **No-noise target (for the CEO to approve):** next game's snap, target and carry share for the absent player's group-mates (`vacated-live`), and next season's for stayers (`vacated-offseason`), each against no change.
+- **Seasons:** shares from 2013 (snaps begin then), the lines' pressure from 2016; scored 2017–2024; **the 2025 vault untouched until the end**.
+
+## Inputs and outputs
+
+- **Inputs** (known-at in brackets):
+  - snap shares, targets and carries per player-game [after each game];
+  - the injury report and availability's chance he plays [the Saturday run];
+  - weekly rosters, and the week-1 roster for the offseason backtest [that week's file];
+  - draft picks [the draft];
+  - last season's top players by team and group [after the season].
+- **Outputs:**
+  - **`vacated-live`** (player-game, the Saturday run): the forecast snap, target and carry share next game, its change from no change, q10 and q90, and which absent teammates drive it;
+  - **`vacated-offseason`** (player-season, at each event): the forecast next-season shares for stayers, the intake flag, q10 and q90;
+  - **both:** the transfer rates table (versioned, per completed season) and the unclaimed share per team-group.
+
+## How it will be used
+
+- In `player-opportunity` and fantasy projections: a backup's projection the week a starter is Out; a stayer's projection in drafts.
+- As an input to participation's next-game forecast, if the obvious-input check says participation lacks it.
+- In the yardstick's next-game and season boards.
+
+## Plan
+
+- **Order:** `vacated-live` first (`vacated-offseason` reads its transfer rates), each in its own build session.
+- **The ladder:**
+  1. no change (the bar);
+  2. the pooled ridge (one rate per pair of groups);
+  3. plus the pair part (I49);
+  4. structured: transfer rates partly pooled by team and by coach (H37's habit);
+  5. trees on the residual (the absent player's size, the stayer's rank, the depth chart);
+  6. the choice model (method 3), if the CEO wants it.
+
+  Each rung must beat the one below (rule k).
+- **Time box:** three build sessions. `vacated-live`: two (the tables and the walk-forward with the Saturday run's knowledge; then scoring, the ranges and the yardstick). `vacated-offseason`: one (the week-1 backtest, the gate and the live event runs).
+- **The backlog it carries:** I49 (the pair part), I126 (H111 retried where the group was left empty), I55 (the first game back) as a check in `vacated-live`.
+- **Technical calls (for veto; logged in [decision 0046](../../docs/decisions/0046-vacated-opportunity-exploration.md)):**
+  - the groups and top k, and the roster's DL only;
+  - the ridge's penalty grid extended below 1 (the exploration chose the grid's edge), chosen by cross-validation within the training seasons;
+  - the expected absence as (1 − chance he plays) × his share;
+  - the offseason backtest on the week-1 roster only;
+  - forecasts clipped to [0, 1].
