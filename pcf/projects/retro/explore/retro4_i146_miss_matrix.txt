@@ -1,0 +1,272 @@
+loaded participation/trees_week: 79,417 rows, keys ['gsis_id', 'game_id']
+loaded availability/next_logit: 226,922 rows, keys ['gsis_id', 'game_id']
+loaded crude-forecaster/receiving_next_lasso: 36,125 rows, keys ['gsis_id', 'game_id']
+loaded crude-forecaster/rushing_next_lasso: 10,207 rows, keys ['gsis_id', 'game_id']
+loaded crude-forecaster/passing_next_lasso: 3,413 rows, keys ['gsis_id', 'game_id']
+loaded crude-forecaster/qb_rushing_next_lasso: 3,413 rows, keys ['gsis_id', 'game_id']
+loaded opportunity-quality/eff_trees: 66,758 rows, keys ['gsis_id', 'game_id']
+loaded baselines/lasso: 52,472 rows, keys ['gsis_id', 'game_id']
+loaded baselines/ecr: 13,260 rows, keys ['gsis_id', 'game_id']
+  participation/trees_week <- availability/next_logit: +0.003% (-0.014% to +0.021%), copies max +0.002%, rows 51,092
+  participation/trees_week <- crude-forecaster/receiving_next_lasso: +0.220% (+0.076% to +0.362%), copies max +0.007%, rows 24,620
+  participation/trees_week <- crude-forecaster/rushing_next_lasso: +0.308% (+0.081% to +0.546%), copies max +0.021%, rows 6,828
+  participation/trees_week <- crude-forecaster/passing_next_lasso: +0.069% (-0.093% to +0.215%), copies max +0.176%, rows 2,293
+  participation/trees_week <- crude-forecaster/qb_rushing_next_lasso: -0.036% (-0.171% to +0.100%), copies max +0.055%, rows 2,293
+  participation/trees_week <- opportunity-quality/eff_trees: +0.668% (+0.533% to +0.816%), copies max +0.009%, rows 52,096
+  participation/trees_week <- baselines/lasso: +1.662% (+1.443% to +1.894%), copies max +0.004%, rows 41,160
+  participation/trees_week <- baselines/ecr: +2.915% (+2.267% to +3.562%), copies max +0.054%, rows 4,003
+  availability/next_logit <- participation/trees_week: +0.022% (+0.009% to +0.035%), copies max +0.003%, rows 51,092
+  availability/next_logit <- crude-forecaster/receiving_next_lasso: -0.001% (-0.006% to +0.004%), copies max +0.012%, rows 24,620
+  availability/next_logit <- crude-forecaster/rushing_next_lasso: -0.050% (-0.104% to +0.005%), copies max +0.011%, rows 6,828
+  availability/next_logit <- crude-forecaster/passing_next_lasso: -0.023% (-0.097% to +0.053%), copies max +0.078%, rows 2,293
+  availability/next_logit <- crude-forecaster/qb_rushing_next_lasso: -0.202% (-0.500% to +0.055%), copies max +0.060%, rows 2,293
+  availability/next_logit <- opportunity-quality/eff_trees: +0.005% (-0.003% to +0.013%), copies max +0.011%, rows 42,981
+  availability/next_logit <- baselines/lasso: -0.000% (-0.000% to -0.000%), copies max +0.000%, rows 33,981
+  availability/next_logit <- baselines/ecr: -0.000% (-0.000% to -0.000%), copies max -0.000%, rows 4,003
+  crude-forecaster/receiving_next_lasso <- participation/trees_week: +2.448% (+1.991% to +2.914%), copies max +0.021%, rows 24,620
+  crude-forecaster/receiving_next_lasso <- availability/next_logit: +0.687% (+0.522% to +0.857%), copies max +0.010%, rows 24,620
+  crude-forecaster/receiving_next_lasso <- crude-forecaster/rushing_next_lasso: +0.623% (+0.328% to +0.904%), copies max +0.015%, rows 6,828
+  crude-forecaster/receiving_next_lasso <- opportunity-quality/eff_trees: +0.890% (+0.698% to +1.080%), copies max +0.013%, rows 24,620
+  crude-forecaster/receiving_next_lasso <- baselines/lasso: +0.006% (-0.055% to +0.069%), copies max +0.011%, rows 19,506
+  crude-forecaster/receiving_next_lasso <- baselines/ecr: +0.452% (+0.140% to +0.780%), copies max +0.036%, rows 3,457
+  crude-forecaster/rushing_next_lasso <- participation/trees_week: +2.974% (+2.425% to +3.522%), copies max +0.016%, rows 6,828
+  crude-forecaster/rushing_next_lasso <- availability/next_logit: +0.477% (+0.011% to +0.904%), copies max +0.024%, rows 6,828
+  crude-forecaster/rushing_next_lasso <- crude-forecaster/receiving_next_lasso: +0.197% (+0.051% to +0.339%), copies max +0.050%, rows 6,828
+  crude-forecaster/rushing_next_lasso <- opportunity-quality/eff_trees: +3.611% (+2.835% to +4.459%), copies max +0.019%, rows 6,828
+  crude-forecaster/rushing_next_lasso <- baselines/lasso: +0.083% (-0.019% to +0.187%), copies max +0.007%, rows 5,734
+  crude-forecaster/rushing_next_lasso <- baselines/ecr: +3.819% (+1.995% to +5.735%), copies max +0.179%, rows 997
+  crude-forecaster/passing_next_lasso <- participation/trees_week: +8.655% (+6.505% to +10.516%), copies max +0.412%, rows 2,293
+  crude-forecaster/passing_next_lasso <- availability/next_logit: +1.442% (-0.847% to +3.327%), copies max +0.197%, rows 2,293
+  crude-forecaster/passing_next_lasso <- crude-forecaster/qb_rushing_next_lasso: +0.027% (-0.049% to +0.104%), copies max +0.047%, rows 2,293
+  crude-forecaster/passing_next_lasso <- baselines/lasso: +0.312% (+0.160% to +0.487%), copies max +0.084%, rows 2,079
+  crude-forecaster/qb_rushing_next_lasso <- participation/trees_week: +0.615% (+0.363% to +0.853%), copies max +0.111%, rows 2,293
+  crude-forecaster/qb_rushing_next_lasso <- availability/next_logit: +1.348% (+0.129% to +2.636%), copies max +0.156%, rows 2,293
+  crude-forecaster/qb_rushing_next_lasso <- crude-forecaster/passing_next_lasso: +0.040% (-0.158% to +0.270%), copies max +0.140%, rows 2,293
+  crude-forecaster/qb_rushing_next_lasso <- baselines/lasso: +0.385% (-0.260% to +0.990%), copies max +0.074%, rows 2,079
+  opportunity-quality/eff_trees <- participation/trees_week: +0.005% (-0.066% to +0.075%), copies max +0.009%, rows 52,096
+  opportunity-quality/eff_trees <- availability/next_logit: -0.002% (-0.007% to +0.001%), copies max +0.006%, rows 42,981
+  opportunity-quality/eff_trees <- crude-forecaster/receiving_next_lasso: +0.002% (-0.006% to +0.010%), copies max +0.008%, rows 24,620
+  opportunity-quality/eff_trees <- crude-forecaster/rushing_next_lasso: +0.010% (-0.046% to +0.061%), copies max +0.012%, rows 6,828
+  opportunity-quality/eff_trees <- baselines/lasso: +0.549% (+0.376% to +0.709%), copies max +0.007%, rows 36,589
+  opportunity-quality/eff_trees <- baselines/ecr: +3.109% (+2.187% to +4.000%), copies max +0.042%, rows 3,602
+  baselines/ecr <- participation/trees_week: +0.790% (+0.068% to +1.492%), copies max +0.042%, rows 4,003
+  baselines/ecr <- availability/next_logit: -0.000% (-0.030% to +0.027%), copies max +0.043%, rows 4,003
+  baselines/ecr <- crude-forecaster/receiving_next_lasso: +0.240% (-0.322% to +0.781%), copies max +0.057%, rows 3,457
+  baselines/ecr <- crude-forecaster/rushing_next_lasso: +1.160% (+0.286% to +1.945%), copies max +0.330%, rows 997
+  baselines/ecr <- opportunity-quality/eff_trees: +1.431% (+0.581% to +2.207%), copies max +0.075%, rows 3,602
+  baselines/ecr <- baselines/lasso: +1.139% (+0.503% to +1.747%), copies max +0.059%, rows 3,979
+loaded team-efficiency/off_next3_ridge: 4,734 rows, keys ['game_id', 'team']
+loaded team-efficiency/def_next3_ridge: 4,734 rows, keys ['game_id', 'team']
+loaded pace/plays_full: 4,952 rows, keys ['game_id', 'team']
+loaded pace/dropbacks_full: 4,952 rows, keys ['game_id', 'team']
+loaded pace/runs_full: 4,952 rows, keys ['game_id', 'team']
+loaded pace/proe_shrunk: 4,952 rows, keys ['game_id', 'team']
+loaded pace/pace_oe_shrunk: 4,952 rows, keys ['game_id', 'team']
+loaded schemes-v2/shotgun_shrunk: 4,951 rows, keys ['game_id', 'team']
+loaded schemes-v2/tempo_shrunk: 4,933 rows, keys ['game_id', 'team']
+loaded schemes-v2/depth_shrunk: 4,946 rows, keys ['game_id', 'team']
+skipped player-pace/proe_lineup: KeyError: "no Expert with id 'player-pace' in pcf.baselines, pcf.experts, pcf.composites, 
+loaded crude-forecaster/team_next_lasso: 3,198 rows, keys ['game_id', 'team']
+loaded elo/wins_next3: 4,158 rows, keys ['game_id', 'team']
+  team-efficiency/off_next3_ridge <- team-efficiency/def_next3_ridge: +0.078% (-0.053% to +0.215%), copies max +0.292%, rows 3,710
+  team-efficiency/off_next3_ridge <- pace/plays_full: -0.317% (-0.628% to -0.038%), copies max +0.129%, rows 3,710
+  team-efficiency/off_next3_ridge <- pace/dropbacks_full: -0.462% (-0.795% to -0.167%), copies max +0.034%, rows 3,710
+  team-efficiency/off_next3_ridge <- pace/runs_full: -0.212% (-0.363% to -0.065%), copies max +0.070%, rows 3,710
+  team-efficiency/off_next3_ridge <- pace/proe_shrunk: -0.353% (-0.675% to -0.054%), copies max +0.180%, rows 3,710
+  team-efficiency/off_next3_ridge <- pace/pace_oe_shrunk: -0.124% (-0.296% to +0.021%), copies max +0.078%, rows 3,710
+  team-efficiency/off_next3_ridge <- schemes-v2/shotgun_shrunk: -0.331% (-0.477% to -0.187%), copies max +0.119%, rows 3,709
+  team-efficiency/off_next3_ridge <- schemes-v2/tempo_shrunk: -0.094% (-0.244% to +0.045%), copies max +0.125%, rows 3,698
+  team-efficiency/off_next3_ridge <- schemes-v2/depth_shrunk: -0.350% (-0.538% to -0.178%), copies max +0.047%, rows 3,706
+  team-efficiency/off_next3_ridge <- crude-forecaster/team_next_lasso: -0.058% (-0.179% to +0.057%), copies max +0.062%, rows 2,174
+  team-efficiency/off_next3_ridge <- elo/wins_next3: +0.404% (+0.115% to +0.678%), copies max +0.142%, rows 3,262
+  team-efficiency/def_next3_ridge <- team-efficiency/off_next3_ridge: +0.152% (-0.138% to +0.451%), copies max +0.020%, rows 3,710
+  team-efficiency/def_next3_ridge <- pace/plays_full: +0.101% (-0.154% to +0.371%), copies max +0.015%, rows 3,710
+  team-efficiency/def_next3_ridge <- pace/dropbacks_full: -0.041% (-0.193% to +0.102%), copies max +0.178%, rows 3,710
+  team-efficiency/def_next3_ridge <- pace/runs_full: -0.117% (-0.284% to +0.035%), copies max +0.026%, rows 3,710
+  team-efficiency/def_next3_ridge <- pace/proe_shrunk: -0.066% (-0.189% to +0.060%), copies max +0.047%, rows 3,710
+  team-efficiency/def_next3_ridge <- pace/pace_oe_shrunk: -0.195% (-0.417% to +0.016%), copies max +0.074%, rows 3,710
+  team-efficiency/def_next3_ridge <- schemes-v2/shotgun_shrunk: -0.501% (-0.735% to -0.279%), copies max +0.019%, rows 3,709
+  team-efficiency/def_next3_ridge <- schemes-v2/tempo_shrunk: -0.011% (-0.226% to +0.196%), copies max +0.043%, rows 3,698
+  team-efficiency/def_next3_ridge <- schemes-v2/depth_shrunk: +0.051% (-0.090% to +0.191%), copies max +0.051%, rows 3,706
+  team-efficiency/def_next3_ridge <- crude-forecaster/team_next_lasso: +0.370% (-0.223% to +0.969%), copies max +0.022%, rows 2,174
+  team-efficiency/def_next3_ridge <- elo/wins_next3: +0.573% (+0.189% to +0.990%), copies max +0.050%, rows 3,262
+  pace/plays_full <- team-efficiency/off_next3_ridge: -0.110% (-0.241% to +0.026%), copies max +0.019%, rows 3,710
+  pace/plays_full <- team-efficiency/def_next3_ridge: -0.070% (-0.261% to +0.123%), copies max +0.055%, rows 3,710
+  pace/plays_full <- pace/dropbacks_full: -0.035% (-0.091% to +0.016%), copies max +0.064%, rows 3,884
+  pace/plays_full <- pace/runs_full: -0.038% (-0.070% to -0.005%), copies max +0.037%, rows 3,884
+  pace/plays_full <- pace/proe_shrunk: +0.012% (-0.144% to +0.186%), copies max +0.151%, rows 3,884
+  pace/plays_full <- pace/pace_oe_shrunk: +0.034% (-0.226% to +0.271%), copies max -0.006%, rows 3,884
+  pace/plays_full <- schemes-v2/shotgun_shrunk: -0.060% (-0.175% to +0.052%), copies max +0.178%, rows 3,883
+  pace/plays_full <- schemes-v2/tempo_shrunk: -0.066% (-0.123% to -0.011%), copies max +0.092%, rows 3,871
+  pace/plays_full <- schemes-v2/depth_shrunk: -0.093% (-0.415% to +0.250%), copies max -0.003%, rows 3,880
+  pace/plays_full <- crude-forecaster/team_next_lasso: +0.116% (-0.539% to +0.779%), copies max +0.300%, rows 2,174
+  pace/plays_full <- elo/wins_next3: +0.193% (-0.042% to +0.430%), copies max +0.008%, rows 3,262
+  pace/dropbacks_full <- team-efficiency/off_next3_ridge: -0.099% (-0.214% to +0.024%), copies max +0.081%, rows 3,710
+  pace/dropbacks_full <- team-efficiency/def_next3_ridge: -0.135% (-0.249% to -0.039%), copies max +0.063%, rows 3,710
+  pace/dropbacks_full <- pace/plays_full: +0.022% (-0.066% to +0.111%), copies max +0.101%, rows 3,884
+  pace/dropbacks_full <- pace/runs_full: +0.132% (-0.093% to +0.344%), copies max +0.061%, rows 3,884
+  pace/dropbacks_full <- pace/proe_shrunk: +0.080% (-0.254% to +0.421%), copies max -0.001%, rows 3,884
+  pace/dropbacks_full <- pace/pace_oe_shrunk: -0.012% (-0.104% to +0.079%), copies max +0.033%, rows 3,884
+  pace/dropbacks_full <- schemes-v2/shotgun_shrunk: -0.010% (-0.040% to +0.019%), copies max +0.040%, rows 3,883
+  pace/dropbacks_full <- schemes-v2/tempo_shrunk: -0.049% (-0.104% to +0.003%), copies max +0.026%, rows 3,871
+  pace/dropbacks_full <- schemes-v2/depth_shrunk: -0.169% (-0.548% to +0.223%), copies max +0.017%, rows 3,880
+  pace/dropbacks_full <- crude-forecaster/team_next_lasso: -0.132% (-0.446% to +0.185%), copies max +0.067%, rows 2,174
+  pace/dropbacks_full <- elo/wins_next3: -0.031% (-0.102% to +0.034%), copies max +0.100%, rows 3,262
+  pace/runs_full <- team-efficiency/off_next3_ridge: +0.044% (-0.008% to +0.096%), copies max +0.084%, rows 3,710
+  pace/runs_full <- team-efficiency/def_next3_ridge: +0.108% (-0.072% to +0.290%), copies max +0.033%, rows 3,710
+  pace/runs_full <- pace/plays_full: -0.063% (-0.149% to +0.015%), copies max +0.068%, rows 3,884
+  pace/runs_full <- pace/dropbacks_full: -0.087% (-0.195% to +0.007%), copies max -0.005%, rows 3,884
+  pace/runs_full <- pace/proe_shrunk: -0.037% (-0.141% to +0.064%), copies max +0.083%, rows 3,884
+  pace/runs_full <- pace/pace_oe_shrunk: -0.063% (-0.169% to +0.048%), copies max +0.079%, rows 3,884
+  pace/runs_full <- schemes-v2/shotgun_shrunk: -0.128% (-0.262% to +0.002%), copies max +0.048%, rows 3,883
+  pace/runs_full <- schemes-v2/tempo_shrunk: -0.038% (-0.092% to +0.018%), copies max +0.061%, rows 3,871
+  pace/runs_full <- schemes-v2/depth_shrunk: -0.043% (-0.106% to +0.017%), copies max -0.006%, rows 3,880
+  pace/runs_full <- crude-forecaster/team_next_lasso: +0.014% (-0.043% to +0.067%), copies max +0.070%, rows 2,174
+  pace/runs_full <- elo/wins_next3: +0.123% (-0.172% to +0.430%), copies max +0.053%, rows 3,262
+  pace/proe_shrunk <- team-efficiency/off_next3_ridge: +0.016% (-0.254% to +0.294%), copies max +0.111%, rows 3,710
+  pace/proe_shrunk <- team-efficiency/def_next3_ridge: -0.016% (-0.182% to +0.149%), copies max +0.031%, rows 3,710
+  pace/proe_shrunk <- pace/plays_full: -0.041% (-0.136% to +0.055%), copies max +0.074%, rows 3,884
+  pace/proe_shrunk <- pace/dropbacks_full: +0.009% (-0.122% to +0.143%), copies max +0.146%, rows 3,884
+  pace/proe_shrunk <- pace/runs_full: +0.223% (-0.003% to +0.439%), copies max +0.050%, rows 3,884
+  pace/proe_shrunk <- pace/pace_oe_shrunk: -0.043% (-0.154% to +0.060%), copies max +0.061%, rows 3,884
+  pace/proe_shrunk <- schemes-v2/shotgun_shrunk: -0.013% (-0.089% to +0.055%), copies max +0.015%, rows 3,883
+  pace/proe_shrunk <- schemes-v2/tempo_shrunk: -0.038% (-0.102% to +0.025%), copies max +0.039%, rows 3,871
+  pace/proe_shrunk <- schemes-v2/depth_shrunk: -0.058% (-0.209% to +0.079%), copies max +0.032%, rows 3,880
+  pace/proe_shrunk <- crude-forecaster/team_next_lasso: +0.114% (-0.461% to +0.669%), copies max +0.183%, rows 2,174
+  pace/proe_shrunk <- elo/wins_next3: +0.063% (-0.237% to +0.339%), copies max +0.252%, rows 3,262
+  pace/pace_oe_shrunk <- team-efficiency/off_next3_ridge: +0.236% (+0.066% to +0.402%), copies max +0.031%, rows 3,710
+  pace/pace_oe_shrunk <- team-efficiency/def_next3_ridge: -0.018% (-0.171% to +0.136%), copies max +0.081%, rows 3,710
+  pace/pace_oe_shrunk <- pace/plays_full: -0.023% (-0.052% to +0.004%), copies max +0.178%, rows 3,884
+  pace/pace_oe_shrunk <- pace/dropbacks_full: -0.044% (-0.233% to +0.160%), copies max +0.109%, rows 3,884
+  pace/pace_oe_shrunk <- pace/runs_full: -0.005% (-0.280% to +0.264%), copies max +0.027%, rows 3,884
+  pace/pace_oe_shrunk <- pace/proe_shrunk: -0.135% (-0.256% to -0.011%), copies max +0.175%, rows 3,884
+  pace/pace_oe_shrunk <- schemes-v2/shotgun_shrunk: -0.486% (-0.838% to -0.132%), copies max +0.042%, rows 3,883
+  pace/pace_oe_shrunk <- schemes-v2/tempo_shrunk: -0.156% (-0.481% to +0.154%), copies max +0.064%, rows 3,871
+  pace/pace_oe_shrunk <- schemes-v2/depth_shrunk: -0.143% (-0.273% to -0.013%), copies max +0.102%, rows 3,880
+  pace/pace_oe_shrunk <- crude-forecaster/team_next_lasso: +0.146% (-0.284% to +0.554%), copies max +0.014%, rows 2,174
+  pace/pace_oe_shrunk <- elo/wins_next3: +0.585% (+0.256% to +0.929%), copies max +0.144%, rows 3,262
+  schemes-v2/shotgun_shrunk <- team-efficiency/off_next3_ridge: -0.041% (-0.094% to +0.011%), copies max +0.037%, rows 3,709
+  schemes-v2/shotgun_shrunk <- team-efficiency/def_next3_ridge: -0.001% (-0.105% to +0.099%), copies max +0.146%, rows 3,709
+  schemes-v2/shotgun_shrunk <- pace/plays_full: -0.220% (-0.401% to -0.051%), copies max +0.054%, rows 3,883
+  schemes-v2/shotgun_shrunk <- pace/dropbacks_full: -0.131% (-0.236% to -0.034%), copies max -0.011%, rows 3,883
+  schemes-v2/shotgun_shrunk <- pace/runs_full: -0.029% (-0.147% to +0.110%), copies max +0.109%, rows 3,883
+  schemes-v2/shotgun_shrunk <- pace/proe_shrunk: -0.061% (-0.154% to +0.025%), copies max +0.035%, rows 3,883
+  schemes-v2/shotgun_shrunk <- pace/pace_oe_shrunk: -0.031% (-0.132% to +0.071%), copies max +0.041%, rows 3,883
+  schemes-v2/shotgun_shrunk <- schemes-v2/tempo_shrunk: -0.005% (-0.057% to +0.054%), copies max +0.021%, rows 3,871
+  schemes-v2/shotgun_shrunk <- schemes-v2/depth_shrunk: -0.085% (-0.209% to +0.032%), copies max +0.015%, rows 3,880
+  schemes-v2/shotgun_shrunk <- crude-forecaster/team_next_lasso: -0.128% (-0.255% to -0.002%), copies max +0.042%, rows 2,174
+  schemes-v2/shotgun_shrunk <- elo/wins_next3: -0.014% (-0.046% to +0.019%), copies max +0.163%, rows 3,262
+  schemes-v2/tempo_shrunk <- team-efficiency/off_next3_ridge: +0.060% (+0.001% to +0.121%), copies max +0.013%, rows 3,698
+  schemes-v2/tempo_shrunk <- team-efficiency/def_next3_ridge: -0.104% (-0.285% to +0.075%), copies max +0.003%, rows 3,698
+  schemes-v2/tempo_shrunk <- pace/plays_full: +0.112% (-0.065% to +0.290%), copies max +0.044%, rows 3,871
+  schemes-v2/tempo_shrunk <- pace/dropbacks_full: -0.082% (-0.230% to +0.065%), copies max +0.065%, rows 3,871
+  schemes-v2/tempo_shrunk <- pace/runs_full: -0.109% (-0.266% to +0.054%), copies max +0.034%, rows 3,871
+  schemes-v2/tempo_shrunk <- pace/proe_shrunk: -0.091% (-0.224% to +0.038%), copies max +0.034%, rows 3,871
+  schemes-v2/tempo_shrunk <- pace/pace_oe_shrunk: +1.704% (+1.116% to +2.247%), copies max +0.126%, rows 3,871
+  schemes-v2/tempo_shrunk <- schemes-v2/shotgun_shrunk: -0.331% (-0.694% to +0.009%), copies max +0.084%, rows 3,871
+  schemes-v2/tempo_shrunk <- schemes-v2/depth_shrunk: -0.184% (-0.342% to -0.024%), copies max +0.045%, rows 3,870
+  schemes-v2/tempo_shrunk <- crude-forecaster/team_next_lasso: +0.123% (-0.034% to +0.282%), copies max +0.236%, rows 2,169
+  schemes-v2/tempo_shrunk <- elo/wins_next3: +0.096% (-0.016% to +0.211%), copies max +0.161%, rows 3,252
+  schemes-v2/depth_shrunk <- team-efficiency/off_next3_ridge: +0.014% (-0.046% to +0.074%), copies max +0.065%, rows 3,706
+  schemes-v2/depth_shrunk <- team-efficiency/def_next3_ridge: +0.113% (+0.030% to +0.192%), copies max +0.013%, rows 3,706
+  schemes-v2/depth_shrunk <- pace/plays_full: -0.015% (-0.042% to +0.011%), copies max +0.034%, rows 3,880
+  schemes-v2/depth_shrunk <- pace/dropbacks_full: +0.040% (-0.055% to +0.130%), copies max +0.044%, rows 3,880
+  schemes-v2/depth_shrunk <- pace/runs_full: +0.137% (+0.033% to +0.242%), copies max +0.002%, rows 3,880
+  schemes-v2/depth_shrunk <- pace/proe_shrunk: +0.003% (-0.058% to +0.065%), copies max +0.039%, rows 3,880
+  schemes-v2/depth_shrunk <- pace/pace_oe_shrunk: -0.098% (-0.251% to +0.067%), copies max +0.059%, rows 3,880
+  schemes-v2/depth_shrunk <- schemes-v2/shotgun_shrunk: -0.027% (-0.105% to +0.052%), copies max +0.082%, rows 3,880
+  schemes-v2/depth_shrunk <- schemes-v2/tempo_shrunk: -0.090% (-0.270% to +0.093%), copies max +0.109%, rows 3,870
+  schemes-v2/depth_shrunk <- crude-forecaster/team_next_lasso: -0.079% (-0.280% to +0.149%), copies max +0.021%, rows 2,171
+  schemes-v2/depth_shrunk <- elo/wins_next3: +0.085% (-0.035% to +0.202%), copies max +0.178%, rows 3,260
+  crude-forecaster/team_next_lasso <- team-efficiency/off_next3_ridge: +1.171% (+0.355% to +2.027%), copies max +0.150%, rows 2,174
+  crude-forecaster/team_next_lasso <- team-efficiency/def_next3_ridge: +0.247% (+0.082% to +0.409%), copies max +0.011%, rows 2,174
+  crude-forecaster/team_next_lasso <- pace/plays_full: -0.056% (-0.383% to +0.264%), copies max +0.054%, rows 2,174
+  crude-forecaster/team_next_lasso <- pace/dropbacks_full: -0.338% (-0.551% to -0.137%), copies max +0.241%, rows 2,174
+  crude-forecaster/team_next_lasso <- pace/runs_full: -0.251% (-0.713% to +0.201%), copies max +0.164%, rows 2,174
+  crude-forecaster/team_next_lasso <- pace/proe_shrunk: -0.048% (-0.208% to +0.107%), copies max +0.029%, rows 2,174
+  crude-forecaster/team_next_lasso <- pace/pace_oe_shrunk: +0.224% (-0.144% to +0.588%), copies max +0.112%, rows 2,174
+  crude-forecaster/team_next_lasso <- schemes-v2/shotgun_shrunk: -0.104% (-0.258% to +0.045%), copies max +0.145%, rows 2,174
+  crude-forecaster/team_next_lasso <- schemes-v2/tempo_shrunk: +0.035% (-0.212% to +0.279%), copies max +0.114%, rows 2,169
+  crude-forecaster/team_next_lasso <- schemes-v2/depth_shrunk: -0.266% (-0.622% to +0.101%), copies max +0.196%, rows 2,171
+  crude-forecaster/team_next_lasso <- elo/wins_next3: +1.372% (+0.760% to +1.906%), copies max +0.134%, rows 1,918
+  elo/wins_next3 <- team-efficiency/off_next3_ridge: +0.505% (+0.244% to +0.749%), copies max +0.106%, rows 3,262
+  elo/wins_next3 <- team-efficiency/def_next3_ridge: +0.038% (-0.255% to +0.300%), copies max +0.082%, rows 3,262
+  elo/wins_next3 <- pace/plays_full: -0.043% (-0.100% to +0.012%), copies max +0.008%, rows 3,262
+  elo/wins_next3 <- pace/dropbacks_full: -0.124% (-0.302% to +0.049%), copies max +0.007%, rows 3,262
+  elo/wins_next3 <- pace/runs_full: -0.133% (-0.260% to -0.007%), copies max +0.026%, rows 3,262
+  elo/wins_next3 <- pace/proe_shrunk: -0.044% (-0.250% to +0.175%), copies max +0.031%, rows 3,262
+  elo/wins_next3 <- pace/pace_oe_shrunk: -0.165% (-0.331% to -0.015%), copies max +0.054%, rows 3,262
+  elo/wins_next3 <- schemes-v2/shotgun_shrunk: -0.476% (-0.705% to -0.260%), copies max +0.064%, rows 3,262
+  elo/wins_next3 <- schemes-v2/tempo_shrunk: -0.278% (-0.423% to -0.138%), copies max +0.031%, rows 3,252
+  elo/wins_next3 <- schemes-v2/depth_shrunk: -0.259% (-0.501% to -0.033%), copies max +0.046%, rows 3,260
+  elo/wins_next3 <- crude-forecaster/team_next_lasso: +0.307% (+0.067% to +0.548%), copies max +0.074%, rows 1,918
+
+180 cells; 34 pass (false-discovery control at 10%, beats all 19 copies, 90% interval above 0)
+
+Passing cells, largest first (share of A's squared error removed by B, beyond A's own recalibration):
+  [player] crude-forecaster/passing_next_lasso  <-  participation/trees_week: +8.655% (+6.505% to +10.516%); copies +0.109% mean, +0.412% max; recalibration alone +0.126%; r +0.205; 2,293 rows
+  [player] crude-forecaster/rushing_next_lasso  <-  baselines/ecr: +3.819% (+1.995% to +5.735%); copies -0.010% mean, +0.179% max; recalibration alone +0.473%; r +0.144; 997 rows
+  [player] crude-forecaster/rushing_next_lasso  <-  opportunity-quality/eff_trees: +3.611% (+2.835% to +4.459%); copies -0.027% mean, +0.019% max; recalibration alone -0.083%; r +0.095; 6,828 rows
+  [player] opportunity-quality/eff_trees  <-  baselines/ecr: +3.109% (+2.187% to +4.000%); copies -0.008% mean, +0.042% max; recalibration alone +1.553%; r +0.052; 3,602 rows
+  [player] crude-forecaster/rushing_next_lasso  <-  participation/trees_week: +2.974% (+2.425% to +3.522%); copies -0.030% mean, +0.016% max; recalibration alone -0.083%; r +0.118; 6,828 rows
+  [player] participation/trees_week  <-  baselines/ecr: +2.915% (+2.267% to +3.562%); copies -0.016% mean, +0.054% max; recalibration alone +3.901%; r +0.068; 4,003 rows
+  [player] crude-forecaster/receiving_next_lasso  <-  participation/trees_week: +2.448% (+1.991% to +2.914%); copies -0.005% mean, +0.021% max; recalibration alone -0.010%; r +0.110; 24,620 rows
+  [team] schemes-v2/tempo_shrunk  <-  pace/pace_oe_shrunk: +1.704% (+1.116% to +2.247%); copies -0.035% mean, +0.126% max; recalibration alone +0.030%; r +0.038; 3,871 rows
+  [player] participation/trees_week  <-  baselines/lasso: +1.662% (+1.443% to +1.894%); copies -0.004% mean, +0.004% max; recalibration alone +4.609%; r +0.020; 41,160 rows
+  [player] baselines/ecr  <-  opportunity-quality/eff_trees: +1.431% (+0.581% to +2.207%); copies -0.006% mean, +0.075% max; recalibration alone -0.415%; r +0.074; 3,602 rows
+  [team] crude-forecaster/team_next_lasso  <-  elo/wins_next3: +1.372% (+0.760% to +1.906%); copies -0.046% mean, +0.134% max; recalibration alone -0.005%; r +0.082; 1,918 rows
+  [team] crude-forecaster/team_next_lasso  <-  team-efficiency/off_next3_ridge: +1.171% (+0.355% to +2.027%); copies -0.063% mean, +0.150% max; recalibration alone -0.030%; r +0.053; 2,174 rows
+  [player] baselines/ecr  <-  baselines/lasso: +1.139% (+0.503% to +1.747%); copies +0.000% mean, +0.059% max; recalibration alone -0.666%; r +0.077; 3,979 rows
+  [player] crude-forecaster/receiving_next_lasso  <-  opportunity-quality/eff_trees: +0.890% (+0.698% to +1.080%); copies -0.007% mean, +0.013% max; recalibration alone -0.010%; r +0.070; 24,620 rows
+  [player] crude-forecaster/receiving_next_lasso  <-  availability/next_logit: +0.687% (+0.522% to +0.857%); copies -0.003% mean, +0.010% max; recalibration alone -0.010%; r -0.082; 24,620 rows
+  [player] participation/trees_week  <-  opportunity-quality/eff_trees: +0.668% (+0.533% to +0.816%); copies -0.007% mean, +0.009% max; recalibration alone -0.029%; r +0.053; 52,096 rows
+  [player] crude-forecaster/receiving_next_lasso  <-  crude-forecaster/rushing_next_lasso: +0.623% (+0.328% to +0.904%); copies -0.030% mean, +0.015% max; recalibration alone +0.909%; r +0.011; 6,828 rows
+  [player] crude-forecaster/qb_rushing_next_lasso  <-  participation/trees_week: +0.615% (+0.363% to +0.853%); copies -0.020% mean, +0.111% max; recalibration alone -0.326%; r +0.085; 2,293 rows
+  [team] pace/pace_oe_shrunk  <-  elo/wins_next3: +0.585% (+0.256% to +0.929%); copies -0.054% mean, +0.144% max; recalibration alone -0.338%; r -0.081; 3,262 rows
+  [team] team-efficiency/def_next3_ridge  <-  elo/wins_next3: +0.573% (+0.189% to +0.990%); copies -0.081% mean, +0.050% max; recalibration alone -0.105%; r -0.052; 3,262 rows
+  [player] opportunity-quality/eff_trees  <-  baselines/lasso: +0.549% (+0.376% to +0.709%); copies -0.004% mean, +0.007% max; recalibration alone +1.516%; r -0.013; 36,589 rows
+  [team] elo/wins_next3  <-  team-efficiency/off_next3_ridge: +0.505% (+0.244% to +0.749%); copies -0.052% mean, +0.106% max; recalibration alone -0.078%; r +0.054; 3,262 rows
+  [player] crude-forecaster/receiving_next_lasso  <-  baselines/ecr: +0.452% (+0.140% to +0.780%); copies -0.008% mean, +0.036% max; recalibration alone +1.521%; r +0.084; 3,457 rows
+  [team] team-efficiency/off_next3_ridge  <-  elo/wins_next3: +0.404% (+0.115% to +0.678%); copies -0.065% mean, +0.142% max; recalibration alone -0.154%; r +0.049; 3,262 rows
+  [player] crude-forecaster/passing_next_lasso  <-  baselines/lasso: +0.312% (+0.160% to +0.487%); copies -0.108% mean, +0.084% max; recalibration alone +8.417%; r -0.214; 2,079 rows
+  [player] participation/trees_week  <-  crude-forecaster/rushing_next_lasso: +0.308% (+0.081% to +0.546%); copies -0.023% mean, +0.021% max; recalibration alone +0.114%; r +0.065; 6,828 rows
+  [team] elo/wins_next3  <-  crude-forecaster/team_next_lasso: +0.307% (+0.067% to +0.548%); copies -0.062% mean, +0.074% max; recalibration alone -0.159%; r +0.065; 1,918 rows
+  [team] crude-forecaster/team_next_lasso  <-  team-efficiency/def_next3_ridge: +0.247% (+0.082% to +0.409%); copies -0.056% mean, +0.011% max; recalibration alone -0.030%; r -0.053; 2,174 rows
+  [team] pace/pace_oe_shrunk  <-  team-efficiency/off_next3_ridge: +0.236% (+0.066% to +0.402%); copies -0.076% mean, +0.031% max; recalibration alone +0.036%; r -0.050; 3,710 rows
+  [player] participation/trees_week  <-  crude-forecaster/receiving_next_lasso: +0.220% (+0.076% to +0.362%); copies -0.008% mean, +0.007% max; recalibration alone +0.006%; r +0.045; 24,620 rows
+  [player] crude-forecaster/rushing_next_lasso  <-  crude-forecaster/receiving_next_lasso: +0.197% (+0.051% to +0.339%); copies -0.013% mean, +0.050% max; recalibration alone -0.083%; r +0.049; 6,828 rows
+  [team] schemes-v2/depth_shrunk  <-  pace/runs_full: +0.137% (+0.033% to +0.242%); copies -0.061% mean, +0.002% max; recalibration alone +0.097%; r +0.048; 3,880 rows
+  [team] schemes-v2/depth_shrunk  <-  team-efficiency/def_next3_ridge: +0.113% (+0.030% to +0.192%); copies -0.063% mean, +0.013% max; recalibration alone +0.082%; r -0.042; 3,706 rows
+  [player] availability/next_logit  <-  participation/trees_week: +0.022% (+0.009% to +0.035%); copies -0.002% mean, +0.003% max; recalibration alone -0.007%; r -0.012; 51,092 rows
+
+The largest cells that don't pass:
+  [player] crude-forecaster/passing_next_lasso  <-  availability/next_logit: +1.442% (-0.847% to +3.327%); copies max +0.197%; fdr False
+  [player] crude-forecaster/qb_rushing_next_lasso  <-  availability/next_logit: +1.348% (+0.129% to +2.636%); copies max +0.156%; fdr False
+  [player] baselines/ecr  <-  crude-forecaster/rushing_next_lasso: +1.160% (+0.286% to +1.945%); copies max +0.330%; fdr False
+  [player] baselines/ecr  <-  participation/trees_week: +0.790% (+0.068% to +1.492%); copies max +0.042%; fdr False
+  [player] crude-forecaster/rushing_next_lasso  <-  availability/next_logit: +0.477% (+0.011% to +0.904%); copies max +0.024%; fdr False
+  [player] crude-forecaster/qb_rushing_next_lasso  <-  baselines/lasso: +0.385% (-0.260% to +0.990%); copies max +0.074%; fdr False
+  [team] team-efficiency/def_next3_ridge  <-  crude-forecaster/team_next_lasso: +0.370% (-0.223% to +0.969%); copies max +0.022%; fdr False
+  [player] baselines/ecr  <-  crude-forecaster/receiving_next_lasso: +0.240% (-0.322% to +0.781%); copies max +0.057%; fdr False
+
+Recalibration alone, per forecast (share of its squared error removed by a walk-forward a + b x its own forecast):
+  crude-forecaster/receiving_next_lasso: +0.331%
+  pace/plays_full: -0.036%
+  crude-forecaster/qb_rushing_next_lasso: -0.326%
+  pace/proe_shrunk: -0.264%
+  participation/trees_week: +0.001%
+  pace/runs_full: -0.076%
+  crude-forecaster/passing_next_lasso: +0.126%
+  elo/wins_next3: -0.078%
+  crude-forecaster/team_next_lasso: -0.030%
+  schemes-v2/depth_shrunk: +0.097%
+  schemes-v2/tempo_shrunk: +0.030%
+  crude-forecaster/rushing_next_lasso: -0.083%
+  schemes-v2/shotgun_shrunk: -0.290%
+  pace/dropbacks_full: -0.225%
+  opportunity-quality/eff_trees: +0.074%
+  pace/pace_oe_shrunk: +0.250%
+  baselines/ecr: -0.631%
+  team-efficiency/def_next3_ridge: -0.252%
+  availability/next_logit: +3.801%
+  team-efficiency/off_next3_ridge: -0.165%

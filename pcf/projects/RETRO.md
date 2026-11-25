@@ -1,11 +1,350 @@
 # Retro: what the record says, and what to try next
 
-> The loop that learns from our own log (CLAUDE.md, "The retro"). After every second finished project Claude reads every hunch, idea and verdict, and writes here: how the last predictions scored, which kinds of bets hold, a prediction for every open idea and hunch, new ideas, and proposed changes to how we work.
+> The loop that learns from our own log (CLAUDE.md, "The retro"). After every second finished build (W12, retro 4) Claude reads every hunch, idea, finding and verdict, and writes here: how the last predictions scored, which kinds of bets hold, a prediction for every open idea and hunch, new ideas, and proposed changes to how we work.
 
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
 - **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects. **Retro 3** came due on 2026-11-22 (`context-retro` and `opportunity-quality`) and the CEO started it on 2026-11-23.
+
+---
+
+## Retro 4 (started 2026-11-25)
+
+> The CEO, 2026-11-25: "Start retro 4"
+
+**Why now:** three projects finished since retro 3: `td-expert` (built 2026-11-24), `availability` (built 2026-11-24 to 25) and `roles-archetypes` (built 2026-11-24 to 25). The yardstick batch (retro 3's group D) and vacated opportunity's exploration and brief came in between. By the charter the retro was due at the second of them, before the next project starts.
+
+**Read:** hunches H93 to H112 (20, all with the CEO's odds written before the test), ideas I113 to I139, the yardstick batch, and the projects since retro 3: `td-expert` (built), `availability` (exploration, brief, build), `roles-archetypes` (three looks, brief, build in two rounds), `vacated-opportunity` (exploration, brief agreed).
+
+**The steps,** in the charter's order: 1. sort the backlog; 2. score the predictions; 3. run the quick groups; 4. update the patterns; 5. new ideas and a prediction for every open one; 6. the findings table; 7. workflow changes for the CEO.
+
+### 1. The backlog, sorted (2026-11-25)
+
+**Since retro 3:** 68 were open. The builds and the yardstick batch closed 32 (20 graduated, 12 killed) and opened 9 (I115, I117, I119, I120, I126, I127, I137, I138, I139). W9 worked: every row closed by a build left Open in the same commit.
+
+**Housekeeping, closed by Claude** (three rows had a result but sat under Open, from before W9):
+
+| Idea | Closed as | Why, in one line |
+|---|---|---|
+| I49, swap pairs inherit an absent player's snaps | **Held, small** | It became the vacated plus-minus's pair part: +2.3% (+0.1 to +4.5), with H101 and I136 (the replacement is nearer in role) |
+| I25, tendencies settle fast, efficiency doesn't | **Held in part** | schemes-v2#F5: shotgun, no-huddle and man rate settle in 1-2 games, efficiency a third; pass rate over expected and depth don't settle faster |
+| I23, receiver depth fit | Killed | schemes-v2#F13 left it unclear (+0.03 EPA per target, intervals touch zero, 193 movers); matchups tie (P2) and there are no new movers until the season ends |
+
+**The sort: 58 open ideas,** by what they need and what they cost:
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Retro-sized: data in hand, no package code** | I137 (the yardstick's rushing floor; the CEO, 2026-11-25: "Keep i137 for the next retro"), I28 (a playoff flag for the traits), I97's data check (enough quasi-random absences?) | Under an hour each | Step 3 |
+| **D2. Quick runs on saved walks: a build-chat batch** | I103 (trees for opportunity-quality's horizons), I117 (trees for the other touchdown forecasts), I119 (a game's chance of 2+ touchdowns) | Quick each, but inside built experts (W7) | The build chat, as one batch |
+| **E. Player value on lower-noise outcomes** | I76, I77, I78, I79, I81, I82, I97, I99, I111 (9); hunches H71, H74 | A session each; I76-I78 heavy | skill-over-expected's build (brief agreed 2026-11-20, still not started) |
+| **G. Participation's next build** | I9, I10, I11, I15, I16, I51, I55, I138 (8) | A session | participation's next version |
+| **B. Misses after a change, other experts** | I4, I5, I41, I54, I56, I68 (6) | A session each | team-efficiency, pace, crude-forecaster |
+| **T. Teams** | I115, I127 (2) | In a build | Elo's next build (I115 with the games-lost forecast, the CEO, 2026-11-25), team-efficiency |
+| **V. Vacated** | I126 (1) | Quick | vacated-offseason's build |
+| **AV. Availability's next** | I120, I139 (2) | A session; I120 needs the starter's chance to keep the job | availability and td-expert |
+| **H. Coaches and schemes** | I21, I71, I86, I88 (4) | One session | schemes-v2's next look |
+| **J. Tooling** | I45, I62, I64, I66, I69, I72 (6) | When a build touches the harness | the build that needs it |
+| **C. Ranges** | I1, I14, I42, I52, I85 (5) | One session (one coverage tool) | `pcf.validation`, then each expert |
+| **M. Context's next version** | I92, I93, I110, I112 (4) | A session each; I110 and I112 on hold (the CEO, 2026-11-22) | context-retro's next version |
+| **K. After the season** | I6, I8 (2) | Quick | the first retro after 2026 ends |
+| **L. Parked** | I31, I32, I96, I104 (4) | | their projects |
+
+(I97 sits in A for its data check and in E for its test, so the groups add to 59.)
+
+**What the sort says:**
+- **The backlog shrank for the first time:** 68 to 58, because three builds ran (W7's batch and the builds closed 32).
+- **Group F (fatigue) is empty:** availability's review settled I29, I30 and I50.
+- **Two builds would clear a third of the rest:** skill-over-expected (E, 9 and two hunches) and participation's next version (G, 8).
+- **Only three are retro-sized** (group A), plus K after the season.
+
+**Open hunches (the CEO's to close):** H5, H6 and H18 (open since retro 1, kept open at retro 3), and H71 and H74 (odds given at retro 3; they wait for skill-over-expected's build).
+
+### 2. How the predictions scored ([`retro/explore/retro4_calibration.py`](retro/explore/retro4_calibration.py), output [`.txt`](retro/explore/retro4_calibration.txt))
+
+**What's scored:** every bet written before its test since retro 3 that now has a result, plus the yardstick batch's and the builds' ideas. "Held in part" counts as held, as before. Bets the tests never answered are left out (listed in the script). The Brier score is the average squared gap between the odds and what happened: 0 is perfect, and always saying 50% scores 0.250.
+
+**The CEO's first number: 20 hunches (H93 to H112), 11 held.**
+
+| | Bets | Held | Average odds | Brier | Pays (any held-out gain) |
+|---|---|---|---|---|---|
+| **Retro 4: all** | 20 | 11 (55%) | 51% | **0.230** | 5 |
+| Football claims | 13 | 7 (54%) | 45% | 0.213 | **4** |
+| Methods | 7 | 4 (57%) | 63% | 0.262 | **1** (H109) |
+| Retro 3, for comparison | 14 | 7 (50%) | 53% | 0.177 | |
+
+- **The CEO's calibration slipped back toward a coin:** 0.177 to 0.230.
+- **The CEO's 50% bets all held (5 of 5); the 30% bets mostly failed (1 of 6).** The CEO sorted the bets well and was too timid at both ends. The 60-75% bets were the weak band (H96, H99, H103, H111 failed).
+- **Methods held this time (4 of 7), but only one paid.** H100, H107 and H108 held by their pass rules as descriptions, and none improved a forecast beyond what we had. H109 is the exception: the CEO's plus-minus beats "no change" by 31% on weekly absences.
+- **The running total over three retros:**
+  - held: claims 22 of 31 (71%), methods 6 of 19 (32%);
+  - paid, this round: claims 4 of 13, methods 1 of 7.
+
+  So "football claims pay more than methods" still stands, on paying more than on holding.
+- **A sharper split than claim or method** (for step 4): the CEO's claims about players' bodies held 5 of 5 (H93, H94, H95, H97, H98, all injury). The claims about what teams decide or how schemes match up failed 6 of 6: H103 scheme fit, H104 coaches seek roles, H105 teams target roles, H106 matchups, H110 intake after efficiency losses, H112 efficiency after intake.
+
+**Claude, on the CEO's claim as worded (W6): 20 bets, 11 held, average odds 50%, Brier 0.193.**
+- On claims Claude was sharp: Brier 0.139, against the CEO's 0.213.
+- On methods Claude was worse than the CEO: 0.292 against 0.262. Claude bet low on H108 (25%) and H109 (35%), which held, and high on H99 (65%), which failed. P4 made Claude expect methods to fail on their pass rules, when they mostly fail on paying.
+- **Bet by bet, Claude was closer on 13 of the 20, the CEO on 7.**
+
+**Claude's side bets and ideas: 68 bets, 35 came true (51%) at average odds of 56%. Brier 0.220, better than retro 3's 0.260.**
+
+| Claude's stated odds | Bets | Came true |
+|---|---|---|
+| 0 to 35% | 8 | 25% |
+| 35 to 55% | 21 | 29% |
+| 55 to 75% | 23 | **70%** |
+| 75% and up | 16 | 69% |
+
+- **The 55-75% band is fixed** (retro 3: 23%; now 70%).
+- **The 35-55% band is too high:** 29% came true at 44%.
+- **Size bets are still the weak spot: 6 of 23 came true at average odds of 57%.** Retro 3's lesson ("a size bet should start nearer 40%") wasn't applied enough: the size bets written after retro 3 still averaged in the mid-50s, and about a quarter came true. Examples:
+  - a hamstring repeating 2x (1.22);
+  - part-timers gaining 0.05 (−0.002);
+  - proneness adding 0.5% (0.04%);
+  - the hysteresis band's 14% (14.05%).
+- **Lesson for Claude, made a rule for itself:** a bet on a size starts at 35% unless an earlier result of the same kind measured it.
+
+### Waiting on the CEO (asked 2026-11-25)
+
+1. **H5, H6 and H18** (open since retro 1, kept open at retro 3): keep them open again, or close them as not tested?
+2. **Group A:** run I137, I28 and I97's data check here in step 3?
+3. **Group D2** (I103, I117, I119): send them to the build chat as one batch, like the yardstick batch?
+4. **For step 7:** what in the last two days' way of working helped, and what wasted time?
+
+**The CEO's answers (2026-11-25):** "1; can we test those hunches? 2; no, we will test those ideas within the build and i want to do builds at night when i am asleep. 3; i do not have any new workflow ideas. 4; yes run group a now. then when group a finishes. please review all of our ideas and hunches to then spontaneously - and thoughtfully - create three to ten more ideas that we can test now or later. the goal is to almost replicate the google deepmind paper on large language models sleeping. we want to create a dataset of football knowledge so that we can iteratively improve our experts and find new features."
+
+- **H5, H6 and H18 get tests** (designs below). All three have the CEO's odds from 2026-11-15, written before any test, so they count as before the test.
+- **Group D2 (I103, I117, I119) is tested inside each expert's next build**, not as a batch. **Builds run at night,** while the CEO sleeps.
+- **No new workflow ideas from the CEO.** Step 7 has Claude's proposal.
+- **Group A ran (step 3).** Then the backlog and the hunches were read again for new ideas, modelled on Google's "Language Models Need Sleep" paper (step 5).
+
+### 3. The quick groups, run (2026-11-25, discovery only; scripts in `retro/explore/retro4_*.py`)
+
+**Group A:**
+
+| Idea | Result | Claude's odds, scored |
+|---|---|---|
+| I97's data check: enough quasi-random absences? ([`retro4_i97_absences.py`](retro/explore/retro4_i97_absences.py)) | **Too few for the QB test.** The weekly roster codes mark the COVID list (R59, 2020-2021), fixed suspensions (R40) and indefinite ones (R30). Regulars (top players, and each team's main QB) missed **202 games** on these lists after their first game for the team: OL 74, DL 48, WR 26, TE 18, RB 17, **QB 9** (nine players, one game each). Suspensions almost all start before a player's first game, so they leave the count. For scale, vacated's absences for any reason number 2,737 | 50% that the free data mark too few: **came true** for QBs. The 40% QB slope and the 20% for other groups can't be tested |
+| I28, a playoff flag for the traits ([`retro4_i28_playoffs.py`](retro/explore/retro4_i28_playoffs.py)) | **The bias is real, and the flag doesn't pay.** On 218 playoff rows, actual less forecast: pass rate over expected +0.010, shotgun +0.015, +0.44 seconds a snap (the sizes schemes-v2 found). A flag learned on earlier seasons changes playoff squared error by −1.9% (−6.8 to +2.2), +1.1% (−1.2 to +3.4) and −0.5% (−5.9 to +4.2): all ties. A constant shift is small beside one game's noise. A side result: the same teams pass *less* than forecast in their last three regular-season games (−0.015) | 75% (medium) that a flag beats the blends at about the stated sizes: **failed.** The sizes held; the forecast gain didn't |
+| I137, the yardstick's rushing floor ([`retro4_i137_floor.py`](retro/explore/retro4_i137_floor.py)) | **The guess was wrong: it isn't the penalty pick.** The grid tops out at 1.0 while the target's SD is about 27 yards, so the picks are nearly least squares. But scaling the grid to the target changes nothing (role-table copies −0.53% to −0.55%). A one-standard-error rule, about 10 times the penalty, halves the copies' cost (−0.30%), and it also shrinks real gains (the role table +0.74% to +0.22%) and flips four verdicts (fine back roles lose; carries per run snap gains on rushing; on receiving the coordinates and their backs-only version lose). On rushing, the copies cost about 0.08% per noise column. The floor is the board's size (15,383 rows, few backs), not the rule | 55% that the copies' cost falls under −0.15%: **failed** (−0.30% at best). 70% that no counted input loses its verdict: **failed** under the one-SE rule |
+
+**What it means:** a no-signal input costs about −0.5% on the rushing board under any reasonable rule, so a rushing gain means something only beside its copies, as test 4 already requires. The yardstick doesn't change. But the rushing verdicts depend on the penalty rule, so each night's replay re-scores them under a second rule (I142).
+
+**Closed by Claude:** I28 and I137 killed; I97 killed (its QB test can't be run on 9 games; the usable part, the 202 non-QB games, became I143). **The backlog: 58, less these three, plus 6 new ideas (step 5): 61 open.** After the CEO's W10 yes: less I140 and I142, plus 8 dreams: **67 open.**
+
+**H5, H6 and H18: how they'll be tested** (pre-registered now; the CEO's odds from 2026-11-15 stand, written before any test):
+
+| Hunch | The test | Pass rule | Cost | The CEO's odds | Claude's odds |
+|---|---|---|---|---|---|
+| **H5** strength is conditional | Elo's saved walk-forward margins, 2016-2024. Each team's residual margin (actual less Elo's) split by four conditions: home or away; the opponent's QB in the top or bottom third (by dropback EPA to date); the opponent pass-heavy or run-heavy (pass rate over expected to date); leading or trailing at the half. For each, does a team's condition gap repeat between a season's halves, and does a team-by-condition term lower next games' squared error beyond Elo, walk-forward? | Held if at least one non-home condition repeats (split-half r 0.2+, interval above 0) **and** its term adds with an interval above 0 | Under an hour each (saved histories): retro-sized | 30% a large effect; 50% nothing worth keeping | 10% for a large effect; 75% that only home holds (P2, matchups tie). Unchanged |
+| **H6** consistent measures predict other outcomes (sharpened, 2026-11-15) | Inside the first dream batch (I141): every measure in CONSISTENCY.md with a week r, scored on the yardstick boards it wasn't built for, with 19 copies each | Held if measures with week r 0.5+ count on another outcome more often than measures under 0.5, the difference's interval above 0 (bootstrap over measures) | A night build | "almost certainly true" (given for the first wording) | **50%** for the sharpened claim; 75% that few forecast beyond the overall rating |
+| **H18** schemes predict whom teams pay | Contracts (the OverTheCap file snap-leverage read once) by team, position and signing year, 2017-2024: the share of new money a team spends at TE, WR and RB, on its last-season personnel rates (12 and 11 personnel, pass rate over expected), beside need (the group's departures, age, last season's spend) | Held if a scheme term adds to the need-only model with an interval above 0, held out by season | A session (the contract table's join) | 20% a modest effect; 50% nothing | **35%** (was 60%): P13, the CEO's claims about team decisions failed 6 of 6, and H105 found teams don't shop for roles |
+
+### 4. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P4 | **Methods tie the simple version, or lose** | Refined: methods now hold as **descriptions** (H100, H107, H108 held) and still don't pay. The one that paid, H109, brings new information: who sat | Claude bet against methods' pass rules (H108 25%, H109 35%) and lost those bets: P4 is about paying, not about holding |
+| P11 | Role first | The role table beats the coordinates and the pooled PCA (I113's build, F76); I135 (the table counts without his own target rates); I136 | |
+| **P13 (new)** | **Bodies and usage hold; front-office decisions don't** | Claims about players' bodies held 5 of 5 (H93 to H98, injury). Claims about what teams decide failed 6 of 6: H103 scheme fit, H104 coaches seek roles, H105 teams target roles, H106 matchups, H110 intake after efficiency losses, H112 efficiency after intake. A team gives the role after arrival (H104's side bet); it doesn't shop for it (H105) | Not usage: how teams *redistribute* share when a player sits is real and pays (H109). It's the decision (whom to sign, which scheme to fit) that the free data can't see: contracts, medicals, price |
+| **P14 (new)** | **Real but small loses to the board's noise** | I28 (a real playoff bias, too small to beat one game's noise), I137 (no-signal copies cost 0.5% on a small board), I97 (natural experiments too rare), H94 and H95 (real, never tried as forecasts). 31 hunches are real and never paid | The cure is pooling (I140 to I142): many small, real effects, tried together on every outcome with a false-discovery control, not one at a time |
+
+**What the patterns say to do:** the CEO's next football bets should lean on bodies and usage (P13), not on what front offices decide. A method is worth testing when it brings new information (P4). The record now holds 31 real hunches that never paid and many consistent measures. That bank is the "day's experience" the sleep paper consolidates (step 5).
+
+### 5. New ideas and predictions
+
+**The paper** ([arXiv 2606.03979](https://arxiv.org/abs/2606.03979), Behrouz, Hashemi, Javanmard and Mirrokni, Google, July 2026; read from its abstract and two explainers, not the full text):
+- language models learn well in context but can't move that short-term knowledge into their long-term parameters without forgetting old skills;
+- the fix is a **sleep** phase after waking:
+  - **consolidation** distils the short-term knowledge upward into long-term capacity, keeping the old;
+  - **dreaming** has the model write its own practice data and keep only what makes a test copy better, so new learning doesn't overwrite old.
+
+**The football version:**
+- **Waking:** the day's builds and explorations. Their findings sit in many files, as short-term memory.
+- **Sleep:** each night after the builds.
+  - **Consolidation:** everything learned goes into one football knowledge dataset (I140).
+  - **Dreaming:** the system writes its own candidate features from that dataset and tests each on a sandbox copy, the yardstick with shuffled twins. It keeps only what beats the copies (I141).
+  - **Rehearsal:** it replays what we already know, so a change can't silently overwrite an old finding (I142).
+
+**Six new ideas, as Claude's** (in IDEAS.md with their odds; size bets start at 35%, step 2's rule):
+
+| # | Idea | The bet | Claude's odds |
+|---|---|---|---|
+| I140 | **The football knowledge ledger (consolidation):** one machine-readable table, a row per tested claim, measure or input. Each row has its id (H, I, F) and kind (claim or method). It has its subject (bodies, usage, skill, role, team decision, scheme, market) and its level. It holds the outcomes tried, its consistency (week r, season r, movers' share kept), its gain on its own target and on each yardstick board with intervals, and real? and pays?. It also holds when it's known, where its column lives (table, run id) and the odds written before. Built from HUNCHES, IDEAS, CONSISTENCY, FINDINGS and RESULTS, and rebuilt each night | It parses every F row and every closed H and I row with an outcome; it reproduces retro 4's calibration with no hand entry | **80%** for the parse; 60% that it reproduces retro 4's Brier scores within 0.005 |
+| I141 | **Dreaming: a nightly candidate batch.** Candidates come from the ledger by fixed rules, not by hand: (1) **transfer:** every real-but-unpaid measure (31 hunches, plus consistent rows in CONSISTENCY.md) on every yardstick board and expert target it wasn't built for; (2) **within role** (P11); (3) **recency** variants. Each runs through `score_input` with 19 copies, and is kept only if it counts and survives a false-discovery control across the night (Benjamini-Hochberg at 10%). Kept ones enter the ledger as discoveries, never a champion without a build. **H6's test runs inside it** | The first night's batch | **55%** at least one candidate passes; 25% three or more; 35% the best adds 0.3%+ on some board |
+| I142 | **Rehearsal: replay what counts.** Each night, every input the ledger marks as counting is re-scored on its board under today's code and data (the vault closed), and under a second penalty rule (I137's one-SE). A flip is flagged as forgetting before it reaches a build | The first replay | **40%** at least one counted input flips under today's code; 35% that a quarter or more flip under the second rule |
+| I143 | **The COVID-list knockouts check vacated-live** (from I97's count): absences for injury may be confounded (a player playing hurt loses share before he sits). The 202 games regulars missed to the COVID list are close to random, so group-mates' share changes there should match the transfer rates fit on all absences | The plus-minus's pooled same-group rates on COVID-list absences against injury absences, the difference's interval | **65%** they agree (interval covers 0); 25% the COVID rate is higher |
+| I144 | **A self-model: the ledger predicts verdicts.** A plain logistic on the ledger's tags (kind, subject, level, whether a cheaper input exists, consistency), fit on every bet through retro 4, predicts whether the next 20 bets hold and pay, before their tests. Scored against our own written odds | Brier on the next 20 bets | **35%** it beats Claude's odds on "holds"; 50% it beats both of ours on "pays" (the subject tag carries P13) |
+| I145 | **Upward distillation into the crude forecaster:** fit the yardstick's lasso on a blend of the true outcome and the champion experts' walk-forward forecasts (soft targets), to steady the small boards (rushing) | The rushing and receiving rest-of-season boards, distilled against plain, with copies | **30%** it lowers rushing's squared error clearly. A yardstick change needs the CEO's yes; it's also a candidate for `player-opportunity` |
+
+**Predictions moved by this retro:**
+
+| Bet | Was | Now | Why |
+|---|---|---|---|
+| H18 (Claude's number) | 60% | **35%** | P13: team-decision claims 0 of 6; H105 |
+| H6, sharpened (Claude's first number for it) | (none) | **50%** | The test exists now (I141) |
+| I9, movers over-projected (participation's next build) | medium | medium | I84 and I122 gave it a slot and a vacancy prior; still open |
+| I126, H111 where the group was left empty | 25% | **20%** | P13 and H111: who receives among stayers is a small slice |
+
+Retro 3's predictions for the other open ideas, and for H71 and H74, stand.
+
+### 6. The findings table
+
+- **F89 (I25):** a new head coach's tendencies (shotgun, no-huddle, man rate) settle in 1-2 games, efficiency in many more.
+- **F90 (I28):** playoff teams pass more over expected, use the shotgun more and play slower than their regular season says (+0.010, +0.015, +0.44 seconds a snap), but a playoff flag doesn't improve the forecast.
+- **F91 (I137):** on the yardstick's rushing rest-of-season board, signal-free inputs cost about 0.08% per column under any reasonable penalty rule. Read a rushing gain only beside its copies.
+- **"Use and ignore":** the teams' row adds F89 and F90.
+
+### 7. Workflow changes, proposed (the CEO accepts, edits or rejects)
+
+**How retro 3's accepted changes worked:**
+
+| Change | How it went |
+|---|---|
+| W7, quick build work goes to the build chat as a batch | Worked: the yardstick batch ran and closed 8 ideas. The CEO now prefers ideas tested inside each expert's build (D2) |
+| W9, an idea leaves Open with its result | Worked for every build since; three older rows were left over (cleaned at step 1) |
+
+**Proposed now:**
+
+| # | Change | Why |
+|---|---|---|
+| W10 | **Rehearsal and dreaming, inside the retro** (rewritten after the CEO's direction below; first written as a nightly cycle). Two new steps: **rehearsal** re-reads the findings table against everything since and marks contradicted rows unclear; **dreaming** reads all three logs (ideas, findings, hunches) and writes new, abstract ideas outside the normal path, each tagged `dream, retro N`. Every idea carries an origin tag (`project`, `retro N`, `dream, retro N`), past ones flagged too, and each retro scores how often each origin pays | The CEO's direction (2026-11-25, below): the three logs already consolidate; the dream is a retro step, not a nightly job, and not its own project |
+| W12 | **Retros are triggered by two finished builds,** never by explorations or briefs started. Builds run at night; spot-checks and finishing in the morning | The CEO (2026-11-25): "So after builds, we should trigger retros" |
+| W11 | **Claude's size bets start at 35%** unless an earlier result of the same kind measured the size | Size bets came true 6 of 23 at 57% (step 2). This is Claude's own rule, listed so the CEO sees it |
+
+**The CEO on W10 (2026-11-25, word for word):** "Okay, so well, I think your consolidation and dreaming and the rehearsal is fair, but it's not quite what I was looking for. So what I was kind of looking for was instead of every night, it would be more of um, within the retro analysis or like these projects that we're doing right now, this retro analysis for, I would say like, okay, we have all of these ideas and hunches, and I guess I forgot about the findings table. I think you could use the findings table also because that also consolidates information that we have discovered. So I think it would be ideas, findings, and hunches. You look at all three of those, and because it's already consolidated, we're consolidating them when we build and when we explore and when we create briefs, right? We're logging those findings, we're creating new ones, we're testing them when we're doing the builds. And then I was thinking within the retro, we basically go over like a couple things. We go over like how have we been doing? Are we working together well? Do we think there's like, I don't know, do you think there's a new pattern we can do to be better and be more effective and discover more things with the data? And then also, it would be to basically allow you to do this sort of like um, this dreaming where you look at all of our past ideas, findings, and hunches, and you say, okay, this is what we thought, this is what happened, and if we extrapolate that, if you think about it and extrapolate it, just look at the patterns and say, okay, well, these worked, so can we make some really cool ideas from our past ideas, just the patterns, not even thinking about any project in the future or whatever, just like just really creative, really abstract, really new and fun and different. And then you write those up and now you just made a couple more ideas, and those ideas basically came from a process that's outside of our normal process because our normal process is, brief exploration or exploration, brief, and then build, right? That's and then spot check. That's our normal process, which is great, and we do a lot in that normal process, but it's guided a lot by me. And if you're coming up with ideas on the side within these retro analysis, I think that could be really powerful, and I think we can learn a lot, and we can create some really cool things with your guesses, with your dreaming. So I don't think it should be every night. I think having the builds done at nighttime is good. Um, but I think for the dreaming and the rehearsal, it should be during the retros. So during the retros, it's like, okay, and it doesn't have to be a huge process. It's just like it's we can make it its own project if you want it to be a really big process. If you think that would fit into our entire goal of building this product, if you think it should be its own project, like, okay, we're going to do a dreaming, or we're going to do um, a large language model sleep project or whatever, we can make that a new thing that we do once in a while, just like how we do retro once in a while. But I think it could just stay within the retros. And I also think for the retros should come after builds. They should be triggered by the builds. They shouldn't be triggered by the explorations. So just because we start a project, if we started 5 projects, that does not mean we should do a retro. But if we built 2 projects and we finish them, then we should do a retro, because if we're building stuff, that means we tested a bunch of ideas. We already did the exploration. We already did the brief. You tested all the hunches. So after builds, we should trigger retros. The brief and exploration should just be to start everything, and then at nighttime I can set the builds up and you can just run them while I'm sleeping, and then in the morning I can do the spot checks and we can finalize the builds. What do you think?"
+
+- **W10 as written (nightly) is not what the CEO wants.** Dreaming and rehearsal belong inside the retro, read from the three logs that already consolidate what we learn: ideas, findings and hunches. Builds still run at night; the CEO's spot-checks and the builds' finishing happen in the morning.
+- **Retros are triggered by finished builds** (two of them), never by explorations or briefs started.
+- **Claude's answer:** agreed; dreaming stays inside the retro (an hour of reading and writing whose output is ideas, which already have a home), with an origin tag so later retros can score dreams against project-born ideas; rehearsal becomes a retro step too; the workflow step opens with the CEO's questions.
+
+**The CEO's decisions (2026-11-25):** "Yeah, so you can rewrite W10 and W12 this way. I think that's great. I think what you listed out is great. But also, and you can totally start the your dreaming now. That would be great too. But one thing too to make sure is could you because you mentioned labeling the ideas as dreams or if they came from a dream or came from a retro. So if you do that, which I think is great, but could you also go back and look at our past retros and find which ideas you came up with and then go back and flag those ideas? So we have, some backwards data too, because I know we did this in the past, but that'll also be great to do moving forward. So yeah, you can proceed. Please dream now."
+
+| # | Decision | Where |
+|---|---|---|
+| W10 (rewritten) | **Accepted:** rehearsal and dreaming are retro steps 5 and 6; every idea carries an origin tag, past ones flagged | `CLAUDE.md`, "The retro"; origins in `IDEAS.md` (below) |
+| W11 | Claude's own rule (size bets start at 35%) | Claude's numbers from retro 4 on |
+| W12 | **Accepted:** retros follow two finished builds | `CLAUDE.md`, "The retro" and the lifecycle's done step |
+
+### After the CEO's yes: I140 to I142 re-sorted (2026-11-25)
+
+- **I140, the ledger: closed, superseded.** The three logs already are the consolidated knowledge (the CEO's W10 direction), so a separate table would copy them.
+- **I141 rewritten as one night build:** every real-but-unpaid measure scored on the boards and targets it wasn't built for, with copies and a false-discovery control. H6's test runs inside it.
+- **I142 graduated into the retro:** rehearsal is now step 5 of every retro, run on the findings later work leans on.
+- **I144** now reads its tags from the three logs; I143 and I145 are unchanged.
+
+### Rehearsal (the new step 5, first run 2026-11-25)
+
+Every one of the 91 findings was re-read against what came after it. Nothing was re-run this time: the CEO asked for the dream first, and the findings later work leans on most are F1 (target share is the player's), F23 (a moving back's share comes from who is left) and F76 (the role table). All three feed vacated-live, so its night build re-runs them as its first step, before anything is built on them.
+
+| Finding | What later work says | Done |
+|---|---|---|
+| F62, QBs' red-zone carries | The vault (2025) reversed it; the row already says unclear | Stays unclear. I147 asks whether its seasons-won count would have warned us |
+| F81, the rushing board's floor | F91 (I137) answered the cause F81 left open: the board's size, not the penalty pick | F81 now points to F91 |
+| F40 and F45, the after-pressure part | F40 holds on the old provider; on the new one (2023 on) the trait sits in the pressure part (F45). Both rows already say so | No change |
+| F36 and F37, efficiency | Not a conflict: efficiency earns more chances (F36) and doesn't last as efficiency (F37) | No change |
+| F38 against F62 and F63 | F38 (kind of chance adds nothing) is for backs and receivers; F62 was QBs only and is now unclear | No change |
+| F55, the row rule | Participation's yardstick worth moves 3-4 times with the row rule. The yardstick kept its own rule (participation's chance of a snap), so the later board rows (F74, F78, F82) are read as worth among players already expected to play | No change |
+
+No other finding is contradicted by anything learned since.
+
+### Dreaming (the new step 6, first run 2026-11-25)
+
+**What was read:** all 145 ideas, all 91 findings and all 112 hunches. Five threads run through them:
+- simple inputs from another expert pay (volume, role, the line, availability);
+- fast traits are real but rarely pay;
+- forecasts miss after changes;
+- team totals are easier to forecast than player shares;
+- the vault punishes inputs that win narrowly.
+
+Eight ideas came out. They are tagged `dream, retro 4` in IDEAS.md with their odds, and none is tied to a project.
+
+| # | The dream | From | Claude's odds |
+|---|---|---|---|
+| I146 | **The experts' miss matrix:** read every expert's misses against every other expert's outputs, and let the cells with signal say which feature should pass between experts | P9, P11 (what paid was another expert's output) | 60% one cell passes; 35% it adds 0.3%+ once built |
+| I147 | **Seasons won as a vault-risk test:** an input that wins overall but in few of nine seasons is a vault risk | F62's reversal | 55% F62's input won fewer seasons than the median; 35% the count separates clearly |
+| I148 | **Fast traits as a change alarm:** shotgun, no-huddle and quick-pass rates jump when an unrecorded change happens (a new play-caller, a hurt QB); the efficiency forecast shortens its memory after a flag | F89, F5, I47 | 45% flagged weeks miss more; 25% it pays |
+| I149 | **Players must add up to their team:** scale player forecasts to the team forecast by their error variances (retail's reconciliation) | F54, F58 (team totals are readable) | 50% beats on receiving; 35% by 0.3%+ |
+| I150 | **The market's update as a target:** do our Saturday experts forecast the move from the opening to the closing line? | F7, F50, F58 | 60% they explain 10%+ of it; 15% an edge |
+| I151 | **Hidden injuries read from usage:** a healthy-listed player far below his snap forecast is likely hurt | I4, I143's confound | 50% beats the chain on absence; 30% pays |
+| I152 | **Role drift:** where a player's role is heading, not only where it is | F76, F79 | 40% adds; 30% by 0.3%+ |
+| I153 | **Historical analogs:** forecast a player-season from its 20 nearest past ones (weather's analogs) | F76, movers and rookies are thin | 25% beats alone (P4); 40% the blend adds |
+
+**Where they go:**
+- I147 is cheap: retro 5's rehearsal runs it on saved walks.
+- I146 is a night build on saved walks only.
+- I148, I149, I151, I152 and I153 go inside their experts' next builds.
+- I150 waits for the betting cousin.
+
+### Where ideas came from: the backward flags (2026-11-25)
+
+Every idea born in a retro is now tagged in IDEAS.md. The tags were read from each idea's source and from each retro's own list of new ideas.
+
+| Retro | Ideas born there | Count |
+|---|---|---|
+| 1 | I46-I53 (new ideas), I54-I56 (the follow-ups of I47, the retro's first pick) | 11 |
+| 2 | I76-I78 (new ideas), I79 (the CEO's), I80-I83 (the idea review), I84-I88 (the backlog) | 13 |
+| 3 | I113, I114 | 2 |
+| 4 | I140-I145 (from the CEO's sleep question); dreams I146-I153 | 6 + 8 |
+
+**How each origin has done so far** (counting closed ideas that had a test; I140 and I142 were closed without one, as were project-born I7, I12 and I18):
+
+| Origin | Tested and closed | Graduated | Paid as a forecast |
+|---|---|---|---|
+| Retro-born | 12 | **8 (67%)** | 4: I80 (+4.2% receiving), I84 (backs), I113 (the role table), I114 (the opener, teams +5%) |
+| Project-born | 64 | **28 (44%)** | not yet counted row by row |
+| Dream-born | 0 | — | first scored at retro 5 |
+
+**What it says:** retro-born ideas graduate more often. There are two cautions.
+- With only 12 of them, the interval runs from about 40% to 85%.
+- They were written with the patterns in hand, later, and often as the CEO's requested "safe" bets (I80).
+
+Retro 5 counts "paid" for the project-born rows as well, and scores the first dreams.
+
+**The CEO on the head start (2026-11-25, word for word):** "It seems like a head start, because you're already looking at all the other patterns and you're looking at the ideas and findings and what worked, what didn't work, and you're kind of making a guess on what would work in the future or what would be interesting to test, or even making an idea that you think will fail is good too, because then we know not to do that. We know that that path is blocked or constrained or restricted. So it's good to have failings too. It's what is really good is the thing that we really want is to know what we know and to know what we do not know. That's really the goal of everything in this project, and everything we do. We want to know what we don't know. And I think it is a head start, but that's kind of the point. The point is that it's a head start. The point that when you do this dreaming step, we can kind of like leapfrog some work or some tests or some thought process or some brainstorming. We can leapfrog it, and we can kind of like get ahead of the curve. So it's kind of the point to have a head start. And then I think which dream should run first? I guess. I don't know. You can do any of them. Any of them that are easy to test right now, go for it. And then if any of them fit like within an expert down in the future, like we can keep them there. But I mean, like any of them that are easy right now, just do. And if you don't do it, we'll revisit in the next retro. So I think you can do whatever you think. Your call."
+
+- **The head start is the point.** A retro or dream idea that graduates more often is the step working, not a bias to correct. The score compares origins so the dream step can be judged, not so retro ideas are marked down.
+- **A dream expected to fail is welcome.** A closed path is knowledge: we know what we don't know. Dreams may carry low odds on purpose.
+- **Run the dreams that are easy now** (Claude's call); the rest wait in their experts' builds or come back at retro 5.
+
+
+### The easy dreams, run (2026-11-25, the CEO: "Any of them that are easy to test right now, go for it"; discovery only)
+
+Three of the eight could run on saved walks (2016-2024, the vault untouched). The rest need a build or new data, or re-runs:
+- **I147:** the saved walks don't keep each input's base version, so it needs re-runs.
+- **I149, I152, I153:** need `player-opportunity`'s build.
+- **I150:** needs the betting cousin.
+
+| Dream | Result | Claude's odds, scored |
+|---|---|---|
+| **I146, the miss matrix** | **34 of 180 cells pass.** It re-finds the yardstick's known inputs (participation, opportunity-quality and availability in the crude forecaster), a check that it works. New: participation's snap-share misses are read in production forecasts (the fantasy lasso +1.7%, opportunity-quality +0.7%); team-efficiency and Elo fill each other's misses (+0.4% to +0.6%); schemes-v2's tempo misses what pace knows (+1.7%). Graduated; F92 | 60% a cell passes: **came true**. 35% for 0.3%+ once built: waits for the builds |
+| **I151, hidden injuries** | Real and small: after a big snap drop, the next game's absence is 1.2 points above the forecast (+0.4 to +2.0), in all 8 seasons; as a flag it ties. Killed; F93 | 50% beats the forecast: **came true, small**. 30% pays: **failed** |
+| **I148, the change alarm** | Outside known changes, team-efficiency misses more after an alarm (offense +10%, defense +15% of the squared miss) but neither interval clears 0. Stays open for the shorter-memory test in team-efficiency's build | 45% flagged weeks miss more: **unclear, leaning yes** |
+
+**What it means:**
+- The dream step's first scores: one dream paid as a discovery, one was real but small, one is unclear.
+- F92's new cells are named candidates for three builds:
+  - **participation:** read production forecasts, F36's "efficiency earns opportunity" from the other side;
+  - **team-efficiency and Elo:** read each other;
+  - **schemes-v2's tempo:** read pace.
+- F93 is a closed path. The report already knows most of what a snap drop says.
+
+**The backlog after the run:** 67 open, less I146 and I151: **65 open.**
+
+### The case against this retro
+
+- **Step 2's scores lean on Claude's sorting.** Claim or method, and which side bets count, were sorted after the results (W2 was rejected). H111 as a method and H102 as a claim could each go the other way.
+- **P13 rests on one week of hunches** from three projects (availability, roles, vacated). The six team-decision failures share data limits (no contracts, no medicals), so P13 may be "the free data can't see decisions" more than "decisions aren't football".
+- **I137 tried only three rules.** A rule fit across several holdout seasons, or a stronger penalty grid, wasn't tried.
+- **I28's test is small:** 196 rows, 8 seasons. A real 1% gain can't be ruled out.
+- **The sleep mapping is Claude's reading of the paper from its abstract and two explainers,** not its full text. The football ideas stand on their own tests either way.
+- **I141 is a multiple-testing machine.** The false-discovery control and the vault are what keep it honest. Its finds are discoveries, never proof.
+
+- **I146's cells are one-column linear corrections on saved walks,** often on the overlap of two experts' rows. A cell's size is not what the input adds once built; the builds decide that.
+- **The dreams are Claude's reading of the logs, in one sitting.** They are guesses with odds, as every idea is. The first honest score comes at retro 5.
+- **The backward origin flags are Claude's judgment** for the follow-ups (I54-I56 are counted as retro 1's, though they came from running I47).
 
 ---
 
