@@ -1,6 +1,6 @@
 # Aging: how a player changes with age, and when his career ends
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). Below: the usual way, two analogies, what we already know and the backlog that fits. Waiting for the CEO's hunches, before any recommendation or test.
+> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. Waiting for the CEO to confirm the wording, add odds for H117, H119 and H122 and sizes if they like; then Claude proposes ways to test them (one exploratory).
 
 ## Why now
 
@@ -74,4 +74,24 @@ It updates between seasons, from completed seasons only. It serves next-season p
 
 ## The CEO's direction and hunches (word for word, before any test)
 
-*(Waiting for the CEO.)*
+**The CEO, 2026-11-25:** "I would be 30% confident that cumulative snaps split between passing and rushing predict efficiency and usage declines better than just age. I would be 30% confident that our roles and archetypes coordinates reduce the error on future decline of efficiency and usage better than just snaps and age. I would be curious to see if we can distinguish between players that observe just lower usage and maintain their efficiency as they age and between players that players that observe both efficiency and usage decreases. I would be 50% confident that weighted snaps - the risk score of an injury occurring on a play - predict downfall better than just age. I wonder if we can also predict which players have a late career comeback, some players decrease their efficiency and usage but then spontaneously increase their efficiency before retiring. I would be 60% confident that top players - those who score extremely high outcomes for at least one season - decline on a different pattern - usage and efficiency trends - when compared to career backups or players that never accomplished high outcomes. I am 95% confident that some positions and roles (coordinates) age differently. I would say the best measure of decline because of age would be usage rather than efficiency, because efficiency is so closely tied with teammate performance."
+
+### The hunches (the CEO's odds; the wording "as read" is Claude's, for the CEO to confirm or edit)
+
+"Better than just age" is read the same way each time: the forecast of next season's change with the new input added to age clearly beats age alone. It is scored on held-out seasons, players resampled, a tie going to age alone. "Decline" is read as next season's change in a rate, and, for "downfall", also whether he plays next season.
+
+| # | The claim, as read | The CEO's odds | Claude's odds (the exact claim first) |
+|---|---|---|---|
+| **H115** | **Mileage, split by kind:** a player's cumulative snaps, passing plays and running plays counted apart, forecast his decline in efficiency and in usage better than his age alone | 30% | **25%** for both efficiency and usage. Side: 40% for at least one, at one position or more (likeliest: running backs' usage). Mileage and age move together, and good players play more, so most of mileage is age and talent. Size: 0.5-2% of next season's error where it pays |
+| **H116** | **Roles add to mileage and age:** the roles-and-archetypes coordinates reduce the error on a player's future decline in efficiency and usage beyond snaps and age | 30% | **30%** for both. Side: 45% for usage alone (the role table pays for usage elsewhere: F76, F79). Size: 0.5-2% |
+| **H117** | **Two ways to decline:** players who lose usage and keep their efficiency, and players who lose both, are distinct groups, and which one a player is can be told before it happens | no odds yet (the CEO: "I would be curious to see") | **Real (the two groups exist, beyond noise): 65%. Told apart in advance, better than chance: 30%** |
+| **H118** | **Mileage weighted by risk:** snaps weighted by each play's chance of an injury forecast a player's downfall (his decline and his career's end) better than his age alone | 50% | **25%.** No per-play injury risk exists yet. It would be built here from play type, contact and the injury reports (availability's events), which is the cost. Side: 35% it beats plain mileage (H115) for running backs |
+| **H119** | **Late-career comebacks:** some players' efficiency and usage fall, then their efficiency rises again before they retire, and which players will do it can be forecast | no odds yet (the CEO: "I wonder if") | **Real, beyond what pulling a bad season back toward his level already gives: 20%. Forecastable: 10%.** A dip followed by a rise is what noise and the pull-back produce on their own (stabilization: efficiency is mostly noise in one season), so the test must beat that |
+| **H120** | **Stars age differently:** players with at least one season of extremely high outcomes decline on a different pattern (their usage and efficiency trends) from career backups and players who never had one | 60% | **60%.** Side: 45% the difference is in usage (stars keep their jobs longer as they decline), against 25% in efficiency. Selection is the case against: a star's peak is partly luck, so he regresses from it |
+| **H121** | **Positions and roles age differently:** some positions, and some roles within a position (the roles-and-archetypes coordinates), age on different curves | 95% | **90%** for the claim as worded (positions alone: 97%). Roles within a position: 55% |
+| **H122** | **Usage shows aging better than efficiency:** the best measure of decline from age is usage, not efficiency, because efficiency is so tied to teammates' performance | no odds yet | **70%** that age explains a clearly larger share of the real change in usage than in efficiency. Two cases against: usage also depends on teammates (who else is on the depth chart), and efficiency is mostly noise in a season anyway. This is also a taste call on the target: which measure aging is judged on |
+
+**Assumptions to flag (Claude):**
+- **Mileage needs counts back to each career's start.** Snap counts begin in 2013 and participation in 2016. Before that, plays from play-by-play stand in: carries, targets and dropbacks from 1999. Careers that started earlier are cut off, a stated limit.
+- **Survivor bias touches every hunch.** Players who decline get cut and leave no next season. Each test also reads "still playing next season" as an outcome, or adds replacement-level seasons for those who vanish (the delta method's fix).
+- **The roles-and-archetypes coordinates** are read from that project's saved walk-forward history (rule e), for the seasons it covers.
