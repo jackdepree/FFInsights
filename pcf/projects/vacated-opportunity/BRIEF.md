@@ -1,6 +1,6 @@
 # Vacated opportunity: who absorbs an absent player's targets and carries
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. Waiting for the CEO's direction and closes.
+> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. The CEO closed H109 (held) and H110-H112 (failed) and split the project into two experts, `vacated-offseason` (between seasons) and `vacated-live` (within seasons). Next: the brief.
 
 ## Why now
 
@@ -84,6 +84,18 @@ The CEO's message, 2026-11-24, in full:
 | H111 | The roles project's coordinates predict who receives a departed or absent player's opportunity better than plain position labels: "I would be 60% confident that our roles project coordinates predicts recipients better than plain position labels." | 60% (given with the hunch, 2026-11-24) | For the claim as worded (each stayer's share of the vacated targets and carries is forecast better from his distance to the departed player in role space than from whether he plays the same position, held out): 55%. Side bet: it still adds once his current share is in, 35% (roles' H107 and I124 found the coordinates add nothing beyond a player's own rates) |
 | H112 | After a top player leaves, the teams that bring in a top player at his position group and the teams that leave it empty differ in what happens next: "I think it would be interesting to measure the variance between teams that intake a top player at the position group and teams that simply leave that position group void." | 30% (2026-11-24: "Yes I'll give 30% odds for being in a top player or leave it empty comparison.") | For the claim as read (teams that bring in a top player recover more of the side's efficiency the next season than teams that leave the group empty): 25%. Side bets: the spread of the efficiency change differs, 20%; the stayers' shares grow less on teams that bring someone in, 90% |
 
+
+### The CEO's answers after the exploration, 2026-11-24 (word for word)
+
+> "Yes you can close those hunches and h109 should be held. 2; yes. 3; yes maybe we should have two experts one for between and the other for within seasons."
+
+- **The closes:** H109 held; H110, H111 and H112 failed, as their pass rules read.
+- **Question 2** asked whether the results match the CEO's sense that offseason departures matter more than weekly injuries, though the weekly side came out strongest. The CEO: "yes". The offseason expert keeps its priority for the CEO; the weekly one is where the forecast is strongest.
+- **Question 3:** two experts by rule m.
+  - **`vacated-offseason`, between seasons:** after departures, free agency and the draft. Cadence `offseason_events`. Its gate is I125: did the team bring in a top player at the group?
+  - **`vacated-live`, within seasons:** after each game, for a player Out this week. Cadence `in_season`. The weekly plus-minus.
+
+  `vacated-opportunity` stays the parent project, holding the shared exploration and one brief for both.
 
 ## Methods
 
