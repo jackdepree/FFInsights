@@ -30,7 +30,8 @@
 12. **The ridge's penalty grid is extended below 1** (the exploration chose the grid's edge). It's chosen by cross-validation within the training seasons.
 13. **Shares from 2013** (when snaps begin); the lines' pressure from 2016; scored 2017–2024; the 2025 vault is untouched.
 14. **The shuffled null:** absences shuffled across games within the team-season (live); departures shuffled across team-seasons (offseason). 19 copies each.
+15. **The choice model (method 3, the CEO, 2026-11-24) is fit on completed seasons only.** It reads who was on the field each play, which is known only after the season (rule m), so its diversion ratios feed both experts as a prior.
 
 ## Data path
 
-15. **The exploration's scripts read the main checkout's data through `PCF_DATA_DIR`** (the worktree has no `data/`). Its interim tables are in `<interim>/vacated/`. No config changed.
+16. **The exploration's scripts read the main checkout's data through `PCF_DATA_DIR`** (the worktree has no `data/`). Its interim tables are in `<interim>/vacated/`. No config changed.

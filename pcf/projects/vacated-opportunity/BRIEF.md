@@ -1,6 +1,6 @@
 # Vacated opportunity: who absorbs an absent player's targets and carries
 
-> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. The CEO closed H109 (held) and H110-H112 (failed) and split the project into two experts, `vacated-offseason` (between seasons) and `vacated-live` (within seasons). The CEO answered the brief's three questions (the bar is no change; a preseason intake flag; all three shares). The brief is drafted below, for the CEO to agree.
+> **Status:** kickoff, 2026-11-24 (the CEO: "Ok, let's start vacated opportunity"). The usual way and two analogies are below. The CEO's direction and hunches H109 to H112 are in, all with odds (2026-11-24). The exploration ran methods 1 and 2 (the CEO's choice) the same day, pre-registered and with results in [EXPLORATION.md](EXPLORATION.md): go. H109 held by its pass rule; H110, H111 and H112 failed (H112's stayers side bet held); I125 held. The CEO closed H109 (held) and H110-H112 (failed) and split the project into two experts, `vacated-offseason` (between seasons) and `vacated-live` (within seasons). The CEO answered the brief's three questions (the bar is no change; a preseason intake flag; all three shares). The brief is agreed (2026-11-24, the no-noise target approved), with the choice model (method 3) added to the build. Next: the builds, in the build chat.
 
 ## Why now
 
@@ -123,11 +123,18 @@ The CEO's second message, 2026-11-24, in full:
 - **The offseason's intake gate uses a flag known before the season** (a newcomer at the group who was a top player at his group elsewhere last season, or a pick 1–64 rookie). Contracts stay out of the tables for now.
 - **Both experts forecast all three shares:** snap share, target share and carry share. For the lines, snap share only.
 
+### The CEO's agreement, 2026-11-24 (word for word)
+
+> "Yes I approve and yes the build should as the exploratory choice model method 3."
+
+- **The brief is agreed, and the no-noise target is approved** ("Yes I approve").
+- **The choice model (method 3) is built and scored** ("yes the build should as the exploratory choice model method 3"), as the ladder's last rung, whatever the rungs below do. A tie still goes to the plus-minus (rule k).
+
 ---
 
-# The brief (draft, 2026-11-24, for the CEO to agree)
+# The brief (agreed 2026-11-24)
 
-**Status:** draft (for the CEO to agree) · **Layer:** expert (1), two experts sharing this brief · **Cadence:** `vacated-live` in_season (the Saturday run, 12:00 Eastern, like participation and availability); `vacated-offseason` offseason_events (after free agency's first wave, after the draft, and at the week-1 roster)
+**Status:** agreed (the CEO, 2026-11-24: "Yes I approve and yes the build should as the exploratory choice model method 3.") · **Layer:** expert (1), two experts sharing this brief · **Cadence:** `vacated-live` in_season (the Saturday run, 12:00 Eastern, like participation and availability); `vacated-offseason` offseason_events (after free agency's first wave, after the draft, and at the week-1 roster)
 
 ## Methods
 
@@ -137,7 +144,7 @@ The exploration ran methods 1 and 2 (the CEO's choice); method 3 waits.
 |---|---|---|---|
 | 1 | **The proportional split** and with-or-without | Lost to no change in every cell (H109, I125). With-or-without adds nothing over it (+2.4%) | Scored as a reference only. **It doesn't ship** |
 | 2 | **The CEO's plus-minus for all players:** a ridge on every player-game's share, demeaned within his player-season, on each absent top teammate's share. A pooled part per pair of groups (the transfer rates), plus a pair part per same-group pair (I49) | Weekly: +31% of no change's error, clear in all five groups. Offseason: +17% where the group was left empty, a loss where a top player came in | **The method both experts build**, climbing the ladder below |
-| 3 | **Exploratory: diversion ratios from a choice model** (a nested logit over the players on the field, per target and carry) | Not run | Waits for the CEO's call (a question below). It's the only method that models the team's lost volume and who receives in one model |
+| 3 | **Exploratory: diversion ratios from a choice model** (a nested logit over the players on the field, per target and carry) | Not run | **Built and scored** (the CEO, 2026-11-24: "yes the build should as the exploratory choice model method 3"). It's the only method that models the team's lost volume and who receives in one model |
 
 ## The noise ceiling (from the exploration)
 
@@ -219,9 +226,9 @@ The exploration ran methods 1 and 2 (the CEO's choice); method 3 waits.
   - the pooled part alone over the pooled part plus the pair part;
   - one rate per pair of groups over team or coach rates;
   - the ridge over trees;
-  - the plus-minus over the choice model (if it's built).
+  - the plus-minus over the choice model.
 - **Failure looks like:** it doesn't beat no change, or it adds nothing beside participation. Then no change ships, and the transfer rates are kept as a description and as participation's input.
-- **No-noise target (for the CEO to approve):** next game's snap, target and carry share for the absent player's group-mates (`vacated-live`), and next season's for stayers (`vacated-offseason`), each against no change.
+- **No-noise target (approved by the CEO, 2026-11-24: "Yes I approve"):** next game's snap, target and carry share for the absent player's group-mates (`vacated-live`), and next season's for stayers (`vacated-offseason`), each against no change.
 - **Seasons:** shares from 2013 (snaps begin then), the lines' pressure from 2016; scored 2017–2024; **the 2025 vault untouched until the end**.
 
 ## Inputs and outputs
@@ -252,14 +259,16 @@ The exploration ran methods 1 and 2 (the CEO's choice); method 3 waits.
   3. plus the pair part (I49);
   4. structured: transfer rates partly pooled by team and by coach (H37's habit);
   5. trees on the residual (the absent player's size, the stayer's rank, the depth chart);
-  6. the choice model (method 3), if the CEO wants it.
+  6. the choice model (method 3; the CEO, 2026-11-24).
 
-  Each rung must beat the one below (rule k).
-- **Time box:** three build sessions. `vacated-live`: two (the tables and the walk-forward with the Saturday run's knowledge; then scoring, the ranges and the yardstick). `vacated-offseason`: one (the week-1 backtest, the gate and the live event runs).
+  Each rung must beat the one below (rule k), except the choice model, which is built and scored whatever the rungs below do (the CEO's call); a tie still decides which ships.
+- **The choice model's timing (rule m):** it reads who was on the field each play (participation data), which is known only after the season. So it's fit on completed seasons only, and its diversion ratios feed both experts as a prior, applied to the expected players. Its one parameter set per season is versioned like the transfer rates.
+- **Time box:** four build sessions (three before the CEO added the choice model). `vacated-live`: two (the tables and the walk-forward with the Saturday run's knowledge; then scoring, the ranges and the yardstick). The choice model: one, fit on completed seasons, scored in both experts. `vacated-offseason`: one (the week-1 backtest, the gate and the live event runs).
 - **The backlog it carries:** I49 (the pair part), I126 (H111 retried where the group was left empty), I55 (the first game back) as a check in `vacated-live`.
 - **Technical calls (for veto; logged in [decision 0046](../../docs/decisions/0046-vacated-opportunity-exploration.md)):**
   - the groups and top k, and the roster's DL only;
   - the ridge's penalty grid extended below 1 (the exploration chose the grid's edge), chosen by cross-validation within the training seasons;
   - the expected absence as (1 − chance he plays) × his share;
   - the offseason backtest on the week-1 roster only;
-  - forecasts clipped to [0, 1].
+  - forecasts clipped to [0, 1];
+  - the choice model fit on completed seasons only, as a prior for both experts.
