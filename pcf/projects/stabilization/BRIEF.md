@@ -139,6 +139,7 @@ The CEO's own read: "maybe they're the same hunch." They share a frame, a rate r
   - usage rates stabilize within a season: targets a route k 70 routes, aDOT 18 targets;
   - efficiency rates mostly don't: catch over expected k 136 targets, pressures a pass snap 346 pass snaps.
 - **There are two pulls, not one:** noise (by k), then drift (the true rate's season r, 0.53-0.97). Recalibrating the pull beat M1 for 12 of 18 rates.
+- **H113 and H114 closed by the CEO, 2026-11-25, both held as their pass rules read:** "Yes close those hunches please."
 - **H113:** real (11 of 21 clear). It pays a little and unevenly (2 of 11 up, 2 down, each under 1%).
 - **H114:** the pre-registered form doesn't pay (1 of 18, about chance). Fit together with the player's own pull, his other consistent rates add 1-4% for 4 rates, the CEO's aDOT-to-yards-a-route example among them.
 - **In-season drift:** real for usage rates (6 of 20 rates) and offensive tendencies (5 of 7), not for efficiency or for what a defense faces. The filter's ranges hold 75-85% for 19 of 20. Widening them by a player's own swings helps (I14 graduates).

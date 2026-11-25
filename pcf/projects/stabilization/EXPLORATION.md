@@ -254,6 +254,8 @@ Measures from play-by-play, players at the end of 2010-2018, the target pooled t
 - **The routes and on-field counts come from participation,** which is post-season. An in-season build needs a stand-in (snap share times dropbacks).
 - **The defense's quarter-level reliability** is a within-game opponent effect, not a finer level of detail that works.
 
+**H113 and H114 closed by the CEO, 2026-11-25, both held as their pass rules read:** "Yes close those hunches please."
+
 ### Technical calls made here (for the CEO's veto)
 
 - **Centring:**
