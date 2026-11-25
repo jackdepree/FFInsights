@@ -699,11 +699,11 @@ projects:
   - id: aging
     name: Aging curves
     phase: 1
-    status: idea
-    horizon: later
+    status: exploring
+    horizon: now
     cadence: [retrospective]
     depends_on: [grain-tables, validation-harness]
-    summary: Decline by position and age. Curves are fit between seasons; in-season projects use curves fit on completed seasons only.
+    summary: "Decline by position and age. Curves are fit between seasons; in-season projects use curves fit on completed seasons only. The CEO's pick, 2026-11-25 (\"Ok let's start the aging expert!\"), after stabilization found that true rates drift between seasons (r 0.53-0.97) and left age out of its rest-of-career forecasts. Kickoff in projects/aging/BRIEF.md: the usual way (the delta method with survivor-bias fixes, mixed models, projection systems' age step, PECOTA's comparables) and two analogies (demography's life tables and the age-period-cohort problem; engineering's bathtub curve and fatigue by load). Waiting for the CEO's hunches."
 
   - id: availability
     name: Availability

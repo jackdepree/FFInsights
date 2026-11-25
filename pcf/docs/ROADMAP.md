@@ -40,6 +40,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Stabilization** (`stabilization`, the CEO's pick, 2026-11-25: "Kick off stabilization"): how many attempts until a player's rate is real, how far to pull it back and toward what, and how sure to be of it; the base of player-level uncertainty, served to every expert. Kickoff in the strategy chat ([brief](../projects/stabilization/BRIEF.md)): the usual way and two analogies (credibility theory, psychometrics). Waiting for the CEO's hunches. Explored 2026-11-25, **go** (`projects/stabilization/EXPLORATION.md`): two pulls (noise by k, then drift); drift in-season for usage rates and offensive tendencies; the diffusion model loses to a ridge on its own inputs. Brief agreed 2026-11-25 ("Agree the brief"); the build runs at night.
 
+**Aging** (`aging`, the CEO's pick, 2026-11-25: "Ok let's start the aging expert!"): how a player's rates change with age, and when his career ends; the predictable part of the drift stabilization found between seasons. Kickoff in the strategy chat (`projects/aging/BRIEF.md`); waiting for the CEO's hunches.
+
 The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
 
 ## Later
