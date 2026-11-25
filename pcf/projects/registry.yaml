@@ -431,7 +431,7 @@ projects:
     horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: "How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty. The CEO's pick, 2026-11-25 (\"Kick off stabilization\"). Kickoff in projects/stabilization/BRIEF.md: the usual way (stabilization points from split-half reliability; regress by k; empirical Bayes) and two analogies (credibility theory in insurance: pull toward the right class, layered; psychometrics: attempts differ in information, reliability changes with conditions, talent drifts). Waiting for the CEO's hunches."
+    summary: "How many attempts until a rate is real, and shrinking noisy rates toward the mean. The base of player-level uncertainty. The CEO's pick, 2026-11-25 (\"Kick off stabilization\"). Kickoff in projects/stabilization/BRIEF.md: the usual way (stabilization points; regress by k; empirical Bayes) and two analogies (credibility theory; psychometrics), plus the CEO's LD50 analogy. Hunches H113 (teammates prop rates up or down) and H114 (a consistent measure sets where the others regress to), the CEO's odds 25% each. Scope: players and teams, offense and defense, football-real measures; judged on the next few games, next season and rest of career. Three methods proposed (reliability curves; conditional credibility with drift; exploratory: a denoising diffusion model over all rates, against multivariate empirical Bayes). Waiting for the CEO's method pick."
 
   - id: context-live
     name: Context (in-season)
