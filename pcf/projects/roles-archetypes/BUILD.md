@@ -75,3 +75,28 @@ Written by Claude before any of these tests ran. The ideas' own rows in `IDEAS.m
 | **I57** (new): the role table adds to his own past share | 40% | 2 to 5% |
 | **I132** (earlier): measurables (40, height, weight, draft slot) beat the position mean on a rookie's first-season in-tight and ball-carrier axes | 60% | 10 to 20% of the squared distance |
 | **Test 1 re-scored** (new): offense passes under the CEO's reading (movers keep half of each repeating component's season r) | 95% (the report already shows it) | |
+
+## Round 2's odds, scored (2026-11-25; scripts and outputs in `explore/build2_*`)
+
+| Test | Claude's odds | Came out | Size against expected |
+|---|---|---|---|
+| S1: the rushing loss mostly in one position group | 55% | **Void as worded** (the rushing board holds only RBs); by the backs' prior role, no: early-down backs 55%, passing-down backs 43% | |
+| S2: mostly in one season | 25% | Didn't hold: 2019 38%, 2021 35% | |
+| S3 = I133: fullbacks set aside, or carries per run snap beside the axes, turns it to a tie or better | 50% | **Held** both ways: −0.13% (−0.44 to +0.16) and −0.25% (−0.52 to +0.04) | The fullbacks are only part of the cause: signal-free copies of the coordinates cost −0.48% on average on this board |
+| S4: a fix of the coordinates beats the role table on rushing | 15% | Didn't hold (best −0.13% against the table's +0.74%) | |
+| S5: the coarse roles as dummies count on rushing | 45% | Didn't hold (−0.03%). Side result: the two fine back roles as dummies count, +0.45% (+0.30 to +0.60), beating 19 of 19 copies | +0.45% inside the +0.3 to +0.6 expected for the coarse version |
+| I134: the band brings the median flip under 14% | 45% | Didn't hold, by a hair: 14.05% | DL 26%, OLB 31% |
+| I134: DL and OLB under 20% | 70% | Didn't hold | |
+| I134: the banded labels forecast as well (a tie or better) | 80% | **Held**: ties on all four rates | |
+| I135: the 4-feature table counts on receiving | 40% | **Held**: +0.23% (+0.14 to +0.32), beats 19 of 19 | |
+| I135: and on rushing | 30% | **Held**: +0.88% (+0.67 to +1.11), beats 19 of 19 | Larger than the 6-feature table's +0.74% |
+| I135: the 4-feature table beats labels on targets; on carries | 75%; 50% | **Held** on targets (+28.1%); a tie on carries (+4.3%, −1.9 to +10.8) | Targets inside +10 to +25%, a little above |
+| I136: offense's substitutes under 0.5 on the role table | 55% | **Held**: 0.436 (0.404 to 0.466); defense 0.440 too | About 0.45 expected |
+| I122: the vacancy blend beats the group average | 55% | **Held** on the coordinates (+1.7%, +0.3 to +3.1; beats 20 of 20 placebo vacancies); a tie on the role table (+0.8%) | Smaller than the 5% expected |
+| I43: the passing-down share adds to a contract model within position | 75% | **Held where the idea said** (DL and OLB: +5.4% lasso, +5.8% trees, both beating 20 of 20); overall +3.6% on the lasso, a tie on the stronger trees (+1.3%) | Larger than the +1% expected, where it holds |
+| I57: his own past vertical share beats the position's mix | 90% | **Held**: +18.6% (+11.5 to +25.0) | Just under the 20 to 40% expected |
+| I57: the role table adds beyond his own share | 40% | **Held**: +9.1% (+6.2 to +12.0), beats 20 of 20 | Larger than the 2 to 5% expected |
+| I132: measurables beat the position mean on rookies' in-tight and ball-carrier axes | 60% | **Held in part**: WR in tight +15.8% (+5.2 to +25.2), beats 20 of 20; WR ball carrier, TE and RB ties | In-tight inside the 10 to 20% expected |
+| Test 1 under the CEO's reading | 95% | **Held**: the five repeating offensive axes keep 79-93% | |
+
+Claude's read: 11 of the 16 scorable direction calls came out on the side of 50% I had put them (S1 is void; S3 and I135's carries were at 50%; I132 held in part). The five misses: four times I doubted the role table (I135 on both boards, I57's table), and once I was too hopeful about the front (DL and OLB under 20%). The sizes I most underrated were the role table's extra worth: on the route mix (+9.1% against 2 to 5%) and without his own rates on rushing (+0.88%). I overrated the vacancy blend (+1.7% against 5%).

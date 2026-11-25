@@ -1,0 +1,32 @@
+Round 2, backlog ideas on the build's history (run 696a3f0b)
+
+== I122: a shrunk vacancy forecast (newcomers in a group a top player left)
+  coordinates: 393 newcomers; the group average (last season's) 8.020
+    blend toward the departed player: weight 0.15 (range 0.15-0.20 over folds); squared distance 7.886; beats the average by +1.7% (90% +0.3 to +3.1) -> HOLDS
+    blend toward the team's usual role: weight 0.25 (range 0.20-0.25 over folds); squared distance 7.933; beats the average by +1.1% (90% +0.1 to +2.0) -> HOLDS
+  role table (standardized): 393 newcomers; the group average (last season's) 2.984
+    blend toward the departed player: weight 0.10 (range 0.10-0.15 over folds); squared distance 2.961; beats the average by +0.8% (90% -0.2 to +1.8) -> tie
+    blend toward the team's usual role: weight 0.20 (range 0.20-0.25 over folds); squared distance 2.960; beats the average by +0.8% (90% -0.0 to +1.6) -> tie
+
+== I43: the market pays for the passing-down role (veteran contracts, share of the cap)
+  4,779 contracts signed 2019-2024 by WR, TE, RB and defenders with last season's row; mean 1.37% of the cap; groups ['CB', 'DL', 'ILB', 'OLB', 'RB', 'S', 'TE', 'WR']
+  lasso: plain model's r with pay 0.55
+    + passing-down share (adj_late): +3.6% (90% +2.7 to +4.4); better
+      by group: CB +3.4% (+1.3 to +5.5); DL +6.3% (+4.6 to +7.8); ILB -1.0% (-4.4 to +1.7); OLB +3.1% (+0.4 to +5.3); RB -6.0% (-12.1 to -0.9); S +3.8% (+0.6 to +6.9); TE +3.1% (-0.5 to +6.1); WR +3.5% (+1.6 to +5.1)
+    + adj_late and its on/off tilt: +6.1% (90% +4.9 to +7.2); better
+  trees: plain model's r with pay 0.75
+    + passing-down share (adj_late): +1.3% (90% -0.8 to +3.3); tie
+      by group: CB -6.6% (-14.0 to +0.7); DL +5.2% (+2.1 to +8.1); ILB +5.8% (-1.5 to +12.3); OLB +6.8% (+1.7 to +12.3); RB +6.2% (+0.4 to +11.8); S -1.7% (-9.7 to +5.3); TE +0.9% (-12.3 to +11.4); WR -2.3% (-7.1 to +1.9)
+    + adj_late and its on/off tilt: +2.2% (90% -0.2 to +4.4); tie
+
+== I57: a receiver's vertical route share next season
+  1101 receiver pairs (WR, TE; 20+ targeted routes both seasons), 567 scored 2021-2024
+    his own past share over the position's mix: +18.6% (90% +11.5 to +25.0); better
+    the role table over the position's mix: +24.7% (90% +18.3 to +30.7); better
+    + the role table beyond his own past share: +9.1% (90% +6.2 to +12.0); better
+    season-to-season r of the share (scored pairs): 0.51
+
+== I132: the combine beside the space (rookies' first-season coordinates)
+  190 rookie WR, TE (and RB in the history's offense) seasons with 200+ snaps and a combine row, 2017-2024; measured share: ht_in 99%, wt 99%, forty 80%, vertical 80%, shuttle 53%, draft_ovr 100%
+  WR (132 rookies): measurables against the position mean, leave-one-season-out: in tight (z0) +15.8% (90% +5.2 to +25.2); better; ball carrier (z1) +12.6% (90% -1.3 to +24.4); tie; 12 personnel (z3) +2.2% (90% -8.6 to +12.4); tie; featured target (z4) +8.0% (90% -1.4 to +16.3); tie
+  TE (58 rookies): measurables against the position mean, leave-one-season-out: in tight (z0) +9.7% (90% -12.3 to +27.7); tie; ball carrier (z1) -12.9% (90% -27.4 to +0.1); tie; 12 personnel (z3) -1.5% (90% -36.3 to +20.5); tie; featured target (z4) -2.2% (90% -36.9 to +23.9); tie

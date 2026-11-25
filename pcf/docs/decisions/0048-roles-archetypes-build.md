@@ -1,6 +1,6 @@
 # 0048: roles and archetypes' build, its technical calls
 
-**Date:** 2026-11-24 · **Decided by:** Claude (technical calls, listed for the CEO's veto at merge) · **Project:** `roles-archetypes` (the build of the agreed brief; decision 0045 holds the exploration's and the brief's calls)
+**Date:** 2026-11-24 (round 2: 2026-11-25) · **Decided by:** Claude (technical calls; the CEO reviewed them, 2026-11-25: "No vetoes from me.") · **Project:** `roles-archetypes` (the build of the agreed brief; decision 0045 holds the exploration's and the brief's calls)
 
 ## What ships, and how it's read
 
@@ -26,7 +26,7 @@
 
 12. **The role table, six features per side:** offense snap share, targets per pass snap, carries per run snap, target depth, the team-adjusted run share and 11-personnel share (H107's table); defense snap share, rushes per pass snap, tackles per snap, tackle depth, the team-adjusted 11-personnel and 3rd-down shares (one per defensive axis that repeats; passes defensed left out, at 0.12 within a season).
 13. **Named roles are explicit rules on the table's features,** read in order, positionless (no rule reads the depth chart). Ten cuts, set once on 2016–2020 and frozen: at a valley (the thinnest point of the feature's smoothed distribution, so few players sit near it) where there is one, or at a stated quantile (the backs' and tight ends' run tilt at the median, the slot cut at the 80th percentile of split-out players, the tackler cut at the 67th of the front). The cuts were picked while looking at flips on 2016–2020 only; 2021–2024 was scored once.
-14. **Twelve fine roles, five coarse ones.** Offense: early-down back, passing-down back (back); blocking tight end, inline tight end (in tight); slot receiver, deep threat, outside receiver (split out). Defense: pass rusher, box linebacker, run defender (front); slot defender, base defensive back (coverage). **The names are working names: naming is the CEO's taste call.**
+14. **Twelve fine roles, five coarse ones.** Offense: early-down back, passing-down back (back); blocking tight end, inline tight end (in tight); slot receiver, deep threat, outside receiver (split out). Defense: pass rusher, box linebacker, run defender (front); slot defender, base defensive back (coverage). **The CEO approved the twelve names** (2026-11-25: "I think the 12 role names work great!"). The fine roles ship as leans with their "how sure" beside the five coarse ones (the CEO, 2026-11-25: "Yes ship roles as leans with a certainty score").
 15. **How sure:** for each cut a rule passed, the chance his true value is on the same side, from that feature's split-half noise at his snaps; the product over the cuts. Calibrated on 2021–2024 (said 0.98, held 0.96; said 0.83, held 0.85; said 0.68, held 0.69; said 0.47, held 0.52).
 
 ## The exploratory method
@@ -41,10 +41,31 @@
 20. **Signal:** the coordinates' lasso against 20 refits on targets shuffled within target season and position (VALIDATION §5, retrospective); it must beat all 20.
 21. **The yardstick:** `score_input` on the receiving and rushing rest-of-season boards beside participation, the prior being the previous season's main-team values (missing: the column's median). The 19 copies are shuffled **within season and position** (the brief), not the yardstick's own within-week copies: each copy moves a player's whole prior to another player of the same season and group.
 22. **Substitutes:** H101's design on the build's walk-forward prior-season coordinates (the pooled space, raw axes), as the brief's test 5 says. A sensitivity with each axis scaled within position is reported beside it, not as the verdict.
-23. **Test 1's mover clause is read as written** ("movers keep at least half of each component's season r"): offense fails it on one axis (the red zone, oz2, kept 42%), the axis that doesn't repeat anyway. The other reading (each of the repeating components) passes. The CEO decides which reading the brief meant.
+23. **Test 1's mover clause is read as written** ("movers keep at least half of each component's season r"): offense fails it on one axis (the red zone, oz2, kept 42%), the axis that doesn't repeat anyway. The other reading (each of the repeating components) passes. **Settled after the result, at the CEO's call** (2026-11-25: "I think movers keep only the parts that repeat"): test 1 reads "movers keep at least half of the season r of each component that repeats", and offense passes it (round 2).
 
 ## Not done here
 
 24. **The vault stays closed** (the brief: "the vault is 2025, untouched"). Opening it means building 2025's counts; the CEO decides, as for the crude forecaster.
 25. **Measurables beside the space** are height, weight and draft slot from the roster. The 40 isn't in the tables (the combine is a raw file only), so it isn't published; a `player` combine part is a separate data task.
 26. **No MLflow model is registered** (no project has one); the run is logged as an attempt with its metrics and report.
+
+## The CEO's review (2026-11-25)
+
+The CEO's answers, word for word: "I think the 12 role names work great! I think movers keep only the parts that repeat. Yes ship roles as leans with a certainty score. Can you spot check the rushing noise? No vetoes from me. Make sure to check the backlog of ideas and test the ones that fit into both of these builds, please."
+
+- **No vetoes:** calls 1-26 stand.
+- **Names:** the twelve fine and five coarse names stand (call 14).
+- **Test 1:** the repeating components' reading (call 23), settled after the result.
+- **Fine roles:** ship as leans with "how sure" (call 14).
+- **Round 2** (the spot-check of the rushing noise and the backlog ideas) adds calls 27 on, below.
+
+## Round 2's calls (2026-11-25)
+
+27. **The round-2 tests read the saved history** (run 696a3f0b) and the package's cached counts and features, so they test exactly what ships; nothing is refit or republished. They are discovery scripts in `projects/roles-archetypes/explore/build2_*.py`, each with its output beside it.
+28. **Contracts and the combine come from their raw nflverse files,** as the snap-leverage and roles explorations did. Both sources are already listed in DATA_SOURCES, so there's no new source. Neither is a table part yet, so neither is read by the package (I132's data task stays open).
+29. **I134's band was chosen on 2017-2020** as the smallest of 0.5, 1, 1.5, 2 and 3 sd to bring the median flip under 14% (0.5 sd), and scored once on 2021-2024. The wider bands' 2021-2024 flips are printed as a sensitivity, not as the verdict. **The band doesn't ship:** it fails the bar and ties on forecasts, and a tie goes to the plain labels (rule k).
+30. **I122's group average is last season's** (known before the newcomer plays), not the same season's as in H104's exploration. Its blend weight is chosen leave-one-season-out. Its null moves the departed player to another team's vacancy in the same group and offseason.
+31. **I43 is scored on both the lasso and the trees,** the precedent's model. The verdict reads where the idea placed it (DL and OLB), where both agree. The overall gain over the stronger trees is a tie and is reported as such.
+32. **The spot-check's copies** are 19 per input, shuffled within season and group (test 4's design), now with their mean as well as their best, because on the rushing board signal-free copies cost about 0.5% on average.
+33. **Test 1's code now prints the CEO's reading** (movers keep half of each repeating axis's season r) beside the strict one. The saved report (run 696a3f0b) predates the change. Its numbers are the same, and only the verdict line differs.
+34. **No package change ships from round 2,** apart from call 33. The interface card says how to read the outputs: the fine roles as leans with `sure`, the role table for rushing and for like-for-like comparables, and the coordinates not for rushing.

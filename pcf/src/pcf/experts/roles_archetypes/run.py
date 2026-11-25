@@ -112,7 +112,8 @@ def ae_place_frozen(fe: pl.DataFrame, embs: Sequence[E.Embedding], side: str) ->
 def test_consistency(fe: pl.DataFrame, sp: dict, out: Report) -> None:
     out("\n== Test 1: consistency, held out (the frozen 2016-2020 fit read on 2021-2024)")
     out("  pass: 4+ of 6 axes at split-half 0.5+ centred within position, and movers keep at "
-        "least half of each axis's season r")  # fmt: skip
+        "least half of the season r of each axis that repeats (the CEO's reading, "
+        "2026-11-25)")  # fmt: skip
     for side in SIDES:
         s = sp[side]
         axes = s["frozen"].axes
@@ -121,14 +122,18 @@ def test_consistency(fe: pl.DataFrame, sp: dict, out: Report) -> None:
                            D.SCORED)  # fmt: skip
         table = V.consistency(fe.filter(c("side") == side), N.TABLE[side], D.SCORED)
         n_ok = int((t["split_half_centred"] >= 0.5).sum())
-        kept_ok = bool((t["kept"] >= 0.5).all())
+        # the CEO's reading (2026-11-25, settled after run 696a3f0b): movers keep at least half of
+        # the season r of each component that repeats (centred split-half 0.5+)
+        kept_ok = bool((t.filter(c("split_half_centred") >= 0.5)["kept"] >= 0.5).all())
+        strict = bool((t["kept"] >= 0.5).all())
         out(f"  {side} PCA ({t['n_halves'][0]} player-seasons with halves, {t['n_pairs'][0]} "
             f"pairs, {t['n_movers'][0]} movers):")  # fmt: skip
         for r in t.iter_rows(named=True):
             out(f"    {r['axis']}: split-half {r['split_half']:.2f}, centred "
                 f"{r['split_half_centred']:.2f}; season r {r['season_r']:.2f}, movers "
                 f"{r['movers_r']:.2f} (kept {r['kept']:.0%})")  # fmt: skip
-        out(f"    -> {n_ok} of 6 centred at 0.5+; movers keep half everywhere: {kept_ok}; "
+        out(f"    -> {n_ok} of 6 centred at 0.5+; movers keep half on every repeating axis: "
+            f"{kept_ok} (on every axis: {strict}); "
             f"TEST 1 {'PASSES' if n_ok >= 4 and kept_ok else 'FAILS'}")  # fmt: skip
         out("    autoencoder (3 seeds averaged), centred split-half: "
             + ", ".join(f"{v:.2f}" for v in ae["split_half_centred"]) + "; movers r: "

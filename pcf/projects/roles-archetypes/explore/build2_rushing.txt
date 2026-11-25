@@ -1,0 +1,68 @@
+Round 2 spot-check: the coordinates on the rushing rest-of-season board (beside participation)
+board: 15,383 rows, positions ['RB']; scored steps 2019-2024
+
+1. Reproduced from the saved history (test 4 said -0.90% and +0.74%):
+  coordinates, all 6                                  : -0.90% (90% -1.18 to -0.64) [10207 rows]
+  role table, 6                                       : +0.74% (90% +0.53 to +0.97) [10207 rows]
+
+2. Where the loss sits: the coordinates' extra squared error is +0.90% of the crude error (positive = worse)
+  by target season (share of the total extra error; the coordinates' and the table's change as % of that season's crude error):
+    2019:    38% of the loss; coordinates +2.09%, table +0.12% (1646 rows)
+    2020:     5% of the loss; coordinates +0.24%, table -0.18% (1733 rows)
+    2021:    35% of the loss; coordinates +1.76%, table -1.56% (1748 rows)
+    2022:    15% of the loss; coordinates +0.84%, table -0.80% (1750 rows)
+    2023:    11% of the loss; coordinates +0.67%, table -1.11% (1692 rows)
+    2024:    -4% of the loss; coordinates -0.20%, table -0.87% (1638 rows)
+  by the back's prior role (last season's named role):
+    early-down back           :    55% of the loss; coordinates +0.95%, table -0.76% (3810 rows)
+    passing-down back         :    43% of the loss; coordinates +1.33%, table +1.05% (3563 rows)
+    no prior (rookie or new)  :     7% of the loss; coordinates +0.38%, table -1.48% (1919 rows)
+    blocking tight end        :     3% of the loss; coordinates +5.47%, table -62.38% (775 rows)
+    inline tight end          :    -8% of the loss; coordinates -13.54%, table -13.14% (139 rows)
+    outside receiver          :     0% of the loss; coordinates +43.15%, table -89.54% (1 rows)
+  by the prior season's snaps:
+    200-499   :    62% of the loss; coordinates +1.70%, table -1.26% (3364 rows)
+    under 200 :    -4% of the loss; coordinates -0.18%, table -1.45% (3233 rows)
+    none      :     7% of the loss; coordinates +0.38%, table -1.48% (1919 rows)
+    500+      :    35% of the loss; coordinates +1.16%, table +0.94% (1691 rows)
+  by player-season: 969 player-seasons; the 10 worst carry 76% of the net loss, the 50 worst 205%; 50% of player-seasons are hurt
+    Joe Mixon 2019 (early-down back, 563 prior snaps): +0.140% ; prior z +3.9 +1.9 -1.1 +0.7 -0.2 +1.9
+    Dare Ogunbowale 2020 (passing-down back, 323 prior snaps): +0.117% ; prior z -2.0 +4.8 +3.6 -0.4 +1.1 -2.2
+    Saquon Barkley 2019 (passing-down back, 813 prior snaps): +0.062% ; prior z +0.8 +3.1 -1.1 +0.6 +1.2 +1.4
+    Gus Edwards 2020 (passing-down back, 357 prior snaps): +0.056% ; prior z +1.3 +3.0 +0.5 -0.1 -1.2 -1.1
+    Ezekiel Elliott 2019 (passing-down back, 836 prior snaps): +0.054% ; prior z +1.5 +2.6 +0.1 +1.0 +0.8 +1.9
+    Darrell Henderson 2021 (early-down back, 329 prior snaps): +0.054% ; prior z +3.5 +1.8 -1.5 +0.5 -1.4 +1.2
+    Kenyan Drake 2021 (early-down back, 592 prior snaps): +0.053% ; prior z +4.4 +2.4 -0.9 +1.4 -0.7 +0.6
+    Gus Edwards 2019 (early-down back, 273 prior snaps): +0.051% ; prior z +3.9 +1.7 -1.5 +0.5 -1.6 +0.1
+    Miles Sanders 2019 (None, None prior snaps): +0.050% ; prior z   na   na   na   na   na   na
+    James Robinson 2021 (early-down back, 609 prior snaps): +0.050% ; prior z +4.2 +2.4 -3.0 +1.4 +0.3 +0.5
+
+3. Bias: the average forecast minus the outcome (rest-of-season yards), crude and with the coordinates, by prior role:
+    early-down back           : crude   -1.4, coordinates   -1.1, table   -0.7 (3810 rows)
+    passing-down back         : crude   -0.5, coordinates   -0.7, table   -0.7 (3563 rows)
+    no prior (rookie or new)  : crude   +0.1, coordinates   -0.2, table   +0.3 (1919 rows)
+    blocking tight end        : crude   +4.0, coordinates   +3.8, table   +1.3 (775 rows)
+    inline tight end          : crude   +4.8, coordinates   +4.2, table   +0.4 (139 rows)
+    outside receiver          : crude   +4.3, coordinates   +5.1, table   -1.4 (1 rows)
+
+4. Single axes and subsets (oz1 alone +0.03%, z4-z5 +0.06% and z0-z3 -0.81% from the build's follow-up):
+  z0 alone                                            : +0.19% (90% +0.08 to +0.31) [10207 rows]
+  z2 alone                                            : -0.52% (90% -0.79 to -0.24) [10207 rows]
+  z3 alone                                            : -0.33% (90% -0.56 to -0.11) [10207 rows]
+  z0 + z1                                             : +0.01% (90% -0.16 to +0.18) [10207 rows]
+
+5. I133: the fullbacks (non-carriers by last season's named role) taken out
+  prior rows on the board's players that aren't backs: 68 player-seasons, 915 rows
+  (a) coordinates, non-backs' prior set missing       : -0.13% (90% -0.44 to +0.16) [10207 rows]
+  (b) coordinates, scored on last season's backs only : -1.08% (90% -1.39 to -0.79) [7373 rows]
+      the table, on the same rows                     : +0.11% (90% -0.14 to +0.36) [7373 rows]
+  (c) coordinates + carries per run snap              : -0.25% (90% -0.52 to +0.04) [10207 rows]
+      carries per run snap alone                      : -0.12% (90% -0.34 to +0.10) [10207 rows]
+
+6. S5: the coarse and fine roles as dummies (the step, not a line)
+  is a back (coarse)                                  : -0.03% (90% -0.26 to +0.20) [10207 rows]
+  early-down back, passing-down back (fine)           : +0.45% (90% +0.30 to +0.60) [10207 rows]
+
+7. Overfitting check: the coordinates' fit on the training seasons vs held out
+  (a lasso on player-constant columns can fit a player's own residual when one back appears in many training weeks)
+  5 shuffled copies of the coordinates: mean -0.62%, worst -1.20%, best -0.31%

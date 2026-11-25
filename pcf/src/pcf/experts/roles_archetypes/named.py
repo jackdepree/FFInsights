@@ -12,7 +12,7 @@ decision 0048).
   axes); the product over the deciding cuts. Its calibration is checked against flips between a
   season's halves.
 
-The names are working names: what to call each role is the CEO's taste call.
+The CEO approved the names (2026-11-25), and the fine roles ship as leans read with `sure`.
 """
 
 from __future__ import annotations

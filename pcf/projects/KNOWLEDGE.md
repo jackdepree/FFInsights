@@ -360,3 +360,12 @@
 | `roles-archetypes#F6` | Like-for-like substitutes on the walk-forward spaces rank 0.477 on both sides (defense passes, offense's interval reaches 0.510) | medium | [RESULTS.md](roles-archetypes/RESULTS.md) |
 | `roles-archetypes#F7` | An autoencoder reconstructs more than PCA (0.90 against 0.84) and forecasts worse (−4% to −17%) | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
 | `roles-archetypes#F8` | Trees on the coordinates fix only the carries step (+44%) and are worse beyond his own rates | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F9` | On the yardstick's rushing board, six signal-free player-constant inputs cost about 0.5% (copies' mean −0.48% to −0.53%; receiving −0.04% to −0.10%) | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F10` | The coordinates' rushing loss (−0.90%) is that floor plus the fullbacks' extreme coordinates; set aside, a tie (−0.13%); no fix beats the role table | medium | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F11` | Without his own target rates the role table still counts on both yardstick boards (+0.23% receiving, +0.88% rushing); its carries win over labels is the shrunk carry rate | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F12` | Like-for-like substitutes on the role table rank 0.436 (offense) and 0.440 (defense), clearer than on the pooled space (0.477) | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F13` | A hysteresis band doesn't fix the fine roles (14.05%; DL 26%, OLB 31%); the front's fine roles are blurred | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F14` | A newcomer's role leans 15% toward the departed player's (−1.7% of the squared distance, beats 20 placebos); ties on the role table | medium | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F15` | The team-adjusted 3rd-and-4th-down share adds 5.4-5.8% to a next-contract model for DL and OLB (20 of 20); overall a tie on trees | medium | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F16` | A receiver's vertical route share repeats (r 0.51); his own share beats the position mix by 18.6%; the role table adds 9.1% | strong | [RESULTS.md](roles-archetypes/RESULTS.md) |
+| `roles-archetypes#F17` | Measurables place a rookie WR on the in-tight axis (+15.8%), not TEs or RBs | medium | [RESULTS.md](roles-archetypes/RESULTS.md) |
