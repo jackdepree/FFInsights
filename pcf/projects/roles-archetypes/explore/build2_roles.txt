@@ -1,0 +1,30 @@
+Round 2: I134, I135, I136 on the build's pieces (run 696a3f0b's counts and features)
+
+== I134: a hysteresis band for the fine roles
+  plain labels: median flip 2017-2020 16.0%; 2021-2024 16.3% (CB 13%, DL 30%, ILB 7%, OLB 34%, RB 14%, S 9%, TE 18%, WR 18%)
+  band 0.5 sd: median flip 2017-2020 13.2%; kept the anchor on 4.2% of full-season rows
+  band 1.0 sd: median flip 2017-2020 10.2%; kept the anchor on 7.3% of full-season rows
+  band 1.5 sd: median flip 2017-2020 9.1%; kept the anchor on 9.6% of full-season rows
+  band 2.0 sd: median flip 2017-2020 7.4%; kept the anchor on 11.6% of full-season rows
+  band 3.0 sd: median flip 2017-2020 6.6%; kept the anchor on 14.3% of full-season rows
+  chosen on 2017-2020: band 0.5 sd. Scored once on 2021-2024: median flip 14.05% (CB 11%, DL 26%, ILB 5%, OLB 31%, RB 11%, S 6%, TE 18%, WR 17%) -> FAILS the 14% bar
+  sensitivity (not the verdict; looked at after the choice): the other bands on 2021-2024: 1.0 sd 12.2%, 1.5 sd 11.3%, 2.0 sd 9.8%, 3.0 sd 5.3%
+  DL and OLB under 20%: DL 25.7%, OLB 30.6%
+  forecasting check: next season's per-snap rates from position labels + role dummies, plain against banded (walk-forward, scored 2021-2024; a tie means the band costs nothing)
+    offense targets per snap: banded against plain +1.5% (90% -0.5 to +3.7); tie
+    offense carries per snap: banded against plain -1.7% (90% -8.4 to +4.9); tie
+    defense tackles per snap: banded against plain -0.5% (90% -2.1 to +1.1); tie
+    defense rushes per pass snap: banded against plain -1.5% (90% -3.8 to +0.8); tie
+
+== I135: the role table without his own target rates (offense)
+  821 pairs scored 2021-2024; no named-role dummies in either table (they read carries per run snap)
+  targets per snap:
+    test 2: labels -> + 6-feature table +48.7% (90% +43.1 to +53.7); better; -> + 4-feature table +28.1% (90% +22.5 to +33.3); better
+    test 3: labels + own rates -> + 6-feature table +2.3% (90% -0.3 to +4.8); tie; -> + 4-feature table +1.2% (90% -0.9 to +3.2); tie
+  carries per snap:
+    test 2: labels -> + 6-feature table +56.4% (90% +38.8 to +68.1); better; -> + 4-feature table +4.3% (90% -1.9 to +10.8); tie
+    test 3: labels + own rates -> + 6-feature table +3.0% (90% +0.7 to +5.4); better; -> + 4-feature table -0.0% (90% -1.1 to +0.9); tie
+
+== I136: like-for-like substitutes on the role table (H101's design; chance 0.5)
+  offense: rank 0.436 (90% 0.404 to 0.466), 1120 events; RB 0.34, TE 0.42, WR 0.49 -> PASSES
+  defense: rank 0.440 (90% 0.415 to 0.464), 1710 events; CB 0.44, DL 0.46, ILB 0.42, OLB 0.38, S 0.42 -> PASSES

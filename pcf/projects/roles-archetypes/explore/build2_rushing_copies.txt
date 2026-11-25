@@ -1,0 +1,15 @@
+Round 2 spot-check, part 2: the shuffled copies' spread (19 each, within season and group)
+
+== rushing rest-of-season board, beside participation (15,383 rows)
+  coordinates                                     : -0.90% (90% -1.18 to -0.64); 19 copies: mean -0.48%, from -1.03 to +0.02; beats 3 of 19; real minus the copies' mean -0.43; counts: False
+  role table                                      : +0.74% (90% +0.53 to +0.97); 19 copies: mean -0.53%, from -1.10 to -0.04; beats 19 of 19; real minus the copies' mean +1.27; counts: True
+  coordinates, non-backs' prior missing (I133 a)  : -0.13% (90% -0.44 to +0.16); 19 copies: mean -0.54%, from -1.18 to -0.12; beats 18 of 19; real minus the copies' mean +0.41; counts: False
+  fine back roles as 2 dummies                    : +0.45% (90% +0.30 to +0.60); 19 copies: mean -0.15%, from -0.61 to +0.43; beats 19 of 19; real minus the copies' mean +0.60; counts: True
+  carries per run snap alone                      : -0.12% (90% -0.34 to +0.10); 19 copies: mean -0.05%, from -0.44 to +0.26; beats 5 of 19; real minus the copies' mean -0.08; counts: False
+
+== receiving rest-of-season board, beside participation (53,355 rows)
+  coordinates                                     : +0.30% (90% +0.18 to +0.42); 19 copies: mean -0.04%, from -0.20 to +0.06; beats 19 of 19; real minus the copies' mean +0.33; counts: True
+  role table                                      : +0.34% (90% +0.17 to +0.51); 19 copies: mean -0.10%, from -0.27 to +0.04; beats 19 of 19; real minus the copies' mean +0.44; counts: True
+  coordinates, non-backs' prior missing (I133 a)  : +0.12% (90% +0.05 to +0.18); 19 copies: mean -0.05%, from -0.23 to +0.00; beats 19 of 19; real minus the copies' mean +0.17; counts: True
+  fine back roles as 2 dummies                    : -0.04% (90% -0.10 to +0.01); 19 copies: mean -0.00%, from -0.04 to +0.04; beats 0 of 19; real minus the copies' mean -0.04; counts: False
+  carries per run snap alone                      : +0.00% (90% -0.01 to +0.01); 19 copies: mean +0.02%, from -0.01 to +0.05; beats 5 of 19; real minus the copies' mean -0.01; counts: False
