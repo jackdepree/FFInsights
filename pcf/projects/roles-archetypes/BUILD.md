@@ -28,3 +28,25 @@ Two tests' numbers were seen while the package was being written and checked aga
 | **Test 4:** the same on the rushing board | 15% | under +0.3% |
 | **Test 5:** like-for-like substitutes rank under 0.5 with the interval under 0.5, offense and defense | 75% offense, 55% defense | about 0.44 (H101) |
 | **Test 5:** fine roles flip under 14% at the median group on 2021–2024 | 25% | about 15–16% |
+
+## The odds, scored (after run `696a3f0b`, 2026-11-24)
+
+| Test | Claude's odds | Came out | Size against expected |
+|---|---|---|---|
+| Test 2, targets | 90% | **Held** | +42.9% (expected +35 to +45) |
+| Test 2, carries | 35% | Didn't beat (a tie) | −14.1% (interval −54 to +11; expected −10 to +10) |
+| Test 2, tackles; rushes | 85% each | **Held** both | +26.5%, +27.6% (expected +20 to +30) |
+| Rung 1 | 90% | **Held** | +48.1% (expected +30 to +45: a bit larger) |
+| Rung 2 | 25% | Didn't hold: the coordinates lose to the table | −10% to −207% (expected ±3: much larger) |
+| Rung 3, carries | 60% | **Held** | +43.8% (expected +5 to +20: larger, because the PCA lasso was so poor on carries) |
+| Rung 3, targets | 30% | Didn't hold (trees worse) | −11.7% (expected ±3: larger) |
+| Rung 4 | 20% | Didn't hold | −17% to +2% alone; ties beyond his own rates but +1.1% on rushes |
+| Test 3 adds | 15% per target | Held on 2 of 4 (carries +1.0%, rushes +3.1%) | Rushes larger than +0 to +1 |
+| Test 3 adds noise | 15% per target | Didn't happen (0 of 4) | |
+| Signal | 95% | **Held**, 4 of 4 | |
+| Test 4, receiving | 20% | **Held** (counts) | +0.30% (expected under +0.3: at the top) |
+| Test 4, rushing | 15% | Didn't hold: adds noise | −0.90% (no odds were written for noise) |
+| Substitutes | 75% offense, 55% defense | Offense failed by a hair, defense held | 0.477 both (expected about 0.44) |
+| Fine flips under 14% | 25% | Didn't hold | 16.3% (expected 15 to 16) |
+
+Claude's read: the direction calls were well calibrated. The sizes were too small wherever the PCA lasso met a step (carries) or the table. I underrated how much a handful of plain rates beats a fitted space.
