@@ -1,5 +1,5 @@
-"""The build's run (decision 0048): both role spaces walk-forward, the named roles, every brief test,
-the saved history and the report.
+"""The build's run (decision 0048): both role spaces walk-forward, the named roles, every brief
+test, the saved history and the report.
 
     python -m pcf.experts.roles_archetypes.run            # everything, logged to MLflow
     python -m pcf.experts.roles_archetypes.run --no-log   # the report only
@@ -36,7 +36,7 @@ c = pl.col
 PROJECT = "roles-archetypes"
 SEEDS = (0, 1, 2)
 COPIES = 19
-REPORT = Path(__file__).resolve().parents[3] / "projects" / PROJECT / "build" / "report.txt"
+REPORT = Path(__file__).resolve().parents[4] / "projects" / PROJECT / "build" / "report.txt"
 
 
 class Report:
@@ -80,10 +80,20 @@ def build_spaces(fe: pl.DataFrame, out: Report) -> dict:
             la, lb = fits[a].loadings, fits[b].loadings
             congr.append(np.abs((la * lb).sum(1)))
         cg = np.array(congr)
-        out("  refits rotated to the last (Procrustes): each axis's loading congruence with the "
-            "previous fit, min over 2017-2024: " + ", ".join(f"{v:.2f}" for v in cg.min(0)))
+        out(
+            "  refits rotated to the last (Procrustes): each axis's loading congruence with the "
+            "previous fit, min over 2017-2024: " + ", ".join(f"{v:.2f}" for v in cg.min(0))
+        )
         out("  and against the frozen 2016-2020 fit, the 2024 fit: " + ", ".join(
-            f"{v:.2f}" for v in np.abs((fits[2024].loadings * frozen.loadings).sum(1))))  # fmt: skip
+            f"{v:.2f}" for v in np.abs((fits[2024].loadings * frozen.loadings).sum(1))
+        ))  # fmt: skip
+        last = fits[max(fits)]
+        out(f"  the published axes (the walk's {last.version} fit, every refit rotated to the one "
+            "before; how the history's z0-z5 read):")  # fmt: skip
+        for i, a in enumerate(last.axes):
+            load = last.loadings[i]
+            top = np.argsort(-np.abs(load))[:5]
+            out(f"    {a}: " + ", ".join(f"{last.features[j]} {load[j]:+.2f}" for j in top))
         out("  group means (frozen fit, 200+ snaps):")
         for g, m in sorted(frozen.group_means.items()):
             out(f"    {g:4} " + " ".join(f"{v:+.2f}" for v in m))
@@ -120,10 +130,10 @@ def test_consistency(fe: pl.DataFrame, sp: dict, out: Report) -> None:
                 f"{r['movers_r']:.2f} (kept {r['kept']:.0%})")  # fmt: skip
         out(f"    -> {n_ok} of 6 centred at 0.5+; movers keep half everywhere: {kept_ok}; "
             f"TEST 1 {'PASSES' if n_ok >= 4 and kept_ok else 'FAILS'}")  # fmt: skip
-        out(f"    autoencoder (3 seeds averaged), centred split-half: "
+        out("    autoencoder (3 seeds averaged), centred split-half: "
             + ", ".join(f"{v:.2f}" for v in ae["split_half_centred"]) + "; movers r: "
             + ", ".join(f"{v:.2f}" for v in ae["movers_r"]))  # fmt: skip
-        out(f"    role table, centred split-half: " + ", ".join(
+        out("    role table, centred split-half: " + ", ".join(
             f"{a} {v:.2f}" for a, v in zip(table["axis"], table["split_half_centred"],
                                            strict=True)) + "; movers r: " + ", ".join(
             f"{v:.2f}" for v in table["movers_r"]))  # fmt: skip
@@ -143,9 +153,14 @@ def ladder_rows(fe: pl.DataFrame, cnt: pl.DataFrame, sp: dict, labels: pl.DataFr
     ae_axes = [a for a in s["ae"].columns if a[1:2] == "e" and a[2:].isdigit()]
     e = s["ae"].filter(c("half") == "all").select(*S.PAIR, *ae_axes)
     roles = N.ROLES[side]
-    lab = labels.filter(c("half") == "all").select(*S.PAIR, "role").with_columns(
-        (c("role") == r).cast(pl.Float64).alias(f"r_{i}") for i, r in enumerate(roles)
-    ).drop("role")
+    lab = (
+        labels.filter(c("half") == "all")
+        .select(*S.PAIR, "role")
+        .with_columns(
+            (c("role") == r).cast(pl.Float64).alias(f"r_{i}") for i, r in enumerate(roles)
+        )
+        .drop("role")
+    )
     rows = base.join(z, on=S.PAIR).join(e, on=S.PAIR).join(lab, on=S.PAIR)
     rows = V.pairs(V.main_rows(rows), V.season_totals(cnt), side)
     rows = pl.concat([rows, V.position_dummies(rows, side)], how="horizontal")
@@ -161,7 +176,7 @@ def ladder_rows(fe: pl.DataFrame, cnt: pl.DataFrame, sp: dict, labels: pl.DataFr
 
 
 def test_ladder(rows: pl.DataFrame, sets: dict, side: str, out: Report) -> dict:
-    P, T, Z, Ev, O = (sets[k] for k in "PTZEO")
+    P, T, Z, Ev, Own = (sets[k] for k in "PTZEO")
     ids = rows["gsis_id"].to_numpy()
     sc = D.SCORED
     res = {}
@@ -170,13 +185,13 @@ def test_ladder(rows: pl.DataFrame, sets: dict, side: str, out: Report) -> dict:
         f"target seasons 2021-2024 ({n} pairs; {rows.height} with training)")  # fmt: skip
     for tgt in V.TARGETS[side]:
         y = rows[f"y_{tgt}"].to_numpy()
-        L = lambda cols, f=V.LASSO: V.walk(rows, cols, f"y_{tgt}", f, sc)  # noqa: E731
+        L = lambda cols, f=V.LASSO, t=tgt: V.walk(rows, cols, f"y_{t}", f, sc)  # noqa: E731
         p = {
             "P": L(P), "T": L([*P, *T]), "Z": L(Z), "PZ": L([*P, *Z]), "Ztrees": L(Z, V.TREES),
-            "E": L(Ev), "B": L([*P, *O]), "BT": L([*P, *O, *T]), "BZ": L([*P, *O, *Z]),
-            "BZtrees": L([*P, *O, *Z], V.TREES), "BE": L([*P, *O, *Ev]),
+            "E": L(Ev), "B": L([*P, *Own]), "BT": L([*P, *Own, *T]), "BZ": L([*P, *Own, *Z]),
+            "BZtrees": L([*P, *Own, *Z], V.TREES), "BE": L([*P, *Own, *Ev]),
         }  # fmt: skip
-        g = lambda a, b: V.gain(y, p[a], p[b], ids)  # noqa: E731
+        g = lambda a, b, y=y, p=p: V.gain(y, p[a], p[b], ids)  # noqa: E731
         name = V.TARGET_NAMES[tgt]
         rows_ = [
             ("test 2: position labels -> coordinates", "P", "Z"),
@@ -213,8 +228,9 @@ def priors(sp: dict, fe: pl.DataFrame, side: str = "offense") -> pl.DataFrame:
     z = s["placed"].filter(c("half") == "all").select(*S.PAIR, "snaps", *s["frozen"].axes)
     t = fe.filter((c("side") == side) & (c("half") == "all")).select(*S.PAIR, *N.TABLE[side])
     m = V.main_rows(z.join(t, on=S.PAIR).with_columns(half=pl.lit("all")))
-    return m.select("gsis_id", "group", season=c("season") + 1, *s["frozen"].axes,
-                    *[c(x).alias(f"t_{x}") for x in N.TABLE[side]])  # fmt: skip
+    return m.select("gsis_id", "group", *s["frozen"].axes,
+                    *[c(x).alias(f"t_{x}") for x in N.TABLE[side]],
+                    season=c("season") + 1)  # fmt: skip
 
 
 def _shuffled_prior(prior: pl.DataFrame, cols: Sequence[str], seed: int) -> pl.DataFrame:
@@ -248,7 +264,9 @@ def test_yardstick(prior: pl.DataFrame, axes: Sequence[str], out: Report) -> dic
             for k in range(COPIES):
                 sh = _shuffled_prior(prior, cols, get_config().seed + 5000 + k)
                 fr = rows.join(sh, on=["gsis_id", "season"], how="left").drop("season")
-                nulls.append(Y.score_input(board, fr, f"copy {k}", beside=("participation",))["alone"])
+                nulls.append(
+                    Y.score_input(board, fr, f"copy {k}", beside=("participation",))["alone"]
+                )
             counts = r["alone_lo"] > 0 and r["alone"] > max(nulls)
             out(f"  {target:9} {name:12}: {100 * r['alone']:+.2f}% of the squared error "
                 f"(90% {100 * r['alone_lo']:+.2f} to {100 * r['alone_hi']:+.2f}); range score "
@@ -289,15 +307,29 @@ def test_named(fe: pl.DataFrame, games: pl.DataFrame, sp: dict, out: Report
             + f" -> {'PASSES' if med < 0.14 else 'FAILS'}")  # fmt: skip
         out.metric(f"t5_flips_{level}", med)
     cal = V.sure_calibration(labels, D.SCORED)
-    out("  how sure, calibrated? (both halves' sure multiplied against how often they agreed, "
-        "2021-2024): " + "; ".join(f"{r['from']:.2f}-{r['to']:.2f}: said {r['said']:.2f}, held "
-                                    f"{r['held']:.2f} (n {r['n']})" for r in cal.iter_rows(named=True)))
+    out(
+        "  how sure, calibrated? (both halves' sure multiplied against how often they agreed, "
+        "2021-2024): "
+        + "; ".join(
+            f"{r['from']:.2f}-{r['to']:.2f}: said {r['said']:.2f}, held "
+            f"{r['held']:.2f} (n {r['n']})"
+            for r in cal.iter_rows(named=True)
+        )
+    )
     for side in SIDES:
         s = sp[side]
         axes = s["frozen"].axes
         prior = V.main_rows(s["placed"]).select("gsis_id", *axes, season=c("season") + 1)
         sub = V.substitutes(games.filter(c("side") == side), prior, axes)
         res[f"subs_{side}"] = sub
+        # sensitivity (reported, not the verdict): each axis scaled to unit sd within position,
+        # so the axes that separate positions don't dominate a within-position distance
+        sd = prior.join(V.main_rows(s["placed"]).select("gsis_id", "group", season=c("season") + 1),
+                        on=["gsis_id", "season"])  # fmt: skip
+        scaled = sd.with_columns((c(a) / c(a).std().over("group")).alias(a) for a in axes)
+        alt = V.substitutes(games.filter(c("side") == side), scaled.drop("group"), axes)
+        out(f"    sensitivity, axes scaled within position: rank {alt['rank']:.3f} (90% "
+            f"{alt['lo']:.3f} to {alt['hi']:.3f})")  # fmt: skip
         out(f"  like-for-like substitutes, {side} (prior-season coordinates; chance 0.5): rank "
             f"{sub['rank']:.3f} (90% {sub['lo']:.3f} to {sub['hi']:.3f}), {sub['events']} "
             f"events; " + ", ".join(f"{g} {v:.2f}" for g, v in sub["by_group"].items())
@@ -317,10 +349,13 @@ def history(fe: pl.DataFrame, cnt: pl.DataFrame, sp: dict, labels: pl.DataFrame)
         cols = [x for a in axes for x in (a, f"{a}_lo", f"{a}_hi")]
         z = s["placed"].filter(c("half") == "all").select(*S.PAIR, "snaps", *cols, "shrink_w",
                                                           "version")  # fmt: skip
-        z = z.rename({a: f"z{i}" for i, a in enumerate(axes)} | {
-            f"{a}_{e}": f"z{i}_{e}" for i, a in enumerate(axes) for e in ("lo", "hi")})
+        z = z.rename(
+            {a: f"z{i}" for i, a in enumerate(axes)}
+            | {f"{a}_{e}": f"z{i}_{e}" for i, a in enumerate(axes) for e in ("lo", "hi")}
+        )
         t = fe.filter((c("side") == side) & (c("half") == "all")).select(
-            *S.PAIR, *[c(x).alias(f"t{i}_{x}") for i, x in enumerate(N.TABLE[side])])
+            *S.PAIR, *[c(x).alias(f"t{i}_{x}") for i, x in enumerate(N.TABLE[side])]
+        )
         lab = labels.filter(c("half") == "all").select(*S.PAIR, "role", "coarse", "sure")
         out.append(z.join(t, on=S.PAIR).join(lab, on=S.PAIR))
     h = pl.concat(out, how="diagonal_relaxed").join(known, on="season")
@@ -333,17 +368,21 @@ def sanity(h: pl.DataFrame, names: pl.DataFrame, out: Report, season: int = 2024
     """The CEO's lists: each axis's top and bottom 10 in the last season (200+ snaps)."""
     out(f"\n== Sanity lists: each axis's top and bottom 10, {season}, 200+ snaps")
     h = h.filter((c("season") == season) & (c("snaps") >= S.MIN_SNAPS)).join(
-        names, on="gsis_id", how="left")
+        names, on="gsis_id", how="left"
+    )
     for side in SIDES:
         hs = h.filter(c("side") == side)
         for i in range(S.K):
             z = f"z{i}"
             top = hs.sort(z, descending=True).head(10)
             bot = hs.sort(z).head(10)
-            fmt = lambda d: ", ".join(f"{n} ({g} {t})" for n, g, t in zip(  # noqa: E731
-                d["name"], d["group"], d["team"], strict=True))
-            out(f"  {side[0]}z{i} top: {fmt(top)}")
-            out(f"  {side[0]}z{i} bottom: {fmt(bot)}")
+            out(f"  {side[0]}z{i} top: {_names(top)}")
+            out(f"  {side[0]}z{i} bottom: {_names(bot)}")
+
+
+def _names(d: pl.DataFrame) -> str:
+    return ", ".join(f"{n} ({g} {t})" for n, g, t in zip(d["name"], d["group"], d["team"],
+                                                         strict=True))  # fmt: skip
 
 
 def player_names() -> pl.DataFrame:

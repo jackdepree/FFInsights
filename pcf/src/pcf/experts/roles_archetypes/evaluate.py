@@ -181,7 +181,7 @@ def walk(rows: pl.DataFrame, cols: Sequence[str], target: str, fitter: Fitter,
     """Walk-forward predictions for the rows whose target season is in `scored` (NaN elsewhere):
     each target season's model is fit on earlier target seasons only. `y` overrides the target
     (shuffled nulls)."""
-    x = rows.select(cols).to_numpy().astype(float)
+    x = rows.select(list(dict.fromkeys(cols))).to_numpy().astype(float)
     y = rows[target].to_numpy().astype(float) if y is None else y
     ts = rows["target_season"].to_numpy()
     out = np.full(len(y), np.nan)

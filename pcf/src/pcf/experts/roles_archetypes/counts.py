@@ -7,9 +7,9 @@ Per player-team-season and half (`all`, `odd` weeks, `even` weeks), on the side 
 - Usage counts: snaps, pass and run snaps, targets, air yards, deep (20+), behind the line and
   middle targets, carries, outside carries, tackles, solo tackles, tackle yards, sacks and hits
   (`rush`), passes defensed (`pd`), and his targets' and touches' EPA.
-- `group`: his most common depth-chart position's group for the team-season (WR; TE; RB with
-  FB; DL; OLB; ILB with MLB; CB; S). Used to report and compare, and to shrink, never inside
-  the space.
+- `group`: his most common depth-chart position's group for the team-season, among his side's
+  groups (WR; TE; RB with FB | DL; OLB; ILB with MLB; CB; S). Used to report and compare, and
+  to shrink, never inside the space.
 - `known_at`: when the season's participation was known (the latest on-field `known_at`).
 
 Per player-team-game (`game_rows`): his snaps and his team's plays, for the substitutes test.
@@ -158,9 +158,16 @@ def season_counts(pbp: pl.DataFrame, on_field: pl.DataFrame) -> tuple[pl.DataFra
         .with_columns([c(k).fill_null(0) for k in EVENTS])
         .with_columns(group=c("position").replace_strict(GROUP, default=None))
     )
-    grp = (pp.filter(c("group").is_not_null()).group_by("gsis_id", "team")
+    # his group on each side: his most common position among that side's groups (a defender's
+    # few offensive snaps never put him in the offense's space, and the reverse)
+    own_side = (
+        pl.when(c("side") == "offense")
+        .then(c("group").is_in(OFFENSE))
+        .otherwise(c("group").is_in(DEFENSE))
+    )
+    grp = (pp.filter(c("group").is_not_null() & own_side).group_by("gsis_id", "team", "side")
            .agg(group=c("group").mode().sort().first()))  # fmt: skip
-    pp = pp.drop("group").join(grp, on=["gsis_id", "team"], how="inner")
+    pp = pp.drop("group").join(grp, on=["gsis_id", "team", "side"], how="inner")
     pp = pp.with_columns(season=pl.lit(season, pl.Int32))
     on_cells = pp.group_by([*KEYS, "half", "cell"]).agg(n=pl.len())
     team_side = pl.concat([

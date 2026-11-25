@@ -144,7 +144,7 @@ def place(sp: Space, feats: pl.DataFrame) -> pl.DataFrame:
 
 def walk(
     feats: pl.DataFrame, side: str, features: Sequence[str], seasons: Sequence[int],
-    first_fit: int | None = None,
+    first_fit: int | None = None, k: int = K,
 ) -> tuple[pl.DataFrame, dict[int, Space]]:  # fmt: skip
     """The walk-forward history: season s's rows placed by the fit on seasons up to s, each fit
     rotated to the one before. `first_fit`: the first season to publish (its fit sees every
@@ -156,7 +156,7 @@ def walk(
     for s in seasons:
         if s < first_fit:
             continue
-        sp = fit_space(feats, side, features, [x for x in seasons if x <= s], ref)
+        sp = fit_space(feats, side, features, [x for x in seasons if x <= s], ref, k)
         fits[s] = sp
         ref = sp
         out.append(place(sp, feats.filter((c("side") == side) & (c("season") == s))))
