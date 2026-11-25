@@ -6,7 +6,7 @@
 
 > "We can open the 2025 vault to check the three forecasts. Yes Elos next build should definitely utilize games lost forecast. Can you spot check the team gain for elo. No vetoes from me. [...] Make sure to check the backlog of ideas and test the ones that fit into both of these builds, please."
 
-- **Vault:** opened once, for the three shipped forecasts (`next_logit`, `next3_chain`, `rest_chain`).
+- **Vault:** opened once, for the three shipped forecasts (`next_logit`, `next3_chain`, `rest_chain`). **Later the same day: kept closed** (the CEO, 2026-11-25, in the build session: "Keep it closed, actually"), after this session's permission check asked for the yes in the build session. Section 1's bets are left unscored.
 - **I115:** Elo's next build uses availability's snap-weighted games-lost forecast (I131 settled the same way).
 - **Spot-check:** R8, the team gain beside Elo.
 - **Vetoes:** none on decision 0047's calls 1-25.

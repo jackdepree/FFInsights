@@ -17,7 +17,7 @@ Two of the brief's five tests failed: availability's next-game chance he's activ
 | Rest of season, games played (any reason) | the composite (`games.py`: the fitted healthy rate, `walk_healthy`, × `rest_chain`'s share not absent) | from `ad99d09b…`'s history | | +23.27% of I60's squared error (+20.74 to +25.96); +10.37% over the first, shrunk-rate composite (+9.65 to +11.06) |
 | Team: snap-weighted adjusted games lost, to date and forecast | `measures.agl`, `agl_forecast` on `rest_chain` | | | a description (R7); the forecast beside Elo ties without 2021 (R8, R12) |
 
-**Vault (2025): approved by the CEO (2026-11-25), not yet opened.** The run relayed through the build chat was stopped by this session's permission check, which needs the CEO's yes given here; the odds and pass rules are written and committed ([REVIEW.md](REVIEW.md) §1). **Versions tried:** 20 variants walked, 3 through the harness; after the review, 2 more walks (I130's tempered chains) and one more games-played composite (I129).
+**Vault (2025): closed** (the CEO, 2026-11-25, in the build session: "Keep it closed, actually"). The CEO first approved opening it, relayed by the build chat; this session's permission check asked for the yes in the build session, and the CEO then chose to keep it closed. The odds and pass rules stay committed, unscored ([REVIEW.md](REVIEW.md) §1). The 2026 live ledger is the unseen-season test. **Versions tried:** 20 variants walked, 3 through the harness; after the review, 2 more walks (I130's tempered chains) and one more games-played composite (I129).
 
 | Check (docs/VALIDATION.md) | Result |
 |---|---|
@@ -103,7 +103,7 @@ Each rung used the one below's takeaways: the report's codes and the body-part g
 - **Games played's range was fixed after a result.** The health-only range covered 26.5%. The residual range is the conventional fix and was fit walk-forward, but it was chosen after seeing that number (decision 0047 call 21).
 - **The gated stack (R3) was added after a result too.** It tied anyway, so it changes nothing.
 - **The 14.4% over I60 partly comes from information I60 doesn't have** (reserve lists and the report's history), which is the point. But I60 is a crude bar. The yardstick says the downstream worth is small: +0.21% receiving, +0.55% rushing beside I60 and participation, against a 22-27% ceiling. Most of the room is new injuries that nothing here sees coming.
-- **Every result is 2017-2024 walk-forward**, trained from 2016 only (decision 0047 call 6), so 2017 trains on one season. The vault is approved and not yet opened.
+- **Every result is 2017-2024 walk-forward**, trained from 2016 only (decision 0047 call 6), so 2017 trains on one season. The vault stays closed (the CEO), so the 2026 ledger is the first unseen season.
 - **The team gain beside Elo (+5.06%) is one season** (the spot-check, R12): 2021 gives +23%, the other five seasons tie. The team rest board is small (about 530 team-games a season), and its shuffled copies already gain up to +3.8%, so a gain there needs a wide margin to mean anything.
 - **The fitted healthy rate (R14) was adopted after its test** (decision 0047 call 27), on the same 2019-2024 rows it was scored on. It was pre-registered as I129 with a pass rule, and it beat the simpler rung (one walk-forward factor) by 8.6% (+7.96 to +9.27), but it hasn't met an unseen season: the 2026 ledger is its test.
 - **2020's COVID opt-outs (R62) and the 2020-2021 Reserve/COVID-19 list (R59) count as health reserve** (R13). Small in the scores, but wrong for opt-outs.
@@ -120,7 +120,7 @@ Each rung used the one below's takeaways: the report's codes and the body-part g
 
 ## Not looked at
 - Depth-chart rank as the weight of a player with no share yet (decision 0047 call 7).
-- Opening the vault (approved; not yet run, R11).
+- The vault (kept closed by the CEO, R11).
 - Why 2021 carries the team gain (R12). Not the Reserve/COVID-19 wave: the gain is largest in weeks 1-8, the wave was in weeks 15-18 (`build/spot_r8.txt`, S8).
 
 ## Could be improved
@@ -154,7 +154,7 @@ The CEO: "We can open the 2025 vault to check the three forecasts. Yes Elos next
 
 | # | Finding | Evidence | Confidence | Applies to |
 |---|---|---|---|---|
-| R11 | **The vault (2025) is approved and not yet opened.** The run was stopped by this session's permission check, which needs the CEO's yes given in this session, not relayed; its odds and pass rules (V1-V8) are committed | REVIEW.md §1 | | the three champions |
+| R11 | **The vault (2025) stays closed** (the CEO, 2026-11-25, in the build session: "Keep it closed, actually"). Its odds and pass rules (V1-V8) were committed before any run and stay unscored; the 2026 ledger is the test | REVIEW.md §1 | | the three champions |
 | R12 | **The spot-check of R8: the team gain beside Elo is one season.** By season, beside Elo: 2019 +3.8%, 2020 −4.2%, **2021 +23.0%**, 2022 +3.2%, 2023 −4.1%, 2024 +3.6%; without 2021, +0.40% (−1.19 to +1.90), a tie; beside Elo and I60's starters without 2021, +0.12% (−1.65 to +1.73). What is compared: the team rest-of-season board (team yards per game, 2019-2024, about 530 team-games a season, lasso refit each season), Elo's columns as the base, the forecast's offense and defense columns (games lost per game left) added. The worry before looking was the copies: a copy shuffled within the week keeps that week's average, so it could carry an early-or-late-season effect. It doesn't: the weekly averages alone tie beside Elo (+0.60%), so the copies' +2.3% average is fitting noise on a small board. Who is missing: the offense carries it, mostly the QB (QB part +4.75% beside Elo and the weekly averages, the line +0.18%, the backs and receivers −1.06%), and the defense's column adds nothing to own yards (+0.00%). Beside I60's starters it ties because I60's starters' forecast holds the QB's absences too (correlation −0.27). Within 2021 the gain is largest early (weeks 1-8 +35%, 9-13 +23%, 14-18 +9%), while the Reserve/COVID-19 list peaked in weeks 15-18 (126-186 players a week), so it isn't the COVID wave; why 2021 is unexplained. **No leak found:** the weights use only earlier games; every forecast was made by the board's moment (0 rows late); 256 week-1 tallies and 81 starters' values were filled with a median | `build/spot_r8.txt` | strong (that it's one season) | teams, rest of season |
 | R13 | **The COVID seasons' reserve codes are read as health.** R62, only in 2020, is the opt-outs (69 players, about 10 weeks each); R59, in 2020-2021, the Reserve/COVID-19 list (211 and 601 players, about a week each). Both are `RES`. They are 0.24% and 0.39% of the horizons' rows; R59 rows are 2.5% of the next-3 range score's total (a one-week stint forecast as injured reserve). Left as is in this build (decision 0047 call 28); fixed in the next (I133) | `roster_week`, the champions' histories | strong | 2020-2021 |
 | R14 | **I129 held: a healthy rate fit on his record beats the shrunk one.** A weighted logistic on the shrunk rate, his last game's share, his season's snaps, age, games, whether he played last game and position, fit walk-forward by season: games played then removes 23.27% of I60's squared error (+20.74 to +25.96), against 14.39% shrunk and 16.03% for the simpler rung (the shrunk composite times one walk-forward factor, 0.95-0.97). Against the simpler rung: +8.62% (+7.96 to +9.27); against the shrunk: +10.37% (+9.65 to +11.06). Every season +21% to +27% over I60; RB, WR and TE all gain. Its range holds 81.0%. On the yardstick it moves rushing to +0.60% and receiving to +0.23%. Now the shipped composite (decision 0047 call 27) | `build/ideas.txt`, `build/games_played_rest_chain_fitted.txt`, `build/yardstick_rest_chain_fitted.txt` | strong (2019-2024; adopted after the test) | QB/RB/WR/TE, rest of season |
@@ -166,7 +166,7 @@ The CEO: "We can open the 2025 vault to check the three forecasts. Yes Elos next
 
 | # | Bet | Chance | Result | Came true? |
 |---|---|---|---|---|
-| V1-V8 | The vault | 55-95% | not opened | |
+| V1-V8 | The vault | 55-95% | kept closed (the CEO) | not scored |
 | S1 | The weekly averages alone add 2%+ beside Elo | 70% | +0.60%, tie | no |
 | S2 | Beside Elo + weekly averages the real columns still add | 55% | +3.32% (+0.92 to +5.77), beats copies | yes |
 | S3 | Beside Elo + I60's starters + weekly averages they tie | 65% | +3.90% (+1.61 to +6.22): they add, in a base the averages had hurt (−4.07%) | no |
@@ -189,6 +189,6 @@ The CEO: "We can open the 2025 vault to check the three forecasts. Yes Elos next
 Of 18 scored bets, 9 came true. The misses were the spot-check's guesses about where the gain sits (S1, S3, S4), and three of the fatigue sizes. The doubt written before I130 (whole numbers can't hold 80%) was right.
 
 ## Open questions for the CEO
-1. ~~Open the vault (2025) once for the three champions?~~ Yes (the CEO, 2026-11-25); it needs the CEO's yes given in this session (R11).
+1. ~~Open the vault (2025) once for the three champions?~~ Kept closed (the CEO, 2026-11-25, in the build session: "Keep it closed, actually"; R11).
 2. ~~Should Elo's next build take the snap-weighted forecast for I115?~~ Yes, the games-lost forecast (the CEO, 2026-11-25). Since the spot-check found its gain is one season (R12), should Elo's build also carry I60's starters' forecast as the fallback?
 3. Is the kept-share output worth keeping as a description, since participation's share already holds it (R6)?
