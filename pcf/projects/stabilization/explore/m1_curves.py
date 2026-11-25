@@ -143,17 +143,21 @@ def main() -> None:
         say(f"- {measure} ({pooled:.0f}): " + ", ".join(ks))
 
     # teams: game halves, quarter halves, season to season
-    say("", "## Teams", "", "| Measure | Side | k (plays) | Typical season | Reliability, season | Split-half r, games (n) | Split-half r, quarters 1+3 against 2+4 (n) | Season r | True rate's season r |", "|---|---|---|---|---|---|---|---|---|")
+    say("", "## Teams (each team-season centred by its season's league rate)", "", "| Measure | Side | k (plays) | Typical season | Reliability, season | Split-half r, games (n) | Split-half r, quarters 1+3 against 2+4 (n) | Season r | True rate's season r |", "|---|---|---|---|---|---|---|---|---|")
     tg, tq = load("team_game"), load("team_quarter")
     for side in ("off", "def"):
         for measure in TEAM_MEASURES:
             g = tg.filter((c("side") == side) & (c("measure") == measure)).with_columns(key=pl.concat_str("team", pl.lit("|"), c("season").cast(pl.Utf8)))
+            # centred by the season's league rate (league rates shift: shotgun use rose every year), so a season's level isn't read as the team's
+            lm = g.group_by("season").agg(lm=c("num").sum() / c("den").sum())
+            g = g.join(lm, on="season").with_columns(num=c("num") - c("lm") * c("den"))
             ts = g.group_by("key", "team", "season").agg(num=c("num").sum(), den=c("den").sum(), games=pl.len())
             mu, s2, t2 = components(ts, g)
             k = s2 / t2
             hg = halves(g, ["key"])
             r_g = wls_r(hg["xo"].to_numpy(), hg["xe"].to_numpy(), np.ones(hg.height))
             q = tq.filter((c("side") == side) & (c("measure") == measure) & c("qtr").cast(pl.Int64).is_in([1, 2, 3, 4])).with_columns(key=pl.concat_str("team", pl.lit("|"), c("season").cast(pl.Utf8)))
+            q = q.join(lm, on="season").with_columns(num=c("num") - c("lm") * c("den"))
             qa = q.with_columns(h=c("qtr").cast(pl.Int64) % 2).group_by("key", "h").agg(num=c("num").sum(), den=c("den").sum())
             qh = qa.filter(c("h") == 1).join(qa.filter(c("h") == 0), on="key", suffix="_e").select(xo=c("num") / c("den"), xe=c("num_e") / c("den_e"), no="den", ne="den_e")
             r_q = wls_r(qh["xo"].to_numpy(), qh["xe"].to_numpy(), np.ones(qh.height))

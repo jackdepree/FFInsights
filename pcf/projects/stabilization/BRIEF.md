@@ -131,3 +131,24 @@ The CEO's own read: "maybe they're the same hunch." They share a frame, a rate r
    - The record (F30, F80) says it will likely tie.
 
 **How each is scored:** the rate's own next few games, next season and (if kept) rest of career, against the raw rate and the position's average. Intervals are judged by coverage. Measures are kept only if they repeat (`pcf.validation.consistency`) or forecast. The noise ceiling comes first.
+
+## After the exploration (2026-11-25: go; `EXPLORATION.md`, Results)
+
+**What it found, in one line each:**
+- Every rate has its 50% point (k):
+  - usage rates stabilize within a season: targets a route k 70 routes, aDOT 18 targets;
+  - efficiency rates mostly don't: catch over expected k 136 targets, pressures a pass snap 346 pass snaps.
+- **There are two pulls, not one:** noise (by k), then drift (the true rate's season r, 0.53-0.97). Recalibrating the pull beat M1 for 12 of 18 rates.
+- **H113:** real (11 of 21 clear). It pays a little and unevenly (2 of 11 up, 2 down, each under 1%).
+- **H114:** the pre-registered form doesn't pay (1 of 18, about chance). Fit together with the player's own pull, his other consistent rates add 1-4% for 4 rates, the CEO's aDOT-to-yards-a-route example among them.
+- **In-season drift:** real for usage rates (6 of 20 rates) and offensive tendencies (5 of 7), not for efficiency or for what a defense faces. The filter's ranges hold 75-85% for 19 of 20. Widening them by a player's own swings helps (I14 graduates).
+- **Peak, new level or noise:** 0.12 to 0.46 of a 4-game gap lasts into the next 4 games, more with more attempts behind it.
+- **The diffusion model:** a ridge on the same inputs beats it everywhere, so under rule k it isn't built.
+- **Rest of a career:** M1 on the career so far beats the raw rate by 19-53%. Drift folded in helps where the true rate moves most (catch over expected +15%, cpoe +38%).
+
+**Proposed for the build (Claude's reading; the CEO decides the direction):**
+1. **The base:** each rate's k, its reliability, its true-rate season r and two pulls (noise, then drift by horizon), with normal ranges.
+2. **In-season:** a drifting level for usage rates and team tendencies, static for efficiency. Ranges come from the filter, widened by each player's swing.
+3. **Inputs fit together in one ridge** per rate: his own pulled rate, his other consistent rates (H114's form that pays) and his teammates' conditions (H113).
+4. **Ideas folded in:** I14 (graduated), I154 (a game-noise factor, so efficiency rates stay static) and I155 (a defense's faced rates read through its opponents).
+5. **Not built:** the diffusion model, and quarter-level reliability for defenses (it measures the opponent).
