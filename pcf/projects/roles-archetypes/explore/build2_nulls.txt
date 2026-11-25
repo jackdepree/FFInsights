@@ -1,0 +1,26 @@
+Round 2: shuffled nulls for the backlog ideas
+
+== I122: placebo vacancies (the departed player and the team's usual role from another team, same group and offseason)
+  coordinates, blend toward the departed player: +1.7% (90% lower +0.3); 20 nulls: mean -0.1%, best +0.2%; beats 20 of 20; counts: True
+  coordinates, blend toward the team's usual role: +1.1% (90% lower +0.2); 20 nulls: mean -0.0%, best +0.4%; beats 20 of 20; counts: True
+
+== I43: adj_late shuffled within signing year and group
+  4,779 contracts; age known for 100% (format 'Month day, year')
+  lasso, all: + adj_late +3.6% (90% +2.7 to +4.4); better; 20 nulls: mean -0.0%, best +0.2%; beats 20 of 20; counts: True
+  lasso, DL+OLB: + adj_late +5.4% (90% +4.0 to +6.6); better; 20 nulls: mean +0.0%, best +0.4%; beats 20 of 20; counts: True
+  trees, all: + adj_late +1.3% (90% -0.8 to +3.3); tie; 20 nulls: mean -1.0%, best +0.8%; beats 20 of 20; counts: False
+  trees, DL+OLB: + adj_late +5.8% (90% +3.3 to +8.5); better; 20 nulls: mean -0.4%, best +1.7%; beats 20 of 20; counts: True
+
+== I57: the role table shuffled within target season and group
+  + the role table beyond his own past share: +9.1% (90% +6.2 to +12.0); better; 20 nulls: mean +0.0%, best +4.8%; beats 20 of 20; counts: True
+  his own past share over the position's mix: +18.6% (90% +11.5 to +25.0); better; 20 nulls: mean +0.8%, best +2.6%; beats 20 of 20; counts: True
+
+== I132: measurables shuffled within season and group; RB rookies added
+  WR (132 rookies), in tight (z0): +15.8% (90% +5.2 to +25.2); better; 20 nulls: mean -5.2%, best +2.0%; beats 20 of 20; counts: True
+  WR (132 rookies), ball carrier (z1): +12.6% (90% -1.3 to +24.4); tie; 20 nulls: mean -3.9%, best +2.8%; beats 20 of 20; counts: False
+  TE (58 rookies), in tight (z0): +9.7% (90% -12.3 to +27.7); tie; 20 nulls: mean -13.0%, best +12.6%; beats 19 of 20; counts: False
+  TE (58 rookies), ball carrier (z1): -12.9% (90% -27.4 to +0.1); tie; 20 nulls: mean -17.2%, best +1.7%; beats 14 of 20; counts: False
+  RB (55 rookies), in tight (z0): +15.9% (90% -3.7 to +33.1); tie; 20 nulls: mean -18.0%, best +15.6%; beats 20 of 20; counts: False
+  RB (55 rookies), ball carrier (z1): -14.0% (90% -30.5 to -2.2); worse; 20 nulls: mean -17.9%, best +0.0%; beats 14 of 20; counts: False
+
+== I134: exact numbers (see build2_roles.txt)

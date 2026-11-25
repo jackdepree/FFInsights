@@ -1,0 +1,189 @@
+roles-archetypes build: 14,065 player-team-seasons, 7,868 with 200+ snaps, 2016-2024 (the 2025 vault untouched)
+
+== offense: the pooled space (frozen fit 2016-2020; WR, TE, RB)
+  explained share per axis: 0.40, 0.17, 0.09, 0.07, 0.06, 0.05 (total 0.84); the autoencoder reconstructs 0.90, 0.90, 0.90 (seeds)
+  oz0: oo_run +0.30, oo_p11 -0.30, adj_p11 -0.30, oo_heavy +0.29, adj_run +0.29
+  oz1: car_per_run +0.44, behind +0.43, adot -0.41, deep -0.33, outside -0.30
+  oz2: oo_rz +0.59, adj_rz +0.58, middle +0.29, oo_late +0.24, adj_late +0.24
+  oz3: oo_p12 +0.53, adj_p12 +0.47, adj_heavy -0.40, middle +0.38, deep -0.22
+  oz4: snap_share +0.63, tgt_per_pass +0.46, adj_rz +0.34, adj_late -0.27, oo_rz +0.22
+  oz5: tgt_per_pass +0.43, adj_heavy +0.38, oo_p11 -0.32, adj_p11 -0.32, oo_heavy +0.30
+  refits rotated to the last (Procrustes): each axis's loading congruence with the previous fit, min over 2017-2024: 1.00, 0.99, 0.99, 0.99, 0.95, 0.97
+  and against the frozen 2016-2020 fit, the 2024 fit: 1.00, 0.99, 0.99, 0.94, 0.26, 0.20
+  the published axes (the walk's 2024 fit, every refit rotated to the one before; how the history's z0-z5 read):
+    oz0: oo_run +0.31, oo_p11 -0.30, adj_p11 -0.30, adj_run +0.29, oo_heavy +0.29
+    oz1: car_per_run +0.45, behind +0.44, adot -0.41, deep -0.32, outside -0.26
+    oz2: oo_rz +0.57, adj_rz +0.56, middle +0.29, oo_late +0.28, adj_late +0.27
+    oz3: oo_p12 +0.52, adj_heavy -0.51, adj_p12 +0.46, oo_heavy -0.24, middle +0.19
+    oz4: tgt_per_pass +0.50, snap_share +0.42, adj_heavy +0.30, middle +0.27, adj_p11 -0.27
+    oz5: snap_share +0.48, adj_rz +0.39, tgt_per_pass +0.38, middle -0.34, oo_rz +0.30
+  group means (frozen fit, 200+ snaps):
+    RB   +2.08 +2.62 -0.53 -0.07 +0.11 +0.01
+    TE   +1.93 -1.14 +0.87 +0.59 -0.26 +0.29
+    WR   -2.17 -0.70 -0.22 -0.30 +0.09 -0.17
+
+== defense: the pooled space (frozen fit 2016-2020; DL, OLB, ILB, CB, S)
+  explained share per axis: 0.46, 0.17, 0.08, 0.05, 0.05, 0.04 (total 0.85); the autoencoder reconstructs 0.92, 0.91, 0.91 (seeds)
+  dz0: adj_p11 +0.32, adj_run -0.31, oo_p11 +0.31, adj_heavy -0.31, oo_run -0.30
+  dz1: rush_per_pass +0.46, tkl_depth -0.44, pd_per_pass -0.36, snap_share -0.32, solo_share -0.28
+  dz2: oo_rz +0.60, adj_rz +0.60, rush_per_pass -0.27, tkl_per_snap +0.22, tkl_depth +0.19
+  dz3: tkl_per_snap +0.74, solo_share -0.41, pd_per_pass -0.31, snap_share +0.27, adj_p12 -0.16
+  dz4: adj_late +0.40, oo_late +0.38, tkl_per_snap +0.35, oo_p11 -0.35, oo_heavy +0.29
+  dz5: snap_share +0.70, adj_rz +0.43, oo_p12 +0.25, adj_late +0.23, oo_run -0.23
+  refits rotated to the last (Procrustes): each axis's loading congruence with the previous fit, min over 2017-2024: 1.00, 1.00, 1.00, 1.00, 1.00, 1.00
+  and against the frozen 2016-2020 fit, the 2024 fit: 1.00, 1.00, 0.99, 0.87, 0.82, 0.95
+  the published axes (the walk's 2024 fit, every refit rotated to the one before; how the history's z0-z5 read):
+    dz0: adj_p11 +0.32, adj_run -0.31, oo_p11 +0.30, adj_heavy -0.30, adj_p12 -0.30
+    dz1: rush_per_pass +0.45, tkl_depth -0.44, pd_per_pass -0.35, snap_share -0.33, oo_rz +0.29
+    dz2: oo_rz +0.58, adj_rz +0.54, rush_per_pass -0.30, tkl_per_snap +0.24, oo_p12 -0.20
+    dz3: tkl_per_snap +0.46, solo_share -0.43, snap_share +0.35, pd_per_pass -0.33, oo_late -0.30
+    dz4: tkl_per_snap +0.62, adj_late +0.41, oo_late +0.31, oo_p11 -0.30, adj_run -0.27
+    dz5: snap_share +0.72, adj_rz +0.53, tkl_per_snap -0.20, oo_run -0.20, rush_per_pass +0.18
+  group means (frozen fit, 200+ snaps):
+    CB   +2.50 -1.43 +0.25 -0.70 -0.12 -0.23
+    DL   -1.45 +1.56 -0.27 -0.23 -0.38 -0.03
+    ILB  -1.91 -0.89 +0.39 +1.35 +0.63 +0.07
+    OLB  -0.41 +0.90 -0.39 +0.20 +0.30 +0.13
+    S    +1.24 -1.23 +0.23 +0.20 +0.19 +0.19
+
+== Test 1: consistency, held out (the frozen 2016-2020 fit read on 2021-2024)
+  pass: 4+ of 6 axes at split-half 0.5+ centred within position, and movers keep at least half of each axis's season r
+  offense PCA (1159 player-seasons with halves, 610 pairs, 142 movers):
+    oz0: split-half 0.96, centred 0.87; season r 0.86, movers 0.78 (kept 91%)
+    oz1: split-half 0.95, centred 0.80; season r 0.88, movers 0.82 (kept 93%)
+    oz2: split-half 0.47, centred 0.34; season r 0.43, movers 0.18 (kept 42%)
+    oz3: split-half 0.81, centred 0.73; season r 0.63, movers 0.53 (kept 85%)
+    oz4: split-half 0.73, centred 0.72; season r 0.65, movers 0.53 (kept 81%)
+    oz5: split-half 0.76, centred 0.73; season r 0.63, movers 0.50 (kept 79%)
+    -> 5 of 6 centred at 0.5+; movers keep half everywhere: False; TEST 1 FAILS
+    autoencoder (3 seeds averaged), centred split-half: 0.80, 0.71, 0.44, 0.78, 0.84, 0.53; movers r: 0.87, 0.91, 0.45, 0.72, 0.64, 0.42
+    role table, centred split-half: snap_share 0.91, tgt_per_pass 0.70, car_per_run 0.97, adot 0.59, adj_run 0.89, adj_p11 0.92; movers r: 0.60, 0.58, 1.00, 0.90, 0.64, 0.59
+    interval check (two halves inside their combined 90%, should be ~90%): oz0 88%, oz1 86%, oz2 89%, oz3 91%, oz4 86%, oz5 87%
+  defense PCA (2391 player-seasons with halves, 1282 pairs, 327 movers):
+    dz0: split-half 0.87, centred 0.78; season r 0.75, movers 0.67 (kept 90%)
+    dz1: split-half 0.90, centred 0.67; season r 0.86, movers 0.83 (kept 96%)
+    dz2: split-half 0.39, centred 0.35; season r 0.30, movers 0.25 (kept 82%)
+    dz3: split-half 0.75, centred 0.50; season r 0.72, movers 0.71 (kept 98%)
+    dz4: split-half 0.53, centred 0.48; season r 0.40, movers 0.29 (kept 73%)
+    dz5: split-half 0.59, centred 0.58; season r 0.47, movers 0.40 (kept 85%)
+    -> 4 of 6 centred at 0.5+; movers keep half everywhere: True; TEST 1 PASSES
+    autoencoder (3 seeds averaged), centred split-half: 0.70, 0.62, 0.32, 0.53, 0.54, 0.51; movers r: 0.70, 0.87, 0.29, 0.63, 0.29, 0.45
+    role table, centred split-half: snap_share 0.78, rush_per_pass 0.47, tkl_per_snap 0.49, tkl_depth 0.45, adj_p11 0.81, adj_late 0.88; movers r: 0.58, 0.88, 0.84, 0.94, 0.55, 0.51
+    interval check (two halves inside their combined 90%, should be ~90%): dz0 87%, dz1 85%, dz2 88%, dz3 84%, dz4 86%, dz5 90%
+
+== Test 5: named roles (rules set on 2016-2020, frozen)
+  cut carrier: car_per_run at 0.5109 (valley 0.2 0.8 of offense)
+  cut in_tight: adj_p11 at -0.09319 (valley 0.2 0.8 of offense non-carrier)
+  cut run_tilt: adj_run at 0.01371 (quantile 0.5 of offense carrier)
+  cut blocker: adj_run at 0.1298 (quantile 0.5 of offense in-tight)
+  cut slot: adj_p11 at 0.1409 (quantile 0.8 of offense split)
+  cut deep: adot at 15.08 (valley 0.6 0.95 of offense split)
+  cut downfield: tkl_depth at 6.891 (valley 0.15 0.85 of defense)
+  cut rusher: rush_per_pass at 0.04098 (valley 0.2 0.9 of defense box)
+  cut tackler: tkl_per_snap at 0.08818 (quantile 0.67 of defense box)
+  cut nickel: adj_p11 at 0.2108 (valley 0.5 0.95 of defense coverage)
+  player-seasons (200+ snaps, 2016-2024) by role and depth-chart group:
+       WR    TE    RB    DL   OLB   ILB    CB     S
+        0     0   285     0     0     0     0     0  early-down back
+        0     0   290     0     0     0     0     0  passing-down back
+        2   174    36     0     0     0     0     0  blocking tight end
+       16   181    13     0     0     0     0     0  inline tight end
+      307    13     0     0     0     0     0     0  slot receiver
+       55     0     0     0     0     0     0     0  deep threat
+      859   337     2     0     0     0     0     0  outside receiver
+        0     0     0   222   102     1     0     0  pass rusher
+        0     0     0   156   247   630    21    31  box linebacker
+        0     0     0  1406   357     9    16     5  run defender
+        0     0     0     0     0     0    77    24  slot defender
+        0     0     0     0     6    30  1071   887  base defensive back
+  flips between halves, role, 2021-2024, median group 16.3% (bar 14%): CB 13%, DL 30%, ILB 7%, OLB 34%, RB 14%, S 9%, TE 18%, WR 18% -> FAILS
+  flips between halves, coarse, 2021-2024, median group 3.8% (bar 14%): CB 6%, DL 0%, ILB 7%, OLB 1%, RB 0%, S 6%, TE 8%, WR 2% -> PASSES
+  how sure, calibrated? (both halves' sure multiplied against how often they agreed, 2021-2024): 0.00-0.60: said 0.47, held 0.52 (n 792); 0.60-0.75: said 0.68, held 0.69 (n 463); 0.75-0.90: said 0.83, held 0.85 (n 620); 0.90-1.00: said 0.98, held 0.96 (n 1675)
+    sensitivity, axes scaled within position: rank 0.479 (90% 0.450 to 0.509)
+  like-for-like substitutes, offense (prior-season coordinates; chance 0.5): rank 0.477 (90% 0.447 to 0.510), 1120 events; RB 0.43, TE 0.53, WR 0.48 -> FAILS
+    sensitivity, axes scaled within position: rank 0.501 (90% 0.480 to 0.523)
+  like-for-like substitutes, defense (prior-season coordinates; chance 0.5): rank 0.477 (90% 0.457 to 0.496), 1710 events; CB 0.48, DL 0.47, ILB 0.49, OLB 0.49, S 0.48 -> PASSES
+
+== Tests 2 and 3, offense: next season's per-snap rates, walk-forward, scored on target seasons 2021-2024 (821 pairs; 1587 with training)
+  targets per snap (error of the labels alone 0.00154):
+    test 2: position labels -> coordinates: +42.9% (90% +37.4 to +47.8); better
+      rung 1: position labels -> labels + role table and named roles: +48.1% (90% +42.6 to +53.2); better
+      rung 2: role table -> coordinates (a tie goes to the table): -10.0% (90% -15.0 to -5.3); worse
+      rung 3: coordinates -> trees on the coordinates (a tie goes to the lasso): -11.7% (90% -17.9 to -5.8); worse
+      rung 4: coordinates -> the autoencoder's codes (a tie goes to PCA): -16.8% (90% -21.0 to -12.7); worse
+    test 3: labels + his own rates -> + coordinates (the no-noise target): +1.3% (90% -0.5 to +3.1); tie
+      labels + own rates -> + role table: +1.7% (90% -0.8 to +3.9); tie
+      + role table -> + coordinates instead (a tie goes to the table): -0.3% (90% -1.9 to +1.2); tie
+      + coordinates -> trees on them (a tie goes to the lasso): -11.8% (90% -17.2 to -6.7); worse
+      + coordinates -> + autoencoder instead (a tie goes to PCA): +0.6% (90% -0.1 to +1.4); tie
+    signal: the coordinates' lasso error 0.0008772 against 20 refits on targets shuffled within season and position (best 0.001373): beats 20 of 20 (needs 20)
+  carries per snap (error of the labels alone 0.00426):
+    test 2: position labels -> coordinates: -14.1% (90% -54.2 to +11.0); tie
+      rung 1: position labels -> labels + role table and named roles: +62.8% (90% +47.2 to +73.4); better
+      rung 2: role table -> coordinates (a tie goes to the table): -206.6% (90% -272.1 to -160.3); worse
+      rung 3: coordinates -> trees on the coordinates (a tie goes to the lasso): +43.8% (90% +32.0 to +54.4); better
+      rung 4: coordinates -> the autoencoder's codes (a tie goes to PCA): +2.4% (90% -4.8 to +9.3); tie
+    test 3: labels + his own rates -> + coordinates (the no-noise target): +1.0% (90% +0.0 to +2.0); better
+      labels + own rates -> + role table: +3.7% (90% +0.7 to +6.8); better
+      + role table -> + coordinates instead (a tie goes to the table): -2.8% (90% -5.8 to -0.0); worse
+      + coordinates -> trees on them (a tie goes to the lasso): -25.4% (90% -45.4 to -10.0); worse
+      + coordinates -> + autoencoder instead (a tie goes to PCA): -0.2% (90% -0.8 to +0.3); tie
+    signal: the coordinates' lasso error 0.004859 against 20 refits on targets shuffled within season and position (best 0.005837): beats 20 of 20 (needs 20)
+
+== Tests 2 and 3, defense: next season's per-snap rates, walk-forward, scored on target seasons 2021-2024 (1725 pairs; 3391 with training)
+  tackles per snap (error of the labels alone 0.000476):
+    test 2: position labels -> coordinates: +26.5% (90% +19.9 to +32.2); better
+      rung 1: position labels -> labels + role table and named roles: +34.3% (90% +29.3 to +38.6); better
+      rung 2: role table -> coordinates (a tie goes to the table): -11.9% (90% -15.5 to -8.5); worse
+      rung 3: coordinates -> trees on the coordinates (a tie goes to the lasso): +0.4% (90% -3.2 to +4.1); tie
+      rung 4: coordinates -> the autoencoder's codes (a tie goes to PCA): -17.2% (90% -20.8 to -13.5); worse
+    test 3: labels + his own rates -> + coordinates (the no-noise target): +0.1% (90% -0.4 to +0.6); tie
+      labels + own rates -> + role table: +1.5% (90% +0.4 to +2.6); better
+      + role table -> + coordinates instead (a tie goes to the table): -1.4% (90% -2.6 to -0.2); worse
+      + coordinates -> trees on them (a tie goes to the lasso): -6.1% (90% -9.3 to -3.0); worse
+      + coordinates -> + autoencoder instead (a tie goes to PCA): +0.3% (90% -0.2 to +0.8); tie
+    signal: the coordinates' lasso error 0.0003493 against 20 refits on targets shuffled within season and position (best 0.0004119): beats 20 of 20 (needs 20)
+  rushes per pass snap (error of the labels alone 0.000147):
+    test 2: position labels -> coordinates: +27.6% (90% +22.2 to +32.4); better
+      rung 1: position labels -> labels + role table and named roles: +36.9% (90% +31.1 to +42.0); better
+      rung 2: role table -> coordinates (a tie goes to the table): -14.8% (90% -19.5 to -10.5); worse
+      rung 3: coordinates -> trees on the coordinates (a tie goes to the lasso): +4.3% (90% +0.1 to +8.8); better
+      rung 4: coordinates -> the autoencoder's codes (a tie goes to PCA): -4.4% (90% -7.4 to -1.8); worse
+    test 3: labels + his own rates -> + coordinates (the no-noise target): +3.1% (90% +1.9 to +4.3); better
+      labels + own rates -> + role table: +2.7% (90% +1.3 to +4.1); better
+      + role table -> + coordinates instead (a tie goes to the table): +0.4% (90% -0.9 to +1.7); tie
+      + coordinates -> trees on them (a tie goes to the lasso): -6.5% (90% -11.2 to -1.9); worse
+      + coordinates -> + autoencoder instead (a tie goes to PCA): +1.1% (90% +0.2 to +2.0); better
+    signal: the coordinates' lasso error 0.0001064 against 20 refits on targets shuffled within season and position (best 0.0001336): beats 20 of 20 (needs 20)
+
+== Test 4: the yardstick (crude forecaster, rest-of-season boards, beside participation; 19 copies shuffled within season and position)
+  receiving coordinates : +0.30% of the squared error (90% +0.18 to +0.42); range score +0.16%; copies' best +0.02%; adds value; counts: True (36125 rows)
+  receiving role table  : +0.34% of the squared error (90% +0.17 to +0.51); range score +0.20%; copies' best +0.01%; adds value; counts: True (36125 rows)
+  rushing   coordinates : -0.90% of the squared error (90% -1.18 to -0.64); range score -0.42%; copies' best -0.09%; adds noise; counts: False (10207 rows)
+  rushing   role table  : +0.74% of the squared error (90% +0.53 to +0.97); range score +0.44%; copies' best +0.01%; adds value; counts: True (10207 rows)
+
+== Sanity lists: each axis's top and bottom 10, 2024, 200+ snaps
+  oz0 top: Marcedes Lewis (TE CHI), Scott Matlock (RB LAC), Adam Prentice (RB NO), Alec Ingold (RB MIA), Nick Vannett (TE TEN), Pharaoh Brown (TE SEA), MyCole Pruitt (TE PIT), Cade Stover (TE HOU), Ben Sims (TE GB), Patrick Ricard (RB BAL)
+  oz0 bottom: Wan'Dale Robinson (WR NYG), Calvin Austin III (WR PIT), Josh Downs (WR IND), Jayden Reed (WR GB), Tyler Boyd (WR TEN), Tyler Lockett (WR SEA), Tank Dell (WR HOU), Dare Ogunbowale (RB HOU), Adam Thielen (WR CAR), Rome Odunze (WR CHI)
+  oz1 top: Dare Ogunbowale (RB HOU), Samaje Perine (RB KC), Roschon Johnson (RB CHI), Emanuel Wilson (RB GB), Rachaad White (RB TB), Justice Hill (RB BAL), Miles Sanders (RB CAR), Trey Sermon (RB IND), Zack Moss (RB CIN), Jaylen Warren (RB PIT)
+  oz1 bottom: Marcedes Lewis (TE CHI), Alec Pierce (WR IND), Josh Oliver (TE MIN), Ben Sims (TE GB), Payne Durham (TE TB), Cade Stover (TE HOU), Bo Melton (WR GB), Chris Manhertz (TE NYG), Marquez Valdes-Scantling (WR NO), Julian Hill (TE MIA)
+  oz2 top: Tyler Johnson (WR LA), Tim Patrick (WR DET), Mike Evans (WR TB), Jake Ferguson (TE DAL), Charlie Kolar (TE BAL), MyCole Pruitt (TE PIT), Sam LaPorta (TE DET), Zach Ertz (TE WAS), AJ Barner (TE SEA), Hunter Henry (TE NE)
+  oz2 bottom: DJ Moore (WR CHI), Trey Palmer (WR TB), Bo Melton (WR GB), Isiah Pacheco (RB KC), Garrett Wilson (WR NYJ), Ray Davis (RB BUF), Jalin Hyatt (WR NYG), Alec Ingold (RB MIA), Rashid Shaheed (WR NO), Tutu Atwell (WR LA)
+  oz3 top: Mark Andrews (TE BAL), Austin Hooper (TE NE), Justice Hill (RB BAL), Ben Sims (TE GB), Isaiah Likely (TE BAL), Jeremy Ruckert (TE NYJ), Jonnu Smith (TE MIA), Cade Stover (TE HOU), Payne Durham (TE TB), T.J. Hockenson (TE MIN)
+  oz3 bottom: Patrick Ricard (RB BAL), Alec Ingold (RB MIA), C.J. Ham (RB MIN), Adam Prentice (RB NO), Scott Matlock (RB LAC), Charlie Kolar (TE BAL), Kyle Juszczyk (RB SF), Hunter Luepke (RB DAL), Scott Miller (WR PIT), Mike Williams (WR NYJ)
+  oz4 top: Travis Kelce (TE KC), Trey McBride (TE ARI), Brock Bowers (TE LV), Malik Nabers (WR NYG), Justin Jefferson (WR MIN), Ja'Marr Chase (WR CIN), Puka Nacua (WR LA), Zach Ertz (TE WAS), DJ Moore (WR CHI), Evan Engram (TE JAX)
+  oz4 bottom: Luke McCaffrey (WR WAS), Zay Jones (WR ARI), Johnny Wilson (WR PHI), Van Jefferson (WR PIT), Jahan Dotson (WR PHI), Justin Watson (WR KC), JuJu Smith-Schuster (WR KC), Jalin Hyatt (WR NYG), Xavier Hutchinson (WR HOU), KhaDarel Hodge (WR ATL)
+  oz5 top: Darnell Mooney (WR ATL), Kareem Hunt (RB KC), Joe Mixon (RB HOU), Bucky Irving (RB TB), A.J. Brown (WR PHI), James Cook (RB BUF), Drake London (WR ATL), Davante Adams (WR NYJ), James Conner (RB ARI), Adonai Mitchell (WR IND)
+  oz5 bottom: Samaje Perine (RB KC), Lucas Krull (TE DEN), Hunter Luepke (RB DAL), Dare Ogunbowale (RB HOU), Ty Johnson (RB BUF), C.J. Ham (RB MIN), Roschon Johnson (RB CHI), Mason Tipton (WR NO), Trey Sermon (RB IND), Brevyn Spann-Ford (TE DAL)
+  dz0 top: Jaylen McCollough (S LA), Marcus Jones (CB NE), Jihad Ward (OLB MIN), Michael Carter II (CB NYJ), Ja'Quan McMillian (CB DEN), Xavier Thomas (OLB ARI), Beanie Bishop Jr. (CB PIT), Troy Hill (CB CAR), Jarrian Jones (CB JAX), Josh Jobe (CB SEA)
+  dz0 bottom: Jack Sanborn (ILB CHI), Grant Stuard (ILB IND), Elandon Roberts (ILB PIT), Jonathan Bullard (DL MIN), Bobby Brown III (DL LA), John Jenkins (DL LV), Eddie Goldman (DL ATL), Jaylon Carlies (ILB IND), Jerry Tillery (DL MIN), Derrick Nnadi (DL KC)
+  dz1 top: Carl Lawson (DL DAL), Jihad Ward (OLB MIN), Von Miller (DL BUF), Will Anderson Jr. (DL HOU), Xavier Thomas (OLB ARI), Jacob Martin (DL CHI), Kyle Van Noy (OLB BAL), DeShawn Williams (DL CAR), Will McDonald IV (OLB NYJ), Dexter Lawrence (DL NYG)
+  dz1 bottom: Kerby Joseph (S DET), Nick Cross (S IND), Geno Stone (S CIN), Denzel Ward (CB CLE), Jaquan Brisker (S CHI), Asante Samuel Jr. (CB LAC), Grant Stuard (ILB IND), Kevin Byard (S CHI), Jack Jones (CB LV), Jaire Alexander (CB GB)
+  dz2 top: Troy Dye (ILB LAC), Pat O'Connor (DL DET), Nakobe Dean (ILB PHI), Jack Gibbens (ILB TEN), Christian Elliss (ILB NE), Nick Thurman (DL CAR), Ernest Jones (ILB TEN), Linval Joseph (DL DAL), Amani Hooker (S TEN), Troy Reeder (ILB LA)
+  dz2 bottom: Bryce Huff (DL PHI), David Ojabo (OLB BAL), Geno Stone (S CIN), Trey Hendrickson (DL CIN), Zach Harrison (DL ATL), Za'Darius Smith (DL DET), Chop Robinson (OLB MIA), Nik Bonitto (OLB DEN), Myles Garrett (DL CLE), Kerby Joseph (S DET)
+  dz3 top: Zaire Franklin (OLB IND), Ernest Jones (ILB SEA), Nick Cross (S IND), Patrick Queen (ILB PIT), Payton Wilson (ILB PIT), E.J. Speed (OLB IND), Roquan Smith (ILB BAL), Troy Andersen (ILB ATL), Xavier Woods (S CAR), Robert Spillane (OLB LV)
+  dz3 bottom: Jaire Alexander (CB GB), Jack Sanborn (ILB CHI), Damontae Kazee (S PIT), Rodney McLeod Jr. (S CLE), Denzel Ward (CB CLE), Alex Austin (CB NE), Cam Hart (CB LAC), Willie Gay Jr. (ILB NO), Adoree' Jackson (CB NYG), Isaiah Rodgers (CB PHI)
+  dz4 top: Budda Baker (S ARI), Grant Stuard (ILB IND), Jack Campbell (ILB DET), Nakobe Dean (ILB PHI), Damontae Kazee (S PIT), Lavonte David (ILB TB), Eric Kendricks (ILB DAL), Edgerrin Cooper (ILB GB), Anthony Walker (ILB MIA), Logan Wilson (ILB CIN)
+  dz4 bottom: John Ridgeway (DL NO), Andrew Billings (DL CHI), DeWayne Carter (DL BUF), Kalia Davis (DL SF), Jaylen Harrell (OLB TEN), Payton Turner (DL NO), Kurt Hinish (DL HOU), Derrick Nnadi (DL KC), Jarrian Jones (CB JAX), Jordan Elliott (DL SF)
+  dz5 top: Julian Blackmon (S IND), Pat O'Connor (DL DET), Zaire Franklin (OLB IND), Maxx Crosby (DL LV), Nick Cross (S IND), Patrick Queen (ILB PIT), Trent McDuffie (CB KC), Brandon Graham (DL PHI), Minkah Fitzpatrick (S PIT), Zach Allen (DL DEN)
+  dz5 bottom: Zach Harrison (DL ATL), Dadrion Taylor-Demerson (S ARI), Chamarri Conner (S KC), Chau Smith-Wade (CB CAR), Denzel Perryman (ILB LAC), Tristin McCollum (S PHI), Bryce Huff (DL PHI), David Ojabo (OLB BAL), Juan Thornhill (S CLE), Raekwon McMillan (ILB NE)

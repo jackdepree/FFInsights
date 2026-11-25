@@ -1,0 +1,9 @@
+Round 2, I135: the role table without his own target rates, on the yardstick (19 copies each)
+
+== receiving (53,355 rows)
+  6-feature table         : +0.34% (90% +0.17 to +0.51); copies mean -0.11%, best +0.08%; counts: True
+  4-feature table (I135)  : +0.23% (90% +0.14 to +0.32); copies mean -0.08%, best +0.06%; counts: True
+
+== rushing (15,383 rows)
+  6-feature table         : +0.74% (90% +0.53 to +0.97); copies mean -0.58%, best +0.10%; counts: True
+  4-feature table (I135)  : +0.88% (90% +0.67 to +1.11); copies mean -0.40%, best +0.11%; counts: True
