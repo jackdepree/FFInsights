@@ -491,6 +491,7 @@ projects:
     depends_on: [grain-tables, validation-harness]
     history_runs:  # the walk-forward histories crude-forecaster reads, one per variant (decision 0037)
       trees_week: {1: 2abc96bcab5047f5b7d505416f538b0f}
+      active: {1: 1a5406548afa4be181c2e88b9fa3b987}  # availability reads it beside its own (decision 0047)
       lasso_h3: {1: f0da29878af8420a9266b12159974a17}
       lasso_rest: {1: 2de0578db3d7464db2607b0ded902481}
     summary: Each rostered QB, RB, WR and TE's offensive snap share and chance of being active, before each game, over the next 3 games and for the rest of the season. Routes are post-season only, so they aren't here. Planned addition (the CEO, 2026-11-24, in roles-archetypes, "Yes in season role changes can go to participation expert"), a player's in-season chance that his role changed from last season, which roles' H102 found is mostly his snap-share change.
@@ -707,10 +708,10 @@ projects:
   - id: availability
     name: Availability
     phase: 1
-    status: brief
+    status: building
     horizon: next
     cadence: [in_season]
-    depends_on: [participation, timeline]
+    depends_on: [grain-tables, participation, timeline, validation-harness]
     summary: "The CEO's pick, 2026-11-23 (\"Ok, let's start the availability expert\"), after the yardstick batch's I60: knowing the share of games a player goes on to play would remove 24-70% of a rest-of-season forecast's error, and a crude games-played forecast gets about 1%. Who plays, and for how many games, for players and teams. Kickoff in projects/availability/BRIEF.md; the CEO's hunches H93-H98 (a two-part model, chance of injury and time missed given one; which injuries repeat; roles; risk-weighted snaps; a per-play injury propensity; fatigue as recent risky plays) and a rebuild of Football Outsiders' adjusted games lost. Replaces injury-fatigue (the CEO, 2026-11-23). Explored 2026-11-23 (GO): players differ in injury rate beyond position (half signal after about 2 expected injuries); how long a player is out is mostly the next injury report (62% of the error); new absences are 76% of rest-of-season games missed and only a fifth start with a named in-game injury; H93, H94, H97 held, H95 in part, H96 failed, H98 small. The brief was agreed 2026-11-24 (\"Yes, agree it\"): games played (any reason, the health part here), kept share when playing hurt, proneness and snap-weighted adjusted games lost; all three methods (two models, a health-state chain, a hidden health state); four build sessions."
 
   - id: injury-fatigue

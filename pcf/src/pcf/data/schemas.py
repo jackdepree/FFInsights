@@ -135,6 +135,7 @@ TABLES: dict[str, Table] = {
                 "leverage_usage",
                 "opportunity",
                 "touchdowns",
+                "injured",
             ),
             after=(
                 "stats",
@@ -147,9 +148,13 @@ TABLES: dict[str, Table] = {
                 "leverage_usage",
                 "opportunity",
                 "touchdowns",
+                "injured",
             ),
             post_season=("on_field_pace", "leverage_usage"),
         ),
+        # Every player on a team's 53-man roster or a health reserve list, per team-game, 2016 on
+        # (availability, decision 0047). Known at the start of the week, like player_game's spine.
+        Table("roster_week", (_PLAYER, _GAME), ("status",)),
     ]
 }
 
