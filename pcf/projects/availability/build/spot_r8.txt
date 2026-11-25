@@ -40,6 +40,9 @@ S6: per season (beside Elo + weekly averages: forecast (off, def)), and the over
     beside Elo + I60's starters: forecast (off, def) 2019 +5.5%, 2020 -8.3%, 2021 +6.5%, 2022 +3.1%, 2023 -3.3%, 2024 +3.7%; without 2021 +0.12% (-1.65 to +1.73)
     beside Elo: QB part only                         2019 +3.8%, 2020 +2.0%, 2021 +15.6%, 2022 -1.6%, 2023 -3.3%, 2024 +1.1%; without 2021 +0.82% (+0.00 to +1.60)
     beside Elo + I60's starters: QB part only        2019 +2.4%, 2020 -2.7%, 2021 +0.2%, 2022 -2.1%, 2023 -2.4%, 2024 +1.1%; without 2021 -0.52% (-1.26 to +0.13)
+  S8: 2021 by part of the season (the Reserve/COVID-19 list, code R59, held 601 players that year, most in December):
+    beside Elo                     weeks 1-8 +35.4% (244 rows); weeks 9-13 +22.6% (144 rows); weeks 14-18 +9.1% (156 rows)
+    beside Elo + I60's starters    weeks 1-8 +6.2% (244 rows); weeks 9-13 +5.5% (144 rows); weeks 14-18 +7.1% (156 rows)
   correlation agl_off_hat with tav_qb: -0.19
   correlation agl_off_hat with tav_skill: -0.34
   correlation agl_qb with tav_qb: -0.27
