@@ -1,0 +1,17 @@
+availability/next_logit run 83fd8f3892ab42de844773a7cf3b924c
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\availability\next_logit\83fd8f3892ab42de844773a7cf3b924c\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (98,133 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (98,133 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (participation/active)
+ 7 walk_forward         pass  172 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 100 of 100 shuffled refits (needs 95)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 100 of 100 shuffled refits
+against NextTable: Comparison(a='availability', b='NextTable', diff=-0.0029263116689341173, lo=-0.0033030504576492645, hi=-0.002550188673495308, rows=226922, blocks=140)
+calibration error: 0.24153520344914264
+calibration slope: 0.8190233834949611
+calibration passed: False

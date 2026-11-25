@@ -22,8 +22,8 @@ ID = "availability"
 BASELINES = {
     "next_logit": ("next_table",),
     "next_lasso": ("next_table", "next_logit"),
-    "next3_chain": ("next3_table", "next3_two"),
-    "rest_chain": ("rest_table", "rest_two"),
+    "next3_chain": ("next3_table",),
+    "rest_chain": ("rest_table",),
     "next3_two": ("next3_table",),
     "rest_two": ("rest_table",),
 }

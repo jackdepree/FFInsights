@@ -34,13 +34,13 @@ from pcf.baselines.crude import inputs as I
 from pcf.baselines.crude import yardstick as Y
 from pcf.config import get_config
 from pcf.experts.availability import checks as K
+from pcf.experts.availability import games as G
 from pcf.validation.compare import block_interval
 
 c = pl.col
 REST = sys.argv[1] if len(sys.argv) > 1 else "rest_chain"
-OUT = Path(__file__).with_name(f"games_played_{REST}.txt")
+OUT = Path(__file__).with_name(f"games_played_{REST}.txt" if "yardstick" not in sys.argv else f"yardstick_{REST}.txt")
 COPIES = 19
-PRIOR, WEIGHT = 0.9, 4.0
 lines: list[str] = []
 KEYS = K.KEYS
 
@@ -58,17 +58,9 @@ def share(g) -> str:
 hist = pl.read_parquet(K.cache_dir() / f"hist_{REST}.parquet")
 feats = pl.read_parquet(K.cache_dir() / "features.parquet").select(
     *KEYS, "played_s", "games_s", "absent_s", "proneness", "credibility", "n_games", "left")
-av = (
-    hist.select(*KEYS, h_as_of="as_of", ha="mean", ha10="q10", ha90="q90", ha_p="p_nonzero", n="n_window")
-    .join(feats, on=KEYS, how="left")
-    .with_columns(hrate=((c("played_s") + WEIGHT * PRIOR) / ((c("games_s") - c("absent_s")).clip(0) + WEIGHT)).clip(0, 1))
-    .with_columns(
-        ha_share=c("ha") / c("n"),
-        gp=c("hrate") * (1 - c("ha") / c("n")),
-        gp10=c("hrate") * (1 - c("ha90") / c("n")),
-        gp90=c("hrate") * (1 - c("ha10") / c("n")),
-    )
-)
+av = G.games_played(hist.drop("season", strict=False).join(feats, on=KEYS, how="left")).select(
+    *KEYS, "gp", "hrate", "ha_share", h_as_of="as_of", ha="mean", ha10="q10", ha90="q90",
+    ha_p="p_nonzero", n="n_window", proneness="proneness")
 
 
 def lined(board: Y.Board) -> pl.DataFrame:
@@ -81,27 +73,38 @@ def lined(board: Y.Board) -> pl.DataFrame:
 # ---------------------------------------------------------------- test 2: games played
 log(f"TEST 2: games played (any reason) over the rest of the season, from {REST}, on the receiving board's rows (QB/RB/WR/TE, participation's chance of a snap 50%+), 2019-2024")
 board = Y.load_board("receiving", "rest")
-rows = board.features.filter(c("step").is_in(board.test))
+rows = board.features.filter(c("step_season") >= 2017)
 fc = I.availability(rows.select(*board.keys, "team", "season", "week", "as_of", "y_s"))
 hs = I.availability(rows.select(*board.keys, "team", "season", "week", "as_of", "y_s"), hindsight=True)
 j = lined(board).join(fc.select(*KEYS, "av_rate"), on=KEYS).join(hs.select(*KEYS, "av_true"), on=KEYS)
-j = j.join(rows.select(*KEYS, "step"), on=KEYS).drop_nulls(["gp", "av_rate", "av_true"])
+j = j.join(rows.select(*KEYS, "step", "season"), on=KEYS).drop_nulls(["gp", "av_rate", "av_true"])
+j = G.walk_ranges(j.with_columns(y=c("av_true")), list(range(2019, 2025)))
 j = j.with_columns(se_av=(c("gp") - c("av_true")) ** 2, se_i60=(c("av_rate") - c("av_true")) ** 2)
 per = j.group_by("step").agg(d=(c("se_i60") - c("se_av")).sum(), n=pl.len(), b=c("se_i60").sum())
 lo, hi = block_interval(per["d"].to_numpy().astype(float), per["n"].to_numpy().astype(float), 2000, 0)
 base = j["se_i60"].mean()
 diff = j["se_i60"].mean() - j["se_av"].mean()
-log(f"  rows {j.height}, weeks {per.height}; outcome (share played) mean {j['av_true'].mean():.3f}")
+log(f"  rows {j.height}, weeks {per.height}; outcome (share played) mean {j['av_true'].mean():.3f}; composite mean {j['gp'].mean():.3f}; I60 mean {j['av_rate'].mean():.3f}")
 log(f"  squared error: I60 {base:.5f}, availability's composite {j['se_av'].mean():.5f}")
 log(f"  A7: the composite removes {100 * diff / base:+.2f}% of I60's squared error ({100 * lo / base:+.2f} to {100 * hi / base:+.2f}), {'better' if lo > 0 else 'worse' if hi < 0 else 'tie'}")
-for name, sub in (("healthy at the run", j.filter(c("ha_share") < 0.1)), ("listed, out or on a reserve list", j.filter(c("ha_share") >= 0.1))):
+for name, sub in (("healthy at the run (health share under 10%)", j.filter(c("ha_share") < 0.1)), ("a health absence expected (10%+)", j.filter(c("ha_share") >= 0.1))):
     log(f"    {name}: rows {sub.height}, I60 {sub['se_i60'].mean():.5f}, composite {sub['se_av'].mean():.5f}")
+for s_ in range(2019, 2025):
+    sub = j.filter(c("season") == s_)
+    log(f"    {s_}: rows {sub.height}, I60 {sub['se_i60'].mean():.5f}, composite {sub['se_av'].mean():.5f} ({100 * (sub['se_i60'].mean() - sub['se_av'].mean()) / sub['se_i60'].mean():+.1f}%)")
 cover = j.select(((c("av_true") >= c("gp10") - 1e-9) & (c("av_true") <= c("gp90") + 1e-9)).mean()).item()
 below = j.select((c("av_true") < c("gp10") - 1e-9).mean()).item()
-log(f"  A8/A9: q10-q90 coverage {100 * cover:.1f}%, below q10 {100 * below:.1f}% (the range is the health part's only; a scratch or benching isn't in it)")
+above = j.select((c("av_true") > c("gp90") + 1e-9).mean()).item()
+log(f"  A8/A9: the range (earlier seasons' misses by size of forecast, games.py): q10-q90 coverage {100 * cover:.1f}%, below q10 {100 * below:.1f}%, above q90 {100 * above:.1f}%")
+pin = lambda col, tau: pl.max_horizontal(tau * (c("av_true") - c(col)), (tau - 1) * (c("av_true") - c(col)))  # noqa: E731
+log(f"  range score (share of the window, q10/q50/q90): composite {j.select(((pin('gp10', 0.1) + pin('gp50', 0.5) + pin('gp90', 0.9)) / 3).mean()).item():.4f}")
 hcov = hist.filter(c("y").is_not_null()).select(
     cover=((c("y") >= c("q10")) & (c("y") <= c("q90"))).mean(), below=(c("y") < c("q10")).mean())
 log(f"  the health count itself ({REST}, every roster row): coverage {100 * hcov['cover'][0]:.1f}%, below q10 {100 * hcov['below'][0]:.1f}%")
+j.select(*KEYS, "season", "step", "gp", "gp10", "gp50", "gp90", "av_rate", "av_true").write_parquet(K.cache_dir() / f"games_played_{REST}.parquet")
+if "yardstick" not in sys.argv:
+    OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    sys.exit(0)
 
 # ---------------------------------------------------------------- test 4: the yardstick
 log("\nTEST 4: the yardstick, rest of season: beside I60's crude forecast and participation, what availability adds (19 shuffled copies)")

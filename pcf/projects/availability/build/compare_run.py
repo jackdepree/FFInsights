@@ -74,7 +74,7 @@ for r in st.iter_rows(named=True):
 
 # ---------------------------------------------------------------- active (test 1)
 log("\nTEST 1: the chance he's active next game (QB/RB/WR/TE on the 53, participation's rows), 2017-2024")
-A = {v: h(v) for v in ("active_part", "active_recal", "active_stack")}
+A = {v: h(v) for v in ("active_part", "active_recal", "active_stack", "active_gated")}
 for v, d in A.items():
     p, y = d["mean"].to_numpy(), d["y"].to_numpy()
     log(f"  {v:<13} rows {d.height}  log loss {d['loss'].mean():.5f}  Brier {d['readable'].mean():.5f}  calibration error {K.calibration_error(p, y):.2f} pts  slope {K.calibration_slope(p, y):.3f}")
@@ -82,6 +82,7 @@ log("A3: beside participation's active, against active alone; A4: against active
 vs("active_stack", "active_part", A["active_stack"], A["active_part"])
 vs("active_stack", "active_recal", A["active_stack"], A["active_recal"])
 vs("active_recal", "active_part", A["active_recal"], A["active_part"])
+vs("active_gated", "active_part", A["active_gated"], A["active_part"])
 log("A5 (Questionable slope 0.85-1.15) and A6 (Out and Doubtful: predicted over actual active rate under 1.3)")
 for v, d in A.items():
     j = d.join(feats, on=KEYS)

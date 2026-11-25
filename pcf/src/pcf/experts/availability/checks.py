@@ -12,6 +12,7 @@ The harness's full validation (`run forecast`) is kept for the shipped variants.
 from __future__ import annotations
 
 from pathlib import Path
+from types import SimpleNamespace
 
 import numpy as np
 import polars as pl
@@ -49,7 +50,6 @@ def build_features(last: int = 2024) -> None:
     gw = Gateway()
     every = all_steps(gw, last)
     feats = backtest.feature_history(X.RestTable(), gw, every)
-    feats.write_parquet(cache_dir() / "features.parquet")
     print(f"features {feats.shape} in {time.time() - t0:.0f}s", flush=True)
     view = gw.view(END_OF_TIME, "in_season", {**INPUTS, "player_game": INPUTS["player_game"]})
     for name, frame in {
@@ -59,7 +59,7 @@ def build_features(last: int = 2024) -> None:
         "active": T.active(view),
         "kept": T.side_share(view),
     }.items():
-        frame.write_parquet(cache_dir() / f"targets_{name}.parquet")
+        backtest.save_features(SimpleNamespace(features=feats, targets=frame), cache_dir() / name)
 
 
 def _history(name: str) -> pl.DataFrame:
@@ -70,8 +70,7 @@ def _history(name: str) -> pl.DataFrame:
 
 def family_rows(family: str) -> tuple[pl.DataFrame, pl.DataFrame]:
     """A family's features and outcomes from the saved history."""
-    f = pl.read_parquet(cache_dir() / "features.parquet")
-    t = pl.read_parquet(cache_dir() / f"targets_{family if family in ('next3', 'rest') else family}.parquet")
+    f, t = backtest.load_features(cache_dir() / family)
     if family == "next":
         f = f.filter(~c("reserve"))
     elif family == "next3":

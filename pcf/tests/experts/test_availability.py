@@ -134,3 +134,47 @@ def test_agl_weights_use_only_earlier_games():
     assert w["weight"][1] == pytest.approx(0.9) and w["weight"][2] == pytest.approx(0.7)
     a = agl(tl)
     assert a.filter(pl.col("game_id") == "g3")["agl"][0] == pytest.approx(0.7)
+
+
+def test_games_played_composes_the_healthy_rate_and_the_health_share():
+    from pcf.experts.availability import games as G
+
+    rows = pl.DataFrame({"mean": [0.0, 5.0], "n_window": [10.0, 10.0], "played_s": [8.0, 4.0],
+                         "games_s": [8.0, 8.0], "absent_s": [0.0, 4.0]})  # fmt: skip
+    out = G.games_played(rows)
+    h0 = (8 + 4 * 0.9) / (8 + 4)
+    assert out["gp"][0] == pytest.approx(h0)
+    assert out["gp"][1] == pytest.approx((4 + 3.6) / (4 + 4) * 0.5)
+
+
+def test_games_played_ranges_use_only_earlier_seasons():
+    from pcf.experts.availability import games as G
+
+    rng = np.random.default_rng(1)
+    n = 600
+    rows = pl.DataFrame({"season": [2019] * n + [2020] * n, "gp": [0.85] * (2 * n),
+                         "y": np.r_[0.85 + rng.normal(0, 0.1, n), [5.0] * n]})  # fmt: skip
+    out = G.walk_ranges(rows, [2020])
+    assert out["season"].unique().to_list() == [2020]
+    # 2020's absurd outcomes can't widen its own range
+    assert (out["gp90"] < 1.0).all() and (out["gp10"] > 0.6).all()
+
+
+def test_the_chains_null_scrambles_the_health_record_within_each_step():
+    pool = _pool(n_players=30, weeks=6).with_columns(step=c_week(), y=pl.col("week").cast(pl.Float64))
+    e = X.VARIANTS["next3_chain"]()
+    out = e.shuffle(pool, seed=3)
+    for col in ("y", "state", "dur", "obs_seq"):
+        # the same values within each step, moved between players
+        a = pool.group_by("step").agg(pl.col(col).sort()).sort("step")
+        b = out.group_by("step").agg(pl.col(col).sort()).sort("step")
+        assert a[col].to_list() == b[col].to_list()
+    assert (out["state"] != pool["state"]).any() or (out["obs_seq"] != pool["obs_seq"]).any()
+    # state and its weeks move together
+    pairs = set(zip(pool["state"], pool["dur"], strict=True))
+    assert set(zip(out["state"], out["dur"], strict=True)) <= pairs
+    assert out["gsis_id"].to_list() == pool["gsis_id"].to_list()  # players stay put
+
+
+def c_week():
+    return pl.col("week")

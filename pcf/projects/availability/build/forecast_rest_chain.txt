@@ -1,0 +1,69 @@
+availability/rest_chain run ad99d09b6be7455d9ff545cdb8b85d67
+scorecard: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\availability\rest_chain\ad99d09b6be7455d9ff545cdb8b85d67\scorecard.html
+ 1 gateway_only         pass  reads only its view
+ 2 known_at_sanity      pass  all parts sound
+ 3 future_perturbation  pass  identical at 25 cutoffs (119,867 rows compared)
+ 4 future_deletion      pass  identical at 25 cutoffs (119,867 rows compared)
+ 5 cadence              pass  in_season, as registered
+ 6 vintage              pass  sound (participation/active)
+ 7 walk_forward         pass  172 time-ordered steps
+ 8 test_labels          pass  identical at 5 test steps
+ 9 shuffled_null        pass  beat 20 of 20 shuffled refits (needs 20)
+10 too_good             pass  no feature above |r| 0.9
+signal: beat 20 of 20 shuffled refits
+against RestTable: Comparison(a='availability', b='RestTable', diff=-0.012335170358825651, lo=-0.014593743182493677, hi=-0.010211690804111748, rows=266917, blocks=140)
+calibration spike: True
+calibration chance: {'table': shape: (10, 4)
+┌─────┬───────┬───────────┬──────────┐
+│ bin ┆ rows  ┆ predicted ┆ actual   │
+│ --- ┆ ---   ┆ ---       ┆ ---      │
+│ i32 ┆ u32   ┆ f64       ┆ f64      │
+╞═════╪═══════╪═══════════╪══════════╡
+│ 0   ┆ 45378 ┆ 0.044188  ┆ 0.052316 │
+│ 1   ┆ 45020 ┆ 0.149792  ┆ 0.17841  │
+│ 2   ┆ 44197 ┆ 0.248639  ┆ 0.286852 │
+│ 3   ┆ 35088 ┆ 0.347285  ┆ 0.375399 │
+│ 4   ┆ 22375 ┆ 0.445304  ┆ 0.458279 │
+│ 5   ┆ 12563 ┆ 0.545006  ┆ 0.516994 │
+│ 6   ┆ 7116  ┆ 0.645924  ┆ 0.601321 │
+│ 7   ┆ 4231  ┆ 0.745862  ┆ 0.659655 │
+│ 8   ┆ 2554  ┆ 0.845885  ┆ 0.775255 │
+│ 9   ┆ 48395 ┆ 0.998622  ┆ 0.996962 │
+└─────┴───────┴───────────┴──────────┘, 'error': 2.2170231425343583, 'slope': 0.8476619225278822, 'passed': False}
+calibration share: {'rows': 110303, 'inside': 0.9097667334523993, 'above': 0.29427123468989963, 'width': 5.111701404313573, 'groups': shape: (21, 6)
+┌────────┬───────┬───────┬──────────┬────────┬───────┐
+│ group  ┆ value ┆ rows  ┆ inside   ┆ judged ┆ ok    │
+│ ---    ┆ ---   ┆ ---   ┆ ---      ┆ ---    ┆ ---   │
+│ str    ┆ str   ┆ u32   ┆ f64      ┆ bool   ┆ bool  │
+╞════════╪═══════╪═══════╪══════════╪════════╪═══════╡
+│ grp    ┆ DB    ┆ 23701 ┆ 0.90608  ┆ true   ┆ false │
+│ grp    ┆ DL    ┆ 15303 ┆ 0.909626 ┆ true   ┆ false │
+│ grp    ┆ LB    ┆ 15581 ┆ 0.911559 ┆ true   ┆ false │
+│ grp    ┆ OL    ┆ 19585 ┆ 0.905999 ┆ true   ┆ false │
+│ grp    ┆ QB    ┆ 3602  ┆ 0.902832 ┆ true   ┆ false │
+│ …      ┆ …     ┆ …     ┆ …        ┆ …      ┆ …     │
+│ season ┆ 2020  ┆ 14180 ┆ 0.892031 ┆ true   ┆ true  │
+│ season ┆ 2021  ┆ 18664 ┆ 0.917327 ┆ true   ┆ false │
+│ season ┆ 2022  ┆ 13727 ┆ 0.905369 ┆ true   ┆ false │
+│ season ┆ 2023  ┆ 13343 ┆ 0.924755 ┆ true   ┆ false │
+│ season ┆ 2024  ┆ 13869 ┆ 0.906482 ┆ true   ┆ false │
+└────────┴───────┴───────┴──────────┴────────┴───────┘, 'passed': False}
+calibration blend: {'rows': 266917, 'inside': 0.9129092564355211, 'above': 0.23441369414462174, 'width': 2.7633983597897473, 'groups': shape: (21, 6)
+┌────────┬───────┬───────┬──────────┬────────┬───────┐
+│ group  ┆ value ┆ rows  ┆ inside   ┆ judged ┆ ok    │
+│ ---    ┆ ---   ┆ ---   ┆ ---      ┆ ---    ┆ ---   │
+│ str    ┆ str   ┆ u32   ┆ f64      ┆ bool   ┆ bool  │
+╞════════╪═══════╪═══════╪══════════╪════════╪═══════╡
+│ grp    ┆ DB    ┆ 51208 ┆ 0.904878 ┆ true   ┆ false │
+│ grp    ┆ DL    ┆ 39469 ┆ 0.918468 ┆ true   ┆ false │
+│ grp    ┆ LB    ┆ 37103 ┆ 0.913646 ┆ true   ┆ false │
+│ grp    ┆ OL    ┆ 45860 ┆ 0.913214 ┆ true   ┆ false │
+│ grp    ┆ QB    ┆ 11718 ┆ 0.910821 ┆ true   ┆ false │
+│ …      ┆ …     ┆ …     ┆ …        ┆ …      ┆ …     │
+│ season ┆ 2020  ┆ 32453 ┆ 0.890118 ┆ true   ┆ true  │
+│ season ┆ 2021  ┆ 35345 ┆ 0.899194 ┆ true   ┆ true  │
+│ season ┆ 2022  ┆ 34387 ┆ 0.92122  ┆ true   ┆ false │
+│ season ┆ 2023  ┆ 34196 ┆ 0.930255 ┆ true   ┆ false │
+│ season ┆ 2024  ┆ 34743 ┆ 0.917681 ┆ true   ┆ false │
+└────────┴───────┴───────┴──────────┴────────┴───────┘, 'passed': False}
+calibration passed: False

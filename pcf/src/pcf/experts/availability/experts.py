@@ -264,6 +264,9 @@ class ActiveGated(ActiveStack):
 
 
 # ---------------------------------------------------------------- next 3, rest of season
+SHUFFLED = ("y", "state", "dur", "last_absent", "last_week", "obs_seq", "prac_seq")
+
+
 class Window(Availability):
     """Games of health absence over the window (this game on): a count with a spike at 0,
     judged part by part (decision 0014). Every method returns a distribution over 0..n."""
@@ -282,6 +285,16 @@ class Window(Availability):
 
     def target(self, view) -> pl.DataFrame:
         return T.window_absent(view, self.n)
+
+    def shuffle(self, pool: pl.DataFrame, seed: int) -> pl.DataFrame:
+        """The signal test's null (decision 0047 call 25): the outcome and the health record the
+        chain and the hidden state learn from (state, weeks in it, the last game's absence, the
+        sequences) shuffled together across players within each step, so every move a refit
+        learns is between two unrelated players."""
+        cols = [x for x in SHUFFLED if x in pool.columns]
+        return pool.with_columns(
+            pl.struct(cols).shuffle(seed=seed).over("step").struct.unnest()
+        )
 
     def fit(self, train: pl.DataFrame) -> Any:
         raise NotImplementedError
