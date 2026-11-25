@@ -1,0 +1,61 @@
+absences of top players (games missed between his first and last game), 2016-2024: 2,737
+  per top player-season, by group: [{'group_j': 'DL', 'per': 0.5}, {'group_j': 'OL', 'per': 1.02}, {'group_j': 'RB', 'per': 0.87}, {'group_j': 'TE', 'per': 0.64}, {'group_j': 'WR', 'per': 0.7}]
+(H109 re-run for I125)
+split-half r (odd against even weeks) of a stayer's next-season snap share, and its Spearman-Brown full-season value:
+  WR: n 396, r 0.92, full season 0.96
+  TE: n 98, r 0.95, full season 0.97
+  RB: n 146, r 0.93, full season 0.96
+  OL: n 1113, r 0.78, full season 0.88
+  DL: n 748, r 0.92, full season 0.96
+share change, with share to next season (stayers after a departure, n 2616): mean +0.048, SD 0.248
+  WR: n 421, SD of change 0.213, mean change +0.041, 1a's allocation mean 0.237; r-squared of the change on the allocation 0.06
+  TE: n 102, SD of change 0.211, mean change +0.117, 1a's allocation mean 0.378; r-squared of the change on the allocation 0.02
+  RB: n 155, SD of change 0.160, mean change +0.047, 1a's allocation mean 0.237; r-squared of the change on the allocation 0.00
+  OL: n 1173, SD of change 0.314, mean change +0.050, 1a's allocation mean 0.285; r-squared of the change on the allocation 0.08
+  DL: n 765, SD of change 0.150, mean change +0.040, 1a's allocation mean 0.179; r-squared of the change on the allocation 0.01
+team efficiency, season to season: offense EPA per play r 0.39, SD of change 0.098; defense r 0.25, SD of change 0.086; SD across team-seasons 0.089 and 0.069
+
+=== H109: snap share (rows and absences: all five groups)
+  snap share: CV error by penalty (2016; no-absence baseline 0.02614) {1: np.float64(0.02421), 3: np.float64(0.02471), 10: np.float64(0.02517), 30: np.float64(0.02544), 100: np.float64(0.02565), 300: np.float64(0.02581), 1000: np.float64(0.02596)} -> 1
+  the pooled part, through 2023 (a stayer's share change per unit of an absent top teammate's share; rows: the stayer's group, columns: the absent player's group):
+            WR      TE      RB      OL      DL
+    WR  +0.159  +0.010  -0.002  -0.002  -0.001
+    TE  +0.008  +0.276  -0.023  -0.004  +0.002
+    RB  +0.003  +0.002  +0.239  -0.001  -0.005
+    OL  -0.005  -0.005  -0.015  +0.082  -0.005
+    DL  -0.007  -0.008  -0.007  -0.003  +0.086
+  the pair part: 6,826 pairs; SD 0.124; 95th abs 0.287
+  snap share, all groups: 2616 stayers; squared error  no change 0.06397, 1a 0.08354, 1b 0.08153, method 2 0.05762
+    method 2 against 1a: gain +31.0% of 1a's error (90% +27.7% to +34.2%)
+    method 2 against no change: +9.9% (90% +5.8% to +13.7%); 1a against no change: -30.6%; 1b against 1a: +2.4%
+      DL: n 765; 2 against 1a +53.6% (90% +46.0% to +61.6%); 2 against no change +4.6%
+      OL: n 1173; 2 against 1a +15.2% (90% +12.2% to +18.2%); 2 against no change +15.0%
+      RB: n 155; 2 against 1a +63.7% (90% +47.5% to +81.6%); 2 against no change -3.0%
+      TE: n 102; 2 against 1a +64.5% (90% +49.8% to +82.3%); 2 against no change +7.3%
+      WR: n 421; 2 against 1a +34.3% (90% +27.3% to +42.0%); 2 against no change -11.7%
+  snap share, skill groups (WR, TE, RB): 678 stayers; squared error  no change 0.04420, 1a 0.09029, 1b 0.08736, method 2 0.04717
+    method 2 against 1a: gain +47.8% of 1a's error (90% +41.2% to +54.6%)
+    method 2 against no change: -6.7% (90% -16.7% to +3.0%); 1a against no change: -104.3%; 1b against 1a: +3.2%
+  snap share, the lines (OL, DL): 1938 stayers; squared error  no change 0.07089, 1a 0.08118, 1b 0.07950, method 2 0.06128
+    method 2 against 1a: gain +24.5% of 1a's error (90% +21.3% to +27.9%)
+    method 2 against no change: +13.6% (90% +9.8% to +17.1%); 1a against no change: -14.5%; 1b against 1a: +2.1%
+  -> H109 (method 2 beats 1a, 90% interval above 0): HELD
+
+=== I125: H109's stayers split by intake
+  skill snap share, a top player brought in: n 383; mean change +0.006; method 2 against no change -60.5% (90% -75.0% to -46.4%); 1a against no change -233.7% (90% -267.6% to -200.7%)
+  skill snap share, the group left empty: n 295; mean change +0.116; method 2 against no change +34.6% (90% +24.0% to +45.7%); 1a against no change -4.9% (90% -18.2% to +8.4%)
+  the lines' snap share, a top player brought in: n 1478; mean change +0.039; method 2 against no change +11.5% (90% +7.5% to +15.4%); 1a against no change -16.0% (90% -20.3% to -11.6%)
+  the lines' snap share, the group left empty: n 460; mean change +0.068; method 2 against no change +24.0% (90% +16.6% to +32.2%); 1a against no change -6.9% (90% -13.3% to +0.2%)
+  target share: CV error by penalty (2016; no-absence baseline 0.00303) {1: np.float64(0.00299), 3: np.float64(0.003), 10: np.float64(0.00301), 30: np.float64(0.00302), 100: np.float64(0.00303), 300: np.float64(0.00303), 1000: np.float64(0.00303)} -> 1
+  target share, a top player brought in: n 1182; mean change +0.001; method 2 against no change -13.1% (90% -17.9% to -8.4%); 1a against no change -93.8% (90% -111.7% to -77.5%)
+  target share, the group left empty: n 384; mean change +0.011; method 2 against no change +9.1% (90% +0.9% to +15.8%); 1a against no change -30.9% (90% -48.9% to -17.9%)
+
+=== I125 with an offseason-known intake flag (a top player elsewhere last season, or a pick 1-64 rookie)
+  agreement with the hindsight flag (skill stayers): 
+[{'h': False, 'p': False, 'len': 186}, {'h': False, 'p': True, 'len': 109}, {'h': True, 'p': False, 'len': 97}, {'h': True, 'p': True, 'len': 286}]
+  skill snap share (offseason flag), a top player brought in: n 395; mean change +0.030; method 2 against no change -25.5% (90% -38.7% to -13.0%); 1a against no change -134.0% (90% -161.1% to -108.5%)
+  skill snap share (offseason flag), the group left empty: n 283; mean change +0.087; method 2 against no change +16.9% (90% +2.1% to +32.4%); 1a against no change -66.7% (90% -88.2% to -47.3%)
+  the lines' snap share (offseason flag), a top player brought in: n 1518; mean change +0.042; method 2 against no change +13.5% (90% +9.0% to +18.0%); 1a against no change -15.5% (90% -20.1% to -10.6%)
+  the lines' snap share (offseason flag), the group left empty: n 420; mean change +0.061; method 2 against no change +13.6% (90% +7.4% to +19.6%); 1a against no change -10.5% (90% -17.9% to -3.2%)
+  target share (offseason flag), a top player brought in: n 1282; mean change +0.002; method 2 against no change -11.3% (90% -15.7% to -6.7%); 1a against no change -88.8% (90% -104.8% to -74.1%)
+  target share (offseason flag), the group left empty: n 284; mean change +0.012; method 2 against no change +11.4% (90% +3.2% to +20.7%); 1a against no change -23.9% (90% -34.7% to -13.0%)

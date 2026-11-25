@@ -1,0 +1,74 @@
+absences of top players (games missed between his first and last game), 2016-2024: 2,737
+  per top player-season, by group: [{'group_j': 'DL', 'per': 0.5}, {'group_j': 'OL', 'per': 1.02}, {'group_j': 'RB', 'per': 0.87}, {'group_j': 'TE', 'per': 0.64}, {'group_j': 'WR', 'per': 0.7}]
+
+=== 0. the noise ceiling
+split-half r (odd against even weeks) of a stayer's next-season snap share, and its Spearman-Brown full-season value:
+  WR: n 396, r 0.92, full season 0.96
+  TE: n 98, r 0.95, full season 0.97
+  RB: n 146, r 0.93, full season 0.96
+  OL: n 1113, r 0.78, full season 0.88
+  DL: n 748, r 0.92, full season 0.96
+share change, with share to next season (stayers after a departure, n 2616): mean +0.048, SD 0.248
+  WR: n 421, SD of change 0.213, mean change +0.041, 1a's allocation mean 0.237; r-squared of the change on the allocation 0.06
+  TE: n 102, SD of change 0.211, mean change +0.117, 1a's allocation mean 0.378; r-squared of the change on the allocation 0.02
+  RB: n 155, SD of change 0.160, mean change +0.047, 1a's allocation mean 0.237; r-squared of the change on the allocation 0.00
+  OL: n 1173, SD of change 0.314, mean change +0.050, 1a's allocation mean 0.285; r-squared of the change on the allocation 0.08
+  DL: n 765, SD of change 0.150, mean change +0.040, 1a's allocation mean 0.179; r-squared of the change on the allocation 0.01
+team efficiency, season to season: offense EPA per play r 0.39, SD of change 0.098; defense r 0.25, SD of change 0.086; SD across team-seasons 0.089 and 0.069
+
+=== H109: snap share (rows and absences: all five groups)
+  snap share: CV error by penalty (2016; no-absence baseline 0.02614) {1: np.float64(0.02421), 3: np.float64(0.02471), 10: np.float64(0.02517), 30: np.float64(0.02544), 100: np.float64(0.02565), 300: np.float64(0.02581), 1000: np.float64(0.02596)} -> 1
+  the pooled part, through 2023 (a stayer's share change per unit of an absent top teammate's share; rows: the stayer's group, columns: the absent player's group):
+            WR      TE      RB      OL      DL
+    WR  +0.159  +0.010  -0.002  -0.002  -0.001
+    TE  +0.008  +0.276  -0.023  -0.004  +0.002
+    RB  +0.003  +0.002  +0.239  -0.001  -0.005
+    OL  -0.005  -0.005  -0.015  +0.082  -0.005
+    DL  -0.007  -0.008  -0.007  -0.003  +0.086
+  the pair part: 6,826 pairs; SD 0.124; 95th abs 0.287
+  snap share, all groups: 2616 stayers; squared error  no change 0.06397, 1a 0.08354, 1b 0.08153, method 2 0.05762
+    method 2 against 1a: gain +31.0% of 1a's error (90% +27.7% to +34.2%)
+    method 2 against no change: +9.9% (90% +5.8% to +13.7%); 1a against no change: -30.6%; 1b against 1a: +2.4%
+      DL: n 765; 2 against 1a +53.6% (90% +46.0% to +61.6%); 2 against no change +4.6%
+      OL: n 1173; 2 against 1a +15.2% (90% +12.2% to +18.2%); 2 against no change +15.0%
+      RB: n 155; 2 against 1a +63.7% (90% +47.5% to +81.6%); 2 against no change -3.0%
+      TE: n 102; 2 against 1a +64.5% (90% +49.8% to +82.3%); 2 against no change +7.3%
+      WR: n 421; 2 against 1a +34.3% (90% +27.3% to +42.0%); 2 against no change -11.7%
+  snap share, skill groups (WR, TE, RB): 678 stayers; squared error  no change 0.04420, 1a 0.09029, 1b 0.08736, method 2 0.04717
+    method 2 against 1a: gain +47.8% of 1a's error (90% +41.2% to +54.6%)
+    method 2 against no change: -6.7% (90% -16.7% to +3.0%); 1a against no change: -104.3%; 1b against 1a: +3.2%
+  snap share, the lines (OL, DL): 1938 stayers; squared error  no change 0.07089, 1a 0.08118, 1b 0.07950, method 2 0.06128
+    method 2 against 1a: gain +24.5% of 1a's error (90% +21.3% to +27.9%)
+    method 2 against no change: +13.6% (90% +9.8% to +17.1%); 1a against no change: -14.5%; 1b against 1a: +2.1%
+  -> H109 (method 2 beats 1a, 90% interval above 0): HELD
+  fitting noise (40 team-bootstrap refits): pooled part's sign flips, same group [0.0, 0.0, 0.0, 0.0, 0.0] (WR, TE, RB, OL, DL); all 25 mean 0.14
+    the same-group pooled values' 90% range: WR +0.151 to +0.168, TE +0.252 to +0.293, RB +0.234 to +0.249, OL +0.079 to +0.086, DL +0.081 to +0.093
+  I49 (swap pairs): the pair part added to the pooled part: +2.3% (90% +0.1% to +4.5%)
+
+=== side bet (Claude 30%): target and carry share (rows and absences: WR, TE, RB; the pool: all three together)
+  target share: CV error by penalty (2016; no-absence baseline 0.00303) {1: np.float64(0.00299), 3: np.float64(0.003), 10: np.float64(0.00301), 30: np.float64(0.00302), 100: np.float64(0.00303), 300: np.float64(0.00303), 1000: np.float64(0.00303)} -> 1
+  target share: 1566 stayers; squared error  no change 0.00227, 1a 0.00405, 1b 0.00403, method 2 0.00244
+    method 2 against 1a: gain +39.6% of 1a's error (90% +33.0% to +46.4%)
+    method 2 against no change: -7.6% (90% -12.0% to -3.4%); 1a against no change: -78.2%; 1b against 1a: +0.5%
+      RB: n 481; 2 against 1a +46.9% (90% +34.1% to +60.9%); 2 against no change +0.1%
+      TE: n 404; 2 against 1a +40.7% (90% +28.5% to +54.4%); 2 against no change +5.3%
+      WR: n 681; 2 against 1a +37.0% (90% +29.9% to +44.5%); 2 against no change -14.7%
+  carry share: CV error by penalty (2016; no-absence baseline 0.00581) {1: np.float64(0.00571), 3: np.float64(0.00573), 10: np.float64(0.00576), 30: np.float64(0.00578), 100: np.float64(0.0058), 300: np.float64(0.00581), 1000: np.float64(0.00581)} -> 1
+  carry share (RB stayers): 481 stayers; squared error  no change 0.02151, 1a 0.03436, 1b 0.03512, method 2 0.02308
+    method 2 against 1a: gain +32.8% of 1a's error (90% +22.2% to +43.8%)
+    method 2 against no change: -7.3% (90% -12.9% to -1.5%); 1a against no change: -59.7%; 1b against 1a: -2.2%
+  -> side bet (both): True
+
+=== side bet (Claude 50%): weekly absences, 2017-2024 (a top player absent after 2+ earlier games; his group's players that game)
+  weekly absences, snap share: 9713 stayers; squared error  no change 0.09069, 1a 0.08255, 1b 0.08255, method 2 0.06234
+    method 2 against 1a: gain +24.5% of 1a's error (90% +22.5% to +26.7%)
+    method 2 against no change: +31.3% (90% +28.8% to +34.0%); 1a against no change: +9.0%; 1b against 1a: +0.0%
+      DL: n 1934; 2 against 1a +25.3% (90% +21.2% to +29.1%); 2 against no change +22.7%
+      OL: n 5546; 2 against 1a +22.9% (90% +20.1% to +25.8%); 2 against no change +30.0%
+      RB: n 559; 2 against 1a +35.7% (90% +24.9% to +47.5%); 2 against no change +46.0%
+      TE: n 322; 2 against 1a +41.0% (90% +27.7% to +57.5%); 2 against no change +58.5%
+      WR: n 1352; 2 against 1a +25.6% (90% +21.0% to +30.9%); 2 against no change +30.5%
+  weekly, skill groups: 2233 stayers; squared error  no change 0.08087, 1a 0.07067, 1b 0.07067, method 2 0.04958
+    method 2 against 1a: gain +29.8% of 1a's error (90% +25.6% to +35.1%)
+    method 2 against no change: +38.7% (90% +34.8% to +42.8%); 1a against no change: +12.6%; 1b against 1a: +0.0%
+  -> side bet (weekly): True

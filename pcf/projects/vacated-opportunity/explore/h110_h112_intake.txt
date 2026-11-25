@@ -1,0 +1,49 @@
+=== H110: an absence's efficiency cost, and next offseason's intake at that group
+rows (top player-seasons with 2+ games played and 2+ missed, 2016-2023): 642; by group [{'group': 'DL', 'len': 103}, {'group': 'OL', 'len': 348}, {'group': 'RB', 'len': 63}, {'group': 'TE', 'len': 45}, {'group': 'WR', 'len': 83}]
+  the efficiency cost (EPA per play, worse without him, positive = worse): mean +0.0125, SD 0.130; by group WR +0.0026, TE +0.0069, RB -0.0044, OL +0.0191, DL +0.0108
+  how much of the cost is noise: games missed per row, median 3; a game's EPA per play SD 0.197
+  newcomers at the group (count) (n 642; mean 4.226):
+    z_eff : +0.047 (90% -0.091 to +0.176)
+    left  : +0.053 (90% -0.246 to +0.344)
+    age   : -0.013 (90% -0.064 to +0.043)
+    n_left: +0.875 (90% +0.639 to +1.081)
+  newcomers' share of the group's snaps (n 642; mean 0.337):
+    z_eff : -0.001 (90% -0.016 to +0.014)
+    left  : +0.037 (90% -0.002 to +0.075)
+    age   : -0.002 (90% -0.006 to +0.002)
+    n_left: +0.125 (90% +0.108 to +0.141)
+  -> H110 (efficiency cost on the intake count, interval above 0): FAILED
+  -> side bet, he left (85%): False
+  the lines' own outcome (OL pressure allowed, DL pressure made; reported):
+  OL and DL newcomers (count) on the pressure cost (n 451; mean 4.681):
+    z_grp : +0.121 (90% -0.048 to +0.277)
+    left  : +0.067 (90% -0.306 to +0.429)
+    age   : -0.021 (90% -0.088 to +0.052)
+    n_left: +0.870 (90% +0.648 to +1.077)
+  by group, the efficiency cost on the intake count (reported):
+    WR: n 83, +0.148 (90% -0.169 to +0.518)
+    TE: n 45, +0.081 (90% -0.216 to +0.318)
+    RB: n 63, -0.286 (90% -0.478 to -0.062)
+    OL: n 348, +0.048 (90% -0.128 to +0.238)
+    DL: n 103, -0.004 (90% -0.368 to +0.340)
+
+=== H112: after a departure, bringing in a top player against leaving the group empty
+rows (team-season-groups with a departure, 2016-2023): 619; brought in a top player 444 (72%)
+  by group, share that brought one in: [{'group': 'DL', 'n': 162, 'intake': 0.69}, {'group': 'OL', 'n': 207, 'intake': 0.87}, {'group': 'RB', 'n': 70, 'intake': 0.56}, {'group': 'TE', 'n': 60, 'intake': 0.57}, {'group': 'WR', 'n': 120, 'intake': 0.67}]
+  efficiency change s to s+1 (EPA per play, up = better): brought in +0.0065, left empty -0.0030; difference +0.0095 (90% -0.0040 to +0.0237)
+  -> H112: FAILED
+  side bet, the spread differs (20%): SD ratio, brought in over left empty 0.92 (90% 0.85 to 1.01) -> False
+  side bet, stayers grow less where a top player came in (90%): stayers' summed share gain +0.052 against +0.324; difference -0.272 (90% -0.334 to -0.214) -> True
+    WR: n 120 (brought in 80); efficiency difference +0.0245 (90% -0.0003 to +0.0516)
+    TE: n 60 (brought in 34); efficiency difference +0.0353 (90% -0.0137 to +0.0826)
+    RB: n 70 (brought in 39); efficiency difference +0.0320 (90% -0.0025 to +0.0678)
+    OL: n 207 (brought in 180); efficiency difference -0.0224 (90% -0.0506 to +0.0059)
+    DL: n 162 (brought in 111); efficiency difference +0.0009 (90% -0.0209 to +0.0243)
+  the lines' own outcome (pressure, up = better; reported): difference -0.0047 (90% -0.0147 to +0.0052)
+  reported: the difference controlling for last season's efficiency and departures -0.0078 (90% -0.0208 to +0.0073)
+
+reported (added after the pre-registration): H110's side bet without the count of departures
+  newcomers at the group (count), without n_left (n 642; mean 4.226):
+    z_eff : +0.060 (90% -0.096 to +0.201)
+    left  : +0.975 (90% +0.687 to +1.245)
+    age   : -0.030 (90% -0.081 to +0.028)

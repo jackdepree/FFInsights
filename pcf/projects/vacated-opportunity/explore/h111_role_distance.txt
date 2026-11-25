@@ -1,0 +1,14 @@
+skill departures 2016-2023: 265; without roles' coordinates 1 (their team-seasons dropped: 1)
+stayers with coordinates (WR, TE, RB) on teams with a skill departure: 987; median role distance 5.22
+  the departed's group by the stayer's group, mean exp(-d): [{'group': 'RB', 'group_j': 'RB', 'k': 0.42, 'n': 64}, {'group': 'RB', 'group_j': 'TE', 'k': 0.35, 'n': 87}, {'group': 'RB', 'group_j': 'WR', 'k': 0.28, 'n': 200}, {'group': 'TE', 'group_j': 'RB', 'k': 0.36, 'n': 102}, {'group': 'TE', 'group_j': 'TE', 'k': 0.43, 'n': 62}, {'group': 'TE', 'group_j': 'WR', 'k': 0.36, 'n': 216}, {'group': 'WR', 'group_j': 'RB', 'k': 0.29, 'n': 200}, {'group': 'WR', 'group_j': 'TE', 'k': 0.41, 'n': 149}, {'group': 'WR', 'group_j': 'WR', 'k': 0.56, 'n': 303}]
+target share change: SD 0.048; the vacated share's mean 0.194
+  P (position labels) against Z (roles' coordinates): gain -0.1% of the first's error (90% -1.3% to +1.1%)
+  P against P + Z's terms (reported): gain +1.0% of the first's error (90% -0.2% to +2.1%)
+  the mean against P (reported: does the vacated share help at all?): gain -0.1% of the first's error (90% -1.3% to +1.0%)
+carry share change: SD 0.074; the vacated share's mean 0.175
+  P (position labels) against Z (roles' coordinates): gain -2.7% of the first's error (90% -5.5% to +0.0%)
+  P against P + Z's terms (reported): gain -0.2% of the first's error (90% -0.9% to +0.5%)
+  the mean against P (reported: does the vacated share help at all?): gain +3.9% of the first's error (90% -0.2% to +8.1%)
+  -> H111: FAILED
+  side bet (35%): P + his share + V x his share, against that + Z's terms, on target share: gain -0.3% of the first's error (90% -0.4% to -0.1%)
+  -> side bet: False

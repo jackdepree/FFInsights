@@ -292,6 +292,14 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Target value and support value | roles-archetypes (H108) | Credit split by whether he was the targeted receiver or ball carrier | | target 0.38 / 0.20 movers; support 0.16 / 0.01 | target: weak trait; support: **noise for movers** | No (team forecast -0.01) | Free data doesn't see a support player's job |
 | EPA per target (WR, TE), per touch (RB) | roles-archetypes (noise ceiling) | Efficiency, shrunk | WR 0.11, TE 0.12, RB 0.29 | 0.16, 0.05, 0.39 | weak trait (TE season near noise) | The room for H103 and H106: little | |
 
+**Vacated opportunity** (vacated-opportunity's exploration, 2026-11-24; 2016-2024 regular seasons; `vacated-opportunity/explore/`):
+
+| Measure | Project | What it is | Week r | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Share transfer rates (the plus-minus's pooled part) | vacated-opportunity (H109) | How much a player's snap share rises per unit of an absent top teammate's share, per pair of groups | | Stable across team-bootstrap refits: no same-group sign flips in 40; WR 90% range +0.15 to +0.17 | **trait of the league** (one value per pair of groups) | Yes: weekly absences +31% of no change's error; offseason only where the group was left empty (I125) | Same group: WR +0.16, TE +0.28, RB +0.24, OL +0.08, DL +0.09; across groups about 0 |
+| A stayer's snap share, next season | vacated-opportunity | His mean snap share over the games he played | 0.78-0.95 (odd against even weeks; OL lowest) | | **trait of the player with his team** | The target of H109 | Full-season 0.88-0.97 |
+| A top player's absence cost | vacated-opportunity (H110) | The side's EPA per play in games he played minus games he missed | | Not measured | **noise** as measured: its SD (0.13) is what 3 missed games give by chance | No: doesn't forecast intake | Median 3 games missed |
+
 ## Feature candidates
 
 > **The CEO's rule (2026-11-07):** experts exist to compress data into features for downstream experts and betting models. An expert output that is **consistent** (above) **and close to as good as the sportsbooks' close** is recorded here as a good candidate feature. Downstream feature selection, inside the folds, decides whether it's used (rule k).
