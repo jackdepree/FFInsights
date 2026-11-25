@@ -1,6 +1,6 @@
 # Stabilization: how many attempts until a rate is real, and how far to pull it back
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Kick off stabilization"). The usual way and two analogies are below, with what we already know. The CEO's direction and hunches H113 and H114 are in (2026-11-25, 25% each), with Claude's odds and three ways to test them (one exploratory). Waiting for the CEO to confirm the hunches' wording, give sizes if they like, and pick the methods; then the exploration runs.
+> **Status:** **agreed**, 2026-11-25 (the CEO: "Agree the brief"), after the exploration (go). The build starts from "The agreed brief" at the bottom, `EXPLORATION.md` and the registry. Kickoff, 2026-11-25 (the CEO: "Kick off stabilization"); hunches H113 and H114 closed as held.
 
 ## Why now
 
@@ -153,3 +153,102 @@ The CEO's own read: "maybe they're the same hunch." They share a frame, a rate r
 3. **Inputs fit together in one ridge** per rate: his own pulled rate, his other consistent rates (H114's form that pays) and his teammates' conditions (H113).
 4. **Ideas folded in:** I14 (graduated), I154 (a game-noise factor, so efficiency rates stay static) and I155 (a defense's faced rates read through its opponents).
 5. **Not built:** the diffusion model, and quarter-level reliability for defenses (it measures the opponent).
+
+
+## The agreed brief (the CEO, 2026-11-25: "Agree the brief")
+
+The build starts from this section, `EXPLORATION.md` (its Results and technical calls) and the registry, and nothing else. It runs at night in the build session.
+
+### The question
+
+For each football-real rate a player or team has, three questions:
+- How much of it is real after n attempts?
+- Where will it be over the next few games, next season and the rest of a career?
+- How sure can we be?
+
+### Why it matters
+
+Every expert shrinks its own rates its own way. One shared answer, with honest ranges, is the base of player-level uncertainty for qb-talent, the simulator and the outcome ranges.
+
+### Terms
+
+- **k (the 50% point; the CEO's LD50):** the attempts at which a rate is half signal, half noise. Reliability at n attempts is n / (n + k).
+- **The two pulls:** first toward the position's mean by k (noise), then further by the true rate's drift, which grows with the horizon (the true rate's season r, and its per-game drift q in-season).
+- **A usage rate** (how a player is used: targets a route, aDOT, carries a run snap) against **an efficiency rate** (how well it goes against expected: catch over expected, pressures a pass snap).
+- **Swing:** how much a player's games have scattered around the model's level, against what the noise alone gives (1 = as expected).
+
+### Builds on
+
+- **The exploration:**
+  - the per-measure k, reliabilities and true-rate correlations;
+  - every method that fit the second pull won;
+  - the ridge beat the diffusion model;
+  - H113 and H114 both held, closed by the CEO.
+- **I14** (graduated): widen each range by the player's own swing.
+- **Earlier findings:**
+  - F37 (one pull-back rate per position was as good as one per player);
+  - F64 and F68 (touchdowns are dice; not measured here);
+  - H26 (moves and new coaches break consistency: a candidate place for the pull to restart, tested only if cheap).
+- **Code:** `pcf.validation.consistency`, the grain tables, and the exploration's `explore/stab_common.py`. Its logic moves into the package; the scripts stay as exploration.
+
+### Assumptions
+
+- Rates are roughly normal around their true level at a season's attempts.
+- The noise per attempt is the same for every player at a position. I154 tests a per-game extra.
+- League shifts are removed by centring on last season's position mean, which is known before the season.
+
+### Goals and the ladder (rule k: a tie goes to the simpler rung)
+
+1. **Baselines:** the position's average, the raw rate, and M1 (pulled back by k).
+2. **Two pulls:** M1 with the drift pull, by horizon (the next 4 games, rest of season, next season, rest of career). This is the base that ships unless a higher rung beats it.
+3. **One ridge per rate,** fit walk-forward. Its inputs:
+   - the player's own pulled rate;
+   - his other consistent rates (the exploration's list: season r of 0.5 or more);
+   - his teammates' conditions (H113's).
+4. **In-season:** a local-level filter for usage rates and team offensive tendencies. Efficiency rates stay static unless I154's game-noise factor makes the filter tie or beat static M1.
+5. **Ranges:** normal 80% ranges from the posterior spread plus the next games' noise, widened by swing (I14).
+6. **Not built:**
+   - the diffusion model;
+   - quarter-level reliability for defenses;
+   - trees (the exploration found the gains linear; the ladder stops at the ridge unless a rung shows otherwise).
+
+### Tests (walk-forward, 2018-2024; the 2025 vault once, at the end)
+
+- **The expert's bar:**
+  - each shipped forecast beats a shuffled-player null and the position's average on held-out seasons, and doesn't add noise;
+  - each rung is kept only where it beats the rung below, clearly (a 90% interval clear of 0, players resampled).
+- **The scores:**
+  - **next 4 games** after games 4, 8 and 12: the rate weighted by its attempts;
+  - **next season:** the rate weighted by next season's attempts;
+  - **rest of career:** a side report.
+- **Ranges:** 80% coverage within 75-85% for every shipped measure. Widening by swing is kept only where the range score (80% interval score) improves.
+- **Calibration:** coverage by thirds of reliability and of swing. Every model's leakage checks run (rule c).
+- **Ideas tested inside the build** (their odds are in `IDEAS.md`): I154 (a game-noise factor) and I155 (a defense's faced rates read through its opponents).
+
+### Inputs and outputs
+
+- **Cadence:** in-season (rule m). Only live fields:
+  - play-by-play;
+  - PFR advanced stats, at their lag (the Tuesday after the following week);
+  - weekly snap counts.
+- **Live stand-ins (a technical call):** participation is post-season, so its exact counts get stand-ins built from snap counts:
+  - routes: offensive snap share times the team's dropbacks;
+  - run snaps: the same, times its runs;
+  - pass snaps on defense: defensive snap share times dropbacks faced.
+
+  The build reports how close each stand-in rate is to participation's exact one (2016-2024). If a measure's stand-in is too poor, the exact version is proposed to the CEO as a retrospective sibling (`stabilization-retro`). It isn't built here: a new expert needs the CEO's sign-off.
+- **Outputs, saved as walk-forward history in the standard schema:**
+  - **player-game-measure**, known before each game: the pulled rate, its spread, k, reliability, attempts so far and swing;
+  - **player-season-measure:** next season's prior;
+  - **team-game-measure:** the same for teams.
+- **Measures:** the exploration's 20 player rates and 7 team rates, offense and defense.
+
+### How it will be used
+
+- As features and priors for the other experts (VOE, opportunity, qb-talent, td-expert) and the crude forecaster.
+- As one shared shrink that replaces each expert's own, where it does as well or better (I156 tests the second pull there).
+
+### Plan
+
+- One night's build: rungs 1-5 above, then the vault, then RESULTS.md with the findings, the case against, the interface card and the CEO's open questions.
+- The morning: the CEO's spot-check and the merge.
