@@ -1,0 +1,23 @@
+I128: a team's habit of listing players Questionable, beside participation's `active`, on Questionable QB/RB/WR/TE rows
+  Questionable listings 2016-2024 (every position): 12,347; health-absent 0.311; the habit's spread across teams in 2024 week 1: 0.086
+  Questionable QB/RB/WR/TE rows with participation's `active`: 3,215 (seasons 2017-2024); active 0.691
+  participation's active, raw          log loss 0.5713, slope 0.656, calibration error 5.31 pts [2,807 rows, 2018-2024]
+  recalibrated on Questionable rows    log loss 0.5618, slope 1.088, calibration error 2.69 pts [2,807 rows, 2018-2024]
+  recalibrated + the team's habit      log loss 0.5593, slope 1.024, calibration error 3.09 pts [2,807 rows, 2018-2024]
+  the habit beside recalibrated `active`: +0.45% of the log loss (-0.24 to +1.15); copies' max +0.06%; counts: False
+  against raw `active`: +2.10% (+0.74 to +3.44)
+  fit on every row: log-odds slope on `active` 0.627, on the habit's gap -0.522 (a team whose Questionable players sit more often: negative)
+
+I129: the healthy rate fit on his record (releases, benchings), games played scored like test 2 (2019-2024)
+  rows 47,501 (2017-2024); healthy share mean 0.904, the shrunk healthy rate's mean 0.932
+  the simpler rung's factor by season: 2019 0.966, 2020 0.960, 2021 0.959, 2022 0.954, 2023 0.958, 2024 0.960
+  shipped composite          mean 0.850 (outcome 0.815); removes +14.39% of I60's squared error (+11.71 to +16.93)
+  the composite rescaled     mean 0.815 (outcome 0.815); removes +16.03% of I60's squared error (+13.49 to +18.45)
+  the fitted healthy rate    mean 0.824 (outcome 0.815); removes +23.27% of I60's squared error (+21.27 to +25.18)
+  fit against gp: +10.37% of its squared error (+9.65 to +11.06)
+  scaled against gp: +1.91% of its squared error (+1.65 to +2.15)
+  fit against scaled: +8.62% of its squared error (+7.96 to +9.27)
+  its range (earlier seasons' misses, 2020-2024): q10-q90 holds 80.9%
+    RB: rows 10,207, I60 0.0818, shipped 0.0719, rescaled 0.0697, fitted 0.0644
+    WR: rows 16,162, I60 0.0840, shipped 0.0724, rescaled 0.0709, fitted 0.0638
+    TE: rows 9,756, I60 0.0760, shipped 0.0622, rescaled 0.0622, fitted 0.0576

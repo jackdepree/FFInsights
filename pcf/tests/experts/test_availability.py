@@ -160,6 +160,30 @@ def test_games_played_ranges_use_only_earlier_seasons():
     assert (out["gp90"] < 1.0).all() and (out["gp10"] > 0.6).all()
 
 
+def test_the_fitted_healthy_rate_learns_from_earlier_seasons_only():
+    from pcf.experts.availability import games as G
+
+    rng = np.random.default_rng(2)
+    n = 400
+    last = rng.uniform(0, 1, 3 * n)
+    season = np.repeat([2018, 2019, 2020], n)
+    # earlier seasons: regulars (high last share) keep playing, fringe players don't
+    share = np.where(season < 2020, np.where(last > 0.5, 0.98, 0.5), 0.0)
+    rows = pl.DataFrame({
+        "season": season, "hrate": np.full(3 * n, 0.9), "ha_share": np.zeros(3 * n),
+        "last_share": last, "log_snaps_s": np.zeros(3 * n), "age": np.full(3 * n, 26.0),
+        "games_s": np.full(3 * n, 6.0), "last_played": np.ones(3 * n, bool),
+        "position": ["WR"] * (3 * n),
+        "y": share, "hy": np.zeros(3 * n), "n": np.full(3 * n, 10.0),
+    })  # fmt: skip
+    out = G.walk_healthy(rows, [2020])
+    assert out["season"].unique().to_list() == [2020]
+    # 2020's outcomes (all zero) aren't in its own fit: regulars still get the higher rate
+    hi = out.filter(pl.col("last_share") > 0.7)["gp_fit"].mean()
+    lo = out.filter(pl.col("last_share") < 0.3)["gp_fit"].mean()
+    assert hi > lo + 0.2 and hi > 0.8
+
+
 def test_the_chains_null_scrambles_the_health_record_within_each_step():
     pool = _pool(n_players=30, weeks=6).with_columns(step=c_week(), y=pl.col("week").cast(pl.Float64))
     e = X.VARIANTS["next3_chain"]()

@@ -57,11 +57,12 @@ def forecast(variant: str, shuffles: int, cutoffs: int | None, seasons: list[int
     check_expert(cls)
     baselines = [VARIANTS[b]() for b in BASELINES.get(variant, ())]
     v = validate(cls(), seasons=seasons or K.SEASONS, open_vault=open_vault, baselines=baselines,
-                 shuffles=shuffles,
-                 refit=K.REFIT, n_cutoffs=leakage.CUTOFFS if cutoffs is None else cutoffs)  # fmt: skip
+                 shuffles=shuffles, refit=K.REFIT,
+                 n_cutoffs=leakage.CUTOFFS if cutoffs is None else cutoffs)  # fmt: skip
     train_end = v.bt.history["train_end"].max()
     tag = "_vault" if open_vault else ""
-    with tracking.attempt(ID, train_end=train_end, name=f"backtest {variant}{tag}", variant=variant):
+    name = f"backtest {variant}{tag}"
+    with tracking.attempt(ID, train_end=train_end, name=name, variant=variant):
         path = record(v)
         run_id = tracking.active_run_id()
     lines = [f"{cls.label()} run {run_id}", f"scorecard: {path}"]

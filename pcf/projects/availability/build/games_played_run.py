@@ -18,7 +18,8 @@ availability's columns add on the receiving, rushing and passing rest-of-season 
 19 copies shuffled within each week. The board's training rows start in 2017 here (availability's
 history starts there), for the base and the new forecast alike.
 
-Run from pcf/: <venv python> projects/availability/build/games_played_run.py <rest variant>
+Run from pcf/: <venv python> projects/availability/build/games_played_run.py <rest variant> [fitted] [yardstick]
+(`fitted`: I129's fitted healthy rate, games.walk_healthy, in place of the shrunk one)
 """
 
 # ruff: noqa: E501
@@ -39,7 +40,9 @@ from pcf.validation.compare import block_interval
 
 c = pl.col
 REST = sys.argv[1] if len(sys.argv) > 1 else "rest_chain"
-OUT = Path(__file__).with_name(f"games_played_{REST}.txt" if "yardstick" not in sys.argv else f"yardstick_{REST}.txt")
+FITTED = "fitted" in sys.argv  # I129: the fitted healthy rate (games.walk_healthy) in place of the shrunk one
+TAG = f"{REST}_fitted" if FITTED else REST
+OUT = Path(__file__).with_name(f"games_played_{TAG}.txt" if "yardstick" not in sys.argv else f"yardstick_{TAG}.txt")
 COPIES = 19
 lines: list[str] = []
 KEYS = K.KEYS
@@ -57,10 +60,19 @@ def share(g) -> str:
 
 hist = pl.read_parquet(K.cache_dir() / f"hist_{REST}.parquet")
 feats = pl.read_parquet(K.cache_dir() / "features.parquet").select(
-    *KEYS, "played_s", "games_s", "absent_s", "proneness", "credibility", "n_games", "left")
-av = G.games_played(hist.drop("season", strict=False).join(feats, on=KEYS, how="left")).select(
-    *KEYS, "gp", "hrate", "ha_share", h_as_of="as_of", ha="mean", ha10="q10", ha90="q90",
-    ha_p="p_nonzero", n="n_window", proneness="proneness")
+    *KEYS, "played_s", "games_s", "absent_s", "proneness", "credibility", "n_games", "left",
+    "position", "last_share", "log_snaps_s", "age", "last_played")
+av = G.games_played(hist.drop("season", "position", strict=False).join(feats, on=KEYS, how="left")).select(
+    *KEYS, "gp", "hrate", "ha_share", "position", "last_share", "log_snaps_s", "age", "games_s", "last_played",
+    h_as_of="as_of", ha="mean", ha10="q10", ha90="q90", ha_p="p_nonzero", n="n_window", hy="y", proneness="proneness")
+
+
+def fitted(rows: pl.DataFrame) -> pl.DataFrame:
+    """I129: gp from the fitted healthy rate, each season from a fit on the seasons before it
+    (2018 on; `rows` carry season and av_true); 2017, with no season before it, keeps the shrunk."""
+    w = G.walk_healthy(rows.with_columns(y=c("av_true")), list(range(2018, 2025)))
+    out = rows.join(w.select(*KEYS, "gp_fit"), on=KEYS, how="left")
+    return out.with_columns(gp=pl.coalesce("gp_fit", "gp")).drop("gp_fit")
 
 
 def lined(board: Y.Board) -> pl.DataFrame:
@@ -78,6 +90,8 @@ fc = I.availability(rows.select(*board.keys, "team", "season", "week", "as_of", 
 hs = I.availability(rows.select(*board.keys, "team", "season", "week", "as_of", "y_s"), hindsight=True)
 j = lined(board).join(fc.select(*KEYS, "av_rate"), on=KEYS).join(hs.select(*KEYS, "av_true"), on=KEYS)
 j = j.join(rows.select(*KEYS, "step", "season"), on=KEYS).drop_nulls(["gp", "av_rate", "av_true"])
+if FITTED:
+    j = fitted(j.drop_nulls("hy"))
 j = G.walk_ranges(j.with_columns(y=c("av_true")), list(range(2019, 2025)))
 j = j.with_columns(se_av=(c("gp") - c("av_true")) ** 2, se_i60=(c("av_rate") - c("av_true")) ** 2)
 per = j.group_by("step").agg(d=(c("se_i60") - c("se_av")).sum(), n=pl.len(), b=c("se_i60").sum())
@@ -101,7 +115,7 @@ log(f"  range score (share of the window, q10/q50/q90): composite {j.select(((pi
 hcov = hist.filter(c("y").is_not_null()).select(
     cover=((c("y") >= c("q10")) & (c("y") <= c("q90"))).mean(), below=(c("y") < c("q10")).mean())
 log(f"  the health count itself ({REST}, every roster row): coverage {100 * hcov['cover'][0]:.1f}%, below q10 {100 * hcov['below'][0]:.1f}%")
-j.select(*KEYS, "season", "step", "gp", "gp10", "gp50", "gp90", "av_rate", "av_true").write_parquet(K.cache_dir() / f"games_played_{REST}.parquet")
+j.select(*KEYS, "season", "step", "gp", "gp10", "gp50", "gp90", "av_rate", "av_true").write_parquet(K.cache_dir() / f"games_played_{TAG}.parquet")
 if "yardstick" not in sys.argv:
     OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
     sys.exit(0)
@@ -114,7 +128,12 @@ for target in ("receiving", "rushing", "passing"):
     board = Y.load_board(target, "rest")
     f = board.features.filter(c("step_season") >= 2017)
     i60 = I.availability(f.select(*board.keys, "team", "season", "week", "as_of", "y_s"))
-    a = lined(board).select(*board.keys, "y_s", av_gp="gp", av_ha_share="ha_share", av_ha_p="ha_p", av_prone="proneness")
+    a = lined(board)
+    if FITTED:
+        hs_ = I.availability(f.select(*board.keys, "team", "season", "week", "as_of", "y_s"), hindsight=True)
+        a = a.join(hs_.select(*board.keys, "av_true"), on=board.keys, how="left").join(f.select(*board.keys, "season"), on=board.keys)
+        a = fitted(a.filter(c("gp").is_not_null()))
+    a = a.select(*board.keys, "y_s", av_gp="gp", av_ha_share="ha_share", av_ha_p="ha_p", av_prone="proneness")
     a = a.with_columns(av_gp_y=c("y_s") * c("av_gp")).drop("y_s")
     f = f.join(i60, on=board.keys, how="left").join(a, on=board.keys, how="left")
     i60_cols = ["av_rate", "av_y", "av_q", "av_dnp", "av_out_s"]
@@ -138,5 +157,5 @@ for target in ("receiving", "rushing", "passing"):
     f2 = f.join(hs, on=board.keys, how="left").with_columns(c("av_true", "av_true_y").fill_null(c("av_true").median()))
     g = Y.gain(board.forecast(beside, extra=[*i60_cols, "av_true", "av_true_y"], feats=f2), base, board.keys)
     log(f"  {target:<10} {'hindsight (the ceiling)':<26} rows {g.rows}: {share(g)}")
-pl.DataFrame(results).write_csv(Path(__file__).with_name(f"yardstick_{REST}.csv"))
+pl.DataFrame(results).write_csv(Path(__file__).with_name(f"yardstick_{TAG}.csv"))
 OUT.write_text("\n".join(lines) + "\n", encoding="utf-8")
