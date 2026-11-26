@@ -56,8 +56,16 @@ def pad(df: pl.DataFrame, ent: str) -> Padded:
     return Padded(df, D, N, NS, REAL, SEASON)
 
 
-def run(L: Padded, q: float, qs: float, sigma2: float, tau2: float, phi: float = 1.0,
-        omega: float = 0.0, train_before: int | None = None):  # fmt: skip
+def run(
+    L: Padded,
+    q: float,
+    qs: float,
+    sigma2: float,
+    tau2: float,
+    phi: float = 1.0,
+    omega: float = 0.0,
+    train_before: int | None = None,
+):
     """The filter over every entity at once. Returns (m, P, z2, loglik): the post-game level and
     its variance at each cell, each game's squared standardized surprise, and the log-likelihood
     of the games before season `train_before` (all games if None)."""
@@ -107,8 +115,16 @@ def fit(L: Padded, sigma2: float, tau2: float, train_before: int, noise: str = "
                 best = (l2, g)
         phi, omega = (best[1], 0.0) if noise == "factor" else (1.0, best[1])
         ll, a, b = best_qq(phi, omega)
-    return {"q": a * tau2, "qs": b * tau2, "q_share": a, "qs_share": b, "phi": phi,
-            "omega": omega * tau2, "omega_share": omega, "loglik": ll}  # fmt: skip
+    return {
+        "q": a * tau2,
+        "qs": b * tau2,
+        "q_share": a,
+        "qs_share": b,
+        "phi": phi,
+        "omega": omega * tau2,
+        "omega_share": omega,
+        "loglik": ll,
+    }
 
 
 def states(L: Padded, par: dict, sigma2: float, tau2: float) -> pl.DataFrame:
@@ -116,5 +132,4 @@ def states(L: Padded, par: dict, sigma2: float, tau2: float) -> pl.DataFrame:
     squared surprise `z2`."""
     mp, pp, zz, _ = run(L, par["q"], par["qs"], sigma2, tau2, par["phi"], par["omega"])
     e, j = L.rows["e"].to_numpy(), L.rows["j"].to_numpy()
-    return L.rows.with_columns(m=pl.Series(mp[e, j]), P=pl.Series(pp[e, j]),
-                               z2=pl.Series(zz[e, j]))  # fmt: skip
+    return L.rows.with_columns(m=pl.Series(mp[e, j]), P=pl.Series(pp[e, j]), z2=pl.Series(zz[e, j]))

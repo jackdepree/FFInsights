@@ -12,8 +12,15 @@ from pcf.validation import stabilize as S
 c = pl.col
 
 
-def _world(players: int = 300, games: int = 16, att: int = 30, p: float = 0.3,
-           sd: float = 0.05, seasons=(2018, 2019, 2020), seed: int = 0):  # fmt: skip
+def _world(
+    players: int = 300,
+    games: int = 16,
+    att: int = 30,
+    p: float = 0.3,
+    sd: float = 0.05,
+    seasons=(2018, 2019, 2020),
+    seed: int = 0,
+):
     """Players with fixed true rates (mean p, sd `sd`), binomial games."""
     rng = np.random.default_rng(seed)
     true = np.clip(rng.normal(p, sd, players), 0.01, 0.99)
@@ -22,14 +29,23 @@ def _world(players: int = 300, games: int = 16, att: int = 30, p: float = 0.3,
         for i in range(players):
             k = rng.binomial(att, true[i], games)
             for g in range(games):
-                rows.append({"gsis_id": f"p{i}", "season": s, "week": g + 1, "group": "A",
-                             "num": float(k[g]), "den": float(att)})  # fmt: skip
+                rows.append(
+                    {
+                        "gsis_id": f"p{i}",
+                        "season": s,
+                        "week": g + 1,
+                        "group": "A",
+                        "num": float(k[g]),
+                        "den": float(att),
+                    }
+                )
     return pl.DataFrame(rows), true
 
 
 def _season(g: pl.DataFrame) -> pl.DataFrame:
-    return g.group_by("gsis_id", "season", "group").agg(num=c("num").sum(), den=c("den").sum(),
-                                                        n_games=pl.len())  # fmt: skip
+    return g.group_by("gsis_id", "season", "group").agg(
+        num=c("num").sum(), den=c("den").sum(), n_games=pl.len()
+    )
 
 
 def test_shrink_and_its_expression_agree():
@@ -43,16 +59,28 @@ def test_shrink_and_its_expression_agree():
 
 
 def test_centre_same_season_is_the_group_mean():
-    rows = pl.DataFrame({"group": ["A", "A", "B"], "season": [2020] * 3,
-                         "num": [3.0, 1.0, 5.0], "den": [10.0, 10.0, 10.0]})  # fmt: skip
+    rows = pl.DataFrame(
+        {
+            "group": ["A", "A", "B"],
+            "season": [2020] * 3,
+            "num": [3.0, 1.0, 5.0],
+            "den": [10.0, 10.0, 10.0],
+        }
+    )
     out = S.centre(rows, target="same").sort("num")
     assert out.filter(c("group") == "A")["mu"].to_list() == pytest.approx([0.2, 0.2])
     assert out.filter(c("group") == "B")["x"].to_list() == pytest.approx([0.0])
 
 
 def test_centre_last_season_uses_only_last_seasons_mean():
-    rows = pl.DataFrame({"group": ["A"] * 4, "season": [2019, 2019, 2020, 2020],
-                         "num": [1.0, 3.0, 9.0, 9.0], "den": [10.0] * 4})  # fmt: skip
+    rows = pl.DataFrame(
+        {
+            "group": ["A"] * 4,
+            "season": [2019, 2019, 2020, 2020],
+            "num": [1.0, 3.0, 9.0, 9.0],
+            "den": [10.0] * 4,
+        }
+    )
     out = S.centre(rows, target="last").sort("season")
     s20 = out.filter(c("season") == 2020)
     assert s20["mu"].to_list() == pytest.approx([0.2, 0.2])  # 2019's mean, not 2020's 0.9
@@ -65,8 +93,14 @@ def test_centre_last_season_uses_only_last_seasons_mean():
 
 
 def test_centre_floor_and_min_rows():
-    rows = pl.DataFrame({"group": ["A", "A", "A"], "season": [2020] * 3,
-                         "num": [1.0, 2.0, 50.0], "den": [10.0, 10.0, 2.0]})  # fmt: skip
+    rows = pl.DataFrame(
+        {
+            "group": ["A", "A", "A"],
+            "season": [2020] * 3,
+            "num": [1.0, 2.0, 50.0],
+            "den": [10.0, 10.0, 2.0],
+        }
+    )
     out = S.centre(rows, floor=5.0)
     assert out.height == 2 and out["mu"][0] == pytest.approx(0.15)  # the thin row isn't in it
     assert S.centre(rows, floor=5.0, min_rows=3).height == 0

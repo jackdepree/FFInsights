@@ -47,8 +47,9 @@ def _per_entity(f: pl.DataFrame, a: str, b: str, ent: str) -> tuple[np.ndarray, 
     return p["ea"].to_numpy(), p["eb"].to_numpy()
 
 
-def gain(f: pl.DataFrame, new: str, base: str, ent: str = "gsis_id", seed: int = 0,
-         draws: int = K.DRAWS) -> Gain:  # fmt: skip
+def gain(
+    f: pl.DataFrame, new: str, base: str, ent: str = "gsis_id", seed: int = 0, draws: int = K.DRAWS
+) -> Gain:
     """The share of `base`'s weighted squared error that `new` removes; entities resampled
     (sorted first, so the interval doesn't move with row order)."""
     ea, eb = _per_entity(f, new, base, ent)
@@ -58,8 +59,12 @@ def gain(f: pl.DataFrame, new: str, base: str, ent: str = "gsis_id", seed: int =
     idx = rng.integers(0, len(ea), (draws, len(ea)))
     g = 1 - ea[idx].sum(1) / eb[idx].sum(1)
     rows = f.drop_nulls([new, base]).height
-    return Gain(float(1 - ea.sum() / eb.sum()), float(np.quantile(g, 0.05)),
-                float(np.quantile(g, 0.95)), rows)  # fmt: skip
+    return Gain(
+        float(1 - ea.sum() / eb.sum()),
+        float(np.quantile(g, 0.05)),
+        float(np.quantile(g, 0.95)),
+        rows,
+    )
 
 
 def sse_gain(f: pl.DataFrame, new: str, base: str) -> float:
@@ -87,24 +92,37 @@ def interval_score(y: np.ndarray, lo: np.ndarray, hi: np.ndarray, alpha: float =
     return (hi - lo) + (2 / alpha) * np.maximum(lo - y, 0) + (2 / alpha) * np.maximum(y - hi, 0)
 
 
-def range_gain(f: pl.DataFrame, new_v: str, base_v: str, mean: str, ent: str = "gsis_id",
-               seed: int = 0, draws: int = K.DRAWS) -> Gain:  # fmt: skip
+def range_gain(
+    f: pl.DataFrame,
+    new_v: str,
+    base_v: str,
+    mean: str,
+    ent: str = "gsis_id",
+    seed: int = 0,
+    draws: int = K.DRAWS,
+) -> Gain:
     """How much of `base_v`'s range score (`w`-weighted) the variance `new_v` removes, both 80%
     normal ranges around `mean`; entities resampled."""
     e = f.drop_nulls([mean, new_v, base_v])
     y, m, w = e["y"].to_numpy(), e[mean].to_numpy(), e["w"].to_numpy()
-    sa = interval_score(y, m - K.Z80 * np.sqrt(e[new_v].to_numpy()),
-                        m + K.Z80 * np.sqrt(e[new_v].to_numpy()))  # fmt: skip
-    sb = interval_score(y, m - K.Z80 * np.sqrt(e[base_v].to_numpy()),
-                        m + K.Z80 * np.sqrt(e[base_v].to_numpy()))  # fmt: skip
+    sa = interval_score(
+        y, m - K.Z80 * np.sqrt(e[new_v].to_numpy()), m + K.Z80 * np.sqrt(e[new_v].to_numpy())
+    )
+    sb = interval_score(
+        y, m - K.Z80 * np.sqrt(e[base_v].to_numpy()), m + K.Z80 * np.sqrt(e[base_v].to_numpy())
+    )
     p = e.select(ent).with_columns(sa=pl.Series(w * sa), sb=pl.Series(w * sb))
     p = p.group_by(ent).agg(c("sa").sum(), c("sb").sum()).sort(ent)
     a, b = p["sa"].to_numpy(), p["sb"].to_numpy()
     rng = np.random.default_rng(seed)
     idx = rng.integers(0, len(a), (draws, len(a)))
     g = 1 - a[idx].sum(1) / b[idx].sum(1)
-    return Gain(float(1 - a.sum() / b.sum()), float(np.quantile(g, 0.05)),
-                float(np.quantile(g, 0.95)), e.height)  # fmt: skip
+    return Gain(
+        float(1 - a.sum() / b.sum()),
+        float(np.quantile(g, 0.05)),
+        float(np.quantile(g, 0.95)),
+        e.height,
+    )
 
 
 def coverage(f: pl.DataFrame, mean: str, var: str) -> float:

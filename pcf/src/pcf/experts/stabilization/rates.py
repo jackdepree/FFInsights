@@ -26,14 +26,23 @@ MIN_CLASS = 20  # entity-seasons a class-season needs for its own mean
 def season_rows(games: pl.DataFrame, ent: str = "gsis_id", cls: str = "pos") -> pl.DataFrame:
     """Per entity-season: num, den, n_games, its class (the most attempts) and its main team (the
     most attempts; ties alphabetical)."""
-    by_cls = games.group_by(ent, "season", cls).agg(d=c("den").sum()).sort(
-        [ent, "season", "d", cls], descending=[False, False, True, False]
-    ).group_by(ent, "season", maintain_order=True).first().select(ent, "season", cls)
-    by_team = games.group_by(ent, "season", "team").agg(d=c("den").sum()).sort(
-        [ent, "season", "d", "team"], descending=[False, False, True, False]
-    ).group_by(ent, "season", maintain_order=True).first().select(ent, "season", "team")
-    s = games.group_by(ent, "season").agg(num=c("num").sum(), den=c("den").sum(),
-                                          n_games=pl.len())  # fmt: skip
+    by_cls = (
+        games.group_by(ent, "season", cls)
+        .agg(d=c("den").sum())
+        .sort([ent, "season", "d", cls], descending=[False, False, True, False])
+        .group_by(ent, "season", maintain_order=True)
+        .first()
+        .select(ent, "season", cls)
+    )
+    by_team = (
+        games.group_by(ent, "season", "team")
+        .agg(d=c("den").sum())
+        .sort([ent, "season", "d", "team"], descending=[False, False, True, False])
+        .group_by(ent, "season", maintain_order=True)
+        .first()
+        .select(ent, "season", "team")
+    )
+    s = games.group_by(ent, "season").agg(num=c("num").sum(), den=c("den").sum(), n_games=pl.len())
     return s.join(by_cls, on=[ent, "season"]).join(by_team, on=[ent, "season"], how="left")
 
 
@@ -48,19 +57,23 @@ def centred(rows: pl.DataFrame, cls: str = "pos", target: str = "same") -> pl.Da
     """Rows with MIN_DEN+ attempts, with `rate`, `mu` (the pull target: its class's mean that
     season, or last season's for `target="last"`) and `x` = rate - mu: the shared `centre`."""
     need = MIN_CLASS if cls != "side" else 1
-    return S.centre(rows.filter(c(cls).is_not_null()), by=(cls,), target=target, floor=MIN_DEN,
-                    min_rows=need)  # fmt: skip
+    return S.centre(
+        rows.filter(c(cls).is_not_null()), by=(cls,), target=target, floor=MIN_DEN, min_rows=need
+    )
 
 
 def game_rows(games: pl.DataFrame, rows: pl.DataFrame, ent: str = "gsis_id") -> pl.DataFrame:
     """His games, with his season's rate, for the noise (the shared `noise`)."""
-    return games.filter(c("den") > 0).select(ent, "season", "num", "den").join(
-        rows.select(ent, "season", "rate", "n_games"), on=[ent, "season"]
+    return (
+        games.filter(c("den") > 0)
+        .select(ent, "season", "num", "den")
+        .join(rows.select(ent, "season", "rate", "n_games"), on=[ent, "season"])
     )
 
 
-def fit_k(rows: pl.DataFrame, games: pl.DataFrame, upto: int, ent: str = "gsis_id",
-          cls: str = "pos") -> dict:  # fmt: skip
+def fit_k(
+    rows: pl.DataFrame, games: pl.DataFrame, upto: int, ent: str = "gsis_id", cls: str = "pos"
+) -> dict:
     """sigma2, tau2 and k from entity-seasons up to `upto` with MIN_DEN+ attempts, centred by their
     own class-season means, pooled over classes (the shared `components`)."""
     tr = centred(rows.filter(c("season") <= upto), cls)
@@ -80,6 +93,7 @@ def season_r(pairs: pl.DataFrame, k: float) -> float:
     mx, my = np.average(x, weights=w), np.average(y, weights=w)
     cov = np.average((x - mx) * (y - my), weights=w)
     r = cov / np.sqrt(np.average((x - mx) ** 2, weights=w) * np.average((y - my) ** 2, weights=w))
-    rel = np.sqrt(np.average(S.reliability(n1, k), weights=w)
-                  * np.average(S.reliability(n2, k), weights=w))  # fmt: skip
+    rel = np.sqrt(
+        np.average(S.reliability(n1, k), weights=w) * np.average(S.reliability(n2, k), weights=w)
+    )
     return float(r / rel)

@@ -39,15 +39,23 @@ def frame() -> pl.DataFrame:
 
 def report(out, seed: int) -> dict:
     f = frame()
-    out("", "== I156: the second pull on opportunity-quality's method B (its backtest rows, "
-        f"seasons {f['season'].min()}-{f['season'].max()} with an earlier season to fit on)")
+    out(
+        "",
+        "== I156: the second pull on opportunity-quality's method B (its backtest rows, "
+        f"seasons {f['season'].min()}-{f['season'].max()} with an earlier season to fit on)",
+    )
     res = {}
-    for label, g in (("everyone", f), ("week 1 (next season)", f.filter(c("week") == 1)),
-                     *((p, f.filter(c("position") == p)) for p in ("RB", "WR", "TE"))):  # fmt: skip
+    for label, g in (
+        ("everyone", f),
+        ("week 1 (next season)", f.filter(c("week") == 1)),
+        *((p, f.filter(c("position") == p)) for p in ("RB", "WR", "TE")),
+    ):
         gB = E.gain(g, "pull_B", "mean_B", seed=seed)
         gA = E.gain(g, "pull_B", "mean_A", seed=seed)
-        out(f"- {label} ({g.height} player-games): B with the second pull vs B {gB.fmt()}; vs A "
-            f"{gA.fmt()}; slope {float(np.nanmean(g['b'].to_numpy())):.2f}")
+        out(
+            f"- {label} ({g.height} player-games): B with the second pull vs B {gB.fmt()}; vs A "
+            f"{gA.fmt()}; slope {float(np.nanmean(g['b'].to_numpy())):.2f}"
+        )
         res[label] = {"vs_B": gB, "vs_A": gA}
     return res
 
@@ -72,12 +80,22 @@ def _by_position(st: pl.DataFrame) -> tuple[pl.DataFrame, dict]:
         for s in V.OSC:
             tr = s_arr < s
             n[s] = int(tr.sum())
-            b[s] = float((x[tr] * y[tr]).sum() / max((x[tr] ** 2).sum(), 1e-12)) if tr.sum() >= 30 \
-                else None  # fmt: skip
-        d = d.with_columns(b_pos=c("season").replace_strict(b, default=None, return_dtype=pl.Float64))
-        d = d.with_columns(f_pos=pl.when(c("b_pos").is_not_null())
-                           .then((c("f0") + c("b_pos") * c("dlt")).clip(0, 1)).otherwise(c("f_shr")))
-        st = st.update(d.select("gsis_id", "team", "season", "f_pos"), on=["gsis_id", "team", "season"])
+            b[s] = (
+                float((x[tr] * y[tr]).sum() / max((x[tr] ** 2).sum(), 1e-12))
+                if tr.sum() >= 30
+                else None
+            )
+        d = d.with_columns(
+            b_pos=c("season").replace_strict(b, default=None, return_dtype=pl.Float64)
+        )
+        d = d.with_columns(
+            f_pos=pl.when(c("b_pos").is_not_null())
+            .then((c("f0") + c("b_pos") * c("dlt")).clip(0, 1))
+            .otherwise(c("f_shr"))
+        )
+        st = st.update(
+            d.select("gsis_id", "team", "season", "f_pos"), on=["gsis_id", "team", "season"]
+        )
         counts[grp] = {"slopes": b, "rows": n}
     return st, counts
 
@@ -93,14 +111,22 @@ def i174(out, copies: int = 19, seed: int = 0) -> dict:
     st, _ = V.shrink(st, m)
     st, counts = _by_position(st)
     sc = V._off_rows(st, m, "all")
-    out("", "== I174: vacated-offseason's target shrink with a slope per position (TE, WR, RB) for "
+    out(
+        "",
+        "== I174: vacated-offseason's target shrink with a slope per position (TE, WR, RB) for "
         "stayers left empty, against its one shared slope (I165, shipped); stayers 2017-2024, "
-        "90% team bootstrap")  # fmt: skip
+        "90% team bootstrap",
+    )
     for grp, v in counts.items():
-        out(f"- {grp}: earlier rows by target season " + ", ".join(
-            f"{s + 1} {v['rows'][s]}" for s in V.OSC) + "; slopes " + ", ".join(
-            f"{s + 1} {v['slopes'][s]:.2f}" if v["slopes"][s] is not None else f"{s + 1} shared"
-            for s in V.OSC))  # fmt: skip
+        out(
+            f"- {grp}: earlier rows by target season "
+            + ", ".join(f"{s + 1} {v['rows'][s]}" for s in V.OSC)
+            + "; slopes "
+            + ", ".join(
+                f"{s + 1} {v['slopes'][s]:.2f}" if v["slopes"][s] is not None else f"{s + 1} shared"
+                for s in V.OSC
+            )
+        )
     res = {"all": V._gain(sc, "f_shr", "f_pos")}
     out(f"- every stayer ({sc.height}): per position vs shared {V._g(sc, 'f_shr', 'f_pos')}")
     for grp in VK.SKILL:
@@ -114,7 +140,9 @@ def i174(out, copies: int = 19, seed: int = 0) -> dict:
         s2, _ = _by_position(s2)
         nulls.append(V._gain(V._off_rows(s2, m, "all"), "f_shr", "f_pos")[0])
     beats = sum(res["all"][0] > v for v in nulls)
-    out(f"- {copies} copies (each season's departures moved to another team, both shrinks refit): "
-        f"best {100 * max(nulls):+.2f}%; the real gain beats {beats} of {copies}")
+    out(
+        f"- {copies} copies (each season's departures moved to another team, both shrinks refit): "
+        f"best {100 * max(nulls):+.2f}%; the real gain beats {beats} of {copies}"
+    )
     res["beats"], res["nulls"] = beats, nulls
     return res

@@ -29,34 +29,43 @@ from pcf.experts.stabilization import walks as W
 from pcf.validation import stabilize as S
 
 c = pl.col
-EXACT_COL = {"tprr": "routes", "yprr": "routes", "car_per_run": "run_snaps",
-             "hits_per_snap": "pass_snaps", "press_per_snap": "pass_snaps",
-             "tgt_per_cov": "pass_snaps"}  # fmt: skip
+EXACT_COL = {
+    "tprr": "routes",
+    "yprr": "routes",
+    "car_per_run": "run_snaps",
+    "hits_per_snap": "pass_snaps",
+    "press_per_snap": "pass_snaps",
+    "tgt_per_cov": "pass_snaps",
+}
 PRIOR = 200.0  # I180: attempts of weight on the position's ratio
 
 
 def exact_games(inp: W.Inputs, measure: str, ex: pl.DataFrame) -> pl.DataFrame:
     g = inp.games[measure].filter(c("season") >= 2016)
     col = EXACT_COL[measure]
-    return g.join(ex.select("gsis_id", "game_id", exact=col), on=["gsis_id", "game_id"],
-                  how="left").with_columns(standin=c("den"))  # fmt: skip
+    return g.join(
+        ex.select("gsis_id", "game_id", exact=col), on=["gsis_id", "game_id"], how="left"
+    ).with_columns(standin=c("den"))
 
 
 def corrected(g: pl.DataFrame) -> pl.DataFrame:
     """I180: the stand-in times his ratio (exact over stand-in) last season, shrunk toward his
     position's ratio last season with PRIOR attempts' weight; his position's ratio alone if he
     has no last season."""
-    s = g.group_by("gsis_id", "season", "pos").agg(E_=c("exact").fill_null(0).sum(),
-                                                   S_=c("standin").sum())  # fmt: skip
+    s = g.group_by("gsis_id", "season", "pos").agg(
+        E_=c("exact").fill_null(0).sum(), S_=c("standin").sum()
+    )
     ps = s.group_by("pos", "season").agg(rho_pos=c("E_").sum() / c("S_").sum())
     s = s.join(ps, on=["pos", "season"]).with_columns(
         ratio=(c("E_") + PRIOR * c("rho_pos")) / (c("S_") + PRIOR)
     )
     last = s.select("gsis_id", season=c("season") + 1, ratio_last="ratio")
     lastpos = ps.select("pos", season=c("season") + 1, rho_last="rho_pos")
-    return g.join(last, on=["gsis_id", "season"], how="left").join(
-        lastpos, on=["pos", "season"], how="left"
-    ).with_columns(corr=c("standin") * pl.coalesce("ratio_last", "rho_last", pl.lit(1.0)))
+    return (
+        g.join(last, on=["gsis_id", "season"], how="left")
+        .join(lastpos, on=["pos", "season"], how="left")
+        .with_columns(corr=c("standin") * pl.coalesce("ratio_last", "rho_last", pl.lit(1.0)))
+    )
 
 
 def calibrated(f: pl.DataFrame) -> pl.DataFrame:
@@ -77,16 +86,19 @@ def calibrated(f: pl.DataFrame) -> pl.DataFrame:
 
 def report(inp: W.Inputs, out, seed: int) -> dict:
     ex = D.exact()
-    out("", "== The live stand-ins against participation's exact counts (2016-2024)", "",
+    out(
+        "",
+        "== The live stand-ins against participation's exact counts (2016-2024)",
+        "",
         "| Measure | Attempts | Season attempts r | Exact over stand-in | Season rate r "
         "(100+ exact) | I180 corrected: rate r | k stand-in, exact | M1 forecast of the exact "
         "rate: stand-in vs exact | I180 vs stand-in | Both rescaled to the exact rate's level "
         "(walk-forward, per position): stand-in vs exact | Verdict |",
-        "|---|---|---|---|---|---|---|---|---|---|---|")  # fmt: skip
+        "|---|---|---|---|---|---|---|---|---|---|---|",
+    )
     res = {}
     for m in K.STANDIN:
-        g = corrected(exact_games(inp, m, ex).filter(c("exact").is_not_null()
-                                                     & (c("exact") > 0)))  # fmt: skip
+        g = corrected(exact_games(inp, m, ex).filter(c("exact").is_not_null() & (c("exact") > 0)))
         s = g.group_by("gsis_id", "season", "pos").agg(
             num=c("num").sum(), sd=c("standin").sum(), ed=c("exact").sum(), cd=c("corr").sum()
         )
@@ -102,15 +114,18 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
         for ver, col in (("standin", "standin"), ("exact", "exact"), ("corr", "corr")):
             gg = g.with_columns(den=c(col))
             if ver == "standin":  # the live version also has 2013-2015
-                gg = pl.concat([inp.games[m].filter(c("season") < 2016), gg.select(
-                    inp.games[m].columns)], how="diagonal_relaxed")  # fmt: skip
+                gg = pl.concat(
+                    [inp.games[m].filter(c("season") < 2016), gg.select(inp.games[m].columns)],
+                    how="diagonal_relaxed",
+                )
             rows = R.season_rows(gg)
             sm = N.season_m1(rows, gg)
             fc[ver] = sm.select("gsis_id", "season", **{f"f_{ver}": c("mu") + c("m1")})
             if ver == "exact":
                 kx = float(sm.filter(c("season") == K.LAST)["k"][0])
-                target = rows.select("gsis_id", season=c("season") - 1,
-                                     y_raw=c("num") / c("den"), w="den")  # fmt: skip
+                target = rows.select(
+                    "gsis_id", season=c("season") - 1, y_raw=c("num") / c("den"), w="den"
+                )
                 mu_x = sm.select("gsis_id", "season", "mu", "pos")
             else:
                 if ver == "standin":
@@ -119,8 +134,10 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
         for ver in fc:
             f = f.join(fc[ver], on=["gsis_id", "season"], how="left")
         f = f.drop_nulls().with_columns(
-            y=c("y_raw") - c("mu"), target=c("season") + 1,
-            standin=c("f_standin") - c("mu"), exact=c("f_exact") - c("mu"),
+            y=c("y_raw") - c("mu"),
+            target=c("season") + 1,
+            standin=c("f_standin") - c("mu"),
+            exact=c("f_exact") - c("mu"),
             corr=c("f_corr") - c("mu"),
         )
         f = calibrated(f).filter(c("target").is_in(list(K.TEST)))
@@ -129,10 +146,22 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
         g_cal = E.gain(f, "standin_cal", "exact_cal", seed=seed)
         poor = g_se.hi < -0.05
         verdict = "too poor" if poor else ("close" if r_rate >= 0.95 else "usable, not close")
-        out(f"| {m} | {EXACT_COL[m]} | {r_att:.3f} | {ratio:.2f} | {r_rate:.3f} | {r_corr:.3f} "
+        out(
+            f"| {m} | {EXACT_COL[m]} | {r_att:.3f} | {ratio:.2f} | {r_rate:.3f} | {r_corr:.3f} "
             f"(plain {r_plain17:.3f}, 2017+) | {ks:.0f}, {kx:.0f} | {g_se.fmt()} | "
-            f"{g_ce.fmt()} | {g_cal.fmt()} | {verdict} |")
-        res[m] = {"r_att": r_att, "ratio": ratio, "r_rate": r_rate, "r_corr": r_corr,
-                  "r_plain17": r_plain17, "k_standin": ks, "k_exact": kx, "forecast": g_se,
-                  "i180": g_ce, "calibrated": g_cal, "verdict": verdict}  # fmt: skip
+            f"{g_ce.fmt()} | {g_cal.fmt()} | {verdict} |"
+        )
+        res[m] = {
+            "r_att": r_att,
+            "ratio": ratio,
+            "r_rate": r_rate,
+            "r_corr": r_corr,
+            "r_plain17": r_plain17,
+            "k_standin": ks,
+            "k_exact": kx,
+            "forecast": g_se,
+            "i180": g_ce,
+            "calibrated": g_cal,
+            "verdict": verdict,
+        }
     return res

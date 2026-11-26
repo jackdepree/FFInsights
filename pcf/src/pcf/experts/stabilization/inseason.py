@@ -33,8 +33,22 @@ from pcf.experts.stabilization import rates as R
 from pcf.validation import stabilize as S
 
 c = pl.col
-INPUTS = ("m1", "m1_v", "N", "raw", "m", "P", "m_phi", "P_phi", "m_om", "P_om", "swing", "G",
-          "m1_k104", "k104")  # fmt: skip
+INPUTS = (
+    "m1",
+    "m1_v",
+    "N",
+    "raw",
+    "m",
+    "P",
+    "m_phi",
+    "P_phi",
+    "m_om",
+    "P_om",
+    "swing",
+    "G",
+    "m1_k104",
+    "k104",
+)
 
 
 def centred_games(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str) -> pl.DataFrame:
@@ -45,18 +59,40 @@ def centred_games(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str) -
     means = R.class_means(rows, cls)
     last = means.select(cls, season=c("season") + 1, mu_last="mu")
     own = means.rename({"mu": "mu_own"})
-    sc = games.sort(ent, "season", "week").group_by(ent, "season", maintain_order=True).agg(
-        cls_s=c(cls).first()
+    sc = (
+        games.sort(ent, "season", "week")
+        .group_by(ent, "season", maintain_order=True)
+        .agg(cls_s=c(cls).first())
     )
     g = games.join(sc, on=[ent, "season"]).drop(cls).rename({"cls_s": cls})
     g = g.join(last, on=[cls, "season"], how="left").join(own, on=[cls, "season"], how="left")
     g = g.with_columns(mu=pl.coalesce("mu_last", "mu_own")).drop_nulls("mu")
-    return g.select(ent, "season", "week", "game_id", "kickoff", "known_at", cls, "num", "den",
-                    "mu", d=c("num") / c("den") - c("mu"), n="den")  # fmt: skip
+    return g.select(
+        ent,
+        "season",
+        "week",
+        "game_id",
+        "kickoff",
+        "known_at",
+        cls,
+        "num",
+        "den",
+        "mu",
+        d=c("num") / c("den") - c("mu"),
+        n="den",
+    )
 
 
-def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, lagged: bool,
-                tau2: float, cps: tuple[int, ...] = K.CHECKPOINTS) -> pl.DataFrame:  # fmt: skip
+def checkpoints(
+    st: pl.DataFrame,
+    ent: str,
+    cls: str,
+    k: float,
+    sigma2: float,
+    lagged: bool,
+    tau2: float,
+    cps: tuple[int, ...] = K.CHECKPOINTS,
+) -> pl.DataFrame:
     """One row per entity-season-checkpoint (after his game g, at his next game's kickoff): the
     inputs read from the games known by then, and the targets (next 4 games, rest of season)."""
     g = st.sort(ent, "season", "week").with_columns(
@@ -72,10 +108,12 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
         next_kick=c("kickoff").shift(-1).over(ent, "season"),
         next_game=c("game_id").shift(-1).over(ent, "season"),
     )
-    tot = g.group_by(ent, "season").agg(pn=c("n").sum(), pnd=c("nd").sum(), tn=c("n").sum(),
-                                        tnd=c("nd").sum())  # fmt: skip
-    g = g.join(tot.select(ent, season=c("season") + 1, pn="pn", pnd="pnd"), on=[ent, "season"],
-               how="left").with_columns(c("pn", "pnd").fill_null(0.0))  # fmt: skip
+    tot = g.group_by(ent, "season").agg(
+        pn=c("n").sum(), pnd=c("nd").sum(), tn=c("n").sum(), tnd=c("nd").sum()
+    )
+    g = g.join(
+        tot.select(ent, season=c("season") + 1, pn="pn", pnd="pnd"), on=[ent, "season"], how="left"
+    ).with_columns(c("pn", "pnd").fill_null(0.0))
     g = g.join(tot.select(ent, "season", "tn", "tnd"), on=[ent, "season"])
     # the targets: next H games, and the rest of the season
     H = K.HORIZON
@@ -85,19 +123,39 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
     )
     cp = g.filter(c("gi").is_in(list(cps)) & c("next_kick").is_not_null())
     cp = cp.with_columns(
-        w=c("cn_h") - c("cn"), y=(c("cnd_h") - c("cnd")) / (c("cn_h") - c("cn")),
-        w_rest=c("tn") - c("cn"), y_rest=(c("tnd") - c("cnd")) / (c("tn") - c("cn")),
+        w=c("cn_h") - c("cn"),
+        y=(c("cnd_h") - c("cnd")) / (c("cn_h") - c("cn")),
+        w_rest=c("tn") - c("cn"),
+        y_rest=(c("tnd") - c("cnd")) / (c("tn") - c("cn")),
         rest_games=c("G_season") - c("gi"),
-    )  # fmt: skip
+    )
     # the state known at the next kickoff: this game's, or (PFR at its lag) an earlier one
     if lagged:
-        known = g.select(ent, "season", "known_at", "gi", "cn", "cnd", "m", "P", "m_phi", "P_phi",
-                         "m_om", "P_om", "zsum", "cnt").sort("known_at")  # fmt: skip
+        known = g.select(
+            ent,
+            "season",
+            "known_at",
+            "gi",
+            "cn",
+            "cnd",
+            "m",
+            "P",
+            "m_phi",
+            "P_phi",
+            "m_om",
+            "P_om",
+            "zsum",
+            "cnt",
+        ).sort("known_at")
         cp = cp.drop("cn", "cnd", "m", "P", "m_phi", "P_phi", "m_om", "P_om", "zsum", "cnt")
         cp = cp.sort("next_kick").join_asof(
-            known.rename({"season": "season_k", "gi": "gi_k"}), left_on="next_kick",
-            right_on="known_at", by=ent, strategy="backward", suffix="_k",
-        )  # fmt: skip
+            known.rename({"season": "season_k", "gi": "gi_k"}),
+            left_on="next_kick",
+            right_on="known_at",
+            by=ent,
+            strategy="backward",
+            suffix="_k",
+        )
         same = c("season_k") == c("season")
         cp = cp.with_columns(
             cn=pl.when(same).then(c("cn")).otherwise(0.0),
@@ -108,16 +166,54 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
         cp = cp.with_columns(gi_known=c("gi"))
     N = c("pn") + c("cn")
     return cp.with_columns(
-        N=N, m1=(c("pnd") + c("cnd")) / (N + k), m1_v=sigma2 / (N + k),
+        N=N,
+        m1=(c("pnd") + c("cnd")) / (N + k),
+        m1_v=sigma2 / (N + k),
         raw=pl.when(c("cn") > 0).then(c("cnd") / c("cn")).otherwise(None),
-        swing=c("zsum") / c("cnt"), G=c("cnt").cast(pl.Float64),
-    ).select(ent, "season", "week", cls, "gi", "gi_known", "next_kick", "next_game", "mu", "pn", "cn", "w", "y", "w_rest", "y_rest",
-             "rest_games", "N", "m1", "m1_v", "raw", "m", "P", "m_phi", "P_phi", "m_om", "P_om",
-             "swing", "G")  # fmt: skip
+        swing=c("zsum") / c("cnt"),
+        G=c("cnt").cast(pl.Float64),
+    ).select(
+        ent,
+        "season",
+        "week",
+        cls,
+        "gi",
+        "gi_known",
+        "next_kick",
+        "next_game",
+        "mu",
+        "pn",
+        "cn",
+        "w",
+        "y",
+        "w_rest",
+        "y_rest",
+        "rest_games",
+        "N",
+        "m1",
+        "m1_v",
+        "raw",
+        "m",
+        "P",
+        "m_phi",
+        "P_phi",
+        "m_om",
+        "P_om",
+        "swing",
+        "G",
+    )
 
 
-def k104(games_c: pl.DataFrame, ent: str, T: int, sigma2: float, tau2: float, lagged: bool,
-         n_train: float, cps: tuple[int, ...] = K.CHECKPOINTS) -> dict[int, float]:  # fmt: skip
+def k104(
+    games_c: pl.DataFrame,
+    ent: str,
+    T: int,
+    sigma2: float,
+    tau2: float,
+    lagged: bool,
+    n_train: float,
+    cps: tuple[int, ...] = K.CHECKPOINTS,
+) -> dict[int, float]:
     """I104's k per checkpoint for season T: this season's true spread from games in weeks up to
     the checkpoint (one earlier for PFR's lag), blended with the pooled spread by player-seasons
     (this season's against an average training season's)."""
@@ -136,10 +232,18 @@ def k104(games_c: pl.DataFrame, ent: str, T: int, sigma2: float, tau2: float, la
     return out
 
 
-def season_frame(games: pl.DataFrame, rows: pl.DataFrame, T: int, ent: str = "gsis_id",
-                 cls: str = "pos", lagged: bool = False, efficiency: bool = False,
-                 L: F.Padded | None = None, gc: pl.DataFrame | None = None,
-                 cps: tuple[int, ...] = K.CHECKPOINTS) -> tuple[pl.DataFrame, dict]:  # fmt: skip
+def season_frame(
+    games: pl.DataFrame,
+    rows: pl.DataFrame,
+    T: int,
+    ent: str = "gsis_id",
+    cls: str = "pos",
+    lagged: bool = False,
+    efficiency: bool = False,
+    L: F.Padded | None = None,
+    gc: pl.DataFrame | None = None,
+    cps: tuple[int, ...] = K.CHECKPOINTS,
+) -> tuple[pl.DataFrame, dict]:
     """Every season's checkpoint rows, with parameters fit on seasons before T (the test season's
     rows are the ones scored; earlier seasons' rows train the slopes and the ranges)."""
     kk = R.fit_k(rows, games, T - 1, ent, cls)
@@ -164,8 +268,15 @@ def season_frame(games: pl.DataFrame, rows: pl.DataFrame, T: int, ent: str = "gs
     kb_col = pl.col("gi").replace_strict({g: kb[g] for g in cps}, default=k)
     cp = cp.with_columns(k104=pl.when(c("season") == T).then(kb_col).otherwise(pl.lit(k)))
     cp = cp.with_columns(m1_k104=c("m1") * (c("N") + k) / (c("N") + c("k104")))
-    info = {"sigma2": sigma2, "tau2": tau2, "k": k, "par": par, "par_phi": par_phi,
-            "par_om": par_om, "cps": cps}  # fmt: skip
+    info = {
+        "sigma2": sigma2,
+        "tau2": tau2,
+        "k": k,
+        "par": par,
+        "par_phi": par_phi,
+        "par_om": par_om,
+        "cps": cps,
+    }
     return cp, info
 
 
@@ -196,8 +307,7 @@ def rungs(cp: pl.DataFrame, info: dict, horizon: str = "next") -> pl.DataFrame:
         # the drift left over (c), fit on earlier seasons by moments, for m1 and pull
         for name, slope in (("m1", pl.lit(1.0)), ("pull", c("b_pull"))):
             base = slope**2 * c("m1_v") + sigma2 / c("w")
-            resid = a.select(r=c("w") * ((c("y") - c(name)) ** 2 - base), w="w",
-                             season="season")  # fmt: skip
+            resid = a.select(r=c("w") * ((c("y") - c(name)) ** 2 - base), w="w", season="season")
             cs = np.full(a.height, np.nan)
             for t in np.unique(s):
                 tr = resid.filter((c("season") < t) & c("r").is_not_null())
@@ -210,8 +320,10 @@ def rungs(cp: pl.DataFrame, info: dict, horizon: str = "next") -> pl.DataFrame:
     a = pl.concat(out)
     for suf, par in (("", info["par"]), ("_phi", info["par_phi"]), ("_om", info["par_om"])):
         noise = par["phi"] * sigma2 / c("w") + par["omega"] / Hs
-        a = a.with_columns((c(f"P{suf}") + par["q"] * (Hs + 1) / 2 + noise).alias(f"v_filt{suf}"),
-                           c(f"m{suf}").alias(f"filt{suf}"))  # fmt: skip
+        a = a.with_columns(
+            (c(f"P{suf}") + par["q"] * (Hs + 1) / 2 + noise).alias(f"v_filt{suf}"),
+            c(f"m{suf}").alias(f"filt{suf}"),
+        )
     sw = (c("G") * c("swing") + K.SWING_WEIGHT) / (c("G") + K.SWING_WEIGHT)
     a = a.with_columns(sw=sw, k=pl.lit(k), reliability=c("N") / (c("N") + k))
     # the conformal scale per range, from earlier seasons' rows at the same checkpoint

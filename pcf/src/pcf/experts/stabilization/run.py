@@ -36,55 +36,81 @@ def _slim(d: dict) -> dict:
     for name, v in d.items():
         r = v.get("ranges") or {}
         out[name] = {
-            "shipped": v["shipped"], "champ": v["champ"],
+            "shipped": v["shipped"],
+            "champ": v["champ"],
             "gains": {k: [g.gain, g.lo, g.hi] for k, g in v["gains"].items()},
-            "bar": [v["bar"]["gain"].gain, v["bar"]["gain"].lo, v["bar"]["gain"].hi,
-                    v["bar"]["best_copy"], v["bar"]["passes"]],
-            "ranges": {k: r[k] for k in ("coverage_plain", "conformal", "widened", "coverage")
-                       if k in r},
-        }  # fmt: skip
+            "bar": [
+                v["bar"]["gain"].gain,
+                v["bar"]["gain"].lo,
+                v["bar"]["gain"].hi,
+                v["bar"]["best_copy"],
+                v["bar"]["passes"],
+            ],
+            "ranges": {
+                k: r[k] for k in ("coverage_plain", "conformal", "widened", "coverage") if k in r
+            },
+        }
     return out
 
 
 def history(inp, res: dict, run_id: str, out: Rp.Out) -> dict[str, pl.DataFrame]:
-    out("== The walk-forward history (standard schema); ranges on expected attempts, their "
-        "coverage on the scored rows 2018-2024", "", "| Table | Quantity | Rung shipped | Rows | "
-        "Scored rows | Coverage (80%) |", "|---|---|---|---|---|---|")  # fmt: skip
-    tabs: dict[str, list[pl.DataFrame]] = {k: [] for k in
-                                           ("player_game", "player_season", "team_game", "team_season")}  # fmt: skip
+    out(
+        "== The walk-forward history (standard schema); ranges on expected attempts, their "
+        "coverage on the scored rows 2018-2024",
+        "",
+        "| Table | Quantity | Rung shipped | Rows | Scored rows | Coverage (80%) |",
+        "|---|---|---|---|---|---|",
+    )
+    tabs: dict[str, list[pl.DataFrame]] = {
+        k: [] for k in ("player_game", "player_season", "team_game", "team_season")
+    }
     for m in K.MEASURES:
         v = res["next"][m.name]
         f = Hs.next_rows(inp, m, v, run_id)
         tabs["player_season"].append(f)
         cv = Hs.coverage(f)
-        out(f"| player_season | {m.name}_next_season | {v['shipped']} | {f.height} | {cv['rows']} | "
-            f"{cv['coverage']:.0%} |")
+        out(
+            f"| player_season | {m.name}_next_season | {v['shipped']} | {f.height} | "
+            f"{cv['rows']} | {cv['coverage']:.0%} |"
+        )
     for name, games, rows, lagged, kind, _label in Rp.player_units(inp):
         v = res["in"][name]
         f = Hs.in_rows(name, games, rows, lagged, kind, v, run_id)
         tabs["player_game"].append(f)
         cv = Hs.coverage(f)
-        out(f"| player_game | {name}_next4 | {v['shipped']} | {f.height} | {cv['rows']} | "
-            f"{cv['coverage']:.0%} |")
+        out(
+            f"| player_game | {name}_next4 | {v['shipped']} | {f.height} | {cv['rows']} | "
+            f"{cv['coverage']:.0%} |"
+        )
     for name, games, rows, lagged, kind, _label in Rp.team_units(inp):
         v = res["teams_next"][name]
         f = Hs.team_next_rows(inp, name, games, rows, v, run_id)
         tabs["team_season"].append(f)
         cv = Hs.coverage(f)
-        out(f"| team_season | {name}_next_season | {v['shipped']} | {f.height} | {cv['rows']} | "
-            f"{cv['coverage']:.0%} |")
+        out(
+            f"| team_season | {name}_next_season | {v['shipped']} | {f.height} | {cv['rows']} | "
+            f"{cv['coverage']:.0%} |"
+        )
         v = res["teams_in"][name]
         f = Hs.in_rows(name, games, rows, lagged, kind, v, run_id)
         tabs["team_game"].append(f)
         cv = Hs.coverage(f)
-        out(f"| team_game | {name}_next4 | {v['shipped']} | {f.height} | {cv['rows']} | "
-            f"{cv['coverage']:.0%} |")
-    keys = {"player_game": ["gsis_id", "game_id"], "player_season": ["gsis_id", "season"],
-            "team_game": ["team", "game_id"], "team_season": ["team", "season"]}  # fmt: skip
+        out(
+            f"| team_game | {name}_next4 | {v['shipped']} | {f.height} | {cv['rows']} | "
+            f"{cv['coverage']:.0%} |"
+        )
+    keys = {
+        "player_game": ["gsis_id", "game_id"],
+        "player_season": ["gsis_id", "season"],
+        "team_game": ["team", "game_id"],
+        "team_season": ["team", "season"],
+    }
     final = {k: Hs.finish(pl.concat(v, how="diagonal_relaxed"), keys[k]) for k, v in tabs.items()}
     for k, v in final.items():
-        out(f"- {k}: {v.height:,} rows, {v['quantity'].n_unique()} quantities, seasons "
-            f"{v['season'].min()}-{v['season'].max()}")
+        out(
+            f"- {k}: {v.height:,} rows, {v['quantity'].n_unique()} quantities, seasons "
+            f"{v['season'].min()}-{v['season'].max()}"
+        )
     return final
 
 
@@ -117,10 +143,17 @@ def main(argv: Sequence[str] | None = None) -> None:
     from pcf.core import tracking
 
     train_end = D.player_games()["known_at"].max()
-    with tracking.attempt(K.PROJECT, train_end=train_end, name="stabilization v1",
-                          params={"copies": args.copies, "test": "2018-2024",
-                                  "measures": len(K.MEASURES),
-                                  "team_measures": len(K.TEAM_MEASURES)}) as run:  # fmt: skip
+    with tracking.attempt(
+        K.PROJECT,
+        train_end=train_end,
+        name="stabilization v1",
+        params={
+            "copies": args.copies,
+            "test": "2018-2024",
+            "measures": len(K.MEASURES),
+            "team_measures": len(K.TEAM_MEASURES),
+        },
+    ) as run:
         run_id = run.info.run_id
         tabs = history(inp, res, run_id, hist_out)
         hist_out.save()
@@ -131,8 +164,9 @@ def main(argv: Sequence[str] | None = None) -> None:
         tracking.log_metrics(metrics)
         tracking.log_checks({"leakage": res["leakage"]["passed"]})
         for name in ("players", "teams", "sides", "leakage", "history"):
-            tracking.log_text((K.report_dir() / f"{name}.txt").read_text(encoding="utf-8"),
-                              f"{name}.txt")  # fmt: skip
+            tracking.log_text(
+                (K.report_dir() / f"{name}.txt").read_text(encoding="utf-8"), f"{name}.txt"
+            )
         print(f"history: {folder} (run {run_id})")
 
 

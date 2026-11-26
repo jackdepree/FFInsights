@@ -34,8 +34,9 @@ c = pl.col
 ALPHAS = np.logspace(-3, 3, 13)
 
 
-def season_m1(rows: pl.DataFrame, games: pl.DataFrame, ent: str = "gsis_id",
-              cls: str = "pos") -> pl.DataFrame:  # fmt: skip
+def season_m1(
+    rows: pl.DataFrame, games: pl.DataFrame, ent: str = "gsis_id", cls: str = "pos"
+) -> pl.DataFrame:
     """Per entity-season (MIN_DEN+ attempts): x (centred by its own class-season mean), n, k fit
     on seasons up to it, m1, sigma2, tau2, team, class."""
     out = []
@@ -45,20 +46,28 @@ def season_m1(rows: pl.DataFrame, games: pl.DataFrame, ent: str = "gsis_id",
         if a.height == 0:
             continue
         f = R.fit_k(rows, games, s, ent, cls)
-        out.append(a.with_columns(n=c("den"), k=pl.lit(f["k"]), sigma2=pl.lit(f["sigma2"]),
-                                  tau2=pl.lit(f["tau2"]))  # fmt: skip
-                   .with_columns(m1=S.shrink_expr("x", "n", "k")))
+        out.append(
+            a.with_columns(
+                n=c("den"), k=pl.lit(f["k"]), sigma2=pl.lit(f["sigma2"]), tau2=pl.lit(f["tau2"])
+            ).with_columns(m1=S.shrink_expr("x", "n", "k"))
+        )
     return pl.concat(out)
 
 
-def pairs(sm: pl.DataFrame, rows: pl.DataFrame, ent: str = "gsis_id",
-          first_team: pl.DataFrame | None = None, open_last: bool = False) -> pl.DataFrame:  # fmt: skip
+def pairs(
+    sm: pl.DataFrame,
+    rows: pl.DataFrame,
+    ent: str = "gsis_id",
+    first_team: pl.DataFrame | None = None,
+    open_last: bool = False,
+) -> pl.DataFrame:
     """Season pairs: the input season's m1 row and the target season's rate, centred by the
     input season's class mean. `first_team`: each entity-season's team in its first game (his
     next team, known before the season starts); the main team if not given. `open_last`: also
     the last season's rows, with no target yet (the forecast for the season after; the history)."""
-    nxt = rows.filter(c("den") > 0).select(ent, season=c("season") - 1, rate_next=c("num") / c("den"),
-                                           w="den", team_main_next="team")  # fmt: skip
+    nxt = rows.filter(c("den") > 0).select(
+        ent, season=c("season") - 1, rate_next=c("num") / c("den"), w="den", team_main_next="team"
+    )
     p = sm.join(nxt, on=[ent, "season"], how="left")
     keep = c("rate_next").is_not_null()
     p = p.filter(keep | (c("season") == K.LAST) if open_last else keep)
@@ -70,12 +79,15 @@ def pairs(sm: pl.DataFrame, rows: pl.DataFrame, ent: str = "gsis_id",
     else:
         p = p.with_columns(team_next=c("team_main_next"))
     return p.with_columns(team_next=pl.coalesce("team_next", "team")).with_columns(
-        y=c("rate_next") - c("mu"), target=c("season") + 1, moved=c("team_next") != c("team"))
+        y=c("rate_next") - c("mu"), target=c("season") + 1, moved=c("team_next") != c("team")
+    )
 
 
 def first_teams(games: pl.DataFrame, ent: str = "gsis_id") -> pl.DataFrame:
-    return games.sort(ent, "season", "week").group_by(ent, "season", maintain_order=True).agg(
-        team=c("team").first()
+    return (
+        games.sort(ent, "season", "week")
+        .group_by(ent, "season", maintain_order=True)
+        .agg(team=c("team").first())
     )
 
 
@@ -88,25 +100,38 @@ def team_k(sm: pl.DataFrame, cls: str = "pos") -> pl.DataFrame:
     """I181: per season, the team part's k: sigma2 over the true spread of team-class rates."""
     out = []
     for s in sorted(sm["season"].unique().to_list()):
-        t = sm.filter(c("season") <= s).group_by("team", cls, "season").agg(
-            num=(c("x") * c("n")).sum(), den=c("n").sum()
+        t = (
+            sm.filter(c("season") <= s)
+            .group_by("team", cls, "season")
+            .agg(num=(c("x") * c("n")).sum(), den=c("n").sum())
         )
         sig = float(sm.filter(c("season") == s)["sigma2"][0])
         tau = S.spread(t["den"].to_numpy(), (t["num"] / t["den"]).to_numpy(), sig)
         out.append((s, sig / tau))
-    return pl.DataFrame({"season": [s for s, _ in out], "k_team": [k for _, k in out]},
-                        schema={"season": pl.Int32, "k_team": pl.Float64})  # fmt: skip
+    return pl.DataFrame(
+        {"season": [s for s, _ in out], "k_team": [k for _, k in out]},
+        schema={"season": pl.Int32, "k_team": pl.Float64},
+    )
 
 
-def features(p: pl.DataFrame, others: dict[str, pl.DataFrame], cond: pl.DataFrame | None,
-             team_cond: pl.DataFrame | None, sm: pl.DataFrame, parts: pl.DataFrame | None,
-             kt: pl.DataFrame | None, ent: str = "gsis_id", cls: str = "pos") -> pl.DataFrame:  # fmt: skip
+def features(
+    p: pl.DataFrame,
+    others: dict[str, pl.DataFrame],
+    cond: pl.DataFrame | None,
+    team_cond: pl.DataFrame | None,
+    sm: pl.DataFrame,
+    parts: pl.DataFrame | None,
+    kt: pl.DataFrame | None,
+    ent: str = "gsis_id",
+    cls: str = "pos",
+) -> pl.DataFrame:
     """Pairs with every candidate input: `o_<measure>` (his other rates' m1 that season, 0 where
     he has none), `cond_<c>` (his teammates' condition, centred by season), `chg_<c>` (for a
     mover, his next team's condition less his own), `trend` (I152) and `layer_t` (I181)."""
     for name, o in others.items():
-        p = p.join(o.select(ent, "season", c("m1").alias(f"o_{name}")), on=[ent, "season"],
-                   how="left").with_columns(c(f"o_{name}").fill_null(0.0))  # fmt: skip
+        p = p.join(
+            o.select(ent, "season", c("m1").alias(f"o_{name}")), on=[ent, "season"], how="left"
+        ).with_columns(c(f"o_{name}").fill_null(0.0))
     if cond is not None:
         cc = [x for x in cond.columns if x.startswith("cond_")]
         p = p.join(cond, on=[ent, "season"], how="left")
@@ -118,13 +143,17 @@ def features(p: pl.DataFrame, others: dict[str, pl.DataFrame], cond: pl.DataFram
             t = x.replace("cond_", "tc_")
             p = p.with_columns(
                 c(x).fill_null(0.0),
-                pl.when(c("moved")).then(c(t).fill_null(0.0) - c(x).fill_null(0.0))
-                .otherwise(0.0).alias(x.replace("cond_", "chg_")),
-            ).drop(t)  # fmt: skip
+                pl.when(c("moved"))
+                .then(c(t).fill_null(0.0) - c(x).fill_null(0.0))
+                .otherwise(0.0)
+                .alias(x.replace("cond_", "chg_")),
+            ).drop(t)
     prev = sm.select(ent, season=c("season") + 1, m1_prev="m1")
-    p = p.join(prev, on=[ent, "season"], how="left").with_columns(
-        trend=(c("m1") - c("m1_prev")).fill_null(0.0)
-    ).drop("m1_prev")
+    p = (
+        p.join(prev, on=[ent, "season"], how="left")
+        .with_columns(trend=(c("m1") - c("m1_prev")).fill_null(0.0))
+        .drop("m1_prev")
+    )
     if parts is not None:
         p = p.join(parts, on=["team", cls, "season"], how="left").join(kt, on="season", how="left")
         p = p.with_columns(o_num=c("t_num") - c("x") * c("n"), o_den=c("t_den") - c("n"))
@@ -136,8 +165,9 @@ def features(p: pl.DataFrame, others: dict[str, pl.DataFrame], cond: pl.DataFram
     return p
 
 
-def player_conditions(cond: pl.DataFrame, games: pl.DataFrame, keys: tuple[str, ...],
-                      ent: str = "gsis_id") -> tuple[pl.DataFrame, pl.DataFrame]:  # fmt: skip
+def player_conditions(
+    cond: pl.DataFrame, games: pl.DataFrame, keys: tuple[str, ...], ent: str = "gsis_id"
+) -> tuple[pl.DataFrame, pl.DataFrame]:
     """His teammates' conditions per season over his games of this measure (centred by season),
     and each team-season's (for his next team)."""
     g = games.select(ent, "game_id", "season").unique().join(cond, on=[ent, "game_id"])
@@ -150,8 +180,9 @@ def player_conditions(cond: pl.DataFrame, games: pl.DataFrame, keys: tuple[str, 
         pv = pv.join(lm, on="season").select(ent, "season", **{f"cond_{k}": c("v") - c("lm")})
         tv = tv.join(lm, on="season").select("team", "season", **{f"cond_{k}": c("v") - c("lm")})
         out = pv if out is None else out.join(pv, on=[ent, "season"], how="full", coalesce=True)
-        tout = tv if tout is None else tout.join(tv, on=["team", "season"], how="full",
-                                                 coalesce=True)  # fmt: skip
+        tout = (
+            tv if tout is None else tout.join(tv, on=["team", "season"], how="full", coalesce=True)
+        )
     return out, tout
 
 
@@ -183,9 +214,17 @@ def rungs(p: pl.DataFrame, others: list[str], ks: dict, cond_cols: list[str]) ->
     """Every rung's walk-forward forecast (null where not fittable yet), and each fitted rung's
     weight on his own m1 (for its range)."""
     p = p.sort("target", "gsis_id" if "gsis_id" in p.columns else "team")
-    p = p.with_columns(avg=pl.lit(0.0), raw=c("x"), layered=c("layer_t") + S.shrink_expr(
-        "x", "n", "k") - c("n") / (c("n") + c("k")) * c("layer_t")) if "layer_t" in p.columns \
-        else p.with_columns(avg=pl.lit(0.0), raw=c("x"))  # fmt: skip
+    p = (
+        p.with_columns(
+            avg=pl.lit(0.0),
+            raw=c("x"),
+            layered=c("layer_t")
+            + S.shrink_expr("x", "n", "k")
+            - c("n") / (c("n") + c("k")) * c("layer_t"),
+        )
+        if "layer_t" in p.columns
+        else p.with_columns(avg=pl.lit(0.0), raw=c("x"))
+    )
     tgt, y, w = p["target"].to_numpy(), p["y"].to_numpy(), p["w"].to_numpy()
     m1 = p["m1"].to_numpy()
     fc, b = S.second_pull(m1, y, w, tgt)
@@ -208,9 +247,15 @@ def rungs(p: pl.DataFrame, others: list[str], ks: dict, cond_cols: list[str]) ->
         Xt = np.column_stack([X, p["trend"].to_numpy()])
         r2, sd2 = _ridge(Xt[tr], y[tr], w[tr])
         ridge_t[te] = (Xt[te] / sd2) @ r2.coef_
-    p = p.with_columns(pull=pl.Series(fc), b_pull=pl.Series(b), pull_mv=pl.Series(fc_mv),
-                       ridge=pl.Series(ridge), b_ridge=pl.Series(b_ridge),
-                       ridge_trend=pl.Series(ridge_t), n_consistent=pl.Series(used))  # fmt: skip
+    p = p.with_columns(
+        pull=pl.Series(fc),
+        b_pull=pl.Series(b),
+        pull_mv=pl.Series(fc_mv),
+        ridge=pl.Series(ridge),
+        b_ridge=pl.Series(b_ridge),
+        ridge_trend=pl.Series(ridge_t),
+        n_consistent=pl.Series(used),
+    )
     cols = ["pull", "b_pull", "pull_mv", "ridge", "b_ridge", "ridge_trend", "n_consistent"]
     return p.with_columns(c(cols).fill_nan(None))
 
@@ -219,8 +264,13 @@ def ranges(p: pl.DataFrame, rung: str) -> pl.DataFrame:
     """`v_<rung>`: b^2 sigma2 / (n + k) + c + sigma2 / w, with b the rung's weight on his own m1
     (1 for m1, the slope for pull, the ridge's own coefficient) and c the drift left over, fit by
     moments on earlier targets; `scale_<rung>`: the conformal scale on earlier targets."""
-    b = {"m1": pl.lit(1.0), "pull": c("b_pull"), "ridge": c("b_ridge"), "raw": pl.lit(1.0),
-         "avg": pl.lit(0.0)}.get(rung, pl.lit(1.0))  # fmt: skip
+    b = {
+        "m1": pl.lit(1.0),
+        "pull": c("b_pull"),
+        "ridge": c("b_ridge"),
+        "raw": pl.lit(1.0),
+        "avg": pl.lit(0.0),
+    }.get(rung, pl.lit(1.0))
     base = b**2 * c("sigma2") / (c("n") + c("k")) + c("sigma2") / c("w")
     if rung == "avg":
         base = c("tau2") + c("sigma2") / c("w")
@@ -240,8 +290,11 @@ def ranges(p: pl.DataFrame, rung: str) -> pl.DataFrame:
         if tr.height >= S.MIN_PAIRS:
             z = ((tr["y"] - tr[rung]).abs() / tr[f"v_{rung}"].sqrt()).to_numpy()
             sc[tgt == t] = float(np.quantile(z, 0.8) / K.Z80)
-    return q.with_columns(pl.Series(f"scale_{rung}", sc).fill_nan(None)).drop("_base", "_r").rename(
-        {"_c": f"c_{rung}"})
+    return (
+        q.with_columns(pl.Series(f"scale_{rung}", sc).fill_nan(None))
+        .drop("_base", "_r")
+        .rename({"_c": f"c_{rung}"})
+    )
 
 
 def swing(sm_games: pl.DataFrame, sm: pl.DataFrame, ent: str = "gsis_id") -> pl.DataFrame:
@@ -250,5 +303,9 @@ def swing(sm_games: pl.DataFrame, sm: pl.DataFrame, ent: str = "gsis_id") -> pl.
     g = sm_games.join(sm.select(ent, "season", "rate", "sigma2"), on=[ent, "season"])
     g = g.with_columns(z2=c("den") * (c("num") / c("den") - c("rate")) ** 2 / c("sigma2"))
     s = g.group_by(ent, "season").agg(zs=c("z2").sum(), G=pl.len())
-    return s.select(ent, "season", sw=(c("zs") + K.SWING_WEIGHT) / (c("G") + K.SWING_WEIGHT),
-                    G=c("G").cast(pl.Float64))  # fmt: skip
+    return s.select(
+        ent,
+        "season",
+        sw=(c("zs") + K.SWING_WEIGHT) / (c("G") + K.SWING_WEIGHT),
+        G=c("G").cast(pl.Float64),
+    )

@@ -49,23 +49,36 @@ def _range(df: pl.DataFrame, fc: str, var: str, ranges: dict | None) -> pl.DataF
             v = v * c("sw").fill_null(1.0)
     sd = v.sqrt()
     return df.with_columns(mean=c("mu") + c(fc)).with_columns(
-        q10=c("mean") - K.Z80 * sd, q50=c("mean"), q90=c("mean") + K.Z80 * sd,
+        q10=c("mean") - K.Z80 * sd,
+        q50=c("mean"),
+        q90=c("mean") + K.Z80 * sd,
         _cov=((c("y") - c(fc)).abs() <= K.Z80 * sd).cast(pl.Float64),
-    )  # fmt: skip
+    )
 
 
 def _frame(df: pl.DataFrame, keys: list[str], quantity: str, cadence: str) -> pl.DataFrame:
     out = df.with_columns(
-        quantity=pl.lit(quantity), model=pl.lit(MODEL), model_version=pl.lit(VERSION),
-        cadence=pl.lit(cadence), as_of=c("as_of").cast(UTC_TIME),
+        quantity=pl.lit(quantity),
+        model=pl.lit(MODEL),
+        model_version=pl.lit(VERSION),
+        cadence=pl.lit(cadence),
+        as_of=c("as_of").cast(UTC_TIME),
         train_end=c("train_end").cast(UTC_TIME),
-    ).filter(c("mean").is_not_null())  # fmt: skip
+    ).filter(c("mean").is_not_null())
     return out
 
 
 # ---------------------------------------------------------------- in season
-def in_rows(name: str, games: pl.DataFrame, rows: pl.DataFrame, lagged: bool, kind: str,
-            verdict: dict, run_id: str, ent: str = "gsis_id") -> pl.DataFrame:  # fmt: skip
+def in_rows(
+    name: str,
+    games: pl.DataFrame,
+    rows: pl.DataFrame,
+    lagged: bool,
+    kind: str,
+    verdict: dict,
+    run_id: str,
+    ent: str = "gsis_id",
+) -> pl.DataFrame:
     eff = kind == "efficiency"
     shipped = verdict["shipped"]
     ranges = verdict.get("ranges")
@@ -76,31 +89,52 @@ def in_rows(name: str, games: pl.DataFrame, rows: pl.DataFrame, lagged: bool, ki
         cp, info = I.season_frame(games, rows, T, ent, "pos", lagged, eff, gc=gc, cps=CPS_ALL)
         a = I.rungs(cp, info, "next")
         par_cols = ["b_pull", "c_m1", "c_pull", *[x for x in a.columns if x.startswith("scale_")]]
-        par = a.filter(c("season") == T).group_by("season", "gi").agg(
-            [c(x).drop_nulls().first() for x in par_cols])
+        par = (
+            a.filter(c("season") == T)
+            .group_by("season", "gi")
+            .agg([c(x).drop_nulls().first() for x in par_cols])
+        )
         cur = cp.filter(c("season") == T).join(par, on=["season", "gi"], how="left")
         sig, tau2 = info["sigma2"], info["tau2"]
-        w_exp = pl.when(c("gi_known") > 0).then(H * c("cn") / c("gi_known")).otherwise(
-            H * c("pn") / 17.0)
-        cur = cur.with_columns(w_exp=pl.max_horizontal(w_exp, pl.lit(1.0)),
-                               sw=(c("G") * c("swing") + K.SWING_WEIGHT) / (c("G") + K.SWING_WEIGHT))  # fmt: skip
+        w_exp = (
+            pl.when(c("gi_known") > 0)
+            .then(H * c("cn") / c("gi_known"))
+            .otherwise(H * c("pn") / 17.0)
+        )
         cur = cur.with_columns(
-            avg=pl.lit(0.0), pull=c("b_pull") * c("m1"),
-            filt=c("m"), filt_phi=c("m_phi"), filt_om=c("m_om"),
+            w_exp=pl.max_horizontal(w_exp, pl.lit(1.0)),
+            sw=(c("G") * c("swing") + K.SWING_WEIGHT) / (c("G") + K.SWING_WEIGHT),
+        )
+        cur = cur.with_columns(
+            avg=pl.lit(0.0),
+            pull=c("b_pull") * c("m1"),
+            filt=c("m"),
+            filt_phi=c("m_phi"),
+            filt_om=c("m_om"),
             v_avg=tau2 + sig / c("w_exp"),
             v_m1=c("m1_v") + c("c_m1").fill_null(0.0) + sig / c("w_exp"),
             v_pull=c("b_pull") ** 2 * c("m1_v") + c("c_pull").fill_null(0.0) + sig / c("w_exp"),
-        )  # fmt: skip
+        )
         for suf, p in (("", info["par"]), ("_phi", info["par_phi"]), ("_om", info["par_om"])):
-            cur = cur.with_columns((c(f"P{suf}") + p["q"] * (H + 1) / 2 + p["phi"] * sig / c("w_exp")
-                                    + p["omega"] / H).alias(f"v_filt{suf}"))  # fmt: skip
+            cur = cur.with_columns(
+                (
+                    c(f"P{suf}")
+                    + p["q"] * (H + 1) / 2
+                    + p["phi"] * sig / c("w_exp")
+                    + p["omega"] / H
+                ).alias(f"v_filt{suf}")
+            )
         rung = pl.when(c(shipped).is_not_null()).then(pl.lit(shipped)).otherwise(pl.lit("m1"))
         cur = cur.with_columns(
-            rung=rung, fc=pl.coalesce(shipped, "m1"), var=pl.coalesce(f"v_{shipped}", "v_m1"),
+            rung=rung,
+            fc=pl.coalesce(shipped, "m1"),
+            var=pl.coalesce(f"v_{shipped}", "v_m1"),
             _scale=c(f"scale_{shipped}{'_sw' if ranges and ranges.get('widened') else ''}")
-            if f"scale_{shipped}" in cur.columns else pl.lit(None, pl.Float64),
-            as_of=c("next_kick"), train_end=pl.lit(_train_end(games, T)),
-        )  # fmt: skip
+            if f"scale_{shipped}" in cur.columns
+            else pl.lit(None, pl.Float64),
+            as_of=c("next_kick"),
+            train_end=pl.lit(_train_end(games, T)),
+        )
         out.append(_range(cur, "fc", "var", ranges if shipped != "avg" else None))
     f = pl.concat(out, how="diagonal_relaxed")
     keys = [ent, "game_id"]
@@ -109,9 +143,27 @@ def in_rows(name: str, games: pl.DataFrame, rows: pl.DataFrame, lagged: bool, ki
         f = f.rename({"gsis_id": "team"})
         keys = ["team", "game_id"]
     f = _frame(f, keys, f"{name}_next4", "in_season").with_columns(run_id=pl.lit(run_id))
-    return f.select(*keys, "season", "as_of", "quantity", "mean", "q10", "q50", "q90", "model",
-                    "model_version", "run_id", "train_end", "cadence", "rung", "gi", "N",
-                    reliability=c("N") / (c("N") + info["k"]), _cov="_cov", _w="w")  # fmt: skip
+    return f.select(
+        *keys,
+        "season",
+        "as_of",
+        "quantity",
+        "mean",
+        "q10",
+        "q50",
+        "q90",
+        "model",
+        "model_version",
+        "run_id",
+        "train_end",
+        "cadence",
+        "rung",
+        "gi",
+        "N",
+        reliability=c("N") / (c("N") + info["k"]),
+        _cov="_cov",
+        _w="w",
+    )
 
 
 # ---------------------------------------------------------------- next season
@@ -124,20 +176,39 @@ def next_rows(inp: W.Inputs, m: K.Measure, verdict: dict, run_id: str) -> pl.Dat
     return _next_common(f, sw, shipped, ranges, inp.games[m.name], m.name, run_id, "gsis_id")
 
 
-def _next_common(f: pl.DataFrame, sw: pl.DataFrame, shipped: str, ranges: dict | None,
-                 games: pl.DataFrame, name: str, run_id: str, ent: str) -> pl.DataFrame:  # fmt: skip
+def _next_common(
+    f: pl.DataFrame,
+    sw: pl.DataFrame,
+    shipped: str,
+    ranges: dict | None,
+    games: pl.DataFrame,
+    name: str,
+    run_id: str,
+    ent: str,
+) -> pl.DataFrame:
     f = f.join(sw.select(ent, "season", "sw"), on=[ent, "season"], how="left")
     b = {"m1": pl.lit(1.0), "pull": c("b_pull"), "ridge": c("b_ridge")}
-    base = (lambda r: b[r] ** 2 * c("sigma2") / (c("n") + c("k")) + c(f"c_{r}").fill_null(0.0)
-            + c("sigma2") / c("n"))  # fmt: skip
-    f = f.with_columns(v_avg_h=c("tau2") + c("sigma2") / c("n"),
-                       **{f"v_{r}_h": base(r) for r in ("m1", "pull", "ridge")})  # fmt: skip
+
+    def base(r: str) -> pl.Expr:
+        return (
+            b[r] ** 2 * c("sigma2") / (c("n") + c("k"))
+            + c(f"c_{r}").fill_null(0.0)
+            + c("sigma2") / c("n")
+        )
+
+    f = f.with_columns(
+        v_avg_h=c("tau2") + c("sigma2") / c("n"),
+        **{f"v_{r}_h": base(r) for r in ("m1", "pull", "ridge")},
+    )
     f = f.with_columns(
         rung=pl.when(c(shipped).is_not_null()).then(pl.lit(shipped)).otherwise(pl.lit("m1")),
-        fc=pl.coalesce(shipped, "m1"), var=pl.coalesce(f"v_{shipped}_h", "v_m1_h"),
-        _scale=c(f"scale_{shipped}") if f"scale_{shipped}" in f.columns else pl.lit(None, pl.Float64),
+        fc=pl.coalesce(shipped, "m1"),
+        var=pl.coalesce(f"v_{shipped}_h", "v_m1_h"),
+        _scale=c(f"scale_{shipped}")
+        if f"scale_{shipped}" in f.columns
+        else pl.lit(None, pl.Float64),
         as_of=pl.datetime(c("target"), 9, 1, time_zone="UTC"),
-    )  # fmt: skip
+    )
     te = {s: _train_end(games, s + 1) for s in f["season"].unique().to_list()}
     f = f.with_columns(train_end=c("season").replace_strict(te, return_dtype=UTC_TIME))
     f = _range(f, "fc", "var", ranges if shipped != "avg" else None)
@@ -147,20 +218,39 @@ def _next_common(f: pl.DataFrame, sw: pl.DataFrame, shipped: str, ranges: dict |
         f = f.rename({ent: "team"})
         keys = ["team", "season"]
     f = _frame(f, keys, f"{name}_next_season", "in_season").with_columns(run_id=pl.lit(run_id))
-    return f.select(*keys, "input_season", "as_of", "quantity", "mean", "q10", "q50", "q90",
-                    "model", "model_version", "run_id", "train_end", "cadence", "rung", "n",
-                    reliability=c("n") / (c("n") + c("k")), _cov="_cov", _w="w")  # fmt: skip
+    return f.select(
+        *keys,
+        "input_season",
+        "as_of",
+        "quantity",
+        "mean",
+        "q10",
+        "q50",
+        "q90",
+        "model",
+        "model_version",
+        "run_id",
+        "train_end",
+        "cadence",
+        "rung",
+        "n",
+        reliability=c("n") / (c("n") + c("k")),
+        _cov="_cov",
+        _w="w",
+    )
 
 
-def team_next_rows(inp: W.Inputs, name: str, games: pl.DataFrame, rows: pl.DataFrame,
-                   verdict: dict, run_id: str) -> pl.DataFrame:  # fmt: skip
+def team_next_rows(
+    inp: W.Inputs, name: str, games: pl.DataFrame, rows: pl.DataFrame, verdict: dict, run_id: str
+) -> pl.DataFrame:
     sm = W.N.season_m1(rows, games)
     p = W.N.pairs(sm, rows, open_last=True)
     p = W.N.features(p, {}, None, None, sm, None, None)
     f = W.next_rungs(p, [], [], {})
     sw = W.N.swing(W.R.game_rows(games, sm), sm)
-    return _next_common(f, sw, verdict["shipped"], verdict.get("ranges"), games, name, run_id,
-                        "gsis_id")  # fmt: skip
+    return _next_common(
+        f, sw, verdict["shipped"], verdict.get("ranges"), games, name, run_id, "gsis_id"
+    )
 
 
 def coverage(f: pl.DataFrame) -> dict:

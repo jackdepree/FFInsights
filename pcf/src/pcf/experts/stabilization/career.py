@@ -42,35 +42,67 @@ def frame(inp: W.Inputs, measure: str) -> pl.DataFrame:
         rho = float(np.clip(R.season_r(p, k), 0, 1))
         past = all_d.filter(c("season") <= S)
         cur = d.filter(c("season") == S).select("gsis_id")
-        car = past.join(cur, on="gsis_id").with_columns(age=S - c("season")).group_by(
-            "gsis_id"
-        ).agg(N=c("den").sum(), Dv=c("dev").sum(), Nd=(c("den") * pl.lit(rho) ** c("age")).sum(),
-              Dd=(c("dev") * pl.lit(rho) ** c("age")).sum())  # fmt: skip
-        fut = all_d.filter(c("season") > S).with_columns(h=c("season") - S).group_by(
-            "gsis_id"
-        ).agg(W=c("den").sum(), Y=c("dev").sum(), rh=(c("den") * pl.lit(rho) ** c("h")).sum(),
-              seasons=pl.len())  # fmt: skip
+        car = (
+            past.join(cur, on="gsis_id")
+            .with_columns(age=S - c("season"))
+            .group_by("gsis_id")
+            .agg(
+                N=c("den").sum(),
+                Dv=c("dev").sum(),
+                Nd=(c("den") * pl.lit(rho) ** c("age")).sum(),
+                Dd=(c("dev") * pl.lit(rho) ** c("age")).sum(),
+            )
+        )
+        fut = (
+            all_d.filter(c("season") > S)
+            .with_columns(h=c("season") - S)
+            .group_by("gsis_id")
+            .agg(
+                W=c("den").sum(),
+                Y=c("dev").sum(),
+                rh=(c("den") * pl.lit(rho) ** c("h")).sum(),
+                seasons=pl.len(),
+            )
+        )
         x = car.join(fut, on="gsis_id").filter(c("W") > 0)
-        out.append(x.with_columns(
-            y=c("Y") / c("W"), w=c("W"), raw=c("Dv") / c("N"), avg=pl.lit(0.0),
-            m1=c("Dv") / (c("N") + k), m1_drift=c("Dd") / (c("Nd") + k) * c("rh") / c("W"),
-            season=pl.lit(S), k=pl.lit(k), rho=pl.lit(rho),
-        ))  # fmt: skip
+        out.append(
+            x.with_columns(
+                y=c("Y") / c("W"),
+                w=c("W"),
+                raw=c("Dv") / c("N"),
+                avg=pl.lit(0.0),
+                m1=c("Dv") / (c("N") + k),
+                m1_drift=c("Dd") / (c("Nd") + k) * c("rh") / c("W"),
+                season=pl.lit(S),
+                k=pl.lit(k),
+                rho=pl.lit(rho),
+            )
+        )
     return pl.concat(out)
 
 
 def report(inp: W.Inputs, out, seed: int) -> dict:
-    out("", "== The rest of a career (side report): players at the end of 2010-2018, the target "
+    out(
+        "",
+        "== The rest of a career (side report): players at the end of 2010-2018, the target "
         "pooled through 2024; k and the true rate's season r fit on seasons up to the end season",
-        "", "| Measure | k (mean) | rho (mean) | Rows | Players | M1 vs raw | M1 vs average | "
-        "Drift folded in vs M1 |", "|---|---|---|---|---|---|---|---|")  # fmt: skip
+        "",
+        "| Measure | k (mean) | rho (mean) | Rows | Players | M1 vs raw | M1 vs average | "
+        "Drift folded in vs M1 |",
+        "|---|---|---|---|---|---|---|---|",
+    )
     res = {}
     for m in PBP:
         f = frame(inp, m)
-        g = {"m1_raw": E.gain(f, "m1", "raw", seed=seed), "m1_avg": E.gain(f, "m1", "avg", seed=seed),
-             "drift_m1": E.gain(f, "m1_drift", "m1", seed=seed)}  # fmt: skip
-        out(f"| {m} | {f['k'].mean():.0f} | {f['rho'].mean():.2f} | {f.height} | "
+        g = {
+            "m1_raw": E.gain(f, "m1", "raw", seed=seed),
+            "m1_avg": E.gain(f, "m1", "avg", seed=seed),
+            "drift_m1": E.gain(f, "m1_drift", "m1", seed=seed),
+        }
+        out(
+            f"| {m} | {f['k'].mean():.0f} | {f['rho'].mean():.2f} | {f.height} | "
             f"{f['gsis_id'].n_unique()} | {g['m1_raw'].fmt()} | {g['m1_avg'].fmt()} | "
-            f"{g['drift_m1'].fmt()} |")
+            f"{g['drift_m1'].fmt()} |"
+        )
         res[m] = g
     return res

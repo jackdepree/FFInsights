@@ -25,7 +25,9 @@ from pcf.experts.stabilization import evaluate as E
 c = pl.col
 
 
-def climb(f: pl.DataFrame, steps: Sequence[tuple[str, str]], ent: str, seed: int) -> tuple[str, dict]:
+def climb(
+    f: pl.DataFrame, steps: Sequence[tuple[str, str]], ent: str, seed: int
+) -> tuple[str, dict]:
     """`steps`: (rung, the rung it must clear) in order; a rung named as the one to clear is
     replaced by the current champion. Returns the champion and every gain."""
     gains, champ = {}, "avg"
@@ -38,8 +40,9 @@ def climb(f: pl.DataFrame, steps: Sequence[tuple[str, str]], ent: str, seed: int
     return champ, gains
 
 
-def copies(make: Callable[[int], pl.DataFrame], rung: str, ent: str, n: int = K.COPIES,
-           seed: int = 0) -> list[float]:  # fmt: skip
+def copies(
+    make: Callable[[int], pl.DataFrame], rung: str, ent: str, n: int = K.COPIES, seed: int = 0
+) -> list[float]:
     """The champion's gain over the position's average on `n` shuffled copies (`make(i)` reruns
     the walk with the inputs moved)."""
     out = []
@@ -52,5 +55,9 @@ def copies(make: Callable[[int], pl.DataFrame], rung: str, ent: str, n: int = K.
 def bar(f: pl.DataFrame, rung: str, cp: list[float], ent: str, seed: int) -> dict:
     g = E.gain(f, rung, "avg", ent, seed)
     best = float(np.nanmax(cp)) if cp else float("nan")
-    return {"gain": g, "best_copy": best, "beats_copies": bool(cp) and g.gain > best,
-            "passes": bool(cp) and g.gain > best and g.clear}  # fmt: skip
+    return {
+        "gain": g,
+        "best_copy": best,
+        "beats_copies": bool(cp) and g.gain > best,
+        "passes": bool(cp) and g.gain > best and g.clear,
+    }

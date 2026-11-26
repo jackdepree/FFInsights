@@ -33,11 +33,14 @@ class Inputs:
         self.rows = {m: R.season_rows(g) for m, g in self.games.items()}
         self.cond = D.conditions()
         tg = D.team_games()
-        self.team_games = {(s, m): tg.filter((c("side") == s) & (c("measure") == m))
-                           .with_columns(gsis_id=c("team"), pos=c("side"))
-                           for s in ("off", "def") for m in K.TEAM_MEASURES}  # fmt: skip
-        self.team_rows = {k: R.season_rows(g)
-                          for k, g in self.team_games.items()}  # fmt: skip
+        self.team_games = {
+            (s, m): tg.filter((c("side") == s) & (c("measure") == m)).with_columns(
+                gsis_id=c("team"), pos=c("side")
+            )
+            for s in ("off", "def")
+            for m in K.TEAM_MEASURES
+        }
+        self.team_rows = {k: R.season_rows(g) for k, g in self.team_games.items()}
         self._sm: dict[str, pl.DataFrame] = {}
 
     def sm(self, m: str) -> pl.DataFrame:
@@ -53,13 +56,15 @@ def others_of(m: K.Measure) -> list[str]:
     return [x for x in grp if x != m.name]
 
 
-def next_frame(inp: Inputs, m: K.Measure, open_last: bool = False
-               ) -> tuple[pl.DataFrame, list[str], list[str], dict]:  # fmt: skip
+def next_frame(
+    inp: Inputs, m: K.Measure, open_last: bool = False
+) -> tuple[pl.DataFrame, list[str], list[str], dict]:
     """Pairs with every candidate input, for one player measure (`open_last`: with the last
     season's rows, whose target isn't known yet)."""
     sm = inp.sm(m.name)
-    p = N.pairs(sm, inp.rows[m.name], first_team=N.first_teams(inp.games[m.name]),
-                open_last=open_last)  # fmt: skip
+    p = N.pairs(
+        sm, inp.rows[m.name], first_team=N.first_teams(inp.games[m.name]), open_last=open_last
+    )
     oth = others_of(m)
     others = {o: inp.sm(o) for o in oth}
     ks = {o: N.pairs(inp.sm(o), inp.rows[o]) for o in oth}
@@ -72,8 +77,9 @@ def next_frame(inp: Inputs, m: K.Measure, open_last: bool = False
     return p, oth, cond_cols, ks
 
 
-def next_rungs(p: pl.DataFrame, oth: list[str], cond_cols: list[str], ks: dict,
-               seed: int | None = None) -> pl.DataFrame:  # fmt: skip
+def next_rungs(
+    p: pl.DataFrame, oth: list[str], cond_cols: list[str], ks: dict, seed: int | None = None
+) -> pl.DataFrame:
     if seed is not None:
         cols = [*SHUFFLE_NEXT, *[f"o_{o}" for o in oth], *cond_cols]
         p = E.shuffled(p, [x for x in cols if x in p.columns], ("target", "pos"), seed)
@@ -84,8 +90,9 @@ def next_rungs(p: pl.DataFrame, oth: list[str], cond_cols: list[str], ks: dict,
 
 
 # ---------------------------------------------------------------- in season
-def in_frames(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str, lagged: bool,
-              efficiency: bool) -> dict[int, tuple[pl.DataFrame, dict]]:  # fmt: skip
+def in_frames(
+    games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str, lagged: bool, efficiency: bool
+) -> dict[int, tuple[pl.DataFrame, dict]]:
     gc = I.centred_games(games, rows, ent, cls)
     first = int(rows["season"].min())
     out = {}
@@ -97,18 +104,25 @@ def in_frames(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str, lagge
     return out
 
 
-def in_rungs(frames: dict, horizon: str = "next", seed: int | None = None,
-             cls: str = "pos") -> pl.DataFrame:  # fmt: skip
+def in_rungs(
+    frames: dict, horizon: str = "next", seed: int | None = None, cls: str = "pos"
+) -> pl.DataFrame:
     out = []
     for T, (cp, info) in frames.items():
         if seed is not None:
             cols = [x for x in I.INPUTS if x in cp.columns]
             cp = E.shuffled(cp, cols, ("season", cls, "gi"), seed + T)
         a = I.rungs(cp, info, horizon).filter(c("season") == T)
-        out.append(a.with_columns(q=pl.lit(info["par"]["q"]), qs=pl.lit(info["par"]["qs"]),
-                                  phi=pl.lit(info["par_phi"]["phi"]),
-                                  omega=pl.lit(info["par_om"]["omega"]),
-                                  sigma2=pl.lit(info["sigma2"]), tau2=pl.lit(info["tau2"])))  # fmt: skip
+        out.append(
+            a.with_columns(
+                q=pl.lit(info["par"]["q"]),
+                qs=pl.lit(info["par"]["qs"]),
+                phi=pl.lit(info["par_phi"]["phi"]),
+                omega=pl.lit(info["par_om"]["omega"]),
+                sigma2=pl.lit(info["sigma2"]),
+                tau2=pl.lit(info["tau2"]),
+            )
+        )
     return pl.concat(out, how="diagonal_relaxed")
 
 

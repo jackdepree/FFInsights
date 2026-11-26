@@ -42,12 +42,17 @@ def opponent_usual(tg: pl.DataFrame, measure: str, k: float | None = None) -> pl
     if k is None:
         sigma2, tau2 = S.components(rows, gm, key=("team", "season"))
         k = S.k_of(sigma2, tau2)
-    prior = ts.select("team", season=c("season") + 1,
-                      prior=c("dv") / c("n") * c("n") / (c("n") + k))  # fmt: skip
-    off = off.with_columns(
-        cdv=c("dev").cum_sum().over("team", "season") - c("dev"),
-        cn=c("den").cum_sum().over("team", "season") - c("den"),
-    ).join(prior, on=["team", "season"], how="left").with_columns(c("prior").fill_null(0.0))
+    prior = ts.select(
+        "team", season=c("season") + 1, prior=c("dv") / c("n") * c("n") / (c("n") + k)
+    )
+    off = (
+        off.with_columns(
+            cdv=c("dev").cum_sum().over("team", "season") - c("dev"),
+            cn=c("den").cum_sum().over("team", "season") - c("den"),
+        )
+        .join(prior, on=["team", "season"], how="left")
+        .with_columns(c("prior").fill_null(0.0))
+    )
     return off.select("team", "game_id", usual=(c("cdv") + k * c("prior")) / (c("cn") + k))
 
 
@@ -62,27 +67,44 @@ def describe(g: pl.DataFrame, col: str) -> dict:
     ts = g.group_by("team", "season").agg(dv=c(col).sum(), den=c("den").sum())
     rows = ts.with_columns(x=c("dv") / c("den"))
     gm = g.join(rows.select("team", "season", rate="x"), on=["team", "season"]).with_columns(
-        num=c(col), n_games=pl.len().over("team", "season"))
+        num=c(col), n_games=pl.len().over("team", "season")
+    )
     sigma2, tau2 = S.components(rows, gm, key=("team", "season"))
     nxt = rows.select("team", season=c("season") - 1, x2="x")
     p = rows.join(nxt, on=["team", "season"])
-    return {"split": split_r(g, col), "k": S.k_of(sigma2, tau2),
-            "season_r": float(np.corrcoef(p["x"], p["x2"])[0, 1]), "tau2": tau2}  # fmt: skip
+    return {
+        "split": split_r(g, col),
+        "k": S.k_of(sigma2, tau2),
+        "season_r": float(np.corrcoef(p["x"], p["x2"])[0, 1]),
+        "tau2": tau2,
+    }
 
 
 def report(tg: pl.DataFrame, out) -> dict:
-    out("", "== I155: a defense's faced rates less its opponents' usual (2006-2024; the opponent's "
-        "usual from its earlier games, the league rate the season's)", "", "| Defensive rate | Game split: raw, adjusted | k (plays): "
-        "raw, adjusted | Season r: raw, adjusted |", "|---|---|---|---|")  # fmt: skip
+    out(
+        "",
+        "== I155: a defense's faced rates less its opponents' usual (2006-2024; the opponent's "
+        "usual from its earlier games, the league rate the season's)",
+        "",
+        "| Defensive rate | Game split: raw, adjusted | k (plays): "
+        "raw, adjusted | Season r: raw, adjusted |",
+        "|---|---|---|---|",
+    )
     res = {}
     for m in K.TEAM_MEASURES:
         d = _league(tg.filter((c("side") == "def") & (c("measure") == m)))
-        d = d.join(opponent_usual(tg, m).rename({"team": "opponent"}), on=["opponent", "game_id"],
-                   how="left").with_columns(c("usual").fill_null(0.0))  # fmt: skip
-        d = d.with_columns(raw=c("num") - c("lm") * c("den"),
-                           adj=c("num") - (c("lm") + c("usual")) * c("den"))  # fmt: skip
+        d = d.join(
+            opponent_usual(tg, m).rename({"team": "opponent"}),
+            on=["opponent", "game_id"],
+            how="left",
+        ).with_columns(c("usual").fill_null(0.0))
+        d = d.with_columns(
+            raw=c("num") - c("lm") * c("den"), adj=c("num") - (c("lm") + c("usual")) * c("den")
+        )
         a, b = describe(d, "raw"), describe(d, "adj")
-        out(f"| {m} | {a['split']:.2f}, {b['split']:.2f} | {a['k']:.0f}, {b['k']:.0f} | "
-            f"{a['season_r']:.2f}, {b['season_r']:.2f} |")
+        out(
+            f"| {m} | {a['split']:.2f}, {b['split']:.2f} | {a['k']:.0f}, {b['k']:.0f} | "
+            f"{a['season_r']:.2f}, {b['season_r']:.2f} |"
+        )
         res[m] = {"raw": a, "adj": b}
     return res
