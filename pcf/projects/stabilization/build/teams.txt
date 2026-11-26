@@ -1,0 +1,90 @@
+== Teams, next season (targets 2018-2024; teams resampled)
+- off_hitsack (hit-or-sack rate, offense; mixed): 224 team pairs; k 246; M1 vs average +8.8% (-5.2 to +21.6); second pull vs M1 +7.0% (+4.4 to +9.1) (slope 0.78); champion pull vs average +15.2% (+4.3 to +25.2), best of 19 copies +0.2% -> ships pull
+    ranges: plain 79%; I14 widening by swing: range score +0.9% (-0.7 to +2.7) -> not kept; shipped coverage 79% (thirds of reliability 77%, 78%, 80%; of swing 77%, 82%, 76%); mean width 0.06616
+- off_proe (pass rate over expected, offense; usage): 224 team pairs; k 198; M1 vs average +12.9% (-13.7 to +34.8); second pull vs M1 +11.4% (-0.6 to +20.0) (slope 0.52); champion m1 vs average +12.9% (-13.7 to +34.8), best of 19 copies -33.6% -> ships avg
+- off_shotgun (shotgun rate, offense; usage): 224 team pairs; k 72; M1 vs average +46.7% (+32.3 to +56.6); second pull vs M1 +2.6% (-6.3 to +10.4) (slope 0.62); champion m1 vs average +46.7% (+32.3 to +56.6), best of 19 copies -65.5% -> ships m1
+    ranges: plain 92%, conformal 85%; I14 widening by swing: range score -0.2% (-1.6 to +1.3) -> not kept; shipped coverage 85% (thirds of reliability 85%, 91%, 80%; of swing 87%, 84%, 85%); mean width 0.245
+- off_no_huddle (no-huddle rate, offense; usage): 224 team pairs; k 73; M1 vs average +14.7% (-10.8 to +39.3); second pull vs M1 +10.7% (+2.9 to +21.1) (slope 0.58); champion pull vs average +23.8% (+5.4 to +43.2), best of 19 copies +0.5% -> ships pull
+    ranges: plain 95%, conformal 87%; I14 widening by swing: range score +5.8% (+2.5 to +9.3) -> kept; shipped coverage 87% (thirds of reliability 91%, 89%, 81%; of swing 91%, 88%, 83%); mean width 0.1306
+- off_explosive (explosive-play rate, offense; efficiency): 224 team pairs; k 828; M1 vs average +5.2% (-6.1 to +14.4); second pull vs M1 +3.0% (-3.2 to +9.2) (slope 0.38); champion m1 vs average +5.2% (-6.1 to +14.4), best of 19 copies -21.0% -> ships avg
+- off_success (success rate, offense; efficiency): 224 team pairs; k 352; M1 vs average +9.6% (-1.3 to +19.8); second pull vs M1 +6.7% (+2.9 to +10.0) (slope 0.62); champion pull vs average +15.7% (+8.3 to +22.4), best of 19 copies +0.1% -> ships pull
+    ranges: plain 77%; I14 widening by swing: range score -0.4% (-1.7 to +1.0) -> not kept; shipped coverage 77% (thirds of reliability 76%, 70%, 85%; of swing 77%, 78%, 76%); mean width 0.07946
+- off_adot (aDOT, offense; usage): 224 team pairs; k 250; M1 vs average +1.8% (-13.1 to +14.6); second pull vs M1 +10.9% (+6.2 to +15.3) (slope 0.54); champion pull vs average +12.5% (+3.9 to +20.5), best of 19 copies +1.1% -> ships pull
+    ranges: plain 83%; I14 widening by swing: range score -1.6% (-3.6 to +0.4) -> not kept; shipped coverage 83% (thirds of reliability 88%, 83%, 78%; of swing 77%, 86%, 85%); mean width 2.101
+- def_hitsack (hit-or-sack rate, defense (allowed or faced); mixed): 224 team pairs; k 739; M1 vs average +4.4% (-6.1 to +13.9); second pull vs M1 +2.8% (-0.6 to +5.8) (slope 0.68); champion m1 vs average +4.4% (-6.1 to +13.9), best of 19 copies -7.6% -> ships avg
+- def_proe (pass rate over expected, defense (allowed or faced); faced): 224 team pairs; k 1511; M1 vs average +7.0% (-2.3 to +15.2); second pull vs M1 +0.5% (-3.0 to +3.8) (slope 0.62); champion m1 vs average +7.0% (-2.3 to +15.2), best of 19 copies -7.2% -> ships avg
+- def_shotgun (shotgun rate, defense (allowed or faced); faced): 224 team pairs; k 1670; M1 vs average +11.2% (+3.5 to +17.8); second pull vs M1 -1.0% (-3.0 to +1.1) (slope 0.79); champion m1 vs average +11.2% (+3.5 to +17.8), best of 19 copies -0.2% -> ships m1
+    ranges: plain 92%, conformal 88%; I14 widening by swing: range score -2.0% (-3.2 to -0.7) -> not kept; shipped coverage 88% (thirds of reliability 88%, 86%, 89%; of swing 87%, 89%, 88%); mean width 0.1607
+- def_no_huddle (no-huddle rate, defense (allowed or faced); faced): 224 team pairs; k 2962; M1 vs average +4.5% (-1.5 to +10.4); second pull vs M1 -0.8% (-2.4 to +1.0) (slope 1.28); champion m1 vs average +4.5% (-1.5 to +10.4), best of 19 copies -1.3% -> ships avg
+- def_explosive (explosive-play rate, defense (allowed or faced); efficiency): 224 team pairs; k 1104; M1 vs average +7.4% (-1.7 to +15.9); second pull vs M1 +2.5% (+0.3 to +4.5) (slope 0.75); champion pull vs average +9.7% (+2.7 to +16.2), best of 19 copies +0.6% -> ships pull
+    ranges: plain 80%; I14 widening by swing: range score +0.1% (-1.6 to +1.7) -> not kept; shipped coverage 80% (thirds of reliability 83%, 78%, 79%; of swing 80%, 85%, 75%); mean width 0.03428
+- def_success (success rate, defense (allowed or faced); efficiency): 224 team pairs; k 827; M1 vs average -1.7% (-10.3 to +6.8); second pull vs M1 +5.4% (+2.5 to +8.0) (slope 0.64); champion pull vs average +3.8% (-1.7 to +9.3), best of 19 copies +0.8% -> ships avg
+- def_adot (aDOT, defense (allowed or faced); mixed): 224 team pairs; k 602; M1 vs average +3.6% (-9.7 to +14.4); second pull vs M1 +2.8% (+0.1 to +5.3) (slope 0.78); champion pull vs average +6.3% (-4.0 to +14.7), best of 19 copies +0.4% -> ships avg
+
+== Teams, in season: the next 4 games after games 4, 8 and 12 (2018-2024; teams resampled)
+- off_hitsack (hit-or-sack rate, offense; mixed): 672 checkpoints; M1 vs average +14.8% (+7.8 to +21.3); second pull vs M1 +1.3% (+0.2 to +2.3); filter vs pull +2.0% (-0.9 to +4.7); filter q 0.009 and q_s 0.30 of the true spread
+    champion pull: vs average +15.9% (+10.0 to +21.5), best of 19 copies +0.3% -> ships pull; seasons won 7 of 7
+    I104 (this season's k blended) vs M1 -0.6% (-0.9 to -0.2)
+    ranges: plain 80%; I14 widening by swing: range score -0.0% (-0.6 to +0.5) -> not kept; shipped coverage 80% (thirds of reliability 82%, 84%, 75%; of swing 80%, 81%, 80%); mean width 0.09495
+    rest of season (672): pull vs average +18.3% (+9.4 to +26.6); coverage 78%
+- off_proe (pass rate over expected, offense; usage): 672 checkpoints; M1 vs average +21.9% (+8.8 to +34.0); second pull vs M1 +1.0% (-2.0 to +3.4); filter vs m1 +12.1% (+4.9 to +18.6); filter q 0.030 and q_s 1.00 of the true spread
+    champion filt: vs average +31.3% (+20.0 to +42.3), best of 19 copies -44.5% -> ships filt; seasons won 7 of 7
+    I104 (this season's k blended) vs M1 +0.3% (+0.0 to +0.5)
+    ranges: plain 76%; I14 widening by swing: range score -0.6% (-1.3 to -0.0) -> not kept; shipped coverage 76% (thirds of reliability 79%, 75%, 74%; of swing 79%, 72%, 78%); mean width 0.1116
+    rest of season (672): filt vs average +29.6% (+14.1 to +44.4); coverage 75%
+- off_shotgun (shotgun rate, offense; usage): 672 checkpoints; M1 vs average +51.6% (+41.7 to +58.5); second pull vs M1 +1.2% (-0.6 to +3.0); filter vs m1 +27.9% (+19.4 to +35.5); filter q 0.030 and q_s 1.00 of the true spread
+    champion filt: vs average +65.1% (+55.5 to +72.0), best of 19 copies -70.6% -> ships filt; seasons won 7 of 7
+    I104 (this season's k blended) vs M1 -0.0% (-0.1 to +0.1)
+    ranges: plain 83%; I14 widening by swing: range score -0.0% (-0.7 to +0.6) -> not kept; shipped coverage 83% (thirds of reliability 83%, 85%, 83%; of swing 85%, 82%, 83%); mean width 0.2165
+    rest of season (672): filt vs average +67.5% (+57.4 to +74.4); coverage 86%
+- off_no_huddle (no-huddle rate, offense; usage): 672 checkpoints; M1 vs average +33.5% (+16.8 to +48.1); second pull vs M1 +1.6% (-1.4 to +5.2); filter vs m1 +32.0% (+11.0 to +50.8); filter q 0.030 and q_s 1.00 of the true spread
+    champion filt: vs average +54.8% (+30.8 to +69.6), best of 19 copies -57.5% -> ships filt; seasons won 7 of 7
+    I104 (this season's k blended) vs M1 +0.8% (+0.6 to +1.2)
+    ranges: plain 90%, conformal 83%; I14 widening by swing: range score -2.2% (-5.8 to +1.2) -> not kept; shipped coverage 83% (thirds of reliability 83%, 85%, 83%; of swing 87%, 86%, 78%); mean width 0.132
+    rest of season (672): filt vs average +59.0% (+29.2 to +73.7); coverage 90%
+- off_explosive (explosive-play rate, offense; efficiency): 672 checkpoints; M1 vs average +7.8% (+3.2 to +12.5); second pull vs M1 +0.3% (-1.2 to +1.7); filter (I154 factor) vs m1 +0.5% (-1.7 to +2.7), plain filter vs m1 +0.5% (-1.7 to +2.7); filter q 0.007 and q_s 0.30 of the true spread
+    champion m1: vs average +7.8% (+3.2 to +12.5), best of 19 copies -11.0% -> ships m1; seasons won 6 of 7
+    I154: phi 1.00 (mean over seasons); factor filter vs static M1 +0.5% (-1.7 to +2.7); I182: omega 0.18 of the spread, vs static M1 +0.5% (-1.8 to +2.7), vs I154 -0.1% (-0.3 to +0.2)
+    I104 (this season's k blended) vs M1 -0.6% (-1.2 to +0.0)
+    ranges: plain 82%; I14 widening by swing: range score -0.3% (-0.8 to +0.1) -> not kept; shipped coverage 82% (thirds of reliability 80%, 84%, 82%; of swing 82%, 84%, 79%); mean width 0.05714
+    rest of season (672): m1 vs average +10.5% (+1.7 to +18.6); coverage 80%
+- off_success (success rate, offense; efficiency): 672 checkpoints; M1 vs average +9.1% (+3.1 to +14.8); second pull vs M1 +2.9% (+1.9 to +3.9); filter (I154 factor) vs pull +11.7% (+7.8 to +15.1), plain filter vs pull +11.7% (+7.8 to +15.1); filter q 0.003 and q_s 0.80 of the true spread
+    champion filt_phi: vs average +22.0% (+16.2 to +27.5), best of 19 copies -26.4% -> ships filt_phi; seasons won 7 of 7
+    I154: phi 1.00 (mean over seasons); factor filter vs static M1 +14.3% (+10.6 to +17.6); I182: omega 0.00 of the spread, vs static M1 +14.3% (+10.6 to +17.6), vs I154 +0.0% (+0.0 to +0.0)
+    I104 (this season's k blended) vs M1 +0.2% (-0.1 to +0.4)
+    ranges: plain 76%; I14 widening by swing: range score +0.0% (-0.2 to +0.3) -> not kept; shipped coverage 76% (thirds of reliability 77%, 77%, 75%; of swing 77%, 77%, 75%); mean width 0.1004
+    rest of season (672): filt_phi vs average +24.7% (+16.8 to +32.2); coverage 74%
+- off_adot (aDOT, offense; usage): 672 checkpoints; M1 vs average +10.0% (+2.8 to +17.1); second pull vs M1 +2.0% (+0.9 to +3.1); filter vs pull -0.0% (-3.0 to +2.9); filter q 0.010 and q_s 0.30 of the true spread
+    champion pull: vs average +11.9% (+5.4 to +18.3), best of 19 copies +1.2% -> ships pull; seasons won 6 of 7
+    I104 (this season's k blended) vs M1 -0.0% (-0.3 to +0.3)
+    ranges: plain 81%; I14 widening by swing: range score +0.2% (-0.3 to +0.8) -> not kept; shipped coverage 81% (thirds of reliability 79%, 82%, 82%; of swing 83%, 80%, 80%); mean width 2.901
+    rest of season (672): pull vs average +17.8% (+9.6 to +25.8); coverage 79%
+- def_hitsack (hit-or-sack rate, defense (allowed or faced); mixed): 672 checkpoints; M1 vs average +6.0% (+1.7 to +10.5); second pull vs M1 -0.1% (-0.4 to +0.1); filter vs m1 -1.2% (-3.3 to +0.9); filter q 0.001 and q_s 0.30 of the true spread
+    champion m1: vs average +6.0% (+1.7 to +10.5), best of 19 copies -5.7% -> ships m1; seasons won 6 of 7
+    I104 (this season's k blended) vs M1 -0.5% (-1.2 to +0.2)
+    ranges: plain 77%; I14 widening by swing: range score -0.6% (-1.2 to -0.1) -> not kept; shipped coverage 77% (thirds of reliability 79%, 77%, 74%; of swing 74%, 79%, 77%); mean width 0.08802
+    rest of season (672): m1 vs average +7.7% (+0.4 to +14.8); coverage 75%
+- def_proe (pass rate over expected, defense (allowed or faced); faced): 672 checkpoints; M1 vs average +2.0% (-1.6 to +5.5); second pull vs M1 +0.4% (-0.2 to +1.0); filter vs m1 -0.7% (-2.4 to +1.0); filter q 0.010 and q_s 0.10 of the true spread
+    champion m1: vs average +2.0% (-1.6 to +5.5), best of 19 copies -4.4% -> ships avg; seasons won 0 of 7
+    I104 (this season's k blended) vs M1 +0.2% (-0.8 to +1.2)
+- def_shotgun (shotgun rate, defense (allowed or faced); faced): 672 checkpoints; M1 vs average +6.1% (+2.0 to +10.3); second pull vs M1 -1.1% (-2.2 to -0.0); filter vs m1 -0.5% (-3.3 to +2.5); filter q 0.024 and q_s 1.00 of the true spread
+    champion m1: vs average +6.1% (+2.0 to +10.3), best of 19 copies -1.4% -> ships m1; seasons won 5 of 7
+    I104 (this season's k blended) vs M1 -0.5% (-1.6 to +0.5)
+    ranges: plain 83%; I14 widening by swing: range score -0.2% (-0.5 to +0.2) -> not kept; shipped coverage 83% (thirds of reliability 84%, 85%, 81%; of swing 82%, 87%, 82%); mean width 0.2418
+    rest of season (672): m1 vs average +8.2% (+1.0 to +15.2); coverage 86%
+- def_no_huddle (no-huddle rate, defense (allowed or faced); faced): 672 checkpoints; M1 vs average +3.1% (+0.3 to +5.9); second pull vs M1 -0.0% (-1.1 to +1.1); filter vs m1 -4.0% (-7.0 to -1.1); filter q 0.002 and q_s 0.30 of the true spread
+    champion m1: vs average +3.1% (+0.3 to +5.9), best of 19 copies +1.1% -> ships m1; seasons won 4 of 7
+    I104 (this season's k blended) vs M1 -0.8% (-1.8 to +0.1)
+    ranges: plain 90%, conformal 87%; I14 widening by swing: range score -3.4% (-5.2 to -1.8) -> not kept; shipped coverage 87% (thirds of reliability 87%, 88%, 87%; of swing 92%, 88%, 82%); mean width 0.15
+    rest of season (672): m1 vs average +5.6% (+0.9 to +10.3); coverage 89%
+- def_explosive (explosive-play rate, defense (allowed or faced); efficiency): 672 checkpoints; M1 vs average +2.8% (-0.7 to +6.1); second pull vs M1 +0.2% (-0.7 to +1.0); filter (I154 factor) vs m1 -3.2% (-5.3 to -1.2), plain filter vs m1 -3.2% (-5.3 to -1.2); filter q 0.006 and q_s 0.30 of the true spread
+    champion m1: vs average +2.8% (-0.7 to +6.1), best of 19 copies -4.4% -> ships avg; seasons won 0 of 7
+    I154: phi 1.00 (mean over seasons); factor filter vs static M1 -3.2% (-5.3 to -1.2); I182: omega 0.10 of the spread, vs static M1 -3.2% (-5.3 to -1.2), vs I154 +0.0% (-0.0 to +0.0)
+    I104 (this season's k blended) vs M1 -0.8% (-1.7 to -0.0)
+- def_success (success rate, defense (allowed or faced); efficiency): 672 checkpoints; M1 vs average -4.4% (-7.7 to -1.0); second pull vs M1 +3.0% (+2.4 to +3.5); filter (I154 factor) vs pull +1.0% (-1.7 to +3.9), plain filter vs pull +1.0% (-1.7 to +3.9); filter q 0.007 and q_s 0.50 of the true spread
+    champion pull: vs average -1.3% (-4.1 to +1.6), best of 19 copies +0.5% -> ships avg; seasons won 0 of 7
+    I154: phi 1.00 (mean over seasons); factor filter vs static M1 +4.0% (+1.3 to +6.8); I182: omega 0.06 of the spread, vs static M1 +4.0% (+1.3 to +6.8), vs I154 -0.0% (-0.0 to +0.0)
+    I104 (this season's k blended) vs M1 -0.8% (-1.2 to -0.3)
+- def_adot (aDOT, defense (allowed or faced); mixed): 672 checkpoints; M1 vs average +5.4% (-0.4 to +10.7); second pull vs M1 +0.2% (-0.7 to +1.1); filter vs m1 -1.0% (-3.6 to +1.4); filter q 0.006 and q_s 0.30 of the true spread
+    champion m1: vs average +5.4% (-0.4 to +10.7), best of 19 copies -5.6% -> ships avg; seasons won 0 of 7
+    I104 (this season's k blended) vs M1 +0.2% (-0.4 to +0.7)

@@ -1,0 +1,53 @@
+
+== I155: a defense's faced rates less its opponents' usual (2006-2024; the usual is known before kickoff)
+
+| Defensive rate | Game split: raw, adjusted | k (plays): raw, adjusted | Season r: raw, adjusted |
+|---|---|---|---|
+| hitsack | 0.27, 0.33 | 712, 611 | 0.32, 0.32 |
+| proe | 0.21, 0.32 | 1477, 1007 | 0.30, 0.27 |
+| shotgun | 0.19, 0.32 | 1704, 978 | 0.30, 0.24 |
+| no_huddle | 0.11, 0.19 | 3391, 1925 | 0.34, 0.33 |
+| explosive | 0.26, 0.26 | 1233, 1199 | 0.34, 0.34 |
+| success | 0.38, 0.44 | 855, 674 | 0.34, 0.38 |
+| adot | 0.33, 0.36 | 593, 504 | 0.34, 0.32 |
+
+== I156: the second pull on opportunity-quality's method B (its backtest rows, seasons 2017-2024 with an earlier season to fit on)
+- everyone (27774 player-games): B with the second pull vs B -0.2% (-0.7 to +0.4); vs A +1.2% (+0.6 to +1.8); slope 0.76
+- week 1 (next season) (1779 player-games): B with the second pull vs B +0.2% (-0.7 to +1.0); vs A +1.3% (+0.4 to +2.2); slope 0.77
+- RB (10043 player-games): B with the second pull vs B -0.0% (-0.8 to +0.8); vs A +2.1% (+0.7 to +3.6); slope 0.74
+- WR (12539 player-games): B with the second pull vs B -0.1% (-1.0 to +0.7); vs A +0.8% (+0.3 to +1.4); slope 0.63
+- TE (5192 player-games): B with the second pull vs B -0.5% (-1.0 to -0.1); vs A +1.4% (-0.4 to +3.2); slope 1.11
+
+== I174: vacated-offseason's target shrink with a slope per position (TE, WR, RB) for stayers left empty, against its one shared slope (I165, shipped); stayers 2017-2024, 90% team bootstrap
+- WR: earlier rows by target season 2017 44, 2018 78, 2019 133, 2020 168, 2021 202, 2022 235, 2023 266, 2024 289; slopes 2017 0.12, 2018 0.23, 2019 0.23, 2020 0.26, 2021 0.30, 2022 0.39, 2023 0.41, 2024 0.39
+- TE: earlier rows by target season 2017 41, 2018 74, 2019 122, 2020 158, 2021 197, 2022 226, 2023 263, 2024 293; slopes 2017 1.48, 2018 1.43, 2019 1.35, 2020 1.44, 2021 1.18, 2022 1.15, 2023 1.10, 2024 1.07
+- RB: earlier rows by target season 2017 59, 2018 101, 2019 151, 2020 189, 2021 224, 2022 262, 2023 308, 2024 349; slopes 2017 0.47, 2018 0.41, 2019 0.49, 2020 0.51, 2021 0.48, 2022 0.46, 2023 0.46, 2024 0.57
+- every stayer (1404): per position vs shared -0.1% (90% -1.8% to +1.7%)
+- WR (603): per position vs shared +0.1% (90% -2.0% to +2.8%)
+- TE (371): per position vs shared -0.5% (90% -5.5% to +4.1%)
+- RB (430): per position vs shared -0.18% (90% -0.59% to +0.18%)
+- 19 copies (each season's departures moved to another team, both shrinks refit): best +0.04%; the real gain beats 14 of 19
+
+== The rest of a career (side report): players at the end of 2010-2018, the target pooled through 2024; k and the true rate's season r fit on seasons up to the end season
+
+| Measure | k (mean) | rho (mean) | Rows | Players | M1 vs raw | M1 vs average | Drift folded in vs M1 |
+|---|---|---|---|---|---|---|---|
+| adot | 18 | 0.75 | 2483 | 872 | +24.9% (+20.3 to +29.3) | +33.4% (+21.6 to +43.7) | +9.6% (-3.0 to +20.2) |
+| catch_oe | 101 | 0.54 | 2483 | 872 | +51.8% (+47.5 to +55.7) | -4.4% (-15.4 to +5.0) | +10.5% (+3.2 to +17.8) |
+| yac_oe | 110 | 0.70 | 2169 | 756 | +51.7% (+47.0 to +55.6) | +2.9% (-6.1 to +10.8) | +5.9% (-0.3 to +12.0) |
+| hitsack | 204 | 0.71 | 465 | 134 | +22.8% (+11.8 to +34.9) | +22.6% (-2.5 to +42.8) | +0.6% (-26.4 to +19.6) |
+| sack | 240 | 0.67 | 465 | 134 | +29.7% (+16.9 to +44.3) | +3.1% (-50.9 to +41.9) | +16.5% (-31.5 to +41.9) |
+| scramble | 68 | 0.95 | 465 | 134 | +18.7% (+12.0 to +25.4) | +45.6% (+24.6 to +60.8) | +12.6% (-3.0 to +27.0) |
+| qb_adot | 208 | 0.53 | 463 | 132 | +34.6% (+22.4 to +45.1) | +11.4% (-31.9 to +38.2) | +2.8% (-33.7 to +30.6) |
+| cpoe | 217 | 0.82 | 461 | 132 | +39.8% (+29.2 to +49.0) | -7.5% (-56.4 to +28.1) | +37.1% (+19.2 to +48.9) |
+
+== The live stand-ins against participation's exact counts (2016-2024)
+
+| Measure | Attempts | Season attempts r | Exact over stand-in | Season rate r (100+ exact) | I180 corrected: rate r | k stand-in, exact | M1 forecast of the exact rate: stand-in vs exact | I180 vs stand-in | Both rescaled to the exact rate's level (walk-forward, per position): stand-in vs exact | Verdict |
+|---|---|---|---|---|---|---|---|---|---|---|
+| tprr | routes | 0.988 | 1.01 | 0.951 | 0.956 (plain 0.953, 2017+) | 50, 70 | -18.6% (-22.1 to -15.0) | +9.6% (+7.8 to +11.3) | +2.5% (+0.7 to +4.4) | too poor |
+| yprr | routes | 0.988 | 1.01 | 0.974 | 0.978 (plain 0.975, 2017+) | 94, 121 | -9.7% (-11.9 to -7.5) | +6.1% (+4.8 to +7.4) | +0.7% (-0.4 to +1.9) | too poor |
+| car_per_run | run_snaps | 0.955 | 1.06 | 0.901 | 0.918 (plain 0.899, 2017+) | 4, 2 | -434.7% (-573.2 to -334.3) | +34.3% (+27.3 to +40.9) | -216.6% (-279.5 to -170.4) | too poor |
+| hits_per_snap | pass_snaps | 0.988 | 0.97 | 0.986 | 0.988 (plain 0.987, 2017+) | 134, 179 | +0.5% (-0.9 to +1.9) | -0.3% (-1.1 to +0.4) | +3.5% (+2.8 to +4.3) | close |
+| press_per_snap | pass_snaps | 0.996 | 1.00 | 0.964 | 0.969 (plain 0.964, 2017+) | 216, 346 | -1.1% (-3.2 to +0.9) | +0.0% (-0.5 to +0.5) | +1.9% (+0.8 to +2.9) | close |
+| tgt_per_cov | pass_snaps | 0.997 | 1.01 | 0.985 | 0.987 (plain 0.985, 2017+) | 74, 67 | -6.6% (-8.1 to -5.1) | +2.0% (+1.2 to +2.8) | -2.5% (-3.8 to -1.2) | too poor |

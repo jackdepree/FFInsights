@@ -9,10 +9,15 @@ from parameters fit on seasons before it:
   season, after every input was known.
 - `team_game` and `team_season`: the same for each team's side.
 
-`mean` is the rate itself (the pull target added back); `q10`-`q90` the shipped 80% range.
+`mean` is the rate itself (the pull target added back); `q10`-`q90` the shipped 80% range;
+`k` the 50% point fit on seasons before the row, `reliability` attempts / (attempts + k) (`N`
+in season, `n` next season), `swing` his games' scatter against the noise alone (shrunk toward 1;
+it widens the range only where the build kept I14's widening).
 **The ranges use expected attempts** (his attempts a game so far times 4, or last season's
-attempts next season), not the realised ones the report scored, which aren't known at `as_of`;
-the coverage of these ranges on the scored rows is reported beside them. Where a season is too
+attempts next season), not the realised ones the report scored, which aren't known at `as_of`.
+Next season the attempts usually fall, so the noise is understated: each season's ranges are
+scaled by earlier seasons' scored rows (`range_scale`, call 32), and their coverage on the
+scored rows is reported beside them. Where a season is too
 early for a rung's slope or drift term, the row falls back to M1 (column `rung`), with no drift
 term and no conformal scale.
 """
@@ -21,6 +26,7 @@ from __future__ import annotations
 
 from datetime import UTC, datetime
 
+import numpy as np
 import polars as pl
 
 from pcf.core.contract import UTC_TIME, check_output
@@ -47,12 +53,29 @@ def _range(df: pl.DataFrame, fc: str, var: str, ranges: dict | None) -> pl.DataF
             v = v * c("_scale").fill_null(1.0) ** 2
         if ranges.get("widened"):
             v = v * c("sw").fill_null(1.0)
-    sd = v.sqrt()
-    return df.with_columns(mean=c("mu") + c(fc)).with_columns(
+    return df.with_columns(mean=c("mu") + c(fc), _var=v, _fc=c(fc))
+
+
+def history_scale(f: pl.DataFrame) -> pl.DataFrame:
+    """The ranges on expected attempts, scaled for each season by earlier seasons' scored rows
+    (decision 0052, call 32): the 80th percentile of |actual - forecast| / sd there, over the
+    normal's (1 before 30 such rows). Then q10-q90 and the coverage flag."""
+    scored = c("_w").is_not_null() & (c("_w") > 0) & c("y").is_not_null()
+    z = f.select(pl.when(scored).then((c("y") - c("_fc")).abs() / c("_var").sqrt()).alias("z"))[
+        "z"
+    ].to_numpy()
+    s = f["season"].to_numpy()
+    sc = np.ones(f.height)
+    for t in np.unique(s):
+        tr = (s < t) & np.isfinite(z)
+        if tr.sum() >= 30:
+            sc[s == t] = np.quantile(z[tr], 0.8) / K.Z80
+    sd = c("_var").sqrt() * c("range_scale")
+    return f.with_columns(range_scale=pl.Series(sc)).with_columns(
         q10=c("mean") - K.Z80 * sd,
         q50=c("mean"),
         q90=c("mean") + K.Z80 * sd,
-        _cov=((c("y") - c(fc)).abs() <= K.Z80 * sd).cast(pl.Float64),
+        _cov=pl.when(scored).then(((c("y") - c("_fc")).abs() <= K.Z80 * sd).cast(pl.Float64)),
     )
 
 
@@ -134,13 +157,16 @@ def in_rows(
             else pl.lit(None, pl.Float64),
             as_of=c("next_kick"),
             train_end=pl.lit(_train_end(games, T)),
+            k=pl.lit(float(info["k"])),  # this test season's k, fit on seasons before it
+            swing=c("sw"),
         )
+        cur = cur.with_columns(reliability=c("N") / (c("N") + c("k")))
         out.append(_range(cur, "fc", "var", ranges if shipped != "avg" else None))
-    f = pl.concat(out, how="diagonal_relaxed")
+    f = history_scale(pl.concat(out, how="diagonal_relaxed").with_columns(_w=c("w")))
     keys = [ent, "game_id"]
     f = f.rename({"next_game": "game_id"})
     if ent == "gsis_id" and name.startswith(("off_", "def_")):
-        f = f.rename({"gsis_id": "team"})
+        f = f.drop("team", strict=False).rename({"gsis_id": "team"})
         keys = ["team", "game_id"]
     f = _frame(f, keys, f"{name}_next4", "in_season").with_columns(run_id=pl.lit(run_id))
     return f.select(
@@ -160,9 +186,12 @@ def in_rows(
         "rung",
         "gi",
         "N",
-        reliability=c("N") / (c("N") + info["k"]),
+        "k",
+        "reliability",
+        "swing",
+        "range_scale",
         _cov="_cov",
-        _w="w",
+        _w="_w",
     )
 
 
@@ -213,9 +242,9 @@ def _next_common(
     f = f.with_columns(train_end=c("season").replace_strict(te, return_dtype=UTC_TIME))
     f = _range(f, "fc", "var", ranges if shipped != "avg" else None)
     keys = [ent, "season"]
-    f = f.with_columns(input_season=c("season"), season=c("target"))
+    f = history_scale(f.with_columns(input_season=c("season"), season=c("target"), _w=c("w")))
     if name.startswith(("off_", "def_")):
-        f = f.rename({ent: "team"})
+        f = f.drop("team", strict=False).rename({ent: "team"})
         keys = ["team", "season"]
     f = _frame(f, keys, f"{name}_next_season", "in_season").with_columns(run_id=pl.lit(run_id))
     return f.select(
@@ -234,9 +263,12 @@ def _next_common(
         "cadence",
         "rung",
         "n",
+        "k",
         reliability=c("n") / (c("n") + c("k")),
+        swing=c("sw"),
+        range_scale="range_scale",
         _cov="_cov",
-        _w="w",
+        _w="_w",
     )
 
 
@@ -261,7 +293,7 @@ def coverage(f: pl.DataFrame) -> dict:
 
 
 def finish(f: pl.DataFrame, keys: list[str]) -> pl.DataFrame:
-    f = f.drop("_cov", "_w")
+    f = f.drop("_cov", "_w", strict=False)
     check_output(f, keys)
     return f
 

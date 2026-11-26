@@ -1,0 +1,76 @@
+== The walk-forward history (standard schema); ranges on expected attempts, their coverage on the scored rows 2018-2024
+
+| Table | Quantity | Rung shipped | Rows | Scored rows | Coverage (80%) |
+|---|---|---|---|---|---|
+| player_season | tprr_next_season | pull | 4483 | 2626 | 83% |
+| player_season | yprr_next_season | ridge | 4483 | 2626 | 81% |
+| player_season | adot_next_season | ridge | 5043 | 1948 | 79% |
+| player_season | catch_oe_next_season | m1 | 5039 | 1948 | 74% |
+| player_season | yac_oe_next_season | m1 | 4488 | 1717 | 80% |
+| player_season | car_per_run_next_season | pull | 1311 | 755 | 90% |
+| player_season | yaco_next_season | avg | 661 | 549 | 77% |
+| player_season | broken_per_touch_next_season | avg | 683 | 568 | 78% |
+| player_season | hitsack_next_season | m1 | 977 | 365 | 78% |
+| player_season | sack_next_season | m1 | 977 | 365 | 78% |
+| player_season | scramble_next_season | pull | 977 | 365 | 78% |
+| player_season | qb_adot_next_season | pull | 963 | 357 | 83% |
+| player_season | cpoe_next_season | pull | 956 | 355 | 76% |
+| player_season | pressured_next_season | avg | 384 | 316 | 79% |
+| player_season | press_per_snap_next_season | ridge | 1515 | 1237 | 80% |
+| player_season | hits_per_snap_next_season | m1 | 3020 | 1662 | 81% |
+| player_season | tgt_per_cov_next_season | pull | 3171 | 2605 | 81% |
+| player_season | catch_allowed_next_season | pull | 2380 | 1980 | 78% |
+| player_season | adot_allowed_next_season | pull | 2379 | 1979 | 80% |
+| player_season | missed_tackle_next_season | m1 | 2784 | 2307 | 79% |
+| player_game | tprr_next4 | filt | 56487 | 26551 | 80% |
+| player_game | yprr_next4 | filt | 56487 | 26551 | 81% |
+| player_game | adot_next4 | filt | 64684 | 17791 | 80% |
+| player_game | catch_oe_next4 | m1 | 64652 | 17788 | 78% |
+| player_game | yac_oe_next4 | m1 | 56995 | 15139 | 81% |
+| player_game | car_per_run_next4 | filt | 16611 | 7456 | 81% |
+| player_game | yaco_next4 | avg | 7156 | 5031 | 80% |
+| player_game | broken_per_touch_next4 | avg | 7156 | 5031 | 80% |
+| player_game | hitsack_next4 | m1 | 9400 | 2530 | 79% |
+| player_game | sack_next4 | m1 | 9400 | 2530 | 80% |
+| player_game | scramble_next4 | filt | 9400 | 2530 | 77% |
+| player_game | qb_adot_next4 | m1 | 9358 | 2512 | 80% |
+| player_game | cpoe_next4 | m1 | 9350 | 2509 | 80% |
+| player_game | pressured_next4 | m1 | 3214 | 2165 | 82% |
+| player_game | press_per_snap_next4 | m1 | 9920 | 5900 | 81% |
+| player_game | hits_per_snap_next4 | filt | 38106 | 16956 | 78% |
+| player_game | tgt_per_cov_next4 | filt | 29385 | 20287 | 81% |
+| player_game | catch_allowed_next4 | filt_phi | 25884 | 17634 | 80% |
+| player_game | adot_allowed_next4 | m1 | 25857 | 17610 | 80% |
+| player_game | missed_tackle_next4 | m1 | 29306 | 20636 | 81% |
+| team_season | off_hitsack_next_season | pull | 608 | 224 | 79% |
+| team_game | off_hitsack_next4 | pull | 8766 | 2814 | 78% |
+| team_season | off_proe_next_season | avg | 608 | 224 | 77% |
+| team_game | off_proe_next4 | filt | 8766 | 2814 | 78% |
+| team_season | off_shotgun_next_season | m1 | 608 | 224 | 88% |
+| team_game | off_shotgun_next4 | filt | 8766 | 2814 | 85% |
+| team_season | off_no_huddle_next_season | pull | 608 | 224 | 90% |
+| team_game | off_no_huddle_next4 | filt | 8766 | 2814 | 88% |
+| team_season | off_explosive_next_season | avg | 608 | 224 | 78% |
+| team_game | off_explosive_next4 | m1 | 8766 | 2814 | 80% |
+| team_season | off_success_next_season | pull | 608 | 224 | 80% |
+| team_game | off_success_next4 | filt_phi | 8766 | 2814 | 79% |
+| team_season | off_adot_next_season | pull | 608 | 224 | 86% |
+| team_game | off_adot_next4 | pull | 8766 | 2814 | 79% |
+| team_season | def_hitsack_next_season | avg | 608 | 224 | 78% |
+| team_game | def_hitsack_next4 | m1 | 8766 | 2814 | 79% |
+| team_season | def_proe_next_season | avg | 608 | 224 | 76% |
+| team_game | def_proe_next4 | avg | 8766 | 2814 | 76% |
+| team_season | def_shotgun_next_season | m1 | 608 | 224 | 89% |
+| team_game | def_shotgun_next4 | m1 | 8766 | 2814 | 84% |
+| team_season | def_no_huddle_next_season | avg | 608 | 224 | 91% |
+| team_game | def_no_huddle_next4 | m1 | 8766 | 2814 | 92% |
+| team_season | def_explosive_next_season | pull | 608 | 224 | 81% |
+| team_game | def_explosive_next4 | avg | 8766 | 2814 | 80% |
+| team_season | def_success_next_season | avg | 608 | 224 | 80% |
+| team_game | def_success_next4 | avg | 8766 | 2814 | 77% |
+| team_season | def_adot_next_season | avg | 608 | 224 | 80% |
+| team_game | def_adot_next4 | avg | 8766 | 2814 | 80% |
+- player_game: 538,808 rows, 20 quantities, seasons 2007-2024
+- player_season: 46,674 rows, 20 quantities, seasons 2007-2025
+- team_game: 122,724 rows, 14 quantities, seasons 2007-2024
+- team_season: 8,512 rows, 14 quantities, seasons 2007-2025

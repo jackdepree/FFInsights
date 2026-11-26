@@ -2,9 +2,11 @@
 
     python -m pcf.experts.stabilization.run            # the report, the checks, the history, MLflow
     python -m pcf.experts.stabilization.run --no-log   # the same without the MLflow attempt
+    python -m pcf.experts.stabilization.run --history-only  # the history again from the saved
+                                                            # verdicts and reports
 
-Writes `projects/stabilization/build/{players,teams,sides,leakage,history}.txt` and
-`verdicts.json`, and (logged) `outputs/stabilization/<run_id>/{player_game,player_season,
+Writes `projects/stabilization/build/{players,teams,sides,leakage,history}.txt`,
+and `verdicts.json`, and (logged) `outputs/stabilization/<run_id>/{player_game,player_season,
 team_game,team_season}.parquet`. The 2025 vault stays closed: no 2025 outcome is read.
 """
 
@@ -118,7 +120,15 @@ def main(argv: Sequence[str] | None = None) -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-log", action="store_true", help="no MLflow attempt, no saved history")
     ap.add_argument("--copies", type=int, default=K.COPIES)
+    ap.add_argument(
+        "--history-only",
+        action="store_true",
+        help="skip the report and the checks: rebuild the history from the saved verdicts",
+    )
     args = ap.parse_args(argv)
+    if args.history_only:
+        _history_only(args.no_log)
+        return
     res = Rp.run_all(args.copies)
     inp = res["inputs"]
     side = Rp.Out("sides")
@@ -134,9 +144,28 @@ def main(argv: Sequence[str] | None = None) -> None:
     leak.save()
     verdicts = {k: _slim(res[k]) for k in ("next", "in", "teams_next", "teams_in")}
     (K.report_dir() / "verdicts.json").write_text(json.dumps(verdicts, indent=1), encoding="utf-8")
-    hist_out = Rp.Out("history")
     metrics = {**res["out_players"].metrics, **res["out_teams"].metrics}
-    if args.no_log:
+    _log_history(inp, res, metrics, res["leakage"]["passed"], args.copies, args.no_log)
+
+
+def _history_only(no_log: bool) -> None:
+    """The history again, from the verdicts and the leakage result a full run saved; the metrics
+    are the verdicts' gains and coverages under the report's keys."""
+    base = K.report_dir()
+    res = json.loads((base / "verdicts.json").read_text(encoding="utf-8"))
+    metrics = {}
+    for sec, pre in (("next", "next"), ("teams_next", "next"), ("in", "in"), ("teams_in", "in")):
+        for name, v in res[sec].items():
+            metrics |= {f"{pre}_{name}_{k}": g[0] for k, g in v["gains"].items()}
+            if "coverage" in v["ranges"]:
+                metrics[f"{pre}_{name}_coverage"] = v["ranges"]["coverage"]
+    passed = "all passed: True" in (base / "leakage.txt").read_text(encoding="utf-8")
+    _log_history(Rp.W.Inputs(), res, metrics, passed, K.COPIES, no_log)
+
+
+def _log_history(inp, res: dict, metrics: dict, passed: bool, copies: int, no_log: bool) -> None:
+    hist_out = Rp.Out("history")
+    if no_log:
         history(inp, res, "no-log", hist_out)
         hist_out.save()
         return
@@ -148,7 +177,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         train_end=train_end,
         name="stabilization v1",
         params={
-            "copies": args.copies,
+            "copies": copies,
             "test": "2018-2024",
             "measures": len(K.MEASURES),
             "team_measures": len(K.TEAM_MEASURES),
@@ -162,7 +191,7 @@ def main(argv: Sequence[str] | None = None) -> None:
         for k, v in tabs.items():
             v.write_parquet(folder / f"{k}.parquet")
         tracking.log_metrics(metrics)
-        tracking.log_checks({"leakage": res["leakage"]["passed"]})
+        tracking.log_checks({"leakage": passed})
         for name in ("players", "teams", "sides", "leakage", "history"):
             tracking.log_text(
                 (K.report_dir() / f"{name}.txt").read_text(encoding="utf-8"), f"{name}.txt"

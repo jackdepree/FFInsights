@@ -11,6 +11,7 @@ import pytest
 
 from pcf.experts.stabilization import drift as F
 from pcf.experts.stabilization import evaluate as E
+from pcf.experts.stabilization import history as Hs
 from pcf.experts.stabilization import inseason as I
 from pcf.experts.stabilization import opponents as O
 from pcf.experts.stabilization import rates as R
@@ -219,3 +220,20 @@ def test_gain_and_its_interval():
     assert g.gain > 0.8 and g.clear and not g.worse
     assert E.gain(f, "bad", "bad", seed=1).gain == pytest.approx(0.0)
     assert E.sse_gain(f, "good", "bad") == pytest.approx(g.gain)
+
+
+def test_history_scale_uses_earlier_seasons_only():
+    rng = np.random.default_rng(3)
+    n = 400
+    season = np.repeat([2018, 2019, 2020], n)
+    y = rng.normal(scale=2.0, size=3 * n)  # the misses are twice the stated sd
+    f = pl.DataFrame({"season": season, "y": y, "_fc": 0.0, "_var": 1.0, "mean": 0.0, "_w": 1.0})
+    out = Hs.history_scale(f)
+    sc = out.group_by("season").agg(pl.col("range_scale").first()).sort("season")
+    assert sc["range_scale"][0] == pytest.approx(1.0)  # nothing earlier
+    assert sc["range_scale"][1] == pytest.approx(2.0, rel=0.15)
+    f2 = f.with_columns(y=pl.when(pl.col("season") == 2020).then(99.0).otherwise(pl.col("y")))
+    out2 = Hs.history_scale(f2)  # a later season's misses change no earlier scale
+    np.testing.assert_allclose(out2["range_scale"].to_numpy(), out["range_scale"].to_numpy())
+    cov = out.filter(pl.col("season") > 2018)["_cov"].mean()
+    assert 0.74 < cov < 0.86

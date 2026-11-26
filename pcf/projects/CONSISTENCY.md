@@ -385,3 +385,51 @@ Per player-season, centred by the position's mean that season (`projects/stabili
 Team tendencies (the same file, centred by the season's league rate):
 - **Offense:** shotgun (k 68 plays), no-huddle (72) and pass rate over expected (194) are traits that also drift in-season (filter +10% to +37%).
 - **Defense:** pass rate over expected, shotgun and no-huddle faced (k 1,477-3,391) are mostly the schedule: noise for the defense itself until read through its opponents (I155).
+
+## Player and team rates, the build (stabilization's build, 2026-11-26)
+
+The build's walk-forward numbers for the rates above (`projects/stabilization/RESULTS.md`, `build/players.txt`, `build/teams.txt`; decision 0052). k is refit each season on earlier seasons (here the 2006-2024 fit); **next season** is the shipped rung against the position's average (targets 2018-2024); **next 4 games** the same after games 4, 8 and 12. Every rate is still a trait (the exploration's season r).
+
+| Measure | k (build) | Shipped next season | vs the average | Shipped next 4 games | vs the average |
+|---|---|---|---|---|---|
+| `tprr` | 48 | the pull | +47.7% | the filter | +45.6% |
+| `yprr` | 91 | the ridge | +38.7% | the filter | +30.1% |
+| `adot` | 17 | the ridge | +35.0% | the filter | +30.2% |
+| `catch_oe` | 136 | M1 | +3.6% | M1 | +2.0% |
+| `yac_oe` | 94 | M1 | +8.4% | M1 | +6.3% |
+| `car_per_run` | 4 | the pull | +70.4% | the filter | +79.7% |
+| `yaco` | 149 | the average (M1 ties, +3.6%) | 0 | the average (ties, +4.1%) | 0 |
+| `broken_per_touch` | 255 | the average (the pull ties, +2.7%) | 0 | the average (ties, -1.0%) | 0 |
+| `hitsack` | 176 | M1 | +30.9% | M1 | +30.5% |
+| `sack` | 269 | M1 | +17.2% | M1 | +16.7% |
+| `scramble` | 69 | the pull | +54.2% | the filter | +52.4% |
+| `qb_adot` | 207 | the pull | +13.9% | M1 | +15.8% |
+| `cpoe` | 242 | the pull | +12.3% | M1 | +11.8% |
+| `pressured` | 215 | the average (M1 ties, +11.8%) | 0 | M1 | +18.9% |
+| `press_per_snap` | 215 | the ridge | +18.7% | M1 | +14.4% |
+| `hits_per_snap` | 132 | M1 | +34.2% | the filter | +24.8% |
+| `tgt_per_cov` | 74 | the pull | +54.1% | the filter | +49.8% |
+| `catch_allowed` | 129 | the pull | +2.1% | the filter | +2.6% |
+| `adot_allowed` | 33 | the pull | +11.8% | M1 | +11.6% |
+| `missed_tackle` | 220 | M1 | +5.1% | M1 | +2.6% |
+
+`tprr`, `yprr`, `car_per_run` and `tgt_per_cov` in season use live stand-ins for participation's counts (routes, run snaps, pass snaps; stabilization#F128). Their k here is the stand-in's. Against participation's exact counts, the stand-ins for routes and run snaps are too poor to read as participation's rate.
+
+**Team sides** (centred by the season's league rate; teams resampled):
+- **Offense:** shotgun, no-huddle, pass rate over expected and success rate drift in season: the filter beats static by +28%, +32%, +12% and +12%. Next season, pass rate over expected and explosive rate tie the league average.
+- **Defense:** the faced tendencies and the efficiency allowed mostly tie the league average, in season and next season. The exception is the explosive rate allowed next season (+9.7%).
+
+**A defense's faced rates, read through its opponents (I155, a description; stabilization#F129).** Each game's faced rate, less the opponent's usual offensive rate (the opponent's earlier games that season, plus last season's pulled rate worth k plays), 2006-2024:
+
+| Defensive rate | Game split: raw, adjusted | k (plays): raw, adjusted | Season r: raw, adjusted | Verdict |
+|---|---|---|---|---|
+| hit-or-sack | 0.27, 0.33 | 712, 611 | 0.32, 0.32 | trait (the defense's part repeats within a season; the forecast is untested) |
+| pass rate over expected faced | 0.21, 0.32 | 1,477, 1,007 | 0.30, 0.27 | trait; adjusting sharpens it game to game, not season to season |
+| shotgun faced | 0.19, 0.32 | 1,704, 978 | 0.30, 0.24 | trait, as above |
+| no-huddle faced | 0.11, 0.19 | 3,391, 1,925 | 0.34, 0.33 | weak; mostly the opponent |
+| explosive allowed | 0.26, 0.26 | 1,233, 1,199 | 0.34, 0.34 | trait; the opponent adds nothing |
+| success allowed | 0.38, 0.44 | 855, 674 | 0.34, 0.38 | trait |
+| aDOT allowed | 0.33, 0.36 | 593, 504 | 0.34, 0.32 | trait |
+
+Whether the adjusted rates forecast next game's faced rates is I183.
+
