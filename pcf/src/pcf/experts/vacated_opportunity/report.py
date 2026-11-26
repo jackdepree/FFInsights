@@ -79,7 +79,7 @@ def ladder(W: dict[str, pl.DataFrame]) -> dict:
                            ("flagged and he played (false alarms)", c("flag_pool") & ~Lad.scored(f)),
                            ("absent but not flagged (surprises)", Lad.scored(f) & ~c("flag_pool")),
                            ("every row (does it hurt elsewhere?)", pl.lit(True))):  # fmt: skip
-            s2 = f.filter(cond)
+            s2 = f.filter(cond & c("played"))
             if m == "carry":
                 s2 = s2.filter(c("group") == "RB")
             out(f"    {name:52} {s2.height:7,}  {K.fmt_gain(_gain(s2, 'f0', 'f_pair'))}")
@@ -265,3 +265,95 @@ def sp_diag(v: np.ndarray):
     import scipy.sparse as sp
 
     return sp.diags(v)
+
+
+# ---------------------------------------------------------------- I160 and I164
+def ideas(W: dict[str, pl.DataFrame]) -> None:
+    from pcf.experts.vacated_opportunity import data as D
+    from pcf.experts.vacated_opportunity import rates as R
+
+    out = K.Report("live_ideas")
+    out("== I160: the forecast change recalibrated by a slope fit on earlier seasons' scored rows")
+    for m in W:
+        f = forecast(m)
+        warm = full(W[m], trees=False).filter(c("season").is_in([2015, 2016]))
+        allr = pl.concat([warm, f], how="diagonal_relaxed")
+        sc = allr.filter(Lad.scored(allr))
+        if m == "carry":
+            sc = sc.filter(c("group") == "RB")
+        y, b, fp, s_ = (sc[x].to_numpy() for x in ("y", "f0", "f_pair", "season"))
+        cal = fp.copy()
+        ks = []
+        for s in SC:
+            tr = s_ < s
+            k = Lad.slope(y[tr], b[tr], fp[tr])
+            ks.append(round(k, 2))
+            te = s_ == s
+            cal[te] = np.clip(b[te] + k * (fp[te] - b[te]), 0, 1)
+        sc = sc.with_columns(f_cal=pl.Series(cal)).filter(c("season").is_in(SC))
+        out(f"  {m}: slopes by season {ks}; recalibrated vs the champion {K.fmt_gain(_gain(sc, 'f_pair', 'f_cal'))}")
+    out("\n== I164: the same-group snap rate in the first game of an absence spell against its later games")
+    pg, tg = D.player_games(), D.team_games()
+    ab = R.absences(pg, tg).sort("j", "team", "season", "week")
+    order = tg.select("team", "season", "week").unique().sort("team", "season", "week").with_columns(
+        gi=c("week").rank("ordinal").over("team", "season"))
+    ab = ab.join(order, on=["team", "season", "week"]).with_columns(
+        first=(c("gi") - c("gi").shift(1).over("j", "team", "season")).fill_null(99) != 1)
+    ab = ab.with_columns(group_j=pl.when(c("first")).then(c("group_j") + "_first").otherwise(c("group_j")))
+    out(f"  {ab.filter(c('first')).height} first games of a spell, {ab.filter(~c('first')).height} later games (2013-2024)")
+    rows = pg.filter(c("group").is_in(list(K.GROUPS)))
+    seasons = list(range(K.FIRST, K.LAST + 1))
+    blocks = [R.design(rows.filter(c("season") == s).select("gsis_id", "team", "season", "game_id", "group", "share"),
+                       ab.filter(c("season") == s), "share", "w_share", K.GROUPS) for s in seasons]  # fmt: skip
+    X, y, keys = R.stack(blocks)
+    teams_r = pl.concat([b.rows.select("team") for b in blocks])["team"].to_list()
+    teams = sorted(set(teams_r))
+    tix = {t: i for i, t in enumerate(teams)}
+    rt = np.array([tix[t] for t in teams_r])
+    ix = {k: i for i, k in enumerate(keys)}
+    base = R.ridge(X, y, 0.3)
+    wts = K.team_weights(teams, draws=100, seed=get_config().seed + 164)
+    gs = [g for g in K.GROUPS if f"{g}>{g}_first" in ix]
+    draws = []
+    for bi in range(wts.shape[0]):
+        sw = np.sqrt(wts[bi, rt])
+        bb = R.ridge(sp_diag(sw) @ X, sw * y, 0.3)
+        draws.append([bb[ix[f"{g}>{g}_first"]] - bb[ix[f"{g}>{g}"]] for g in gs])
+    draws = np.array(draws)
+    for i, g in enumerate(gs):
+        lo, hi = np.percentile(draws[:, i], [5, 95])
+        out(f"  {g}: later games {base[ix[f'{g}>{g}']]:+.3f}, first game {base[ix[f'{g}>{g}_first']]:+.3f}; "
+            f"difference 90% {lo:+.3f} to {hi:+.3f}")  # fmt: skip
+    pooled = draws[:, [gs.index(g) for g in ("WR", "RB", "OL")]].mean(1)
+    lo, hi = np.percentile(pooled, [5, 95])
+    out(f"  WR, RB and OL together: difference {np.mean(pooled):+.3f} (90% {lo:+.3f} to {hi:+.3f})")
+    out.save()
+
+
+# ---------------------------------------------------------------- the yardstick
+def yardstick(W: dict[str, pl.DataFrame], copies: int = 19) -> None:
+    from pcf.baselines.crude import yardstick as Y
+
+    out = K.Report("live_yardstick")
+    out("vacated-live on the yardstick (crude forecaster, next game), beside participation; the input is the")
+    out(f"plus-minus's change (forecast minus no change) for snap, target and carry share, 0 where none;")
+    out(f"{copies} copies shuffled within each week. A gain counts if its interval clears 0 and it beats every copy.")
+    cols = {}
+    for m in W:
+        f = forecast(m).select("gsis_id", "game_id", (c("f_pair") - c("f0")).alias(f"vac_{m}"))
+        cols[m] = f
+    frame = cols["snap"].join(cols["target"], on=["gsis_id", "game_id"], how="full", coalesce=True).join(
+        cols["carry"], on=["gsis_id", "game_id"], how="full", coalesce=True)
+    for target in ("receiving", "rushing"):
+        board = Y.load_board(target, "next")
+        fr = board.features.select(board.keys).join(frame, on=board.keys, how="left").fill_null(0.0)
+        r = Y.score_input(board, fr, "vacated-live", fill=0.0, beside=("participation",), copies=copies)
+        active = fr.filter(pl.any_horizontal(c(f"vac_{m}").abs() > 0.005 for m in W)).select(board.keys)
+        ra = Y.score_input(board, fr, "vacated-live (rows it moves)", fill=0.0, rows=active, beside=("participation",))
+        out(f"  {target}: {100 * r['alone']:+.2f}% of the squared error (90% {100 * r['alone_lo']:+.2f} to "
+            f"{100 * r['alone_hi']:+.2f}); range score {100 * r['range_alone']:+.2f}%; copies' best "
+            f"{100 * r.get('copies_max', float('nan')):+.2f}%; counts: {r.get('counts')} ({r['rows']} rows)")  # fmt: skip
+        out(f"    on the {active.height:,} rows it moves: {100 * ra['alone']:+.2f}% (90% {100 * ra['alone_lo']:+.2f} "
+            f"to {100 * ra['alone_hi']:+.2f})")  # fmt: skip
+        out.metric(f"yardstick_{target}", r["alone"])
+    out.save()

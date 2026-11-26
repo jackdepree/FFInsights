@@ -18,9 +18,10 @@ For every team-game g in week w of season s:
   for each penalty in the grid (the penalty is chosen walk-forward, from earlier seasons).
 - **The structured part** (H37): team or head-coach same-group rates, from completed seasons.
 
-Rows: every player-game in the five groups (skill groups for targets and carries) where he plays
-and has 1+ earlier game for the team that season. Whether he plays is participation's; the share
-is the share if he plays.
+Rows: every player in the five groups (skill groups for targets and carries) with 1+ earlier game
+for the team that season, forecast whether or not he then plays (`played`; `y` is null if he
+didn't). Whether he plays is participation's; the share is the share if he plays, and only games
+he played are scored.
 """
 
 from __future__ import annotations
@@ -192,9 +193,14 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
         g = inp.grids[s].filter(c("group").is_in(list(groups)))
         tops = _status(inp.tops[s].filter(c("group").is_in(list(groups))), smap)
         tops = tops.with_columns(e_sat=c("q") * c(td), e_hind=c("absent") * c(td))
-        rows = g.filter(c("played")).select(
+        # every player with an earlier game: forecast on Saturday whether or not he then plays
+        rows = g.select(
             "gsis_id", "game_id", "team", "season", "week", "group", "coach", "n", "rank",
-            "top", td, y=yname, sd=sd)  # fmt: skip
+            "top", "played", td, y=yname, sd=sd)  # fmt: skip
+        if s >= 2016:  # only players on the team's roster or reserve lists that week
+            rows = rows.join(inp.ros.select("gsis_id", "team", "season", "week"),
+                             on=["gsis_id", "team", "season", "week"], how="semi")  # fmt: skip
+        rows = rows.sort("played", descending=True).unique(["gsis_id", "game_id"], keep="first")
         earlier = inp.pg.filter((c("season") == s) & c("group").is_in(list(groups)))
         rows = _base(rows, earlier, tops, pool, ycol)
         rows = rows.with_columns(base=c("base").fill_null(c(td)), n_with=c("n_with").fill_null(0))

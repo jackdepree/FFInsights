@@ -29,7 +29,7 @@ SWING_K = 20.0  # games' weight on the group's swing (I14's shrinkage)
 
 def scored(w: pl.DataFrame) -> pl.Expr:
     m = w["measure"][0]
-    return c("absent_same") if m == "snap" else c("absent_pool")
+    return (c("absent_same") if m == "snap" else c("absent_pool")) & c("played")
 
 
 def _sse(y: np.ndarray, f: np.ndarray) -> float:
@@ -84,7 +84,7 @@ def add_trees(w: pl.DataFrame, seasons: Sequence[int], base: str = "f_pair") -> 
     from sklearn.ensemble import HistGradientBoostingRegressor
 
     w = w.with_columns(c("top").cast(pl.Float64))
-    fit_rows = w.filter((c("e_pool") > 0.01) | scored(w))
+    fit_rows = w.filter(((c("e_pool") > 0.01) | scored(w)) & c("played"))
     parts = []
     for s in seasons:
         tr = fit_rows.filter(c("season") < s)
@@ -118,7 +118,7 @@ def add_ranges(w: pl.DataFrame, fcol: str, seasons: Sequence[int], by_swing: boo
     w = w.with_columns(z=(c("y") - c(fcol)) / c("sw"))
     parts = []
     for s in seasons:
-        prior = w.filter(c("season") < s)
+        prior = w.filter((c("season") < s) & c("played"))
         qs = prior.group_by("cell").agg(
             z10=c("z").quantile(0.1), z50=c("z").quantile(0.5), z90=c("z").quantile(0.9), nz=pl.len())
         allq = prior.select(z10=c("z").quantile(0.1), z50=c("z").quantile(0.5), z90=c("z").quantile(0.9))

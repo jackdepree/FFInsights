@@ -1,0 +1,7 @@
+vacated-live on the yardstick (crude forecaster, next game), beside participation; the input is the
+plus-minus's change (forecast minus no change) for snap, target and carry share, 0 where none;
+19 copies shuffled within each week. A gain counts if its interval clears 0 and it beats every copy.
+  receiving: +0.25% of the squared error (90% +0.15 to +0.35); range score +0.19%; copies' best +0.01%; counts: True (36125 rows)
+    on the 15,000 rows it moves: +0.65% (90% +0.32 to +0.97)
+  rushing: +1.30% of the squared error (90% +0.76 to +1.85); range score +0.82%; copies' best +0.03%; counts: True (10207 rows)
+    on the 3,903 rows it moves: +4.67% (90% +2.66 to +6.53)

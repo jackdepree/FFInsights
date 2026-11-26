@@ -56,7 +56,7 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("ladder")
     s = sub.add_parser("shuffles")
     s.add_argument("--copies", type=int, default=19)
-    for name in ("checks", "yardstick", "choice", "offseason", "history"):
+    for name in ("checks", "ideas", "yardstick", "choice", "offseason", "history"):
         sub.add_parser(name)
     a = p.parse_args(argv)
     if a.command == "walks":
@@ -70,6 +70,8 @@ def main(argv: list[str] | None = None) -> None:
         Rep.shuffles(walks(), a.copies)
     elif a.command == "checks":
         Rep.checks(walks())
+    elif a.command == "ideas":
+        Rep.ideas(walks())
     elif a.command == "yardstick":
         Rep.yardstick(walks())
     elif a.command == "choice":
