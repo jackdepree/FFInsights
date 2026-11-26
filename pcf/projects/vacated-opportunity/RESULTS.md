@@ -179,3 +179,10 @@ The CEO's words: "No vetoes on decision 0050. No I think vacated live can keep t
 1. **Spot-check:** the shrink on target share (below).
 2. **Participation doesn't take vacated-live's change for now;** vacated-live keeps its snap change.
 3. **The +2.8% between-season target gain ships.**
+
+## After the merge (2026-11-26)
+
+The CEO, word for word: "Yes that is a great idea for shrinkage later. Ideas are almost always good, as long as we have the ability to test them or to at least check if we can test it and if an idea is not extremely redundant. Yes we can check it by hand as long as you walk me through it, then I can help!"
+
+- **I174** (a target shrink per position between seasons, mostly tight ends) is open in `IDEAS.md`.
+- **The first live vacated-offseason run** (after free agency and the draft, 2027) gets a hand check against week 1's roster, walked through with the CEO: which top players count as "came in", which groups count as left empty, and the stayers whose forecast moved most.
