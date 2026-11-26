@@ -1,0 +1,24 @@
+vacated-live: the no-noise test, 19 copies with absences shuffled across games within the
+team-season (training absences and the walk's), every refit redone; scored on the real rows
+  copy 1: snap +0.1%, target -0.1%, carry -0.3%
+  copy 2: snap +1.0%, target -0.1%, carry +0.3%
+  copy 3: snap +0.1%, target +0.1%, carry -0.3%
+  copy 4: snap +0.7%, target +0.1%, carry -0.5%
+  copy 5: snap +0.1%, target +0.2%, carry -0.4%
+  copy 6: snap -0.1%, target +0.1%, carry -0.1%
+  copy 7: snap +1.3%, target +0.1%, carry +1.3%
+  copy 8: snap +0.3%, target +0.0%, carry +0.7%
+  copy 9: snap +0.2%, target +0.1%, carry +0.6%
+  copy 10: snap +0.2%, target +0.2%, carry +0.4%
+  copy 11: snap +0.4%, target +0.1%, carry -0.7%
+  copy 12: snap +0.5%, target -0.3%, carry +0.1%
+  copy 13: snap -0.0%, target -0.1%, carry +0.0%
+  copy 14: snap +1.5%, target +0.2%, carry +0.7%
+  copy 15: snap +0.1%, target +0.0%, carry -0.1%
+  copy 16: snap +0.5%, target -0.1%, carry -0.2%
+  copy 17: snap +0.2%, target -0.1%, carry +0.4%
+  copy 18: snap +0.3%, target -0.1%, carry +0.1%
+  copy 19: snap +0.7%, target -0.0%, carry +0.3%
+snap: real +33.0%; copies' best +1.5%, mean +0.4%; beats 19 of 19
+target: real +8.8%; copies' best +0.2%, mean +0.0%; beats 19 of 19
+carry: real +24.3%; copies' best +1.3%, mean +0.1%; beats 19 of 19

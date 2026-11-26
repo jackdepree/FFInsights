@@ -1,0 +1,87 @@
+vacated-live: the ladder, Saturday-run knowledge, walk-forward 2017-2024 (decision 0050)
+rows: the absent player's group-mates who played (snap share: his group; target and carry share: any
+top WR, TE or RB absent; carry share scored on RBs). Gains: share of the reference's squared error.
+
+== snap share: 21,417 scored rows (alpha per season: [0.1, 0.1, 0.1, 0.1, 0.1, 0.3, 0.3, 0.3])
+  2 pooled vs 1 no change                    +17.6% (90% +16.3% to +18.9%)
+  3 + pair part vs 2                         +18.8% (90% +16.6% to +21.0%)
+  4a team rates vs 3                         -0.7% (90% -1.2% to -0.2%)
+  4b coach rates vs 3                        -0.36% (90% -0.72% to +0.02%)
+  5 trees vs 3                               +17.3% (90% +15.7% to +19.1%)
+  5' trees vs trees without absences         +2.8% (90% +2.0% to +3.7%)
+  champion (3) vs no change                  +33.0% (90% +30.2% to +35.8%)
+  hindsight ceiling vs no change             +39.7% (90% +36.5% to +42.9%)
+  by group, champion vs no change:
+    DL:  4,777 rows  +24.9% (90% +18.4% to +33.7%)   pair vs pooled +13.3% (90% +7.7% to +20.5%)
+    OL: 11,361 rows  +33.0% (90% +29.5% to +36.1%)   pair vs pooled +20.6% (90% +17.8% to +23.3%)
+    RB:  1,263 rows  +42.3% (90% +35.1% to +49.7%)   pair vs pooled +16.3% (90% +11.5% to +21.5%)
+    TE:    913 rows  +50.2% (90% +41.7% to +58.9%)   pair vs pooled +17.9% (90% +11.6% to +24.9%)
+    WR:  3,103 rows  +29.9% (90% +24.9% to +35.6%)   pair vs pooled +13.2% (90% +10.1% to +16.9%)
+  other row sets, champion vs no change:
+    flagged on Saturday (chance he plays 0.5 or less)     17,547  +38.5% (90% +35.3% to +41.8%)
+    flagged and he played (false alarms)                     392  +2.8% (90% -7.9% to +13.6%)
+    absent but not flagged (surprises)                     4,262  +6.1% (90% +5.3% to +6.9%)
+    every row (does it hurt elsewhere?)                   90,808  +17.5% (90% +15.7% to +19.3%)
+  by season, champion vs no change: 2017 +35%, 2018 +41%, 2019 +35%, 2020 +30%, 2021 +31%, 2022 +34%, 2023 +29%, 2024 +31%
+  calibration slope (actual change on forecast change): 0.95 (pooled alone 1.42; the brief's band 0.85-1.15)
+  ranges, plain                       : q10-q90 holds 76.1%, above q50 45.5%, range score 4.889
+    by group: DL 76%, OL 78%, RB 69%, TE 70%, WR 73%
+    by swing third: mid 74%, steady 86%, swingy 68%
+  ranges, widened by his swing (I14)  : q10-q90 holds 76.4%, above q50 45.1%, range score 4.880
+    by group: DL 75%, OL 79%, RB 68%, TE 70%, WR 74%
+    by swing third: mid 72%, steady 80%, swingy 78%
+  Saturday's absence source on scored rows: [('availability', 10235), ('reserve', 8103), (None, 2263), ('off_roster', 816)]
+
+== target share: 13,750 scored rows (alpha per season: [0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03, 0.03])
+  2 pooled vs 1 no change                    +7.3% (90% +6.3% to +8.2%)
+  3 + pair part vs 2                         +1.6% (90% +0.7% to +2.6%)
+  4a team rates vs 3                         -0.31% (90% -0.52% to -0.11%)
+  4b coach rates vs 3                        -0.25% (90% -0.53% to -0.02%)
+  5 trees vs 3                               +6.0% (90% +4.9% to +7.0%)
+  5' trees vs trees without absences         +0.7% (90% +0.2% to +1.2%)
+  champion (3) vs no change                  +8.8% (90% +7.6% to +10.0%)
+  hindsight ceiling vs no change             +10.1% (90% +8.7% to +11.5%)
+  by group, champion vs no change:
+    RB:  3,970 rows  +7.7% (90% +6.0% to +9.5%)   pair vs pooled +1.9% (90% +1.1% to +2.7%)
+    TE:  3,689 rows  +9.9% (90% +7.4% to +12.5%)   pair vs pooled +2.4% (90% +1.1% to +3.9%)
+    WR:  6,091 rows  +8.8% (90% +7.1% to +10.5%)   pair vs pooled +1.3% (90% -0.2% to +2.7%)
+  other row sets, champion vs no change:
+    flagged on Saturday (chance he plays 0.5 or less)     11,787  +9.7% (90% +8.3% to +11.0%)
+    flagged and he played (false alarms)                     199  -0.3% (90% -4.2% to +3.3%)
+    absent but not flagged (surprises)                     2,162  +2.9% (90% +2.2% to +3.7%)
+    every row (does it hurt elsewhere?)                   41,476  +3.4% (90% +3.0% to +3.9%)
+  by season, champion vs no change: 2017 +7%, 2018 +11%, 2019 +13%, 2020 +10%, 2021 +6%, 2022 +5%, 2023 +7%, 2024 +11%
+  calibration slope (actual change on forecast change): 0.79 (pooled alone 0.83; the brief's band 0.85-1.15)
+  ranges, plain                       : q10-q90 holds 78.3%, above q50 47.2%, range score 1.596
+    by group: RB 77%, TE 80%, WR 78%
+    by swing third: mid 77%, steady 86%, swingy 72%
+  ranges, widened by his swing (I14)  : q10-q90 holds 79.4%, above q50 47.5%, range score 1.583
+    by group: RB 80%, TE 80%, WR 78%
+    by swing third: mid 79%, steady 83%, swingy 77%
+  Saturday's absence source on scored rows: [('availability', 7664), ('reserve', 4587), ('off_roster', 776), (None, 723)]
+
+== carry share: 3,970 scored rows (alpha per season: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1])
+  2 pooled vs 1 no change                    +17.0% (90% +13.4% to +21.1%)
+  3 + pair part vs 2                         +8.8% (90% +6.1% to +11.8%)
+  4a team rates vs 3                         -0.6% (90% -1.4% to -0.0%)
+  4b coach rates vs 3                        -0.32% (90% -0.58% to -0.06%)
+  5 trees vs 3                               +2.7% (90% +1.3% to +4.1%)
+  5' trees vs trees without absences         +1.9% (90% +0.9% to +3.0%)
+  champion (3) vs no change                  +24.3% (90% +19.1% to +30.3%)
+  hindsight ceiling vs no change             +27.2% (90% +21.3% to +33.5%)
+  by group, champion vs no change:
+    RB:  3,970 rows  +24.3% (90% +19.1% to +30.3%)   pair vs pooled +8.8% (90% +6.1% to +11.8%)
+  other row sets, champion vs no change:
+    flagged on Saturday (chance he plays 0.5 or less)      3,391  +26.7% (90% +20.8% to +33.5%)
+    flagged and he played (false alarms)                      59  -0.7% (90% -19.4% to +18.7%)
+    absent but not flagged (surprises)                       638  +9.5% (90% +6.1% to +13.3%)
+    every row (does it hurt elsewhere?)                   11,915  +11.8% (90% +9.3% to +14.6%)
+  by season, champion vs no change: 2017 +33%, 2018 +24%, 2019 +21%, 2020 +27%, 2021 +26%, 2022 +20%, 2023 +23%, 2024 +16%
+  calibration slope (actual change on forecast change): 0.98 (pooled alone 1.08; the brief's band 0.85-1.15)
+  ranges, plain                       : q10-q90 holds 74.9%, above q50 43.7%, range score 3.836
+    by group: RB 75%
+    by swing third: mid 73%, steady 85%, swingy 67%
+  ranges, widened by his swing (I14)  : q10-q90 holds 76.9%, above q50 43.9%, range score 3.767
+    by group: RB 77%
+    by swing third: mid 72%, steady 81%, swingy 78%
+  Saturday's absence source on scored rows: [('availability', 2217), ('reserve', 1302), ('off_roster', 231), (None, 220)]

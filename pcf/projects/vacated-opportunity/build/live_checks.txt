@@ -1,0 +1,32 @@
+== Test 4, the obvious-input check: beside participation's next-game share if he plays (snap) and
+   opportunity-quality's next-game expected points (targets, carries); walk-forward linear stacks
+   fit on earlier seasons' scored rows (from 2016); skill groups only (the lines have no incumbent)
+  snap: 5,279 rows; the incumbent alone vs no change +47.1% (90% +42.7% to +51.8%)
+    + the expert's change: +0.20% (90% +0.04% to +0.38%)  (the incumbent plus it vs the expert alone: +16.8% (90% +14.1% to +19.6%))
+    + the trees' absence part too: -0.03% (90% -0.08% to +0.02%)
+      WR: 3,104 rows, + the change +0.20% (90% +0.01% to +0.39%)
+      TE: 913 rows, + the change +0.30% (90% -0.12% to +0.74%)
+      RB: 1,262 rows, + the change +0.13% (90% -0.20% to +0.49%)
+  target: 13,740 rows; the incumbent alone vs no change +9.9% (90% +8.6% to +11.1%)
+    + the expert's change: +4.1% (90% +3.3% to +4.7%)  (the incumbent plus it vs the expert alone: +5.2% (90% +4.1% to +6.2%))
+    + the trees' absence part too: +0.07% (90% -0.09% to +0.21%)
+      WR: 6,088 rows, + the change +3.2% (90% +2.2% to +4.2%)
+      TE: 3,687 rows, + the change +2.3% (90% +0.7% to +3.9%)
+      RB: 3,965 rows, + the change +7.9% (90% +6.8% to +9.0%)
+  carry: 3,965 rows; the incumbent alone vs no change +18.7% (90% +13.9% to +23.8%)
+    + the expert's change: +12.6% (90% +10.4% to +15.2%)  (the incumbent plus it vs the expert alone: +6.2% (90% +3.3% to +9.4%))
+    + the trees' absence part too: +0.04% (90% -0.34% to +0.41%)
+      RB: 3,965 rows, + the change +12.6% (90% +10.4% to +15.2%)
+
+== I55 (a check): a top player's first game back after missing his team's last game
+  457 skill-player games back with participation's forecast; participation's miss (actual minus forecast) +0.7 points of share; his own healthy mean to date misses by -7.8
+  his mean to date vs participation, squared error: -9.1% (90% -19.6% to +1.0%)
+  the half-and-half blend vs participation: +3.8% (90% -1.3% to +9.0%)
+
+== I143: COVID-list absences (2020-2021) against the others, same-group snap rates
+  146 top-player absences on the COVID list (codes R59/R61), of 805 in 2020-2021
+  WR: injury and other +0.155, COVID list +0.203; difference 90% +0.010 to +0.080
+  TE: injury and other +0.266, COVID list +0.304; difference 90% -0.019 to +0.105
+  RB: injury and other +0.235, COVID list +0.304; difference 90% +0.002 to +0.153
+  OL: injury and other +0.080, COVID list +0.105; difference 90% +0.011 to +0.039
+  DL: injury and other +0.084, COVID list +0.101; difference 90% -0.005 to +0.038

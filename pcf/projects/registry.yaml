@@ -629,29 +629,53 @@ projects:
   - id: vacated-opportunity
     name: Vacated opportunity
     phase: 1
-    status: brief
+    status: done
     horizon: next
     cadence: [in_season, offseason_events]  # two experts by rule m (the CEO, 2026-11-24): vacated-live and vacated-offseason below
     depends_on: [participation, opportunity-quality, roles-archetypes, availability]
-    summary: "When a player is out, who absorbs his targets and carries. The CEO's pick, 2026-11-24 (\"Ok, let's start vacated opportunity\"). Kickoff in projects/vacated-opportunity/BRIEF.md: the usual way (vacated targets split by current share or to the next man up; with-or-without splits) and two analogies (diversion ratios in merger analysis; competitive release in ecology). Waiting for the CEO's hunches. Reads roles' spaces (H101's like-for-like) and availability's chance he plays once they're built. Hunches H109-H112 with the CEO's odds (75%, 30%, 60%, 30%). Exploration run 2026-11-24 (EXPLORATION.md, go), with methods 1 and 2 and the lines included: H109 held by its pass rule (the CEO's plus-minus for all players beats the proportional split by 31% on stayers' next-season snap share, but ties no change for the skill groups; on weekly absences it beats no change by 31%); H110 failed (an absence's efficiency cost is mostly noise and doesn't forecast intake); H111 failed (role distance doesn't beat position labels; newcomers take most vacated targets); H112 failed on efficiency (+0.0095 EPA per play, interval across 0) but its side bet held (stayers grow far less where a top player came in). I125 held: where the group was left empty (an offseason-known flag) the plus-minus beats no change by 17% on skill snap share. Pass-rule verdicts; the CEO closes them. Proposed by rule m: vacated-live (in season, the weekly plus-minus) and vacated-offseason (gated on intake). The CEO closed H109 (held) and H110-H112 (failed), 2026-11-24, and split it in two (\"maybe we should have two experts one for between and the other for within seasons\"): vacated-live and vacated-offseason, one brief for both. The CEO's answers for the brief (\"The bar to beat should be no change, yes. Yes a preseason flag is good enough. Yes both experts should forecast snapshare, target share, and carry share.\"): the brief is agreed (the CEO, 2026-11-24: \"Yes I approve and yes the build should as the exploratory choice model method 3.\"), the choice model added; technical calls in decision 0046. Next: the builds, vacated-live first."
+    summary: "When a player is out, who absorbs his targets and carries. The CEO's pick, 2026-11-24 (\"Ok, let's start vacated opportunity\"). Kickoff in projects/vacated-opportunity/BRIEF.md: the usual way (vacated targets split by current share or to the next man up; with-or-without splits) and two analogies (diversion ratios in merger analysis; competitive release in ecology). Waiting for the CEO's hunches. Reads roles' spaces (H101's like-for-like) and availability's chance he plays once they're built. Hunches H109-H112 with the CEO's odds (75%, 30%, 60%, 30%). Exploration run 2026-11-24 (EXPLORATION.md, go), with methods 1 and 2 and the lines included: H109 held by its pass rule (the CEO's plus-minus for all players beats the proportional split by 31% on stayers' next-season snap share, but ties no change for the skill groups; on weekly absences it beats no change by 31%); H110 failed (an absence's efficiency cost is mostly noise and doesn't forecast intake); H111 failed (role distance doesn't beat position labels; newcomers take most vacated targets); H112 failed on efficiency (+0.0095 EPA per play, interval across 0) but its side bet held (stayers grow far less where a top player came in). I125 held: where the group was left empty (an offseason-known flag) the plus-minus beats no change by 17% on skill snap share. Pass-rule verdicts; the CEO closes them. Proposed by rule m: vacated-live (in season, the weekly plus-minus) and vacated-offseason (gated on intake). The CEO closed H109 (held) and H110-H112 (failed), 2026-11-24, and split it in two (\"maybe we should have two experts one for between and the other for within seasons\"): vacated-live and vacated-offseason, one brief for both. The CEO's answers for the brief (\"The bar to beat should be no change, yes. Yes a preseason flag is good enough. Yes both experts should forecast snapshare, target share, and carry share.\"): the brief is agreed (the CEO, 2026-11-24: \"Yes I approve and yes the build should as the exploratory choice model method 3.\"), the choice model added; technical calls in decision 0046. Built 2026-11-25/26 (decision 0050, RESULTS.md): vacated-live beats no change by 33% / 9% / 24% (snap, target, carry share) with the Saturday chance he plays; vacated-offseason, shrunk (I165), by 13.5% (snap) and 2.8% (target) over all stayers, carries keep no change; the choice model loses to the plus-minus. The CEO, 2026-11-26: \"No vetoes on decision 0050. No I think vacated live can keep the snap change for now. Yes the 2.8% between season target gain ship.\" Spot-check: the target shrink (RESULTS). Next: the merge. The CEO at the merge, 2026-11-26: no vetoes on decision 0050; vacated-live keeps its snap change (not a participation input for now); the between-season target gain (+2.8%) ships, carries keep no change; the spot-check of the target shrink kept it. Done 2026-11-26 (\"Yes you may push to GitHub after the merge\")."
 
   - id: vacated-live
     name: Vacated opportunity (within seasons)
     phase: 1
-    status: brief
+    status: done
     horizon: next
     cadence: [in_season]
     depends_on: [availability, participation]
-    summary: "Within seasons (the CEO, 2026-11-24): when a top player is Out this week, each teammate's snap, target and carry share that game, from the CEO's plus-minus for all players (H109's weekly side bet: +31% of no change's error, walk-forward, all five groups). The pooled transfer rates come from completed seasons as a prior; the pair part from this season's earlier games. Brief shared with vacated-opportunity."
+    summary: "Within seasons (the CEO, 2026-11-24): when a top player is Out this week, each teammate's snap, target and carry share that game, from the CEO's plus-minus for all players (H109's weekly side bet: +31% of no change's error, walk-forward, all five groups). The pooled transfer rates come from completed seasons as a prior; the pair part from this season's earlier games. Brief shared with vacated-opportunity. Built 2026-11-25 (decision 0050): the champion is pooled + pair (rung 3): snap +33.0%, target +8.8%, carry +24.3% against no change, 19 of 19 shuffles; team/coach rates and trees don't ship; beside participation the snap signal is already there (+0.20%), beside opportunity-quality targets +4.1% and carries +12.6%; the yardstick counts (receiving +0.25%, rushing +1.30%). The CEO at the merge, 2026-11-26: no vetoes on decision 0050; vacated-live keeps its snap change (not a participation input for now); the between-season target gain (+2.8%) ships, carries keep no change; the spot-check of the target shrink kept it. Done 2026-11-26 (\"Yes you may push to GitHub after the merge\")."
+    history_runs:
+      vacated-live: {1: 67156fc95db64f99b3880e5ed70a86cf}
+    interface:
+      inputs: player_game (roster, snaps, stats, injury), team_game (schedule, opening_coach), roster_week; availability/next_logit v1, participation/trees_week v1, opportunity-quality/eff_trees v1 (checks)
+      outputs: "outputs/vacated-live/<run_id>/history.parquet: quantities snap_share, target_share, carry_share per player-game (every rostered player in the five groups): mean (pooled + pair), q10/q50/q90 (swing-widened), no_change, change, pooled_change, expected_absent, drivers, played; unclaimed.parquet (vacated, absorbed, unclaimed per team-game-group); rates.parquet (pooled rates per refit)"
+      grain: player-game
+      interval: weekly from a player's second game for the team; 2014-2024 (scored 2017-2024)
+      cadence: in_season
+      known_at: the Saturday run (12:00 ET)
+      model: none registered yet (history pinned above)
+      how_to_use: "Read change (forecast minus no change) as a feature: for targets and carries beside opportunity-quality; for snaps participation already has it. Scored on games played only: the share if he plays"
+      feeds: participation (input candidate), opportunity-quality, player-opportunity, fantasy-projections; the yardstick
 
   - id: vacated-offseason
     name: Vacated opportunity (between seasons)
     phase: 1
-    status: brief
+    status: done
     horizon: next
     cadence: [offseason_events]
     depends_on: [vacated-live]
-    summary: "Between seasons (the CEO, 2026-11-24): after departures, free agency and the draft, each stayer's next-season snap, target and carry share. Gated on intake (I125): where no top player came in at the group, the plus-minus beats no change by 17% on skill snap share; where one did, no change wins. Reads vacated-live's pooled transfer rates from completed seasons. Brief shared with vacated-opportunity."
+    summary: "Between seasons (the CEO, 2026-11-24): after departures, free agency and the draft, each stayer's next-season snap, target and carry share. Gated on intake (I125): where no top player came in at the group, the plus-minus beats no change by 17% on skill snap share; where one did, no change wins. Reads vacated-live's pooled transfer rates from completed seasons. Brief shared with vacated-opportunity. Built 2026-11-26 (decision 0050): the in-season rates overshoot between seasons (slopes 0.46-0.77), so the change is shrunk by a slope fit on earlier pairs (I165): over all stayers snap +13.5%, target +2.8% against no change; carry ties, so carries ship no change. Where the group was left empty: snap +25.1%, target +5.1%. Season yardstick: receiving +0.59% counts. The CEO at the merge, 2026-11-26: no vetoes on decision 0050; vacated-live keeps its snap change (not a participation input for now); the between-season target gain (+2.8%) ships, carries keep no change; the spot-check of the target shrink kept it. Done 2026-11-26 (\"Yes you may push to GitHub after the merge\")."
+    history_runs:
+      vacated-offseason: {1: 8e8a9eb07789454ba63555f84a432b57}
+    interface:
+      inputs: player_game (roster, snaps, stats), roster_week (the week-1 roster), vacated-live's pooled rates refit through each season; participation/lasso_rest v1, opportunity-quality/eff_rest v1 and roles-archetypes v1 (checks)
+      outputs: "outputs/vacated-offseason/<run_id>/history.parquet: quantities snap_share, target_share, carry_share per stayer-team-season: mean (the champion: shrunk for snap and target, no change for carry), q10/q50/q90, champion, no_change, plus_minus, change (gated minus no change), intake, departed_share, last_season"
+      grain: player-team-season (stayers of a group a top player left)
+      interval: "at the event (the backtest: week 1), 2016-2024 (scored 2017-2024)"
+      cadence: offseason_events
+      known_at: "the event's roster (live: after free agency and the draft; backtest: the week-1 roster)"
+      model: none registered yet (history pinned above)
+      how_to_use: "The mean as next season's share for stayers; change as a feature for targets beside opportunity-quality. No change where a top player came in (intake)"
+      feeds: participation, player-opportunity, fantasy-projections, dynasty-values; the yardstick"
 
   - id: td-expert
     name: Touchdown expert
