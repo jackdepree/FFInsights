@@ -1,6 +1,6 @@
 # Aging: how a player changes with age, and when his career ends
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below (one exploratory), waiting for the CEO's pick.
+> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below; the CEO picked all three (2026-11-25: "All three please!"). The exploration is pre-registered in `EXPLORATION.md`.
 
 ## Why now
 
