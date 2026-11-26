@@ -1,0 +1,32 @@
+# The build's odds, written before each result (2026-11-25)
+
+Committed before the runs they describe. The ladder's first numbers (rungs 1-5 of `vacated-live`) were seen before this file; everything below was not.
+
+## Backlog ideas (their odds are already in IDEAS.md; restated here)
+
+| Idea | The test here | Odds (where they were written) |
+|---|---|---|
+| I49 | The pair part beside the pooled part, weekly, Saturday knowledge | IDEAS.md, 2026-11-15: medium, 0.5-1.5 points of share. Already seen in the ladder: +18.8% of the pooled part's error on snaps |
+| I55 | First game back: participation's miss, and whether his own healthy mean to date fixes it | IDEAS.md, 2026-11-15: high, 1.5-2.5 points of share on ~150 rows a season |
+| I143 | COVID-list absences' same-group rates against the rest | IDEAS.md, 2026-11-25: 65% they agree (interval covers 0); 25% the COVID rate is higher |
+| I14 | Ranges widened by his own swing | IDEAS.md (held for stabilization): high, coverage evens out by 5+ points across swing bands. Already seen in the ladder (it evens out; range score better for targets and carries, slightly worse for snaps) |
+| I126 | Role distance against same position, where the group was left empty | IDEAS.md, 2026-11-24: 25% Z beats P on target share; about 2% if so |
+| I136 / I122 | The role table's like-for-like in the offseason (the vacancy blend) | Claude, now: 35% that weighting the departed player's share by role-table closeness beats the group-only pooled rate for stayers where the group was left empty, on target share, interval above 0; about 1-3% if so |
+| I9 | A mover's first games: the team's unclaimed share as an input | Claude, now: 40% the offseason unclaimed share at his new group lowers participation's error on movers' first 4 games (interval above 0); about 0.2-0.5 points of share |
+
+## New ideas (Claude's, this build; numbered I160-I169)
+
+| # | Idea | Odds before the test |
+|---|---|---|
+| I160 | **Recalibrate the forecast change:** scale the plus-minus's change by a slope fit walk-forward on earlier seasons (target share's slope is 0.79) | 55% it gains on target share with an interval above 0, about 0.3% of the squared error; 20% on snap share (its slope is 0.95) |
+| I161 | **The trees' absence part beside participation:** the trees' extra over trees without the absence inputs (+3.2% snaps, +1.0% targets in the ladder) still adds once participation and the plus-minus's change are in | 40% on snap share with an interval above 0, about 0.5%; 25% on targets |
+| I162 | **The choice model beats the plus-minus on targets in season** (method 3, nested logit with groups as nests, fit on completed seasons' plays with who was on the field) | 25% it beats the plus-minus's target-share change on the scored rows with an interval above 0; 20% on carries; 80% it beats no change |
+| I163 | **The nests matter:** the choice model's same-group nest parameters are below 1 (closer substitutes within a group), with an interval clear of 1 | 75% for WR and TE together; 60% for RB |
+
+## The brief's tests (pass rules from BRIEF.md; Claude's odds now)
+
+- **No noise, `vacated-live`:** beats 19 of 19 shuffled copies on each share: 95% each.
+- **The obvious-input check:** the plus-minus's change still lowers the squared error beside participation's share (snaps) with an interval above 0: 85%; beside opportunity-quality's expected points (targets): 80%; carries 80%.
+- **The yardstick, next game:** the change counts on receiving yards beside participation (interval above 0, beats 19 copies): 45%; rushing: 45%. Expected size 0.1-0.3% of the squared error.
+- **`vacated-offseason`, where the group was left empty:** beats no change on skill snap share with the week-1 roster's intake flag (interval above 0): 60%; on target share 55%; carry share 40%; the lines' snap share 75%. The gated forecast beats no change over all stayers: 55%.
+- **The offseason yardstick (season yards):** counts on receiving or rushing: 25%.
