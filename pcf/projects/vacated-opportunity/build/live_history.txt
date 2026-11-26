@@ -1,0 +1,4 @@
+history: C:\Users\jacka\Documents\GitHub\FFInsights\pcf\data\outputs\vacated-live\67156fc95db64f99b3880e5ed70a86cf\history.parquet (224,713 rows; 173,760 played)
+run 67156fc95db64f99b3880e5ed70a86cf
+unclaimed: 6,489 team-game-groups; mean vacated 0.555, absorbed 0.350, unclaimed 0.204
+the transfer rates through 2024 (same group): snap WR +0.164, snap TE +0.280, snap RB +0.249, snap OL +0.083, snap DL +0.090, target WR +0.168, target TE +0.194, target RB +0.216, carry WR +0.012, carry TE +0.000, carry RB +0.267

@@ -235,6 +235,7 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
             (c("absent").filter(same) > 0).any().alias("absent_same"),
             (c("q").filter(same_pool) >= 0.5).any().alias("flag_pool"),
             c("p_src").filter(same_pool & (c("q") > 0.05)).first().alias("p_src"),
+            c("j").filter(c("e_sat") > 0.02).str.join(",").alias("drivers"),
         ]
         if structured:
             agg += [(c("rate_team") * c("e_sat")).sum().alias("d_team"),

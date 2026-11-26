@@ -357,3 +357,82 @@ def yardstick(W: dict[str, pl.DataFrame], copies: int = 19) -> None:
             f"to {100 * ra['alone_hi']:+.2f})")  # fmt: skip
         out.metric(f"yardstick_{target}", r["alone"])
     out.save()
+
+
+# ---------------------------------------------------------------- the saved history
+LIVE = "vacated-live"
+
+
+def unclaimed(f: pl.DataFrame, tops: pl.DataFrame) -> pl.DataFrame:
+    """Per team-game and group: the top players' expected absent share (snap), what the stayers'
+    forecasts absorb, and the rest, unclaimed (newcomers, call-ups, the team's lost volume)."""
+    vac = tops.with_columns(e=(1 - c("p_play")) * c("share_td")).group_by("game_id", "team", "group").agg(
+        vacated=c("e").sum())
+    absorbed = f.group_by("game_id", "team", "group").agg(absorbed=(c("f_pair") - c("f0")).sum())
+    return vac.join(absorbed, on=["game_id", "team", "group"], how="left").with_columns(
+        c("absorbed").fill_null(0.0)).with_columns(unclaimed=c("vacated") - c("absorbed")).filter(c("vacated") > 0.01)
+
+
+def history(W: dict[str, pl.DataFrame]) -> str:
+    from pcf.core import tracking
+    from pcf.core.contract import UTC_TIME, check_output
+    from pcf.data.gateway import Gateway
+    from pcf.data.timeline.moments import game_moments
+    from pcf.experts.vacated_opportunity import data as D
+    from pcf.experts.vacated_opportunity import live as L
+    from pcf.experts.vacated_opportunity import rates as R
+
+    out = K.Report("live_history")
+    mom = game_moments(Gateway().calendar, "saturday").select("game_id", as_of=c("moment").cast(UTC_TIME))
+    tg = D.team_games()
+    ends = tg.group_by("season", "week").agg(last=c("kickoff").max()).sort("season", "week")
+    ends = ends.with_columns(train_end=(c("last").shift(1).over("season") + pl.duration(hours=4)).cast(UTC_TIME))
+    parts = []
+    for m in W:
+        f = forecast(m)
+        h = f.select(
+            "gsis_id", "game_id", "season", "week", "team", "group",
+            quantity=pl.lit(K.QUANTITY[m]), mean=c("f_pair"), q10="sq10", q50="sq50", q90="sq90",
+            no_change="f0", change=c("f_pair") - c("f0"), pooled_change=c("f_pool") - c("f0"),
+            expected_absent=c("e_pool"), drivers="drivers", played="played",
+        )  # fmt: skip
+        h = h.with_columns(q10=pl.min_horizontal("q10", "mean"), q90=pl.max_horizontal("q90", "mean"))
+        h = h.with_columns(q50=c("q50").clip(c("q10"), c("q90")))
+        parts.append(h)
+    h = pl.concat(parts).join(mom, on="game_id", how="left").join(ends.select("season", "week", "train_end"),
+                                                                   on=["season", "week"], how="left")  # fmt: skip
+    h = h.with_columns(train_end=pl.coalesce(c("train_end"), c("as_of") - pl.duration(days=150)))
+    inp = L.Inputs()
+    unc = unclaimed(forecast("snap"), pl.concat([inp.tops[s] for s in SC]))
+    fits = L.pooled_fits(inp, "snap", list(range(2014, K.LAST + 2)))
+    rates = pl.concat([R.rate_table(fits, K.GROUPS, "snap")] + [
+        R.rate_table(L.pooled_fits(inp, m, list(range(2014, K.LAST + 2))), K.SKILL, m) for m in ("target", "carry")])
+    train_end = h["train_end"].max()
+    with tracking.attempt(LIVE, train_end=train_end, name="vacated-live v1 (pooled + pair)") as run:
+        rid = run.info.run_id
+        h = h.with_columns(model=pl.lit(LIVE), model_version=pl.lit("backtest"), run_id=pl.lit(rid),
+                           cadence=pl.lit("in_season"))  # fmt: skip
+        check_output(h, ["gsis_id", "game_id"])
+        folder = get_config().zone("outputs") / LIVE / rid
+        folder.mkdir(parents=True, exist_ok=True)
+        h.write_parquet(folder / "history.parquet")
+        unc.write_parquet(folder / "unclaimed.parquet")
+        rates.write_parquet(folder / "rates.parquet")
+        import mlflow
+
+        for name in ("live_ladder", "live_shuffles", "live_checks", "live_ideas", "live_yardstick"):
+            path = K.report_dir() / f"{name}.txt"
+            if path.exists():
+                mlflow.log_artifact(str(path))
+        lad = K.report_dir() / "live_ladder.txt"
+        tracking.log_metrics({"rows": float(h.height)})
+    out(f"history: {folder / 'history.parquet'} ({h.height:,} rows; {h.filter(c('played')).height:,} played)")
+    out(f"run {rid}")
+    out(f"unclaimed: {unc.height:,} team-game-groups; mean vacated {unc['vacated'].mean():.3f}, absorbed "
+        f"{unc['absorbed'].mean():.3f}, unclaimed {unc['unclaimed'].mean():.3f}")  # fmt: skip
+    out("the transfer rates through 2024 (same group): " + ", ".join(
+        f"{r['measure']} {r['group']} {r['rate']:+.3f}" for r in rates.filter(
+            (c("through") == K.LAST) & (c("group") == c("absent_group"))).iter_rows(named=True)))
+    _ = lad
+    out.save()
+    return rid
