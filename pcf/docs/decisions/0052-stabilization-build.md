@@ -110,3 +110,29 @@ The CEO, word for word: "No vetoes. The next season forecast should add the tren
 - The walk-forward slope gets 70%+ of a hindsight constant slope's gain for 8+ of the 11: 60%.
 - In season, the slopes sit within 0.95-1.05 for most rates (so the second pull has nothing to do): 70%.
 - Dropping it turns 2+ shipped next-season rates into ties with the average (they'd ship the average): 50%.
+
+## Calls after the CEO's answers (2026-11-26)
+
+35. **The trend ships as rung 4 next season** (the CEO: "The next season forecast should add the trend now"). `ridge_trend` is the ridge plus his M1's change over his last two seasons (`trend` = m1 less last season's m1, 0 where he has no earlier season), fit walk-forward like the ridge. It ships where it clears the rung that would otherwise ship (rule k), then faces the same bar (the average and 19 copies). Its range uses its own weight on M1, like the other rungs (`b_ridge_trend`). It ships for 10 of 20 player rates; teams have no ridge, so no trend.
+    - **Found on the seasons it was scored on.** I152's trend was first tested in this build, on 2018-2024, the same seasons that now choose it. The odds were written first, but the choice and the score share seasons, so it's a discovery result. **2026 is its first clean test** (2025 too, if the vault is ever opened).
+    - **What pulls it back** (to the rung below it, per rate, with no new build needed): on 2026, scored when the season ends, (a) the trend loses to the rung below it for 6+ of the 10 rates it ships for, sign only; or (b) its 80% ranges cover outside 70%-90% for 3+ of them; or (c) for a single rate, it loses to the rung below by more than its 2018-2024 gain. Any of these goes to the CEO with the numbers.
+36. **The run-snap stand-in is corrected by I180** (the CEO: "try out the cheaper fix first"; `correct.py`). Each back's run snaps (snap share × the team's runs) are multiplied by his last season's exact-over-stand-in ratio from participation, shrunk toward his position's ratio with 200 run snaps' weight. Before 2017, or with no exact count, the ratio is the position's, or 1. Last season's participation is a completed season, so this is a prior from a retrospective source (rule m), known before the season. Only carries a run snap is corrected (`CORRECTED`). The other stand-ins either tie the exact version (defense) or are off by level (routes, F128), which the pull already absorbs.
+    - **A floor, added after the first look:** run snaps are at least his carries in each game (`FLOOR`). I180 alone still left 5 of 38 lead backs above 1 for 2024 (the odds below failed), and a back can't carry on a run he isn't on the field for. This is marked as found after the result.
+    - The stand-ins report compares the plain stand-ins (`Inputs.plain`), so its verdicts are unchanged. `stabilization-retro` stays a proposal.
+37. **The code scan now allows `run.py` to read its own reports, and only that** (`checks.code_scan`: `read_text` only, every other read still fails). `run.py` reads the build's own text and JSON reports, to log them in MLflow and for `--history-only`; it never reads data. **The first two full runs ended "all passed: False"** because the scan flagged those reads, and **the build reported the leakage checks as all passed**. That was wrong: every other check passed, and the flag was a false alarm, but the report should have said so. The checks were rerun with the fix: all passed (`build/leakage.txt`), and the history's MLflow attempt now logs the true result.
+
+### The odds, scored
+
+**The trend (call 35):**
+- It clears the shipped rung for 12+ of 20: **failed**, 10 of 20. It cleared for targets and yards a route, aDOT, YAC over expected, carries a run snap, yards after contact, sack rate, pressures a pass snap, QB hits a pass snap and targets a coverage snap. For yards after contact it beats the average (+6.9%, +2.0 to +11.8), which it used to ship.
+- The history's next-season coverage stays within 74%-90% for every rate: **held**, 74%-90% (catch over expected 74%, carries a run snap 90%; run `9b0f405ff265454885dfed8b9d580a46`). Against v1's history, the ranges moved by a point at most, except carries a run snap's next 4 games (81% to 79%).
+
+**I180 (call 36):**
+- No lead back has a 2025 prior above 1: **failed for I180 alone** (5 of 38 lead backs above 1 in 2024, M1's 2025 prior up to 1.14). With the floor, **0 of 41** (top 0.99), and the shipped prior (the trend) tops out at 0.96 in the saved history.
+- At most 2 do: **failed for I180 alone** (5); held with the floor.
+- In season, the corrected rate still beats the average and its 19 copies, and the filter still beats static: **held**. Vs the average +82.1% (+75.9 to +86.5), best copy −98.4%, filter vs the pull +24.9% (+19.2 to +30.6), up from +20.1%.
+- The season rate's correlation with the exact rate stays at 0.918 or within 0.01: **held**, 0.918.
+
+**The spot-check:** scored in [`SPOT_CHECK.md`](../../projects/stabilization/SPOT_CHECK.md): 3 held (slopes steady, 70%+ of hindsight, dropping it sends rates to the average), 2 failed (6+ of 7 seasons for 6+ rates: 5; in-season slopes near 1: no).
+
+**For the CEO's veto (new):** call 35's pull-back rules, call 36's floor (added after the look) and call 37's allowance for `run.py`.

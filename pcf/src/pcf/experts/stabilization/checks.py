@@ -217,21 +217,29 @@ def code_scan(out) -> dict:
     """Check 4. Two reads are expected and named: `data.py` reads its own cache of rows it read
     through the gateway (as other experts' data modules do); `elsewhere.py` reads opportunity-
     quality's backtest cache for I156, an idea check no forecast uses; `checks.py` reads the
-    package's own source to scan it."""
+    package's own source to scan it; `run.py` reads the build's own text and JSON reports
+    (to log them in MLflow, and for `--history-only`), never data: only `read_text` is allowed
+    there (decision 0052, call 37: the first runs flagged it, and the build first misreported the
+    checks as all passed)."""
     expected = {"checks.py", "data.py", "elsewhere.py"}
+    only = {"run.py": ("read_text",)}  # files allowed these named calls only
     files = sorted(Path(__file__).parent.glob("*.py"))
     files.append(Path(Lk.__file__).with_name("stabilize.py"))
     res, ok = {}, True
     for f in files:
         gw, sp = Lk.scan_code(f.read_text(encoding="utf-8"))
-        if sp or (gw and f.name not in expected):
+        allowed = f.name in expected or (
+            f.name in only and all(any(f"{x}(" in g for x in only[f.name]) for g in gw)
+        )
+        if sp or (gw and not allowed):
             ok = False
         if gw or sp:
             res[f.name] = gw + sp
     out(
         f"- code scan of {len(files)} files: random splitters none; reads around the gateway "
         + ("; ".join(f"{k}: {', '.join(v)}" for k, v in res.items()) or "none")
-        + f" (expected: {', '.join(sorted(expected))}) -> {'pass' if ok else 'FAIL'}"
+        + f" (expected: {', '.join(sorted(expected))}; run.py read_text only) -> "
+        + ("pass" if ok else "FAIL")
     )
     return {"flags": res, "passed": ok}
 

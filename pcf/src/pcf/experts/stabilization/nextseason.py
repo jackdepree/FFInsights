@@ -232,7 +232,7 @@ def rungs(p: pl.DataFrame, others: list[str], ks: dict, cond_cols: list[str]) ->
     X_mv = np.column_stack([m1 * mv, m1 * ~mv])
     fc_mv, _ = S.walk_slopes(X_mv, y, w, tgt)
     n = p.height
-    ridge, ridge_t, b_ridge, used = (np.full(n, np.nan) for _ in range(4))
+    ridge, ridge_t, b_ridge, b_ridge_t, used = (np.full(n, np.nan) for _ in range(5))
     for t in np.unique(tgt):
         tr, te = tgt < t, tgt == t
         if tr.sum() < 100:
@@ -247,6 +247,7 @@ def rungs(p: pl.DataFrame, others: list[str], ks: dict, cond_cols: list[str]) ->
         Xt = np.column_stack([X, p["trend"].to_numpy()])
         r2, sd2 = _ridge(Xt[tr], y[tr], w[tr])
         ridge_t[te] = (Xt[te] / sd2) @ r2.coef_
+        b_ridge_t[te] = r2.coef_[0] / sd2[0]
     p = p.with_columns(
         pull=pl.Series(fc),
         b_pull=pl.Series(b),
@@ -254,9 +255,19 @@ def rungs(p: pl.DataFrame, others: list[str], ks: dict, cond_cols: list[str]) ->
         ridge=pl.Series(ridge),
         b_ridge=pl.Series(b_ridge),
         ridge_trend=pl.Series(ridge_t),
+        b_ridge_trend=pl.Series(b_ridge_t),
         n_consistent=pl.Series(used),
     )
-    cols = ["pull", "b_pull", "pull_mv", "ridge", "b_ridge", "ridge_trend", "n_consistent"]
+    cols = [
+        "pull",
+        "b_pull",
+        "pull_mv",
+        "ridge",
+        "b_ridge",
+        "ridge_trend",
+        "b_ridge_trend",
+        "n_consistent",
+    ]
     return p.with_columns(c(cols).fill_nan(None))
 
 
@@ -268,6 +279,7 @@ def ranges(p: pl.DataFrame, rung: str) -> pl.DataFrame:
         "m1": pl.lit(1.0),
         "pull": c("b_pull"),
         "ridge": c("b_ridge"),
+        "ridge_trend": c("b_ridge_trend"),
         "raw": pl.lit(1.0),
         "avg": pl.lit(0.0),
     }.get(rung, pl.lit(1.0))

@@ -41,7 +41,7 @@ PRIOR = 200.0  # I180: attempts of weight on the position's ratio
 
 
 def exact_games(inp: W.Inputs, measure: str, ex: pl.DataFrame) -> pl.DataFrame:
-    g = inp.games[measure].filter(c("season") >= 2016)
+    g = inp.plain[measure].filter(c("season") >= 2016)  # the plain stand-in, not call 36's
     col = EXACT_COL[measure]
     return g.join(
         ex.select("gsis_id", "game_id", exact=col), on=["gsis_id", "game_id"], how="left"
@@ -115,7 +115,7 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
             gg = g.with_columns(den=c(col))
             if ver == "standin":  # the live version also has 2013-2015
                 gg = pl.concat(
-                    [inp.games[m].filter(c("season") < 2016), gg.select(inp.games[m].columns)],
+                    [inp.plain[m].filter(c("season") < 2016), gg.select(inp.plain[m].columns)],
                     how="diagonal_relaxed",
                 )
             rows = R.season_rows(gg)

@@ -1,7 +1,7 @@
 
 == The leakage checks
 - known-at sanity: player rows known before kickoff 0, team rows 0 -> pass
-- code scan of 19 files: random splitters none; reads around the gateway checks.py: line 226: calls read_text(); data.py: line 106: calls read_parquet(); elsewhere.py: line 28: calls read_parquet(); run.py: line 168: calls read_text() (expected: checks.py, data.py, elsewhere.py) -> FAIL
+- code scan of 20 files: random splitters none; reads around the gateway checks.py: line 230: calls read_text(); data.py: line 106: calls read_parquet(); elsewhere.py: line 28: calls read_parquet(); run.py: line 155: calls read_text(), line 162: calls read_text(), line 197: calls read_text() (expected: checks.py, data.py, elsewhere.py; run.py read_text only) -> pass
 - yaco: 1402 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 1126 (80%) -> pass
 - broken_per_touch: 1402 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 1126 (80%) -> pass
 - pressured: 614 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 519 (85%) -> pass
@@ -17,4 +17,4 @@
 - yprr: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 750 forecasts compared, 0 differ -> pass
 - press_per_snap: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 421 forecasts compared, 0 differ -> pass
 - qb_adot: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 106 forecasts compared, 0 differ -> pass
-all passed: False
+all passed: True

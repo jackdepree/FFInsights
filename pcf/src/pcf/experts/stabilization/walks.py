@@ -13,6 +13,7 @@ import numpy as np
 import polars as pl
 
 from pcf.experts.stabilization import common as K
+from pcf.experts.stabilization import correct as Co
 from pcf.experts.stabilization import data as D
 from pcf.experts.stabilization import evaluate as E
 from pcf.experts.stabilization import inseason as I
@@ -30,6 +31,13 @@ class Inputs:
     def __init__(self) -> None:
         pg = D.player_games()
         self.games = {m.name: pg.filter(c("measure") == m.name) for m in K.MEASURES}
+        # I180's correction for the run-snap stand-in (call 36); the plain stand-ins are kept
+        # for the stand-ins' report, which compares them with participation's exact counts
+        self.plain = dict(self.games)
+        if Co.CORRECTED:
+            ex = D.exact()
+            for name, col in Co.CORRECTED.items():
+                self.games[name] = Co.corrected_games(self.games[name], ex, col)
         self.rows = {m: R.season_rows(g) for m, g in self.games.items()}
         self.cond = D.conditions()
         tg = D.team_games()
@@ -84,7 +92,7 @@ def next_rungs(
         cols = [*SHUFFLE_NEXT, *[f"o_{o}" for o in oth], *cond_cols]
         p = E.shuffled(p, [x for x in cols if x in p.columns], ("target", "pos"), seed)
     f = N.rungs(p, oth, ks, cond_cols)
-    for r in ("m1", "pull", "ridge", "avg"):
+    for r in ("m1", "pull", "ridge", "ridge_trend", "avg"):
         f = N.ranges(f, r)
     return f
 

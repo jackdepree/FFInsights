@@ -2,23 +2,23 @@
 
 | Table | Quantity | Rung shipped | Rows | Scored rows | Coverage (80%) |
 |---|---|---|---|---|---|
-| player_season | tprr_next_season | pull | 4483 | 2626 | 83% |
-| player_season | yprr_next_season | ridge | 4483 | 2626 | 81% |
-| player_season | adot_next_season | ridge | 5043 | 1948 | 79% |
+| player_season | tprr_next_season | ridge_trend | 4483 | 2626 | 84% |
+| player_season | yprr_next_season | ridge_trend | 4483 | 2626 | 81% |
+| player_season | adot_next_season | ridge_trend | 5043 | 1948 | 80% |
 | player_season | catch_oe_next_season | m1 | 5039 | 1948 | 74% |
-| player_season | yac_oe_next_season | m1 | 4488 | 1717 | 80% |
-| player_season | car_per_run_next_season | pull | 1311 | 755 | 90% |
-| player_season | yaco_next_season | avg | 661 | 549 | 77% |
+| player_season | yac_oe_next_season | ridge_trend | 4488 | 1717 | 80% |
+| player_season | car_per_run_next_season | ridge_trend | 1328 | 766 | 90% |
+| player_season | yaco_next_season | ridge_trend | 661 | 549 | 77% |
 | player_season | broken_per_touch_next_season | avg | 683 | 568 | 78% |
 | player_season | hitsack_next_season | m1 | 977 | 365 | 78% |
-| player_season | sack_next_season | m1 | 977 | 365 | 78% |
+| player_season | sack_next_season | ridge_trend | 977 | 365 | 77% |
 | player_season | scramble_next_season | pull | 977 | 365 | 78% |
 | player_season | qb_adot_next_season | pull | 963 | 357 | 83% |
 | player_season | cpoe_next_season | pull | 956 | 355 | 76% |
 | player_season | pressured_next_season | avg | 384 | 316 | 79% |
-| player_season | press_per_snap_next_season | ridge | 1515 | 1237 | 80% |
-| player_season | hits_per_snap_next_season | m1 | 3020 | 1662 | 81% |
-| player_season | tgt_per_cov_next_season | pull | 3171 | 2605 | 81% |
+| player_season | press_per_snap_next_season | ridge_trend | 1515 | 1237 | 80% |
+| player_season | hits_per_snap_next_season | ridge_trend | 3020 | 1662 | 82% |
+| player_season | tgt_per_cov_next_season | ridge_trend | 3171 | 2605 | 81% |
 | player_season | catch_allowed_next_season | pull | 2380 | 1980 | 78% |
 | player_season | adot_allowed_next_season | pull | 2379 | 1979 | 80% |
 | player_season | missed_tackle_next_season | m1 | 2784 | 2307 | 79% |
@@ -27,7 +27,7 @@
 | player_game | adot_next4 | filt | 64684 | 17791 | 80% |
 | player_game | catch_oe_next4 | m1 | 64652 | 17788 | 78% |
 | player_game | yac_oe_next4 | m1 | 56995 | 15139 | 81% |
-| player_game | car_per_run_next4 | filt | 16611 | 7456 | 81% |
+| player_game | car_per_run_next4 | filt | 16611 | 7456 | 79% |
 | player_game | yaco_next4 | avg | 7156 | 5031 | 80% |
 | player_game | broken_per_touch_next4 | avg | 7156 | 5031 | 80% |
 | player_game | hitsack_next4 | m1 | 9400 | 2530 | 79% |
@@ -71,6 +71,6 @@
 | team_season | def_adot_next_season | avg | 608 | 224 | 80% |
 | team_game | def_adot_next4 | avg | 8766 | 2814 | 80% |
 - player_game: 538,808 rows, 20 quantities, seasons 2007-2024
-- player_season: 46,674 rows, 20 quantities, seasons 2007-2025
+- player_season: 46,691 rows, 20 quantities, seasons 2007-2025
 - team_game: 122,724 rows, 14 quantities, seasons 2007-2024
 - team_season: 8,512 rows, 14 quantities, seasons 2007-2025

@@ -9,6 +9,7 @@ import numpy as np
 import polars as pl
 import pytest
 
+from pcf.experts.stabilization import correct as Co
 from pcf.experts.stabilization import drift as F
 from pcf.experts.stabilization import evaluate as E
 from pcf.experts.stabilization import history as Hs
@@ -237,3 +238,31 @@ def test_history_scale_uses_earlier_seasons_only():
     np.testing.assert_allclose(out2["range_scale"].to_numpy(), out["range_scale"].to_numpy())
     cov = out.filter(pl.col("season") > 2018)["_cov"].mean()
     assert 0.74 < cov < 0.86
+
+
+def test_run_snap_correction_uses_last_season_and_the_floor():
+    games = pl.DataFrame(
+        {
+            "gsis_id": ["a", "a", "b", "b"],
+            "game_id": ["g1", "g2", "g3", "g4"],
+            "season": [2017, 2018, 2017, 2018],
+            "pos": ["RB"] * 4,
+            "num": [10.0, 12.0, 2.0, 2.0],
+            "den": [10.0, 10.0, 10.0, 10.0],
+        }
+    )
+    exact = pl.DataFrame(
+        {
+            "gsis_id": ["a", "a", "b", "b"],
+            "game_id": ["g1", "g2", "g3", "g4"],
+            "run_snaps": [15.0, 999.0, 5.0, 999.0],  # 2018's counts can't touch 2018's ratio
+        }
+    )
+    out = Co.corrected_games(games, exact, "run_snaps", floor=False).sort("game_id")
+    r17 = out.filter(pl.col("season") == 2017)["ratio_used"].to_list()
+    assert r17 == pytest.approx([1.0, 1.0])  # no completed season before 2017 here
+    pos = 20.0 / 20.0  # the position's 2017 ratio
+    a18 = out.filter(pl.col("game_id") == "g2")["ratio_used"][0]
+    assert a18 == pytest.approx((15.0 + Co.PRIOR * pos) / (10.0 + Co.PRIOR))
+    floored = Co.corrected_games(games, exact, "run_snaps", floor=True)
+    assert (floored["den"] >= floored["num"]).all()  # never more carries than run snaps

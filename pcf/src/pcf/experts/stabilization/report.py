@@ -124,6 +124,12 @@ def next_season(inp: W.Inputs, out: Out, copies: int = K.COPIES) -> dict:
         r2 = "pull" if g["pull_m1"].clear else "m1"
         g["ridge_r2"] = E.gain(te, "ridge", r2, seed=SEED)
         champ = "ridge" if g["ridge_r2"].clear else r2
+        # rung 4 (the CEO, 2026-11-26: "The next season forecast should add the trend now";
+        # call 35): the ridge with his change over his last two seasons, kept where it
+        # clears the rung below (rule k)
+        g["trend_champ"] = E.gain(te, "ridge_trend", champ, seed=SEED)
+        below = champ
+        champ = "ridge_trend" if g["trend_champ"].clear else champ
         cp = Lad.copies(
             lambda s, p=p, oth=oth, cc=cc, ks=ks: W.next_rungs(p, oth, cc, ks, s).filter(
                 c("target").is_in(list(K.TEST))
@@ -141,7 +147,8 @@ def next_season(inp: W.Inputs, out: Out, copies: int = K.COPIES) -> dict:
             f"k {float(te['k'].mean()):.0f}; M1 vs average {g['m1_avg'].fmt()}, vs raw "
             f"{g['m1_raw'].fmt()}; second pull vs M1 {g['pull_m1'].fmt()} (slope "
             f"{float(te['b_pull'].mean()):.2f}); ridge vs {r2} {g['ridge_r2'].fmt()} "
-            f"({float(te['n_consistent'].mean()):.1f} consistent rates chosen)"
+            f"({float(te['n_consistent'].mean()):.1f} consistent rates chosen); the trend (rung 4) "
+            f"vs {below} {g['trend_champ'].fmt()}"
         )
         out(
             f"    champion {champ}: vs average {b['gain'].fmt()}, best of {copies} copies "

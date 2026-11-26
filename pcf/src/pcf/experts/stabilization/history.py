@@ -216,7 +216,12 @@ def _next_common(
     ent: str,
 ) -> pl.DataFrame:
     f = f.join(sw.select(ent, "season", "sw"), on=[ent, "season"], how="left")
-    b = {"m1": pl.lit(1.0), "pull": c("b_pull"), "ridge": c("b_ridge")}
+    b = {
+        "m1": pl.lit(1.0),
+        "pull": c("b_pull"),
+        "ridge": c("b_ridge"),
+        "ridge_trend": c("b_ridge_trend"),
+    }
 
     def base(r: str) -> pl.Expr:
         return (
@@ -227,7 +232,7 @@ def _next_common(
 
     f = f.with_columns(
         v_avg_h=c("tau2") + c("sigma2") / c("n"),
-        **{f"v_{r}_h": base(r) for r in ("m1", "pull", "ridge")},
+        **{f"v_{r}_h": base(r) for r in ("m1", "pull", "ridge", "ridge_trend")},
     )
     f = f.with_columns(
         rung=pl.when(c(shipped).is_not_null()).then(pl.lit(shipped)).otherwise(pl.lit("m1")),
