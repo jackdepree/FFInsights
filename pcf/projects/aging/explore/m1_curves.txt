@@ -1,0 +1,115 @@
+# Method 1: delta curves, the survivor fix and the age model (2026-11-25; age form: steps)
+
+Pairs of seasons s to s + 1, 2002-2024 (defense 2013-2024). Usage is a share of the team's opportunities over his roster weeks, 0 next season if he left;
+efficiency is EPA per opportunity; both centred by the position's mean that season and pulled back by k. Ages are on September 1, in whole years, 21-35 (ends pooled).
+Pairs: 17,015; players: 4,614.
+
+## The noise ceiling
+
+Next season's rate against the no-age baseline (his pulled rate times a fitted pull, plus an intercept), all seasons: the baseline's leftover spread, the part of it that
+is noise in next season's rate (sigma2 / next season's attempts; 0 for a player who left), and the rest, the true change: the room an age model has.
+
+| Position | Kind | Rows | k | Leftover spread (weighted) | Noise share | Room (true change share) |
+|---|---|---|---|---|---|---|
+| QB | usage | 1420 | 16 | 0.09481 | 5% | 95% |
+| QB | efficiency | 1106 | 190 | 0.01679 | 52% | 48% |
+| RB | usage | 2640 | 32 | 0.00764 | 8% | 92% |
+| RB | efficiency | 2039 | 306 | 0.01143 | 74% | 26% |
+| WR | usage | 3583 | 21 | 0.00447 | 9% | 91% |
+| WR | efficiency | 2809 | 171 | 0.05744 | 76% | 24% |
+| TE | usage | 1631 | 21 | 0.00270 | 8% | 92% |
+| TE | efficiency | 1347 | 155 | 0.05871 | 82% | 18% |
+| DL | usage | 2670 | 37 | 0.03954 | 6% | 94% |
+| LB | usage | 2040 | 28 | 0.07652 | 5% | 95% |
+| DB | usage | 3031 | 39 | 0.08966 | 7% | 93% |
+
+## The delta curves (chained from 0 at age 23; centred units: usage in points of share, efficiency in EPA per opportunity)
+
+Survivors only against the survivor fix. Usage: survivors (he played next season) against all, with a departure's usage at 0. Efficiency: survivors against
+ghosts (a departure's next efficiency at his position's 20th percentile that season). The still-playing column is the share who play next season at that age.
+
+- **QB** usage, survivors: 22 -0.9, 24 +1.4, 26 +0.8, 28 +1.4, 30 -4.6, 32 -7.6, 34 -11.6; with departures: 22 +12.5, 24 -7.3, 26 -35.6, 28 -56.2, 30 -85.3, 32 -111.6, 34 -133.2. Peak (survivors): 27. Still playing: 22 95%, 25 93%, 28 88%, 31 93%, 34 82%
+  - efficiency, survivors: 22 +0.004, 24 +0.010, 26 +0.002, 28 +0.010, 30 -0.000, 32 -0.029, 34 -0.046; with ghosts: 22 +0.005, 24 +0.010, 26 +0.006, 28 +0.016, 30 +0.001, 32 -0.028, 34 -0.046
+- **RB** usage, survivors: 22 -1.6, 24 +0.1, 26 -0.1, 28 -4.5, 30 -11.4, 32 -16.4, 34 -24.4; with departures: 22 +1.6, 24 -2.9, 26 -10.0, 28 -21.4, 30 -35.9, 32 -51.4, 34 -69.4. Peak (survivors): 24. Still playing: 22 87%, 25 85%, 28 79%, 31 63%, 34 75%
+  - efficiency, survivors: 22 +0.000, 24 -0.008, 26 -0.015, 28 -0.021, 30 -0.034, 32 -0.058, 34 -0.058; with ghosts: 22 +0.001, 24 -0.008, 26 -0.016, 28 -0.022, 30 -0.036, 32 -0.058, 34 -0.061
+- **WR** usage, survivors: 22 -2.5, 24 +0.4, 26 +1.0, 28 -1.1, 30 -3.7, 32 -7.2, 34 -11.8; with departures: 22 -0.7, 24 -2.0, 26 -6.1, 28 -12.7, 30 -20.0, 32 -28.6, 34 -38.5. Peak (survivors): 25. Still playing: 22 92%, 25 84%, 28 81%, 31 77%, 34 72%
+  - efficiency, survivors: 22 -0.002, 24 -0.002, 26 -0.016, 28 -0.040, 30 -0.061, 32 -0.094, 34 -0.113; with ghosts: 22 -0.001, 24 -0.003, 26 -0.019, 28 -0.044, 30 -0.068, 32 -0.100, 34 -0.128
+- **TE** usage, survivors: 22 -0.6, 24 +1.6, 26 +2.0, 28 +0.9, 30 -1.2, 32 -3.5, 34 -5.5; with departures: 22 +1.9, 24 -0.3, 26 -2.9, 28 -7.0, 30 -12.9, 32 -19.8, 34 -27.2. Peak (survivors): 25. Still playing: 22 93%, 25 88%, 28 92%, 31 78%, 34 64%
+  - efficiency, survivors: 22 +0.001, 24 -0.003, 26 -0.017, 28 -0.033, 30 -0.034, 32 -0.054, 34 -0.065; with ghosts: 22 +0.004, 24 -0.006, 26 -0.020, 28 -0.037, 30 -0.039, 32 -0.062, 34 -0.079
+- **DL** usage, survivors: 22 -5.9, 24 +1.8, 26 +6.7, 28 +3.1, 30 -2.0, 32 -12.5, 34 -25.1; with departures: 22 -0.4, 24 -2.1, 26 -11.0, 28 -26.8, 30 -44.4, 32 -72.6, 34 -111.7. Peak (survivors): 26. Still playing: 22 94%, 25 91%, 28 88%, 31 71%, 34 54%
+- **LB** usage, survivors: 22 -6.8, 24 +5.2, 26 +10.2, 28 +9.4, 30 +0.5, 32 -16.7, 34 -32.7; with departures: 22 +0.7, 24 -5.0, 26 -18.6, 28 -45.3, 30 -80.6, 32 -121.8, 34 -162.5. Peak (survivors): 26. Still playing: 22 97%, 25 92%, 28 87%, 31 81%, 34 68%
+- **DB** usage, survivors: 22 -4.4, 24 +1.6, 26 +4.1, 28 +1.3, 30 -5.8, 32 -20.5, 34 -28.2; with departures: 22 +3.8, 24 -8.2, 26 -27.1, 28 -50.9, 30 -81.1, 32 -129.1, 34 -185.7. Peak (survivors): 27. Still playing: 22 94%, 25 92%, 28 91%, 31 69%, 34 58%
+
+Ghosts against survivors, efficiency's fall from 30 to 34 (more negative: the fix makes the curve steeper): QB -0.001, RB -0.001, WR -0.009, TE -0.009
+
+## The age model against no age (walk-forward, targets 2010-2024; defense 2016-2024)
+
+| Position | Kind | Test rows | Age model against no age | 90% interval | Clear | Share of the room explained | Mixed check (player level added) against the age model |
+|---|---|---|---|---|---|---|---|
+| QB | usage | 957 | +0.41% | -1.99% to +2.76% | no | 0.4% | -0.83% (-2.79% to +1.24%) |
+| QB | efficiency | 744 | -3.81% | -7.12% to -0.71% | no | -8.2% | -5.15% (-9.35% to -1.58%) |
+| RB | usage | 1801 | +0.90% | -1.02% to +2.95% | no | 1.0% | -4.09% (-5.46% to -2.72%) |
+| RB | efficiency | 1388 | -0.34% | -1.17% to +0.41% | no | -1.3% | -4.87% (-7.15% to -2.52%) |
+| WR | usage | 2570 | +5.32% | +4.06% to +6.61% | yes | 5.9% | -4.24% (-5.28% to -3.21%) |
+| WR | efficiency | 1992 | -0.70% | -1.38% to -0.04% | no | -3.1% | -2.68% (-4.96% to -0.64%) |
+| TE | usage | 1172 | +1.79% | -0.43% to +3.87% | no | 1.9% | -2.64% (-4.57% to -0.57%) |
+| TE | efficiency | 967 | -2.81% | -4.45% to -1.31% | no | -14.0% | -3.31% (-7.43% to +0.84%) |
+| DL | usage | 2206 | +4.76% | +2.63% to +6.71% | yes | 5.1% | -2.23% (-3.39% to -1.15%) |
+| LB | usage | 1682 | +3.64% | +1.76% to +5.54% | yes | 3.8% | -1.98% (-3.58% to -0.20%) |
+| DB | usage | 2512 | +5.26% | +3.90% to +6.62% | yes | 5.7% | -3.16% (-4.17% to -2.07%) |
+
+Age against no age: clear for usage at 1 of 4 offensive positions (the bet: 4 of 4) and for efficiency at 0 of 4 (the bet: 2+).
+
+### H122: does age show more in usage than in efficiency?
+
+The share of the room (the true change) the age model explains, usage against efficiency, at each offensive position; players resampled (1,000 draws).
+
+| Position | Usage's share | Efficiency's share | Difference (90%) | Usage clearly larger |
+|---|---|---|---|---|
+| QB | 0.4% | -8.2% | +8.6% (+1.5% to +16.4%) | yes |
+| RB | 1.0% | -1.3% | +2.3% (-1.2% to +6.2%) | no |
+| WR | 5.9% | -3.1% | +9.0% (+5.7% to +12.4%) | yes |
+| TE | 1.9% | -14.0% | +15.9% (+7.8% to +28.6%) | yes |
+
+H122: usage clearly larger at 3 of 4 (the rule: 3 of 4).
+
+### H121: do positions age differently?
+
+Position-specific age steps against one shared set of steps (each position keeps its own intercept and pull), walk-forward, pooled.
+
+- usage: QB -0.42% (-1.95% to +1.20%); RB -0.05% (-1.33% to +1.16%); WR +5.07% (+3.36% to +6.77%); TE +8.75% (+4.97% to +12.84%); DL -0.20% (-1.24% to +0.82%); LB -0.40% (-1.49% to +0.59%); DB +0.61% (-0.27% to +1.48%)
+- efficiency: QB -2.79% (-4.93% to -0.78%); RB +1.88% (+0.54% to +3.10%); WR -0.56% (-1.06% to -0.04%); TE -2.04% (-3.60% to -0.52%)
+
+Roles within a position (the side bet, 2016+): age steps by roles-and-archetypes' coarse role (young, prime, old bands) on top of the position's steps.
+
+- TE usage (roles: in tight, split out): +0.26% (-1.48% to +1.88%)
+- TE efficiency (roles: split out, in tight): -1.67% (-2.92% to -0.45%)
+
+### H120: do stars age differently?
+
+A star: a top-5 PPR season at his position up to s. Never: no top-24 season (top-12 QB, TE). Star-by-age-band steps (young under 26, prime 26-29, old 30+) on top of the age model, walk-forward.
+
+| Position | Kind | Stars against the age model (90%) | Clear | Mean next-season change, stars: young, prime, old | Never: young, prime, old |
+|---|---|---|---|---|---|
+| QB | usage | +3.57% (+0.32% to +6.48%) | yes | -0.012 (48), -0.064 (77), -0.127 (167) | -0.067 (381), -0.094 (289), -0.134 (208) |
+| RB | usage | +2.82% (+0.86% to +4.74%) | yes | -0.012 (108), -0.055 (150), -0.078 (75) | -0.014 (1049), -0.031 (455), -0.032 (119) |
+| WR | usage | +1.50% (-0.13% to +3.14%) | no | -0.004 (66), -0.021 (155), -0.047 (164) | -0.011 (1580), -0.033 (741), -0.043 (165) |
+| TE | usage | +0.32% (-1.51% to +2.07%) | no | -0.010 (43), -0.022 (115), -0.038 (108) | -0.005 (587), -0.016 (371), -0.033 (104) |
+| QB | efficiency | +3.62% (+1.60% to +5.58%) | yes | +0.009 (47), +0.024 (73), +0.001 (143) | -0.003 (293), -0.017 (199), -0.040 (127) |
+| RB | efficiency | +0.04% (-0.59% to +0.64%) | no | -0.002 (107), -0.002 (134), -0.010 (49) | -0.002 (803), -0.020 (303), -0.031 (79) |
+| WR | efficiency | +0.60% (-0.09% to +1.24%) | no | +0.022 (65), +0.019 (142), -0.013 (127) | -0.008 (1237), -0.032 (529), -0.007 (90) |
+| TE | efficiency | +0.13% (-1.49% to +1.78%) | no | +0.019 (42), +0.027 (107), -0.001 (81) | -0.013 (487), -0.034 (299), -0.096 (64) |
+
+H120: stars' steps clear for 3 of 8 position-kinds.
+
+### H117 (real half): two ways to decline?
+
+Usage decliners: next season's usage at most two-thirds of this season's, at or past the position's usage peak (survivors' curve: QB 27, RB 24, WR 25, TE 25), with
+10+ opportunities in both seasons. Their efficiency change (pulled): its spread, the part noise gives, and the true spread (players resampled); then persistence: did a decliner
+who kept his efficiency (change at or above 0) keep it again in his next decline season?
+
+- QB: 153 decline seasons; spread 0.0069, noise 0.0057, true spread +0.0011 (-0.0002 to +0.0027); kept efficiency: 50%
+- RB: 342 decline seasons; spread 0.0011, noise 0.0009, true spread +0.0002 (-0.0000 to +0.0003); kept efficiency: 48%
+- WR: 361 decline seasons; spread 0.0064, noise 0.0056, true spread +0.0008 (-0.0000 to +0.0016); kept efficiency: 46%
+- TE: 172 decline seasons; spread 0.0044, noise 0.0042, true spread +0.0001 (-0.0007 to +0.0009); kept efficiency: 56%
+- Persistence, players with two decline seasons (287): kept then kept 72, kept then lost 67, lost then kept 82, lost then lost 66; odds ratio 0.87 (90% 0.59 to 1.28).

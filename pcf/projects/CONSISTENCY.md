@@ -360,3 +360,12 @@ Per player-season, centred by the position's mean that season (`projects/stabili
 Team tendencies (the same file, centred by the season's league rate):
 - **Offense:** shotgun (k 68 plays), no-huddle (72) and pass rate over expected (194) are traits that also drift in-season (filter +10% to +37%).
 - **Defense:** pass rate over expected, shotgun and no-huddle faced (k 1,477-3,391) are mostly the schedule: noise for the defense itself until read through its opponents (I155).
+
+## Per-play injury measures (aging's exploration, 2026-11-25)
+
+Player-games with 5+ involvements (dropbacks, targets, carries), 2005-2024, `pcf.validation.consistency` with the player as the unit (`projects/aging/EXPLORATION.md`, `explore/m2_consistency.txt`).
+
+| Measure | What it is | Week-to-week r (QB, RB, WR, TE) | Season-to-season r | Verdict | Helps its target? |
+|---|---|---|---|---|---|
+| `risk` | a play's chance of an injury to him, averaged over his involvements (a logistic on the play's kind, yards, a tackle, a QB hit; fit 2005-2009) | 0.36, 0.43, 0.15, 0.12 | 0.23, 0.40, 0.19, 0.09 | trait (it is his play mix) | Summed over a career, it beats age alone for next season's usage (+2.6%), but not plain mileage (+0.4%, not clear) |
+| `hurt` | named as injured on the play, per involvement | 0.00, -0.01, 0.01, 0.01 | 0.03, -0.01, 0.09, 0.13 | noise | Not tested as an input |
