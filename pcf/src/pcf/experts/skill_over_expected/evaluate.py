@@ -42,7 +42,7 @@ class Gain:
 def gain(p: pl.DataFrame, new: str, base: str, seed: int = 0, draws: int = DRAWS) -> Gain:
     q = p.drop_nulls([new, base])
     e = q.with_columns(en=c("w") * (c("y") - c(new)) ** 2, eb=c("w") * (c("y") - c(base)) ** 2)
-    g = e.group_by("gsis_id").agg(c("en").sum(), c("eb").sum())
+    g = e.group_by("gsis_id").agg(c("en").sum(), c("eb").sum()).sort("gsis_id")  # reproducible
     en, eb = g["en"].to_numpy(), g["eb"].to_numpy()
     rng = np.random.default_rng(seed)
     idx = rng.integers(0, len(en), (draws, len(en)))
@@ -52,40 +52,52 @@ def gain(p: pl.DataFrame, new: str, base: str, seed: int = 0, draws: int = DRAWS
 
 
 def scored(p: pl.DataFrame) -> pl.DataFrame:
-    """The rows every rung can score (rung 3's first fittable target season on)."""
+    """The rows every rung can score (the fitted rungs' first fittable target season on)."""
     return p.filter(c("split").is_not_null())
 
 
-def copies_best(rows: pl.DataFrame, games: pl.DataFrame, new: str, base: str,
-                shuffle: tuple[str, ...], n: int = COPIES, seed: int = 0,
-                keep: pl.DataFrame | None = None) -> list[float]:  # fmt: skip
-    """The gains of `n` shuffled copies (the walk rerun with `shuffle` moved within season and
-    group), on the real walk's scored rows (`keep`: gsis_id, season)."""
+def copies(
+    p: pl.DataFrame,
+    new: str,
+    base: str,
+    shuffle: tuple[str, ...],
+    n: int = COPIES,
+    seed: int = 0,
+    rows: pl.Series | None = None,
+) -> list[float]:
+    """The gains of `n` shuffled copies: `rungs` rerun on the walk's pairs `p` with `shuffle`
+    moved within season and group, scored on the real walk's scored rows."""
     out = []
+    keep = scored(T.rungs(p)).select("gsis_id", "season")
     for i in range(n):
-        q = T.walk(rows, games, shuffle_seed=seed + 7000 + i, shuffle=shuffle)
-        q = scored(q)
-        if keep is not None:
-            q = q.join(keep, on=["gsis_id", "season"], how="semi")
+        q = scored(T.rungs(p, shuffle, seed + 7000 + i)).join(keep, on=["gsis_id", "season"],
+                                                              how="semi")  # fmt: skip
         out.append(gain(q, new, base, draws=10).share)
     return out
 
 
 def ranges(p: pl.DataFrame, mean: str) -> pl.DataFrame:
-    """q10, q90 for each scored row from `mean`: v fit on earlier target seasons."""
+    """q10, q90 for each row from `mean`, fit on earlier target seasons: the spread
+    sqrt(v + sigma2 / w) (v: the true rate's spread left around the forecast), scaled so the
+    earlier pairs' standardized misses hold 80% (a conformal adjustment, VALIDATION §7)."""
     s = p["season"].to_numpy()
-    y, w, m = p["y"].to_numpy(), p["w"].to_numpy(), p[mean].to_numpy()
+    y, w = p["y"].to_numpy(), p["w"].to_numpy()
+    m = p[mean].cast(pl.Float64).fill_null(np.nan).to_numpy()
     s2 = p["sigma2"].to_numpy()
-    v = np.full(p.height, np.nan)
+    lo, hi = np.full(p.height, np.nan), np.full(p.height, np.nan)
     for t in np.unique(s):
         tr = (s < t) & np.isfinite(m)
-        if tr.sum() < 30:
+        te = (s == t) & np.isfinite(m)
+        if tr.sum() < 30 or te.sum() == 0:
             continue
         resid = (y[tr] - m[tr]) ** 2 - s2[tr] / w[tr]
-        v[s == t] = max(float(np.average(resid, weights=w[tr])), 1e-12)
-    sd = np.sqrt(v + s2 / w)
-    return p.with_columns(q10=pl.Series(m - Z80 * sd), q50=pl.Series(m),
-                          q90=pl.Series(m + Z80 * sd))  # fmt: skip
+        v = max(float(np.average(resid, weights=w[tr])), 1e-12)
+        z = np.abs(y[tr] - m[tr]) / np.sqrt(v + s2[tr] / w[tr])
+        scale = float(np.quantile(z, 0.8)) / Z80
+        sd = scale * np.sqrt(v + s2[te] / w[te])
+        lo[te], hi[te] = m[te] - Z80 * sd, m[te] + Z80 * sd
+    return p.with_columns(q10=pl.Series(lo).fill_nan(None), q50=pl.Series(m).fill_nan(None),
+                          q90=pl.Series(hi).fill_nan(None))  # fmt: skip
 
 
 def pinball(y: np.ndarray, q10: np.ndarray, q50: np.ndarray, q90: np.ndarray) -> np.ndarray:

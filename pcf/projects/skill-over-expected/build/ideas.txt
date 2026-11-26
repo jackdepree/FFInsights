@@ -1,0 +1,19 @@
+== I76, the movers model (two-way fixed effects, players and franchises; split-sample corrected shares of the true spread)
+  qb_cpoe         QB : 358 player-seasons, 101 players (42 who moved), 32 teams; shares of the true spread: player -5%, team -33%, together +138%; the plain fit's player share 109%
+  qb_sack_rate    QB : 358 player-seasons, 101 players (42 who moved), 32 teams; shares of the true spread: player 177%, team 63%, together -140%; the plain fit's player share 190%
+  qb_depth        QB : 358 player-seasons, 101 players (42 who moved), 32 teams; shares of the true spread: player 75%, team 20%, together +4%; the plain fit's player share 163%
+  qb_ttt          QB : 358 player-seasons, 101 players (42 who moved), 32 teams; shares of the true spread: player 125%, team 88%, together -113%; the plain fit's player share 138%
+  press_rate      DL : 1202 player-seasons, 369 players (145 who moved), 32 teams; shares of the true spread: player 100%, team 2%, together -1%; the plain fit's player share 103%
+  press_rate      OLB: 481 player-seasons, 174 players (55 who moved), 32 teams; shares of the true spread: player 102%, team 8%, together -10%; the plain fit's player share 105%
+  catch_rate      WR : 894 player-seasons, 298 players (100 who moved), 32 teams; shares of the true spread: player 101%, team 32%, together -33%; the plain fit's player share 108%
+  rb_yac          RB : 377 player-seasons, 143 players (46 who moved), 32 teams; shares of the true spread: player 132%, team 16%, together -48%; the plain fit's player share 148%
+  rb_multi_after  RB : 484 player-seasons, 175 players (57 who moved), 32 teams; shares of the true spread: player 139%, team 61%, together -100%; the plain fit's player share 138%
+  depth_against   DB : 1273 player-seasons, 471 players (150 who moved), 32 teams; shares of the true spread: player 93%, team 1%, together +5%; the plain fit's player share 98%
+  catch_allowed   DB : 1273 player-seasons, 471 players (150 who moved), 32 teams; shares of the true spread: player 92%, team 18%, together -10%; the plain fit's player share 106%
+  ol_press_rate   OL : 1427 player-seasons, 450 players (157 who moved), 32 teams; shares of the true spread: player 63%, team 69%, together -33%; the plain fit's player share 70%
+  ol_sack_rate    OL : 1427 player-seasons, 450 players (157 who moved), 32 teams; shares of the true spread: player 56%, team 61%, together -17%; the plain fit's player share 66%
+
+== I112: the QB's after-pressure part (context-retro, walk-forward) against his plain sack rate, next season's sacks per dropback; inputs 2017-2022
+  all (113 QB-seasons, targets 2020-2023): the after-pressure part alone against the plain rate -13.9% (-24.0 to -3.2); both against the plain rate -2.6% (-4.9 to -0.8)
+  movers (21 QB-seasons, targets 2020-2023): the after-pressure part alone against the plain rate +4.9% (-17.3 to +22.8); both against the plain rate +0.4% (-3.2 to +4.2)
+  stayers (92 QB-seasons, targets 2020-2023): the after-pressure part alone against the plain rate -17.1% (-27.7 to -6.9); both against the plain rate -3.1% (-5.8 to -1.0)

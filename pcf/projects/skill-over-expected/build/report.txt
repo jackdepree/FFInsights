@@ -1,0 +1,317 @@
+skill-over-expected build: 547,790 player-game trait rows, seasons 2016-2024 (PFR's charting 2018-2024); the 2025 vault closed
+
+== I90 (first, as the brief says): QB sacks per pressure on one pressure source, with an interval on share kept (a sack counted as a pressure; each season's level out)
+  2016-2022 (the old provider): 171 pairs (32 movers); repeat 0.45 (0.34 to 0.56); movers keep 99% (90% 49% to 157%)
+  2023-2024 (the new provider): 29 pairs (6 movers); repeat 0.26 (0.00 to 0.48); movers keep 196% (90% -83% to 735%)
+  QB sacks per dropback, 2016-2024: repeat 0.49; movers keep 60% (90% 18% to 106%; 42 movers)
+  a lineman's team's sacks per dropback on his dropbacks, 2016-2024: repeat 0.32; movers keep 20% (90% -15% to 54%; 143 movers)
+
+== Pass rushers: next season's sacks per on-field dropback (centred), the brief's no-noise target for them, and I91 / I170 within the pass-rusher role
+  DL roles in the input season: run defender 571, pass rusher 122, box linebacker 68
+  DL all (633 rows, target seasons 2020-2024): shrunk sacks against raw +31.2% (+26.6 to +35.1); pressures added to shrunk sacks +11.0% (+7.6 to +14.4) (copies' best +0.3%; counts: True; seasons won 5 of 5); the pair against raw past sacks +38.7% (+32.4 to +43.7)
+  DL pass-rusher role (101 rows, target seasons 2020-2024): shrunk sacks against raw +42.0% (+30.1 to +52.5); pressures added to shrunk sacks +13.0% (+5.0 to +20.8) (copies' best +0.8%; counts: True; seasons won 5 of 5); the pair against raw past sacks +48.5% (+34.5 to +60.3)
+  OLB roles in the input season: run defender 149, box linebacker 80, pass rusher 52, base defensive back 2
+  OLB all (234 rows, target seasons 2020-2024): shrunk sacks against raw +30.9% (+24.7 to +36.2); pressures added to shrunk sacks +15.2% (+8.4 to +21.4) (copies' best +2.4%; counts: True; seasons won 4 of 5); the pair against raw past sacks +40.8% (+32.9 to +47.9)
+  OLB pass-rusher role: 44 rows, too few
+  DL and OLB pass-rusher role together (145 rows): pressures added to shrunk sacks +20.1% (+13.0 to +26.7) (copies' best +1.8%; counts: True)
+
+== The ladder, every trait and group (next season's centred rate; gains are shares of the base's squared error, weighted by next season's chances; 90% from players)
+
+  press_rate DL: pressures per dropback on the field; 633 scored pairs (164 movers), target seasons 2020-2024; k 132 (per dropback on the field; a typical season's reliability 0.72)
+    rung 2 (shrunk) against rung 1 (raw): +17.2% (+13.8 to +20.5); against the position's average +40.7% (+31.2 to +48.1)
+    do his chances matter? one flat pull against raw +18.0% (+12.9 to +22.9); shrunk against the flat pull -1.0% (-3.9 to +2.0); chances shuffled (copies' best against raw) +17.8%
+    rung 2b (second pull, I156) against rung 2: +1.1% (-1.2 to +3.3) (slope 0.86); against the flat pull +0.1% (-1.2 to +1.4)
+    rung 3 (owner split) against m1: +1.8% (-0.7 to +4.3); copies' best +1.4%; counts: False (own 0.86, team change 0.26)
+    movers only (164): rung 3 against m1 +7.1% (+1.7 to +11.6); I171 as pre-registered (rung 3 as first built against rung 2) +2.4% (-1.3 to +5.6)
+    champion: m1; against the average +40.7% (+31.2 to +48.1), copies' best -41.2%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 84.5% (thirds of chances 84%, 88%, 81%); range score against the average's range +22.8%
+    owner: player (repeat 0.64, 0.59 to 0.69; movers keep 82%, 90% 68% to 95%; 189 movers)
+
+  press_rate OLB: pressures per dropback on the field; 234 scored pairs (62 movers), target seasons 2020-2024; k 132 (per dropback on the field; a typical season's reliability 0.75)
+    rung 2 (shrunk) against rung 1 (raw): +15.1% (+10.5 to +18.9); against the position's average +54.9% (+45.3 to +62.7)
+    do his chances matter? one flat pull against raw +13.3% (+10.1 to +16.0); shrunk against the flat pull +2.0% (-0.4 to +4.3); chances shuffled (copies' best against raw) +15.7%
+    rung 2b (second pull, I156) against rung 2: -0.5% (-1.2 to +0.4) (slope 1.01); against the flat pull +1.5% (-0.5 to +3.7)
+    rung 3 (owner split) against m1: -2.0% (-3.5 to -0.3); copies' best +2.8%; counts: False (own 1.01, team change 0.13)
+    movers only (62): rung 3 against m1 -7.3% (-12.6 to -1.4); I171 as pre-registered (rung 3 as first built against rung 2) -3.2% (-7.1 to +0.7)
+    champion: m1; against the average +54.9% (+45.3 to +62.7), copies' best -38.9%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 84.2% (thirds of chances 75%, 87%, 91%); range score against the average's range +28.6%
+    owner: player (repeat 0.72, 0.65 to 0.77; movers keep 95%, 90% 79% to 109%; 80 movers)
+
+  press_rate ILB: pressures per dropback on the field; 249 scored pairs (66 movers), target seasons 2020-2024; k 132 (per dropback on the field; a typical season's reliability 0.78)
+    rung 2 (shrunk) against rung 1 (raw): +21.3% (+12.5 to +28.8); against the position's average +30.0% (-16.4 to +55.7)
+    do his chances matter? one flat pull against raw +22.6% (-5.2 to +40.4); shrunk against the flat pull -1.7% (-22.8 to +17.9); chances shuffled (copies' best against raw) +20.7%
+    rung 2b (second pull, I156) against rung 2: +2.5% (-20.7 to +18.8) (slope 0.76); against the flat pull +0.8% (-0.7 to +2.5)
+    rung 3 (owner split) against m1: +1.5% (-20.7 to +17.3); copies' best +2.6%; counts: False (own 0.76, team change 0.15)
+    movers only (66): rung 3 against m1 +13.1% (-3.9 to +27.6); I171 as pre-registered (rung 3 as first built against rung 2) +20.7% (+10.1 to +29.8)
+    champion: m1; against the average +30.0% (-16.4 to +55.7), copies' best -35.9%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 82.8% (thirds of chances 87%, 84%, 78%); range score against the average's range +11.5%
+    owner: team (repeat 0.57, 0.32 to 0.74; movers keep 30%, 90% 1% to 68%; 71 movers)
+  I172 press_rate (DL+OLB+ILB): k per group against one pooled k +0.2% (-0.9 to +1.3) (1116 rows)
+
+  rush_share OLB: role: pressures / (pressures + coverage targets); 222 scored pairs (61 movers), target seasons 2020-2024; k 3 (per pressure or target; a typical season's reliability 0.92)
+    rung 2 (shrunk) against rung 1 (raw): +9.7% (+6.0 to +12.9); against the position's average +78.8% (+70.8 to +85.1)
+    do his chances matter? one flat pull against raw +6.7% (+3.2 to +9.5); shrunk against the flat pull +3.2% (+1.4 to +5.0); chances shuffled (copies' best against raw) +7.7%
+    rung 2b (second pull, I156) against rung 2: +0.2% (-1.5 to +1.7) (slope 0.95); against the flat pull +3.4% (+1.0 to +5.7)
+    rung 3 (owner split) against m1: +0.2% (-1.5 to +1.6); copies' best +0.7%; counts: False (own 0.95, team change 0.00)
+    movers only (61): rung 3 against m1 -1.8% (-4.8 to +0.8); I171 as pre-registered (rung 3 as first built against rung 2) -1.7% (-5.9 to +1.9)
+    champion: m1; against the average +78.8% (+70.8 to +85.1), copies' best -46.5%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 78.8% (thirds of chances 67%, 75%, 93%); range score against the average's range +48.7%
+    owner: player (repeat 0.86, 0.81 to 0.90; movers keep 105%, 90% 98% to 114%; 79 movers)
+
+  rush_share ILB: role: pressures / (pressures + coverage targets); 249 scored pairs (66 movers), target seasons 2020-2024; k 3 (per pressure or target; a typical season's reliability 0.95)
+    rung 2 (shrunk) against rung 1 (raw): +4.6% (+2.7 to +6.5); against the position's average +43.4% (-27.9 to +70.8)
+    do his chances matter? one flat pull against raw +9.6% (-20.7 to +29.9); shrunk against the flat pull -5.5% (-33.6 to +19.7); chances shuffled (copies' best against raw) +5.6%
+    rung 2b (second pull, I156) against rung 2: +3.3% (-29.9 to +25.0) (slope 0.78); against the flat pull -2.0% (-4.5 to +0.3)
+    rung 3 (owner split) against m1: +2.7% (-28.5 to +23.4); copies' best +3.8%; counts: False (own 0.78, team change 0.12)
+    movers only (66): rung 3 against m1 +20.7% (+3.3 to +35.6); I171 as pre-registered (rung 3 as first built against rung 2) +27.9% (+17.4 to +37.9)
+    champion: m1; against the average +43.4% (-27.9 to +70.8), copies' best -99.7%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 80.8% (thirds of chances 78%, 81%, 84%); range score against the average's range +18.1%
+    owner: team (repeat 0.76, 0.37 to 0.88; movers keep 29%, 90% -4% to 72%; 71 movers)
+  I172 rush_share (OLB+ILB): k per group against one pooled k -2.7% (-12.7 to +4.0) (471 rows)
+
+  catch_rate WR: plain catch rate (catches / targets); 480 scored pairs (97 movers), target seasons 2018-2024; k 74 (per target; a typical season's reliability 0.60)
+    rung 2 (shrunk) against rung 1 (raw): +26.1% (+22.5 to +29.8); against the position's average +19.0% (+9.4 to +27.8)
+    do his chances matter? one flat pull against raw +28.1% (+22.7 to +33.5); shrunk against the flat pull -2.8% (-6.6 to +0.9); chances shuffled (copies' best against raw) +27.5%
+    rung 2b (second pull, I156) against rung 2: +2.4% (-0.9 to +5.5) (slope 0.74); against the flat pull -0.4% (-1.9 to +1.2)
+    rung 3 (owner split) against m1: +2.3% (-1.9 to +6.3); copies' best +2.9%; counts: False (own 0.74, team change 0.22)
+    movers only (97): rung 3 against m1 +7.2% (-2.4 to +17.7); I171 as pre-registered (rung 3 as first built against rung 2) +8.8% (+3.1 to +14.3)
+    champion: m1; against the average +19.0% (+9.4 to +27.8), copies' best -20.9%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 84.1% (thirds of chances 80%, 83%, 88%); range score against the average's range +11.1%
+    owner: player (repeat 0.45, 0.38 to 0.51; movers keep 71%, 90% 45% to 96%; 113 movers)
+
+  qb_sack_rate QB: sacks per dropback; 196 scored pairs (35 movers), target seasons 2018-2024; k 255 (per dropback; a typical season's reliability 0.65)
+    rung 2 (shrunk) against rung 1 (raw): +23.8% (+16.9 to +30.0); against the position's average +24.7% (+8.9 to +37.7)
+    do his chances matter? one flat pull against raw +23.1% (+10.4 to +32.5); shrunk against the flat pull +1.0% (-7.4 to +9.4); chances shuffled (copies' best against raw) +24.2%
+    rung 2b (second pull, I156) against rung 2: +0.7% (-5.7 to +6.1) (slope 0.79); against the flat pull +1.7% (-1.6 to +5.0)
+    rung 3 (owner split) against m1: -1.2% (-7.7 to +4.3); copies' best +0.7%; counts: False (own 0.79, team change 0.09)
+    movers only (35): rung 3 against m1 -7.7% (-38.5 to +11.6); I171 as pre-registered (rung 3 as first built against rung 2) -30.5% (-110.8 to +11.7)
+    champion: m1; against the average +24.7% (+8.9 to +37.7), copies' best -13.3%, signal: True; against raw: seasons won 6 of 7
+    80% ranges: coverage 82.4% (thirds of chances 81%, 79%, 88%); range score against the average's range +17.2%
+    owner: player (repeat 0.49, 0.37 to 0.59; movers keep 60%, 90% 18% to 106%; 42 movers)
+
+  qb_depth QB: throw depth (air yards per attempt); 196 scored pairs (35 movers), target seasons 2018-2024; k 224 (per attempt; a typical season's reliability 0.71)
+    rung 2 (shrunk) against rung 1 (raw): +30.5% (+25.7 to +35.6); against the position's average +13.1% (-6.1 to +30.9)
+    do his chances matter? one flat pull against raw +35.4% (+27.4 to +41.7); shrunk against the flat pull -7.5% (-14.8 to +1.2); chances shuffled (copies' best against raw) +28.3%
+    rung 2b (second pull, I156) against rung 2: +8.3% (+1.7 to +13.0) (slope 0.60); against the flat pull +1.4% (-0.7 to +3.7)
+    rung 3 (owner split) against pull: +0.5% (-1.7 to +3.0); copies' best +1.8%; counts: False (own 0.62, team change 0.26)
+    movers only (35): rung 3 against pull +2.7% (-11.2 to +15.9); I171 as pre-registered (rung 3 as first built against rung 2) +18.2% (-14.7 to +43.4)
+    champion: pull; against the average +20.2% (+7.3 to +32.3), copies' best +0.6%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 80.3% (thirds of chances 79%, 89%, 73%); range score against the average's range +9.2%
+    owner: player (repeat 0.43, 0.29 to 0.54; movers keep 75%, 90% 23% to 139%; 42 movers)
+
+  qb_ttt QB: time to throw (seconds); 196 scored pairs (35 movers), target seasons 2018-2024; k 77 (per timed dropback; a typical season's reliability 0.86)
+    rung 2 (shrunk) against rung 1 (raw): +14.2% (+10.0 to +17.9); against the position's average +38.1% (+23.0 to +50.5)
+    do his chances matter? one flat pull against raw +15.7% (+2.6 to +25.4); shrunk against the flat pull -1.8% (-11.7 to +8.7); chances shuffled (copies' best against raw) +14.6%
+    rung 2b (second pull, I156) against rung 2: +2.3% (-8.4 to +10.6) (slope 0.72); against the flat pull +0.6% (-0.8 to +1.8)
+    rung 3 (owner split) against m1: +3.4% (-8.2 to +12.1); copies' best +2.7%; counts: False (own 0.73, team change 0.32)
+    movers only (35): rung 3 against m1 +18.5% (-5.3 to +34.4); I171 as pre-registered (rung 3 as first built against rung 2) +18.5% (-3.2 to +32.3)
+    champion: m1; against the average +38.1% (+23.0 to +50.5), copies' best -48.6%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 71.8% (thirds of chances 64%, 66%, 85%); range score against the average's range +22.2%
+    owner: team (repeat 0.62, 0.52 to 0.69; movers keep 32%, 90% -20% to 70%; 42 movers)
+
+  rb_yac RB: yards after contact per carry; 174 scored pairs (38 movers), target seasons 2020-2024; k 281 (per carry; a typical season's reliability 0.44)
+    rung 2 (shrunk) against rung 1 (raw): +36.4% (+28.7 to +43.0); against the position's average +6.3% (-11.8 to +22.1)
+    do his chances matter? one flat pull against raw +37.5% (+29.4 to +43.5); shrunk against the flat pull -1.7% (-4.6 to +1.4); chances shuffled (copies' best against raw) +38.1%
+    rung 2b (second pull, I156) against rung 2: +0.7% (-1.4 to +2.3) (slope 0.79); against the flat pull -1.0% (-4.1 to +2.2)
+    rung 3 (owner split) against m1: +0.3% (-2.1 to +2.1); copies' best +2.3%; counts: False (own 0.79, team change 0.01)
+    movers only (38): rung 3 against m1 -4.3% (-11.2 to +1.9); I171 as pre-registered (rung 3 as first built against rung 2) -1.1% (-6.6 to +4.2)
+    champion: m1; against the average +6.3% (-11.8 to +22.1), copies' best -3.0%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 83.0% (thirds of chances 85%, 81%, 83%); range score against the average's range +1.5%
+    owner: player (repeat 0.36, 0.20 to 0.48; movers keep 137%, 90% 66% to 278%; 46 movers)
+
+  rb_bt RB: broken tackles per carry; 174 scored pairs (38 movers), target seasons 2020-2024; k 360 (per carry; a typical season's reliability 0.32)
+    rung 2 (shrunk) against rung 1 (raw): +42.9% (+36.1 to +48.6); against the position's average +1.9% (-5.5 to +9.1)
+    do his chances matter? one flat pull against raw +44.1% (+36.8 to +50.3); shrunk against the flat pull -2.1% (-5.4 to +1.2); chances shuffled (copies' best against raw) +43.0%
+    rung 2b (second pull, I156) against rung 2: +1.7% (-2.0 to +4.9) (slope 0.60); against the flat pull -0.4% (-2.1 to +1.1)
+    rung 3 (owner split) against m1: +1.0% (-3.0 to +4.6); copies' best +2.1%; counts: False (own 0.60, team change -0.17)
+    movers only (38): rung 3 against m1 -3.7% (-13.3 to +5.1); I171 as pre-registered (rung 3 as first built against rung 2) -8.2% (-18.6 to +0.6)
+    champion: m1; against the average +1.9% (-5.5 to +9.1), copies' best -6.7%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 75.9% (thirds of chances 77%, 85%, 66%); range score against the average's range +0.9%
+    owner: player (repeat 0.22, 0.11 to 0.32; movers keep 168%, 90% 53% to 520%; 46 movers)
+
+  rb_multi_after RB: tackled after the line: share needing 2+ tacklers; 208 scored pairs (46 movers), target seasons 2019-2024; k 83 (per tackle after the line; a typical season's reliability 0.67)
+    rung 2 (shrunk) against rung 1 (raw): +28.5% (+24.1 to +32.9); against the position's average +16.6% (+1.2 to +30.8)
+    do his chances matter? one flat pull against raw +32.8% (+25.7 to +39.5); shrunk against the flat pull -6.4% (-13.2 to +0.7); chances shuffled (copies' best against raw) +28.7%
+    rung 2b (second pull, I156) against rung 2: +6.7% (-0.4 to +12.7) (slope 0.65); against the flat pull +0.7% (-1.1 to +2.5)
+    rung 3 (owner split) against m1: +7.6% (+0.9 to +13.5); copies' best +7.9%; counts: False (own 0.65, team change 0.16)
+    movers only (46): rung 3 against m1 +8.8% (-1.2 to +19.8); I171 as pre-registered (rung 3 as first built against rung 2) +7.1% (-3.9 to +17.8)
+    champion: m1; against the average +16.6% (+1.2 to +30.8), copies' best -38.5%, signal: True; against raw: seasons won 6 of 6
+    80% ranges: coverage 84.5% (thirds of chances 82%, 92%, 79%); range score against the average's range +9.6%
+    owner: player (repeat 0.46, 0.37 to 0.53; movers keep 65%, 90% 23% to 108%; 59 movers)
+
+  catch_allowed DB: catch rate allowed; 598 scored pairs (145 movers), target seasons 2020-2024; k 117 (per target; a typical season's reliability 0.31)
+    rung 2 (shrunk) against rung 1 (raw): +43.8% (+40.3 to +47.1); against the position's average +3.3% (-1.4 to +7.9)
+    do his chances matter? one flat pull against raw +43.9% (+40.3 to +47.4); shrunk against the flat pull -0.3% (-1.6 to +1.2); chances shuffled (copies' best against raw) +43.9%
+    rung 2b (second pull, I156) against rung 2: -1.1% (-3.2 to +0.8) (slope 0.75); against the flat pull -1.4% (-3.5 to +0.6)
+    rung 3 (owner split) against m1: -5.6% (-8.8 to -2.8); copies' best -0.9%; counts: False (own 0.75, team change -0.03)
+    movers only (145): rung 3 against m1 -22.3% (-32.8 to -12.3); I171 as pre-registered (rung 3 as first built against rung 2) -7.8% (-15.7 to -1.9)
+    champion: m1; against the average +3.3% (-1.4 to +7.9), copies' best -6.4%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 80.6% (thirds of chances 74%, 84%, 84%); range score against the average's range +1.7%
+    owner: player (repeat 0.20, 0.14 to 0.26; movers keep 59%, 90% 4% to 125%; 172 movers)
+
+  int_rate DB: interceptions per target; 598 scored pairs (145 movers), target seasons 2020-2024; k 209 (per target; a typical season's reliability 0.17)
+    rung 2 (shrunk) against rung 1 (raw): +35.6% (+27.5 to +42.8); against the position's average +6.2% (+3.3 to +9.0)
+    do his chances matter? one flat pull against raw +36.1% (+29.6 to +42.1); shrunk against the flat pull -0.8% (-3.5 to +1.9); chances shuffled (copies' best against raw) +36.2%
+    rung 2b (second pull, I156) against rung 2: +0.5% (-1.4 to +2.3) (slope 1.43); against the flat pull -0.3% (-1.7 to +1.2)
+    rung 3 (owner split) against m1: +0.4% (-1.5 to +2.2); copies' best +0.6%; counts: False (own 1.43, team change -4.44)
+    movers only (145): rung 3 against m1 +2.0% (-0.5 to +4.3); I171 as pre-registered (rung 3 as first built against rung 2) +2.3% (-0.1 to +4.6)
+    champion: m1; against the average +6.2% (+3.3 to +9.0), copies' best -0.7%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 72.1% (thirds of chances 70%, 75%, 71%); range score against the average's range +1.9%
+    owner: player (repeat 0.27, 0.20 to 0.34; movers keep 131%, 90% 83% to 206%; 172 movers)
+
+  depth_against DB: throw depth against (air yards per target); 598 scored pairs (145 movers), target seasons 2020-2024; k 35 (per target; a typical season's reliability 0.63)
+    rung 2 (shrunk) against rung 1 (raw): +29.7% (+26.8 to +32.5); against the position's average +11.1% (+1.6 to +19.4)
+    do his chances matter? one flat pull against raw +32.7% (+27.4 to +37.6); shrunk against the flat pull -4.4% (-8.7 to -0.2); chances shuffled (copies' best against raw) +28.3%
+    rung 2b (second pull, I156) against rung 2: +5.9% (+2.1 to +9.6) (slope 0.61); against the flat pull +1.8% (+0.9 to +2.5)
+    rung 3 (owner split) against pull: +0.2% (-0.2 to +0.6); copies' best +0.4%; counts: False (own 0.61, team change 0.36)
+    movers only (145): rung 3 against pull +1.2% (-0.9 to +3.2); I171 as pre-registered (rung 3 as first built against rung 2) +13.5% (+7.1 to +19.4)
+    champion: pull; against the average +16.3% (+10.8 to +21.3), copies' best +0.5%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 77.3% (thirds of chances 71%, 74%, 86%); range score against the average's range +7.7%
+    owner: player (repeat 0.37, 0.30 to 0.43; movers keep 64%, 90% 29% to 98%; 172 movers)
+
+  def_sack_rate DL: sacks per dropback on the field (the noisier outcome); 633 scored pairs (164 movers), target seasons 2020-2024; k 374 (per dropback on the field; a typical season's reliability 0.45)
+    rung 2 (shrunk) against rung 1 (raw): +31.2% (+26.6 to +35.1); against the position's average +18.3% (+8.4 to +27.6)
+    do his chances matter? one flat pull against raw +30.2% (+24.2 to +35.1); shrunk against the flat pull +1.5% (-0.9 to +4.0); chances shuffled (copies' best against raw) +31.0%
+    rung 2b (second pull, I156) against rung 2: -0.1% (-1.6 to +1.1) (slope 0.90); against the flat pull +1.3% (-0.2 to +2.8)
+    rung 3 (owner split) against m1: -0.6% (-2.7 to +1.6); copies' best -0.1%; counts: False (own 0.91, team change 0.32)
+    movers only (164): rung 3 against m1 -1.0% (-9.3 to +6.2); I171 as pre-registered (rung 3 as first built against rung 2) -0.1% (-2.5 to +1.9)
+    champion: m1; against the average +18.3% (+8.4 to +27.6), copies' best -12.0%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 79.2% (thirds of chances 82%, 81%, 75%); range score against the average's range +9.3%
+    owner: player (repeat 0.40, 0.32 to 0.47; movers keep 73%, 90% 46% to 101%; 189 movers)
+
+  def_sack_rate OLB: sacks per dropback on the field (the noisier outcome); 234 scored pairs (62 movers), target seasons 2020-2024; k 374 (per dropback on the field; a typical season's reliability 0.49)
+    rung 2 (shrunk) against rung 1 (raw): +30.9% (+24.7 to +36.2); against the position's average +17.0% (+4.1 to +27.6)
+    do his chances matter? one flat pull against raw +27.8% (+21.5 to +33.0); shrunk against the flat pull +4.3% (+2.5 to +6.2); chances shuffled (copies' best against raw) +30.2%
+    rung 2b (second pull, I156) against rung 2: -1.0% (-2.4 to +0.3) (slope 0.86); against the flat pull +3.3% (+1.5 to +5.3)
+    rung 3 (owner split) against m1: -3.1% (-5.6 to -1.1); copies' best +1.3%; counts: False (own 0.87, team change 0.44)
+    movers only (62): rung 3 against m1 -10.4% (-20.1 to -2.9); I171 as pre-registered (rung 3 as first built against rung 2) -0.3% (-3.9 to +3.5)
+    champion: m1; against the average +17.0% (+4.1 to +27.6), copies' best -17.4%, signal: True; against raw: seasons won 5 of 5
+    80% ranges: coverage 74.7% (thirds of chances 76%, 65%, 83%); range score against the average's range +5.8%
+    owner: player (repeat 0.36, 0.23 to 0.47; movers keep 81%, 90% 31% to 148%; 80 movers)
+
+  def_sack_rate ILB: sacks per dropback on the field (the noisier outcome); 249 scored pairs (66 movers), target seasons 2020-2024; k 374 (per dropback on the field; a typical season's reliability 0.55)
+    rung 2 (shrunk) against rung 1 (raw): +38.4% (+31.8 to +45.8); against the position's average +15.2% (-7.9 to +29.8)
+    do his chances matter? one flat pull against raw +39.8% (+31.5 to +48.2); shrunk against the flat pull -2.3% (-7.7 to +2.1); chances shuffled (copies' best against raw) +38.7%
+    rung 2b (second pull, I156) against rung 2: +1.6% (-4.5 to +7.7) (slope 0.76); against the flat pull -0.7% (-3.4 to +2.6)
+    rung 3 (owner split) against m1: +0.6% (-5.2 to +6.6); copies' best +2.0%; counts: False (own 0.77, team change 0.16)
+    movers only (66): rung 3 against m1 +0.9% (-10.2 to +11.1); I171 as pre-registered (rung 3 as first built against rung 2) +5.6% (-3.3 to +13.6)
+    champion: m1; against the average +15.2% (-7.9 to +29.8), copies' best -17.9%, signal: True; against raw: seasons won 4 of 5
+    80% ranges: coverage 81.3% (thirds of chances 85%, 81%, 78%); range score against the average's range +5.7%
+    owner: player (repeat 0.46, 0.28 to 0.58; movers keep 60%, 90% 24% to 122%; 71 movers)
+  I172 def_sack_rate (DL+OLB+ILB): k per group against one pooled k -1.0% (-2.3 to +0.3) (1116 rows)
+
+  qb_press_rate QB: pressures per dropback (a sack counted); 196 scored pairs (35 movers), target seasons 2018-2024; k 147 (per dropback; a typical season's reliability 0.78)
+    rung 2 (shrunk) against rung 1 (raw): +20.4% (+15.5 to +24.9); against the position's average +24.5% (+6.9 to +39.4)
+    do his chances matter? one flat pull against raw +21.9% (+9.8 to +31.8); shrunk against the flat pull -2.0% (-13.8 to +9.9); chances shuffled (copies' best against raw) +20.1%
+    rung 2b (second pull, I156) against rung 2: +3.7% (-7.5 to +12.6) (slope 0.67); against the flat pull +1.7% (-0.2 to +3.4)
+    rung 3 (owner split) against m1: -1.2% (-14.5 to +9.5); copies' best +5.5%; counts: False (own 0.68, team change 0.12)
+    movers only (35): rung 3 against m1 -12.1% (-61.8 to +18.1); I171 as pre-registered (rung 3 as first built against rung 2) +17.2% (-0.8 to +31.1)
+    champion: m1; against the average +24.5% (+6.9 to +39.4), copies' best -24.2%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 82.4% (thirds of chances 81%, 81%, 85%); range score against the average's range +17.7%
+    owner: team (repeat 0.48, 0.35 to 0.57; movers keep 13%, 90% -34% to 63%; 42 movers)
+
+  qb_sack_per_press QB: sacks per pressure (a sack counted); 196 scored pairs (35 movers), target seasons 2018-2024; k 115 (per pressure; a typical season's reliability 0.57)
+    rung 2 (shrunk) against rung 1 (raw): +30.6% (+25.1 to +36.4); against the position's average +14.6% (+0.1 to +26.9)
+    do his chances matter? one flat pull against raw +31.6% (+23.6 to +38.5); shrunk against the flat pull -1.4% (-6.4 to +3.7); chances shuffled (copies' best against raw) +31.1%
+    rung 2b (second pull, I156) against rung 2: +0.5% (-2.7 to +3.2) (slope 0.76); against the flat pull -1.0% (-3.9 to +2.0)
+    rung 3 (owner split) against m1: -1.1% (-4.5 to +1.8); copies' best +1.3%; counts: False (own 0.76, team change 0.09)
+    movers only (35): rung 3 against m1 -9.4% (-34.1 to +7.6); I171 as pre-registered (rung 3 as first built against rung 2) -74.4% (-204.6 to +0.6)
+    champion: m1; against the average +14.6% (+0.1 to +26.9), copies' best -10.6%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 73.9% (thirds of chances 78%, 67%, 77%); range score against the average's range +6.7%
+    owner: player (repeat 0.43, 0.32 to 0.51; movers keep 104%, 90% 54% to 162%; 42 movers)
+
+  ol_press_rate OL: his team's pressure on his dropbacks; 742 scored pairs (124 movers), target seasons 2018-2024; k 183 (per dropback on the field; a typical season's reliability 0.76)
+    rung 2 (shrunk) against rung 1 (raw): +22.7% (+21.5 to +23.9); against the position's average -28.1% (-40.3 to -16.8)
+    do his chances matter? one flat pull against raw +39.9% (+36.3 to +43.1); shrunk against the flat pull -28.6% (-34.6 to -22.4); chances shuffled (copies' best against raw) +23.2%
+    rung 2b (second pull, I156) against rung 2: +22.4% (+18.5 to +25.9) (slope 0.39); against the flat pull +0.2% (-0.1 to +0.5)
+    rung 3 (owner split) against pull: +4.0% (+1.6 to +6.5); copies' best +0.5%; counts: True (own 0.45, team change 0.32)
+    movers only (124): rung 3 against pull +19.1% (+8.8 to +28.8); I171 as pre-registered (rung 3 as first built against rung 2) +42.1% (+30.2 to +52.4)
+    champion: split; against the average +4.6% (-1.0 to +9.8), copies' best -0.0%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 83.0% (thirds of chances 84%, 80%, 85%); range score against the average's range +4.6%
+    owner: team (repeat 0.30, 0.24 to 0.37; movers keep 25%, 90% -14% to 65%; 143 movers)
+
+  ol_sack_rate OL: his team's sacks on his dropbacks; 742 scored pairs (124 movers), target seasons 2018-2024; k 306 (per dropback on the field; a typical season's reliability 0.64)
+    rung 2 (shrunk) against rung 1 (raw): +30.3% (+28.0 to +32.6); against the position's average -0.9% (-9.4 to +7.2)
+    do his chances matter? one flat pull against raw +37.5% (+33.1 to +41.5); shrunk against the flat pull -11.5% (-16.0 to -7.1); chances shuffled (copies' best against raw) +30.0%
+    rung 2b (second pull, I156) against rung 2: +10.5% (+7.1 to +13.7) (slope 0.52); against the flat pull +0.3% (-0.2 to +0.7)
+    rung 3 (owner split) against pull: +4.7% (+1.3 to +8.2); copies' best +0.0%; counts: True (own 0.63, team change 0.48)
+    movers only (124): rung 3 against pull +21.3% (+5.6 to +34.9); I171 as pre-registered (rung 3 as first built against rung 2) +41.1% (+25.9 to +53.4)
+    champion: split; against the average +14.0% (+8.8 to +18.8), copies' best -0.0%, signal: True; against raw: seasons won 7 of 7
+    80% ranges: coverage 85.5% (thirds of chances 86%, 86%, 85%); range score against the average's range +8.1%
+    owner: team (repeat 0.32, 0.26 to 0.37; movers keep 20%, 90% -15% to 54%; 143 movers)
+
+  line_poe (the line's pressure over expected, per team-season dropback): 224 scored team-seasons; k 211 dropbacks; repeat 0.38; shrunk against raw +20.5% (+18.7 to +22.0); second pull against shrunk +18.5% (+8.9 to +25.6)
+
+== Consistency (pcf.validation.consistency, per-game rates of players over each trait's season floor; unit = player)
+  press_rate DL            week_r 0.424, week_lo 0.384, week_hi 0.462, season_r 0.601, season_lo 0.562, season_hi 0.638, unit_seasons 1202, season_pairs 761, mean_abs 0.043, verdict trait
+  press_rate OLB           week_r 0.537, week_lo 0.481, week_hi 0.588, season_r 0.708, season_lo 0.656, season_hi 0.754, unit_seasons 481, season_pairs 283, mean_abs 0.046, verdict trait
+  press_rate ILB           week_r 0.429, week_lo 0.367, week_hi 0.488, season_r 0.519, season_lo 0.445, season_hi 0.586, unit_seasons 496, season_pairs 295, mean_abs 0.015, verdict trait
+  rush_share OLB           week_r 0.834, week_lo 0.809, week_hi 0.856, season_r 0.848, season_lo 0.818, season_hi 0.874, unit_seasons 461, season_pairs 271, mean_abs 0.570, verdict trait
+  rush_share ILB           week_r 0.633, week_lo 0.587, week_hi 0.676, season_r 0.700, season_lo 0.648, season_hi 0.746, unit_seasons 496, season_pairs 295, mean_abs 0.124, verdict trait
+  catch_rate WR            week_r 0.336, week_lo 0.287, week_hi 0.384, season_r 0.347, season_lo 0.283, season_hi 0.407, unit_seasons 894, season_pairs 547, mean_abs 0.629, verdict trait
+  qb_sack_rate QB          week_r 0.431, week_lo 0.357, week_hi 0.499, season_r 0.362, season_lo 0.263, season_hi 0.453, unit_seasons 358, season_pairs 227, mean_abs 0.066, verdict trait
+  qb_depth QB              week_r 0.415, week_lo 0.341, week_hi 0.485, season_r 0.427, season_lo 0.333, season_hi 0.513, unit_seasons 358, season_pairs 227, mean_abs 8.030, verdict trait
+  qb_ttt QB                week_r 0.695, week_lo 0.647, week_hi 0.737, season_r 0.550, season_lo 0.469, season_hi 0.622, unit_seasons 358, season_pairs 227, mean_abs 2.723, verdict trait
+  rb_yac RB                week_r 0.214, week_lo 0.132, week_hi 0.294, season_r 0.322, season_lo 0.215, season_hi 0.421, unit_seasons 377, season_pairs 208, mean_abs 1.972, verdict trait
+  rb_bt RB                 week_r 0.156, week_lo 0.072, week_hi 0.237, season_r 0.165, season_lo 0.052, season_hi 0.275, unit_seasons 377, season_pairs 208, mean_abs 0.067, verdict trait
+  rb_multi_after RB        week_r 0.459, week_lo 0.397, week_hi 0.516, season_r 0.605, season_lo 0.537, season_hi 0.664, unit_seasons 484, season_pairs 271, mean_abs 0.389, verdict trait
+  catch_allowed DB         week_r 0.166, week_lo 0.120, week_hi 0.210, season_r 0.146, season_lo 0.085, season_hi 0.205, unit_seasons 1273, season_pairs 721, mean_abs 0.633, verdict trait
+  int_rate DB              week_r 0.191, week_lo 0.146, week_hi 0.235, season_r 0.254, season_lo 0.195, season_hi 0.310, unit_seasons 1273, season_pairs 721, mean_abs 0.031, verdict trait
+  depth_against DB         week_r 0.382, week_lo 0.342, week_hi 0.420, season_r 0.292, season_lo 0.235, season_hi 0.347, unit_seasons 1273, season_pairs 721, mean_abs 9.999, verdict trait
+  def_sack_rate DL         week_r 0.247, week_lo 0.202, week_hi 0.291, season_r 0.350, season_lo 0.296, season_hi 0.401, unit_seasons 1202, season_pairs 761, mean_abs 0.011, verdict trait
+  def_sack_rate OLB        week_r 0.294, week_lo 0.224, week_hi 0.362, season_r 0.319, season_lo 0.228, season_hi 0.404, unit_seasons 481, season_pairs 283, mean_abs 0.013, verdict trait
+  def_sack_rate ILB        week_r 0.274, week_lo 0.204, week_hi 0.341, season_r 0.446, season_lo 0.366, season_hi 0.520, unit_seasons 496, season_pairs 295, mean_abs 0.004, verdict trait
+  qb_press_rate QB         week_r 0.583, week_lo 0.522, week_hi 0.638, season_r 0.390, season_lo 0.293, season_hi 0.479, unit_seasons 358, season_pairs 227, mean_abs 0.319, verdict trait
+  qb_sack_per_press QB     week_r 0.361, week_lo 0.283, week_hi 0.434, season_r 0.390, season_lo 0.293, season_hi 0.479, unit_seasons 358, season_pairs 227, mean_abs 0.211, verdict trait
+  ol_press_rate OL         week_r 0.584, week_lo 0.554, week_hi 0.612, season_r 0.264, season_lo 0.211, season_hi 0.316, unit_seasons 1427, season_pairs 851, mean_abs 0.319, verdict trait
+  ol_sack_rate OL          week_r 0.352, week_lo 0.313, week_hi 0.389, season_r 0.248, season_lo 0.194, season_hi 0.300, unit_seasons 1427, season_pairs 851, mean_abs 0.064, verdict trait
+
+== The yardstick (crude forecaster, rest-of-season boards, beside participation; 19 copies shuffled within season and position)
+  receiving catch_rate shrunk     : -0.05% of the squared error (90% -0.13 to +0.01); range score -0.05%; copies' best +0.07%; neutral; counts: False (36125 rows)
+  receiving catch_rate raw        : -0.12% of the squared error (90% -0.19 to -0.04); range score -0.06%; copies' best +0.08%; adds noise; counts: False (36125 rows)
+  rushing   rb_yac shrunk         : -0.12% of the squared error (90% -0.49 to +0.27); range score -0.20%; copies' best +0.34%; neutral; counts: False (10207 rows)
+  rushing   rb_yac raw            : +0.06% of the squared error (90% -0.23 to +0.36); range score -0.02%; copies' best +0.48%; neutral; counts: False (10207 rows)
+  rushing   rb_bt shrunk          : +0.24% of the squared error (90% -0.06 to +0.52); range score +0.15%; copies' best +0.50%; neutral; counts: False (10207 rows)
+  rushing   rb_bt raw             : -0.05% of the squared error (90% -0.35 to +0.24); range score -0.05%; copies' best +0.54%; neutral; counts: False (10207 rows)
+  rushing   rb_multi_after shrunk : +0.06% of the squared error (90% -0.10 to +0.23); range score -0.02%; copies' best +0.42%; neutral; counts: False (10207 rows)
+  rushing   rb_multi_after raw    : +0.10% of the squared error (90% -0.06 to +0.27); range score -0.00%; copies' best +0.33%; neutral; counts: False (10207 rows)
+  rushing   all shrunk            : -0.39% of the squared error (90% -0.83 to +0.05); range score -0.35%; copies' best +0.26%; adds noise; counts: False (10207 rows)
+  passing   qb_sack_rate shrunk   : +0.41% of the squared error (90% -0.09 to +0.91); range score +1.21%; copies' best +0.56%; adds value; counts: False (3413 rows)
+  passing   qb_sack_rate raw      : +0.66% of the squared error (90% +0.21 to +1.11); range score +1.03%; copies' best +0.31%; adds value; counts: True (3413 rows)
+  passing   qb_depth shrunk       : -0.14% of the squared error (90% -0.45 to +0.17); range score +0.25%; copies' best +1.29%; neutral; counts: False (3413 rows)
+  passing   qb_depth raw          : -0.18% of the squared error (90% -0.48 to +0.13); range score +0.26%; copies' best +1.06%; neutral; counts: False (3413 rows)
+  passing   qb_ttt shrunk         : +0.13% of the squared error (90% -0.06 to +0.31); range score +0.20%; copies' best +0.54%; adds value; counts: False (3413 rows)
+  passing   qb_ttt raw            : +0.15% of the squared error (90% -0.05 to +0.36); range score +0.09%; copies' best +0.61%; neutral; counts: False (3413 rows)
+  passing   all shrunk            : -0.37% of the squared error (90% -1.05 to +0.30); range score +1.01%; copies' best +0.51%; adds value; counts: False (3413 rows)
+
+== Sanity lists: each trait's top and bottom 10 by the shrunk rate, 2024
+  catch_allowed DB top: Javon Bullard GB 0.7, Chamarri Conner KC 0.698, Budda Baker ARI 0.683, Grant Delpit CLE 0.681, Justin Reid KC 0.681, Jalen Thompson ARI 0.677, Cam Lewis BUF 0.675, Dee Alford ATL 0.67, Isaiah Pola-Mao LV 0.67, Minkah Fitzpatrick PIT 0.669
+  catch_allowed DB bottom: Kamari Lassiter HOU 0.562, Derek Stingley Jr. HOU 0.568, Kerby Joseph DET 0.586, Tyrique Stevenson CHI 0.588, Nate Wiggins BAL 0.59, Calen Bullock HOU 0.594, Jaycee Horn CAR 0.594, Denzel Ward CLE 0.601, Darius Slay PHI 0.602, Quinyon Mitchell PHI 0.602
+  catch_rate WR top: Amon-Ra St. Brown DET 0.756, Chris Godwin TB 0.717, Khalil Shakir BUF 0.71, DeVonta Smith PHI 0.708, Demario Douglas NE 0.705, Puka Nacua LA 0.703, Adam Thielen CAR 0.702, Ja'Marr Chase CIN 0.701, Jaxon Smith-Njigba SEA 0.699, Ladd McConkey LAC 0.696
+  catch_rate WR bottom: Adonai Mitchell IND 0.546, Jonathan Mingo CAR 0.555, Marquez Valdes-Scantling NO 0.563, Demarcus Robinson LA 0.568, Diontae Johnson CAR 0.57, Brandin Cooks DAL 0.574, Calvin Ridley TEN 0.574, Amari Cooper BUF 0.575, Marvin Harrison Jr. ARI 0.576, Dontayvion Wicks GB 0.576
+  depth_against DB top: Denzel Ward CLE 13.2, Nazeeh Johnson KC 12.8, Brandon Stephens BAL 12.6, Elijah Molden LAC 12.4, Julian Blackmon IND 12.4, Derek Stingley Jr. HOU 12.3, Calen Bullock HOU 12.2, Brandin Echols NYJ 12.2, Kerby Joseph DET 12.1, Geno Stone CIN 12.1
+  depth_against DB bottom: Roger McCreary TEN 5.23, Chamarri Conner KC 5.79, Derwin James LAC 6.48, Nate Hobbs LV 6.51, Mike Hilton CIN 6.55, Christian Izien TB 6.57, Josh Metellus MIN 6.59, Devon Witherspoon SEA 6.72, Kyle Hamilton BAL 6.79, Javon Bullard GB 6.8
+  int_rate DB top: Kerby Joseph DET 0.0612, Xavier McKinney GB 0.0568, Amani Hooker TEN 0.0431, Calen Bullock HOU 0.0395, C.J. Gardner-Johnson PHI 0.0389, Donte Jackson PIT 0.0389, Reed Blankenship PHI 0.0384, Marlon Humphrey BAL 0.0378, Jessie Bates ATL 0.0365, Derek Stingley Jr. HOU 0.0355
+  int_rate DB bottom: Alontae Taylor NO 0.0149, Brandon Stephens BAL 0.015, Martin Emerson CLE 0.0153, Dee Alford ATL 0.0156, Terrion Arnold DET 0.0157, Amik Robertson DET 0.0158, Benjamin St-Juste WAS 0.0158, Devon Witherspoon SEA 0.0159, Darius Slay PHI 0.0166, Quinyon Mitchell PHI 0.0166
+  press_rate DL top: Aidan Hutchinson DET 0.107, Micah Parsons DAL 0.093, Trey Hendrickson CIN 0.0929, Myles Garrett CLE 0.0837, Nick Bosa SF 0.0801, Zach Allen DEN 0.0724, Will Anderson Jr. HOU 0.072, Greg Rousseau BUF 0.0717, Chris Jones KC 0.0688, Chase Young NO 0.0666
+  press_rate DL bottom: Davon Godchaux NE 0.0197, Daniel Ekuale NE 0.021, Bobby Brown III LA 0.0216, Jordan Davis PHI 0.0224, LaBryan Ray CAR 0.0236, Da'Shawn Hand MIA 0.0237, Raekwon Davis IND 0.0239, Jordan Elliott SF 0.0241, DaVon Hamilton JAX 0.0242, Benito Jones MIA 0.0249
+  press_rate ILB top: Ivan Pace Jr. MIN 0.0363, Kaden Elliss ATL 0.031, Trevor Nowaske DET 0.0286, Frankie Luvu WAS 0.0286, Blake Cashman MIN 0.0278, DeMarvion Overshown DAL 0.0265, Elandon Roberts PIT 0.0258, Jordan Hicks CLE 0.0236, Edgerrin Cooper GB 0.0235, Devin Bush CLE 0.0228
+  press_rate ILB bottom: Christian Rozeboom LA 0.00513, De'Vondre Campbell SF 0.00551, Omar Speights LA 0.00567, Dee Winters SF 0.00592, Troy Reeder LA 0.00617, Mohamoud Diabate CLE 0.00683, Ernest Jones SEA 0.00699, Trevin Wallace CAR 0.00713, Jamien Sherwood NYJ 0.00723, Pete Werner NO 0.00742
+  press_rate OLB top: Will McDonald IV NYJ 0.077, Nik Bonitto DEN 0.0727, Derick Hall SEA 0.0671, Jonathan Greenard MIN 0.0665, Brian Burns NYG 0.0653, Dondrea Tillman DEN 0.0624, Arnold Ebiketie ATL 0.0594, Odafe Oweh BAL 0.059, Yaya Diaby TB 0.0589, Nick Herbig PIT 0.0582
+  press_rate OLB bottom: Robert Spillane LV 0.0146, E.J. Speed IND 0.0149, Akeem Davis-Gaither CIN 0.0175, Germaine Pratt CIN 0.0176, Zack Baun PHI 0.0185, Zaire Franklin IND 0.0186, Dorian Williams BUF 0.0249, Lorenzo Carter ATL 0.0262, Jeremiah Owusu-Koramoah CLE 0.0262, Leo Chenal KC 0.0295
+  qb_depth QB top: Anthony Richardson IND 10.2, Trevor Lawrence JAX 8.66, Jordan Love GB 8.46, Lamar Jackson BAL 8.42, Jameis Winston CLE 8.42, Bryce Young CAR 8.37, Justin Herbert LAC 8.37, Brock Purdy SF 8.36, Joe Flacco IND 8.36, Will Levis TEN 8.29
+  qb_depth QB bottom: Tua Tagovailoa MIA 6.41, Patrick Mahomes KC 6.72, Jared Goff DET 6.74, Gardner Minshew LV 6.75, Drew Lock NYG 6.98, Kyler Murray ARI 7.08, Aaron Rodgers NYJ 7.1, Geno Smith SEA 7.14, Baker Mayfield TB 7.17, Joe Burrow CIN 7.24
+  qb_sack_rate QB top: Deshaun Watson CLE 0.0999, Will Levis TEN 0.0976, Caleb Williams CHI 0.0959, Jalen Hurts PHI 0.0846, C.J. Stroud HOU 0.0827, Jayden Daniels WAS 0.0822, Drake Maye NE 0.0816, Jacoby Brissett NE 0.0814, Russell Wilson PIT 0.0808, Gardner Minshew LV 0.0788
+  qb_sack_rate QB bottom: Josh Allen BUF 0.0413, Jordan Love GB 0.0446, Derek Carr NO 0.046, Bo Nix DEN 0.0486, Cooper Rush DAL 0.0523, Aidan O'Connell LV 0.0533, Lamar Jackson BAL 0.0536, Matthew Stafford LA 0.0564, Tua Tagovailoa MIA 0.0564, Andy Dalton CAR 0.0571
+  qb_ttt QB top: Jalen Hurts PHI 2.92, Lamar Jackson BAL 2.9, Sam Darnold MIN 2.87, Justin Fields PIT 2.8, C.J. Stroud HOU 2.77, Brock Purdy SF 2.76, Justin Herbert LAC 2.76, Aidan O'Connell LV 2.75, Bo Nix DEN 2.74, Deshaun Watson CLE 2.73
+  qb_ttt QB bottom: Tua Tagovailoa MIA 2.31, Cooper Rush DAL 2.43, Trevor Lawrence JAX 2.5, Joe Flacco IND 2.5, Andy Dalton CAR 2.51, Gardner Minshew LV 2.52, Kirk Cousins ATL 2.53, Baker Mayfield TB 2.54, Aaron Rodgers NYJ 2.56, Will Levis TEN 2.56
+  rb_bt RB top: Derrick Henry BAL 0.0982, J.K. Dobbins LAC 0.0884, Josh Jacobs GB 0.0878, Tyjae Spears TEN 0.0856, James Conner ARI 0.0821, Chase Brown CIN 0.0813, David Montgomery DET 0.0805, Antonio Gibson NE 0.0767, Tony Pollard TEN 0.0755, Kyren Williams LA 0.0751
+  rb_bt RB bottom: D'Andre Swift CHI 0.051, Travis Etienne JAX 0.0536, Isiah Pacheco KC 0.055, Tyrone Tracy Jr. NYG 0.055, Breece Hall NYJ 0.0551, De'Von Achane MIA 0.0557, Kareem Hunt KC 0.0561, Javonte Williams DEN 0.0569, Raheem Mostert MIA 0.0571, Aaron Jones MIN 0.0576
+  rb_multi_after RB top: Nick Chubb CLE 0.549, Devin Singletary NYG 0.535, David Montgomery DET 0.533, Kareem Hunt KC 0.529, Najee Harris PIT 0.521, Tyrone Tracy Jr. NYG 0.517, Ray Davis BUF 0.513, Rhamondre Stevenson NE 0.511, Josh Jacobs GB 0.51, Jonathan Taylor IND 0.508
+  rb_multi_after RB bottom: Saquon Barkley PHI 0.361, Tony Pollard TEN 0.379, D'Andre Swift CHI 0.388, Tank Bigsby JAX 0.398, Aaron Jones MIN 0.406, Joe Mixon HOU 0.414, Rachaad White TB 0.417, Bucky Irving TB 0.424, Breece Hall NYJ 0.427, Travis Etienne JAX 0.428
+  rb_yac RB top: Derrick Henry BAL 2.48, Tank Bigsby JAX 2.37, Bucky Irving TB 2.35, Rachaad White TB 2.29, Antonio Gibson NE 2.28, Isaac Guerendo SF 2.28, J.K. Dobbins LAC 2.27, Tyler Allgeier ATL 2.27, Bijan Robinson ATL 2.26, Josh Jacobs GB 2.24
+  rb_yac RB bottom: Kareem Hunt KC 1.89, Tyrone Tracy Jr. NYG 1.9, D'Andre Swift CHI 1.9, Chase Brown CIN 1.93, Alexander Mattison LV 1.95, Isiah Pacheco KC 1.95, Alvin Kamara NO 1.96, Jaylen Warren PIT 1.97, Kyren Williams LA 1.97, Nick Chubb CLE 1.97
+  rush_share ILB top: Trevor Nowaske DET 0.418, Frankie Luvu WAS 0.36, Elandon Roberts PIT 0.295, Kaden Elliss ATL 0.263, Ivan Pace Jr. MIN 0.253, Devin Bush CLE 0.236, Blake Cashman MIN 0.235, Mack Wilson ARI 0.226, Bobby Wagner WAS 0.219, Drue Tranquill KC 0.219
+  rush_share ILB bottom: Dee Winters SF 0.0123, Omar Speights LA 0.0136, Troy Reeder LA 0.0167, Christian Rozeboom LA 0.0249, De'Vondre Campbell SF 0.0274, Ventrell Miller JAX 0.0441, Pete Werner NO 0.0447, Mohamoud Diabate CLE 0.0456, David Long MIA 0.0472, Trevin Wallace CAR 0.0507
+  rush_share OLB top: Kayvon Thibodeaux NYG 0.933, Will McDonald IV NYJ 0.921, Derick Hall SEA 0.9, T.J. Watt PIT 0.858, Jihad Ward MIN 0.852, Brian Burns NYG 0.848, Patrick Jones II MIN 0.846, Josh Sweat PHI 0.838, Nik Bonitto DEN 0.836, Yetur Gross-Matos SF 0.829
+  rush_share OLB bottom: Akeem Davis-Gaither CIN 0.072, E.J. Speed IND 0.08, Robert Spillane LV 0.102, Zaire Franklin IND 0.103, Germaine Pratt CIN 0.11, Zack Baun PHI 0.11, Dorian Williams BUF 0.112, Lorenzo Carter ATL 0.242, Malik Harrison BAL 0.244, Jeremiah Owusu-Koramoah CLE 0.244

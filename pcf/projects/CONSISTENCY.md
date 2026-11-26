@@ -215,6 +215,30 @@ Schemes rows measured 2026-11-08 with [`projects/schemes-v2/explore/tendencies.p
 | Share of tackles after the line needing 2+ tacklers, RBs | skill-over-expected (H83) | Play-by-play's tackler fields | | 0.46 (0.37-0.54); kept 65% (59) | **trait of the runner** | Not tested | Raw 0.66 |
 | Share of tackles at or behind the line needing 2+ tacklers, RBs | skill-over-expected (H83) | As above | | 0.21 (0.10-0.31); kept 107% | trait, weak | | |
 
+**The build's traits** (skill-over-expected's build, 2026-11-25; decision 0051): `pcf.validation.consistency` on each player's per-game rates, player-seasons over each trait's floor, 2016-2024 (PFR's and participation's from 2018). Week r is odd against even weeks; season r next season. The share kept is movers' (`pcf.validation.owners.kept`). "Helps its target" is the champion against the position's average on next season's centred rate (RESULTS.md). Every verdict is "trait" by the module's rule.
+
+| Measure | Project | What it is | Week r (90%) | Season r | Verdict | Helps its target? | Note |
+|---|---|---|---|---|---|---|---|
+| Pressures per on-field dropback, DL | skill-over-expected (build) | | 0.42 (0.38-0.46) | 0.60 (0.56-0.64) | **trait of the player** (kept 82%) | **Yes:** shrunk, +41% of next season's error against the position's average; +11% to next season's sacks beyond shrunk sacks | One k per trait (132 dropbacks) |
+| Pressures per on-field dropback, OLB | skill-over-expected (build) | | 0.54 (0.48-0.59) | 0.71 (0.66-0.75) | **trait of the player** (kept 95%) | **Yes:** +55% against the average; +15% to next season's sacks | The OLB group mixes edge rushers and 4-3 off-ball linebackers |
+| Pressures per on-field dropback, ILB | skill-over-expected (build) | | 0.43 (0.37-0.49) | 0.52 (0.45-0.59) | trait of the **team** (kept 30%) | Ties the average (+30%, interval spans 0) | How often a defense sends him |
+| Rush share, OLB | skill-over-expected (build) | | 0.83 (0.81-0.86) | 0.85 (0.82-0.87) | **trait of the player** (kept 105%) | **Yes:** +79% against the average | His role, not his skill |
+| Rush share, ILB | skill-over-expected (build) | | 0.63 (0.59-0.68) | 0.70 (0.65-0.75) | trait of the **team** (kept 29%) | Ties the average (+43%, spans 0); for movers, his new team's rate adds +28% (I171) | The scheme's |
+| Plain catch rate, WR | skill-over-expected (build) | | 0.34 (0.29-0.38) | 0.35 (0.28-0.41) | **trait of the player** (kept 71%) | **Yes** on next season's rate (+19% against the average); no on the yardstick (receiving yards, a tie) |  |
+| Sacks per dropback, QB | skill-over-expected (build) | | 0.43 (0.36-0.50) | 0.36 (0.26-0.45) | **trait of the QB** (kept 60%) | **Yes:** +25% against the average; the raw rate counts on the passing yardstick (+0.66%) |  |
+| Throw depth, QB | skill-over-expected (build) | | 0.42 (0.34-0.49) | 0.43 (0.33-0.51) | **trait of the QB** (kept 75%) | **Yes:** the second pull, +20% against the average; no on the yardstick |  |
+| Time to throw, QB | skill-over-expected (build) | | 0.70 (0.65-0.74) | 0.55 (0.47-0.62) | trait of the **offense** (kept 32%) | **Yes:** +38% against the average; ranges hold only 72% |  |
+| Yards after contact per carry, RB | skill-over-expected (build) | | 0.21 (0.13-0.29) | 0.32 (0.22-0.42) | trait of the runner (kept 137%), weak | Ties the average (+6%, spans 0) | Shrink it hard: k 281 carries |
+| Broken tackles per carry, RB | skill-over-expected (build) | | 0.16 (0.07-0.24) | 0.17 (0.05-0.28) | trait, weak (kept 168%) | Ties the average (+2%) | k 360 carries: a season is a third signal |
+| Tackles after the line needing 2+ tacklers, RB | skill-over-expected (build) | | 0.46 (0.40-0.52) | 0.61 (0.54-0.66) | **trait of the runner** (kept 65%) | **Yes:** +17% against the average | The RB measure to use |
+| Catch rate allowed, DB | skill-over-expected (build) | | 0.17 (0.12-0.21) | 0.15 (0.09-0.21) | trait, weak (kept 59%, 4-125%) | Ties the average (+3%) | Shrink 69% of the way to the mean |
+| Interceptions per target, DB | skill-over-expected (build) | | 0.19 (0.15-0.24) | 0.25 (0.20-0.31) | trait of the player, weak (kept 131%) | **Yes**, small: +6% against the average | k 209 targets |
+| Throw depth against, DB | skill-over-expected (build) | | 0.38 (0.34-0.42) | 0.29 (0.24-0.35) | **trait** (kept 64%), likely his assignment | **Yes:** the second pull, +16% against the average | Slot and deep safeties apart |
+| Sacks per on-field dropback, DL / OLB / ILB | skill-over-expected (build) | | 0.25 / 0.29 / 0.27 | 0.35 / 0.32 / 0.45 | trait, weaker than pressures | Shrunk sacks beat raw sacks by 31%; pressures add 11% to 15% beyond them | Not shipped: the target |
+| Pressures per dropback (a sack counted), QB | skill-over-expected (build) | | 0.58 (0.52-0.64) | 0.39 (0.29-0.48) | trait of the **offense** (kept 13%) | +25% against the average | Not shipped |
+| Sacks per pressure (a sack counted), QB | skill-over-expected (build) | | 0.36 (0.28-0.43) | 0.39 (0.29-0.48) | **trait of the QB** (kept 104%) | +15% against the average | Not shipped; I90's halves |
+| His team's pressure and sacks on a lineman's dropbacks, OL | skill-over-expected (build) | | 0.58 / 0.35 | 0.26 / 0.25 | trait of the **line** (kept 25% and 20%) | Only the owner split pays (+4% to +5%; +19% to +21% for movers) | Not shipped |
+
 **Over context-live's expectation** (skill-over-expected's fourth look, H84, 2026-11-20; decision 0038's back-history, 2017-2024): every measure above that has an expectation (pass rushers' pressures, WR catch rate, QB completion, QB and line sacks, pressures, time to throw and depth, RB yards per carry) repeats and travels within 0.05 of its plain rate when taken over the situation, or over the situation plus shotgun, no-huddle, pass rushers and the box. Verdicts don't change. The one gain: time to throw over expected repeats 0.70 for QBs (plain 0.64) and 0.41 for a line (0.36), with QB movers still keeping 37%. Detail in `skill-over-expected/EXPLORATION.md`, fourth look.
 
 **Offense traits from the context** (context-v2's first look, 2026-11-20):

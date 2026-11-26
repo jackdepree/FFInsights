@@ -13,9 +13,13 @@ The ladder, for next season's same rate (centred by next season's group mean):
 - **2b, the second pull (I156, stabilization's):** M1 times one slope fit on earlier season
   pairs (the drift between seasons a season's reliability can't see).
 - **3, the owner's part split:** one fit, on earlier pairs, of next season's rate on his own M1
-  and the **team part**: the shrunk centred rate last season of his next team's other players
-  in his group (for a mover, the team he joins; for a stayer, his teammates). A player-owned
-  trait puts its weight on his own M1; a team-owned one moves toward the team he plays for.
+  and the **change in team part**: the shrunk centred rate last season of the team he joins'
+  other players in his group, less his old team's (him left out). It is zero for a stayer, whose
+  own rate already holds his team's part. A player-owned trait puts its weight on his own M1; a
+  team-owned one moves with the change of team. (As first built, `split0`, the team part was
+  the next team's level for everyone, stayers included: decision 0051, call 22.)
+- **Beside the ladder, `flat`:** one slope on the raw rate (no chances): does a player's number
+  of chances matter beyond one pull per trait?
 
 Fits are weighted by next season's chances, without an intercept (rates are centred).
 """
@@ -83,7 +87,10 @@ EXTRA = (
     Trait("ol_sack_rate", "his team's sacks on his dropbacks", ("OL",), "ol_press_rate", 300,
           "dropback on the field"),
 )  # fmt: skip
-BY_NAME = {t.name: t for t in TRAITS + EXTRA}
+# The line's pressure over expected: a team row keyed by the team (`gsis_id` = team); "QB" is
+# only the placeholder group its team rows are read under.
+LINE = Trait("line_poe", "the line's pressure over expected", ("QB",), "line_poe", 1, "dropback")
+BY_NAME = {t.name: t for t in (*TRAITS, *EXTRA, LINE)}
 
 
 # ---------------------------------------------------------------- season rows
@@ -98,15 +105,21 @@ def season_rows(games: pl.DataFrame, teams: pl.DataFrame, trait: Trait) -> pl.Da
     else:
         # a rate trait's chances (its den), or a count's total (on_dropbacks, rb_carries)
         col = "den" if trait.floor_trait in BY_NAME else "num"
-        f = games.filter(c("trait") == trait.floor_trait).group_by("gsis_id", "season").agg(
-            volume=c(col).sum()
+        f = (
+            games.filter(c("trait") == trait.floor_trait)
+            .group_by("gsis_id", "season")
+            .agg(volume=c(col).sum())
         )
         s = s.join(f, on=["gsis_id", "season"], how="left")
     t = teams.select(gsis_id="pid", season="season", team="team",
                      group=c("position").replace_strict(GROUPS, default=None))  # fmt: skip
     s = s.join(t, on=["gsis_id", "season"], how="inner")
-    s = s.filter(c("group").is_in(trait.groups) & (c("volume") >= trait.floor)
-                 & (c("den") >= max(trait.side_floor, 1e-9)) & (c("season") >= trait.first))  # fmt: skip
+    s = s.filter(
+        c("group").is_in(trait.groups)
+        & (c("volume") >= trait.floor)
+        & (c("den") >= max(trait.side_floor, 1e-9))
+        & (c("season") >= trait.first)
+    )
     s = s.with_columns(rate=c("num") / c("den"))
     mu = (c("num").sum() / c("den").sum()).over("group", "season")
     return s.with_columns(mu=mu).with_columns(x=c("rate") - c("mu"), trait=pl.lit(trait.name))
@@ -154,51 +167,78 @@ def team_components(rows: pl.DataFrame, sigma2: float) -> float:
 
 
 # ---------------------------------------------------------------- the walk
-def walk(rows: pl.DataFrame, games: pl.DataFrame, shuffle_seed: int | None = None,
-         shuffle: tuple[str, ...] = ()) -> pl.DataFrame:  # fmt: skip
-    """Every season pair (input season s, target s + 1) with each rung's forecast, fit only on
-    seasons up to s (k) and on pairs whose target is s or earlier (the slopes).
+def pairs(rows: pl.DataFrame, games: pl.DataFrame,
+          k_rows: pl.DataFrame | None = None) -> pl.DataFrame:  # fmt: skip
+    """Every season pair (input season s, target s + 1), with k fit on seasons up to s.
 
-    Columns: gsis_id, season (input), group, team, team_next, moved, x, n (chances), y and w
-    (next season's centred rate and chances), k, sigma2, tau2, m1, team_part, and the rungs
-    `avg`, `raw`, `m1`, `pull` (2b) and `split` (3), null where not yet fittable.
-    `shuffle`: columns of the input season moved together to another player of the same season
-    and group (a shuffled copy, for the null tests)."""
+    `k_rows`: the rows k (and k_team) are fit on, if not `rows`: all the trait's groups, so a
+    trait has one k (the brief's "one stabilization constant per trait"; I172 tied, rule k).
+
+    Columns: gsis_id, season (input), group, team, team_next, moved, x and n (his centred rate
+    and chances), y and w (next season's centred rate and chances), k, k_team, sigma2, tau2,
+    and the team part's raw pieces: tp_x, tp_n (his next team's other players in his group
+    this season) and tpo_x, tpo_n (his own team's, him left out; the same for a stayer)."""
     seasons = sorted(rows["season"].unique().to_list())
     parts = team_parts(rows)
+    trait = BY_NAME[rows["trait"][0]]
     nxt = rows.select("gsis_id", season=c("season") - 1, y=c("x"), w=c("den"),
                       team_next=c("team"))  # fmt: skip
-    pairs = []
+    out = []
+    k_rows = rows if k_rows is None else k_rows
     for s in seasons[:-1]:
-        tr = rows.filter(c("season") <= s)
-        sigma2, tau2 = components(tr, game_rows(games, tr, BY_TRAIT[rows["trait"][0]]))
-        k = sigma2 / tau2
+        tr = k_rows.filter(c("season") <= s)
+        sigma2, tau2 = components(tr, game_rows(games, tr, trait))
         k_team = sigma2 / team_components(tr, sigma2)
         a = rows.filter(c("season") == s).join(nxt, on=["gsis_id", "season"], how="inner")
         if a.height == 0:
             continue
-        # the next team's other players in his group, last season (him left out)
         a = a.join(parts.rename({"team": "team_next"}), on=["team_next", "group", "season"],
                    how="left").with_columns(c("t_num", "t_den").fill_null(0.0))  # fmt: skip
         own = pl.when(c("team_next") == c("team")).then(1.0).otherwise(0.0)
         a = a.with_columns(o_num=c("t_num") - own * c("num"), o_den=c("t_den") - own * c("den"))
+        # his own team's other players in his group this season (him left out)
+        a = a.drop("t_num", "t_den").join(parts, on=["team", "group", "season"], how="left")
+        a = a.with_columns(q_num=c("t_num").fill_null(0.0) - c("num"),
+                           q_den=c("t_den").fill_null(0.0) - c("den"))  # fmt: skip
         a = a.with_columns(
             tp_x=pl.when(c("o_den") > 0).then(c("o_num") / c("o_den") - c("mu")).otherwise(0.0),
             tp_n=c("o_den").clip(0, None),
+            tpo_x=pl.when(c("q_den") > 0).then(c("q_num") / c("q_den") - c("mu")).otherwise(0.0),
+            tpo_n=c("q_den").clip(0, None),
+            k=pl.lit(sigma2 / tau2),
+            k_team=pl.lit(k_team),
+            sigma2=pl.lit(sigma2),
+            tau2=pl.lit(tau2),
+            n=c("den"),
+            moved=(c("team_next") != c("team")),
         )
-        a = a.with_columns(
-            k=pl.lit(k), k_team=pl.lit(k_team), sigma2=pl.lit(sigma2), tau2=pl.lit(tau2),
-            n=c("den"), moved=(c("team_next") != c("team")),
-        )
-        pairs.append(a)
-    p = pl.concat(pairs, how="diagonal_relaxed")
+        out.append(a)
+    if not out:
+        raise ValueError(f"{trait.name}: no season pairs")
+    return pl.concat(out, how="diagonal_relaxed")
+
+
+def rungs(p: pl.DataFrame, shuffle: tuple[str, ...] = (), seed: int = 0) -> pl.DataFrame:
+    """Each rung's forecast on `pairs`: `avg`, `raw`, `m1`, and the fitted ones (null where not
+    yet fittable): `flat` (one slope on the raw rate, no chances), `pull` (2b), `split0` (3 as
+    first built: his M1 and his next team's part) and `split` (3: his M1 and the **change** in
+    team part, next team's less his old team's, which is zero for a stayer).
+    `shuffle`: columns (inputs, or `team_change`) moved together to another player of the same
+    season and group before the rungs are made (a shuffled copy, for the null tests)."""
+    shrink = lambda x, n: c(n) / (c(n) + c("k_team")) * c(x)  # noqa: E731
+    p = p.with_columns(team_new=shrink("tp_x", "tp_n"), team_old=shrink("tpo_x", "tpo_n"))
+    p = p.with_columns(team_change=pl.when(c("moved")).then(c("team_new") - c("team_old"))
+                       .otherwise(0.0))  # fmt: skip
     if shuffle:
-        p = shuffled(p, shuffle, shuffle_seed or 0)
-    p = p.with_columns(
-        avg=pl.lit(0.0), raw=c("x"), m1=c("n") / (c("n") + c("k")) * c("x"),
-        team_part=c("tp_n") / (c("tp_n") + c("k_team")) * c("tp_x"),
-    )
+        p = shuffled(p, shuffle, seed)
+    p = p.with_columns(avg=pl.lit(0.0), raw=c("x"), m1=c("n") / (c("n") + c("k")) * c("x"))
     return fit_slopes(p)
+
+
+def walk(rows: pl.DataFrame, games: pl.DataFrame, shuffle_seed: int | None = None,
+         shuffle: tuple[str, ...] = ()) -> pl.DataFrame:  # fmt: skip
+    """`pairs` then `rungs`: every season pair with each rung's walk-forward forecast."""
+    return rungs(pairs(rows, games), shuffle, shuffle_seed or 0)
 
 
 def shuffled(p: pl.DataFrame, cols: tuple[str, ...], seed: int) -> pl.DataFrame:
@@ -217,24 +257,30 @@ def _wls(X: np.ndarray, y: np.ndarray, w: np.ndarray) -> np.ndarray:
 
 
 def fit_slopes(p: pl.DataFrame) -> pl.DataFrame:
-    """Rungs 2b and 3, each target season's slopes fit on pairs with earlier targets only."""
+    """The fitted rungs, each target season's slopes fit on pairs with earlier targets only."""
     s = p["season"].to_numpy()
     y, w = p["y"].to_numpy(), p["w"].to_numpy()
-    m1, tp = p["m1"].to_numpy(), p["team_part"].to_numpy()
-    pull, split = np.full(p.height, np.nan), np.full(p.height, np.nan)
+    x, m1 = p["x"].to_numpy(), p["m1"].to_numpy()
+    designs = {"flat": [x], "pull": [m1], "split0": [m1, p["team_new"].to_numpy()],
+               "split": [m1, p["team_change"].to_numpy()]}  # fmt: skip
+    fc = {k: np.full(p.height, np.nan) for k in designs}
     b_pull, b_own, b_team = (np.full(p.height, np.nan) for _ in range(3))
     for t in np.unique(s):
         tr, te = s < t, s == t
         if tr.sum() < 30:
             continue
-        b = _wls(m1[tr, None], y[tr], w[tr])
-        pull[te], b_pull[te] = b[0] * m1[te], b[0]
-        b2 = _wls(np.column_stack([m1[tr], tp[tr]]), y[tr], w[tr])
-        split[te] = b2[0] * m1[te] + b2[1] * tp[te]
-        b_own[te], b_team[te] = b2
-    out = p.with_columns(pull=pl.Series(pull), split=pl.Series(split), b_pull=pl.Series(b_pull),
+        for k, cols in designs.items():
+            X = np.column_stack(cols)
+            b = _wls(X[tr], y[tr], w[tr])
+            fc[k][te] = X[te] @ b
+            if k == "pull":
+                b_pull[te] = b[0]
+            if k == "split":
+                b_own[te], b_team[te] = b
+    out = p.with_columns(**{k: pl.Series(v) for k, v in fc.items()}, b_pull=pl.Series(b_pull),
                          b_own=pl.Series(b_own), b_team=pl.Series(b_team))  # fmt: skip
-    return out.with_columns(c("pull", "split", "b_pull", "b_own", "b_team").fill_nan(None))
+    cols = [*designs, "b_pull", "b_own", "b_team"]
+    return out.with_columns(c(cols).fill_nan(None))
 
 
 BY_TRAIT = BY_NAME

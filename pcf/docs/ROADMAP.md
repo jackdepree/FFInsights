@@ -40,7 +40,7 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Stabilization** (`stabilization`, the CEO's pick, 2026-11-25: "Kick off stabilization"): how many attempts until a player's rate is real, how far to pull it back and toward what, and how sure to be of it; the base of player-level uncertainty, served to every expert. Kickoff in the strategy chat ([brief](../projects/stabilization/BRIEF.md)): the usual way and two analogies (credibility theory, psychometrics). Waiting for the CEO's hunches. Explored 2026-11-25, **go** (`projects/stabilization/EXPLORATION.md`): two pulls (noise by k, then drift); drift in-season for usage rates and offensive tendencies; the diffusion model loses to a ridge on its own inputs. Brief agreed 2026-11-25 ("Agree the brief"); the build runs at night.
 
-The next cousin of VOE: **skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20): players credited on pressure, completion and rushing yards over context-live's expected, with less luck than EPA. VOE itself is parked.
+**Skills over expected** (`skill-over-expected`, the CEO's pick, 2026-11-20; built 2026-11-25, validating): a retrospective table of 12 player-season traits, each shrunk toward its position by one stabilization constant per trait, with intervals, next season's forecast and an owner label ([results](../projects/skill-over-expected/RESULTS.md), decision 0051). Shrinking beats the raw rate for all 15 trait-groups and the position's average for 10; for movers, team-owned traits follow the new team. Waiting for the CEO's spot-check and merge. **For stabilization's build:** the k and shrink code is duplicated here; make it a shared module (rule j). VOE itself is parked.
 
 ## Later
 

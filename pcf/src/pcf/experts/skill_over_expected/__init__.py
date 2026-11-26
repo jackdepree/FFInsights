@@ -1,1 +1,4 @@
-"""Skills over expected (`skill-over-expected`): player-season traits with owners (decision 0051)."""
+"""Skills over expected (`skill-over-expected`): player-season traits with owners.
+
+Decision 0051.
+"""

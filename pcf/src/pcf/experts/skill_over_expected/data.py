@@ -7,7 +7,8 @@ rows (`team, game_id, season, week, num, den` of pressure over expected, trait `
 
 Read through the gateway, a retrospective view at the end of time, one season at a time
 (participation and the on-field map are post-season), regular season only, 2016-2024; PFR's
-charted measures from 2018. The 2025 vault is never read. Cached in `<interim>/skill_over_expected/`.
+charted measures from 2018. The 2025 vault is never read. Cached in
+`<interim>/skill_over_expected/`.
 """
 
 from __future__ import annotations
@@ -83,9 +84,7 @@ def offense_counts(p: pl.DataFrame, pfr: pl.DataFrame) -> pl.DataFrame:
             _long(qb, "qb_ttt", c("ttt"), c("n_ttt")),
             _long(qb, "qb_press_rate", c("pres"), c("n_pres")),
             _long(qb, "qb_sack_per_press", c("sacks_flag"), c("pres"))]  # fmt: skip
-    ru = p.filter((c("rush_attempt") == 1) & (c("qb_scramble") == 0)).drop_nulls(
-        "rusher_player_id"
-    )
+    ru = p.filter((c("rush_attempt") == 1) & (c("qb_scramble") == 0)).drop_nulls("rusher_player_id")
     ru = ru.with_columns(tacklers=pl.sum_horizontal([c(k).is_not_null().cast(pl.Int32)
                                                     for k in TACKLE]))  # fmt: skip
     ru = ru.with_columns(after=((c("yards_gained") > 0) & (c("tacklers") > 0)).cast(pl.Int32))
@@ -108,8 +107,10 @@ def defense_counts(p: pl.DataFrame, of: pl.DataFrame, pfr: pl.DataFrame) -> pl.D
           .group_by("gsis_id", "game_id", "season", "week", "team").agg(nd=pl.len()))  # fmt: skip
     d = on.join(pfr, on=["gsis_id", "game_id"], how="inner")
     d = d.with_columns(c("press", "sacks", "tgt", "cmp", "ints").fill_null(0))
-    d = d.with_columns(air=(c("adot") * c("tgt")).fill_null(0),
-                       nadot=pl.when(c("adot").is_not_null()).then(c("tgt")).otherwise(0))  # fmt: skip
+    d = d.with_columns(
+        air=(c("adot") * c("tgt")).fill_null(0),
+        nadot=pl.when(c("adot").is_not_null()).then(c("tgt")).otherwise(0),
+    )
     return pl.concat([
         _long(d, "press_rate", c("press"), c("nd")),
         _long(d, "def_sack_rate", c("sacks"), c("nd")),
@@ -125,12 +126,16 @@ def lineman_counts(p: pl.DataFrame, of: pl.DataFrame) -> pl.DataFrame:
     """An offensive lineman's team's pressure and sacks on the dropbacks he was on the field for
     (the brief's "ignore" row: a lineman's on-field rate is his line's)."""
     d = p.filter((c("qb_dropback") == 1) & c("pres").is_not_null()).select(
-        "game_id", "play_id", "season", "week", "pres", "sack")
+        "game_id", "play_id", "season", "week", "pres", "sack"
+    )
     o = of.filter((c("side") == "offense") & c("position").is_in(OL)).select(
-        "game_id", "play_id", "gsis_id", "team")
-    g = o.join(d, on=["game_id", "play_id"]).group_by(
-        "gsis_id", "game_id", "season", "week", "team").agg(
-        pres=c("pres").sum(), sacks=c("sack").sum(), n=pl.len())
+        "game_id", "play_id", "gsis_id", "team"
+    )
+    g = (
+        o.join(d, on=["game_id", "play_id"])
+        .group_by("gsis_id", "game_id", "season", "week", "team")
+        .agg(pres=c("pres").sum(), sacks=c("sack").sum(), n=pl.len())
+    )
     return pl.concat([_long(g, "ol_press_rate", c("pres"), c("n")),
                       _long(g, "ol_sack_rate", c("sacks"), c("n"))])  # fmt: skip
 
@@ -148,9 +153,11 @@ def line_counts(p: pl.DataFrame) -> pl.DataFrame:
     n_def = pl.len().over("defteam", "season")
     d = d.with_columns(poe=c("res") - (c("res").sum().over("defteam", "season") - c("res"))
                        / (n_def - 1))  # fmt: skip
-    return d.group_by(team="posteam", game_id="game_id", season="season", week="week").agg(
-        num=c("poe").sum(), den=pl.len().cast(pl.Float64)
-    ).with_columns(trait=pl.lit("line_poe"), gsis_id=c("team"))
+    return (
+        d.group_by(team="posteam", game_id="game_id", season="season", week="week")
+        .agg(num=c("poe").sum(), den=pl.len().cast(pl.Float64))
+        .with_columns(trait=pl.lit("line_poe"), gsis_id=c("team"))
+    )
 
 
 def season_counts(season: int, gateway: Gateway | None = None):
@@ -188,16 +195,25 @@ def season_counts(season: int, gateway: Gateway | None = None):
 def main_teams(roster: pl.DataFrame, snaps: pl.DataFrame) -> pl.DataFrame:
     """`pcf.validation.owners.main_team` on snap counts (`n` per player-season-position)
     instead of one row per snap: the same ties (alphabetical), far fewer rows."""
+
     def most(frame, by, value, name, weight=None):
         g = frame.group_by(*by, value).agg(n=pl.len() if weight is None else c(weight).sum())
-        return (g.sort([*by, "n", value], descending=[False] * len(by) + [True, False])
-                .group_by(by, maintain_order=True).first().select(*by, c(value).alias(name)))
+        return (
+            g.sort([*by, "n", value], descending=[False] * len(by) + [True, False])
+            .group_by(by, maintain_order=True)
+            .first()
+            .select(*by, c(value).alias(name))
+        )
+
     key = ["gsis_id", "season"]
-    out = (most(roster, key, "team", "team")
-           .join(most(roster, key, "position", "roster_pos"), on=key, how="left")
-           .join(most(snaps, key, "position", "field_pos", "n"), on=key, how="left"))
-    return out.select(pid="gsis_id", season="season", team="team",
-                      position=pl.coalesce("field_pos", "roster_pos")).sort("pid", "season")
+    out = (
+        most(roster, key, "team", "team")
+        .join(most(roster, key, "position", "roster_pos"), on=key, how="left")
+        .join(most(snaps, key, "position", "field_pos", "n"), on=key, how="left")
+    )
+    return out.select(
+        pid="gsis_id", season="season", team="team", position=pl.coalesce("field_pos", "roster_pos")
+    ).sort("pid", "season")
 
 
 def build(seasons: Sequence[int] = SEASONS) -> dict[str, pl.DataFrame]:
@@ -212,8 +228,12 @@ def build(seasons: Sequence[int] = SEASONS) -> dict[str, pl.DataFrame]:
     roster, snaps = pl.concat(ro), pl.concat(sn)
     teams = main_teams(roster, snaps)
     games = pl.concat(g).filter(c("den") > 0).select(COLS)
-    return {"games": games, "line": pl.concat(ln).select(COLS), "teams": teams,
-            "known": pl.concat(kn)}
+    return {
+        "games": games,
+        "line": pl.concat(ln).select(COLS),
+        "teams": teams,
+        "known": pl.concat(kn),
+    }
 
 
 def load(refresh: bool = False) -> dict[str, pl.DataFrame]:
