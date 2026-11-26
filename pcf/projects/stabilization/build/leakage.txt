@@ -1,0 +1,20 @@
+
+== The leakage checks
+- known-at sanity: player rows known before kickoff 0, team rows 0 -> pass
+- code scan of 20 files: random splitters none; reads around the gateway checks.py: line 230: calls read_text(); data.py: line 106: calls read_parquet(); elsewhere.py: line 28: calls read_parquet(); run.py: line 155: calls read_text(), line 162: calls read_text(), line 197: calls read_text() (expected: checks.py, data.py, elsewhere.py; run.py read_text only) -> pass
+- yaco: 1402 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 1126 (80%) -> pass
+- broken_per_touch: 1402 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 1126 (80%) -> pass
+- pressured: 614 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 519 (85%) -> pass
+- press_per_snap: 1883 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 1256 (67%) -> pass
+- tgt_per_cov: 5875 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 4731 (81%) -> pass
+- catch_allowed: 5070 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 3818 (75%) -> pass
+- adot_allowed: 5064 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 3810 (75%) -> pass
+- missed_tackle: 5773 checkpoints; read a game not yet known: 0; the lag bites (an earlier game is the latest known) in 4536 (79%) -> pass
+- tprr: 8 cutoffs (2019, 2023), 4175 checkpoints before them; future deleted: 3853 rows compared, 0 differ; outcomes after the cutoff scrambled: 0 differ -> pass
+- catch_oe: 8 cutoffs (2019, 2023), 2765 checkpoints before them; future deleted: 2556 rows compared, 0 differ; outcomes after the cutoff scrambled: 0 differ -> pass
+- pressured: 8 cutoffs (2019, 2023), 411 checkpoints before them; future deleted: 308 rows compared, 0 differ; outcomes after the cutoff scrambled: 0 differ -> pass
+- tgt_per_cov: 8 cutoffs (2019, 2023), 3658 checkpoints before them; future deleted: 2695 rows compared, 0 differ; outcomes after the cutoff scrambled: 0 differ -> pass
+- yprr: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 750 forecasts compared, 0 differ -> pass
+- press_per_snap: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 421 forecasts compared, 0 differ -> pass
+- qb_adot: targets 2020, 2024, every measure's outcomes from the target season on scrambled: 106 forecasts compared, 0 differ -> pass
+all passed: True

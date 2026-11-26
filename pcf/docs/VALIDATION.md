@@ -41,7 +41,7 @@ Every time we check a model against test seasons and then tweak it, those season
 - Opening the vault is logged in MLflow (tag `vault_opened`, with the date), so it can't happen quietly.
 - **It rolls forward every February,** after the Super Bowl: the season just finished becomes the vault, and the old vault joins training and the reported backtest.
 
-**Who has used the 2025 vault** (each project's registry entry and RESULTS hold the result; MLflow holds the tag): schemes-v2 (2026-11-10), team-efficiency (2026-11-14), context-live (2026-11-17), context-retro (2026-11-22), opportunity-quality (2026-11-22), td-expert (2026-11-24). Kept closed: the crude forecaster (the CEO, 2026-11-19) and availability (the CEO, 2026-11-25: "Keep it closed, actually"; its pre-registered odds stay unscored in `projects/availability/REVIEW.md`).
+**Who has used the 2025 vault** (each project's registry entry and RESULTS hold the result; MLflow holds the tag): schemes-v2 (2026-11-10), team-efficiency (2026-11-14), context-live (2026-11-17), context-retro (2026-11-22), opportunity-quality (2026-11-22), td-expert (2026-11-24). Kept closed: the crude forecaster (the CEO, 2026-11-19) and availability (the CEO, 2026-11-25: "Keep it closed, actually"; its pre-registered odds stay unscored in `projects/availability/REVIEW.md`), and stabilization (2026-11-26: not opened in its build, pending the CEO; its odds and pass rules are written in `projects/stabilization/RESULTS.md`).
 
 **Props are the exception.** Prop history is deep only from 2024, and 2025 weeks 14–22 are missing. So for props:
 - development uses 2022–2025, with 2022–23 marked sparse and the missing weeks excluded;

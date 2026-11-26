@@ -22,6 +22,11 @@ The ladder, for next season's same rate (centred by next season's group mean):
   of chances matter beyond one pull per trait?
 
 Fits are weighted by next season's chances, without an intercept (rates are centred).
+
+The k, the shrink, the centring and the second pull are stabilization's shared code,
+`pcf.validation.stabilize` (decision 0051 call 32; decision 0052 call 1). This table passes its own
+pull target (the same season's group mean: a retrospective table reads a finished season) and its
+brief's floors. The one football difference kept here is the linebacker groups (`regroup`).
 """
 
 from __future__ import annotations
@@ -30,6 +35,8 @@ from dataclasses import dataclass
 
 import numpy as np
 import polars as pl
+
+from pcf.validation import stabilize as S
 
 c = pl.col
 GROUPS = {"DE": "DL", "DT": "DL", "NT": "DL", "DL": "DL", "OLB": "OLB", "ILB": "ILB",
@@ -141,13 +148,12 @@ def season_rows(games: pl.DataFrame, teams: pl.DataFrame, trait: Trait) -> pl.Da
     s = s.join(t, on=["gsis_id", "season"], how="inner")
     s = s.filter(
         c("group").is_in(trait.groups)
-        & (c("volume") >= trait.floor)
         & (c("den") >= max(trait.side_floor, 1e-9))
         & (c("season") >= trait.first)
     )
-    s = s.with_columns(rate=c("num") / c("den"))
-    mu = (c("num").sum() / c("den").sum()).over("group", "season")
-    return s.with_columns(mu=mu).with_columns(x=c("rate") - c("mu"), trait=pl.lit(trait.name))
+    # the pull target: the same season's group mean, over the rows that pass the brief's floor
+    s = S.centre(s, by=("group",), target="same", floor=trait.floor, volume="volume")
+    return s.with_columns(trait=pl.lit(trait.name))
 
 
 def game_rows(games: pl.DataFrame, rows: pl.DataFrame, trait: Trait) -> pl.DataFrame:
@@ -160,17 +166,8 @@ def game_rows(games: pl.DataFrame, rows: pl.DataFrame, trait: Trait) -> pl.DataF
 def components(rows: pl.DataFrame, games: pl.DataFrame) -> tuple[float, float]:
     """(sigma2, tau2): the noise per chance (each player's games scattered around his season
     rate, `den`-weighted, per degree of freedom) and the true spread of centred season rates
-    (their `den`-weighted variance less the average noise; stabilization's `components`)."""
-    gg = games.filter(c("n_games") >= 2).with_columns(
-        dev=c("den") * (c("num") / c("den") - c("rate")) ** 2
-    )
-    per = gg.group_by("gsis_id", "season").agg(ss=c("dev").sum(), G=c("n_games").first())
-    sigma2 = float((per["ss"] / (per["G"] - 1)).mean())
-    n, x = rows["den"].to_numpy(), rows["x"].to_numpy()
-    w = n / n.sum()
-    xm = float(np.sum(w * x))
-    tau2 = float(np.sum(w * (x - xm) ** 2) - sigma2 * np.sum(w / n))
-    return sigma2, max(tau2, 1e-12)
+    (their `den`-weighted variance less the average noise): `stabilize.components`."""
+    return S.components(rows, games)
 
 
 def team_parts(rows: pl.DataFrame) -> pl.DataFrame:
@@ -184,11 +181,7 @@ def team_components(rows: pl.DataFrame, sigma2: float) -> float:
     t = rows.group_by("team", "group", "season").agg(
         num=(c("num") - c("mu") * c("den")).sum(), den=c("den").sum()
     )
-    n, x = t["den"].to_numpy(), (t["num"] / t["den"]).to_numpy()
-    w = n / n.sum()
-    xm = float(np.sum(w * x))
-    tau2 = float(np.sum(w * (x - xm) ** 2) - sigma2 * np.sum(w / n))
-    return max(tau2, 1e-12)
+    return S.spread(t["den"].to_numpy(), (t["num"] / t["den"]).to_numpy(), sigma2)
 
 
 # ---------------------------------------------------------------- the walk
@@ -230,7 +223,7 @@ def pairs(rows: pl.DataFrame, games: pl.DataFrame,
             tp_n=c("o_den").clip(0, None),
             tpo_x=pl.when(c("q_den") > 0).then(c("q_num") / c("q_den") - c("mu")).otherwise(0.0),
             tpo_n=c("q_den").clip(0, None),
-            k=pl.lit(sigma2 / tau2),
+            k=pl.lit(S.k_of(sigma2, tau2)),
             k_team=pl.lit(k_team),
             sigma2=pl.lit(sigma2),
             tau2=pl.lit(tau2),
@@ -250,13 +243,13 @@ def rungs(p: pl.DataFrame, shuffle: tuple[str, ...] = (), seed: int = 0) -> pl.D
     team part, next team's less his old team's, which is zero for a stayer).
     `shuffle`: columns (inputs, or `team_change`) moved together to another player of the same
     season and group before the rungs are made (a shuffled copy, for the null tests)."""
-    shrink = lambda x, n: c(n) / (c(n) + c("k_team")) * c(x)  # noqa: E731
-    p = p.with_columns(team_new=shrink("tp_x", "tp_n"), team_old=shrink("tpo_x", "tpo_n"))
+    p = p.with_columns(team_new=S.shrink_expr("tp_x", "tp_n", "k_team"),
+                       team_old=S.shrink_expr("tpo_x", "tpo_n", "k_team"))  # fmt: skip
     p = p.with_columns(team_change=pl.when(c("moved")).then(c("team_new") - c("team_old"))
                        .otherwise(0.0))  # fmt: skip
     if shuffle:
         p = shuffled(p, shuffle, seed)
-    p = p.with_columns(avg=pl.lit(0.0), raw=c("x"), m1=c("n") / (c("n") + c("k")) * c("x"))
+    p = p.with_columns(avg=pl.lit(0.0), raw=c("x"), m1=S.shrink_expr("x", "n", "k"))
     return fit_slopes(p)
 
 
@@ -276,9 +269,7 @@ def shuffled(p: pl.DataFrame, cols: tuple[str, ...], seed: int) -> pl.DataFrame:
     return p.with_columns(p.select(cols)[order])
 
 
-def _wls(X: np.ndarray, y: np.ndarray, w: np.ndarray) -> np.ndarray:
-    sw = np.sqrt(w)
-    return np.linalg.lstsq(X * sw[:, None], y * sw, rcond=None)[0]
+_wls = S.wls  # kept under its old name for the report's callers
 
 
 def fit_slopes(p: pl.DataFrame) -> pl.DataFrame:
@@ -288,20 +279,10 @@ def fit_slopes(p: pl.DataFrame) -> pl.DataFrame:
     x, m1 = p["x"].to_numpy(), p["m1"].to_numpy()
     designs = {"flat": [x], "pull": [m1], "split0": [m1, p["team_new"].to_numpy()],
                "split": [m1, p["team_change"].to_numpy()]}  # fmt: skip
-    fc = {k: np.full(p.height, np.nan) for k in designs}
-    b_pull, b_own, b_team = (np.full(p.height, np.nan) for _ in range(3))
-    for t in np.unique(s):
-        tr, te = s < t, s == t
-        if tr.sum() < 30:
-            continue
-        for k, cols in designs.items():
-            X = np.column_stack(cols)
-            b = _wls(X[tr], y[tr], w[tr])
-            fc[k][te] = X[te] @ b
-            if k == "pull":
-                b_pull[te] = b[0]
-            if k == "split":
-                b_own[te], b_team[te] = b
+    fc, coef = {}, {}
+    for k, cols in designs.items():  # the second pull and the other one-fit rungs, walk-forward
+        fc[k], coef[k] = S.walk_slopes(np.column_stack(cols), y, w, s)
+    b_pull, b_own, b_team = coef["pull"][:, 0], coef["split"][:, 0], coef["split"][:, 1]
     out = p.with_columns(**{k: pl.Series(v) for k, v in fc.items()}, b_pull=pl.Series(b_pull),
                          b_own=pl.Series(b_own), b_team=pl.Series(b_team))  # fmt: skip
     cols = [*designs, "b_pull", "b_own", "b_team"]
