@@ -1,6 +1,6 @@
 # 0052: stabilization's build, its technical calls
 
-**Date:** 2026-11-26 · **Decided by:** Claude (technical calls, for the CEO's veto) · **Project:** `stabilization` (the build of the agreed brief, `projects/stabilization/BRIEF.md`, "The agreed brief", the CEO, 2026-11-25: "Agree the brief") · **Vetoes:** pending (the list is at the end).
+**Date:** 2026-11-26 · **Decided by:** Claude (technical calls, for the CEO's veto) · **Project:** `stabilization` (the build of the agreed brief, `projects/stabilization/BRIEF.md`, "The agreed brief", the CEO, 2026-11-25: "Agree the brief") · **Vetoes:** none (the CEO, 2026-11-26: "No vetoes"; the list is near the end).
 
 ## Odds written before any result (2026-11-26)
 
@@ -80,3 +80,33 @@ Every call above is a technical call, and any of them can be vetoed. These are t
 - **Call 25 with call 32:** the history's ranges use expected attempts, scaled walk-forward on earlier seasons' misses.
 - **Call 30:** linebackers keep the roster grouping (the CEO's answer).
 - **Not a call, a question:** the trend (I152, F124) isn't shipped in v1. Shipping it would make it rung 4 next season.
+
+## The CEO's answers (2026-11-26), and what follows
+
+The CEO, word for word: "No vetoes. The next season forecast should add the trend now. For the run snap problem I think we can try out the cheaper fix first. Keep 2025 vault closed. Please spot check the second pull, then you may merge. Yes please always run and test all ideas from the backlog that are appropriate for a build and the ones specified in the brief."
+
+- **No vetoes** on calls 1-34.
+- **The 2025 vault stays closed.** Its odds and pass rules in RESULTS.md stay unscored.
+- **The trend ships next season** (call 35, below).
+- **The run-snap stand-in gets I180's correction** (call 36). `stabilization-retro` stays a proposal.
+- **The spot-check is the second pull** (`SPOT_CHECK.md`).
+- **The standing rule** (every backlog idea that fits a build is run and tested) is already how this build worked: every routed idea and every fitting open idea was run, and the rest are listed with a reason.
+
+### Odds written before these results (2026-11-26, after the answers, before any code ran)
+
+**The trend shipped (call 35):**
+- It clears the rung that ships now for 12+ of the 20 player rates: 65%. It cleared the ridge for 16; against the shipped pull or M1 the base is weaker for some and stronger for others.
+- The history's next-season coverage stays within 74%-90% for every rate: 75%.
+
+**I180's correction for carries a run snap (call 36):**
+- Already known, not a bet: in this build's stand-ins report the corrected stand-in removes 34% of the plain stand-in's error on next season's exact rate, about 40% of the gap to the exact version.
+- No lead back (150+ corrected run snaps) has a 2025 prior above 1: 55%. At most 2 do: 80%.
+- In season, the corrected rate's shipped forecast still beats the position's average and its 19 copies, and the filter still beats static: 85%.
+- The season rate's correlation with the exact rate stays at 0.918 or within 0.01 of it (the report's): 90%.
+
+**The spot-check of the second pull:**
+- Its slope is fit only on earlier targets, and each test season's slope stays within 0.1 of its 2024 value for 8+ of the 11 rates it ships or helps for: 55%.
+- The pull beats M1 in 6+ of 7 test seasons for 6+ of the 11: 50%.
+- The walk-forward slope gets 70%+ of a hindsight constant slope's gain for 8+ of the 11: 60%.
+- In season, the slopes sit within 0.95-1.05 for most rates (so the second pull has nothing to do): 70%.
+- Dropping it turns 2+ shipped next-season rates into ties with the average (they'd ship the average): 50%.
