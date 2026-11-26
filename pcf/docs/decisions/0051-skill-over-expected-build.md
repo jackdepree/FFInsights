@@ -1,0 +1,37 @@
+# 0051: skills over expected's build, its technical calls
+
+**Date:** 2026-11-25 · **Decided by:** Claude (technical calls, for the CEO's veto) · **Project:** `skill-over-expected` (the build of the agreed brief, `projects/skill-over-expected/BRIEF.md`, agreed 2026-11-20: "1; yes I approve")
+
+## What ships, and how it's read
+
+1. **A saved history, not a forecasting expert** (decision 0048's way, call 1): one row per player-season and trait, walk-forward, in the standard output columns (`as_of`, `train_end`, `cadence` = retrospective), under `outputs/skill-over-expected/<run_id>/history.parquet`, pinned in the registry's `history_runs`. A season's row is known once its participation is out (the day after the Super Bowl); an in-season model reads it only for finished seasons (rule m).
+2. **Read through the gateway,** a retrospective view at the end of time, one season at a time (`play.pbp`, `play.participation`, `player_play.on_field`, `player_game.roster` and `pfr`), regular season, 2016-2024 (PFR's charting 2018-2024). Cached in `<interim>/skill_over_expected/`. **The 2025 vault stays closed** (the CEO, 2026-11-25: "No keep 2025 closed please").
+3. **A sack counts as a pressure** in every pressure rate from participation (QB pressures, the line's pressure over expected, a lineman's on-field rate). Before 2023 participation's pressure flag is empty on every sack (I90's trap, context-v2's fourth look); the exploration's first look counted sacks out.
+4. **Main team and position** as `pcf.validation.owners.main_team` (most roster games, ties alphabetical; most on-field snaps, ties alphabetical), computed on snap counts instead of one row per snap (`data.main_teams`, the same answer with far fewer rows). "Moved" means the main team changed.
+5. **Groups** from the main position: DL (DE, DT, NT), OLB, ILB (ILB, MLB, LB), DB (CB, FS, SS, S, DB), WR, RB, QB, OL. Each trait is fit per group (I172 tests pooling).
+6. **Traits and floors** are the exploration's: pressures per on-field dropback (DL, OLB, ILB; 150 dropbacks); rush share (OLB, ILB; 150 dropbacks and 10 pressures or targets); WR plain catch rate (40 targets); QB sacks per dropback, throw depth, time to throw (150 dropbacks); RB yards after contact and broken tackles per PFR carry, and the share of after-the-line tackles needing two or more tacklers (80 carries); DB catch rate allowed, interceptions per target, throw depth against (30 targets). Beside them, not shipped (the "ignore" column's evidence): pass rushers' sacks per on-field dropback, QB pressures per dropback and sacks per pressure, a lineman's team's pressure and sacks on his dropbacks (300 dropbacks). The line's pressure over expected is a team-game row (`line_poe`), as the exploration built it.
+
+## The ladder
+
+7. **Centred rates.** Every rate is read less its group's mean that season (over the rows that pass the floor), the brief's "plain rates with each season's level taken out" and stabilization's centring. The target is next season's rate less next season's group mean, so every rung is scored on the same level-free scale; the level itself is not this table's forecast.
+8. **Rung 2, the shrink (M1),** is stabilization's method 1 (its `components`): k = sigma2 / tau2, the noise per chance from each player's games around his season rate, over the true spread of centred season rates. One k per trait and group, fit on seasons up to the input season. The shrunk rate is n / (n + k) of the way from the group's mean to his rate.
+9. **Rung 2b, the second pull** (I156, stabilization's): M1 times one slope fit by weighted least squares on earlier season pairs only. It's in the ladder because stabilization's exploration found it beats M1 for 12 of 18 rates and its agreed brief makes it the base; using it here follows stabilization rather than inventing a second method.
+10. **Rung 3, the owner split:** one weighted fit, on earlier pairs, of next season's rate on his own M1 and the **team part**, the shrunk centred rate last season of his next team's other players in his group (k for the team part from the spread of team-group rates). For a mover it's the team he joins, for a stayer his teammates. **His next team is his main team next season**, which for almost everyone is the team he starts the season with (known before week 1 after free agency); a player traded in season is the exception, a small look-ahead stated in the case against.
+11. **Fits are weighted by next season's chances, with no intercept** (centred rates). The slopes need 30 earlier pairs, so a trait's first season pair is never scored: every rung is scored on the same rows (rung 3's fittable ones).
+12. **Ties go to the simpler rung** (rule k): the ladder stops when a rung doesn't clear the one below. The champion per trait is the highest rung that cleared.
+
+## The tests
+
+13. **Gain** = the share of the base's weighted squared error removed; 90% interval from resampling players, 2,000 draws.
+14. **Counts** = the interval clears zero **and** the gain beats all 20 shuffled copies, each the walk rerun with **the piece the rung adds** moved to another player of the same season and group: for M1 against the raw rate, his chances (shrinking by someone else's sample size); for the split against the rung below it, the team part. **The second pull has no added input** (it's one slope), so it's judged on its interval alone. The **signal test** (VALIDATION §5, retrospective: within season and position) moves every input together (rate, chances, team part) and scores against the position's average: the champion must beat all 20.
+15. **Ranges:** normal 80% ranges for next season's rate, mean the champion, variance v + sigma2 / w, where v is the true rate's spread left around the forecast (fit on earlier pairs) and w next season's chances. Coverage (75-85%), coverage by thirds of chances, and the range score against the position average's range made the same way.
+16. **Owner labels** from the share kept (`pcf.validation.owners.kept`, each season's level out) with its 90% interval (`kept_interval`): player when movers keep half or more, else team.
+17. **Seasons won** (I147's count) is reported beside every champion's gain.
+18. **The yardstick:** each offensive champion's shrunk value as last season's prior on the crude forecaster's rest-of-season boards (WR catch rate on receiving, the RB traits on rushing, the QB traits on passing), beside participation, `score_input`, with 19 copies shuffled within season and position (decision 0048, call 21's way).
+
+## Odds written before the full run
+
+A code-check run of the ladder (every trait's rungs 1 to 3 on all rows) was seen before these were written, so the brief's own success test (the shrunk trait beats the raw rate and the position's average) has no scored odds here; it was already visible. Nothing below had been run:
+- **The yardstick:** 45% the shrunk WR catch rate counts on the receiving board beside participation; 30% at least one RB trait counts on rushing; 35% at least one QB trait counts on passing. Size: +0.1% to +0.5% of the squared error where they count.
+- **I90's halves** (Claude's odds from 2026-11-20 in `IDEAS.md`, never scored): 55% QB movers keep under half of sacks per pressure in both providers' halves; 70% sacks per dropback still follows the QB more than the line.
+- **I170, I171, I172** (new, in `IDEAS.md`), **I156** on the yardstick (its odds from 2026-11-25), **I79**'s three bets (2026-11-20), **I76** and **I112** where they run.
