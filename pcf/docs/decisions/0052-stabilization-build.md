@@ -1,6 +1,6 @@
 # 0052: stabilization's build, its technical calls
 
-**Date:** 2026-11-26 · **Decided by:** Claude (technical calls, for the CEO's veto) · **Project:** `stabilization` (the build of the agreed brief, `projects/stabilization/BRIEF.md`, "The agreed brief", the CEO, 2026-11-25: "Agree the brief") · **Vetoes:** pending.
+**Date:** 2026-11-26 · **Decided by:** Claude (technical calls, for the CEO's veto) · **Project:** `stabilization` (the build of the agreed brief, `projects/stabilization/BRIEF.md`, "The agreed brief", the CEO, 2026-11-25: "Agree the brief") · **Vetoes:** pending (the list is at the end).
 
 ## Odds written before any result (2026-11-26)
 
@@ -66,3 +66,17 @@ Written after the shared module was moved and the inputs were built (row counts 
 32. **The history's ranges get a walk-forward scale** (found in the final run, after the report was scored): on expected attempts the next-season ranges held only 68-80% on the scored rows (the report's, on realised attempts, 75-83%), because a player's attempts usually fall the next season and the noise term is understated. Each season's ranges in the history are scaled by the 80th percentile of earlier seasons' scored |actual - forecast| / sd (over the normal's; 1 before 30 such rows), in season and next season alike (`history.history_scale`, column `range_scale`). The report's verdicts are unchanged; only the saved ranges move.
 33. **The history's in-season `reliability` uses each test season's own k** (a bug found while adding the brief's `k` and `swing` columns): it had used the k fit through 2023 for every season's rows, a look-ahead in that one column (the forecasts and ranges were never affected). The history now carries `k`, `reliability` and `swing` per row, as the brief's outputs list.
 34. **`run --history-only`** rebuilds the history and its MLflow attempt from the saved verdicts and leakage result, the metrics re-read from the verdicts, so a history fix doesn't rerun the 19-copy report (a full run takes about two hours). The first full run's MLflow attempt crashed in the team history (a duplicate `team` column, fixed) and a second was stopped on purpose for call 32; both count in versions tried.
+
+## For the CEO's veto (the calls that move results most)
+
+Every call above is a technical call, and any of them can be vetoed. These are the ones a veto would change most:
+- **Call 1:** the shared shrink lives in `pcf.validation.stabilize`, and skill-over-expected points at it.
+- **Call 4:** one k per rate, pooled over positions (I185 tests a k per position).
+- **Call 6:** the filter's grids. q_s reaches the edge (1.0) for three offensive tendencies.
+- **Call 9:** a conformal scale only where plain coverage falls outside 75%-85%; I14's widening only where the range score clears.
+- **Call 12:** the ridge's inputs are chosen inside each fold (season r 0.5+ on earlier pairs).
+- **Call 17:** a rate that can't beat the position's average ships the average: yards after contact, broken tackles a touch and pressured rate next season, and 11 team sides.
+- **Call 21:** the stand-ins' rescaled diagnostic, added after the first stand-in result (marked as such). It doesn't change a verdict.
+- **Call 25 with call 32:** the history's ranges use expected attempts, scaled walk-forward on earlier seasons' misses.
+- **Call 30:** linebackers keep the roster grouping (the CEO's answer).
+- **Not a call, a question:** the trend (I152, F124) isn't shipped in v1. Shipping it would make it rung 4 next season.
