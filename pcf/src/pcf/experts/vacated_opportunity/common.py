@@ -100,4 +100,5 @@ def gain(err0: np.ndarray, err1: np.ndarray, team: np.ndarray, weights: np.ndarr
 
 
 def fmt_gain(g: tuple[float, float, float]) -> str:
-    return f"{100 * g[0]:+.1f}% (90% {100 * g[1]:+.1f}% to {100 * g[2]:+.1f}%)"
+    d = 2 if max(abs(g[1]), abs(g[2])) < 0.01 else 1
+    return f"{100 * g[0]:+.{d}f}% (90% {100 * g[1]:+.{d}f}% to {100 * g[2]:+.{d}f}%)"
