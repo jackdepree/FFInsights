@@ -26,6 +26,7 @@ from pcf.experts.stabilization import evaluate as E
 from pcf.experts.stabilization import nextseason as N
 from pcf.experts.stabilization import rates as R
 from pcf.experts.stabilization import walks as W
+from pcf.validation import stabilize as S
 
 c = pl.col
 EXACT_COL = {"tprr": "routes", "yprr": "routes", "car_per_run": "run_snaps",
@@ -58,13 +59,30 @@ def corrected(g: pl.DataFrame) -> pl.DataFrame:
     ).with_columns(corr=c("standin") * pl.coalesce("ratio_last", "rho_last", pl.lit(1.0)))
 
 
+def calibrated(f: pl.DataFrame) -> pl.DataFrame:
+    """A diagnostic beside the pre-registered test: each version's forecast rescaled to the exact
+    rate's level (intercept and slope per position, fit on earlier targets only), so a stand-in
+    whose scale is off but whose ordering is right isn't charged for the scale."""
+    out = []
+    for pos in sorted(f["pos"].unique().to_list()):
+        a = f.filter(c("pos") == pos).sort("target")
+        y, w, t = a["y"].to_numpy(), a["w"].to_numpy(), a["target"].to_numpy()
+        cols = {}
+        for ver in ("standin", "exact"):
+            X = np.column_stack([np.ones(a.height), a[ver].to_numpy()])
+            cols[f"{ver}_cal"], _ = S.walk_slopes(X, y, w, t)
+        out.append(a.with_columns(**{k: pl.Series(v) for k, v in cols.items()}))
+    return pl.concat(out).with_columns(c("standin_cal", "exact_cal").fill_nan(None))
+
+
 def report(inp: W.Inputs, out, seed: int) -> dict:
     ex = D.exact()
     out("", "== The live stand-ins against participation's exact counts (2016-2024)", "",
         "| Measure | Attempts | Season attempts r | Exact over stand-in | Season rate r "
         "(100+ exact) | I180 corrected: rate r | k stand-in, exact | M1 forecast of the exact "
-        "rate: stand-in vs exact | I180 vs stand-in | Verdict |",
-        "|---|---|---|---|---|---|---|---|---|---|")  # fmt: skip
+        "rate: stand-in vs exact | I180 vs stand-in | Both rescaled to the exact rate's level "
+        "(walk-forward, per position): stand-in vs exact | Verdict |",
+        "|---|---|---|---|---|---|---|---|---|---|---|")  # fmt: skip
     res = {}
     for m in K.STANDIN:
         g = corrected(exact_games(inp, m, ex).filter(c("exact").is_not_null()
@@ -93,7 +111,7 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
                 kx = float(sm.filter(c("season") == K.LAST)["k"][0])
                 target = rows.select("gsis_id", season=c("season") - 1,
                                      y_raw=c("num") / c("den"), w="den")  # fmt: skip
-                mu_x = sm.select("gsis_id", "season", "mu")
+                mu_x = sm.select("gsis_id", "season", "mu", "pos")
             else:
                 if ver == "standin":
                     ks = float(sm.filter(c("season") == K.LAST)["k"][0])
@@ -104,15 +122,17 @@ def report(inp: W.Inputs, out, seed: int) -> dict:
             y=c("y_raw") - c("mu"), target=c("season") + 1,
             standin=c("f_standin") - c("mu"), exact=c("f_exact") - c("mu"),
             corr=c("f_corr") - c("mu"),
-        ).filter(c("target").is_in(list(K.TEST)) & (c("target") >= 2018))
+        )
+        f = calibrated(f).filter(c("target").is_in(list(K.TEST)))
         g_se = E.gain(f, "standin", "exact", seed=seed)
         g_ce = E.gain(f, "corr", "standin", seed=seed)
+        g_cal = E.gain(f, "standin_cal", "exact_cal", seed=seed)
         poor = g_se.hi < -0.05
         verdict = "too poor" if poor else ("close" if r_rate >= 0.95 else "usable, not close")
         out(f"| {m} | {EXACT_COL[m]} | {r_att:.3f} | {ratio:.2f} | {r_rate:.3f} | {r_corr:.3f} "
             f"(plain {r_plain17:.3f}, 2017+) | {ks:.0f}, {kx:.0f} | {g_se.fmt()} | "
-            f"{g_ce.fmt()} | {verdict} |")
+            f"{g_ce.fmt()} | {g_cal.fmt()} | {verdict} |")
         res[m] = {"r_att": r_att, "ratio": ratio, "r_rate": r_rate, "r_corr": r_corr,
                   "r_plain17": r_plain17, "k_standin": ks, "k_exact": kx, "forecast": g_se,
-                  "i180": g_ce, "verdict": verdict}  # fmt: skip
+                  "i180": g_ce, "calibrated": g_cal, "verdict": verdict}  # fmt: skip
     return res

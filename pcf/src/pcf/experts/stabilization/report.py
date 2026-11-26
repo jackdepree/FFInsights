@@ -141,6 +141,49 @@ def next_season(inp: W.Inputs, out: Out, copies: int = K.COPIES) -> dict:
     return res
 
 
+# ---------------------------------------------------------------- teams, next season
+def teams_next(inp: W.Inputs, out: Out, copies: int = K.COPIES) -> dict:
+    """Rungs 1-2 for each team rate (M1, the second pull); the ridge isn't tried (32 teams a
+    season leave it under 100 training pairs until the last test seasons; decision 0052)."""
+    out("== Teams, next season (targets 2018-2024; teams resampled)")
+    res = {}
+    for name, games, rows, _lag, kind, label in team_units(inp):
+        sm = W.N.season_m1(rows, games)
+        p = W.N.pairs(sm, rows)
+        p = W.N.features(p, {}, None, None, sm, None, None)
+        f = W.next_rungs(p, [], [], {}).with_columns(season=c("target"))
+        sw = W.N.swing(R.game_rows(games, sm), sm)
+        f = f.join(sw, on=["gsis_id", "season"], how="left").with_columns(
+            c("sw").fill_null(1.0), reliability=c("n") / (c("n") + c("k")))
+        te = f.filter(c("target").is_in(list(K.TEST)))
+        g = {"m1_avg": E.gain(te, "m1", "avg", seed=SEED),
+             "pull_m1": E.gain(te, "pull", "m1", seed=SEED)}  # fmt: skip
+        champ = "pull" if g["pull_m1"].clear else "m1"
+        cp = Lad.copies(lambda s: W.next_rungs(p, [], [], {}, s).filter(
+            c("target").is_in(list(K.TEST))), champ, "gsis_id", copies, SEED)  # fmt: skip
+        b = Lad.bar(te, champ, cp, "gsis_id", SEED)
+        shipped = champ if b["passes"] else "avg"
+        out(f"- {name} ({label}; {kind}): {te.height} team pairs; k {float(te['k'].mean()):.0f}; "
+            f"M1 vs average {g['m1_avg'].fmt()}; second pull vs M1 {g['pull_m1'].fmt()} (slope "
+            f"{float(te['b_pull'].mean()):.2f}); champion {champ} vs average {b['gain'].fmt()}, "
+            f"best of {copies} copies {E.pct(b['best_copy'])} -> ships {shipped}")  # fmt: skip
+        rb = None
+        if shipped != "avg":
+            f2 = walk_scale(f, shipped, f"v_{shipped}", "target")
+            f2 = f2.with_columns(**{f"scale_{shipped}": c("_scale")})
+            wide = walk_scale(f2.with_columns(_vw=c(f"v_{shipped}") * c("sw")).drop("_scale"),
+                              shipped, "_vw", "target")  # fmt: skip
+            f2 = f2.with_columns(**{f"scale_{shipped}_sw": wide["_scale"]})
+            rb = range_block(f2.filter(c("target").is_in(list(K.TEST))), shipped,
+                             f"v_{shipped}", f"scale_{shipped}", "gsis_id", out,
+                             f"next_{name}")  # fmt: skip
+        for k_, v in g.items():
+            out.metric(f"next_{name}_{k_}", v.gain)
+        res[name] = {"frame": f, "gains": g, "champ": champ, "shipped": shipped, "bar": b,
+                     "copies": cp, "ranges": rb}  # fmt: skip
+    return res
+
+
 # ---------------------------------------------------------------- players and teams, in season
 def in_season(units: list[tuple[str, pl.DataFrame, pl.DataFrame, bool, str, str]], out: Out,
               copies: int = K.COPIES, ent: str = "gsis_id") -> dict:  # fmt: skip
@@ -284,7 +327,8 @@ def run_all(copies: int = K.COPIES, sections: tuple[str, ...] = ("players", "tea
         res["out_players"] = o
     if "teams" in sections:
         o = Out("teams")
-        o("== Teams, in season: the next 4 games after games 4, 8 and 12 (2018-2024; teams "
+        res["teams_next"] = teams_next(inp, o, copies)
+        o("", "== Teams, in season: the next 4 games after games 4, 8 and 12 (2018-2024; teams "
           "resampled)")  # fmt: skip
         res["teams_in"] = in_season(team_units(inp), o, copies)
         o.save()

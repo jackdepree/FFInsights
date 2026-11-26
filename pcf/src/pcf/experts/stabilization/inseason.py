@@ -38,12 +38,16 @@ INPUTS = ("m1", "m1_v", "N", "raw", "m", "P", "m_phi", "P_phi", "m_om", "P_om", 
 
 
 def centred_games(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str) -> pl.DataFrame:
-    """His games, each centred by last season's mean of his class that season (his own season's
-    mean only where no last season exists, the first season)."""
+    """His games, each centred by last season's mean of his class (his own season's mean only
+    where no last season exists, the data's first season). His class for the season is his
+    class in his first game of it, known by then (not the season's most attempts, which isn't
+    known until the season ends; decision 0052, call 23)."""
     means = R.class_means(rows, cls)
     last = means.select(cls, season=c("season") + 1, mu_last="mu")
     own = means.rename({"mu": "mu_own"})
-    sc = rows.select(ent, "season", cls_s=c(cls))
+    sc = games.sort(ent, "season", "week").group_by(ent, "season", maintain_order=True).agg(
+        cls_s=c(cls).first()
+    )
     g = games.join(sc, on=[ent, "season"]).drop(cls).rename({"cls_s": cls})
     g = g.join(last, on=[cls, "season"], how="left").join(own, on=[cls, "season"], how="left")
     g = g.with_columns(mu=pl.coalesce("mu_last", "mu_own")).drop_nulls("mu")
@@ -52,7 +56,7 @@ def centred_games(games: pl.DataFrame, rows: pl.DataFrame, ent: str, cls: str) -
 
 
 def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, lagged: bool,
-                tau2: float) -> pl.DataFrame:  # fmt: skip
+                tau2: float, cps: tuple[int, ...] = K.CHECKPOINTS) -> pl.DataFrame:  # fmt: skip
     """One row per entity-season-checkpoint (after his game g, at his next game's kickoff): the
     inputs read from the games known by then, and the targets (next 4 games, rest of season)."""
     g = st.sort(ent, "season", "week").with_columns(
@@ -66,6 +70,7 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
         zsum=c("z2").cum_sum().over(ent),
         cnt=pl.int_range(1, pl.len() + 1).over(ent),
         next_kick=c("kickoff").shift(-1).over(ent, "season"),
+        next_game=c("game_id").shift(-1).over(ent, "season"),
     )
     tot = g.group_by(ent, "season").agg(pn=c("n").sum(), pnd=c("nd").sum(), tn=c("n").sum(),
                                         tnd=c("nd").sum())  # fmt: skip
@@ -78,7 +83,7 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
         cn_h=c("cn").shift(-H).over(ent, "season"),
         cnd_h=c("cnd").shift(-H).over(ent, "season"),
     )
-    cp = g.filter(c("gi").is_in(list(K.CHECKPOINTS)) & c("next_kick").is_not_null())
+    cp = g.filter(c("gi").is_in(list(cps)) & c("next_kick").is_not_null())
     cp = cp.with_columns(
         w=c("cn_h") - c("cn"), y=(c("cnd_h") - c("cnd")) / (c("cn_h") - c("cn")),
         w_rest=c("tn") - c("cn"), y_rest=(c("tnd") - c("cnd")) / (c("tn") - c("cn")),
@@ -106,19 +111,19 @@ def checkpoints(st: pl.DataFrame, ent: str, cls: str, k: float, sigma2: float, l
         N=N, m1=(c("pnd") + c("cnd")) / (N + k), m1_v=sigma2 / (N + k),
         raw=pl.when(c("cn") > 0).then(c("cnd") / c("cn")).otherwise(None),
         swing=c("zsum") / c("cnt"), G=c("cnt").cast(pl.Float64),
-    ).select(ent, "season", "week", cls, "gi", "gi_known", "w", "y", "w_rest", "y_rest",
+    ).select(ent, "season", "week", cls, "gi", "gi_known", "next_kick", "next_game", "mu", "pn", "cn", "w", "y", "w_rest", "y_rest",
              "rest_games", "N", "m1", "m1_v", "raw", "m", "P", "m_phi", "P_phi", "m_om", "P_om",
              "swing", "G")  # fmt: skip
 
 
 def k104(games_c: pl.DataFrame, ent: str, T: int, sigma2: float, tau2: float, lagged: bool,
-         n_train: float) -> dict[int, float]:  # fmt: skip
+         n_train: float, cps: tuple[int, ...] = K.CHECKPOINTS) -> dict[int, float]:  # fmt: skip
     """I104's k per checkpoint for season T: this season's true spread from games in weeks up to
     the checkpoint (one earlier for PFR's lag), blended with the pooled spread by player-seasons
     (this season's against an average training season's)."""
     out = {}
     s = games_c.filter(c("season") == T)
-    for g in K.CHECKPOINTS:
+    for g in cps:
         wk = s.filter(c("week") <= (g - 1 if lagged else g))
         r = wk.group_by(ent).agg(num=c("nd_raw").sum(), den=c("n").sum())
         r = r.filter(c("den") >= R.MIN_DEN).with_columns(x=c("num") / c("den"))
@@ -133,7 +138,8 @@ def k104(games_c: pl.DataFrame, ent: str, T: int, sigma2: float, tau2: float, la
 
 def season_frame(games: pl.DataFrame, rows: pl.DataFrame, T: int, ent: str = "gsis_id",
                  cls: str = "pos", lagged: bool = False, efficiency: bool = False,
-                 L: F.Padded | None = None, gc: pl.DataFrame | None = None) -> tuple[pl.DataFrame, dict]:  # fmt: skip
+                 L: F.Padded | None = None, gc: pl.DataFrame | None = None,
+                 cps: tuple[int, ...] = K.CHECKPOINTS) -> tuple[pl.DataFrame, dict]:  # fmt: skip
     """Every season's checkpoint rows, with parameters fit on seasons before T (the test season's
     rows are the ones scored; earlier seasons' rows train the slopes and the ranges)."""
     kk = R.fit_k(rows, games, T - 1, ent, cls)
@@ -149,17 +155,17 @@ def season_frame(games: pl.DataFrame, rows: pl.DataFrame, T: int, ent: str = "gs
     s1 = F.states(L, par_phi, sigma2, tau2).select(ent, "season", "week", m_phi="m", P_phi="P")
     s2 = F.states(L, par_om, sigma2, tau2).select(ent, "season", "week", m_om="m", P_om="P")
     st = st.join(s1, on=[ent, "season", "week"]).join(s2, on=[ent, "season", "week"])
-    cp = checkpoints(st, ent, cls, k, sigma2, lagged, tau2)
+    cp = checkpoints(st, ent, cls, k, sigma2, lagged, tau2, cps)
     cp = cp.filter(c("season") <= T)
     # I104: this season's k, blended
     n_train = rows.filter((c("season") < T) & (c("den") >= R.MIN_DEN)).group_by("season").len()
     n_train = float(n_train["len"].mean()) if n_train.height else 1.0
-    kb = k104(gc.with_columns(nd_raw=c("n") * c("d")), ent, T, sigma2, tau2, lagged, n_train)
-    kb_col = pl.col("gi").replace_strict({g: kb[g] for g in K.CHECKPOINTS}, default=k)
+    kb = k104(gc.with_columns(nd_raw=c("n") * c("d")), ent, T, sigma2, tau2, lagged, n_train, cps)
+    kb_col = pl.col("gi").replace_strict({g: kb[g] for g in cps}, default=k)
     cp = cp.with_columns(k104=pl.when(c("season") == T).then(kb_col).otherwise(pl.lit(k)))
     cp = cp.with_columns(m1_k104=c("m1") * (c("N") + k) / (c("N") + c("k104")))
     info = {"sigma2": sigma2, "tau2": tau2, "k": k, "par": par, "par_phi": par_phi,
-            "par_om": par_om}  # fmt: skip
+            "par_om": par_om, "cps": cps}  # fmt: skip
     return cp, info
 
 
@@ -172,9 +178,12 @@ def rungs(cp: pl.DataFrame, info: dict, horizon: str = "next") -> pl.DataFrame:
         Hs = c("rest_games").cast(pl.Float64)
     else:
         Hs = pl.lit(float(K.HORIZON))
-    cp = cp.filter(c("w") > 0).with_columns(avg=pl.lit(0.0))
+    cps = info.get("cps", K.CHECKPOINTS)
+    if horizon != "any":
+        cp = cp.filter(c("w") > 0)
+    cp = cp.with_columns(avg=pl.lit(0.0))
     out = []
-    for g in K.CHECKPOINTS:
+    for g in cps:
         a = cp.filter(c("gi") == g).sort("season")
         if a.height == 0:
             continue
@@ -213,7 +222,7 @@ def rungs(cp: pl.DataFrame, info: dict, horizon: str = "next") -> pl.DataFrame:
             z = a.select(((c("y") - c(mean)).abs() / v.sqrt()).alias("z"))["z"].to_numpy()
             sc = np.full(a.height, np.nan)
             for t in np.unique(s):
-                for g in K.CHECKPOINTS:
+                for g in cps:
                     tr = (s < t) & (gi == g) & np.isfinite(z)
                     if tr.sum() >= S.MIN_PAIRS:
                         sc[(s == t) & (gi == g)] = np.quantile(z[tr], 0.8) / K.Z80

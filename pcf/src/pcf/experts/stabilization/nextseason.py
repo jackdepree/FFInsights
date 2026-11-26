@@ -52,13 +52,16 @@ def season_m1(rows: pl.DataFrame, games: pl.DataFrame, ent: str = "gsis_id",
 
 
 def pairs(sm: pl.DataFrame, rows: pl.DataFrame, ent: str = "gsis_id",
-          first_team: pl.DataFrame | None = None) -> pl.DataFrame:  # fmt: skip
+          first_team: pl.DataFrame | None = None, open_last: bool = False) -> pl.DataFrame:  # fmt: skip
     """Season pairs: the input season's m1 row and the target season's rate, centred by the
     input season's class mean. `first_team`: each entity-season's team in its first game (his
-    next team, known before the season starts); the main team if not given."""
+    next team, known before the season starts); the main team if not given. `open_last`: also
+    the last season's rows, with no target yet (the forecast for the season after; the history)."""
     nxt = rows.filter(c("den") > 0).select(ent, season=c("season") - 1, rate_next=c("num") / c("den"),
                                            w="den", team_main_next="team")  # fmt: skip
-    p = sm.join(nxt, on=[ent, "season"], how="inner")
+    p = sm.join(nxt, on=[ent, "season"], how="left")
+    keep = c("rate_next").is_not_null()
+    p = p.filter(keep | (c("season") == K.LAST) if open_last else keep)
     if first_team is not None:
         ft = first_team.select(ent, season=c("season") - 1, team_next="team")
         p = p.join(ft, on=[ent, "season"], how="left").with_columns(
@@ -66,8 +69,8 @@ def pairs(sm: pl.DataFrame, rows: pl.DataFrame, ent: str = "gsis_id",
         )
     else:
         p = p.with_columns(team_next=c("team_main_next"))
-    return p.with_columns(y=c("rate_next") - c("mu"), target=c("season") + 1,
-                          moved=c("team_next") != c("team"))  # fmt: skip
+    return p.with_columns(team_next=pl.coalesce("team_next", "team")).with_columns(
+        y=c("rate_next") - c("mu"), target=c("season") + 1, moved=c("team_next") != c("team"))
 
 
 def first_teams(games: pl.DataFrame, ent: str = "gsis_id") -> pl.DataFrame:
@@ -237,7 +240,8 @@ def ranges(p: pl.DataFrame, rung: str) -> pl.DataFrame:
         if tr.height >= S.MIN_PAIRS:
             z = ((tr["y"] - tr[rung]).abs() / tr[f"v_{rung}"].sqrt()).to_numpy()
             sc[tgt == t] = float(np.quantile(z, 0.8) / K.Z80)
-    return q.with_columns(pl.Series(f"scale_{rung}", sc).fill_nan(None)).drop("_base", "_r", "_c")
+    return q.with_columns(pl.Series(f"scale_{rung}", sc).fill_nan(None)).drop("_base", "_r").rename(
+        {"_c": f"c_{rung}"})
 
 
 def swing(sm_games: pl.DataFrame, sm: pl.DataFrame, ent: str = "gsis_id") -> pl.DataFrame:

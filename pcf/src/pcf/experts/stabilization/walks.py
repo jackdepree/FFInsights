@@ -53,10 +53,13 @@ def others_of(m: K.Measure) -> list[str]:
     return [x for x in grp if x != m.name]
 
 
-def next_frame(inp: Inputs, m: K.Measure) -> tuple[pl.DataFrame, list[str], list[str], dict]:
-    """Pairs with every candidate input, for one player measure."""
+def next_frame(inp: Inputs, m: K.Measure, open_last: bool = False
+               ) -> tuple[pl.DataFrame, list[str], list[str], dict]:  # fmt: skip
+    """Pairs with every candidate input, for one player measure (`open_last`: with the last
+    season's rows, whose target isn't known yet)."""
     sm = inp.sm(m.name)
-    p = N.pairs(sm, inp.rows[m.name], first_team=N.first_teams(inp.games[m.name]))
+    p = N.pairs(sm, inp.rows[m.name], first_team=N.first_teams(inp.games[m.name]),
+                open_last=open_last)  # fmt: skip
     oth = others_of(m)
     others = {o: inp.sm(o) for o in oth}
     ks = {o: N.pairs(inp.sm(o), inp.rows[o]) for o in oth}
