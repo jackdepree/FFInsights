@@ -1,0 +1,59 @@
+The CEO's spot-check: vacated-offseason's shrunk target share (I165). Stayers 2017-2024 (pairs s -> s + 1);
+gains are the share of the reference's squared error removed, 90% team bootstrap.
+
+== 1. How the slope is fit and when it's known
+  slope = sum(change x (actual - no change)) / sum(change^2), through the origin, over the skill stayers
+  left empty of every earlier pair; the pair s -> s + 1 reads only pairs t -> t + 1 with t < s, whose
+  season t + 1 <= s ended before season s + 1's week 1 (the event). Where a top player came in, no change.
+  2017: slope 0.663, fit on pairs 2015->2016 to 2015->2016 (144 rows)
+  2018: slope 0.503, fit on pairs 2015->2016 to 2016->2017 (253 rows)
+  2019: slope 0.481, fit on pairs 2015->2016 to 2017->2018 (406 rows)
+  2020: slope 0.491, fit on pairs 2015->2016 to 2018->2019 (515 rows)
+  2021: slope 0.494, fit on pairs 2015->2016 to 2019->2020 (623 rows)
+  2022: slope 0.549, fit on pairs 2015->2016 to 2020->2021 (723 rows)
+  2023: slope 0.552, fit on pairs 2015->2016 to 2021->2022 (837 rows)
+  2024: slope 0.546, fit on pairs 2015->2016 to 2022->2023 (931 rows)
+
+== 2. The result
+  every stayer (1397 rows): shrunk vs no change +2.8% (90% +0.5% to +4.8%); unshrunk +0.4% (90% -3.9% to +4.0%)
+  left empty (902 rows): shrunk vs no change +5.1% (90% +0.9% to +8.4%); vs unshrunk +4.4% (90% +1.0% to +8.3%)
+  rows it moves: 896 (64%); mean change +0.0061, mean |change| 0.0062 (target share); actual minus no change on them +0.0069
+
+== 3. By season and by group (every stayer)
+  2017: 157 rows, shrunk vs no change +0.6% (90% -12.1% to +11.8%)
+  2018: 218 rows, shrunk vs no change +2.6% (90% -0.7% to +6.2%)
+  2019: 160 rows, shrunk vs no change +4.5% (90% -0.8% to +9.7%)
+  2020: 164 rows, shrunk vs no change +2.7% (90% -1.5% to +7.5%)
+  2021: 156 rows, shrunk vs no change +8.3% (90% +2.7% to +15.2%)
+  2022: 191 rows, shrunk vs no change +2.0% (90% -0.7% to +5.5%)
+  2023: 176 rows, shrunk vs no change +0.7% (90% -2.2% to +3.6%)
+  2024: 175 rows, shrunk vs no change +1.6% (90% -0.4% to +3.6%)
+  positive in 8 of 8 seasons
+  WR: every stayer 600 rows +2.0% (90% -1.4% to +4.8%); left empty 287 rows +5.0% (90% -2.9% to +11.9%)
+  TE: every stayer 369 rows +5.4% (90% +2.9% to +8.2%); left empty 298 rows +6.9% (90% +3.7% to +10.7%)
+  RB: every stayer 428 rows +2.1% (90% -0.2% to +4.9%); left empty 317 rows +2.8% (90% -0.3% to +6.4%)
+    WR's share of the error removed: 42%
+    TE's share of the error removed: 45%
+    RB's share of the error removed: 14%
+
+== 4. How close to zero: each season dropped in turn (every stayer)
+  without 2017: +3.1% (90% +1.5% to +4.7%)
+  without 2018: +2.9% (90% +0.3% to +5.1%)
+  without 2019: +2.6% (90% +0.2% to +4.7%)
+  without 2020: +2.8% (90% +0.4% to +5.0%)
+  without 2021: +2.1% (90% -0.3% to +4.1%)
+  without 2022: +2.9% (90% +0.5% to +5.1%)
+  without 2023: +3.1% (90% +0.6% to +5.4%)
+  without 2024: +3.0% (90% +0.4% to +5.1%)
+  interval above 0 in 7 of 8 drops
+
+== 5. What the slope costs: walk-forward against hindsight and fixed slopes
+  hindsight slope 0.540 (every pair): vs no change +3.0% (90% +1.0% to +4.9%); vs walk-forward +0.18% (90% -0.17% to +0.65%)
+  fixed slope 0.25: vs no change +2.2% (90% +1.3% to +3.1%)
+  fixed slope 0.50: vs no change +3.0% (90% +1.1% to +4.7%)
+  fixed slope 0.75: vs no change +2.4% (90% -0.6% to +5.0%)
+  fixed slope 1.00: vs no change +0.4% (90% -3.9% to +4.0%)
+
+== 6. No noise: 19 copies, each season's departures moved to another team, the slope refit on them
+  every stayer: real +2.82%; copies' best +1.58%, mean +0.77%; beats 19 of 19
+  left empty: real +5.07%; copies' best +2.85%, mean +1.39%; beats 19 of 19

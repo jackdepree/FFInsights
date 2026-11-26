@@ -836,41 +836,11 @@ def _offseason_shrink(out: K.Report, res: dict) -> None:
         "\n== I165: the change shrunk by a slope fit on earlier pairs; then the champion per measure (rule k)"
     )
     for m, (st, deps, fits) in list(res.items()):
-        st = st.with_columns(f_shr=c("f_gate"), slope_=pl.lit(None, pl.Float64))
-        lines = c("group").is_in(["OL", "DL"])
-        skill = (c("group") == "RB") if m == "carry" else c("group").is_in(list(K.SKILL))
-        cells = {"empty": skill & ~c("intake")} | ({"lines": lines} if m == "snap" else {})
-        for which, cond in cells.items():
-            d = st.filter(cond & c("season").is_in(PAIRS_ALL)).with_columns(dlt=c("f_pm") - c("f0"))
-            fit_rows = d.filter(c("y").is_not_null()).with_columns(y=c("y") - c("f0"))
-            s_arr, x, y = (
-                fit_rows["season"].to_numpy(),
-                fit_rows["dlt"].to_numpy(),
-                fit_rows["y"].to_numpy(),
-            )
-            b = {}
-            for s in OSC:
-                tr = s_arr < s
-                b[s] = (
-                    float((x[tr] * y[tr]).sum() / max((x[tr] ** 2).sum(), 1e-12))
-                    if tr.sum() >= 30
-                    else 1.0
-                )
-            d = d.with_columns(
-                slope_=c("season").replace_strict(b, default=None, return_dtype=pl.Float64)
-            )
-            d = d.with_columns(f_shr=(c("f0") + c("slope_") * c("dlt")).clip(0, 1))
-            st = st.update(
-                d.select("gsis_id", "team", "season", "f_shr", "slope_"),
-                on=["gsis_id", "team", "season"],
-            )
+        st, slopes = shrink(st, m)
+        for which, b in slopes.items():
             sc = _off_rows(st, m, which)
-            out(
-                f"  {m}, {which}: slopes by season " + ", ".join(f"{s + 1} {b[s]:.2f}" for s in OSC)
-            )
-            out(
-                f"    shrunk vs the plus-minus {_g(sc, 'f_pm', 'f_shr')}; shrunk vs no change {_g(sc, 'f0', 'f_shr')}"
-            )
+            out(f"  {m}, {which}: slopes by season " + ", ".join(f"{s + 1} {b[s]:.2f}" for s in OSC))
+            out(f"    shrunk vs the plus-minus {_g(sc, 'f_pm', 'f_shr')}; shrunk vs no change {_g(sc, 'f0', 'f_shr')}")
         sc = _off_rows(st, m, "all")
         ladder = ("f0", "f_gate", "f_shr")
         champ = "f0"
@@ -880,6 +850,34 @@ def _offseason_shrink(out: K.Report, res: dict) -> None:
         out(f"  {m}, every stayer: gated vs no change {_g(sc, 'f0', 'f_gate')}; shrunk vs no change {_g(sc, 'f0', 'f_shr')}; "
             f"shrunk vs gated {_g(sc, 'f_gate', 'f_shr')} -> the champion: {CHAMP_NAMES[champ]}")  # fmt: skip
         res[m] = (st.with_columns(f_champ=c(champ), champ=pl.lit(CHAMP_NAMES[champ])), deps, fits)
+
+
+def shrink(st: pl.DataFrame, m: str, hindsight: bool = False) -> tuple[pl.DataFrame, dict]:
+    """I165's shrunk forecast (`f_shr`): no change plus the plus-minus's change times a slope
+    through the origin of (actual - no change) on the change, fit on earlier pairs only (or, with
+    `hindsight`, on every pair: the room, never shipped). Skill groups left empty and the lines
+    get their own slopes; elsewhere `f_shr` is the gated forecast. Returns the slopes per cell
+    and season (the pair's first season s)."""
+    st = st.with_columns(f_shr=c("f_gate"), slope_=pl.lit(None, pl.Float64))
+    lines = c("group").is_in(["OL", "DL"])
+    skill = (c("group") == "RB") if m == "carry" else c("group").is_in(list(K.SKILL))
+    cells = {"empty": skill & ~c("intake")} | ({"lines": lines} if m == "snap" else {})
+    slopes = {}
+    for which, cond in cells.items():
+        d = st.filter(cond & c("season").is_in(PAIRS_ALL)).with_columns(dlt=c("f_pm") - c("f0"))
+        fit_rows = d.filter(c("y").is_not_null())
+        s_arr = fit_rows["season"].to_numpy()
+        x = fit_rows["dlt"].to_numpy()
+        y = (fit_rows["y"] - fit_rows["f0"]).to_numpy()
+        b = {}
+        for s in OSC:
+            tr = np.ones_like(s_arr, dtype=bool) if hindsight else s_arr < s
+            b[s] = float((x[tr] * y[tr]).sum() / max((x[tr] ** 2).sum(), 1e-12)) if tr.sum() >= 30 else 1.0
+        d = d.with_columns(slope_=c("season").replace_strict(b, default=None, return_dtype=pl.Float64))
+        d = d.with_columns(f_shr=(c("f0") + c("slope_") * c("dlt")).clip(0, 1))
+        st = st.update(d.select("gsis_id", "team", "season", "f_shr", "slope_"), on=["gsis_id", "team", "season"])
+        slopes[which] = b
+    return st, slopes
 
 
 PAIRS_ALL = list(range(2015, K.LAST))
@@ -1179,3 +1177,81 @@ def _offseason_history(res: dict) -> None:
         mlflow.log_artifact(str(K.report_dir() / "offseason.txt"))
         tracking.log_metrics({"rows": float(h.height)})
     print(f"offseason history: {folder / 'history.parquet'} ({h.height:,} rows); run {rid}")
+
+
+# ---------------------------------------------------------------- the CEO's spot-check (2026-11-26)
+def spot_target_shrink(copies: int = 19) -> None:
+    """The shrink on target share, in depth (the CEO, 2026-11-26: "Can yo please spot check the
+    shrink on target?"). Odds in `build/PREREG.md`, written first."""
+    from pcf.experts.vacated_opportunity import offseason as O
+
+    m = "target"
+    out = K.Report("spot_target_shrink")
+    out("The CEO's spot-check: vacated-offseason's shrunk target share (I165). Stayers 2017-2024 (pairs s -> s + 1);")
+    out("gains are the share of the reference's squared error removed, 90% team bootstrap.")
+    fits = offseason_fits(m)
+    st, deps = O.build(m, fits)
+    st, slopes = shrink(st, m)
+    b = slopes["empty"]
+    out("\n== 1. How the slope is fit and when it's known")
+    out("  slope = sum(change x (actual - no change)) / sum(change^2), through the origin, over the skill stayers")
+    out("  left empty of every earlier pair; the pair s -> s + 1 reads only pairs t -> t + 1 with t < s, whose")
+    out("  season t + 1 <= s ended before season s + 1's week 1 (the event). Where a top player came in, no change.")
+    for s in OSC:
+        n = st.filter((c("season") < s) & c("y").is_not_null() & c("group").is_in(list(K.SKILL)) & ~c("intake")).height
+        out(f"  {s + 1}: slope {b[s]:.3f}, fit on pairs {PAIRS_ALL[0]}->{PAIRS_ALL[0] + 1} to {s - 1}->{s} ({n} rows)")
+    sc_all, sc_e = _off_rows(st, m, "all"), _off_rows(st, m, "empty")
+    out("\n== 2. The result")
+    out(f"  every stayer ({sc_all.height} rows): shrunk vs no change {_g(sc_all, 'f0', 'f_shr')}; unshrunk {_g(sc_all, 'f0', 'f_gate')}")
+    out(f"  left empty ({sc_e.height} rows): shrunk vs no change {_g(sc_e, 'f0', 'f_shr')}; vs unshrunk {_g(sc_e, 'f_pm', 'f_shr')}")
+    moved = sc_all.filter((c("f_shr") - c("f0")).abs() > 1e-9)
+    out(f"  rows it moves: {moved.height} ({100 * moved.height / sc_all.height:.0f}%); mean change "
+        f"{moved.select((c('f_shr') - c('f0')).mean()).item():+.4f}, mean |change| "
+        f"{moved.select((c('f_shr') - c('f0')).abs().mean()).item():.4f} (target share); actual minus no change on "
+        f"them {moved.select((c('y') - c('f0')).mean()).item():+.4f}")  # fmt: skip
+    out("\n== 3. By season and by group (every stayer)")
+    for s in OSC:
+        d = sc_all.filter(c("season") == s)
+        out(f"  {s + 1}: {d.height} rows, shrunk vs no change {_g(d, 'f0', 'f_shr')}")
+    pos = sum(_gain(sc_all.filter(c("season") == s), "f0", "f_shr")[0] > 0 for s in OSC)
+    out(f"  positive in {pos} of {len(OSC)} seasons")
+    for grp in K.SKILL:
+        d = sc_all.filter(c("group") == grp)
+        e = sc_e.filter(c("group") == grp)
+        out(f"  {grp}: every stayer {d.height} rows {_g(d, 'f0', 'f_shr')}; left empty {e.height} rows {_g(e, 'f0', 'f_shr')}")
+    tot = ((sc_all["y"] - sc_all["f0"]) ** 2 - (sc_all["y"] - sc_all["f_shr"]) ** 2).sum()
+    for grp in K.SKILL:
+        d = sc_all.filter(c("group") == grp)
+        part = ((d["y"] - d["f0"]) ** 2 - (d["y"] - d["f_shr"]) ** 2).sum()
+        out(f"    {grp}'s share of the error removed: {100 * part / tot:.0f}%")
+    out("\n== 4. How close to zero: each season dropped in turn (every stayer)")
+    lows = []
+    for s in OSC:
+        g = _gain(sc_all.filter(c("season") != s), "f0", "f_shr")
+        lows.append(g[1])
+        out(f"  without {s + 1}: {K.fmt_gain(g)}")
+    out(f"  interval above 0 in {sum(x > 0 for x in lows)} of {len(OSC)} drops")
+    out("\n== 5. What the slope costs: walk-forward against hindsight and fixed slopes")
+    sh, bh = shrink(st.drop("f_shr", "slope_"), m, hindsight=True)
+    sh = _off_rows(sh, m, "all").select("gsis_id", "team", "season", f_hind="f_shr")
+    d = sc_all.join(sh, on=["gsis_id", "team", "season"])
+    out(f"  hindsight slope {bh['empty'][OSC[0]]:.3f} (every pair): vs no change {_g(d, 'f0', 'f_hind')}; "
+        f"vs walk-forward {_g(d, 'f_shr', 'f_hind')}")  # fmt: skip
+    for k in (0.25, 0.5, 0.75, 1.0):
+        d2 = d.with_columns(f_k=pl.when(c("f_shr") != c("f0")).then((c("f0") + k * (c("f_pm") - c("f0"))).clip(0, 1))
+                            .otherwise(c("f0")))  # fmt: skip
+        out(f"  fixed slope {k:.2f}: vs no change {_g(d2, 'f0', 'f_k')}")
+    out(f"\n== 6. No noise: {copies} copies, each season's departures moved to another team, the slope refit on them")
+    real = _gain(sc_all, "f0", "f_shr")[0]
+    real_e = _gain(sc_e, "f0", "f_shr")[0]
+    nulls, nulls_e = [], []
+    for k in range(copies):
+        s2 = _reforecast(st, O.shuffled_departures(deps, get_config().seed + 900 + k), fits, m)
+        s2, _ = shrink(s2, m)
+        nulls.append(_gain(_off_rows(s2, m, "all"), "f0", "f_shr")[0])
+        nulls_e.append(_gain(_off_rows(s2, m, "empty"), "f0", "f_shr")[0])
+    out(f"  every stayer: real {100 * real:+.2f}%; copies' best {100 * max(nulls):+.2f}%, mean "
+        f"{100 * np.mean(nulls):+.2f}%; beats {sum(real > v for v in nulls)} of {copies}")  # fmt: skip
+    out(f"  left empty: real {100 * real_e:+.2f}%; copies' best {100 * max(nulls_e):+.2f}%, mean "
+        f"{100 * np.mean(nulls_e):+.2f}%; beats {sum(real_e > v for v in nulls_e)} of {copies}")  # fmt: skip
+    out.save()

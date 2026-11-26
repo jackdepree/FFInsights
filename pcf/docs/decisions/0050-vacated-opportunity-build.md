@@ -1,6 +1,6 @@
 # 0050: vacated opportunity's build, its technical calls
 
-**Date:** 2026-11-25 to 2026-11-26 · **Decided by:** Claude (technical calls, listed for the CEO's veto before the merge) · **Project:** `vacated-live` and `vacated-offseason` (the build of the agreed brief, `projects/vacated-opportunity/BRIEF.md`; decision 0046 holds the exploration's and the brief's calls)
+**Date:** 2026-11-25 to 2026-11-26 · **Decided by:** Claude (technical calls; the CEO reviewed them, 2026-11-26: "No vetoes on decision 0050.") · **Project:** `vacated-live` and `vacated-offseason` (the build of the agreed brief, `projects/vacated-opportunity/BRIEF.md`; decision 0046 holds the exploration's and the brief's calls)
 
 Code: `pcf.experts.vacated_opportunity` (`data`, `rates`, `live`, `ladder`, `choice`, `offseason`, `report`, `run`). Reports: `projects/vacated-opportunity/build/`. The odds for every idea and test were written in `build/PREREG.md` before their results.
 
@@ -55,3 +55,10 @@ Code: `pcf.experts.vacated_opportunity` (`data`, `rates`, `live`, `ladder`, `cho
 26. **vacated-offseason** (`outputs/vacated-offseason/8e8a9eb07789454ba63555f84a432b57/history.parquet`):
     - one row per stayer-team-season and quantity: mean (the champion), q10/q50/q90, `champion`, `no_change`, `plus_minus`, `change` (gated minus no change), `intake`, `departed_share`, `last_season`;
     - `as_of` is the season's retrospective moment (10:00 ET on the first day of the week-1 window); `train_end` is the end of season s's Super Bowl week.
+
+## The CEO's answers (2026-11-26)
+
+The CEO's words: "No vetoes on decision 0050. No I think vacated live can keep the snap change for now. Yes the 2.8% between season target gain ship. Can yo please spot check the shrink on target?"
+
+27. **vacated-live keeps its snap change.** Participation doesn't take it as an input for now.
+28. **vacated-offseason ships the shrunk target share** (+2.8% over all stayers). Carries keep no change. The CEO's spot-check of that shrink is in RESULTS.md ("The CEO's spot-check").

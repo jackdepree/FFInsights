@@ -23,8 +23,8 @@ Carry share ties, so no change ships for carries. **The choice model (method 3) 
 | Calibration | Live slopes: snap 0.95, target 0.79 (below the 0.85-1.15 band; recalibrating doesn't help, I160), carry 0.98. Offseason raw slopes: 0.63, 0.46 and 0.45, which the shrink fixes by construction |
 | Range coverage (q10-q90, aim 75-85%) | Live (swing ranges): 76.4%, 79.4%, 76.8%. Offseason: 79.0%, 81.9%, 76.3% |
 | Leakage | Point-in-time tests on the grid. Saturday knowledge only (availability's rows with `as_of` ≤ kickoff). Rates from completed seasons; the pair part from earlier games. Every rostered player is forecast, so the yardstick can't see who sat (decision 0050, call 8). Vault closed |
-| Football sanity (CEO review) | to do |
-| CEO spot-check | to do |
+| Football sanity (CEO review, 2026-11-26) | no vetoes; the CEO approved the target gain shipping |
+| CEO spot-check (2026-11-26) | the shrink on target share: still ships (below) |
 
 ## Hunch verdicts
 
@@ -131,11 +131,51 @@ Not run through `pcf.validation.misses` yet. The ranges' coverage by group and c
 | **How to use it** | Read `change` as a feature (it's what adds beside the incumbents), not the mean as a forecast. Snap shares: participation has most of it in season. Targets and carries: use it beside opportunity-quality. Offseason carries: the mean is no change |
 | **Feeds** | participation (input candidate), opportunity-quality, player-opportunity, fantasy-projections; the yardstick |
 
-## Open questions for the CEO
+## The CEO's spot-check: the shrink on target share (2026-11-26)
 
-1. **Spot-check pick:** which decision or finding should I walk through in depth? Suggestions:
-   - the lines' offseason gain against its shuffles (the case against's second point);
-   - the I165 shrink on targets;
-   - the Saturday chance's fallback rates.
-2. **Should participation take vacated-live's change as an input?** In season the snap signal is already in participation. Feeding it in would retire the snap half of vacated-live.
-3. **Is a 2.8% offseason target gain worth shipping, or should targets take no change too?** It clears 0 by under a point.
+The odds were written first (`build/PREREG.md`); the detail is in `build/spot_target_shrink.txt`.
+
+**Verdict: it still ships.** It's small and real: it beats no change in all 8 seasons, beats all 19 shuffled copies, and doesn't depend on the exact slope. It's close to zero in two ways: no single season clears 0 except 2021, and without 2021 the interval touches 0.
+
+1. **How the slope is fit, and whether it's known in time.**
+   - It's one number: how much of the plus-minus's predicted rise actually happened, a slope through zero of (actual − no change) on (the plus-minus − no change).
+   - It's fit on the skill-position stayers left empty in earlier seasons only. The forecast for 2020 reads the pairs 2015→2016 to 2018→2019, all finished before 2020's week 1.
+   - Where a top player came in, the forecast is no change. So yes, it's known in time, by construction (*held*).
+2. **How steady it is:** 0.66 for 2017 (one season of history, 144 rows), then 0.48-0.55 every season after. The hindsight slope over every season is 0.54. The plus-minus predicts about twice the rise that happens.
+3. **The result:**
+   - over all 1,397 stayers: +2.8% (+0.5% to +4.8%) against no change;
+   - over the 902 left empty: +5.1% (+0.9% to +8.4%);
+   - unshrunk, the plus-minus ties no change (+0.4%, −3.9% to +4.0%).
+4. **Its size in football terms:** it moves 64% of the stayers by about +0.6 points of target share, roughly 3-4 targets over a season. On those rows the actual rise was +0.7 points. It's a small, nearly uniform lift for the players left behind, not a reshuffle of who gets what.
+5. **By season:** positive in all 8 (+0.6% to +8.3%), but only 2021 clears 0 on its own (+8.3%). I bet 55% on 6 or more positive (*held*).
+6. **By position:**
+   - TE +5.4% (+2.9% to +8.2%), the only group that clears 0 on its own;
+   - WR +2.0% and RB +2.1% tie.
+
+   Of the error removed, TEs carry 45%, WRs 42% and RBs 14%. I bet 55% on TEs carrying the largest gain (*held*, narrowly by share).
+7. **How close to zero:**
+   - dropping each season in turn, the interval stays above 0 in 7 of 8 drops;
+   - without 2021 it's +2.1% (−0.3% to +4.1%).
+
+   I bet 40% on all 8 (*failed*).
+8. **The slope's cost:**
+   - the hindsight slope gains only +0.18% over the walk-forward one (I bet 70% on under 1 point: *held*);
+   - fixed slopes of 0.25 or 0.5 give +2.2% and +3.0%, both clear;
+   - 0.75 ties, and 1.0 (no shrink) ties.
+
+   So the result doesn't hang on the exact slope, only on shrinking by about half.
+9. **No noise:** rebuilt end to end with each season's departures moved to another team (the slope refit each time), the copies reach a best of +1.58% and a mean of +0.77%. The real +2.82% beats all 19 (I bet 85%: *held*). Left empty: real +5.07%, copies' best +2.85%.
+
+   About a quarter of the gain (the copies' mean, +0.8%) is the general lift stayers get whoever left. The rest, about 2 points, comes from which teammates left.
+
+**What would change the answer:**
+- a 2025 season like 2017 or 2023 (+0.6%, +0.7%) would pull the interval toward 0;
+- the live roster after free agency and the draft would also change it, since its intake flag will differ from week 1's.
+
+## Open questions for the CEO (answered 2026-11-26)
+
+The CEO's words: "No vetoes on decision 0050. No I think vacated live can keep the snap change for now. Yes the 2.8% between season target gain ship. Can yo please spot check the shrink on target?"
+
+1. **Spot-check:** the shrink on target share (below).
+2. **Participation doesn't take vacated-live's change for now;** vacated-live keeps its snap change.
+3. **The +2.8% between-season target gain ships.**

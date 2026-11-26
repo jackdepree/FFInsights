@@ -44,3 +44,13 @@ The result being checked: over all stayers, the shrunk target-share forecast bea
 - **How close to zero:** dropping any one season, the gain over all stayers keeps an interval above 0 in all 8 drops: 40%.
 - **What the slope costs:** a slope fit in hindsight on all seasons gains no more than 1 point over the walk-forward one: 70%.
 - **Verdict:** it still ships after the check: 75%.
+
+**Results (2026-11-26, `spot_target_shrink.txt`):**
+- The slope is known before each season: held (by design).
+- 19 of 19 shuffles: held (85%).
+- 6 or more of 8 seasons positive: held, 8 of 8 (55%).
+- TEs carry the largest gain: held (55%), TE +5.4% against WR +2.0% and RB +2.1%; by share of the error removed 45% against 42%.
+- All 8 drops above 0: failed (40%), 7 of 8; without 2021 the interval reaches −0.3%.
+- The hindsight slope within 1 point: held (70%), +0.18%.
+- Still ships: yes (75%).
+

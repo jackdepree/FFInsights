@@ -9,6 +9,7 @@ walks to `interim/vacated_build/`.
     python -m pcf.experts.vacated_opportunity.run choice
     python -m pcf.experts.vacated_opportunity.run offseason
     python -m pcf.experts.vacated_opportunity.run history        # the saved outputs + MLflow
+    python -m pcf.experts.vacated_opportunity.run spot           # the CEO's spot-check: the target shrink
 """
 
 from __future__ import annotations
@@ -56,7 +57,7 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("ladder")
     s = sub.add_parser("shuffles")
     s.add_argument("--copies", type=int, default=19)
-    for name in ("checks", "ideas", "yardstick", "choice", "offseason", "history"):
+    for name in ("checks", "ideas", "yardstick", "choice", "offseason", "history", "spot"):
         sub.add_parser(name)
     a = p.parse_args(argv)
     if a.command == "walks":
@@ -80,6 +81,8 @@ def main(argv: list[str] | None = None) -> None:
         Rep.offseason()
     elif a.command == "history":
         Rep.history(walks())
+    elif a.command == "spot":
+        Rep.spot_target_shrink()
 
 
 if __name__ == "__main__":
