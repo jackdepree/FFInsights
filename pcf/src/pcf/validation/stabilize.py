@@ -36,28 +36,47 @@ MIN_PAIRS = 30  # earlier pairs a slope needs before it's fit
 
 
 # ---------------------------------------------------------------- the pull target and the floor
+def means(
+    rows: pl.DataFrame,
+    by: Sequence[str] = ("group",),
+    floor: float = 0.0,
+    volume: str = "den",
+    min_rows: int = 0,
+) -> pl.DataFrame:
+    """The pull target per class-season: `mu` = `num` over `den` summed over the rows with
+    `volume` at least `floor`, for classes with at least `min_rows` such rows."""
+    r = rows.filter(c(volume) >= floor)
+    m = r.group_by(*by, "season").agg(mu=c("num").sum() / c("den").sum(), m_rows=pl.len())
+    return m.filter(c("m_rows") >= min_rows).drop("m_rows")
+
+
 def centre(
     rows: pl.DataFrame,
     by: Sequence[str] = ("group",),
     target: str = "same",
     floor: float = 0.0,
     volume: str = "den",
+    min_rows: int = 0,
 ) -> pl.DataFrame:
     """Rows with `rate`, `mu` (the pull target: the group's mean, `num` over `den` summed) and `x`
     (the centred rate). Only rows with `volume` at least `floor` are kept, and the mean is over
-    them. `target`: "same" (that season's mean) or "last" (last season's; a group-season with no
-    last season falls back to its own, so the first season isn't lost; `mu_last_known` says which).
-    """
+    them (and only classes with `min_rows` of them). `target`: "same" (that season's mean) or
+    "last" (last season's; a class-season with no last season falls back to its own, so the first
+    season isn't lost; `mu_last_known` says which)."""
     if target not in ("same", "last"):
         raise ValueError(f"target must be 'same' or 'last', not {target!r}")
     by = list(by)
     s = rows.filter(c(volume) >= floor).with_columns(rate=c("num") / c("den"))
-    mu = (c("num").sum() / c("den").sum()).over(*by, "season")
-    if target == "same":
+    if target == "same" and min_rows <= 0:
+        mu = (c("num").sum() / c("den").sum()).over(*by, "season")
         return s.with_columns(mu=mu).with_columns(x=c("rate") - c("mu"))
-    own = s.group_by(*by, "season").agg(mu_own=c("num").sum() / c("den").sum())
+    own = means(rows, by, floor, volume, min_rows).rename({"mu": "mu_own"})
+    if target == "same":
+        s = s.join(own, on=[*by, "season"], how="inner").rename({"mu_own": "mu"})
+        return s.with_columns(x=c("rate") - c("mu"))
     last = own.select(*by, season=c("season") + 1, mu_last="mu_own")
     s = s.join(own, on=[*by, "season"], how="left").join(last, on=[*by, "season"], how="left")
+    s = s.filter(c("mu_own").is_not_null() | c("mu_last").is_not_null())
     return s.with_columns(
         mu=pl.coalesce("mu_last", "mu_own"), mu_last_known=c("mu_last").is_not_null()
     ).drop("mu_own", "mu_last").with_columns(x=c("rate") - c("mu"))
