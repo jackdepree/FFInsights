@@ -92,6 +92,31 @@ EXTRA = (
 LINE = Trait("line_poe", "the line's pressure over expected", ("QB",), "line_poe", 1, "dropback")
 BY_NAME = {t.name: t for t in (*TRAITS, *EXTRA, LINE)}
 
+# Rung 2, the shrink (decision 0051 call 30). "m1" (ships): each player pulled toward his
+# position by his own reliability n / (n + k), with his own interval. "flat" (the revert): one
+# pull per trait, the same slope for every player, fit on earlier season pairs, and no
+# per-player interval. They tie for 13 of 15 trait-groups (F111); rule k's exception is
+# recorded in the decision.
+SHRINK = "m1"
+
+# The role table's off-ball fine roles (roles-archetypes, I113): an OLB player-season in one of
+# them counts as an inside linebacker (the CEO, 2026-11-26: "Yes we can count those linebackers
+# as middle/inside linebackers"; decision 0051 call 31).
+OFF_BALL = ("box linebacker", "base defensive back")
+
+
+def regroup(teams: pl.DataFrame, roles: pl.DataFrame) -> pl.DataFrame:
+    """Main teams and positions with 4-3 off-ball outside linebackers moved to ILB, by rule:
+    roster or on-field position OLB and the role table's fine role that season off-ball. The
+    old label is kept as `roster_position`. Seasons with no role row keep OLB."""
+    r = roles.select(pid="gsis_id", season="season", role="role")
+    t = teams.join(r, on=["pid", "season"], how="left")
+    off = (c("position") == "OLB") & c("role").is_in(OFF_BALL)
+    return t.with_columns(
+        roster_position=c("position"),
+        position=pl.when(off).then(pl.lit("ILB")).otherwise(c("position")),
+    ).drop("role")
+
 
 # ---------------------------------------------------------------- season rows
 def season_rows(games: pl.DataFrame, teams: pl.DataFrame, trait: Trait) -> pl.DataFrame:

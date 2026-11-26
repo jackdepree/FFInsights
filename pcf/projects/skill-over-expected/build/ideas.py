@@ -25,6 +25,7 @@ from pcf.config import get_config
 from pcf.data.gateway import END_OF_TIME, Gateway, TableSource
 from pcf.experts.skill_over_expected import data as D
 from pcf.experts.skill_over_expected import evaluate as E
+from pcf.experts.skill_over_expected import run as R
 from pcf.experts.skill_over_expected import traits as T
 
 c = pl.col
@@ -160,6 +161,7 @@ def i112(d: dict) -> None:
 
 def main() -> None:
     d = D.load()
+    d["teams"] = T.regroup(d["teams"], R.roles())  # decision 0051 call 31
     i76(d)
     i112(d)
 

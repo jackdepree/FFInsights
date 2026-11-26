@@ -159,3 +159,27 @@ def test_kept_label():
     assert E.kept_label(0.6) == "player"
     assert E.kept_label(0.3) == "team"
     assert E.kept_label(float("nan")) == "team"
+
+
+def test_flat_rung_has_one_pull_and_no_interval(world):
+    games, _, _, rows = world
+    p = T.walk(rows, games)
+    at = [datetime(s + 1, 2, 15, tzinfo=UTC) for s in SEASONS]
+    known = pl.DataFrame({"season": list(SEASONS), "known_at": at})
+    h = H.rows_for(rows, games, p, "flat", "player", 0.9, known)
+    assert h["shrunk_lo"].null_count() == h.height
+    late = h.filter(c("season") == max(SEASONS))
+    ratio = (late["shrunk_c"] / late["rate_c"]).to_numpy()
+    assert np.allclose(ratio, ratio[0]) and 0 < ratio[0] < 1  # the same pull for everyone
+    assert np.allclose(late["next_c"].to_numpy(), late["shrunk_c"].to_numpy())
+
+
+def test_regroup_moves_off_ball_outside_linebackers_only():
+    teams = pl.DataFrame({"pid": ["a", "b", "c", "d"], "season": [2020] * 4,
+                          "team": ["X"] * 4, "position": ["OLB", "OLB", "OLB", "DE"]})  # fmt: skip
+    roles = pl.DataFrame({"gsis_id": ["a", "b", "d"], "season": [2020] * 3,
+                          "role": ["box linebacker", "pass rusher", "box linebacker"]})  # fmt: skip
+    t = T.regroup(teams, roles).sort("pid")
+    assert t["position"].to_list() == ["ILB", "OLB", "OLB", "DE"]
+    assert t["roster_position"].to_list() == ["OLB", "OLB", "OLB", "DE"]
+    assert T.GROUPS[t["position"][0]] == "ILB"

@@ -205,7 +205,7 @@ def ladder(trait: T.Trait, grp: str, rows: pl.DataFrame, games: pl.DataFrame, ou
         "pull_flat": E.gain(q, "pull", "flat", seed),
     }  # fmt: skip
     cp_n = E.copies(pr, "m1", "raw", ("n",), seed=seed)  # a diagnostic (decision 0051, call 23)
-    champ = "m1" if g["m1_raw"].clear() else "raw"
+    champ = T.SHRINK if g[f"{T.SHRINK}_raw"].clear() else "raw"  # decision 0051 call 30
     if champ == "m1" and g["pull_m1"].clear():
         champ = "pull"
     below = champ
@@ -417,10 +417,14 @@ def main(argv: Sequence[str] | None = None) -> None:
     seed = get_config().seed
     out = Report()
     d = D.load()
-    out(f"skill-over-expected build: {d['games'].height:,} player-game trait rows, "
-        f"seasons 2016-2024 (PFR's charting 2018-2024); the 2025 vault closed")  # fmt: skip
-    i90(d, out, seed)
     role = roles()
+    olb = d["teams"].filter(c("position") == "OLB").height
+    d["teams"] = T.regroup(d["teams"], role)  # decision 0051 call 31
+    moved = d["teams"].filter((c("roster_position") == "OLB") & (c("position") == "ILB")).height
+    out(f"skill-over-expected build: {d['games'].height:,} player-game trait rows, "
+        f"seasons 2016-2024 (PFR's charting 2018-2024); the 2025 vault closed; rung 2 is "
+        f"{T.SHRINK}; {moved} of {olb} OLB player-seasons count as ILB (off-ball)")  # fmt: skip
+    i90(d, out, seed)
     sacks_target(d, out, seed, role)
     out(
         "\n== The ladder, every trait and group (next season's centred rate; gains are shares "

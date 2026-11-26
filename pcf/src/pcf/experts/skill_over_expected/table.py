@@ -24,7 +24,7 @@ def rows_for(rows: pl.DataFrame, games: pl.DataFrame, p: pl.DataFrame, rung: str
              owner: str, share: float, known: pl.DataFrame,
              k_rows: pl.DataFrame | None = None) -> pl.DataFrame:  # fmt: skip
     """`rows`: one trait and group's season rows; `p`: its walk (`traits.walk`), whose pairs
-    give the slope and the left-over spread for each season's forecast; `rung`: raw, m1 or
+    give the slope and the left-over spread for each season's forecast; `rung`: raw, m1, flat or
     pull (the trait's champion; split's forecast needs next season's team, so its rows publish
     the rung below and the split's slopes are in the report); `k_rows`: all the trait's groups,
     for its one k (`traits.pairs`)."""
@@ -43,8 +43,8 @@ def rows_for(rows: pl.DataFrame, games: pl.DataFrame, p: pl.DataFrame, rung: str
         slope, v, scale = 1.0, float("nan"), float("nan")
         if fit.height >= 30:
             y, w = fit["y"].to_numpy(), fit["w"].to_numpy()
-            m = fit["x" if rung == "raw" else "m1"].to_numpy()
-            if rung == "pull":
+            m = fit["x" if rung in ("raw", "flat") else "m1"].to_numpy()
+            if rung in ("pull", "flat"):
                 slope = float(np.sum(w * m * y) / np.sum(w * m * m))
             s2 = fit["sigma2"].to_numpy()
             resid = (y - slope * m) ** 2 - s2 / w
@@ -52,6 +52,9 @@ def rows_for(rows: pl.DataFrame, games: pl.DataFrame, p: pl.DataFrame, rung: str
             z = np.abs(y - slope * m) / np.sqrt(v + s2 / w)
             scale = float(np.quantile(z, 0.8)) / Z80  # the conformal scale (evaluate.ranges)
         spread = scale * (pl.lit(v) + sigma2 / c("den")).sqrt()
+        if rung == "flat":  # one pull for everyone: no per-player interval (call 30)
+            a = a.with_columns(shrunk_c=slope * c("x"), sd=pl.lit(None, dtype=pl.Float64))
+            slope = 1.0
         base = c("x") if rung == "raw" else c("shrunk_c")
         a = (
             a.with_columns(next_c=slope * base)
