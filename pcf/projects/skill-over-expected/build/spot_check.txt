@@ -1,0 +1,68 @@
+
+== press_rate, inside linebackers: 303 scored pairs, 80 movers (61 players; 14 of them OLB-labelled off-ball in the input season); before the reclassification 66 movers, +20.7% (+10.1 to +29.8)
+  the movers' gain, as pre-registered (his M1 and his new team's part, against M1): +9.4% (+1.1 to +16.7); the shipped rung 3 (the team change): +1.1% (-14.7 to +14.8)
+  all rows (movers and stayers): split0 against M1 -2.3% (-17.0 to +10.2)
+  is it only a harder pull? the second pull (one slope on M1, no team) against M1, movers: +10.4% (+2.8 to +17.5); the split against the second pull, movers: -1.2% (-6.1 to +3.3)
+  a movers' own pull (fit on earlier movers only), 57 movers: against M1 +5.7% (-30.5 to +32.8); the split against it -1.0% (-31.9 to +20.5)
+  20 copies with the new team's part moved to another inside linebacker that season: best +13.9%, median +9.7%; beats all 20: False
+  by target season (movers, the gain, its share of the total gain):
+    2020: 10 movers, +28.0%, 47% of the total; without it +5.8% (-3.7 to +12.9)
+    2021: 13 movers, +11.8%, 17% of the total; without it +9.0% (+0.8 to +16.3)
+    2022: 16 movers, +4.1%, 4% of the total; without it +10.0% (+1.7 to +17.6)
+    2023: 21 movers, +11.7%, 22% of the total; without it +8.9% (+0.3 to +16.2)
+    2024: 20 movers, +2.0%, 9% of the total; without it +14.9% (+4.1 to +24.7)
+  dropping each new team in turn (movers to it):
+    without NYG (5 movers): +7.7% (-0.3 to +15.7)
+    without ATL (2 movers): +7.9% (+0.3 to +15.4)
+    without DET (2 movers): +7.9% (-0.6 to +15.5)
+    the lowest lower bound over all 28 teams: -0.9%; clear without every team: False
+  role or scheme: the team change (new team's part less the old) against his miss from M1, weighted r -0.04
+    big team change (above the median): 40 movers, +12.0% (+0.7 to +21.9)
+    small team change: 40 movers, +5.5% (-5.8 to +14.9)
+    ILB-labelled movers: 66, +9.7% (+0.8 to +17.5)
+  the movers it helps most (season in, team, new team, his centred rate in and out, M1, with the new team):
+    Jamie Collins 2019 NE->DET: +0.019 -> -0.001; M1 +0.014, split0 +0.010
+    Kaden Elliss 2022 NO->ATL: +0.020 -> -0.001; M1 +0.013, split0 +0.010
+    Mack Wilson 2023 NE->ARI: +0.038 -> +0.004; M1 +0.020, split0 +0.017
+    Damien Wilson 2020 KC->JAX: -0.015 -> +0.001; M1 -0.009, split0 -0.006
+    Josh Bynes 2019 BAL->CIN: +0.007 -> -0.009; M1 +0.004, split0 +0.001
+    Bobby Okereke 2022 IND->NYG: -0.013 -> -0.002; M1 -0.009, split0 -0.007
+
+== rush_share, inside linebackers: 303 scored pairs, 80 movers (61 players; 14 of them OLB-labelled off-ball in the input season); before the reclassification 66 movers, +27.9% (+17.4 to +37.9)
+  the movers' gain, as pre-registered (his M1 and his new team's part, against M1): +11.0% (+4.0 to +19.5); the shipped rung 3 (the team change): -2.3% (-22.3 to +16.3)
+  all rows (movers and stayers): split0 against M1 -5.7% (-22.8 to +9.2)
+  is it only a harder pull? the second pull (one slope on M1, no team) against M1, movers: +12.4% (+5.7 to +20.7); the split against the second pull, movers: -1.7% (-5.6 to +3.0)
+  a movers' own pull (fit on earlier movers only), 57 movers: against M1 +8.1% (-52.1 to +48.7); the split against it -6.1% (-87.5 to +34.9)
+  20 copies with the new team's part moved to another inside linebacker that season: best +16.0%, median +11.8%; beats all 20: False
+  by target season (movers, the gain, its share of the total gain):
+    2020: 10 movers, +43.7%, 51% of the total; without it +6.2% (+1.1 to +13.0)
+    2021: 13 movers, +30.7%, 32% of the total; without it +8.4% (+1.8 to +16.8)
+    2022: 16 movers, +3.8%, 4% of the total; without it +11.9% (+3.9 to +21.4)
+    2023: 21 movers, +13.6%, 20% of the total; without it +10.5% (+2.2 to +19.7)
+    2024: 20 movers, -1.6%, -7% of the total; without it +22.7% (+12.6 to +30.6)
+  dropping each new team in turn (movers to it):
+    without DET (2 movers): +8.0% (+2.0 to +14.9)
+    without NYG (5 movers): +8.9% (+1.8 to +16.9)
+    without CIN (1 movers): +10.1% (+3.0 to +18.3)
+    the lowest lower bound over all 28 teams: +1.8%; clear without every team: True
+  role or scheme: the team change (new team's part less the old) against his miss from M1, weighted r 0.01
+    big team change (above the median): 40 movers, +13.8% (+4.4 to +26.2)
+    small team change: 40 movers, +5.3% (-1.4 to +14.0)
+    ILB-labelled movers: 66, +11.2% (+4.3 to +19.0)
+  the movers it helps most (season in, team, new team, his centred rate in and out, M1, with the new team):
+    Jamie Collins 2019 NE->DET: +0.212 -> -0.005; M1 +0.179, split0 +0.126
+    Reggie Ragland 2020 DET->NYG: +0.143 -> -0.079; M1 +0.100, split0 +0.057
+    Damien Wilson 2020 KC->JAX: -0.118 -> +0.019; M1 -0.089, split0 -0.059
+    Josh Bynes 2019 BAL->CIN: +0.085 -> -0.065; M1 +0.059, split0 +0.023
+    Kaden Elliss 2022 NO->ATL: +0.146 -> +0.008; M1 +0.118, split0 +0.098
+    Bobby Okereke 2022 IND->NYG: -0.104 -> +0.041; M1 -0.092, split0 -0.078
+
+== The other movers results: the first split against M1 and against the second pull (movers only)
+  catch_rate WR (97 movers): split0 against M1 +8.8% (+3.1 to +14.3); the second pull against M1 +7.8% (+2.2 to +12.9); split0 against the second pull +1.1% (-1.5 to +3.8)
+  depth_against DB (145 movers): split0 against M1 +13.5% (+7.1 to +19.4); the second pull against M1 +14.7% (+8.5 to +20.5); split0 against the second pull -1.3% (-2.2 to -0.5)
+  ol_press_rate OL (124 movers): split0 against M1 +42.1% (+30.2 to +52.4); the second pull against M1 +28.0% (+21.5 to +33.9); split0 against the second pull +19.6% (+8.4 to +30.3)
+  ol_sack_rate OL (124 movers): split0 against M1 +41.1% (+25.9 to +53.4); the second pull against M1 +23.3% (+16.1 to +30.6); split0 against the second pull +23.2% (+8.1 to +36.1)
+
+== Outside linebackers (edge players after the reclassification): the shipped split against the second pull
+  press_rate OLB (126 pairs, 34 movers): the second pull against M1 +5.2% (-0.2 to +9.1); split against M1 +8.0% (+2.1 to +12.9); split against the second pull +2.9% (+0.7 to +5.6), copies' best +1.8%; movers: split against the second pull +10.8% (+3.0 to +18.4)
+  rush_share OLB (118 pairs, 33 movers): the second pull against M1 +4.5% (-3.0 to +10.1); split against M1 +4.3% (-3.2 to +9.8); split against the second pull -0.3% (-0.7 to +0.2), copies' best +0.7%; movers: split against the second pull -1.2% (-3.0 to +0.7)

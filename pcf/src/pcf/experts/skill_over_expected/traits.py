@@ -95,7 +95,7 @@ BY_NAME = {t.name: t for t in (*TRAITS, *EXTRA, LINE)}
 # Rung 2, the shrink (decision 0051 call 30). "m1" (ships): each player pulled toward his
 # position by his own reliability n / (n + k), with his own interval. "flat" (the revert): one
 # pull per trait, the same slope for every player, fit on earlier season pairs, and no
-# per-player interval. They tie for 13 of 15 trait-groups (F111); rule k's exception is
+# per-player interval. They tie for 14 of 15 trait-groups (F111); rule k's exception is
 # recorded in the decision.
 SHRINK = "m1"
 
