@@ -1,0 +1,87 @@
+vacated-offseason: each stayer's next-season share after a top player left (the event: the week-1
+roster); pairs 2016->2017 to 2023->2024 scored; vacated-live's rates fit through season s; 90% team
+bootstrap. No change = his season-s share in games where every departed group-mate played.
+
+== snap share
+  885 departures; 2,498 stayers, 2,434 who played in s + 1; a top player came in at the group for 66% of stayer rows
+  skill groups left empty: 305 rows
+    plus-minus vs no change +16.1% (90% +2.4% to +29.2%) (pooled alone +15.7% (90% +5.4% to +26.3%); the pair part over pooled +0.4% (90% -5.9% to +6.5%))
+    gated vs no change +16.1% (90% +2.4% to +29.2%); the proportional split vs no change -70.8% (90% -89.5% to -52.1%); gated vs the proportional split +50.8% (90% +42.8% to +58.6%)
+  skill groups, a top player came in: 312 rows
+    plus-minus vs no change -26.7% (90% -41.2% to -12.7%) (pooled alone -20.7% (90% -32.1% to -9.1%); the pair part over pooled -5.0% (90% -11.5% to +0.7%))
+    gated vs no change +0.00% (90% +0.00% to +0.00%); the proportional split vs no change -155.2% (90% -193.1% to -121.0%); gated vs the proportional split +60.8% (90% +47.4% to +75.7%)
+  the lines: 1,817 rows
+    plus-minus vs no change +12.4% (90% +7.9% to +16.6%) (pooled alone +14.3% (90% +10.8% to +17.6%); the pair part over pooled -2.2% (90% -5.5% to +0.8%))
+    gated vs no change +12.4% (90% +7.9% to +16.6%); the proportional split vs no change -13.9% (90% -18.7% to -9.0%); gated vs the proportional split +23.1% (90% +19.0% to +27.0%)
+  every stayer: 2,434 rows
+    plus-minus vs no change +9.2% (90% +4.8% to +13.5%) (pooled alone +11.3% (90% +7.6% to +14.8%); the pair part over pooled -2.3% (90% -4.9% to +0.1%))
+    gated vs no change +11.6% (90% +7.6% to +15.5%); the proportional split vs no change -31.8% (90% -37.5% to -26.5%); gated vs the proportional split +32.9% (90% +29.3% to +36.4%)
+      empty, RB: 87 rows, plus-minus vs no change +13.9% (90% -16.0% to +49.8%)
+      empty, TE: 66 rows, plus-minus vs no change +23.6% (90% -4.0% to +51.0%)
+      empty, WR: 152 rows, plus-minus vs no change +12.2% (90% -3.7% to +29.5%)
+    calibration slope (empty): 0.63
+      lines, DL: 690 rows, plus-minus vs no change +1.1% (90% -10.4% to +11.4%)
+      lines, OL: 1127 rows, plus-minus vs no change +14.2% (90% +9.2% to +18.9%)
+    calibration slope (lines): 0.77
+
+== target share
+  278 departures; 1,414 stayers, 1,397 who played in s + 1; a top player came in at the group for 36% of stayer rows
+  skill groups left empty: 902 rows
+    plus-minus vs no change +0.8% (90% -7.2% to +7.1%) (pooled alone +0.2% (90% -6.1% to +5.6%); the pair part over pooled +0.5% (90% -1.4% to +2.3%))
+    gated vs no change +0.8% (90% -7.2% to +7.1%); the proportional split vs no change -80.2% (90% -102.5% to -60.4%); gated vs the proportional split +44.9% (90% +35.0% to +55.8%)
+  skill groups, a top player came in: 495 rows
+    plus-minus vs no change -19.2% (90% -29.5% to -9.6%) (pooled alone -19.6% (90% -29.3% to -10.5%); the pair part over pooled +0.3% (90% -0.9% to +1.3%))
+    gated vs no change +0.00% (90% +0.00% to +0.00%); the proportional split vs no change -117.1% (90% -145.5% to -91.1%); gated vs the proportional split +53.9% (90% +42.0% to +67.0%)
+  every stayer: 1,397 rows
+    plus-minus vs no change -8.1% (90% -15.6% to -1.2%) (pooled alone -8.6% (90% -15.1% to -2.5%); the pair part over pooled +0.4% (90% -0.7% to +1.5%))
+    gated vs no change +0.4% (90% -3.9% to +4.0%); the proportional split vs no change -96.6% (90% -116.2% to -79.0%); gated vs the proportional split +49.3% (90% +40.8% to +58.9%)
+      empty, RB: 317 rows, plus-minus vs no change +0.9% (90% -4.5% to +6.9%)
+      empty, TE: 298 rows, plus-minus vs no change +8.0% (90% +2.0% to +14.8%)
+      empty, WR: 287 rows, plus-minus vs no change -4.9% (90% -20.4% to +8.6%)
+    calibration slope (empty): 0.46
+
+== carry share
+  278 departures; 1,414 stayers, 1,397 who played in s + 1; a top player came in at the group for 36% of stayer rows
+  skill groups left empty: 317 rows
+    plus-minus vs no change -6.0% (90% -17.5% to +6.1%) (pooled alone -4.1% (90% -13.6% to +5.7%); the pair part over pooled -1.8% (90% -6.1% to +1.8%))
+    gated vs no change -6.0% (90% -17.5% to +6.1%); the proportional split vs no change -67.7% (90% -97.3% to -40.5%); gated vs the proportional split +36.8% (90% +24.1% to +50.5%)
+  skill groups, a top player came in: 111 rows
+    plus-minus vs no change -6.3% (90% -24.8% to +13.5%) (pooled alone -0.3% (90% -17.0% to +16.9%); the pair part over pooled -6.0% (90% -11.8% to -1.0%))
+    gated vs no change +0.00% (90% +0.00% to +0.00%); the proportional split vs no change -55.4% (90% -100.7% to -12.3%); gated vs the proportional split +35.6% (90% +7.9% to +64.8%)
+  every stayer: 428 rows
+    plus-minus vs no change -6.1% (90% -15.2% to +3.8%) (pooled alone -3.0% (90% -10.3% to +5.1%); the pair part over pooled -3.0% (90% -6.4% to -0.2%))
+    gated vs no change -4.2% (90% -12.1% to +4.4%); the proportional split vs no change -64.0% (90% -88.8% to -39.6%); gated vs the proportional split +36.5% (90% +23.1% to +50.6%)
+      empty, RB: 317 rows, plus-minus vs no change -6.0% (90% -17.5% to +6.1%)
+    calibration slope (empty): 0.45
+
+== No noise: 19 copies with each season's departure lists moved to another team (no change kept)
+  snap, empty: real +16.1%; copies' best +13.0%, mean +5.2%; beats 19 of 19
+  snap, lines: real +12.4%; copies' best +12.1%, mean +10.2%; beats 19 of 19
+  target, empty: real +0.8%; copies' best -8.4%, mean -13.5%; beats 19 of 19
+  carry, empty: real -6.0%; copies' best -18.1%, mean -26.9%; beats 19 of 19
+
+== Ranges: q10-q90 from earlier pairs' residuals per cell (group | intake | the forecast moves > 0.02)
+  snap: q10-q90 holds 79.7% of 2,434 rows (aim 80%); range score 4.944; DL 79%, OL 81%, RB 75%, TE 79%, WR 79%
+  target: q10-q90 holds 82.0% of 1,397 rows (aim 80%); range score 1.119; RB 82%, TE 83%, WR 81%
+  carry: q10-q90 holds 75.2% of 428 rows (aim 80%); range score 3.497; RB 75%
+
+== The obvious-input check (skill stayers left empty; walk-forward linear stacks on earlier pairs):
+   participation's rest-of-season share (snap), opportunity-quality's rest-of-season expected points (target,
+   carry), at his team's first game of s + 1; then + the plus-minus's change
+  snap: 262 rows; the incumbent vs no change +35.0% (90% +22.3% to +48.4%); the incumbent + the change vs the incumbent +1.3% (90% -2.6% to +4.7%)
+  target: 792 rows; the incumbent vs no change +10.9% (90% +7.2% to +14.9%); the incumbent + the change vs the incumbent +3.9% (90% +2.1% to +5.6%)
+  carry: 274 rows; the incumbent vs no change +13.6% (90% +5.8% to +21.2%); the incumbent + the change vs the incumbent -3.2% (90% -7.2% to +0.5%)
+
+== I126 / I136: like-for-like on roles' table, skill stayers where the group was left empty
+  snap: 262 stayers with role tables; Z vs P -0.2% (90% -3.7% to +3.4%); rank correlation of his distance to the nearest departed player with his gain over no change +0.018
+  target: 789 stayers with role tables; Z vs P -0.1% (90% -3.0% to +3.0%); rank correlation of his distance to the nearest departed player with his gain over no change -0.019
+  carry: 274 stayers with role tables; Z vs P +4.1% (90% -2.1% to +10.5%); rank correlation of his distance to the nearest departed player with his gain over no change -0.022
+
+== Method 3 in the offseason (the choice model's diversion), skill stayers left empty
+  target: 902 rows; choice vs no change -47.8% (90% -63.4% to -32.6%); choice vs the plus-minus -48.9% (90% -61.4% to -36.8%)
+  carry: 317 rows; choice vs no change -50.1% (90% -79.7% to -22.6%); choice vs the plus-minus -41.6% (90% -63.5% to -21.6%)
+
+== The yardstick (rest-of-season boards, scored on each team's first game of s + 1), beside participation;
+   the input is the gated forecast's change (gated minus no change) for snap, target and carry share
+  receiving: +0.60% (90% +0.06 to +1.20) on 2209 week-1 rows; range score +0.38%; copies' best +0.23%; counts: True
+  rushing: -0.05% (90% -0.22 to +0.06) on 613 week-1 rows; range score -0.02%; copies' best +0.27%; counts: False

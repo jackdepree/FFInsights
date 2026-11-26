@@ -46,7 +46,9 @@ def season_tops(pg: pl.DataFrame) -> pl.DataFrame:
              tgt_share=c("tgt_share").mean(), car_share=c("car_share").mean(),
              first_wk=c("week").min(), last_wk=c("week").max())
     )  # fmt: skip
-    ps = ps.with_columns(rank=c("snaps").rank("ordinal", descending=True).over("team", "season", "group"))
+    ps = ps.with_columns(
+        rank=c("snaps").rank("ordinal", descending=True).over("team", "season", "group")
+    )
     k = c("group").replace_strict(K.TOPK, return_dtype=pl.Int64)
     return ps.with_columns(top=c("rank") <= k)
 
@@ -84,9 +86,11 @@ def design(rows: pl.DataFrame, ab: pl.DataFrame, ycol: str, wcol: str, groups: S
     cols = ["idx", "gsis_id", "team", "season", "game_id", "group", "psk"]
     if extra == "coach":
         cols.append("coach")
-    pr = rows.select(cols).join(
-        ab.select("j", "team", "game_id", "group_j", w=c(wcol)), on=["team", "game_id"]
-    ).filter(c("j") != c("gsis_id"))
+    pr = (
+        rows.select(cols)
+        .join(ab.select("j", "team", "game_id", "group_j", w=c(wcol)), on=["team", "game_id"])
+        .filter(c("j") != c("gsis_id"))
+    )
     parts = [pr.select("idx", "psk", key=c("group") + ">" + c("group_j"), val="w")]
     same = pr.filter(c("group") == c("group_j"))
     if pair:
@@ -96,10 +100,17 @@ def design(rows: pl.DataFrame, ab: pl.DataFrame, ycol: str, wcol: str, groups: S
         ))  # fmt: skip
     if extra:
         who = c("team") if extra == "team" else c("coach").fill_null("?")
-        parts.append(same.select("idx", "psk", key=pl.lit(extra + "|") + who + "|" + c("group"), val="w"))
+        parts.append(
+            same.select("idx", "psk", key=pl.lit(extra + "|") + who + "|" + c("group"), val="w")
+        )
     L = pl.concat(parts).group_by("idx", "psk", "key").agg(c("val").sum())
     n = rows.group_by("psk").agg(n=pl.len())
-    M = L.group_by("psk", "key").agg(s=c("val").sum()).join(n, on="psk").with_columns(m=c("s") / c("n"))
+    M = (
+        L.group_by("psk", "key")
+        .agg(s=c("val").sum())
+        .join(n, on="psk")
+        .with_columns(m=c("s") / c("n"))
+    )
     D = (
         rows.select("idx", "psk").join(M.select("psk", "key", "m"), on="psk")
         .join(L.select("idx", "key", "val"), on=["idx", "key"], how="left")
@@ -136,7 +147,9 @@ def stack(blocks: Sequence[Design]) -> tuple[sp.csr_matrix, np.ndarray, list[str
     for b in blocks:
         m = np.array([seen[k] for k in b.keys])
         coo = b.X.tocoo()
-        mats.append(sp.csr_matrix((coo.data, (coo.row, m[coo.col])), shape=(b.X.shape[0], len(keys))))
+        mats.append(
+            sp.csr_matrix((coo.data, (coo.row, m[coo.col])), shape=(b.X.shape[0], len(keys)))
+        )
     return sp.vstack(mats).tocsr(), np.concatenate([b.y for b in blocks]), keys
 
 
@@ -153,7 +166,9 @@ class Fit:
         return {k: self.coef.get(k, 0.0) for k in pool_keys(groups)}
 
 
-def choose_alpha(blocks: dict[int, Design], seasons: Sequence[int], grid=GRID) -> tuple[float, dict]:
+def choose_alpha(
+    blocks: dict[int, Design], seasons: Sequence[int], grid=GRID
+) -> tuple[float, dict]:
     """The penalty by a time-ordered inner split (decision 0050, call 4): fit on all but the
     last training season, score the last one's demeaned shares (its own pair columns unseen)."""
     if len(seasons) < 2:
@@ -190,7 +205,9 @@ def blocks_for(pg: pl.DataFrame, ab: pl.DataFrame, measure: str, seasons: Sequen
     if extra == "coach":
         rows = rows.join(tg.select("game_id", "team", "coach"), on=["game_id", "team"], how="left")
     a = ab.filter(c("group_j").is_in(list(groups)))
-    cols = ["gsis_id", "team", "season", "game_id", "group", ycol] + (["coach"] if extra == "coach" else [])
+    cols = ["gsis_id", "team", "season", "game_id", "group", ycol] + (
+        ["coach"] if extra == "coach" else []
+    )
     return {s: design(rows.filter(c("season") == s).select(cols), a.filter(c("season") == s), ycol, wcol,
                       groups, extra) for s in seasons}  # fmt: skip
 

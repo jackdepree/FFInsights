@@ -1,0 +1,30 @@
+Method 3: a nested logit over the WR, TE and RB on the field for each target and carry (plus an
+outside option), nests = groups, fit on each completed season's plays (participation's on-field data).
+
+== The nest parameters by season (1 = no closer substitution within the group than across)
+  target: 2016 WR 0.85 TE 1.00 RB 1.00; 2017 WR 0.55 TE 1.00 RB 1.00; 2018 WR 0.70 TE 1.00 RB 1.00; 2019 WR 0.85 TE 1.00 RB 1.00; 2020 WR 0.70 TE 1.00 RB 1.00; 2021 WR 0.55 TE 1.00 RB 1.00; 2022 WR 0.70 TE 1.00 RB 1.00; 2023 WR 0.55 TE 1.00 RB 1.00; 2024 WR 0.70 TE 1.00 RB 1.00
+    WR: mean 0.68, 90% across seasons 0.61 to 0.76; below 1 in 9 of 9 seasons
+    TE: mean 1.00, 90% across seasons 1.00 to 1.00; below 1 in 0 of 9 seasons
+    RB: mean 1.00, 90% across seasons 1.00 to 1.00; below 1 in 0 of 9 seasons
+    log likelihood over the plain logit (all nests 1): +12.2 a season (17,406 plays)
+  carry: 2016 WR 0.25 TE 0.25 RB 0.25; 2017 WR 0.25 TE 0.25 RB 0.25; 2018 WR 0.25 TE 0.25 RB 0.25; 2019 WR 0.25 TE 0.25 RB 0.25; 2020 WR 0.25 TE 0.25 RB 0.25; 2021 WR 0.25 TE 0.25 RB 0.25; 2022 WR 0.25 TE 0.25 RB 0.25; 2023 WR 0.25 TE 0.25 RB 0.25; 2024 WR 0.25 TE 0.25 RB 0.25
+    WR: mean 0.25, 90% across seasons 0.25 to 0.25; below 1 in 9 of 9 seasons
+    TE: mean 0.25, 90% across seasons 0.25 to 0.25; below 1 in 9 of 9 seasons
+    RB: mean 0.25, 90% across seasons 0.25 to 0.25; below 1 in 9 of 9 seasons
+    log likelihood over the plain logit (all nests 1): +141.9 a season (12,746 plays)
+
+== In season, scored like vacated-live (2017-2024, the same rows): the choice model's shares
+  target: 13,750 rows
+    choice model vs no change      +1.9% (90% +0.2% to +3.5%)
+    choice model vs the plus-minus -7.6% (90% -9.1% to -6.1%)
+    nests vs a plain logit (I163)  +0.12% (90% -0.06% to +0.32%)
+    the average of the two vs the plus-minus -1.7% (90% -2.3% to -1.1%)
+      WR: 6,091 rows; vs no change +2.0% (90% -0.3% to +4.3%); vs the plus-minus -7.5% (90% -9.5% to -5.5%)
+      TE: 3,689 rows; vs no change +2.8% (90% -0.2% to +5.6%); vs the plus-minus -7.9% (90% -11.0% to -4.8%)
+      RB: 3,970 rows; vs no change +0.7% (90% -1.5% to +2.9%); vs the plus-minus -7.6% (90% -9.3% to -5.9%)
+  carry: 3,970 rows
+    choice model vs no change      +16.8% (90% +12.3% to +21.9%)
+    choice model vs the plus-minus -9.8% (90% -15.5% to -4.9%)
+    nests vs a plain logit (I163)  -2.7% (90% -5.0% to -0.8%)
+    the average of the two vs the plus-minus -0.5% (90% -2.4% to +1.3%)
+      RB: 3,970 rows; vs no change +16.8% (90% +12.3% to +21.9%); vs the plus-minus -9.8% (90% -15.5% to -4.9%)

@@ -75,9 +75,13 @@ def grid(pg: pl.DataFrame, tg: pl.DataFrame, season: int) -> pl.DataFrame:
     ).drop("c_share", "c_tgt", "c_car", "q_share", "q_tgt", "q_car", "g_last", "first_wk")  # fmt: skip
     now = p.select("gsis_id", "game_id", "team", y_share="share", y_tgt="tgt_share",
                    y_car="car_share", played=pl.lit(True))  # fmt: skip
-    g = g.join(now, on=["gsis_id", "game_id", "team"], how="left").with_columns(c("played").fill_null(False))
+    g = g.join(now, on=["gsis_id", "game_id", "team"], how="left").with_columns(
+        c("played").fill_null(False)
+    )
     k = c("group").replace_strict(K.TOPK, return_dtype=pl.Int64)
-    g = g.with_columns(rank=c("cs").rank("ordinal", descending=True).over("game_id", "team", "group"))
+    g = g.with_columns(
+        rank=c("cs").rank("ordinal", descending=True).over("game_id", "team", "group")
+    )
     return g.with_columns(top=(c("rank") <= k) & (c("n") >= 2), season=pl.lit(season, pl.Int32))
 
 
@@ -104,13 +108,22 @@ def chances(top: pl.DataFrame, rep: pl.DataFrame, ros: pl.DataFrame, avail: pl.D
     a = avail.select("gsis_id", "game_id", "p_play", a_as_of="as_of")
     t = t.join(a, on=["gsis_id", "game_id"], how="left")
     known = c("a_as_of").is_not_null() & (c("a_as_of") <= c("kickoff"))
-    rep_p = c("status").fill_null("none").replace_strict(fb, default=fb.get("none", 1.0), return_dtype=pl.Float64)
+    rep_p = (
+        c("status")
+        .fill_null("none")
+        .replace_strict(fb, default=fb.get("none", 1.0), return_dtype=pl.Float64)
+    )
     off = (c("season") >= 2016) & c("on").is_null()
     res = c("reserve").fill_null(False)
     return t.with_columns(
         p_play=pl.when(off | res).then(0.0).when(known).then(c("p_play")).otherwise(rep_p),
-        p_src=pl.when(off).then(pl.lit("off_roster")).when(res).then(pl.lit("reserve"))
-        .when(known).then(pl.lit("availability")).otherwise(pl.lit("report")),
+        p_src=pl.when(off)
+        .then(pl.lit("off_roster"))
+        .when(res)
+        .then(pl.lit("reserve"))
+        .when(known)
+        .then(pl.lit("availability"))
+        .otherwise(pl.lit("report")),
     ).drop("on", "a_as_of")
 
 
@@ -155,12 +168,17 @@ def _status(tops: pl.DataFrame, smap: pl.DataFrame | None) -> pl.DataFrame:
     if smap is None:
         return t
     src = t.select("gsis_id", "team", src_game="game_id", absent2="absent", q2="q")
-    t = t.join(smap, on=["team", "game_id"], how="left").join(src, on=["gsis_id", "team", "src_game"], how="left")
+    t = t.join(smap, on=["team", "game_id"], how="left").join(
+        src, on=["gsis_id", "team", "src_game"], how="left"
+    )
     return t.with_columns(absent=c("absent2").fill_null(0.0), q=c("q2").fill_null(0.0)).drop(
-        "src_game", "absent2", "q2")
+        "src_game", "absent2", "q2"
+    )
 
 
-def _base(rows: pl.DataFrame, earlier: pl.DataFrame, tops: pl.DataFrame, pool: str, val: str) -> pl.DataFrame:
+def _base(
+    rows: pl.DataFrame, earlier: pl.DataFrame, tops: pl.DataFrame, pool: str, val: str
+) -> pl.DataFrame:
     """No change: his mean over earlier games where every current top pool-mate played."""
     key = c("group") if pool == "group" else pl.lit("skill")
     J = tops.select("game_id", "team", j="gsis_id", pk=key)
@@ -170,7 +188,9 @@ def _base(rows: pl.DataFrame, earlier: pl.DataFrame, tops: pl.DataFrame, pool: s
     xx = x.join(e, on=["gsis_id", "team"]).filter(c("w2") < c("week"))
     played = earlier.select(j="gsis_id", g2="game_id", jp=pl.lit(True))
     xx = xx.join(played, on=["j", "g2"], how="left")
-    ok = xx.group_by("gsis_id", "game_id", "g2").agg(all_=c("jp").is_not_null().all(), v=c("v").first())
+    ok = xx.group_by("gsis_id", "game_id", "g2").agg(
+        all_=c("jp").is_not_null().all(), v=c("v").first()
+    )
     b = ok.filter(c("all_")).group_by("gsis_id", "game_id").agg(base=c("v").mean(), n_with=pl.len())
     return rows.join(b, on=["gsis_id", "game_id"], how="left")
 
@@ -208,7 +228,9 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
         rate = pl.DataFrame({"gk": list(pooled), "rate": list(pooled.values())})
         J = tops.select("game_id", "team", j="gsis_id", group_j="group", e_sat="e_sat",
                         e_hind="e_hind", p_src="p_src", q="q", absent="absent")  # fmt: skip
-        x = rows.select("gsis_id", "game_id", "team", "group", "coach").join(J, on=["game_id", "team"])
+        x = rows.select("gsis_id", "game_id", "team", "group", "coach").join(
+            J, on=["game_id", "team"]
+        )
         x = x.filter(c("j") != c("gsis_id")).with_columns(gk=c("group") + ">" + c("group_j"))
         x = x.join(rate, on="gk", how="left").with_columns(c("rate").fill_null(0.0))
         same_pool = (c("group") == c("group_j")) if pool == "group" else pl.lit(True)
@@ -220,7 +242,9 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
                 tab = pl.DataFrame({"sk": [k for k in cf if k.startswith(kind + "|")],
                                     f"r_{kind}": [v for k, v in cf.items() if k.startswith(kind + "|")]})  # fmt: skip
                 sp_pool = sfits[kind][s - 1].pooled(groups)
-                x = x.with_columns(sk=pl.lit(kind + "|") + who + "|" + c("group")).join(tab, on="sk", how="left")
+                x = x.with_columns(sk=pl.lit(kind + "|") + who + "|" + c("group")).join(
+                    tab, on="sk", how="left"
+                )
                 x = x.with_columns((pl.when(same).then(c(f"r_{kind}").fill_null(0.0)).otherwise(0.0)
                                     + c("gk").replace_strict(sp_pool, default=0.0, return_dtype=pl.Float64))
                                    .alias(f"rate_{kind}")).drop("sk", f"r_{kind}")  # fmt: skip
@@ -238,15 +262,25 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
             c("j").filter(c("e_sat") > 0.02).str.join(",").alias("drivers"),
         ]
         if structured:
-            agg += [(c("rate_team") * c("e_sat")).sum().alias("d_team"),
-                    (c("rate_coach") * c("e_sat")).sum().alias("d_coach")]
+            agg += [
+                (c("rate_team") * c("e_sat")).sum().alias("d_team"),
+                (c("rate_coach") * c("e_sat")).sum().alias("d_coach"),
+            ]
         dx = x.group_by("gsis_id", "game_id").agg(agg)
         rows = rows.join(dx, on=["gsis_id", "game_id"], how="left")
         fill = ["d_pool", "d_pool_h", "e_pool", "e_pool_h", "e_same", "e_cross"] + (
-            ["d_team", "d_coach"] if structured else [])
+            ["d_team", "d_coach"] if structured else []
+        )
         rows = rows.with_columns([c(f).fill_null(0.0) for f in fill]).with_columns(
-            c("absent_pool").fill_null(False), c("absent_same").fill_null(False), c("flag_pool").fill_null(False))
-        rows = rows.join(_pair_part(inp, s, tops, measure, groups, pooled, pair_grid, x), on=["gsis_id", "game_id"], how="left")
+            c("absent_pool").fill_null(False),
+            c("absent_same").fill_null(False),
+            c("flag_pool").fill_null(False),
+        )
+        rows = rows.join(
+            _pair_part(inp, s, tops, measure, groups, pooled, pair_grid, x),
+            on=["gsis_id", "game_id"],
+            how="left",
+        )
         pcols = [col for col in rows.columns if col.startswith("d_pair")]
         rows = rows.with_columns([c(p).fill_null(0.0) for p in pcols])
         out.append(rows.with_columns(measure=pl.lit(measure), alpha=pl.lit(fits[s - 1].alpha)))
@@ -256,10 +290,16 @@ def walk(inp: Inputs, measure: str, seasons: Sequence[int], smap: pl.DataFrame |
 def _shuffle_ab(ab: pl.DataFrame, smap: pl.DataFrame) -> pl.DataFrame:
     """Completed seasons' absences moved to another game of the same team-season."""
     inv = smap.select("team", src_game="game_id", game_id="src_game")
-    return ab.rename({"game_id": "src_game"}).join(inv, on=["team", "src_game"], how="inner").drop("src_game")
+    return (
+        ab.rename({"game_id": "src_game"})
+        .join(inv, on=["team", "src_game"], how="inner")
+        .drop("src_game")
+    )
 
 
-def pooled_fits(inp: Inputs, measure: str, seasons: Sequence[int], ab: pl.DataFrame | None = None) -> dict:
+def pooled_fits(
+    inp: Inputs, measure: str, seasons: Sequence[int], ab: pl.DataFrame | None = None
+) -> dict:
     """The pooled refits each walked season reads (fit on every completed season before it)."""
     ab = inp.ab if ab is None else ab
     blocks = R.blocks_for(inp.pg, ab, measure, range(K.FIRST, max(seasons)))
@@ -269,7 +309,9 @@ def pooled_fits(inp: Inputs, measure: str, seasons: Sequence[int], ab: pl.DataFr
 def structured_fits(inp: Inputs, measure: str, seasons: Sequence[int], ab: pl.DataFrame) -> dict:
     out = {}
     for kind in ("team", "coach"):
-        blocks = R.blocks_for(inp.pg, ab, measure, range(K.FIRST, max(seasons)), extra=kind, tg=inp.tg)
+        blocks = R.blocks_for(
+            inp.pg, ab, measure, range(K.FIRST, max(seasons)), extra=kind, tg=inp.tg
+        )
         out[kind] = {s - 1: R.fit_through(blocks, s - 1) for s in seasons}
     return out
 
@@ -282,13 +324,17 @@ def _pair_part(inp: Inputs, s: int, tops: pl.DataFrame, measure: str, groups, po
     ycol, _ = K.MEASURES[measure]
     td = {"snap": "share_td", "target": "tgt_td", "carry": "car_td"}[measure]
     played = inp.pg.filter((c("season") == s) & c("group").is_in(list(groups))).select(
-        "gsis_id", "team", "season", "week", "game_id", "group", ycol)
+        "gsis_id", "team", "season", "week", "game_id", "group", ycol
+    )
     ab_s = tops.filter(c("absent") > 0).select(
-        j="gsis_id", team="team", game_id="game_id", week="week", group_j="group", w=c(td))
+        j="gsis_id", team="team", game_id="game_id", week="week", group_j="group", w=c(td)
+    )
     pk = R.pool_keys(groups)
     out = []
     xx = x.filter(c("group") == c("group_j")).select("gsis_id", "game_id", "j", "e_sat", "e_hind")
-    weeks = sorted(x.join(tops.select("game_id", "week").unique(), on="game_id")["week"].unique().to_list())
+    weeks = sorted(
+        x.join(tops.select("game_id", "week").unique(), on="game_id")["week"].unique().to_list()
+    )
     for w in weeks:
         before = played.filter(c("week") < w)
         a_b = ab_s.filter(c("week") < w)
@@ -309,14 +355,18 @@ def _pair_part(inp: Inputs, s: int, tops: pl.DataFrame, measure: str, groups, po
         for a in grid_:
             b = R.ridge(Xp, r, a)
             tab = dict(zip(keys, b.tolist(), strict=True))
-            cols[a] = now["pk_"].replace_strict(tab, default=0.0, return_dtype=pl.Float64).to_numpy()
+            cols[a] = (
+                now["pk_"].replace_strict(tab, default=0.0, return_dtype=pl.Float64).to_numpy()
+            )
         res = now.select("gsis_id", "game_id", "e_sat", "e_hind")
         for a, v in cols.items():
             res = res.with_columns(pl.Series(f"_b{a}", v))
         agg = []
         for a in grid_:
-            agg += [(c(f"_b{a}") * c("e_sat")).sum().alias(f"d_pair_{a}"),
-                    (c(f"_b{a}") * c("e_hind")).sum().alias(f"d_pairh_{a}")]
+            agg += [
+                (c(f"_b{a}") * c("e_sat")).sum().alias(f"d_pair_{a}"),
+                (c(f"_b{a}") * c("e_hind")).sum().alias(f"d_pairh_{a}"),
+            ]
         out.append(res.group_by("gsis_id", "game_id").agg(agg))
     if not out:
         return pl.DataFrame(schema={"gsis_id": pl.Utf8, "game_id": pl.Utf8})

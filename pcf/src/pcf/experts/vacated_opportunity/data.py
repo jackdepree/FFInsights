@@ -32,6 +32,9 @@ UPSTREAM = {
     "availability/next_logit": 1,
     "participation/trees_week": 1,
     "opportunity-quality/eff_trees": 1,
+    "participation/lasso_rest": 1,
+    "opportunity-quality/eff_rest": 1,
+    "roles-archetypes": 1,
 }
 
 
@@ -112,7 +115,9 @@ def _build_report() -> pl.DataFrame:
     for s in SEASONS:
         v = _view([s], {"player_game": ("roster", "injury")})
         pg = v.table("player_game", seasons=[s])
-        out.append(pg.select("gsis_id", "game_id", "team", status="report_status").drop_nulls("status"))
+        out.append(
+            pg.select("gsis_id", "game_id", "team", status="report_status").drop_nulls("status")
+        )
     return pl.concat(out).unique(["gsis_id", "game_id"])
 
 
@@ -160,3 +165,45 @@ def opportunity(refresh: bool = False) -> pl.DataFrame:
         return h.select("gsis_id", "game_id", "as_of", oq_if=c("if_nonzero_mean"))
 
     return _cached("opportunity", build, refresh)
+
+
+def season_incumbents(refresh: bool = False) -> pl.DataFrame:
+    """Participation's rest-of-season share (lasso_rest) and opportunity-quality's rest-of-season
+    expected points (eff_rest) at each player's first game window of a season (the offseason
+    expert's obvious inputs)."""
+
+    def build():
+        p = (
+            _output("participation/lasso_rest")
+            .filter(c("quantity").str.contains("share"))
+            .select("gsis_id", "game_id", part_rest="mean")
+        )
+        o = _output("opportunity-quality/eff_rest").select("gsis_id", "game_id", oq_rest="mean")
+        return p.join(o, on=["gsis_id", "game_id"], how="full", coalesce=True)
+
+    return _cached("season_incumbents", build, refresh)
+
+
+def roles(refresh: bool = False) -> pl.DataFrame:
+    """Roles' walk-forward role table per offensive player-team-season (t0-t5), standardized
+    within season."""
+
+    def build():
+        h = (
+            _view(SEASONS, {"roles-archetypes": 1})
+            .output("roles-archetypes")
+            .filter(c("side") == "offense")
+        )
+        cols = [
+            "t0_snap_share",
+            "t1_tgt_per_pass",
+            "t2_car_per_run",
+            "t3_adot",
+            "t4_adj_run",
+            "t5_adj_p11",
+        ]
+        h = h.select("gsis_id", "team", "season", *cols)
+        return h.with_columns([((c(x) - c(x).mean().over("season")) / c(x).std().over("season")).fill_null(0.0)
+                               for x in cols])  # fmt: skip
+
+    return _cached("roles", build, refresh)

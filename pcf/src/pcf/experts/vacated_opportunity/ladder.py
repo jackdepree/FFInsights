@@ -95,7 +95,9 @@ def add_trees(w: pl.DataFrame, seasons: Sequence[int], base: str = "f_pair") -> 
         m.fit(X, (tr["y"] - tr[base]).to_numpy())
         adj = m.predict(te.select(TREE_FEATURES).to_numpy())
         active = (te["e_pool"] > 0.01).to_numpy()  # Saturday knowledge only
-        parts.append(te.with_columns(f_trees=pl.Series((te[base].to_numpy() + adj * active).clip(0, 1))))
+        parts.append(
+            te.with_columns(f_trees=pl.Series((te[base].to_numpy() + adj * active).clip(0, 1)))
+        )
     return pl.concat(parts)
 
 
@@ -120,8 +122,14 @@ def add_ranges(w: pl.DataFrame, fcol: str, seasons: Sequence[int], by_swing: boo
     for s in seasons:
         prior = w.filter((c("season") < s) & c("played"))
         qs = prior.group_by("cell").agg(
-            z10=c("z").quantile(0.1), z50=c("z").quantile(0.5), z90=c("z").quantile(0.9), nz=pl.len())
-        allq = prior.select(z10=c("z").quantile(0.1), z50=c("z").quantile(0.5), z90=c("z").quantile(0.9))
+            z10=c("z").quantile(0.1),
+            z50=c("z").quantile(0.5),
+            z90=c("z").quantile(0.9),
+            nz=pl.len(),
+        )
+        allq = prior.select(
+            z10=c("z").quantile(0.1), z50=c("z").quantile(0.5), z90=c("z").quantile(0.9)
+        )
         te = w.filter(c("season") == s).join(qs, on="cell", how="left")
         te = te.with_columns([pl.when(c("nz") >= 50).then(c(z)).otherwise(allq[z][0]).alias(z)
                               for z in ("z10", "z50", "z90")])  # fmt: skip
@@ -136,6 +144,7 @@ def add_ranges(w: pl.DataFrame, fcol: str, seasons: Sequence[int], by_swing: boo
 
 def range_score(y: np.ndarray, q10: np.ndarray, q50: np.ndarray, q90: np.ndarray) -> float:
     """The range score (pinball loss averaged over q10, q50, q90), in share points x 100."""
+
     def pb(q, lv):
         d = y - q
         return np.maximum(lv * d, (lv - 1) * d)
@@ -147,4 +156,8 @@ def slope(y: np.ndarray, base: np.ndarray, f: np.ndarray) -> float:
     """The calibration slope: the actual change on the forecast change."""
     x = f - base
     v = float(((x - x.mean()) ** 2).sum())
-    return float(((x - x.mean()) * (y - base - (y - base).mean())).sum() / v) if v > 0 else float("nan")
+    return (
+        float(((x - x.mean()) * (y - base - (y - base).mean())).sum() / v)
+        if v > 0
+        else float("nan")
+    )
