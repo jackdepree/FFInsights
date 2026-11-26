@@ -32,3 +32,15 @@ Committed before the runs they describe. The ladder's first numbers (rungs 1-5 o
 - **The yardstick, next game:** the change counts on receiving yards beside participation (interval above 0, beats 19 copies): 45%; rushing: 45%. Expected size 0.1-0.3% of the squared error.
 - **`vacated-offseason`, where the group was left empty:** beats no change on skill snap share with the week-1 roster's intake flag (interval above 0): 60%; on target share 55%; carry share 40%; the lines' snap share 75%. The gated forecast beats no change over all stayers: 55%.
 - **The offseason yardstick (season yards):** counts on receiving or rushing: 25%.
+
+## The CEO's spot-check: the shrink on target share (asked 2026-11-26; odds written before the check)
+
+The result being checked: over all stayers, the shrunk target-share forecast beats no change by +2.8% (90% +0.5% to +4.7%); where the group was left empty, +5.1% (+0.9% to +8.4%).
+
+- **The slope is known before each season** (fit only on pairs whose next season had finished by that season's week 1): a design check, not a bet; it either holds or there's a leak.
+- **No noise:** the shrunk forecast, rebuilt end to end with each season's departures moved to another team (the slope refit on the shuffled rows), loses to the real one in 19 of 19 copies: 85%.
+- **Steady by season:** the shrunk forecast beats no change in at least 6 of the 8 scored seasons: 55%.
+- **Where it comes from:** tight ends carry the largest gain of the three groups (the unshrunk plus-minus was already +8.0% for TEs left empty): 55%.
+- **How close to zero:** dropping any one season, the gain over all stayers keeps an interval above 0 in all 8 drops: 40%.
+- **What the slope costs:** a slope fit in hindsight on all seasons gains no more than 1 point over the walk-forward one: 70%.
+- **Verdict:** it still ships after the check: 75%.
