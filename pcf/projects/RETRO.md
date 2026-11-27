@@ -243,13 +243,13 @@ Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 an
 | W11, Claude's size bets start at 35% | **Not kept.** Size bets averaged 61% and came true 2 of 8 |
 | "Every build runs the backlog" (the CEO, 2026-11-26) | Worked. Builds closed as many ideas as they opened, and each build listed what it didn't run |
 
-**Proposed now** (the CEO accepts, edits or rejects):
+**Proposed now** (the CEO accepts, edits or rejects; all three accepted 2026-11-27, "I approve w13-w15", and written into `CLAUDE.md`):
 
 | # | Change | Why |
 |---|---|---|
-| W13 | **Every build saves each tested input's gain per season**, beside the pooled gain (a small table in its outputs) | I147 (seasons won as a vault-risk test) can't run without it, and retro 4's F62 reversal is the case for it. It costs a few lines per build |
-| W14 | **The earlier-seasons check:** where a build's walk already forecasts seasons before its test window, the shipped rungs are scored there too, before shipping, and reported beside the test seasons | The rehearsal found 2010-2017 forecasts that had been made and never read, and they showed the test seasons' lean (two rates fewer). It's a second vault that costs nothing, and the 2025 vault stays closed |
-| W15 | **Claude writes a size as a middle and an 80% range** ("about +1%, 80% between +0.3% and +2%"), scored by how often the result lands in the range, instead of a probability on a narrow band. It replaces W11 | W11 asked Claude to lower its own numbers and it didn't happen. A range is scored by coverage, which is the same test our forecasts already pass |
+| W13 | **Accepted 2026-11-27.** **Every build saves each tested input's gain per season**, beside the pooled gain (a small table in its outputs) | I147 (seasons won as a vault-risk test) can't run without it, and retro 4's F62 reversal is the case for it. It costs a few lines per build |
+| W14 | **Accepted 2026-11-27.** **The earlier-seasons check:** where a build's walk already forecasts seasons before its test window, the shipped rungs are scored there too, before shipping, and reported beside the test seasons | The rehearsal found 2010-2017 forecasts that had been made and never read, and they showed the test seasons' lean (two rates fewer). It's a second vault that costs nothing, and the 2025 vault stays closed |
+| W15 | **Accepted 2026-11-27.** **Claude writes a size as a middle and an 80% range** ("about +1%, 80% between +0.3% and +2%"), scored by how often the result lands in the range, instead of a probability on a narrow band. It replaces W11 | W11 asked Claude to lower its own numbers and it didn't happen. A range is scored by coverage, which is the same test our forecasts already pass |
 
 **Questions for the CEO:**
 1. How have the last two days of builds felt from your side? Is anything slower or noisier than it should be?
@@ -264,9 +264,15 @@ Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 an
 4. **Group A** (I187, I192, I193): run them now, or leave them for retro 6?
 5. The three questions above, on how we're working.
 
+**The CEO's answers (2026-11-27):** "Did we accidentally not test h115-h122 or do you just need my approval to close them, if so then yes you may close h115-h122. Yes you can close h5. I approve w13-w15."
+
+- **H5** closed as failed (HUNCHES.md). **Aging's H115 to H122** closed as proposed, on `pcf/aging` (they were tested in aging's exploration and only waited for the CEO's close). So step 2's aging scores are now final, not provisional: the 0.293 in the case against no longer applies.
+- **W13, W14 and W15** are in `CLAUDE.md` (building, validating, and the odds paragraph). W11 is retired.
+- Still open: group A (item 4) and the three questions on how we're working (item 5).
+
 ### The case against this retro
 
-- **Step 2 leans on unmerged verdicts.** Aging's eight hunches are scored on proposed verdicts. If the CEO closes H117 and H119 by their written rules instead, Claude's Brier on the CEO's claims moves from 0.233 to 0.293.
+- **Step 2 leaned on unmerged verdicts** (settled 2026-11-27: the CEO closed them as proposed). Aging's eight hunches were scored on proposed verdicts. If the CEO closes H117 and H119 by their written rules instead, Claude's Brier on the CEO's claims moves from 0.233 to 0.293.
 - **I4's "those who play beat it" conditions on playing.** The forecast already discounts him for the chance he sits, so a player who plays beats it by construction. What the test shows is that nothing points to a cost of playing hurt. It doesn't show there is none: the forecast's "if he plays" share isn't on the yardstick board.
 - **I9 and I10 tried one-number corrections.** Participation's trees already read the unlisted and new-team flags. A correction that learns by position or by depth slot might still pay. I187 tries the range instead.
 - **I86 used one definition of the split** (the lead back's share). A coach's committee habit could show in another (the top two backs' share, or a concentration index).
