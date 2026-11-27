@@ -1,6 +1,6 @@
 # Environment: the conditions a game is played in
 
-> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`.
+> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`, and it ran 2026-11-27: **GO** (its Results). Proposed verdicts: H123 held, H124-H127 failed, for the CEO to close; the brief is next, with what the exploration changed.
 
 ## Why now
 

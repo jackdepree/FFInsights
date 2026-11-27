@@ -1,6 +1,6 @@
 # Environment: exploration
 
-> **Status:** pre-registered 2026-11-27, before any result. The CEO picked all three ways to test (2026-11-27: "Use all three methods to test please"). The weather fetch from Open-Meteo is running (the CEO's sign-off, 2026-11-27). Discovery only: 1999-2024, and the 2025 vault stays closed.
+> **Status:** pre-registered 2026-11-27, before any result; run the same day (Results, at the end): **GO**. The CEO picked all three ways to test (2026-11-27: "Use all three methods to test please"). The weather fetch from Open-Meteo is running (the CEO's sign-off, 2026-11-27). Discovery only: 1999-2024, and the 2025 vault stays closed.
 
 ## What we expect (W16, written after the CEO's hunches)
 
@@ -144,6 +144,132 @@ For each outcome:
 | The forecast against observed: wind's correlation 0.8+ | 75% | 0.85 (0.7 to 0.93) |
 | The forecast against observed: wind's mean miss 3 mph or less | 60% | 2.5 mph (1.5 to 4) |
 
-## Results
+## Results (2026-11-27)
 
-*Not run yet.*
+> **Run:** `explore/env_m1.py` (the noise ceiling and method 1), `env_m2.py` (method 2), `env_m3.py` (method 3), each writing a `.txt` beside it. **Written after the run, and disclosed:** `env_m1_checks.py` (three checks on what went against the frame; they don't change any verdict); a bug fix in method 2's H125 (the previous season's tendencies were built after the 2017 filter, so 2017's rows had none; fixed and rerun, and the numbers barely moved); and a second run of method 2 with the ridge penalty tuned on the last training season (`--tuned`, `env_m2_tuned.txt`), to check the loss wasn't a badly set penalty. No verdict changes between the runs; the numbers below are the tuned run's where they differ.
+
+**The data:** 6,695 regular-season games 1999-2024; 5,053 outdoor or open with weather; 12,894 team-games 2000-2024. Of outdoor games, 6.0% had 15+ mph wind, 5.8% were 32°F or colder, 6.7% had rain or snow. Open-Meteo's wind against the schedule's game-time reading: r 0.67; temperature r 0.97 (4,804 games).
+
+### The noise ceiling
+
+**The room is small but real.** The conditions explain at most 1.9% of any outcome's variation, and the trees find no more than the linear model (they do worse on totals and margin, from overfitting 6,447 games). But where they explain anything, it repeats: the odd-season and even-season models' predictions correlate at 0.83-0.95 for every outcome in the top seven. Plays a game (r 0.27) and sack rate (r −0.04) have no room at all.
+
+| Outcome | Linear share, out of fold | Trees' share (5 seeds) | Split halves r |
+|---|---|---|---|
+| yards a play | +1.92% | +1.44% (+1.29% to +1.70%) | 0.95 |
+| game total points | +1.79% | +0.37% | 0.87 |
+| pass rate over expected | +1.25% | +1.18% | 0.95 |
+| points scored | +0.85% | +0.71% | 0.87 |
+| EPA a play | +0.45% | +0.29% | 0.83 |
+| spread of play outcomes (SD of EPA) | +0.44% | +0.19% | 0.75 |
+| runs | +0.44% | +0.24% | 0.94 |
+| dropbacks | +0.27% | +0.31% | 0.88 |
+| field goal make rate | +0.25% | −0.60% | 0.74 |
+| home margin | +0.06% | −1.94% | 0.87 |
+| interception rate | +0.02% | −0.21% | 0.53 |
+| seconds a play | −0.09% | −0.22% | 0.47 |
+| plays a game | −0.12% | −0.10% | 0.27 |
+| sack rate | −0.13% | −0.05% | −0.04 |
+
+### Against the frame (in detail)
+
+**1. The closing total under-prices wind, by about half.**
+- **What we expected:** the market reads the forecast, so the conditions' leftover beside the closing total is 0.5 points or less, and a walk-forward gain is about +0.1% (−0.2% to +0.5%).
+- **What we found:**
+  - Games in 15+ mph wind score 4.59 fewer points than calm games, but the closing total sits only 2.07 lower. The total lands about 2.5 points under the close.
+  - Beside the close, the leftover is −0.25 points for every mph of wind (robust t −5.1). Rain leaves one too: −35 points an inch an hour (t −2.8), so about −1.8 points at a steady 0.05 in/h. Domes leave −1.5 (t −2.6).
+  - **It isn't fading:**
+
+    | Seasons | 15+ mph games | Their total less the close, against calm games' |
+    |---|---|---|
+    | 1999-2007 | 92 | −2.45 (±2.63) |
+    | 2008-2015 | 68 | −0.52 (±3.10) |
+    | 2016-2024 | 131 | −3.49 (±1.77) |
+
+  - **With the forecast in place of the observed wind** (2022-2024): −0.231 points a mph, against −0.262 with the observed wind. The forecast flags only 16 games at 15+ mph, so this is thin, but it points the same way.
+- **Out of sample (side bet b):** walk-forward 2016-2024, the conditions beside the closing total remove +0.70% of the total's squared error (90%: −0.05% to +1.36%; 2,367 games). That's above Claude's range, but the interval just reaches 0, so the pre-registered rule says **failed**.
+- **What it means:** the tax is real, and the market charges only about half of it in wind. Against the frame's "most of the tax is in the closing total", this is the result to build on (I194). The case against is below: the forecast is short-lead, and the sample is about 130 windy games a decade.
+
+**2. Pace doesn't move. The weather changes what teams call, not how fast they play.**
+- Plays a game and seconds a play explain nothing (−0.12%, −0.09%), and their split halves barely repeat. In wind and rain, teams drop back 1-2 fewer times and run about 1 more (the t-tests), at the same tempo.
+- This is against the CEO's first wording of H127 (pace among the largest), and it left H125's pace half little to win: there's no average effect for roles to sharpen.
+
+**3. The largest effect is yards a play, by a coin flip over game totals.**
+- **What we expected:** field goal accuracy or game totals on top.
+- **What we found:** yards a play +1.92% against game totals +1.79%. With seasons resampled, yards a play is ahead by +0.10 points (90%: −0.48 to +0.69), in 61% of resamples. A tie, but the pre-registered rule reads the top row, so the CEO's H127 (as the CEO set its odds) **failed**, and so did Claude's 85%.
+- **Field goals are smaller than the frame said.** Kick by kick (25,555 kicks), distance explains 11.4% of make or miss, and the conditions add +0.43% beside it. From 50+ yards outdoors, kickers made 57.7% in 15+ mph wind (104 kicks) against 60.2% under 10 mph (1,893). Coaches seem to choose their kicks in wind: there are few long tries left to miss.
+
+**4. The conditions stay beside the obvious inputs (side bet a held, against Claude's 35%).** With every condition together, beside both teams' previous-8 means and the closing spread and total, 6 of 8 conditions keep at least one outcome at a 5% false-discovery rate: wind, cold, rain, dome, rest and prime time. Most of what survives is the play mix (dropbacks, pass rate over expected, runs), which the lines don't price directly. Long rest's survivor is −0.85 dropbacks after 13+ days, the same sign as I56 (teams run more after a bye; it stays in night batch N4).
+
+**5. The cold mix: a home edge in sample, not out of it (H126).**
+- A cold-weather home team against a dome or warm-climate visitor under 40°F beats the closing spread by +4.62 points (t +2.8; 116 games, 2000-2024) and Elo's margin by +2.21 (t +1.1; 48 games, 2016-2024).
+- Out of sample it adds nothing: −0.05% of the margin's squared error beside Elo (−0.38% to +0.32%), and −0.01% beside the close.
+- Eight terms were tested across H126's two fits, plus the checks; one t of 2.8 among them by chance is about a 1-in-25 event, uncorrected. Worth one cheap look in the build (I195), no more.
+
+### What matched (one line each)
+
+- **H123:** 7 of 8 conditions have an outcome that survives the simple tests (all but altitude; long rest has none, short rest has three). 15+ mph wind costs −4.59 points on the total raw (Claude's range −1.5 to −5).
+- **Wind's dropbacks:** −1.96 a team (range 0 to −4).
+- **The roof:** dome games total +3.63 points raw, +1.81 a team; just above Claude's +0.5 to +3.5 for the game.
+- **H124 failed:** roles × wind and rain add only noise on every kind (0 of 4 clear; −0.03% to −0.22% on bad-weather plays, tuned or not).
+- **H125 failed:** roles and tendencies × conditions lose on bad-weather games: plays −3.6%, seconds a play −8.2%, pass rate over expected −5.1%, shotgun rate −18.3%. Shotgun's league rate rose from 55% to 69% over 2017-2024, which may be why its loss is the largest (untested).
+- **The spread of play outcomes:** 2.5% narrower in 15+ mph wind than calm (−4.4% to −0.5%), inside Claude's range; it misses the 3% bar. Rain −1.7%, cold −1.4%, neither clear. Wind narrows the outcomes: fewer deep shots, more runs.
+- **Method 3, weather-proof teams:** sensitivities don't repeat (split halves r −0.06 to +0.05; next block −0.05 to +0.10) and they make forecasts worse (−0.2% to −2.0% on bad-weather games). QBs: r +0.04 on EPA a pass play, +0.16 on air yards (−0.09 to +0.39), neither clear. **The tax falls the same on everyone.**
+- **The forecast against observed** (556 outdoor games, 2022-2024): wind r 0.85, mean miss 1.85 mph, the 15+ mph flags agree 95%; temperature r 0.99. Rain is poor: r 0.46. Open-Meteo's archive of forecasts stitches each run's first hours, so this is a short-lead forecast.
+
+### The odds, scored
+
+| Test | Odds (Claude) | Result | Size in Claude's range? |
+|---|---|---|---|
+| H123, 3+ conditions | 95% (CEO 80%) | **held**, 7 of 8 | yes (−4.59) |
+| Side a, 3+ beside the obvious inputs | 35% | **held**, 6 of 8 | |
+| Side b, beyond the close out of sample | 15% | failed: +0.70% (−0.05% to +1.36%) | no, above |
+| H127, the CEO's wording | 85% (CEO 60%) | failed: yards a play on top, by a tie | |
+| H127, exactly the CEO's four | 20% | failed | |
+| H127, 3+ of the four | 55% | failed: 1 of 4 (game totals; pass rate over expected, 3rd, is the mix, not volume) | |
+| H126, beyond Elo | 20% (CEO 30%) | failed: −0.05% | yes |
+| H126 side, the cold mix by a point in sample | 30% | **held**: +2.21 beside Elo, +4.62 beside the close | |
+| H126 side, out of sample | 10% | failed | |
+| H124 as worded | 10% (CEO 70%) | failed: 0 of 4 | no (no gain) |
+| H124, any one kind | 35% | failed | |
+| H125, pace | 15% (CEO 70%) | failed | |
+| The spread, 3%+ | 50% | failed: −2.5% | yes |
+| Method 3, team slopes repeat | 30% | failed: r −0.04 | yes |
+| Method 3, slopes forecast | 10% | failed | |
+| Method 3, QB slopes repeat | 20% | failed | |
+| Forecast wind r 0.8+ | 75% | **held**: 0.85 | yes |
+| Forecast wind miss 3 mph or less | 60% | **held**: 1.85 | yes |
+
+Claude's bets at 40% or lower: 2 of 12 came true (side a and the cold-mix side). Both surprises point the same way: the conditions carry more beside the obvious inputs than expected.
+
+### The case against
+
+- **The observed weather stands in for the forecast before 2022.** The market priced the forecast; we measure what happened. Part of wind's leftover may be wind the forecast didn't see. The 2022-2024 check with the forecast agrees (−0.23 a mph), but it's 16 windy games and a short-lead forecast.
+- **Few windy games.** 291 games at 15+ mph in 26 seasons, 131 since 2016. A team or two going under in a blizzard moves the mean by a point.
+- **The close here is nflverse's**, a consensus close, not FanDuel's. A sharp book may already price wind fully. "Bet the under in wind" is old betting folklore, so a market that ignores it for 25 years is suspicious.
+- **Many tests.** Method 1's t-tests and regressions are corrected (Benjamini-Hochberg), but H126's terms and the checks after the run are not.
+- **The weather window is the three hours from the UTC kickoff, at the stadium's coordinates.** A retractable roof's state comes from the schedule's `roof`, which can be wrong for a game.
+- **The ranking depends on the model.** The linear model puts totals at +1.79% and the trees at +0.37%; the top two are a tie either way.
+
+### Go / no-go: **GO**
+
+There is signal, small and stable. What a build should carry:
+- **A league-wide tax,** not team or player sensitivities. Method 3 and H124-H125 say the slopes are noise, and rule k gives every tie to the simpler side.
+- **The outcomes it moves:** yards a play, totals and points, the play mix (dropbacks, runs, pass rate over expected), and the spread of play outcomes. Not pace, sacks, interceptions or margin.
+- **Feeds:** the yardstick's totals and passing boards, pace's mix (not its clock), kicker-dst (small), the game simulator.
+- **The betting test:** wind and rain beyond the closing total, scored with the forecast issued before the close (I194). Saving Open-Meteo's forecast before each 2026 game would make a clean test set, a job for odds-collection's workflow.
+
+### Ideas from this exploration (homes in `NIGHT_BATCHES.md`, W17)
+
+- **I194:** wind and rain beyond the closing total, as a betting input. Home: environment's build.
+- **I195:** the cold mix beyond the close and Elo. Home: environment's build.
+
+### Proposed hunch verdicts (the CEO closes them)
+
+| Hunch | Proposed | Real? | Pays? |
+|---|---|---|---|
+| H123 | **held** | yes: 7 of 8 conditions, 6 beside the obvious inputs | not yet: beside the close, +0.70% on totals, just short of clear |
+| H124 | **failed** | no evidence | no: −0.03% to −0.22% |
+| H125 | **failed** | no: pace doesn't move with the weather | no: −3.6% to −18.3% |
+| H126 | **failed** | in sample, only the cold mix (+4.6 beside the close, t 2.8) | no: −0.05% beside Elo |
+| H127 | **failed**, by a tie | partly: totals 2nd and the pass mix 3rd; pace and the spread aren't | not tested for pay |

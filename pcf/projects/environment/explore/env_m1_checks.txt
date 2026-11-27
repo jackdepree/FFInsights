@@ -1,0 +1,20 @@
+# Environment: checks after method 1 (2026-11-27; they don't change the pre-registered verdicts)
+
+## 1. H127's top two
+
+Yards a play's share less game totals': +0.10% (90%: -0.48% to +0.69%); yards a play ahead in 61% of resamples.
+
+## 2. Field goals, kick by kick
+
+25,555 kicks 1999-2024. Distance alone explains 11.35% of the make-or-miss variation; the conditions add +0.43% of it (+0.49% of the distance model's Brier score).
+50+ yard kicks outdoors: made 57.7% in 15+ mph wind (104 kicks) against 60.2% under 10 mph (1893).
+
+## 3. Wind beyond the closing total
+
+| Seasons | Games, 15+ mph | Total less the close, 15+ mph | Total less the close, under 10 mph | Gap |
+|---|---|---|---|---|
+| 1999-2007 | 92 | -1.08 | +1.37 | -2.45 (±2.63) |
+| 2008-2015 | 68 | +0.55 | +1.07 | -0.52 (±3.10) |
+| 2016-2024 | 131 | -2.79 | +0.69 | -3.49 (±1.77) |
+- 2022-2024, by the observed wind: total less the close -3.01 at 15+ mph (38 games) against +1.13 under 10 (390); per mph, robust slope -0.262
+- 2022-2024, by the forecast wind: total less the close -2.16 at 15+ mph (16 games) against +0.84 under 10 (443); per mph, robust slope -0.231

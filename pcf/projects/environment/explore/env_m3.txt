@@ -1,0 +1,17 @@
+# Environment, method 3: agronomy's stability analysis (2026-11-27)
+
+| Outcome | Split halves r (90%; team-blocks) | Next block's slope r (90%) | Forecast gain on bad-weather games (90%) |
+|---|---|---|---|
+| pass rate over expected | -0.04 (-0.20 to +0.13; 256) | -0.05 (-0.19 to +0.10; 224) | -1.998% (-2.704% to -1.270%; 3,174 team-games) |
+| dropbacks | -0.04 (-0.19 to +0.13; 256) | -0.01 (-0.13 to +0.09; 224) | -1.212% (-1.876% to -0.563%; 3,174 team-games) |
+| EPA a play | -0.06 (-0.22 to +0.12; 256) | +0.03 (-0.07 to +0.14; 224) | -1.186% (-1.840% to -0.567%; 3,174 team-games) |
+| points scored | +0.05 (-0.03 to +0.14; 256) | +0.10 (-0.02 to +0.20; 224) | -0.192% (-0.504% to +0.107%; 3,174 team-games) |
+
+Spread of team slopes (pass rate over expected): reliability-shrunk; the bets: slopes repeat for pass rate over expected: failed; the slopes forecast (any outcome): failed.
+
+**QBs** (40+ outdoor starts; split halves of the career, alternate starts):
+
+- EPA a pass play: split halves r +0.04 (90%: -0.21 to +0.24; 76 QBs)
+- air yards an attempt: split halves r +0.16 (90%: -0.09 to +0.39; 61 QBs)
+
+QB slopes repeat (either outcome, clear): failed.

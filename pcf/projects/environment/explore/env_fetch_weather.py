@@ -12,10 +12,10 @@ No key and no personal data in the requests. Run from pcf/:  python projects/env
 from __future__ import annotations
 
 import json
-import sys
 import time
 import urllib.parse
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from datetime import timedelta
 from pathlib import Path
 
@@ -42,11 +42,12 @@ def games() -> pl.DataFrame:
     return g.select("game_id", "season", "kickoff", "stadium_id", "lat", "lon")
 
 
-def fetch(kind: str, row: dict, out: Path) -> bool:
-    d0 = row["kickoff"].date()
+def fetch(kind: str, rows: list[dict], d: Path) -> int:
+    """One request for every game kicking off on the same UTC day (Open-Meteo takes lists of coordinates)."""
+    d0 = rows[0]["kickoff"].date()
     q = {
-        "latitude": row["lat"],
-        "longitude": row["lon"],
+        "latitude": ",".join(str(r["lat"]) for r in rows),
+        "longitude": ",".join(str(r["lon"]) for r in rows),
         "start_date": str(d0),
         "end_date": str(d0 + timedelta(days=1)),
         "hourly": VARS,
@@ -56,36 +57,38 @@ def fetch(kind: str, row: dict, out: Path) -> bool:
         "timezone": "GMT",
     }
     url = HOSTS[kind] + "?" + urllib.parse.urlencode(q)
-    for attempt in range(5):
+    for attempt in range(6):
         try:
             req = urllib.request.Request(url, headers={"User-Agent": "pcf-research/0.1"})
-            with urllib.request.urlopen(req, timeout=60) as r:
-                out.write_text(r.read().decode("utf-8"), encoding="utf-8")
-            return True
+            with urllib.request.urlopen(req, timeout=90) as r:
+                body = json.loads(r.read().decode("utf-8"))
+            body = body if isinstance(body, list) else [body]
+            for row, b in zip(rows, body, strict=True):
+                (d / f"{row['game_id']}.json").write_text(json.dumps(b), encoding="utf-8")
+            return 0
         except Exception as e:  # noqa: BLE001
-            wait = 60 if "429" in str(e) else 5 * (attempt + 1)
-            print(f"{kind} {row['game_id']}: {e}; retry in {wait}s", flush=True)
+            wait = 65 if "429" in str(e) else 5 * (attempt + 1)
+            print(f"{kind} {d0}: {e}; retry in {wait}s", flush=True)
             time.sleep(wait)
-    return False
+    return len(rows)
 
 
 def main() -> None:
     raw = get_config().zone("raw") / "open_meteo"
-    g = games()
+    g = games().with_columns(day=pl.col("kickoff").dt.date())
     plan = [("archive", g), ("forecast", g.filter(pl.col("season") >= 2022))]
     for kind, rows in plan:
         d = raw / kind
         d.mkdir(parents=True, exist_ok=True)
-        todo = [r for r in rows.iter_rows(named=True) if not (d / f"{r['game_id']}.json").exists()]
-        print(f"{kind}: {rows.height} games, {len(todo)} to fetch", flush=True)
-        fails = 0
-        for i, r in enumerate(todo):
-            fails += not fetch(kind, r, d / f"{r['game_id']}.json")
-            time.sleep(0.25)
-            if i % 500 == 0:
-                print(f"{kind}: {i}/{len(todo)}", flush=True)
-        print(f"{kind}: done, {fails} failed", flush=True)
-    json.dump({"vars": VARS}, sys.stdout)
+        todo = rows.filter(~pl.col("game_id").is_in([f.stem for f in d.glob("*.json")]))
+        groups = [grp.to_dicts() for _, grp in todo.group_by("day", maintain_order=True)]
+        print(
+            f"{kind}: {rows.height} games, {todo.height} to fetch in {len(groups)} requests",
+            flush=True,
+        )
+        with ThreadPoolExecutor(3) as ex:
+            fails = sum(ex.map(fetch, [kind] * len(groups), groups, [d] * len(groups)))
+        print(f"{kind}: done, {fails} games failed", flush=True)
 
 
 if __name__ == "__main__":
