@@ -319,7 +319,7 @@ Only "steady" persists. The other states last a season, which is how noise behav
 
 - **The data hole.** Targets for 2003-2008 come from jersey matching, at 95-98% coverage. The unmatched 2-5% may lean toward some players (practice-squad call-ups, mid-season trades), which slightly biases those years' shares.
 - **The smooth form was chosen after seeing the steps.** It won in every row and is simpler (rule k), but it is still a choice made on the test seasons. The bets are scored on the steps.
-- **Mileage is career usage.** The obvious-input check shrinks its gain by about 40% for usage and makes efficiency's unclear. Some of what's left may be the history the check didn't hold: three seasons back, or his peak.
+- **Mileage is career usage.** The obvious-input check shrinks its gain by about 40% for usage and makes efficiency's unclear. Some of what's left may be the history the check didn't hold: three seasons back, or his peak. **Checked 2026-11-27 (below): it isn't.** With both held, mileage still adds +1.6% for usage and +2.8% for still playing.
 - **The 1999+ restriction** for method 2 drops older players in the early years. Ages 30+ before 2008 are thin, which makes the risk test weaker for veterans.
 - **H117 and H119's pull-back checks were not pre-registered.** I added them after seeing results that looked too good. Both hunches pass their written rules; the CEO should weigh the rules against the checks.
 - **Ghosts at the 20th percentile** are an assumption. A different level would change the efficiency curves after 30, not the forecasts.
@@ -339,3 +339,18 @@ Only "steady" persists. The other states last a season, which is how noise behav
 - **Method 2's ridges:** standardized inputs, penalty 0.01 (0.1 with roles), test inputs clipped at ±5 standard deviations. Roles from the most-snaps row per player-season, offense only.
 - **Method 3:** one hidden-state model for the four positions, changes standardized by position on seasons before 2010, refit every three target seasons. The twin's clusters are on his last two seasons' standardized changes (0 when missing).
 - **Checks added after the pre-registration:** the obvious-input check (H), the levels floor in method 3, and the pull-back checks for H117 and H119.
+
+### Follow-up before the brief (2026-11-27): mileage beside a longer history
+
+`explore/m2_history_check.py` (`.txt`). The case against said mileage might be history the obvious-input check didn't hold. Here H (age, his last two seasons, years in the league) also gets his pulled rate three seasons back and his career peak (HL), and mileage goes on top. Odds were written in the script before the run.
+
+| Comparison | Usage (0 if he left) | Efficiency | Still playing |
+|---|---|---|---|
+| H + mileage against H (the exploration's row) | **+1.28%** (+0.55% to +1.98%) | +0.40% (-0.12% to +0.89%) | **+1.60%** |
+| HL (three seasons back and the peak) against H | -0.46%, clearly worse | **+0.81%** (+0.16% to +1.46%) | +0.09% |
+| HL + mileage against HL | **+1.57%** (+0.89% to +2.22%) | +0.19% (-0.29% to +0.63%) | **+2.82%** (+1.92% to +3.87%) |
+
+- **Mileage isn't the missing history.** Beside the longer history it adds more, not less, for usage and for still playing. By position, usage is clear for RB (+1.7%) and WR (+2.7%), and still playing for RB (+4.3%) and WR (+5.5%). QB and TE aren't clear.
+- **The longer history helps efficiency a little and hurts usage.** For usage, two seasons are enough.
+- **Claude's bets:** mileage's usage gain stays clear, 55%: held, but larger than the 80% range (+0.2% to +1.4%); efficiency stays unclear, 75%: held; the longer history adds to usage, 60%: failed.
+

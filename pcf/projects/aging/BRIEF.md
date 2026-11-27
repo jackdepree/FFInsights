@@ -1,6 +1,6 @@
 # Aging: how a player changes with age, and when his career ends
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below; the CEO picked all three (2026-11-25: "All three please!"). The exploration is pre-registered in `EXPLORATION.md`; it ran 2026-11-25 (go), and the CEO closed its verdicts 2026-11-27. The brief is drafted next, with W16's "What we expect" frame.
+> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below; the CEO picked all three (2026-11-25: "All three please!"). The exploration is pre-registered in `EXPLORATION.md`; it ran 2026-11-25 (go), and the CEO closed its verdicts 2026-11-27. The brief below was drafted 2026-11-27, with W16's "What we expect" frame; three questions are open for the CEO before it is agreed.
 
 ## Why now
 
@@ -59,7 +59,7 @@
 ## The backlog that fits
 
 - **I152** (a dream): role drift, where a player's role is heading. It is the role side of aging.
-- **I153** (a dream): historical analogs, the 20 nearest past player-seasons. This is PECOTA's way.
+- **I153** (a dream): historical analogs, the 20 nearest past player-seasons. This is PECOTA's way. *Killed 2026-11-27: they tie a linear model in the exploration.*
 - **I156:** the second pull elsewhere. An age-shaped drift is a sharper second pull.
 - **H26** (held): moves and new coaches break consistency. A move at 30 may not mean what a move at 24 does.
 
@@ -124,3 +124,132 @@ It updates between seasons, from completed seasons only. It serves next-season p
    - **Cost:** a session or two.
 
 **The backlog checked along the way:** I153 (historical analogs, PECOTA's way) as a side model in method 3, and I152 (role drift) in method 2.
+
+## After the exploration (2026-11-25: go; `EXPLORATION.md`, Results and the 2026-11-27 follow-up)
+
+**What it found, in one line each:**
+- **Aging is a usage expert.** Age (a cubic, per position) forecasts next season's share and whether he's still playing, by 3-6% of the error at every position. It adds nothing to efficiency: stabilization's pull already carries it.
+- **Survivor bias is most of the curve.** With departures counted as 0, usage falls several times faster after 30 than survivors show.
+- **Beside age, the inputs that pay:** his last two seasons and years in the league (the most), then mileage. Mileage reads as durability (more mileage, more usage next season), and it holds beside a longer history (+1.6% usage, +2.8% still playing).
+- **Stars keep their jobs longer** at QB and RB (+3.6% and +2.8% for usage), and star QBs keep their efficiency.
+- **Positions age differently** (H121), and usage shows it more than efficiency (H122).
+- **Nothing else pays:** roles (H116), risk weighting (H118's twist), hidden career phases, analogs (I153), a player's own lasting level.
+- **The two ways to decline (H117) and the comebacks (H119) are the pull-back.**
+- **The CEO closed H115-H122 on 2026-11-27, as proposed.**
+
+## What we expect (W16, written 2026-11-27 for the build; the hunches came first)
+
+**The frame: a depreciation schedule beside an inspection.** A used car's price falls on a schedule by age and mileage, and an inspection says what this car is like today.
+- **Stabilization is the inspection.** It says where a player's rates are now, pulled back for noise.
+- **Aging is the schedule.** It says how much a player's job typically shrinks from this age to the next, and the chance he's off the road next year.
+- **Mileage works like a high-mileage car still on the road:** it was kept because it runs. More mileage at the same age means a job teams keep giving, not a body wearing out.
+- **The schedule doesn't re-inspect.** Efficiency belongs to stabilization, so aging forecasts no efficiency.
+- **Where it sits:**
+  - **It feeds:** next season's usage prior for player-opportunity, dynasty values and fantasy projections, and a career-end chance for dynasty and career-snaps.
+  - **It overlaps:** participation within a season (age adds nothing once recent games are in, participation#F29), and availability (games missed to injury). Aging's "still playing" is a career ending, not a missed game.
+  - **It shouldn't redo:** stabilization's pull and k, or availability's injuries.
+
+**The results we expect from the build** (Claude's, a middle and an 80% range, W15):
+- **Next season's usage share, against the no-age baseline** (his pulled share, his last two seasons, years in the league): about +4% of the squared error at offensive positions, 80% between +2% and +6%; about +5% on defense, 80% between +3% and +7%.
+- **Mileage on top:** about +1.5% for usage, 80% between +0.5% and +2.5%; clear for RB and WR, not for QB and TE.
+- **The still-playing chance:** log loss better than the baseline's by about 3%, 80% between +1% and +5%. Calibrated within 5 points in every tenth.
+- **Star bands (QB, RB):** about +3% for usage at those two, 80% between +1% and +5%.
+- **Downstream, on the yardstick:** a small gain on the rest-of-season boards early in the season, when in-season data is thin. About +0.3% for weeks 1-4, 80% between 0 and +1%, fading to 0 by midseason.
+- **Ranges:** 80% ranges covering 75-85% at every position.
+
+Anything else the build finds goes in its report in detail. What matches this gets one line.
+
+## The brief (draft, 2026-11-27; the CEO agrees it, and answers the three open questions first)
+
+The build starts from this section, `EXPLORATION.md` (its Results, follow-up and technical calls) and the registry, and nothing else. It runs at night in the build session.
+
+### The question
+
+For each player at the end of a season: how much of his team's work will he have next season, given his age, his history and his mileage? And what's the chance he's still in the league?
+
+### Why it matters
+
+Every forecast of next season starts from this season and drifts. Stabilization found the drift and treated it as random. Aging is the predictable part, so next season's priors stop assuming a 31-year-old back keeps his job like a 25-year-old does. It matters most where a season-long or multi-season view is the product: dynasty values, best ball, season-long projections.
+
+### Terms
+
+- **Usage share:** his share of his team's opportunities over every week he was on its roster (dropbacks for QB, carries plus targets for RB, targets for WR and TE, defensive snaps on defense). Missed games and benchings count as lost usage. **A player out of the league next season has a share of 0.**
+- **Still playing:** he has a roster week next season.
+- **Mileage:** his career passing involvements (dropbacks or targets) and rushing involvements (carries) through this season, from play-by-play from 1999, logged.
+- **Star:** a season up to now in his position's top 5 in PPR points.
+- **The no-age baseline:** next season's share from his pulled share, his last two seasons and his years in the league, with no age term.
+
+### Builds on
+
+- **The exploration:** the cubic in age per position, survivor handling (departures as 0), mileage as durability, the star bands, and the play-by-play rebuild of targets for 2003-2008 (a fix any project reading pre-2009 targets needs).
+- **Stabilization:** each rate's k, used to pull this season's rates before they're read.
+- **Findings:** participation#F29 (age adds nothing within a season), F2 and F23 (a mover's share comes from his new room), H26 (moves and new coaches break consistency).
+- **Code:** `explore/aging_common.py` (the player-season table, the pairs, `pass_plays`), `m1_curves.py` and `m2_load.py`. The logic moves into the package; the scripts stay as exploration.
+- **Already tried, not to redo:** step-a-year curves (the cubic beats them), the mixed model's player intercept, roles, risk weighting, hidden states, analogs, and the comeback and two-kinds labels (the pull-back).
+
+### Assumptions
+
+- **The season is the unit.** Changes are read between completed seasons, and nothing within one.
+- **Era is taken out by centring** on the position's season mean. Cohorts (draft classes, rule changes) aren't separated, a stated limit.
+- **A departure is a 0,** not a missing row. Survivors-only curves are reported beside it as a check.
+- **Mileage before 1999 is unknown,** so careers that started earlier get mileage from 1999 and a flag. The build reports whether the flag matters.
+- **A team change isn't known at the season's end.** Aging forecasts as if he stays. Movers are scored apart in the build's report (H26), and a mover's new room belongs to player-opportunity (F23).
+
+### Goals and the ladder (rule k: a tie goes to the simpler rung)
+
+1. **Baselines:** the no-age baseline. The position's average share is reported for reference.
+2. **Age:** a cubic in age per position, added to the baseline. This is the base that ships unless a higher rung beats it.
+3. **Mileage:** logged passing and rushing mileage on top.
+4. **Stars:** star-by-age-band terms at QB and RB.
+5. **Trees, once, as the check:** gradient-boosted trees on the same inputs, to catch an interaction the linear rungs miss (age by mileage by position). They ship only if they beat rung 4 clearly. The exploration found the gains linear, so the expectation is a tie.
+6. **The still-playing chance:** a logistic on the shipped rung's inputs, with its own ladder (baseline, age, mileage).
+7. **Ranges:** next season's share as a spike at 0 (one minus the still-playing chance) plus a distribution if he plays. This is the spike form participation and availability use (decision 0014), with q10, q50 and q90.
+8. **Not built:** an efficiency forecast; roles, risk weighting, hidden states, analogs and a player intercept.
+
+### Tests (walk-forward; test seasons 2016-2024; the earlier-seasons check on 2010-2015, W14; the 2025 vault once, at the end)
+
+- **The expert's bar:**
+  - the shipped forecast beats the no-age baseline and a shuffled-age null (age shuffled within position and season, 19 copies), players resampled;
+  - each rung is kept only where it beats the rung below clearly (a 90% interval clear of 0);
+  - no rung adds noise.
+- **The scores:**
+  - next season's usage share, with departures as 0, weighted by the team's opportunities: the squared error, and the range score for the ranges;
+  - the still-playing chance: log loss, and calibration by tenths.
+- **Gains per season** (W13): every rung's gain for each test season, in a small table.
+- **Ranges:** 80% coverage within 75-85% at every position, also by age band (under 26, 26-29, 30+) and for movers.
+- **Downstream:** next season's usage share as an input to the crude forecaster's rest-of-season boards for weeks 1-4, against 19 copies.
+- **Ideas tested in the build** (W17; odds in `IDEAS.md`):
+  - **I157:** wear shows in efficiency through rushing mileage after 29;
+  - **I158:** stars keep their jobs beyond their play;
+  - **I188:** the pull-back null as a shared function in `pcf.validation`, used on the star bands and on I157 and I158, then on the past "kinds" results it names.
+- **Leakage:** every model's checks run (rule c). The yardstick input is read only from aging's walk-forward history (rule e).
+
+### Inputs and outputs
+
+- **Cadence: retrospective** (rule m). Built between seasons from completed seasons only. In season it serves only as a prior from the last completed season.
+- **Inputs:**
+  - play-by-play (1999 on);
+  - weekly rosters and the players file (birth dates, draft year and pick);
+  - weekly snap counts (defense, 2013 on);
+  - PPR points from the stats table, with targets rebuilt from play-by-play before 2009;
+  - stabilization's k per rate.
+- **Outputs, saved as walk-forward history in the standard schema:**
+  - **player-season:** next season's usage share (mean, q10, q50, q90, the spike at 0) and the still-playing chance, known at the end of the season;
+  - **position-age:** the curve table (the expected change in share from each age to the next, and the still-playing chance), as a description for the other experts.
+
+### How it will be used
+
+- As next season's usage prior for player-opportunity, fantasy projections, dynasty values and the crude forecaster.
+- As the career-end chance for dynasty and career-snaps.
+- As a candidate input to stabilization's next-season ridge for usage rates (its next version tests it).
+
+### Open for the CEO (taste calls: your instinct first)
+
+1. **How far ahead?** Next season only, or also two and three seasons ahead (dynasty's horizon)?
+2. **Which positions?** Offense only (QB, RB, WR, TE), or defense too (DL, LB, DB: IDP, and team strength later)?
+3. **The no-noise target** (yours to approve): aging is judged on next season's usage share with departures as 0, and the still-playing chance, not on efficiency or fantasy points. Approve, or change it?
+
+### Plan
+
+- One night's build: rungs 1-7, the ideas, the earlier-seasons check, then the vault. Then RESULTS.md with "Against the frame", the findings, the case against, the interface card and the CEO's open questions.
+- The morning: the CEO's spot-check and the merge.
