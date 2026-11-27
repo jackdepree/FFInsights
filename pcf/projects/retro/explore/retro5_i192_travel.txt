@@ -1,0 +1,13 @@
+games 2476 (2016-2024); Elo's root squared error 13.00 points
+how often (away side): x_hrs 59.1%, x_early 8.9%, x_short 8.2%; away crossed 3 hours 14.8%
+in-sample slopes, points of home margin per unit (all seasons, for reading only): x_hrs -0.30, x_early +1.18, x_short +0.14
+  Elo's mean residual when x_hrs > 0: -0.09 (1432 games); < 0: -0.10; 0: +0.71
+  Elo's mean residual when x_early > 0: +0.41 (214 games); < 0: +nan; 0: +0.22
+  Elo's mean residual when x_short > 0: -0.24 (202 games); < 0: +nan; 0: +0.28
+
+== the three terms beside Elo, walk-forward 2017-2024: -0.344% of Elo's squared error (-0.725% to +0.045%); the copies' largest -0.144%, beaten by 12 of 19
+  x_hrs alone: -0.178%
+  x_early alone: -0.164%
+  x_short alone: -0.183%
+
+== verdict (interval above 0 and beats all 19 copies): failed

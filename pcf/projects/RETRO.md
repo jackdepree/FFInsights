@@ -268,7 +268,21 @@ Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 an
 
 - **H5** closed as failed (HUNCHES.md). **Aging's H115 to H122** closed as proposed, on `pcf/aging` (they were tested in aging's exploration and only waited for the CEO's close). So step 2's aging scores are now final, not provisional: the 0.293 in the case against no longer applies.
 - **W13, W14 and W15** are in `CLAUDE.md` (building, validating, and the odds paragraph). W11 is retired.
-- Still open: group A (item 4) and the three questions on how we're working (item 5).
+- Group A: run the same day (below). Still open: the three questions on how we're working (item 5).
+
+**The CEO, 2026-11-27:** "Run group a now please. I approve of the three workflow changes you proposed."
+
+### Group A, run (2026-11-27, discovery only; every bet written 2026-11-26 in `IDEAS.md`, pass rules in each script's header before its run)
+
+| Idea | Result | Claude's odds |
+|---|---|---|
+| **I187,** widen where the middle won't move ([`retro5_i187_widen.py`](retro/explore/retro5_i187_widen.py)) | **Killed.** Participation's 80% range already covers the three biased kinds as well as every other row: no slot 86.5%, movers' first 4 games 85.8%, Questionable 86.8%, the rest 86.0% (nominal 80%). The bias sits in the zero spike, which the range spans. Widening by kind ties: −0.001% of the range score (−0.032% to +0.030%) | 60% coverage under 75% for 2+ kinds: failed (0 of 3); 35% widening pays: failed |
+| **I192,** travel and body clock beside Elo ([`retro5_i192_travel.py`](retro/explore/retro5_i192_travel.py)) | **Killed.** Hours crossed, a western team's early kickoff in the east and short rest after travel lose beside Elo: −0.34% of its squared error (−0.73% to +0.05%), beaten by 7 of 19 copies. In sample the early kickoff leans the right way (+1.2 points, 214 games), hours crossed the wrong way | 30%: failed |
+| **I193,** a lead back carries his split ([`retro5_i193_lead_back.py`](retro/explore/retro5_i193_lead_back.py)) | **Killed as worded.** 45 moving lead backs led again: the new split follows his old one at r 0.26 (−0.03 to +0.51), not the new team's last split (+0.09); the interval reaches 0. Over all 116 moves, his own share of carries follows his old split (r 0.38, 0.24 to 0.51), not the team's (−0.03), as F2 and F23 say | 35%: failed (the size, r about 0.2, was close) |
+
+- **All four bets failed** (60%, 35%, 30%, 35%). Retro 6 scores them with the rest of retro 5's new rows.
+- **P15 and P13 sharpen.** The team's own trip (I192) joins the team's own habits (H5, I86) as nothing beside who is present and how good they are. Bodies hold for players (ages, injuries), not for a team's travel.
+- **The backlog: 58 open.** Findings F135 (I187) and F136 (I192), and a note on F130 (I193).
 
 ### The case against this retro
 

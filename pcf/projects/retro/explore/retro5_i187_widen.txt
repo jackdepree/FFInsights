@@ -1,0 +1,18 @@
+rows 79417, seasons 2016-2024: no depth-chart slot 6426, a mover's first 4 games 5552, Questionable 4075
+
+== 1. coverage of the 80% range (q10 to q90), 2016-2024
+  no depth-chart slot        rows   6426: inside 86.5%, below q10 4.7%, above q90 8.8%; played 0 snaps 45.7%; mean miss -3.13 points
+  a mover's first 4 games    rows   5552: inside 85.8%, below q10 4.7%, above q90 9.4%; played 0 snaps 32.9%; mean miss -0.93 points
+  Questionable               rows   4075: inside 86.8%, below q10 3.5%, above q90 9.6%; played 0 snaps 35.3%; mean miss -1.99 points
+  none of the three          rows  65311: inside 86.0%, below q10 5.5%, above q90 8.5%; played 0 snaps 21.8%; mean miss +0.02 points
+
+== 2. widening by kind, walk-forward (a picked on earlier seasons' rows of that kind)
+  no depth-chart slot        scale by season: {2018: 1.1, 2019: 1.1, 2020: 1.1, 2021: 1.1, 2022: 1.2, 2023: 1.2, 2024: 1.1}
+  a mover's first 4 games    scale by season: {2018: 1.1, 2019: 1.1, 2020: 1.1, 2021: 1.1, 2022: 1.1, 2023: 1.1, 2024: 1.0}
+  Questionable               scale by season: {2018: 1.2, 2019: 1.1, 2020: 1.1, 2021: 1.1, 2022: 1.1, 2023: 1.1, 2024: 1.1}
+  all rows                   rows  61935: range score -0.001% better (-0.032% to +0.030%)
+  no depth-chart slot        rows   5192: range score +0.092% better (-0.160% to +0.316%); coverage after 88.9%
+  a mover's first 4 games    rows   4508: range score -0.157% better (-0.356% to +0.037%); coverage after 88.3%
+  Questionable               rows   3085: range score +0.025% better (-0.182% to +0.254%); coverage after 90.3%
+
+== verdicts: coverage under 75% for 0 of 3 kinds (the bet: 2+): failed; the widening's overall gain has an interval above 0: failed
