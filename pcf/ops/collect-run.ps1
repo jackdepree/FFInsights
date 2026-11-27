@@ -3,7 +3,7 @@
 # do, with the same scripts, and pushes to the same private pcf-data repo.
 #
 #   -What odds      ESPN lines and props, then The Odds API (the key is read from pcf/.env in the
-#                   main checkout and never written to the log)
+#                   main checkout and never written to the log), then Open-Meteo's weather forecasts
 #   -What nflverse  the daily nflverse snapshot (`pcf refresh --snapshots-only`)
 #
 # It works in its own clone of pcf-data (<DataDir>/collect/pcf-data), not the ledger's sparse one.
@@ -74,7 +74,13 @@ try {
         Step "ESPN lines and props" { & $python (Join-Path $explore "backfill_espn.py") --current-season }
         Step "The Odds API lines and props" { & $python (Join-Path $explore "collect_odds_api.py") }
         Remove-Item Env:\ODDS_API_KEY -ErrorAction SilentlyContinue
-        $paths = @("raw/espn_odds", "raw/odds_api")
+        # Environment's weather forecasts (the CEO, 2026-11-27). A failure is logged and doesn't lose the lines.
+        try {
+            Step "Open-Meteo weather forecasts" { & $python (Join-Path $pcf "projects\environment\explore\collect_forecast.py") }
+        } catch {
+            Add-Content $log ("{0:s} {1}; the lines are still saved" -f (Get-Date), $_)
+        }
+        $paths = @("raw/espn_odds", "raw/odds_api", "raw/open_meteo_live")
     } else {
         # nflverse sometimes replaces a file mid-download (its fingerprint no longer matches): one
         # retry a minute later, as the ledger's own pull does.

@@ -1,4 +1,5 @@
-# Collects betting lines several times a week and saves them to the private pcf-data repo.
+# Collects betting lines (and each upcoming game's weather forecast) several times a week and saves them
+# to the private pcf-data repo.
 # Collected market data can't be re-downloaded later, so it is the one exception to rule g.
 # This repo is public, so these logs are public: the scripts print only counts, never lines or keys.
 #
@@ -59,6 +60,14 @@ jobs:
           PCF_DATA_DIR: ${{ github.workspace }}/pcf-data
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: python pcf/projects/odds-collection/explore/collect_odds_api.py
+
+      # Environment's brief (the CEO, 2026-11-27): each upcoming outdoor game's weather forecast, saved at the
+      # lead it was issued. A failure here mustn't lose the lines, so the save step still runs.
+      - name: Open-Meteo weather forecasts (free, no key)
+        continue-on-error: true
+        env:
+          PCF_DATA_DIR: ${{ github.workspace }}/pcf-data
+        run: python pcf/projects/environment/explore/collect_forecast.py
 
       - name: Save to pcf-data
         working-directory: pcf-data
