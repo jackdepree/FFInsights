@@ -97,7 +97,7 @@ Some sources get corrected after the fact: stat corrections, roster moves, updat
 |---|---|---|---|---|---|
 | **ESPN odds and props** | 2 | Game lines (open/close, with prices) and player props (open/current lines, no prices) | ✅ **Collecting.** History 2022→ (deep from 2024). See [the exploration](../projects/odds-collection/EXPLORATION.md). | History: open and close only, never "the line at time t". Live: our fetch time. The opener as a table part (`team_game.openers`, td-expert I118): the start of the game's week + 2 days (rule `espn_openers`) | Market, props board, closing line value |
 | **The Odds API** | 3 | Game lines and props **with prices**, incl. FanDuel and anytime TD | ✅ **Collecting** since 2026-10-28 (free tier, ~410 of 500 credits/month) | Our fetch time | Props board, TD props, market |
-| **Open-Meteo** | 3 | Weather forecasts and history, no key | ○ To explore | Forecast: issue time. History: kickoff. | Environment (upcoming games) |
+| **Open-Meteo** | 3 | Weather forecasts and history, no key | ○ To explore (the CEO signed it off for environment, 2026-11-27: "We should definitely use open meteo as our source or another source that can give us forecasts of weather before hand") | Forecast: issue time. History: kickoff. | Environment (upcoming games) |
 | **Sleeper API** | 2 | Trending adds and drops, players | ○ To explore | Fetch time (snapshots) | Crowd expert, case studies |
 | **Fantasy Football Calculator** | 2 | ADP by format | ○ To explore | Fetch time (snapshots) | Crowd expert, ADP benchmark |
 | **College Football Data** | 3 | College stats, recruiting, draft | ○ Key in `.env` | Game date (college stats). Draft data at the draft. | Prospects |
