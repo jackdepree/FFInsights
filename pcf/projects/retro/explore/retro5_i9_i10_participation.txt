@@ -1,0 +1,45 @@
+rows 79417, seasons 2016-2024, no slot 6426 (8.1%)
+
+== I10: the champion's mean miss (actual less forecast, share points), by depth-chart slot
+  no slot  rows   6426: -3.13 (-4.31 to -2.07)
+  listed   rows  72991: -0.07 (-0.14 to +0.01)
+  no slot, by season: {2016: -11.53, 2017: -0.16, 2018: -2.54, 2019: -2.71, 2020: -2.75, 2021: -0.8, 2022: -2.02, 2023: -2.89, 2024: -1.97}
+  no slot, by position (top 6):
+shape: (4, 3)
+┌──────────┬──────┬───────┐
+│ position ┆ rows ┆ miss  │
+│ ---      ┆ ---  ┆ ---   │
+│ str      ┆ u32  ┆ f64   │
+╞══════════╪══════╪═══════╡
+│ WR       ┆ 2664 ┆ -3.79 │
+│ RB       ┆ 1783 ┆ -2.54 │
+│ TE       ┆ 1250 ┆ -2.81 │
+│ QB       ┆ 729  ┆ -2.65 │
+└──────────┴──────┴───────┘
+  walk-forward shift by season (points): {2017: -11.53, 2018: -7.32, 2019: -6.09, 2020: -5.41, 2021: -4.68, 2022: -3.68, 2023: -3.39, 2024: -3.31}
+  the shift's gain, all rows: -0.035% of squared error (-0.176% to +0.105%)
+  the shift's gain, no-slot rows: -0.390% of squared error (-1.905% to +1.204%)
+
+== I9: movers' first 4 games with a new team: 4527 rows, 709 players; with an unclaimed share 1827
+  the champion's mean miss: -1.06 points of share (-1.54 to -0.59)
+shape: (3, 4)
+┌───────┬──────┬───────┬───────┐
+│ group ┆ rows ┆ miss  ┆ dep   │
+│ ---   ┆ ---  ┆ ---   ┆ ---   │
+│ str   ┆ u32  ┆ f64   ┆ f64   │
+╞═══════╪══════╪═══════╪═══════╡
+│ RB    ┆ 1440 ┆ -1.03 ┆ 0.54  │
+│ TE    ┆ 1050 ┆ -0.81 ┆ 0.674 │
+│ WR    ┆ 2037 ┆ -1.22 ┆ 0.89  │
+└───────┴──────┴───────┴───────┘
+  in-sample slope of the miss on the unclaimed share: [0.0249, -0.0201] (slope, intercept)
+  2018: slope +0.075, intercept -0.054 (fit on 215 rows)
+  2019: slope +0.061, intercept -0.038 (fit on 468 rows)
+  2020: slope +0.043, intercept -0.029 (fit on 719 rows)
+  2021: slope +0.040, intercept -0.026 (fit on 842 rows)
+  2022: slope +0.042, intercept -0.023 (fit on 1106 rows)
+  2023: slope +0.043, intercept -0.028 (fit on 1359 rows)
+  2024: slope +0.042, intercept -0.031 (fit on 1616 rows)
+  the correction's gain on movers' first 4 games: -0.31% of squared error (-0.66% to +0.02%)
+  root squared error, points of share: champion 17.78, corrected 17.81
+  a constant movers' shift alone: +0.21% (-0.21% to +0.65%)

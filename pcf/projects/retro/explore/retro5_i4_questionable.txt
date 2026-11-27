@@ -1,0 +1,14 @@
+
+== receiving, next game: rows 53355, Questionable 2759, Doubtful 17
+  beside crude          rows  36125: share +0.76% (+0.60% to +0.91%); range +0.29%; copies max +0.00%; counts yes
+  beside participation  rows  36125: share +0.06% (+0.02% to +0.11%); range +0.07%; copies max +0.01%; counts yes
+  miss (actual less forecast with participation), Questionable, played   rows   1337: +3.51 yards (+2.28 to +4.83)
+  miss (actual less forecast with participation), not listed, played     rows  31804: +0.50 yards (+0.26 to +0.73)
+  miss (actual less forecast with participation), Questionable, all      rows   1773: -1.80 yards (-2.78 to -0.73)
+
+== rushing, next game: rows 15383, Questionable 711, Doubtful 6
+  beside crude          rows  10207: share +0.89% (+0.55% to +1.22%); range +0.17%; copies max +0.02%; counts yes
+  beside participation  rows  10207: share +0.14% (+0.02% to +0.27%); range +0.09%; copies max +0.03%; counts yes
+  miss (actual less forecast with participation), Questionable, played   rows    344: +6.71 yards (+4.02 to +9.54)
+  miss (actual less forecast with participation), not listed, played     rows   8834: +1.54 yards (+1.10 to +1.98)
+  miss (actual less forecast with participation), Questionable, all      rows    479: -2.15 yards (-4.50 to +0.34)

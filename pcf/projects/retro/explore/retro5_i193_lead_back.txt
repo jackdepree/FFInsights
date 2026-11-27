@@ -1,0 +1,15 @@
+lead backs who moved (2006-07 to 2023-24): 116; lead again at the new team 45; median carries at the new team 106
+
+== primary: lead again at the new team (B's split): 45 moves
+  r with his old split +0.26 (-0.03 to +0.51); with B's own last split +0.07 (-0.20 to +0.34)
+  OLS: his old split +0.26 (-0.05 to +0.52), B's own +0.09 (-0.22 to +0.36)
+
+== all moves: B's split, whoever leads: 116 moves
+  r with his old split +0.14 (-0.02 to +0.29); with B's own last split +0.17 (+0.01 to +0.32)
+  OLS: his old split +0.15 (-0.01 to +0.31), B's own +0.17 (+0.01 to +0.33)
+
+== all moves: his own share of B's carries: 116 moves
+  r with his old split +0.38 (+0.24 to +0.51); with B's own last split -0.03 (-0.19 to +0.13)
+  OLS: his old split +0.66 (+0.41 to +0.90), B's own -0.03 (-0.29 to +0.21)
+
+== verdict (primary: his old split's slope beside B's own, interval above 0): failed

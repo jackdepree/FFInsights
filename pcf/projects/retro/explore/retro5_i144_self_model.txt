@@ -1,0 +1,16 @@
+fit on 165 bets (retros 3-4), scored on 138 (retro 5)
+coefficients (CEO, side bet, method, has a number): [0.15, -0.47, -1.06, -0.05] intercept 0.36
+
+== holds, retro 5's bets: Brier (lower is better)
+  all                            n 138: written odds 0.234, self-model 0.250, base rate 0.250
+  the CEO's first numbers        n   9: written odds 0.262, self-model 0.226, base rate 0.235
+  Claude's on the CEO's claims   n  10: written odds 0.233, self-model 0.254, base rate 0.250
+  Claude's side bets             n 119: written odds 0.233, self-model 0.251, base rate 0.251
+  Claude's, all                  n 129: written odds 0.233, self-model 0.251, base rate 0.251
+  side bets with a number: n 52, came true 54%, written 59%, self-model 46%
+  side bets without a number: n 67, came true 46%, written 48%, self-model 47%
+
+== pays, the CEO's 9 hunches in retro 5 (fit on 20; tag: method or claim)
+  self-model 0.446, the CEO's odds 0.262, Claude's 0.254 (n 9); paid 7 of 9
+
+== verdicts: beats Claude's odds on holds (35%): no; beats both on pays (50%): no

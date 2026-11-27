@@ -1,0 +1,16 @@
+team-seasons 608; the split: mean 0.589, sd 0.141
+
+== season-to-season r of the split (90% interval, pairs resampled)
+  all pairs                    pairs  576: r +0.21 (+0.14 to +0.27)
+  same coach, same lead back   pairs  215: r +0.28 (+0.17 to +0.38)
+  same coach, new lead back    pairs  234: r +0.04 (-0.07 to +0.15)
+  new coach, same lead back    pairs   56: r +0.30 (+0.10 to +0.48)
+  new coach, new lead back     pairs   71: r -0.24 (-0.40 to -0.07)
+  new coach (any back)         pairs  127: r +0.11 (-0.04 to +0.25)
+
+== a moving coach (his last split at the old team, his first at the new; within 3 seasons): 21 moves, r -0.00 (-0.37 to +0.44)
+   the new team's own split the season before he came: r -0.00 (-0.39 to +0.38) on 21
+   both together (OLS): the coach's old split -0.00, the team's own -0.00
+
+== verdicts: first bet (r 0.3+ with interval above 0.1 for same coach, new back; under 0.15 with a new coach): failed
+   second bet (a moving coach's r above 0 with its interval above 0): failed
