@@ -143,3 +143,10 @@ The CEO, word for word: "No vetoes. The next season forecast should add the tren
 
 - No vetoes on calls 1-34; calls 35-37 came after, with the trend, the run-snap floor and the leakage scan's fix, and were reported at the merge.
 - The 2025 vault stays closed for stabilization.
+
+## After the merge (2026-11-26)
+
+The CEO answered the two football questions left open:
+- **Broken tackles** (the CEO: "I would say that broken tackles are dependent both upon the running backs ability to break tackles and the opportunities he has - which are granted to him by his team's performance and blocking - to break them"). Nothing changes in what ships: broken tackles and pressured rate keep the position's average next season. The split into the back's part and the team's part is added to I92.
+- **Faced tendencies** (the CEO: "I would expect offensive patterns to stay consistent and that defenses are more likely to match an opposing offenses patterns"). This agrees with F129, and nothing changes.
+

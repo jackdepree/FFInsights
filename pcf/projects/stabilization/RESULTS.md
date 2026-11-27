@@ -248,6 +248,6 @@ The brief planned to open it once, at the end. The CEO has kept it closed for th
 
 Answered (the CEO, 2026-11-26): the trend ships (call 35); the run-snap stand-in gets I180's correction first (call 36) and `stabilization-retro` stays a proposal; the vault stays closed; no vetoes on calls 1-34; the spot-check is the second pull ([SPOT_CHECK.md](SPOT_CHECK.md)).
 
-Still open:
-1. **Are broken tackles and pressured rate shipping the position's average right, football-wise?** The number says nothing beats the average next season (yards after contact now does, through the trend). Is there a football reason a runner's broken tackles shouldn't carry?
-2. **A defense's faced tendencies are mostly its opponents'** (F129). Does that match what you see: do some defenses really push offenses into shotgun or passing?
+Answered after the merge (the CEO, 2026-11-26):
+1. **Broken tackles and pressured rate shipping the position's average.** The CEO: "I would say that broken tackles are dependent both upon the running backs ability to break tackles and the opportunities he has - which are granted to him by his team's performance and blocking - to break them." So the plain rate mixes the back's skill with his team's blocking, and the team's part changes when the line or the team changes. That fits nothing beating the average next season. The follow-up (split broken tackles into the back's part and the team's part) joins I92 in `IDEAS.md`.
+2. **A defense's faced tendencies are mostly its opponents'** (F129). The CEO: "I would expect offensive patterns to stay consistent and that defenses are more likely to match an opposing offenses patterns." That matches F129: the offense sets the tendency and the defense mostly reacts, so faced tendencies keep shipping as the opponents' mix.
