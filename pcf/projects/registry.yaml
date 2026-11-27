@@ -418,11 +418,11 @@ projects:
   - id: environment
     name: Environment
     phase: 1
-    status: idea
-    horizon: next
+    status: brief
+    horizon: now
     cadence: [in_season]
     depends_on: [grain-tables, validation-harness]
-    summary: Weather, roof, surface, rest days, travel and time zones.
+    summary: "Weather, roof, surface, rest days, travel and time zones. The CEO's pick, 2026-11-27 (\"Ok let's kick off the environment expert\"). Kickoff in projects/environment/BRIEF.md: the usual way (additive adjustments to spreads, totals and projections for home field, wind, cold, rest, travel and altitude) and two analogies (agronomy's genotype by environment; athletics' wind and altitude marks). What we know: travel and the body clock add nothing beside Elo (F136), no team's home gap repeats (F131), and weather is known only after the game (tag-tables#F9). The CEO's hunches H123-H127 (2026-11-27): all eight conditions matter (80%), roles under rain and wind (70%), roles and schemes for pace (70%), home field mixes with the weather (30%), the largest effects in pace, passing volume, the spread of play outcomes and totals (odds asked); the CEO signed off on Open-Meteo for forecasts. The CEO picked all three ways to test (2026-11-27). Exploration run 2026-11-27, GO (EXPLORATION.md, Results): the conditions explain at most 1.9% of any outcome, but it repeats (split halves 0.83-0.95); the largest are yards a play and game totals (a tie); pace doesn't move; the closing total under-prices wind by about half (-0.25 points a mph beside it, t -5.1; walk-forward +0.70%, just short of clear); roles and team or QB sensitivities add only noise (weather is a tax, not a talent). The CEO closed H123-H127 as proposed (2026-11-27: H123 held, H124-H127 failed), added H128 (roles and schemes as a matchup in the weather, odds asked), and set the brief's scope: totals, the play mix and the wind bet. Brief agreed 2026-11-27 ("Agree; merge"; BRIEF.md, The brief; decision 0054): the no-noise target approved, yards a play added, H128 at the CEO's 30%, and the live forecast step added to the collector. The build waits for the CEO's go. Ideas I194, I195 homed in the build."
 
   - id: stabilization
     name: Stabilization and regression

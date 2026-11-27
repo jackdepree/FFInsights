@@ -1,0 +1,83 @@
+# Environment: the noise ceiling and method 1 (2026-11-27)
+
+Regular-season games 1999-2024: 6,695; outdoor or open with weather: 5,053; team-games 2000-2024: 12,894.
+
+Weather shares (outdoor games): 15+ mph 6.0%; 32°F or colder 5.8%; rain or snow (0.02+ in/h) 6.7%; altitude games 3.2%; prime time 20.0%; turf 41.5%; dome or closed 24.5%.
+Check: Open-Meteo's observed wind against the schedule's game-time reading, r 0.67; temperature r 0.97 (4,804 games).
+
+## The noise ceiling, and the share each outcome's variation the conditions explain (H127)
+
+| Outcome | Rows | Trees' share, out of fold (5 seeds: mean, range) | Linear share, out of fold | Split halves: predictions r (odd against even seasons) |
+|---|---|---|---|---|
+| plays a game | 11,902 | -0.10% (-0.12% to -0.07%) | -0.12% | 0.27 |
+| seconds a play | 12,791 | -0.22% (-0.27% to -0.17%) | -0.09% | 0.47 |
+| dropbacks | 11,902 | +0.31% (+0.25% to +0.39%) | +0.27% | 0.88 |
+| pass rate over expected | 11,902 | +1.18% (+1.07% to +1.31%) | +1.25% | 0.95 |
+| runs | 11,902 | +0.24% (+0.20% to +0.28%) | +0.44% | 0.94 |
+| EPA a play | 11,902 | +0.29% (+0.06% to +0.45%) | +0.45% | 0.83 |
+| yards a play | 12,874 | +1.44% (+1.29% to +1.70%) | +1.92% | 0.95 |
+| sack rate | 12,874 | -0.05% (-0.13% to +0.00%) | -0.13% | -0.04 |
+| interception rate | 12,874 | -0.21% (-0.37% to -0.07%) | +0.02% | 0.53 |
+| spread of play outcomes (SD of EPA) | 11,902 | +0.19% (+0.11% to +0.26%) | +0.44% | 0.75 |
+| points scored | 12,894 | +0.71% (+0.65% to +0.75%) | +0.85% | 0.87 |
+| game total points | 6,447 | +0.37% (+0.37% to +0.37%) | +1.79% | 0.87 |
+| home margin | 6,447 | -1.94% (-1.94% to -1.94%) | +0.06% | 0.87 |
+| field goal make rate | 7,610 | -0.60% (-0.60% to -0.60%) | +0.25% | 0.74 |
+
+Ranked by the linear share: yards a play +1.92%; game total points +1.79%; pass rate over expected +1.25%; points scored +0.85%; EPA a play +0.45%; spread of play outcomes (SD of EPA) +0.44%; runs +0.44%; dropbacks +0.27%; field goal make rate +0.25%; home margin +0.06%; interception rate +0.02%; seconds a play -0.09%; plays a game -0.12%; sack rate -0.13%
+
+## H123: simple tests (Welch's t, Benjamini-Hochberg at 5% over every condition and outcome)
+
+| Condition | Outcomes that survive (difference, rows in the condition) |
+|---|---|
+| wind | dropbacks -1.96 (n 532); pass rate over expected -0.032 (n 532); runs +1.27 (n 532); EPA a play -0.0503 (n 532); yards a play -0.299 (n 582); points scored -2.3 (n 582); game total points -4.59 (n 291); field goal make rate -0.0353 (n 329) |
+| cold | dropbacks -1.72 (n 534); pass rate over expected -0.018 (n 534); runs +1.04 (n 534); yards a play -0.13 (n 584); home margin +2.53 (n 292) |
+| rain | dropbacks -1.03 (n 594); pass rate over expected -0.0202 (n 594); runs +0.988 (n 594); EPA a play -0.0479 (n 594); yards a play -0.278 (n 651); points scored -2.16 (n 652); game total points -4.31 (n 326) |
+| dome | dropbacks +0.781 (n 2,980); pass rate over expected +0.0105 (n 2,980); runs -0.723 (n 2,980); yards a play +0.286 (n 3,172); interception rate -0.00225 (n 3,172); spread of play outcomes (SD of EPA) +0.0385 (n 2,980); points scored +1.81 (n 3,172); game total points +3.63 (n 1,586); field goal make rate +0.0245 (n 1,901) |
+| surface | seconds a play -0.214 (n 5,289); pass rate over expected +0.00386 (n 4,992); yards a play +0.124 (n 5,328); spread of play outcomes (SD of EPA) +0.0136 (n 4,992); points scored +1.08 (n 5,328); game total points +2.16 (n 2,664); home margin +1.03 (n 2,664); field goal make rate +0.0242 (n 3,185) |
+| short rest | pass rate over expected +0.00859 (n 547); interception rate -0.00419 (n 559); spread of play outcomes (SD of EPA) -0.0249 (n 547) |
+| long rest | none |
+| altitude | none |
+| prime time | dropbacks +0.571 (n 2,464); pass rate over expected +0.00904 (n 2,464); runs -0.697 (n 2,464); EPA a play +0.0142 (n 2,464); yards a play +0.0744 (n 2,626) |
+
+Conditions with at least one surviving outcome (rest counted once): 7 of 8 (cold, dome, prime time, rain, rest, surface, wind). H123 (3+): held.
+
+## Side a: every condition together, beside the previous-8-game means and the closing spread and total
+
+| Condition | Outcomes that survive beside the obvious inputs (coefficient) |
+|---|---|
+| wind | dropbacks -0.0837; pass rate over expected -0.00158; runs +0.0529; EPA a play -0.00224; yards a play -0.017; points scored -0.13; game total points -0.254 |
+| cold | dropbacks -0.0529; pass rate over expected -0.000751; runs +0.0356; interception rate +0.000136 |
+| precip | pass rate over expected -0.211; EPA a play -0.542; yards a play -2.99; points scored -17.5; game total points -36.8 |
+| dome | plays a game -0.737; dropbacks -1.04; pass rate over expected -0.0141; EPA a play -0.0387; spread of play outcomes (SD of EPA) +0.0231 |
+| turf | none |
+| short_rest | interception rate -0.00353; spread of play outcomes (SD of EPA) -0.0295 |
+| long_rest | dropbacks -0.848 |
+| altitude | none |
+| primetime | runs -0.627 |
+
+Side a (3+ of 8 beside the obvious inputs): 6 (cold, dome, precip, primetime, rest, wind): held.
+
+## Side b: total points beyond the closing total, walk-forward 2016-2024
+
+Gain over the closing total: +0.700% (90%: -0.052% to +1.359%), 2,367 games. Side b: failed.
+Leftover against the close, all seasons (points; robust t): wind -0.25 (t -5.1); cold +0.03 (t +1.2); precip -35.42 (t -2.8); dome -1.53 (t -2.6); turf +0.68 (t +1.7); short_rest +0.06 (t +0.1); long_rest -0.62 (t -1.2); altitude -0.32 (t -0.3); primetime -0.55 (t -1.2)
+
+Raw: 15+ mph games against calm (under 10), total points -4.59; the closing total's own gap -2.07.
+
+## H127
+
+Largest share: yards a play (+1.92%). The CEO's H127 (not margin, interceptions, sacks or yards a play): failed.
+Top four: yards a play, game total points, pass rate over expected, points scored. The first wording's four (pace counted by its best measure) in the top four: 1 of 4. Exactly the top four: failed; 3+: failed.
+
+## H126: the home edge with the weather
+
+- Beyond Elo (2016-2024, 2,367 games): gain -0.052% (90%: -0.382% to +0.317%); cold_mix +2.21 points (t +1.1, n 48); windy +1.50 points (t +1.2, n 131); wet +0.89 points (t +0.7, n 133); dome_out -1.14 points (t -1.7, n 506)
+- Beyond the closing spread (2000-2024, 6,447 games): gain -0.014% (90%: -0.144% to +0.126%); cold_mix +4.62 points (t +2.8, n 116); windy -0.70 points (t -0.6, n 291); wet +0.05 points (t +0.0, n 326); dome_out -0.12 points (t -0.2, n 1211)
+
+H126 (beyond Elo, clear): failed. Side: the cold mix beats Elo's margin by +1.87 points in sample (48 games): held.
+
+## The forecast against the observed weather (2022-2024)
+
+556 outdoor games. Wind: r 0.85, mean miss 1.85 mph, 15+ mph flags agree 95.0%. Temperature: r 0.99, mean miss 1.9°F, 32°F flags agree 98.4%. Rain: r 0.46, 0.02+ flags agree 91.7%.
+Caveat: Open-Meteo's archive of forecasts stitches each run's first hours together, so this is a short-lead forecast, not one issued a day before.

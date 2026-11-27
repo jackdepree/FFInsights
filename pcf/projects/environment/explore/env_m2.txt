@@ -1,0 +1,36 @@
+# Environment, method 2 (2026-11-27)
+
+Plays 2017-2024 with both sides' role mix: 266,292; in 10+ mph wind or rain (outdoor): 24.6%.
+
+## H124: roles x wind and rain, beyond the conditions' average effects (tested 2019-2024, bad-weather plays)
+
+| Kind | Outcome | Gain from the role x weather terms (90%) |
+|---|---|---|
+| passing | air yards an attempt | -0.098% (-0.187% to -0.012%; 26,719 plays) |
+| passing | completion | -0.219% (-0.395% to -0.071%; 26,719 plays) |
+| passing | EPA a dropback | -0.085% (-0.166% to -0.011%; 30,209 plays) |
+| rushing | EPA a run | -0.083% (-0.175% to -0.000%; 21,667 plays) |
+| pressure | sack or QB hit a dropback | -0.103% (-0.187% to -0.025%; 30,209 plays) |
+| defensive | EPA a play (defense's mix) | -0.102% (-0.149% to -0.055%; 50,410 plays) |
+| defensive | pressure (defense's mix) | -0.133% (-0.242% to -0.040%; 30,209 plays) |
+
+Kinds with a clear gain: 0 of 4. H124 as worded (all four): failed; side (any one): failed.
+
+## H125: pace and schemes, roles and tendencies x conditions (tested 2019-2024, bad-weather games)
+
+| Outcome | Gain (90%) |
+|---|---|
+| plays a game | -4.865% (-8.256% to -1.592%; 1,030 team-games) |
+| seconds a play | -8.244% (-12.175% to -4.867%; 1,028 team-games) |
+| neutral pass rate over expected | -5.938% (-9.534% to -2.763%; 1,030 team-games) |
+| shotgun rate | -18.342% (-28.924% to -9.771%; 1,030 team-games) |
+
+H125 (pace's gain clear): failed. Schemes (either tendency clear): failed.
+
+## The spread of play outcomes: the SD of EPA less the situation model's, against calm, dry, mild outdoor plays
+
+- 15+ mph wind: SD -2.5% against calm (90%: -4.4% to -0.5%; 15,548 plays, 124 games)
+- rain or snow (0.02+ in/h): SD -1.7% against calm (90%: -3.9% to +0.1%; 14,828 plays, 117 games)
+- 32°F or colder: SD -1.4% against calm (90%: -3.7% to +1.0%; 10,494 plays, 84 games)
+
+The spread bet (15+ mph wind differs from calm by 3%+, clearly): failed.
