@@ -22,7 +22,7 @@
 |---|---|---|
 | **`aging`** | I157 (wear in efficiency, through rushing mileage after 29), I158 (stars keep their jobs beyond their play), I188 (the pull-back null as a shared check) | Brief agreed 2026-11-27; the build runs tonight |
 | **`player-opportunity`** | I5 (rookies improve in their first season), I145 (distillation into the crude forecaster: a yardstick change, so it needs the CEO's yes first), I149 (players add up to their team), I152 (role drift), I184 (expected attempts from a forecaster) | The registry's next composite; it isn't kicked off. It waits for the CEO's pick of what comes after aging |
-| **`environment`** | I194 (wind and rain beyond the closing total), I195 (the cold mix beyond the lines), and the CEO's H128 | Exploration run 2026-11-27 (GO); the brief is drafted and waits for the CEO |
+| **`environment`** | I194 (wind and rain beyond the closing total), I195 (the cold mix beyond the lines), and the CEO's H128 | Brief agreed 2026-11-27; the build waits for the CEO's go |
 | **`market`'s exploration** | I150 (the market's update from open to close as a target) | Waits for odds-collection's lines (free lines only) |
 
 ## The night batches

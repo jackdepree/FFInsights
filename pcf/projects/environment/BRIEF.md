@@ -1,6 +1,6 @@
 # Environment: the conditions a game is played in
 
-> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`, and it ran 2026-11-27: **GO** (its Results). The CEO closed H123-H127 as proposed (2026-11-27: "Close h123-h127"; H123 held, H124-H127 failed), added H128, and set the brief's scope: "Brief should be around totals and the play mix and the wind bet." **The brief is drafted below** ("The brief"), with four questions for the CEO, answered 2026-11-27 ("The CEO's answers to the brief's questions", at the end); it waits for the CEO's agreement.
+> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`, and it ran 2026-11-27: **GO** (its Results). The CEO closed H123-H127 as proposed (2026-11-27: "Close h123-h127"; H123 held, H124-H127 failed), added H128, and set the brief's scope: "Brief should be around totals and the play mix and the wind bet." **The brief is drafted below** ("The brief"), with four questions for the CEO, answered 2026-11-27 ("The CEO's answers to the brief's questions", at the end); **the CEO agreed it 2026-11-27** ("Agree; merge"). The build waits for the CEO's go (2026-11-27: "builds wait for my go").
 
 ## Why now
 
@@ -151,7 +151,7 @@ It updates between games (in season) and serves `kicker-dst`, the `game-simulato
 
 Anything else the build finds goes in its report in detail. What matches this gets one line.
 
-## The brief (draft 2026-11-27, for the CEO to agree)
+## The brief (agreed 2026-11-27: "Agree; merge")
 
 The build starts from this section, `EXPLORATION.md` (its Results and the technical calls) and the registry, and nothing else. It runs at night in the build session.
 
