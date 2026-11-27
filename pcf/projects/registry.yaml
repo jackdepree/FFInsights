@@ -901,7 +901,7 @@ projects:
     status: idea
     horizon: later
     cadence: [in_season]
-    depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, injury-fatigue, schemes-v2]
+    depends_on: [participation, opportunity-quality, vacated-opportunity, roles-archetypes, availability, schemes-v2]  # availability replaced injury-fatigue (the CEO, 2026-11-23)
     summary: Projected volume and role for each player for the coming game. Tests schemes-v2's traits as features (CEO, 2026-11-10).
 
   - id: game-simulator
