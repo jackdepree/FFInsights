@@ -354,3 +354,37 @@ Only "steady" persists. The other states last a season, which is how noise behav
 - **The longer history helps efficiency a little and hurts usage.** For usage, two seasons are enough.
 - **Claude's bets:** mileage's usage gain stays clear, 55%: held, but larger than the 80% range (+0.2% to +1.4%); efficiency stays unclear, 75%: held; the longer history adds to usage, 60%: failed.
 
+
+### Two more checks before the brief (2026-11-27), after the CEO's answers
+
+The CEO, 2026-11-27: "Yes the forecast should include an estimate of the count of outstanding seasons and outstanding snaps for every player for the rest of their career. This should forecast for all players not just offense. Yes I approve of the proposed target." Odds were written in each script before its run.
+
+**Age beside years in the league** (`explore/m2_age_beside_years.py`, `.txt`). Method 1's "age against no age" had no years in the league in its baseline, and the obvious-input check added years to a model that already had age. So nothing had said whether age adds beside career stage. With his pulled rate, his last two seasons and his years in the league held, the cubic in age adds:
+
+| Position | Usage (0 if he left) | Still playing (log loss) |
+|---|---|---|
+| QB | **+1.45%** (+0.36% to +2.49%) | +0.16% |
+| RB | +0.40% (-0.67% to +1.47%) | -0.03% |
+| WR | **+1.57%** (+0.83% to +2.28%) | -0.02% |
+| TE | -0.01% | -0.63% |
+| DL | **+1.14%** (+0.34% to +1.99%) | -0.33% |
+| LB | +0.42% | +0.08% |
+| DB | **+0.67%** (+0.05% to +1.30%) | -0.58% |
+| Pooled, offense / defense | **+0.85% / +0.75%** | -0.13% / -0.28% |
+
+- **Most of what looked like age is career stage.** Beside years in the league, age adds about 1% to next season's usage, clearly at QB, WR, DL and DB, and nothing to whether he's still playing. With mileage in both, only QB stays clear (+1.5%).
+- **So the "age" in method 1's 3-6% was mostly years in the league,** which the baseline there didn't hold. This goes against the brief's first frame, which had age itself doing the work.
+- **Claude's bets:** offense 3+ of 4, 45%: failed (2); defense 2+ of 3, 40%: held; still playing pooled, 50%: failed.
+
+**Offensive linemen and specialists, and how open careers are** (`explore/m4_linemen_specialists.py`, `.txt`). Snap share on his side (offense for OL, special teams for K, P, LS), 2013-2024. The baseline already has years in the league:
+
+| Position | Pairs | Snap share: age against no age | Still playing: age against no age | Still playing next season, under 30 / 30+ |
+|---|---|---|---|---|
+| OL | 3,436 | -0.07% | -0.24% | 86% / 65% |
+| K | 447 | -1.41% | -0.57% | 83% / 81% |
+| P | 397 | +2.49% (-0.01% to +4.75%) | **+2.10%** | 85% / 79% |
+| LS | 395 | +0.08% | +1.38% (-0.03% to +2.87%) | 91% / 86% |
+
+- **Beside years in the league, age adds nothing for linemen and kickers,** and a little for punters' still playing. Their careers end with age (65% of 30+ linemen play the next season, against 86% under 30), but years in the league already says so.
+- **Careers are mostly still open in recent seasons.** Of 2018's rostered players, 26.5% were still on a roster in 2024; of 2022's, 64.5%. Of 2010's, 0.9%. A rest-of-career forecast can only be scored on the seasons seen so far, so its scoring must be cut at 2024 (the brief's tests).
+- **Claude's bets:** OL share 80%: failed; OL still playing 80%: failed; specialists' share (1+) 50%: failed; specialists still playing (1+) 55%: held (P).
