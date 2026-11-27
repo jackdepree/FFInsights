@@ -1,6 +1,6 @@
 # Environment: the conditions a game is played in
 
-> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`, and it ran 2026-11-27: **GO** (its Results). The CEO closed H123-H127 as proposed (2026-11-27: "Close h123-h127"; H123 held, H124-H127 failed), added H128, and set the brief's scope: "Brief should be around totals and the play mix and the wind bet." **The brief is drafted below** ("The brief"), with four open questions for the CEO before it's agreed.
+> **Status:** kickoff, 2026-11-27 (the CEO: "Ok let's kick off the environment expert"). The usual way and two analogies are below, with what we already know. The CEO's hunches H123-H127 are in, word for word (2026-11-27), with Claude's odds; the CEO's odds for H123-H126 came with them, and H127 has none yet. The CEO signed off on Open-Meteo (or another free source of forecasts) as a new source. The CEO's odds for H127 came 2026-11-27 (60%, on their own wording), and the CEO picked all three ways to test ("Use all three methods to test please"). The exploration is pre-registered in `EXPLORATION.md`, and it ran 2026-11-27: **GO** (its Results). The CEO closed H123-H127 as proposed (2026-11-27: "Close h123-h127"; H123 held, H124-H127 failed), added H128, and set the brief's scope: "Brief should be around totals and the play mix and the wind bet." **The brief is drafted below** ("The brief"), with four questions for the CEO, answered 2026-11-27 ("The CEO's answers to the brief's questions", at the end); it waits for the CEO's agreement.
 
 ## Why now
 
@@ -142,7 +142,7 @@ It updates between games (in season) and serves `kicker-dst`, the `game-simulato
 **The results we expect from the build** (Claude's, a middle and an 80% range, W15):
 - **Totals beside the closing total**, walk-forward 2016-2024: about +0.7% of the squared error, 80% between 0 and +1.4%. Clear (the interval above 0): 45%.
 - **With the forecast in place of the observed weather** (2022-2024): about 80% of the observed weather's gain (80% between 40% and 110%).
-- **The play mix beside the previous-8 means**, on bad-weather games: dropbacks about +1.0% of the squared error (80% +0.3% to +2%), runs about +0.8% (80% +0.2% to +1.5%), pass rate over expected about +1.5% (80% +0.5% to +2.5%). On all games about a fifth of that.
+- **The play mix beside the previous-8 means**, on bad-weather games: dropbacks about +1.0% of the squared error (80% +0.3% to +2%), runs about +0.8% (80% +0.2% to +1.5%), pass rate over expected about +1.5% (80% +0.5% to +2.5%). Yards a play about +1.0% (80% +0.3% to +2%). On all games about a fifth of each.
 - **The ladder:** the nonlinear wind rung (bands) ties the straight line (70%), so the straight line ships (rule k). The trees tie or lose (85%).
 - **The wind bet** (I194), 2016-2024: the under, when the model's total sits 1.5+ points below the close, wins about 55% of about 120 bets (80% between 48% and 61%). Too few bets to be clear (the break-even at −110 is 52.4%).
 - **H128:** 15% clear on the margin beside the close; I195 (the cold mix): 20%.
@@ -159,7 +159,7 @@ The build starts from this section, `EXPLORATION.md` (its Results and the techni
 
 For every game, before kickoff, from the forecast:
 - how much do the conditions move the game's total and each team's points?
-- how much do they move each side's play mix: dropbacks, runs and pass rate over expected?
+- how much do they move each side's play mix (dropbacks, runs and pass rate over expected) and its yards a play?
 - how much of that does the closing total leave unpriced (the wind bet)?
 
 ### Why it matters
@@ -175,7 +175,7 @@ For every game, before kickoff, from the forecast:
 - **The tax:** the conditions' league-wide shift on an outcome against a calm, dry, mild outdoor game, in the outcome's units (points, dropbacks).
 - **Beyond the close:** the total less the closing total. The wind bet forecasts it.
 - **A bad-weather game:** outdoors with 10+ mph wind, 0.02+ inches an hour, or 40°F or colder.
-- **The play mix:** a team-game's dropbacks, runs and pass rate over expected.
+- **The play mix:** a team-game's dropbacks, runs and pass rate over expected. **Yards a play** (the exploration's largest effect) is read beside it: passing and rushing yards less sack yards, over dropbacks and carries.
 
 ### Builds on
 
@@ -202,7 +202,7 @@ For every game, before kickoff, from the forecast:
 4. **Trees, once, as the check**, on the same inputs. They ship only if they beat the rung below clearly.
 5. **Ranges:** the total's distribution given the shipped rung (a normal around it with a variance that can depend on the conditions, against a constant one), with q10, q50 and q90.
 
-**The play mix** (dropbacks, runs, pass rate over expected, per team-game):
+**The play mix and yards a play** (dropbacks, runs, pass rate over expected and yards a play, per team-game):
 1. **The baseline:** the team's and opponent's previous-8 means and the closing spread and total.
 2. **The linear tax** on top, then wind's shape and the trees as above.
 3. **Ranges** the same way.
@@ -217,7 +217,7 @@ For every game, before kickoff, from the forecast:
   - the shipped tax beats the baseline and a shuffled-weather null (each game's conditions shuffled among games in the same month and roof, 19 copies), weeks resampled;
   - each rung is kept only where it beats the rung below clearly (a 90% interval clear of 0);
   - no rung adds noise.
-- **The no-noise target (for the CEO to approve):** the game total's squared error beside the closing total, 2016-2024. The play mix's squared error beside the previous-8 means is the second target.
+- **The no-noise target (approved by the CEO, 2026-11-27: "1; approve"):** the game total's squared error beside the closing total, 2016-2024. The play mix's (and yards a play's) squared error beside the previous-8 means is the second target.
 - **The wind bet (I194):**
   - the gain beside the close, on all games and on 15+ mph forecast games;
   - the under's record when the forecast total sits 1.5+ points below the close, against 52.4% (−110), with its interval. Discovery only: there are too few bets to prove an edge, and no closing line value without an earlier line;
@@ -239,8 +239,8 @@ For every game, before kickoff, from the forecast:
   - the role table's history and schemes' tendencies from the season before (for H128 only).
 - **Outputs, saved as walk-forward history in the standard schema, known before kickoff:**
   - **game:** the conditions; the tax on the total (points, with q10, q50 and q90); the total beyond the close (the wind bet's number);
-  - **team-game:** the tax on points, dropbacks, runs and pass rate over expected, each with q10, q50 and q90.
-- **Live forecasts:** a small Open-Meteo step in the collector (`collect-odds.yml`, or the PC fallback) saves each game's forecast the morning of the game into `pcf-data`, from 2026's remaining weeks on. Open-Meteo has no key and the step costs no credits.
+  - **team-game:** the tax on points, dropbacks, runs, pass rate over expected and yards a play, each with q10, q50 and q90.
+- **Live forecasts** (added 2026-11-27, the CEO: "you may add it now"): `explore/collect_forecast.py` runs in the collector (`collect-odds.yml`, and the PC fallback `ops/collect-run.ps1`) beside the odds, Tue, Thu, Sat, Sun and Mon. It saves every upcoming outdoor or open game's forecast at the lead it was issued into `pcf-data` (`raw/open_meteo_live/`), so a Sunday game gets forecasts from about 5, 3, 1 and 0 days out, the Sunday 12:00 UTC run being the morning of. It runs once merged to main. Open-Meteo has no key and the step costs no credits; a failure doesn't lose the lines.
 
 ### How it will be used
 
@@ -251,12 +251,14 @@ For every game, before kickoff, from the forecast:
 ### Plan
 
 - One night's build: the package module (the Open-Meteo client, the conditions table, the two ladders, the ranges), the ideas (I194, I195, H128), the earlier-seasons check, then the vault. Then RESULTS.md with "Against the frame", the findings, the case against, the interface card and the CEO's open questions.
-- The live forecast step goes in a separate small commit, after the CEO sees it (it touches the collector that runs on GitHub).
+- The live forecast step is in already (its own commit, 2026-11-27), so the build reads the 2026 forecasts it has collected by then (for description only: 2026 is after the vault).
 - The morning: the CEO's spot-check and the merge.
 
-## Open questions for the CEO (before the brief is agreed)
+## The CEO's answers to the brief's questions (2026-11-27, word for word)
 
-1. **The no-noise target:** the game total's squared error beside the closing total (2016-2024), with the play mix beside the previous-8 means second. Approve, or change?
-2. **Yards a play:** the exploration's largest effect, and it feeds the yardstick's yards boards. Add it to the team-game outputs? (It costs nothing extra.)
-3. **H128's odds:** your confidence that roles or schemes make some teams fare better than their opponents in bad weather (beside the closing spread, out of sample).
-4. **The live forecast step** in the collector: yes now, or after the build?
+"1; approve. 2; yes. 3; h128; 30%. 4; you may add it now."
+
+- **The no-noise target, approved:** the game total's squared error beside the closing total, with the play mix beside the previous-8 means second.
+- **Yards a play is added** to the team-game outputs, the play mix's ladder and its tests.
+- **H128's odds:** 30% (the CEO), against Claude's 15%.
+- **The live forecast step is added** to the collector (`explore/collect_forecast.py`; decision 0054).
