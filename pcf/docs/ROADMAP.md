@@ -44,6 +44,8 @@ The first experts: **Team Elo · opponent-adjusted efficiency · pace & play-cal
 
 **Aging** (`aging`, the CEO's pick, 2026-11-25: "Ok let's start the aging expert!"): how a player's rates change with age, and when his career ends; the predictable part of the drift stabilization found between seasons. Kickoff in the strategy chat (`projects/aging/BRIEF.md`); the CEO's hunches H115-H122. The exploration ran 2026-11-25 (go): aging is a usage expert (age forecasts next season's share and still-playing chance, not efficiency), with mileage as durability and stars aging differently; the CEO closed the verdicts on 2026-11-27 (H115, H118, H120-H122 held; H116, H117, H119 failed), and the exploration merged the same day. Two checks before the brief found most of the 'age' signal is career stage (beside years in the league, age adds about +0.8% to usage). The CEO answered the brief's questions 2026-11-27 (seasons and snaps left for the rest of the career, every position, the target approved); the CEO agreed the brief (projects/aging/BRIEF.md) the same day, no vetoes; next, the build, at night in the build chat.
 
+**Environment** (`environment`, the CEO's pick, 2026-11-27: "Ok let's kick off the environment expert"): the conditions a game is played in (weather, roof, surface, rest, travel, altitude) and how they move totals, margins, pace and each side's passing, rushing and kicking. Kickoff in the strategy chat (`projects/environment/BRIEF.md`); it waits for the CEO's hunches.
+
 ## Later
 
 - **The remaining experts:** line play, game script, Context (retrospective), VOE (in-season), VOE (retrospective), opportunity quality, vacated opportunity, touchdowns, aging, injury & fatigue, roles & archetypes, QB talent, prospects, kicker & DST, market, crowd, news
