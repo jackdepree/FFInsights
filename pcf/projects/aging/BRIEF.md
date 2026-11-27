@@ -1,6 +1,6 @@
 # Aging: how a player changes with age, and when his career ends
 
-> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below; the CEO picked all three (2026-11-25: "All three please!"). The exploration is pre-registered in `EXPLORATION.md`; it ran 2026-11-25 (go), and the CEO closed its verdicts 2026-11-27. The brief below was drafted 2026-11-27, with W16's "What we expect" frame. The CEO answered its three questions the same day (the rest of the career, every position, the target approved), and two checks followed; it waits for the CEO's agreement.
+> **Status:** kickoff, 2026-11-25 (the CEO: "Ok let's start the aging expert!"). The CEO's hunches H115-H122 are in, word for word (2026-11-25), with Claude's odds. The CEO's odds for H117 (45%) and H122 (80%) added 2026-11-25; H119 has none. Three ways to test are below; the CEO picked all three (2026-11-25: "All three please!"). The exploration is pre-registered in `EXPLORATION.md`; it ran 2026-11-25 (go), and the CEO closed its verdicts 2026-11-27. The brief below was drafted 2026-11-27, with W16's "What we expect" frame. The CEO answered its three questions the same day (the rest of the career, every position, the target approved), and two checks followed; the CEO agreed it the same day, with no vetoes and no change of scope ("I agree to the brief. No vetoes. No scope change."). The build runs at night in the build chat, from this file, `EXPLORATION.md` and the registry.
 
 ## Why now
 
@@ -173,7 +173,7 @@ It updates between seasons, from completed seasons only. It serves next-season p
 
 Anything else the build finds goes in its report in detail. What matches this gets one line.
 
-## The brief (2026-11-27; the CEO answered its questions the same day, and agrees it)
+## The brief (agreed 2026-11-27: "I agree to the brief. No vetoes. No scope change.")
 
 The build starts from this section, `EXPLORATION.md` (its Results, the 2026-11-27 checks and the technical calls) and the registry, and nothing else. It runs at night in the build session.
 
