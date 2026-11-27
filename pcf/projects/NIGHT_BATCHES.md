@@ -9,6 +9,11 @@
 - **The report** is `projects/retro/batches/<batch>.md`. Each idea gets a start and end time, so its tokens can be charged to it (W18). The report gives one line for each idea that matched its odds, and detail for each that didn't (W16).
 - **The merge** needs the CEO's yes in the morning, as with any build.
 
+**When batches run** (the CEO, 2026-11-27: "Builds should take priority because they tend to carry more ideas with them, but we can always queue batches of ideas to test after builds are complete or after a 5 hours reset of usage"):
+- **Builds come first.** A night with an agreed brief runs its build.
+- **A batch fills the spare time:** after a build finishes within its night, or when the 5-hour usage window resets and no build is waiting. It takes the next batch in the order below.
+- **A batch never delays a build.** It stops at an idea boundary, closes what it finished, and leaves the rest open with the same home.
+
 **Sorted 2026-11-27** (the CEO: "Ok let's find homes for the backlog."). There were 59 open ideas. 57 got a home and 2 closed as not planned (in `IDEAS.md`'s Killed table).
 
 ## Homes in a build
