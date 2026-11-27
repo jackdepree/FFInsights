@@ -1,0 +1,18 @@
+# Mileage beside a longer history (2026-11-27)
+
+Pairs from careers starting 1999+: 16,265.
+
+| Comparison | Usage (0 if he left) | Efficiency | Still playing (log loss) |
+|---|---|---|---|
+| H + mileage against H (the exploration's row) | +1.28% (+0.55% to +1.98%) | +0.40% (-0.12% to +0.89%) | +1.60% (+0.64% to +2.54%) |
+| HL (H + three seasons back + career peak) against H | -0.46% (-0.83% to -0.11%) | +0.81% (+0.16% to +1.46%) | +0.09% (-0.39% to +0.58%) |
+| HL + mileage against HL | +1.57% (+0.89% to +2.22%) | +0.19% (-0.29% to +0.63%) | +2.82% (+1.92% to +3.87%) |
+
+By position, HL + mileage against HL (usage; efficiency; still playing):
+
+- QB: +0.54% (-0.01% to +1.20%); +1.43% (-0.26% to +2.99%); -0.51% (-1.77% to +0.69%)
+- RB: +1.73% (+0.82% to +2.62%); -0.40% (-1.01% to +0.26%); +4.25% (+2.56% to +5.93%)
+- WR: +2.67% (+1.52% to +3.81%); +0.05% (-0.32% to +0.38%); +5.51% (+3.68% to +7.45%)
+- TE: +1.32% (-0.86% to +3.25%); -0.32% (-0.67% to +0.01%); +2.05% (-0.50% to +4.83%)
+
+Bets: mileage's usage gain clear beside the longer history: held (+1.57% (+0.89% to +2.22%)); efficiency stays unclear: held; the longer history adds to H for usage: failed.
