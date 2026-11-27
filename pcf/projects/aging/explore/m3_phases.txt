@@ -1,0 +1,66 @@
+# Method 3: career phases as hidden states (2026-11-25)
+
+Survivor pairs at QB, RB, WR and TE with efficiency in both seasons: 7,301 (1,928 players). Each is a change in pulled usage and pulled
+efficiency, standardized by position. A five-state Gaussian hidden Markov model with transitions by age band (under 26, 26-29, 30+), started at rising, steady,
+usage-only decline, full decline and efficiency rebound, then learned by EM; one model for the four positions, refit every three target seasons.
+
+## The states the model learned (fit on targets before 2022; standardized changes)
+
+| Start | Mean usage change | Mean efficiency change | Spread (usage, efficiency) | Stay chance: under 26, 26-29, 30+ |
+|---|---|---|---|---|
+| rising | +0.93 | +0.00 | 0.82, 0.90 | 0.12, 0.03, 0.00 |
+| steady | -0.10 | -0.02 | 0.40, 0.55 | 0.59, 0.74, 0.70 |
+| usage-only decline | -0.97 | +0.00 | 0.80, 0.67 | 0.19, 0.20, 0.28 |
+| full decline | -0.25 | -1.14 | 0.83, 0.78 | 0.00, 0.08, 0.08 |
+| efficiency rebound | -0.23 | +1.08 | 0.99, 0.75 | 0.03, 0.03, 0.01 |
+
+The rebound state (the most efficiency gain for its usage change): efficiency rebound as started.
+
+## The hidden-state model against its twin (walk-forward, targets 2010-2024; pooled over the four positions, each weighing the same)
+
+The twin: k-means (5 clusters) on his last two seasons' changes, plus a smooth age term. Age only: the smooth age term alone. Scores are on standardized changes
+(efficiency weighted by the harmonic mean of both seasons' opportunities).
+
+| Comparison | Usage change | Efficiency change |
+|---|---|---|
+| Hidden states against the twin | +0.12% (-0.79% to +0.98%) | +5.02% (+3.86% to +6.16%) |
+| The twin against age only | +3.15% (+2.11% to +4.22%) | +5.99% (+3.95% to +7.97%) |
+| Hidden states against age only | +3.27% (+2.22% to +4.27%) | +10.72% (+8.85% to +12.40%) |
+| Hidden states plus age against age only | +3.55% (+2.65% to +4.38%) | +9.37% (+7.23% to +11.14%) |
+| I153 analogs against the twin | +9.47% (+7.67% to +11.19%) | +25.59% (+23.31% to +27.67%) |
+| I153 analogs against age only | +12.32% (+10.38% to +14.18%) | +30.07% (+27.72% to +32.33%) |
+| Levels (age, his levels and last changes, linear) against age only | +12.39% (+9.93% to +14.51%) | +31.06% (+28.89% to +33.24%) |
+| Levels plus the hidden-state forecast against levels | +0.21% (-0.22% to +0.62%) | -1.19% (-1.97% to -0.54%) |
+| Levels plus the twin's clusters against levels | +0.22% (-0.04% to +0.51%) | +0.14% (-0.21% to +0.52%) |
+| I153 analogs against levels (the same inputs, linear) | -0.16% (-1.77% to +1.34%) | -1.57% (-3.54% to +0.25%) |
+
+The bet (the hidden-state model beats the twin clearly, usage or efficiency): yes.
+
+## H117, the "told apart in advance" half
+
+Usage decliners (as in method 1) with an efficiency change in both seasons: 716. Kept efficiency: 47%. A logistic on what is known before the
+decline season (age, usage and efficiency levels, last season's changes, star status, mileage; then the model's state chances added), walk-forward by target season.
+
+- without the states: held-out AUC 0.847 (90% 0.821 to 0.872), 626 decline seasons.
+- with the states: held-out AUC 0.836 (90% 0.812 to 0.864), 626 decline seasons.
+
+## H119: late-career comebacks
+
+After a full-decline season (pulled usage and efficiency both fell from s-1 to s, at or past the position's usage peak), is next season's efficiency above what method 1's
+age model already expects (its own pull-back included)? The leftover is next season's centred efficiency less that forecast, weighted by next season's opportunities.
+
+- after a full decline: 765 seasons, mean leftover +0.0110 EPA an opportunity (90% -0.0001 to +0.0211); share above 0: 47%
+- every other season: 4326 seasons, mean leftover -0.0051 EPA an opportunity (90% -0.0111 to +0.0004); share above 0: 44%
+- Forecastable? the rebound state's chance against the leftover, after full declines (held out, 765): correlation -0.000 (90% -0.051 to +0.050)
+- Forecastable? the twin's efficiency forecast against the leftover, after full declines (held out, 765): correlation +0.000 (90% -0.057 to +0.064)
+- Forecastable? the analogs' efficiency forecast against the leftover, after full declines (held out, 765): correlation +0.008 (90% -0.049 to +0.060)
+
+## Checks: is it the pull-back?
+
+H117's label (efficiency change at or above 0) and H119's leftover both carry the pull-back to the mean: a season that was high falls next season, and one that was low
+rises, from noise alone. Three checks.
+
+- H117 with his pulled efficiency this season alone: held-out AUC 0.810.
+- H117 with the label beyond expectation (next season's efficiency at or above the age model's forecast; kept: 39%): held-out AUC 0.536 (90% 0.499 to 0.576), 626 decline seasons, every input and the state chances.
+- H119 against a forecast that knows his last two seasons, after a full decline: 765 seasons, mean leftover -0.0019 (90% -0.0132 to +0.0088)
+- H119 against a forecast that knows his last two seasons, every other season: 4326 seasons, mean leftover -0.0041 (90% -0.0093 to +0.0011)

@@ -1,0 +1,9 @@
+# Mileage once age and history are held, players 29 and older (all rows, standardized coefficients on next season's usage)
+- QB usage (385 rows): passing mileage -0.0081, rushing mileage -0.0512; the outcome's spread 0.4141
+- QB efficiency (298 rows): passing mileage +0.0174, rushing mileage -0.0143; the outcome's spread 0.3298
+- RB usage (297 rows): passing mileage -0.0010, rushing mileage +0.0017; the outcome's spread 0.0995
+- RB efficiency (188 rows): passing mileage +0.0140, rushing mileage -0.0212; the outcome's spread 0.3034
+- WR usage (490 rows): passing mileage -0.0013, rushing mileage +0.0030; the outcome's spread 0.0925
+- WR efficiency (328 rows): passing mileage -0.0182, rushing mileage -0.0285; the outcome's spread 0.4694
+- TE usage (301 rows): passing mileage +0.0045, rushing mileage +0.0033; the outcome's spread 0.0744
+- TE efficiency (219 rows): passing mileage -0.0009, rushing mileage -0.0690; the outcome's spread 0.4456
