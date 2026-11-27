@@ -8,6 +8,8 @@
 ## In short
 Two or three sentences: what we learned and whether it worked against the brief's tests.
 
+**Against the frame** (the brief's "What we expect", W16): what went against it, in detail; what matched, in one line.
+
 **Scorecard:** link (MLflow) · **Vault:** result, opened on date (or "spent") · **Versions tried:** N
 
 | Check (docs/VALIDATION.md) | Result |

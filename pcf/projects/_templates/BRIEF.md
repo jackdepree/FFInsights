@@ -23,6 +23,9 @@ State the football claim on its own, apart from any method for testing it. Befor
 ## Methods
 *Claude, after the hunches.* Two or three ways to test or build this, one of them exploratory (from outside the usual toolbox), each with what it assumes and what it costs. The CEO takes part in the choice.
 
+## What we expect
+*Claude, after the CEO's hunches (W16).* One analogy that sums up what this expert should find and how it will sit with the other experts: what it feeds, what it overlaps, what it shouldn't redo. Then the few results we expect, in plain units. Reports explain in detail only what goes against this.
+
 ## The noise ceiling
 *Filled in by the exploration, before the hunches are tested.* How much of the target's error anything could remove (hindsight oracle, split-half repeatability), and how large the model's own fitting noise is (seeds, row order). Every gain below is read against these.
 

@@ -268,7 +268,7 @@ Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 an
 
 - **H5** closed as failed (HUNCHES.md). **Aging's H115 to H122** closed as proposed, on `pcf/aging` (they were tested in aging's exploration and only waited for the CEO's close). So step 2's aging scores are now final, not provisional: the 0.293 in the case against no longer applies.
 - **W13, W14 and W15** are in `CLAUDE.md` (building, validating, and the odds paragraph). W11 is retired.
-- Group A: run the same day (below). Still open: the three questions on how we're working (item 5).
+- Group A: run the same day (below). The three questions on how we're working (item 5): answered the same day (step 9, below).
 
 **The CEO, 2026-11-27:** "Run group a now please. I approve of the three workflow changes you proposed."
 
@@ -283,6 +283,27 @@ Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 an
 - **All four bets failed** (60%, 35%, 30%, 35%). Retro 6 scores them with the rest of retro 5's new rows.
 - **P15 and P13 sharpen.** The team's own trip (I192) joins the team's own habits (H5, I86) as nothing beside who is present and how good they are. Bodies hold for players (ages, injuries), not for a team's travel.
 - **The backlog: 58 open.** Findings F135 (I187) and F136 (I192), and a note on F130 (I193).
+
+### Step 9: the CEO's answers on how we're working (2026-11-27)
+
+1. "I think one thing that would help me understand the results better is if we are explicit with what we expect to find in the build. During our exploration and brief we should use some frame of reference like an analogy to concisely summarize our expectations of the expert and how the expert will interact with other experts. This way, you can limit your explanations to only what we found to go against the grain of the expectation."
+2. "yea we should either group backlog ideas into new projects or experts that we will build and therefore test the ideas, or we should plan to test them is batch sessions at night under the build and work chat. We can not afford to constantly have ideas in the backlog."
+3. "I would be interested to see the how much usage or tokens each project and exploration or each idea costs. Yes it would also be interesting to see how often a result changes during a spot check or during a re-run."
+
+Written into `CLAUDE.md` as the CEO's (the wording of each rule, and the parts marked *Claude's call*, are for the CEO's veto):
+
+| # | Change | Where |
+|---|---|---|
+| W16 | **The expectation frame.** The exploration and the brief carry a short "What we expect" section: one analogy that sums up what the expert should find and how it will sit with the other experts (what it feeds, what it overlaps, what it shouldn't redo), and the few results we expect, in plain units. It is written after the CEO's hunches, so it doesn't anchor them. Reports then explain in detail only what went against the frame; what matched gets one line | Charter (starting a project; done), the brief and results templates |
+| W17 | **No standing backlog.** Every open idea has a home: a project or expert we will build, whose build tests it, or a named night batch, a build-chat session that runs a group of ideas overnight. Step 1 of every retro gives each idea its home. *Claude's call:* an idea that fits neither is closed as "not planned", with its reason, and can be reopened; a new idea gets its home when it is written | Charter (the retro's step 1; ideas) |
+| W18 | **Measure the process.** Every retro reports what each project, exploration and idea cost in tokens, and how often a result changed at the CEO's spot-check or at a re-run (rehearsal, the earlier-seasons check, the vault). *Claude's call:* costs come from Claude Code's local session transcripts (only the totals are committed); a build's report gives each idea's start and end time, so its tokens can be charged to it | Charter (the retro's steps 2 and 9) |
+
+**A first cost baseline** ([`retro5_costs.py`](retro/explore/retro5_costs.py), output [`.txt`](retro/explore/retro5_costs.txt)), by the git branch each message was written on, 2026-10-28 to 2026-11-27:
+
+- **All work so far:** 9,524 messages; 39 million fresh input tokens, 2,076 million re-read from the cache (98% of all input), 11.3 million output.
+- **A night build** (its own session, so it is measured cleanly): 156 to 377 messages, 35 to 92 million cached input and 0.2 to 0.4 million output. Stabilization 87.7 and 0.38; availability 89.0 and 0.36; td-expert 91.7 and 0.37; vacated-opportunity 34.8 and 0.22.
+- **The strategy chat is charged roughly:** a message lands on the branch the session started on, not the worktree it was working in, so 1,151 messages (229 million cached) sit on `main`, and `pcf/aging` shows only today. Per-idea costs need the build's start and end times (W18). Retro 6 fixes the charging by timestamps between each branch's commits.
+- **Results changed at a spot-check or re-run:** not counted yet; retro 6 counts them from every SPOT_CHECK file, the rehearsals and the vault results.
 
 ### The case against this retro
 
