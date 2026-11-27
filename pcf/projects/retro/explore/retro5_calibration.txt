@@ -1,0 +1,90 @@
+
+== THE CEO, FIRST NUMBER, CLOSED (H113, H114): 2 bets, 2 came true (100%), average stated 25%; Brier 0.562 (always saying 50%: 0.250)
+   stated 0%-35%: 2 bets, average stated 25%, came true 100%
+   claims: 1 of 1 came true, average stated 25%, Brier 0.562
+   methods: 1 of 1 came true, average stated 25%, Brier 0.562
+     25%  yes  H113 teammates prop a player's rates up or down (held, narrowly)
+     25%  yes  H114 a consistent measure sets where the others regress to (held, by chance's margin)
+
+== THE CEO, FIRST NUMBER, AGING (PROVISIONAL): 7 bets, 5 came true (71%), average stated 56%; Brier 0.176 (always saying 50%: 0.250)
+   stated 0%-35%: 2 bets, average stated 30%, came true 50%
+   stated 35%-55%: 2 bets, average stated 48%, came true 50%
+   stated 55%-75%: 1 bets, average stated 60%, came true 100%
+   stated 75%-100%: 2 bets, average stated 88%, came true 100%
+   claims: 4 of 5 came true, average stated 62%, Brier 0.179
+   methods: 1 of 2 came true, average stated 40%, Brier 0.170
+     30%  yes  H115 mileage split by kind beats age alone (held by its rule)
+     30%  no   H116 roles add to mileage and age
+     45%  no   H117 two ways to decline, told apart (proposed failed)
+     50%  yes  H118 risk-weighted mileage beats age alone (held by its rule)
+     60%  yes  H120 stars age differently
+     95%  yes  H121 positions and roles age differently
+     80%  yes  H122 usage shows aging better than efficiency
+
+== THE CEO, ALL NINE (PROVISIONAL): 9 bets, 7 came true (78%), average stated 49%; Brier 0.262 (always saying 50%: 0.250)
+   stated 0%-35%: 4 bets, average stated 28%, came true 75%
+   stated 35%-55%: 2 bets, average stated 48%, came true 50%
+   stated 55%-75%: 1 bets, average stated 60%, came true 100%
+   stated 75%-100%: 2 bets, average stated 88%, came true 100%
+   claims: 5 of 6 came true, average stated 56%, Brier 0.243
+   methods: 2 of 3 came true, average stated 35%, Brier 0.301
+   pays (any held-out gain): 7 of 9
+
+== CLAUDE, ON THE CEO'S CLAIM AS WORDED (ALL TEN, AGING PROVISIONAL): 10 bets, 7 came true (70%), average stated 50%; Brier 0.233 (always saying 50%: 0.250)
+   stated 0%-35%: 4 bets, average stated 25%, came true 50%
+   stated 35%-55%: 1 bets, average stated 45%, came true 100%
+   stated 55%-75%: 4 bets, average stated 66%, came true 75%
+   stated 75%-100%: 1 bets, average stated 90%, came true 100%
+   claims: 5 of 7 came true, average stated 57%, Brier 0.196
+   methods: 2 of 3 came true, average stated 33%, Brier 0.318
+     70%  yes  H113 (real)
+     45%  yes  H114 (1+ rate)
+     25%  yes  H115 (both kinds)
+     30%  no   H116 (both kinds)
+     65%  no   H117 (real)
+     25%  yes  H118
+     20%  no   H119 (real; the rule passes by a hair, proposed failed)
+     60%  yes  H120
+     90%  yes  H121
+     70%  yes  H122
+
+== Head to head on the same 9 hunches: Claude closer on 2, the CEO on 5, level 2; Brier CEO 0.262, Claude 0.254
+
+== CLAUDE, SIDE BETS, IDEAS AND BUILD ODDS: 119 bets, 59 came true (50%), average stated 53%; Brier 0.233 (always saying 50%: 0.250)
+   stated 0%-35%: 22 bets, average stated 23%, came true 41%
+   stated 35%-55%: 30 bets, average stated 43%, came true 30%
+   stated 55%-75%: 45 bets, average stated 60%, came true 56%
+   stated 75%-100%: 22 bets, average stated 82%, came true 73%
+   size bets: 2 of 8 came true, average stated 61%, Brier 0.333
+   other bets: 57 of 111 came true, average stated 52%, Brier 0.225
+   stab-explore: 3 of 8 came true, average stated 39%, Brier 0.196
+   stab-build: 17 of 34 came true, average stated 52%, Brier 0.229
+   stab-spot: 3 of 5 came true, average stated 57%, Brier 0.271
+   vac-build: 18 of 33 came true, average stated 56%, Brier 0.202
+   vac-spot: 5 of 6 came true, average stated 63%, Brier 0.123
+   skill-build: 5 of 12 came true, average stated 52%, Brier 0.250
+   skill-spot: 3 of 9 came true, average stated 59%, Brier 0.382
+   aging: 5 of 12 came true, average stated 46%, Brier 0.259
+
+   size bets in detail:
+     60%  no   I180 the correlation rises 0.02+
+     90%  no   I55 the first game back, 1.5-2.5 points recovered (high)
+     60%  no   I164 by 0.03-0.06
+     55%  no   I170 by +3 to +6%
+     25%  no   I171 by 5-15%
+     70%  no   85-120 movers
+     60%  yes  Pressures' gain clear, +8 to +20%
+     65%  yes  Rush share's gain clear, +10 to +25%
+
+   bets at 70%+ that failed:
+     80%  At most 2 above 1 (I180 alone) (stab-build)
+     70%  In-season slopes in 0.95-1.05 for most (stab-spot)
+     90%  I55 the first game back, 1.5-2.5 points recovered (high) (vac-build)
+     75%  I163 the nests below 1, WR and TE (vac-build)
+     75%  I79 RBs: no efficiency measure makes 'use' (skill-build)
+     70%  85-120 movers (skill-spot)
+     70%  No season carries more than half (skill-spot)
+     75%  It's scheme (skill-spot)
+     80%  Age against no age: usage at 4 of 4 (aging)
+
+== Sensitivity, the written rules scored instead: Claude on the CEO's claims Brier 0.293; side bets 0.236

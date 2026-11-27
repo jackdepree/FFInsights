@@ -5,7 +5,275 @@
 - **A pattern is a hypothesis, not a finding.** It was fitted after the fact, on a few dozen verdicts that come in clusters (one project can supply most of a pattern). It earns trust only by predicting verdicts before they're known, which is what the predictions table is for.
 - **Confidence means:** low, medium, high: roughly 60%, 75%, 90% sure the stated outcome happens. A retro scores them by counting how many in each band came true.
 - **Where things go:** new ideas go in [IDEAS.md](IDEAS.md) as Claude's (I46 on); the CEO's edits can turn one into a hunch ([HUNCHES.md](HUNCHES.md)). Accepted workflow changes go in `CLAUDE.md`.
-- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects. **Retro 3** came due on 2026-11-22 (`context-retro` and `opportunity-quality`) and the CEO started it on 2026-11-23.
+- **Next retro:** after the second project finished from 2026-11-15 on. That point came on 2026-11-19 (`crude-forecaster` and `context-live`). **The CEO postponed it** the same day: "I would personally like to hold off on the retro analysis number 2 ... I want to do VOE and maybe one other cousin, or maybe even some explorations first ... So I would like to push out retro number 2. We can do that later after we learn a lot from VOE and some experiments." Retro 2 runs after VOE and one or two of its cousins (`projects/voe/BRIEF.md`). **The CEO started it on 2026-11-20**, when VOE was paused: "let's start the retro 2 now, the retro analysis, and kind of look back. Keep asking me questions, keep telling me the limitations, keep telling me the constraints, the assumptions, because anytime I can push back, then we're getting value, and anytime you push back on me, then we're hopefully getting value and we're staying true and we're staying valid." Retro 3 comes after the next two finished projects. **Retro 3** came due on 2026-11-22 (`context-retro` and `opportunity-quality`) and the CEO started it on 2026-11-23. **Retro 5** ran 2026-11-26, after `vacated-opportunity`, `skill-over-expected` and `stabilization`; retro 6 comes after the next two finished builds (W12).
+
+---
+
+## Retro 5 (2026-11-26)
+
+> The CEO, 2026-11-26: "Please start the next retro"
+
+**Why now:** three builds have finished since retro 4: `vacated-opportunity` (built 2026-11-25 to 26), `skill-over-expected` (built 2026-11-25) and `stabilization` (built 2026-11-26). By W12 the retro was due at the second of them. `aging`'s exploration ran too (branch `pcf/aging`, not merged); explorations don't trigger a retro, but its hunches are scored here, provisionally.
+
+**Read:** hunches H113 to H122, every idea closed or opened since retro 4 (I143 to I186), findings F94 to F129, the three builds' RESULTS, PREREG and SPOT_CHECK files, and aging's EXPLORATION.
+
+**The steps,** in the charter's order: 1. sort the backlog; 2. score the predictions; 3. run the quick groups; 4. update the patterns; 5. rehearsal; 6. dreaming; 7. new ideas and predictions; 8. the findings table; 9. how we're working.
+
+### 1. The backlog, sorted (2026-11-26)
+
+**Since retro 4:** 65 were open after retro 4's dream run. The three builds opened 21 (numbered I154 to I186, with gaps) and closed 23, leaving 63. W9 held for every build: each row left Open in the same commit as its result.
+
+**Closed by Claude at the sort** (no test needed):
+
+| Idea | Closed as | Why, in one line |
+|---|---|---|
+| I69, the noise floor in every yardstick table | **Graduated** | Done in the code: `score_input` returns the copies' largest gain beside every gain, and every board result prints it |
+| I96, the diffusion model as a play simulator | Killed | It waits for a simulator nobody has kicked off, and diffusion lost both times it was tried (H85; stabilization's third method) |
+| I104, a kept share that changes by season | Killed | Its form failed in stabilization's build (F126); the season-varying share is the same question from the other side |
+
+I153 (historical analogs) was tested on `pcf/aging` and added nothing beyond the player's levels. It closes when aging merges.
+
+**The sort: 61 open** (after step 3's closures and steps 6 and 7's new rows), by what they need:
+
+| Group | Ideas | Cost | Where it runs |
+|---|---|---|---|
+| **A. Retro-sized, data in hand** | I187 (ranges on biased rows), I192 (travel beside Elo), I193 (a moving lead back's split) | Under an hour each | Retro 6's step 3, or now if the CEO wants |
+| **P. Participation's next build** | I11, I15, I16, I51, I138, I191 (6) | A session | participation's next version. I138 has new evidence (I4, below) |
+| **S. Stabilization's next version** | I183 (the opponent-adjusted faced rate), I186 (the trend for teams), I189 (k by role) (3); with I185's per-position k to ship-test | A session | stabilization's next build |
+| **O. Player opportunity** | I5 (rookies, its original form), I149, I152 (its original form), I153 (closes at aging's merge), I184 (5) | Inside the build | `player-opportunity`'s build |
+| **E. Player value on lower-noise outcomes** | I77, I78, I81, I82, I92, I99, I111 (7) | A session each; I111 on the CEO's hold | context and VOE's next looks |
+| **B. Misses after a change** | I41, I54, I56, I68 (4) | A session each | team-efficiency, pace, crude-forecaster |
+| **T. Teams** | I31, I32, I42, I115, I127, I148 (6) | In a build | team-efficiency's and Elo's next builds |
+| **AV. Availability** | I120, I139 (2) | A session | availability and td-expert |
+| **H. Coaches and schemes** | I21, I71, I88, I93 (4) | One session | schemes-v2's next look |
+| **J. Tooling** | I45, I62, I64, I66, I72, I188 (6) | When a build touches the harness | the build that needs it |
+| **C. Ranges** | I1, I52, I85 (3) | One session | `pcf.validation`, then each expert |
+| **D2. Inside built experts** | I103, I117, I119 (3) | Quick each, inside the build (retro 4) | opportunity-quality's and td-expert's next builds |
+| **K. After the season** | I6, I8, I173 (3) | Quick | the first retro after 2026 ends |
+| **N. Night builds and the CEO's yes** | I141 (H6 runs inside it), I145 (a yardstick change) (2) | A night build | when the CEO sets one up |
+| **L. Waiting** | I110 (the CEO's hold), I147 (needs every build to save per-season gains: W13), I150 (the betting cousin), I190 (scored at retro 6) (4) | | their dependency |
+
+**What the sort says:**
+- **The backlog held steady (63 to 61):** builds now close about as many ideas as they open, because every build runs the backlog (the CEO, 2026-11-26).
+- **No retro-sized group was left over from the builds** except the CEO's routed four (I4, I9, I10, I86) and two from stabilization (I183, I185). Step 3 ran five of the six, plus H5 and I144.
+- **Two builds would clear a fifth of the rest:** participation's next version (P, 6, plus I187's ranges) and player-opportunity (O, 5).
+
+**Open hunches:**
+- **H5** was rated retro-sized at retro 4 and never run. It ran in step 3: proposed failed, for the CEO to close.
+- **H6** waits for I141's night build.
+- **H18** needs a session (the contract table's join).
+- **H71 and H74** have no test yet. skill-over-expected's build didn't touch them; they belong to a VOE look.
+- **Aging's H115 to H122** sit on `pcf/aging` with proposed verdicts, still waiting for the CEO.
+
+### 2. How the predictions scored ([`retro/explore/retro5_calibration.py`](retro/explore/retro5_calibration.py), output [`.txt`](retro/explore/retro5_calibration.txt))
+
+**What's scored:** every bet written before its test since retro 4 that now has a result: the three builds' briefs, PREREGs and spot-checks, the stabilization exploration, and aging's exploration. "Held in part" counts as held, as before. Bets the tests never answered are left out (listed in the script). **Aging's hunches are provisional:** they're scored on the proposed verdicts, which the CEO hasn't closed. H117's told-apart half and H119's real half pass their written rules but are proposed failed (both are the pull-back). The proposed verdict is scored, and a sensitivity line scores the written rules instead.
+
+**The CEO's first number: 9 hunches (H113, H114, and aging's H115 to H122 less H119, which has no CEO odds), 7 held.**
+
+| | Bets | Held | Average odds | Brier | Pays (any held-out gain) |
+|---|---|---|---|---|---|
+| **Retro 5: all** (aging provisional) | 9 | 7 (78%) | 49% | **0.262** | 7 |
+| Football claims | 6 | 5 | 56% | 0.243 | 5 |
+| Methods | 3 | 2 | 35% | 0.301 | 2 (H114, H118, both as plain mileage or a pull, not the method's twist) |
+| Retro 4, for comparison | 20 | 11 (55%) | 51% | 0.230 | 5 |
+
+- **The CEO was too cautious this round.** The four bets at 25-30% held 3 of 4 (H113, H114, H115); the high ones (H121 95%, H122 80%) held. The 45-50% bets split.
+- **This reverses retro 4,** where the 30% bets held 1 of 6. Two rounds in a row the CEO's low band is the one off, in opposite directions. Nine bets is too few to call that a habit.
+- **Claims held 5 of 6. The one failure is H117** (two ways to decline), which was the pull-back.
+- **Running total over four retros:** claims held 27 of 37 (73%); methods 8 of 22 (36%).
+
+**Claude, on the CEO's claim as worded (W6): 10 bets, 7 held, average odds 50%, Brier 0.233** (0.293 if H117's and H119's written rules are scored instead).
+- Claims 0.196, methods 0.318. Claude bet against H118 (25%) and H115 (25%), and both held by their rules. Both held as plain mileage, which is what Claude expected to fail.
+- **Head to head on the 9 with both numbers: the CEO closer on 5, Claude on 2, level 2.** Brier: the CEO 0.262, Claude 0.254. This is the first retro where the CEO was closer bet by bet.
+
+**Claude's side bets, ideas and build odds: 119 bets, 59 came true (50%) at average odds of 53%. Brier 0.233,** about level with retro 4's 0.220, still better than a coin (0.250).
+
+| Claude's stated odds | Bets | Came true |
+|---|---|---|
+| 0 to 35% | 22 | 41% |
+| 35 to 55% | 30 | **30%** |
+| 55 to 75% | 45 | 56% |
+| 75% and up | 22 | 73% |
+
+- **The 35-55% band is too high again** (retro 4: 29% at 44%; now 30% at 43%). When Claude says "about even", the bet comes true less than a third of the time.
+- **The low band is too low:** 41% came true at 23%.
+- **By source:** the vacated build and spot-check were sharp (Brier 0.202 and 0.123). The skills spot-check was the worst (0.382): 3 of 9 came true at 59%. The CEO's spot-check found the new-team gain was scheme, and Claude's odds had bet against that.
+- **Nine confident bets (70%+) failed.** Among them: I55's first game back (90%), I163's nests below 1 (75%), I79 (no RB efficiency measure makes "use", 75%), "it's scheme" (75%, the skills spot-check), and age against no age for usage at 4 of 4 (80%).
+- **Size bets: 2 of 8 came true, at average odds of 61%.** W11 (Claude's own rule, retro 4: a size bet starts at 35%) **wasn't kept.** The size bets written since averaged 61%, higher than before the rule. Two were bets on a size band that the result overshot: I170 (+3 to 6%, actual 13%) and I171 (5-15%, actual larger). Claude's rule didn't change Claude's numbers, so step 9 proposes a different form (W15).
+
+### 3. The quick groups, run (2026-11-26, discovery only; scripts in `retro/explore/retro5_*.py`)
+
+The CEO routed I4, I9, I10 and I86 here ("We can leave quick ideas missed by a build to be tested by the retro"). I185 and I144 were retro-sized by their own rows, and H5 by retro 4's design. Every bet below was written in its script's header before the run. I183 needs a faced-rate forecast built on stabilization's opponent code, so it goes to stabilization's next version (group S), under W7. I147 waits for W13.
+
+| Idea | Result | Odds, scored |
+|---|---|---|
+| **I4,** Questionable players produce less ([`retro5_i4_questionable.py`](retro/explore/retro5_i4_questionable.py)) | **The flag pays a little, and not through playing hurt.** On the yardstick (next game, 2019-2024), beside participation, the Questionable flag adds +0.06% on receiving (0.02 to 0.11) and +0.14% on rushing (0.02 to 0.27), beating all 19 copies. Over all Questionable rows the forecast runs high (−1.8 and −2.2 yards). Those who play *beat* it: +3.5 and +6.7 yards, against +0.5 and +1.5 for players not listed. The gain is the chance he sits, which participation under-reads (I138). Killed as worded; F133 | 30% it counts beside participation: **came true**; size 0.05-0.2%: **came true**. 55% over-forecast when he plays: **failed** |
+| **I9,** movers' first games ([`retro5_i9_i10_participation.py`](retro/explore/retro5_i9_i10_participation.py)) | **Real, doesn't pay.** Participation still over-forecasts a mover's first 4 games by 1.1 points of share (0.6 to 1.5). His new group's unclaimed share, as a walk-forward correction, loses 0.3% on those games; a constant shift ties. Killed; F132 | 50% the miss is still below 0: **came true**. 40% (vacated's PREREG) the unclaimed share pays: **failed** |
+| **I10,** no depth-chart slot (same script) | **Real, doesn't pay.** No-slot rows are over-forecast by 3.1 points of share (2.1 to 4.3), in all 9 seasons. A walk-forward shift ties overall and loses on those rows: 2016's −11.5 over-shifts the later seasons. Killed; F132 | 40% still over-forecast by 1+ point: **came true**. 20% a shift pays: **failed** |
+| **I86,** the backfield split is the coach's ([`retro5_i86_backfield.py`](retro/explore/retro5_i86_backfield.py)) | **It's the lead back's.** The lead back's share of his team's RB carries repeats when he stays (r 0.28 same coach, 0.30 new coach). It doesn't repeat when he changes under the same coach (0.04), and it doesn't travel with a moving coach (21 moves, r 0.00). Killed; F130 | 35% (retro 3) that it's the coach's: **failed**. 35% that it travels with him: **failed** |
+| **H5,** strength is conditional (the CEO's; [`retro5_h5_conditional.py`](retro/explore/retro5_h5_conditional.py)) | **Proposed failed.** Beside Elo, no team's gap repeats between a season's halves: home −0.02, the opponent's offense (top or bottom third) +0.01, the opponent's pass lean +0.02, leading or trailing at the half −0.06. No team-by-condition term adds (−0.19% to −0.01%). Even a team's own home edge doesn't repeat: only the league's does, and Elo has it. F131 | The CEO's 30% (a large effect): **failed**; the CEO's 50% (nothing worth keeping): **came true**. Claude's 10%: failed (as bet). Claude's 75% (only home holds): **came true** |
+| **I185,** a k per position ([`retro5_i185_position_k.py`](retro/explore/retro5_i185_position_k.py)) | **Pays where positions differ.** Clearly better than the pooled k for 4 of 20 rates: yards a route +0.9%, aDOT +0.9%, targets a coverage snap +0.9%, aDOT allowed +0.5%. Worse for 2 (missed tackles −0.3%, QB hits −0.02%). 11 rates have one position and can't differ. Graduated to stabilization's next version (it ships only after a test there with copies); F134 | 30% clear for 2+: **came true**; size 0.5-2%: **came true** for 3 of 4 |
+| **I144,** the self-model ([`retro5_i144_self_model.py`](retro/explore/retro5_i144_self_model.py)) | **Loses to Claude's written odds.** A logistic on the tags every bet carries, fit on retros 3-4's 165 bets: Brier 0.251 on retro 5's 129 Claude bets against the written odds' 0.233. On the CEO's 9 first numbers it was *better* (0.226 against 0.262): the CEO's odds were too low this round, and the tags just said "hunches hold about 60%". Killed. The good part became I190 | 35% it beats Claude's odds: **failed**. 50% it beats both on pays: **failed** |
+
+**What it means:**
+- **Three of the five football ideas are real and don't pay** (I4's playing-hurt reading, I9, I10). They join P14.
+- **Two of them point at participation** (I138 for the sitting chance; I187 for ranges where the middle can't move).
+- **I86 and H5 close two old team-level claims.** Neither a coach's backfield habit nor a team's conditional strength repeats. That is P15 (step 4).
+- **Step 3's 17 bets: 8 came true** (Claude's: 7 of 15).
+
+**Closed:** I4, I9, I10, I86, I144 killed; I185 graduated. With step 1's three (I69, I96, I104): **9 closed.**
+
+### 4. The patterns, updated
+
+| # | Pattern | New for it | New against it, or its limit |
+|---|---|---|---|
+| P4 | **Methods tie the simple version, or lose** | Stabilization: the diffusion model lost to a ridge on its own inputs; the ridge cleared the pull for 3 of 20; layered credibility (I181) and a game-noise factor (I154, I182) killed. Aging: roles, hidden states and analogs add nothing beyond a linear model on his levels (H116, I153); risk weighting adds nothing over plain mileage (H118). Skills: per-group k ties (I172) | **What paid was simple and new:** the trend (F124, one more column), the second pull (one slope), a k per position where positions differ (F134). Also I180's exact ratio, a correction from data we had. P4 still reads "a simple thing with new information beats a clever thing with the same information" |
+| P13 | **Bodies and usage hold; front-office decisions don't** | Aging: age and mileage forecast usage and the chance he's still playing (H115, H118, H121, H122). Mileage reads as durability, not wear | No new team-decision hunch was tested this round |
+| P14 | **Real but small loses to the board's noise** | I9 (−1.1 points, a correction loses), I10 (−3.1 points, a shift ties), I4 (a real gap among those who played), I143 (COVID rates differ a little), I164 (a sudden absence transfers 0.018 more) | **A limit worth testing:** a real bias that a mean shift can't fix may still fix a range. I187 tests that |
+| **P15 (new)** | **League-wide rates plus who is present; team and coach extras don't repeat** | F101 (teams and coaches have no own transfer rates), F131 (no team-specific conditional strength, home included), F130 (the backfield split follows the lead back, not the coach), F23 and H78 (a mover's share comes from who is left), F115 (a mover's team-owned trait: a harder pull; the new team's rate adds only for linemen) | **Not linemen and edge pressure:** the new team's rate adds there (F115), and a lineman's numbers are his line's (F114). P15 says a team's *habit* doesn't carry; the *players* around him do |
+| **P16 (new)** | **Usage moves and repeats; efficiency regresses** | Stabilization: usage rates are real within weeks (k 4 to 69 attempts) and drift in season; efficiency rates take seasons (k 136 to 255) and stay static (F120, F125, F126). Aging: age explains 1-6% of usage's true change and about none of efficiency's (H122). Rookies' usage doesn't rise in season (I5's form) | The oldest pattern in a new form: P9 (volume carries player forecasts). P16 says why: usage is the coach's choice and it lasts; efficiency is mostly the play's luck |
+
+**What the patterns say to do:**
+- The CEO's next football bets should keep to bodies and usage (P13, P16).
+- Team- or coach-level "habit" claims should be bet low unless a lineman or edge rusher is involved (P15).
+- A method is worth a test when it adds a column of new information, not when it re-reads the same one (P4).
+
+### 5. Rehearsal ([`retro5_rehearsal_stabilization.py`](retro/explore/retro5_rehearsal_stabilization.py), outputs `retro5_rehearsal_stabilization.txt` and `_test_seasons.txt`)
+
+**What was re-read:** F94 to F129 (the three builds), against this retro's step 3 and aging's exploration.
+
+**What was re-run:** the findings that later work leans on most are F121 (M1, the base of every pulled rate), F122 (the second pull) and F124 (the trend, which ships as rung 4 and was chosen on the test seasons). Stabilization's walk starts at targets 2007, fit only on earlier pairs at every step. So its forecasts for **targets 2010-2017 already existed and had never been looked at.** Eight rates have play-by-play from 2006. Scored here for the first time, with the same 8 on 2018-2024 for a like-for-like comparison:
+
+| Rung, clear of the one below (8 rates) | 2010-2017 (never scored) | 2018-2024 (the test seasons) | Claude's odds, written before the run |
+|---|---|---|---|
+| M1 against the raw rate (F121) | 7 | 8 | 85% for 8 of 8: **failed** |
+| M1 against the position's average (F121) | 5 | 7 | 80% for 6+: **failed** |
+| The second pull against M1 (F122) | 2 (and 2 worse) | 4 | 55% for 3+: **failed** |
+| The trend against the ridge (F124) | 3 (none worse; 6 of 8 lean positive) | 5 | 55% for 4+: **failed**; 30% for 6+: failed |
+
+- **Nothing is contradicted:** every rung points the same way out of time, so no finding is marked unclear.
+- **Everything reaches about two rates fewer.** That is the size of the test seasons' lean, and it's what the vault would show too.
+- **The trend's QB pressure gains don't hold out of time:** hit-or-sack +3.5% and sack rate +3.6% on 2018-2024, −0.8% and −0.1% on 2010-2017. Its gains on aDOT, catch over expected and scramble rate hold.
+- F121, F122 and F124 carry these numbers now.
+- **Claude's four odds all failed,** each by about one rate: the odds read the 20-rate headlines, not these 8 rates.
+
+**What later work says about the others:**
+
+| Finding | What later work says | Done |
+|---|---|---|
+| F23 and F2, a back's share is his backfield's | I86: the team-level split follows the lead back, not the coach (F130) | F23 notes it |
+| F111 and I172, one k per trait | I185: a k per position pays for receiving and coverage rates, where positions differ (F134). I172 tied for the pass-rush traits | Not a conflict: F134 names the limit |
+| F120 and F125, usage moves and efficiency doesn't | Aging (unmerged): age explains usage's change and not efficiency's (H122) | Supports; aging's rows come at its merge |
+| F124, the trend | Aging's comeback (H119) is the pull-back. The trend is the opposite read (where he's heading), and it holds out of time on 3 of 8 rates | Notes above |
+| F57, a mover's new slot | I9: participation, which reads it, still over-forecasts movers' first games by 1.1 points, and no shift fixes it (F132) | No change |
+
+### 6. Dreaming
+
+**What was read:** all 193 ideas, the 129 findings and the 122 hunches (aging's on its branch). Four threads stood out since retro 4:
+- the misses that are real but can't be corrected (P14);
+- "told apart" results that turned out to be the pull-back (H117, H119);
+- simple columns of new information pay (the trend, a k per position);
+- our own odds, which miss in the same bands retro after retro.
+
+Five dreams, tagged `dream, retro 5` in IDEAS.md with their odds:
+
+| # | The dream | From | Claude's odds |
+|---|---|---|---|
+| I187 | **Misses that don't shift should widen:** where a forecast is biased but a correction loses (no slot, a mover's first games, Questionable), widen the range there instead of moving the middle | I9, I10, I4, F93 | 60% coverage is under 75% on 2+ of the 3 kinds; 35% the widening pays on the range score |
+| I188 | **The pull-back null as a standard check:** every "kinds of player" or "comeback" claim scored beyond what his own pulled level and last two seasons forecast, as one `pcf.validation` function beside the copies | H117, H119 | 50% another past held "kinds" result falls under its rule; 70% it's cheap enough to be standard |
+| I189 | **k from the role, not the position** | I185, P11 | 30% better for 2+ of the 9 rates that span positions |
+| I190 | **Our odds, recalibrated by our own record:** each author's written odds mapped through how often that band came true, fit on retros 1-5, scored at retro 6 | Five retros of step 2; I144's side result | 45% beats Claude's written odds; 40% the CEO's |
+| I191 | **Usage momentum within a season:** a player's snap-share trend over his last 6 games, beside participation's rest-of-season forecast | F124, F125, aging's durability | 30% it counts on a rest-of-season board |
+
+**Where they go:** I187 is retro-sized (saved walks). I188 is tooling for the next exploration that labels kinds. I189 goes to stabilization's next version and I191 to participation's. I190 is scored at retro 6.
+
+**How the origins have done** (closed ideas that had a test):
+
+| Origin | Through retro 4 | Since retro 4 | All | Graduated | Paid as a forecast since retro 4 |
+|---|---|---|---|---|---|
+| Retro-born | 12 tested, 8 graduated | 7 (I49, I79 held; I143, I55, I76, I86, I144 failed) | 19 | **10 (53%)** | 1 (I49) |
+| Project-born | 64, 28 graduated | 26 (I14, I136, I155, I156, I164, I165, I170, I171, I172, I185 held) | 90 | **38 (42%)** | 8 (I14, I156, I165, I170, I171, I180, I185, and I4's small flag) |
+| Dream-born | 2 (I146 graduated, I151 killed) | 0 closed | 2 | 1 | see below |
+
+- **Retro-born ideas still graduate more often** (53% against 42%), but the gap narrowed: 2 of 7 graduated since retro 4. The retro-born ideas built in the builds this round were mostly bets against (I55, I143) that failed.
+- **The dreams' first real payoff is I152, the role drift.** Its form in stabilization (where a rate was heading) cleared 16 of 20 rates and ships as rung 4, the largest gain any retro 4 idea made. Its row stays open for its original form (the role table).
+- **The other retro 4 dreams:** I146 paid as a discovery; I151 was real and small; I148 is unclear; I153 failed (on aging's branch). I147, I149 and I150 are untested.
+- **Of the six dreams tested, two paid** (I146, I152's form). That matches the project-born rate on a tiny count.
+
+### 7. New ideas and predictions
+
+**Two new ideas, as Claude's,** tagged `retro 5` in IDEAS.md:
+
+| # | Idea | The bet | Claude's odds |
+|---|---|---|---|
+| I192 | **Bodies, not teams: travel and body clock beside Elo** (P13 and H5): league-wide terms for time zones crossed, a western team's early kickoff in the east, and short rest after travel | Elo's saved margins, walk-forward slopes, the share of squared error removed | **30%** clear; 0.1-0.3% |
+| I193 | **Does a lead back carry his split?** (from I86) | A moving lead back's new split on his old team's split and the new team's last split | **35%** his old split adds (about 40 moves) |
+
+**Predictions moved by this retro** (every other open idea's and hunch's prediction stands as last written in IDEAS.md and HUNCHES.md):
+
+| Bet | Was | Now | Why |
+|---|---|---|---|
+| I138, recalibrate participation's chance he plays on Questionable rows | (none) | **55%** | I4: the forecast runs high on Questionable rows, and those who play beat it: the sitting chance is under-read |
+| I186, the trend for teams | 35% | **30%** | The rehearsal: the trend reaches two rates fewer out of time |
+| I152, role drift in its original form (the role table) | 40% | **45%** | Its stabilization form paid; it holds out of time on 3 of 8 rates |
+| I5, rookies (its original form, fantasy points) | medium | **35%** | Rookies' usage rates don't rise in season (its stabilization form). The under-projection would have to come from efficiency, which regresses (P16) |
+| H18, schemes predict whom teams pay (Claude's number) | 35% | **30%** | P15: team habits don't carry |
+| H71, a latent space of the 22 (Claude's number) | 20% | **15%** | P4: roles, hidden states and analogs added nothing in aging; the diffusion model lost in stabilization |
+
+### 8. The findings table
+
+Five new rows (F130 to F134), and the rehearsal's numbers on F121, F122, F124 and F23:
+- **F130 (I86):** a team's backfield split belongs to the lead back, not the head coach.
+- **F131 (H5):** beyond Elo's league-wide home edge, team strength isn't conditional.
+- **F132 (I9, I10):** participation over-forecasts no-slot rows (−3.1 points) and movers' first games (−1.1), and neither bias pays as a correction.
+- **F133 (I4):** a Questionable listing adds a little beside participation, through the chance he sits.
+- **F134 (I185):** a k per position beats the pooled one where positions differ.
+
+"Use and ignore" now lists these under running backs, teams, availability and movers, and any player's rate.
+
+### 9. How we're working
+
+**How retro 4's accepted changes went:**
+
+| Change | How it went |
+|---|---|
+| W10, rehearsal and dreaming inside the retro | Worked. One dream (I152) became the biggest shipped gain of the round, and the rehearsal found the earlier seasons the walk had already made |
+| W12, retros after two finished builds | Worked; this one came after three builds, which finished within two days of each other |
+| W11, Claude's size bets start at 35% | **Not kept.** Size bets averaged 61% and came true 2 of 8 |
+| "Every build runs the backlog" (the CEO, 2026-11-26) | Worked. Builds closed as many ideas as they opened, and each build listed what it didn't run |
+
+**Proposed now** (the CEO accepts, edits or rejects):
+
+| # | Change | Why |
+|---|---|---|
+| W13 | **Every build saves each tested input's gain per season**, beside the pooled gain (a small table in its outputs) | I147 (seasons won as a vault-risk test) can't run without it, and retro 4's F62 reversal is the case for it. It costs a few lines per build |
+| W14 | **The earlier-seasons check:** where a build's walk already forecasts seasons before its test window, the shipped rungs are scored there too, before shipping, and reported beside the test seasons | The rehearsal found 2010-2017 forecasts that had been made and never read, and they showed the test seasons' lean (two rates fewer). It's a second vault that costs nothing, and the 2025 vault stays closed |
+| W15 | **Claude writes a size as a middle and an 80% range** ("about +1%, 80% between +0.3% and +2%"), scored by how often the result lands in the range, instead of a probability on a narrow band. It replaces W11 | W11 asked Claude to lower its own numbers and it didn't happen. A range is scored by coverage, which is the same test our forecasts already pass |
+
+**Questions for the CEO:**
+1. How have the last two days of builds felt from your side? Is anything slower or noisier than it should be?
+2. This retro ran every quick idea itself, and the backlog held at 61. Do you want retro 6 to aim to shrink it, by closing more ideas that wait on projects not yet planned?
+3. Is there a pattern in how we work that you'd like the retro to measure next time (for example, how long each build takes, or how often your spot-check changes a verdict)?
+
+### Waiting on the CEO (asked 2026-11-26)
+
+1. **H5:** close it as failed (F131)?
+2. **Aging's H115 to H122** (on `pcf/aging`, asked 2026-11-25): close them as proposed? H117 and H119 pass their written rules but are proposed failed, since both are the pull-back.
+3. **W13, W14 and W15:** accept, edit or reject?
+4. **Group A** (I187, I192, I193): run them now, or leave them for retro 6?
+5. The three questions above, on how we're working.
+
+### The case against this retro
+
+- **Step 2 leans on unmerged verdicts.** Aging's eight hunches are scored on proposed verdicts. If the CEO closes H117 and H119 by their written rules instead, Claude's Brier on the CEO's claims moves from 0.233 to 0.293.
+- **I4's "those who play beat it" conditions on playing.** The forecast already discounts him for the chance he sits, so a player who plays beats it by construction. What the test shows is that nothing points to a cost of playing hurt. It doesn't show there is none: the forecast's "if he plays" share isn't on the yardstick board.
+- **I9 and I10 tried one-number corrections.** Participation's trees already read the unlisted and new-team flags. A correction that learns by position or by depth slot might still pay. I187 tries the range instead.
+- **I86 used one definition of the split** (the lead back's share). A coach's committee habit could show in another (the top two backs' share, or a concentration index).
+- **H5 used the opposing offense's dropback EPA to date as "the opponent's QB",** as a team rate. A QB-level split (the starter's own rate) might differ, though P2 has failed at every level so far.
+- **I185 had no shuffled copies.** 4 of 20 at a one-sided 95% bound is above the 1 expected by chance, but not by much. Stabilization's next version tests it with copies before anything ships.
+- **The rehearsal re-ran 8 of 20 rates.** The stand-in and PFR rates start too late for earlier seasons. The trend's most important gains (usage: targets a route, carries a run snap) aren't among the 8.
+- **The dreams are Claude's reading, in one sitting.** Their odds are guesses, as every idea's are.
 
 ---
 

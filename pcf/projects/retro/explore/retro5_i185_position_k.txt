@@ -1,0 +1,23 @@
+rate                            pairs  gain (90%)                   k pooled (2024) -> by position (2024)
+targets a route                  2626  -0.18% (-0.91% to +0.63%)   49 -> WR 74, RB 38, TE 28
+yards a route                    2626  +0.89% (+0.15% to +1.60%)  clear   94 -> WR 129, RB 79, TE 57
+aDOT (air yards a target)        1948  +0.86% (+0.59% to +1.11%)  clear   18 -> WR 19, RB 19, TE 24
+catch over expected              1948  +0.25% (-0.03% to +0.54%)   139 -> WR 126, RB 206, TE 168
+YAC over expected                1717  +0.17% (-0.44% to +0.85%)   96 -> WR 100, RB 130, TE 58
+carries a run snap                766  +0.00% (+0.00% to +0.00%)   3 -> RB 3
+yards after contact a carry       549  +0.00% (-0.00% to +0.00%)   171 -> RB 171
+broken tackles a touch            568  +0.00% (-0.00% to +0.00%)   271 -> RB 271
+hit-or-sack rate faced            365  +0.00% (+0.00% to +0.00%)   180 -> QB 180
+sack rate                         365  +0.00% (+0.00% to +0.00%)   272 -> QB 272
+scramble rate                     365  +0.00% (+0.00% to +0.00%)   67 -> QB 67
+QB aDOT                           357  -0.00% (-0.00% to +0.00%)   212 -> QB 212
+completion over expected          355  -0.00% (-0.00% to +0.00%)   250 -> QB 250
+pressured rate (PFR)              316  +0.00% (+0.00% to +0.00%)   201 -> QB 201
+pressures a pass snap            1237  +0.00% (+0.00% to +0.00%)   212 -> DL 212
+QB hits a pass snap              1662  -0.02% (-0.03% to -0.01%)  worse   131 -> DL 131
+targets a coverage snap          2605  +0.86% (+0.40% to +1.32%)  clear   74 -> S 91, LB 49
+catch rate allowed               1980  +0.13% (-0.36% to +0.65%)   130 -> S 110, LB 372
+aDOT allowed                     1979  +0.49% (+0.02% to +0.99%)  clear   33 -> S 32, LB 69
+missed tackle rate               2307  -0.26% (-0.50% to -0.02%)  worse   213 -> S 267, LB 165
+
+== the per-position k is clearly better for 4 of 20 rates (the bet: 2+)
